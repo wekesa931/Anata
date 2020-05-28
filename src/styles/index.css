@@ -1,0 +1,11 @@
+.appContainer {
+    background: whitesmoke;
+}
+
+
+.card {
+    border: 1px solid lightgrey;
+    border-radius: .5rem;
+    padding: .5rem
+}
+
