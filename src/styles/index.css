@@ -1,7 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla&family=Rubik:wght@500&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 .appContainer {
     background: whitesmoke;
 }
-
 
 .card {
     border: 1px solid lightgrey;
@@ -9,3 +16,14 @@
     padding: .5rem
 }
 
+.bold {
+    font-weight: 500;
+}
+
+text-danger {
+    color: red;
+}
+
+a {
+    cursor: pointer;
+}

@@ -5,10 +5,17 @@ import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 're
 
 type LoginProps = {
     successSignIn: (response: GoogleLoginResponse | GoogleLoginResponseOffline) => void,
-    failureSignIn: (response: GoogleLoginResponse | GoogleLoginResponseOffline) => void
+    setLoggingIn: (status: Boolean) => void,
+    isLoggingIn: Boolean
 }
 
 const LoginComponent = (props: LoginProps) => {
+    const [error, setError] = React.useState<any>();
+
+    const failureSignIn = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+        setError(response);
+        props.setLoggingIn(false);
+    }
     
     return (
         <div className={styles.container}>
@@ -19,11 +26,14 @@ const LoginComponent = (props: LoginProps) => {
                 <div>
                 <GoogleLogin
 					clientId="684998311530-c9tvo9lvednahhignbchcijlpqdlj1ei.apps.googleusercontent.com"
-					buttonText="Login with your Antara Email"
+					buttonText={props.isLoggingIn ? "Logging you in..." : "Login with your Antara Email"}
 					onSuccess={props.successSignIn}
-					onFailure={props.failureSignIn}
-					cookiePolicy={'single_host_origin'}
+                    onFailure={failureSignIn}
+                    onRequest={() => props.setLoggingIn(true)}
+                    cookiePolicy={'single_host_origin'}
+                    disabled={props.isLoggingIn}
 				/>
+                <p className="text-danger bold">{error && error}</p>
                 </div>
            </div>
         </div>
