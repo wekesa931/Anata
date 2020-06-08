@@ -10,10 +10,10 @@ type LoginProps = {
 }
 
 const LoginComponent = (props: LoginProps) => {
-    const [error, setError] = React.useState<any>();
+    const [error, setError] = React.useState<string>('');
 
-    const failureSignIn = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-        setError(response);
+    const failureSignIn = ({error}: any) => {
+        setError(error);
         props.setLoggingIn(false);
     }
     
@@ -33,7 +33,7 @@ const LoginComponent = (props: LoginProps) => {
                     cookiePolicy={'single_host_origin'}
                     disabled={props.isLoggingIn}
 				/>
-                <p className="text-danger bold">{error && error}</p>
+                <p className="text-danger" style={{padding: "10px", fontFamily: "Rubik"}}>{error && `An error occured: ${error.split('_').join(' ')}`}</p>
                 </div>
            </div>
         </div>
