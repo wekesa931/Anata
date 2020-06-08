@@ -39,7 +39,7 @@ const Dashboard = () => {
     return (
         <>
             <NavBar />
-            <Paper square>
+            <Paper className="tabs" square>
                 <Tabs
                     value={currentTab}
                     indicatorColor="primary"

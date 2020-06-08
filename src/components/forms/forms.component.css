@@ -53,6 +53,14 @@
     margin-bottom: 1rem;
 }
 
+.formInactive {
+    color: #608EB6
+}
+
+.formActive {
+    color: #FF9800;
+}
+
 .divider {
     border: .5px solid #EEEEEE;
     width: 60%;

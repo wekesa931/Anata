@@ -12,7 +12,7 @@ const App = () => {
 	const currentUser = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : null;
 	const [user, setUser] = React.useState<GoogleLoginResponse | GoogleLoginResponseOffline | null>
 		(currentUser);
-	const [isLoggingIn, setLoggingIn] = React.useState<Boolean>(false);
+	const [isLoggingIn, setLoggingIn] = React.useState<boolean>(false);
 
 	const successfulSignIn = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
 		sessionStorage.setItem('user', JSON.stringify(response));

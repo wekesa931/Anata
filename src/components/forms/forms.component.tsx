@@ -2,31 +2,35 @@ import React from 'react'
 import forms from './forms';
 import styles from './forms.component.css';
 import AirtableIframe from '../airtableIframe/airtableIframe.component';
+import { always } from 'kremling'
 
 type FormProps = {
     name: string;
     url: string;
-    setFormClicked: Function
+    setFormActive: Function,
+    formActive: string;
 }
 
-const Form = ({ name, url, setFormClicked }: FormProps) => {
+const Form = ({ name, url, formActive, setFormActive }: FormProps) => {
     return <div className={styles.formBlock}>
-        <a className={styles.formName} onClick={() => setFormClicked(url)}>{name}</a>
+        <a className={always(styles.formName)
+                        .toggle(styles.formActive, styles.formInactive, url === formActive)} 
+            onClick={() => setFormActive(url)}>{name}</a>
         <p className={styles.formDescription}>This form's helpful description falls here. Kindly fill it in.</p>
         <div className={styles.divider}></div>
     </div>
 }
 
 const Forms = () => {
-    const [formClicked, setFormClicked] = React.useState<string>('');
+    const [formActive, setFormActive] = React.useState<string>('');
 
     return (<div className={styles.container}>
         <div className={`${styles.card} ${styles.utilityView}`}>
             <p className={styles.utilityViewTitle}>Forms</p>
-            {forms.map(({ name, url }) => <Form name={name} url={url} setFormClicked={setFormClicked} />)}
+            {forms.map(({ name, url }) => <Form name={name} url={url} setFormActive={setFormActive} formActive={formActive} />)}
         </div>
         <div className={`${styles.card} ${styles.primaryView}`}>
-            {formClicked && <AirtableIframe src={formClicked} />}
+            {formActive && <AirtableIframe src={formActive} />}
         </div>
 
     </div>

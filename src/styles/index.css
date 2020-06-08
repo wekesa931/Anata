@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Karla&family=Rubik:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700&family=Rubik:wght@500&display=swap');
 
 * {
     margin: 0;
@@ -20,10 +20,27 @@
     font-weight: 500;
 }
 
-text-danger {
+.text-danger {
     color: red;
 }
 
 a {
     cursor: pointer;
+}
+
+.tabs {
+    box-shadow: 0px 2px 4px rgba(96, 142, 182, 0.15) !important;
+}
+
+.MuiTab-wrapper {
+    font-family: Karla;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 21px;
+    color: #222222; /* Grey/greyscale-1 */
+}
+
+.MuiTab-textColorPrimary.Mui-selected {
+    background: #FAFAFA;
 }

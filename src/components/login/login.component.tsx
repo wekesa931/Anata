@@ -5,8 +5,8 @@ import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 're
 
 type LoginProps = {
     successSignIn: (response: GoogleLoginResponse | GoogleLoginResponseOffline) => void,
-    setLoggingIn: (status: Boolean) => void,
-    isLoggingIn: Boolean
+    setLoggingIn: (status: boolean) => void,
+    isLoggingIn: boolean
 }
 
 const LoginComponent = (props: LoginProps) => {
