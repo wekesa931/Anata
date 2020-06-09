@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './login.component.css';
-import logo from '../../assets/img/antara-logo.png';
+import logo from '../../assets/img/logo/antara-logo.png';
 import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
 
 type LoginProps = {

@@ -1,8 +1,11 @@
-import React from 'react'
+import React from 'react';
+import { always } from 'kremling';
+
 import forms from './forms';
 import styles from './forms.component.css';
 import AirtableIframe from '../airtableIframe/airtableIframe.component';
-import { always } from 'kremling'
+import VectorIcon from '../../assets/img/vector/telemedicine.png';
+
 
 type FormProps = {
     name: string;
@@ -30,11 +33,20 @@ const Forms = () => {
             {forms.map(({ name, url }) => <Form name={name} url={url} setFormActive={setFormActive} formActive={formActive} />)}
         </div>
         <div className={`${styles.card} ${styles.primaryView}`}>
-            {formActive && <AirtableIframe src={formActive} />}
+            {formActive ? <AirtableIframe src={formActive} /> : <FormsDefaultView />}
+            
         </div>
 
     </div>
     )
+}
+
+const FormsDefaultView = () => {
+    return (<div className={styles.defaultViewContainer}>
+        <img src={VectorIcon} alt='Health Navigator Vector Image' width="291px"/>
+        <p className={styles.defaultViewPrimaryText}>Choose a form to get started.</p>
+        <p className={styles.defaultViewSecondaryText}>There are so many to choose from.</p>
+    </div>)
 }
 
 export default Forms;

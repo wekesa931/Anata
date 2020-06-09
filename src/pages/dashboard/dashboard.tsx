@@ -31,7 +31,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const Dashboard = () => {
-    const [currentTab, setCurrentTab] = React.useState('one');
+    const [currentTab, setCurrentTab] = React.useState('three');
 
   const handleChange = (event: React.ChangeEvent<{}>, tab: string) => {
     setCurrentTab(tab);
@@ -53,7 +53,7 @@ const Dashboard = () => {
                 </Tabs>
             </Paper>
             <TabPanel value={currentTab} index="one">
-                <AirtableIframe src="https://airtable.com/embed/shrMjDe4yAifyJLyV?backgroundColor=green&viewControls=on"/>
+                <AirtableIframe src="https://airtable.com/embed/shrXAgtdZNtbEQ4Z1?backgroundColor=green&viewControls=on"/>
             </TabPanel>
             <TabPanel value={currentTab} index="two">
                 <AirtableIframe src="https://airtable.com/embed/shrt929cXvPmRTBJD?backgroundColor=green&viewControls=on"/>

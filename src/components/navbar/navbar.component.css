@@ -8,3 +8,18 @@
 .navbarLogo {
     height: 60px;
 }
+
+.logoContainer {
+    display: flex;
+}
+
+.drawer {
+    width: 15rem;
+    flex-shrink: 0;
+}
+
+.drawerHeader {
+    display: flex;
+    justify-content: flex-end;
+}
+

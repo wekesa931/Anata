@@ -69,3 +69,39 @@
 .formBlock {
     padding: 1rem .5rem .5rem .5rem;
 }
+
+.defaultViewContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4.5rem 0;
+    flex-direction: column;
+}
+
+.defaultViewPrimaryText {
+    font-family: "Rubik";
+    font-size: 30px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #222222;
+    width: 18.19rem;
+    height: 4.25rem;
+    text-align: center;
+}
+
+.defaultViewSecondaryText {
+    width: 252px;
+    height: 20px;
+    font-family: "Karla";
+    font-size: 16px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.25;
+    letter-spacing: normal;
+    color: #222222;
+    margin-top: 1rem;
+}
