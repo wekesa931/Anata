@@ -1,7 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const path = require('path');
+var sslRedirect = require('heroku-ssl-redirect');
+
 const app = express();
+
+app.use(sslRedirect());
 app.use(express.static(path.join(__dirname, 'dist')));
 
 app.get('/ping', function (req, res) {
