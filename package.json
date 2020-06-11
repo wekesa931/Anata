@@ -41,7 +41,7 @@
     "@types/react-dom": "^16.9.8",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "heroku-ssl-redirect": "0.0.4",
+    "heroku-ssl-redirect": "^0.0.4",
     "kremling": "^2.0.4",
     "path": "^0.12.7",
     "react": "^16.13.1",
