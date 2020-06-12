@@ -31,7 +31,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const Dashboard = () => {
-    const [currentTab, setCurrentTab] = React.useState('three');
+    const [currentTab, setCurrentTab] = React.useState('one');
 
   const handleChange = (event: React.ChangeEvent<{}>, tab: string) => {
     setCurrentTab(tab);

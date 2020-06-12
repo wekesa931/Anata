@@ -2,19 +2,28 @@ import React from 'react';
 import styles from './login.component.css';
 import logo from '../../assets/img/logo/antara-logo.png';
 import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
+import { useHistory } from 'react-router-dom';
 
 type LoginProps = {
-    successSignIn: (response: GoogleLoginResponse | GoogleLoginResponseOffline) => void,
+    setUser: (user: any) => void
     setLoggingIn: (status: boolean) => void,
     isLoggingIn: boolean
 }
 
-const LoginComponent = (props: LoginProps) => {
+const Login = (props: LoginProps) => {
+    const history = useHistory();
+    
     const [error, setError] = React.useState<string>('');
 
     const failureSignIn = ({error}: any) => {
         setError(error);
         props.setLoggingIn(false);
+    }
+
+    const successfulSignIn = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+        sessionStorage.setItem('user', JSON.stringify(response));
+        props.setUser(response);
+        history.push('/');
     }
     
     return (
@@ -27,7 +36,7 @@ const LoginComponent = (props: LoginProps) => {
                 <GoogleLogin
 					clientId="684998311530-c9tvo9lvednahhignbchcijlpqdlj1ei.apps.googleusercontent.com"
 					buttonText={props.isLoggingIn ? "Logging you in..." : "Login with your Antara Email"}
-					onSuccess={props.successSignIn}
+					onSuccess={successfulSignIn}
                     onFailure={failureSignIn}
                     onRequest={() => props.setLoggingIn(true)}
                     cookiePolicy={'single_host_origin'}
@@ -40,4 +49,4 @@ const LoginComponent = (props: LoginProps) => {
     );
 }
 
-export default LoginComponent;
+export default Login;

@@ -63,7 +63,7 @@ const NavBar = () => {
             <div>
                 <IconButton>
                     <SvgIcon>
-                        <MenuDotsIcon />
+                        <MenuDotsIcon/>
                     </SvgIcon>
                 </IconButton>
                 <IconButton>

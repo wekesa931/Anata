@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AuthContext = React.createContext({});
+const AuthContext = React.createContext({user: null, logout: () => null});
 
 function AuthProvider({ user, children }:any) {
   const logout = () => {
