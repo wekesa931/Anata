@@ -1,0 +1,40 @@
+import React, { useEffect, useState } from 'react'
+import { useRouteMatch } from 'react-router-dom'
+import BioData from './biodata/biodata.component'
+import Encounters from './encounters/encounters.component'
+import airtableFetch from '../../utils/airtableFetch'
+import styles from './patient-dashboard.component.css'
+
+import { useUser } from '../../context/user-context'
+
+const PatientDashboard = () => {
+  const [recId, setRecId] = useState<string>()
+  const [member, setMember] = useState<any>()
+  const { params } = useRouteMatch<any>()
+  const user = useUser()
+
+  if (params.recId && !recId) {
+    setRecId(params.recId)
+  }
+  useEffect(() => {
+    if (recId && user) {
+      airtableFetch(`members/${recId}`, user.tokenId).then((response: any) => {
+        console.log(response, 'here')
+        setMember(response)
+      })
+    }
+  }, [recId, user])
+
+  return member ? (
+    <div className={styles.container}>
+      <div className="card">
+        <BioData member={member} />
+        <Encounters member={member} />
+      </div>
+      <div className="card" style={{ width: '550px' }} />
+      <div className="card" style={{ width: '350px' }} />
+    </div>
+  ) : null
+}
+
+export default PatientDashboard

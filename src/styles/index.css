@@ -1,46 +1,117 @@
-@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700&family=Rubik:wght@500&display=swap');
+/* global css */
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700&family=Rubik:wght@400;500&display=swap');
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+:root {
+  /* colors */
+  --orange-base: #ff9800;
+  --orange-dark: #955b05;
+  --orange-light: #ffeccf;
+  --blue-base: #608eb6;
+  --blue-dark: #205284;
+  --blue-light: #c6dfeb;
+  --greyscale-3: #cccccc;
+  --greyscale-1: #222222;
+  --blue-dark: #205284;
+  --blue-light: #c6dfeb;
+  --turquoise-base: #42bcda;
+  --purple-base: #26187b;
+}
+
+/* typography */
+
+h1,
+.text-heading-1 {
+  font-family: 'Rubik';
+  font-size: 29px;
+  line-height: 34px;
+  font-weight: 500;
+}
+
+h2,
+.text-heading-2 {
+  font-family: 'Rubik';
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 500;
+}
+
+h3,
+.text-heading-3 {
+  font-family: 'Rubik';
+  font-size: 17px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+h4,
+.text-heading-4 {
+  font-family: 'Rubik';
+  font-size: 17px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.heading-caption {
+  font-family: 'Karla';
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 400;
+}
+
+.text-normal {
+  font-family: 'Karla';
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 400;
+}
+
+.text-small {
+  font-family: 'Karla';
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 400;
+}
+
+.text-bold {
+  font-weight: 700;
+}
+
+/** end of typography styles **/
+
 .appContainer {
-    background: whitesmoke;
+  background: whitesmoke;
 }
 
 .card {
-    border: 1px solid lightgrey;
-    border-radius: .5rem;
-    padding: .5rem
-}
-
-.bold {
-    font-weight: 500;
-}
-
-.text-danger {
-    color: red;
+  border: 1px solid lightgrey;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
 }
 
 a {
-    cursor: pointer;
+  cursor: pointer;
+  color: var(--turquoise-base);
 }
 
 .tabs {
-    box-shadow: 0px 2px 4px rgba(96, 142, 182, 0.15) !important;
+  box-shadow: 0px 2px 4px rgba(96, 142, 182, 0.15) !important;
 }
 
 .MuiTab-wrapper {
-    font-family: Karla;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 21px;
-    color: #222222; /* Grey/greyscale-1 */
+  font-family: Karla;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 21px;
+  color: #222222; /* Grey/greyscale-1 */
 }
 
 .MuiTab-textColorPrimary.Mui-selected {
-    background: #FAFAFA;
+  background: #fafafa;
 }

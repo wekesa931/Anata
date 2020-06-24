@@ -1,25 +1,24 @@
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    background-color: white;
-    padding: 0 .5rem;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--purple-base);
+  padding: 0 0.5rem;
 }
 
 .navbarLogo {
-    height: 60px;
+  height: 60px;
 }
 
 .logoContainer {
-    display: flex;
+  display: flex;
 }
 
 .drawer {
-    width: 15rem;
-    flex-shrink: 0;
+  width: 15rem;
+  flex-shrink: 0;
 }
 
 .drawerHeader {
-    display: flex;
-    justify-content: flex-end;
+  display: flex;
+  justify-content: flex-end;
 }
-

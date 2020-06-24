@@ -11,8 +11,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "webpack-dev-server --mode development --open --hot --port 5000",
+    "lint": "eslint --fix './src/**/*.{js,jsx,ts,tsx}'",
+    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'",
+    "prebuild": "npm run lint && npm run format",
     "build": "webpack --mode production",
-    "check-types": "tsc"
+    "check-types": "tsc",
+    "analyze": "webpack --profile --json > stats.json"
   },
   "author": "Antara Health",
   "license": "ISC",
@@ -23,13 +27,24 @@
     "@babel/preset-env": "^7.10.0",
     "@babel/preset-react": "^7.10.0",
     "@babel/preset-typescript": "^7.9.0",
+    "@svgr/webpack": "^5.4.0",
+    "@testing-library/react": "^10.3.0",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
+    "@typescript-eslint/eslint-plugin": "^3.3.0",
+    "@typescript-eslint/parser": "^3.3.0",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.5.3",
+    "dotenv": "^8.2.0",
+    "eslint": "~7.2.0",
+    "eslint-config-airbnb-typescript-prettier": "^2.2.0",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
+    "husky": "^4.2.5",
+    "jest": "^26.0.1",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
     "style-loader": "^1.2.1",
     "typescript": "^3.9.3",
     "webpack": "^4.43.0",
@@ -39,9 +54,6 @@
   "dependencies": {
     "@material-ui/core": "^4.10.1",
     "@material-ui/icons": "^4.9.1",
-    "@svgr/webpack": "^5.4.0",
-    "@types/react": "^16.9.35",
-    "@types/react-dom": "^16.9.8",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "heroku-ssl-redirect": "^0.0.4",
@@ -50,6 +62,12 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-google-login": "^5.1.20",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "webpack-bundle-analyzer": "^3.8.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }

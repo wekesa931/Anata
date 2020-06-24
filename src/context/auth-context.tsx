@@ -1,15 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react'
+import { User } from '../types/user'
 
-const AuthContext = React.createContext({user: null, logout: () => null});
+type AuthContextType = {
+  user: User
+  setCurrentUser: (user: User) => void
+  logout: () => void
+}
 
-function AuthProvider({ user, children }:any) {
+const AuthContext = React.createContext<AuthContextType>({
+  user: null,
+  setCurrentUser: (user: any) => {
+    return user || null
+  },
+  logout: () => null,
+})
+
+function AuthProvider({ user, children }: any) {
+  const session = sessionStorage.getItem('user')
+    ? JSON.parse(sessionStorage.getItem('user') || '')
+    : null
+  const [currentUser, setCurrentUser] = useState(user || session)
+
   const logout = () => {
-      // todo: clear the token in localStorage/cookier and the user data
-      console.log('Logging out...');
+    sessionStorage.removeItem('user')
+    setCurrentUser(null)
   }
+
   return (
-    <AuthContext.Provider value={{logout, user}}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user: currentUser, setCurrentUser, logout }}>
+      {children}
+    </AuthContext.Provider>
   )
 }
 const useAuth = () => React.useContext(AuthContext)
-export {AuthProvider, useAuth}
+
+export { AuthProvider, useAuth }
