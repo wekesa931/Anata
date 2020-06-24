@@ -1,8 +1,10 @@
 .navbar {
   display: flex;
+  flex: 1;
   justify-content: space-between;
-  background-color: var(--purple-base);
+  background-color: var(--nav-bg);
   padding: 0 0.5rem;
+  height: 4rem;
 }
 
 .navbarLogo {
@@ -11,6 +13,7 @@
 
 .logoContainer {
   display: flex;
+  align-items: center;
 }
 
 .drawer {

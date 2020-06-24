@@ -1,0 +1,28 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 7rem;
+  background-color: var(--nav-bg);
+  height: 100vh;
+}
+
+.menuItem {
+  height: 10rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.borderItemTop,
+.borderItemBottom {
+  height: 1rem;
+  background-color: white;
+}
+
+.logo {
+  text-align: center;
+  padding: 1.5rem 1.5rem 0rem 1.5rem;
+}

@@ -2,8 +2,6 @@ const path = require('path')
 const webpack = require('webpack')
 const dotenv = require('dotenv')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-var BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin
 
 const env = dotenv.config().parsed
 const envKeys = Object.keys(env).reduce((prev, next) => {
@@ -67,7 +65,6 @@ module.exports = {
       template: './src/index.html',
     }),
     new webpack.DefinePlugin(envKeys),
-    new BundleAnalyzerPlugin(),
     new webpack.optimize.ModuleConcatenationPlugin(),
   ],
   devtool: 'sourcemap',

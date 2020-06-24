@@ -1,5 +1,5 @@
 /* global css */
-@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700&family=Rubik:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700&family=Rubik:wght@400;500&family=Source+Sans+Pro:wght@300;600&display=swap');
 
 * {
   margin: 0;
@@ -21,6 +21,7 @@
   --blue-light: #c6dfeb;
   --turquoise-base: #42bcda;
   --purple-base: #26187b;
+  --nav-bg: #07396b;
 }
 
 /* typography */
@@ -57,6 +58,15 @@ h4,
   font-weight: 500;
 }
 
+h5,
+.text-heading-5 {
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+}
+
 .heading-caption {
   font-family: 'Karla';
   font-size: 14px;
@@ -82,7 +92,34 @@ h4,
   font-weight: 700;
 }
 
+.logo {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 30px;
+  letter-spacing: -0.05em;
+  color: white;
+}
+
+.hnos {
+  font-family: Source Sans Pro;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 30px;
+  letter-spacing: -0.05em;
+  color: white;
+}
+
+.text-white {
+  color: white;
+}
+
 /** end of typography styles **/
+.flex {
+  display: flex;
+}
 
 .appContainer {
   background: whitesmoke;

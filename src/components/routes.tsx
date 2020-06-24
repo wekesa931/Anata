@@ -5,6 +5,7 @@ import Dashboard from '../pages/dashboard/dashboard'
 import NavBar from './navbar/navbar.component'
 import PatientDashboard from './patient-dashboard/patient-dashboard.component'
 import { useUser } from '../context/user-context'
+import Sidebar from './sidebar/sidebar.component'
 
 const Routes = () => {
   return (
@@ -31,10 +32,13 @@ function ProtectedRoute({ children, ...rest }: any) {
       {...rest}
       render={({ location }) =>
         user ? (
-          <>
-            <NavBar />
-            {children}
-          </>
+          <div className="flex">
+            <Sidebar />
+            <div style={{ flex: 1 }}>
+              <NavBar />
+              {children}
+            </div>
+          </div>
         ) : (
           <Redirect
             to={{

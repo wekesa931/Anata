@@ -15,8 +15,7 @@
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'",
     "prebuild": "npm run lint && npm run format",
     "build": "webpack --mode production",
-    "check-types": "tsc",
-    "analyze": "webpack --profile --json > stats.json"
+    "check-types": "tsc"
   },
   "author": "Antara Health",
   "license": "ISC",
