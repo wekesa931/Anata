@@ -8,7 +8,9 @@ if (!('error' in result)) {
   envs = JSON.stringify(result.parsed)
 } else {
   envs = {}
-  _.each(process.env, (value, key) => (envs[key] = value))
+  for (const [key, value] of Object.entries(process.env)) {
+    envs[key] = value
+  }
 }
 
 module.exports = envs
