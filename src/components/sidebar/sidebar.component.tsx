@@ -13,7 +13,7 @@ const Sidebar = () => {
       <div className={styles.logo}>
         <FlatLogo />
       </div>
-      {SidebarMenuItems.map((item, index) => (
+      {SidebarMenuItems.map((item) => (
         <div key={item.name}>
           <div
             className={always(styles.menuItem).maybe(
