@@ -3,13 +3,7 @@ const webpack = require('webpack')
 const dotenv = require('dotenv')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const env = dotenv.config().parsed
-const envKeys = env
-  ? Object.keys(env).reduce((prev, next) => {
-      prev[`process.env.${next}`] = JSON.stringify(env[next])
-      return prev
-    }, {})
-  : []
+dotenv.config({ path: __dirname + '/.env' })
 
 module.exports = {
   entry: './src/index',
@@ -66,7 +60,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html',
     }),
-    new webpack.DefinePlugin(envKeys),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(dotenv.config().parsed),
+    }),
     new webpack.optimize.ModuleConcatenationPlugin(),
   ],
   devtool: 'sourcemap',

@@ -4,6 +4,7 @@ import Routes from './routes'
 import AppContexts from '../context'
 
 const App = () => {
+  console.log(process.env.NODE_PROXY_URL)
   return (
     <div className="appContainer">
       <AppContexts>
