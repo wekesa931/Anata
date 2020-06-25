@@ -11,6 +11,7 @@ if (!('error' in result)) {
   for (const [key, value] of Object.entries(process.env)) {
     envs[key] = value
   }
+  envs = JSON.stringify(envs)
 }
 
 module.exports = envs
