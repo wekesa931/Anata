@@ -4,7 +4,7 @@ const dotenv = require('dotenv')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const env = dotenv.config().parsed
-console.log(env, 'env')
+console.log(dotenv.config(), env, 'env')
 module.exports = {
   entry: './src/index',
   output: {
