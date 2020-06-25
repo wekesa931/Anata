@@ -19,7 +19,6 @@ const PatientDashboard = () => {
   useEffect(() => {
     if (recId && user) {
       airtableFetch(`members/${recId}`, user.tokenId).then((response: any) => {
-        console.log(response, 'here')
         setMember(response)
       })
     }
