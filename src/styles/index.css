@@ -17,11 +17,25 @@
   --blue-light: #c6dfeb;
   --greyscale-3: #cccccc;
   --greyscale-1: #222222;
-  --blue-dark: #205284;
-  --blue-light: #c6dfeb;
   --turquoise-base: #42bcda;
   --purple-base: #26187b;
   --nav-bg: #07396b;
+}
+
+html,
+body,
+#root,
+.appContainer {
+  height: 100%;
+}
+
+.dashboard {
+  background-color: var(--nav-bg);
+}
+.dashboard-container {
+  border-radius: 16px 0 0 0;
+  padding: 1rem;
+  background: white;
 }
 
 /* typography */
@@ -142,10 +156,10 @@ h5,
 }
 
 /** buttons **/
-button.btn,
-a.btn {
+button.btn {
   background: none;
   border: none;
+  outline: none;
 }
 
 button.btn-icon {
@@ -166,4 +180,5 @@ button.btn-icon {
 a {
   cursor: pointer;
   color: var(--turquoise-base);
+  text-decoration: none;
 }

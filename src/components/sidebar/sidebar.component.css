@@ -9,6 +9,10 @@
   border-left: 4px solid var(--orange-base);
 }
 
+.menuLink:hover > h5 {
+  color: var(--orange-base);
+}
+
 .menuItem {
   height: 9rem;
   text-align: center;
@@ -21,6 +25,10 @@
 .menuLink {
   padding: 1rem;
   flex: 2;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
 }
 
 .menuItem.active {

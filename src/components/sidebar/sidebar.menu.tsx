@@ -1,18 +1,20 @@
 import React from 'react'
-import ClipboardPlusIcon from '../../assets/img/icons/ clipboard-plus.svg'
-import PopulationIcon from '../../assets/img/icons/ items.svg'
+import ClipboardCrossPlusIcon from '../../assets/img/icons/cross-clipboard.svg'
 import TasksIcon from '../../assets/img/icons/ calendar-checked.svg'
+import TableIcon from '../../assets/img/icons/ table.svg'
+import PresentationIcon from '../../assets/img/icons/ presentation.svg'
+import ClipboardTextIcon from '../../assets/img/icons/ clipboard-text.svg'
 
 const SidebarMenuItems = [
   {
     name: 'Members Table',
-    icon: <PopulationIcon />,
-    rootUrl: '/members',
+    icon: <TableIcon />,
+    rootUrl: '/',
   },
   {
-    name: 'Navigator Dashboard',
-    icon: <ClipboardPlusIcon />,
-    rootUrl: '/dashboard',
+    name: 'Benefeciary Dashboard',
+    icon: <ClipboardCrossPlusIcon />,
+    rootUrl: '/bene/',
   },
   {
     name: 'HN Tasks Summary',
@@ -21,12 +23,12 @@ const SidebarMenuItems = [
   },
   {
     name: 'Populations & Cohorts',
-    icon: <PopulationIcon />,
+    icon: <PresentationIcon />,
     rootUrl: '/population',
   },
   {
     name: 'Forms',
-    icon: <PopulationIcon />,
+    icon: <ClipboardTextIcon />,
     rootUrl: '/forms',
   },
 ]
