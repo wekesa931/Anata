@@ -5,12 +5,17 @@ import TasksIcon from '../../assets/img/icons/ calendar-checked.svg'
 
 const SidebarMenuItems = [
   {
+    name: 'Members Table',
+    icon: <PopulationIcon />,
+    rootUrl: '/members',
+  },
+  {
     name: 'Navigator Dashboard',
     icon: <ClipboardPlusIcon />,
     rootUrl: '/dashboard',
   },
   {
-    name: 'Tasks Summary',
+    name: 'HN Tasks Summary',
     icon: <TasksIcon />,
     rootUrl: '/tasks',
   },
@@ -18,6 +23,11 @@ const SidebarMenuItems = [
     name: 'Populations & Cohorts',
     icon: <PopulationIcon />,
     rootUrl: '/population',
+  },
+  {
+    name: 'Forms',
+    icon: <PopulationIcon />,
+    rootUrl: '/forms',
   },
 ]
 

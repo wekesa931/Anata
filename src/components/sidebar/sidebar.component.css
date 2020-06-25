@@ -3,23 +3,47 @@
   flex-direction: column;
   width: 7rem;
   background-color: var(--nav-bg);
-  height: 100vh;
+}
+
+.active > .menuLink {
+  border-left: 4px solid var(--orange-base);
 }
 
 .menuItem {
-  height: 10rem;
+  height: 9rem;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+.menuLink {
   padding: 1rem;
+  flex: 2;
+}
+
+.menuItem.active {
+  background-color: white;
+}
+
+.borderItemTop {
+  width: 100%;
+  background-color: var(--nav-bg);
+  border-radius: 0 0 24px;
+}
+
+.borderItemBottom {
+  width: 100%;
+  background-color: var(--nav-bg);
+  border-radius: 0 24px 0 0;
 }
 
 .borderItemTop,
 .borderItemBottom {
-  height: 1rem;
-  background-color: white;
+  width: 100%;
+  background-color: var(--nav-bg);
+  flex: 1;
 }
 
 .logo {

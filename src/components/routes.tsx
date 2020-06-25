@@ -32,7 +32,7 @@ function ProtectedRoute({ children, ...rest }: any) {
       {...rest}
       render={({ location }) =>
         user ? (
-          <div className="flex">
+          <div className="d-flex">
             <Sidebar />
             <div style={{ flex: 1 }}>
               <NavBar />

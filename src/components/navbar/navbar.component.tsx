@@ -1,9 +1,6 @@
 import React from 'react'
-
-import IconButton from '@material-ui/core/IconButton'
-import SvgIcon from '@material-ui/core/SvgIcon'
-import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined'
 import MenuDotsIcon from '../../assets/img/icons/menu_dots.svg'
+import UserIcon from '../../assets/img/icons/ user.svg'
 import styles from './navbar.component.css'
 
 const NavBar = () => {
@@ -14,15 +11,13 @@ const NavBar = () => {
           <span className="logo">antara</span>
           <span className="hnos">HNOS</span>
         </div>
-        <div>
-          <IconButton>
-            <SvgIcon style={{ color: 'white' }}>
-              <MenuDotsIcon />
-            </SvgIcon>
-          </IconButton>
-          <IconButton>
-            <AccountCircleOutlinedIcon fill="white" />
-          </IconButton>
+        <div className="d-flex flex-align-center flex-justify-end flex-one">
+          <button className="btn btn-icon">
+            <MenuDotsIcon className="icon-white" />
+          </button>
+          <button className="btn btn-icon">
+            <UserIcon className="icon-white" />
+          </button>
         </div>
       </div>
     </>
