@@ -3,8 +3,8 @@ const webpack = require('webpack')
 const dotenv = require('dotenv')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-dotenv.config()
-
+const env = dotenv.config().parsed
+console.log('env')
 module.exports = {
   entry: './src/index',
   output: {
@@ -61,7 +61,7 @@ module.exports = {
       template: './src/index.html',
     }),
     new webpack.DefinePlugin({
-      'process.env': JSON.stringify(dotenv.config().parsed),
+      'process.env': JSON.stringify(env),
     }),
     new webpack.optimize.ModuleConcatenationPlugin(),
   ],

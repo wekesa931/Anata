@@ -1,9 +1,9 @@
 import React from 'react'
 import { always, toggle } from 'kremling'
+import { Link, useRouteMatch } from 'react-router-dom'
 import styles from './sidebar.component.css'
 import FlatLogo from '../../assets/img/logo/flat-logo-48.svg'
 import SidebarMenuItems from './sidebar.menu'
-import { Link, useRouteMatch } from 'react-router-dom'
 
 const Sidebar = () => {
   const { path } = useRouteMatch()
