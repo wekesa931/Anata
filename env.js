@@ -1,0 +1,14 @@
+const dotenv = require('dotenv')
+
+const result = dotenv.config()
+
+let envs
+
+if (!('error' in result)) {
+  envs = JSON.stringify(result.parsed)
+} else {
+  envs = {}
+  _.each(process.env, (value, key) => (envs[key] = value))
+}
+
+module.exports = envs
