@@ -5,8 +5,12 @@
   background-color: var(--nav-bg);
 }
 
-.active > .menuLink {
+.active .menuLink {
   border-left: 4px solid var(--orange-base);
+}
+
+.active svg {
+  fill: var(--blue-dark);
 }
 
 .menuLink:hover > h5 {
@@ -32,7 +36,7 @@
 }
 
 .menuItem.active {
-  background-color: white;
+  background-color: var(--white);
 }
 
 .borderItemTop {
@@ -54,7 +58,15 @@
   flex: 1;
 }
 
-.logo {
+.logoContainer {
   text-align: center;
-  padding: 1.5rem 1.5rem 0rem 1.5rem;
+  padding: 1.75rem 2.25rem 0.875rem 1.75rem;
+}
+
+.logo {
+  padding: 3rem;
+}
+
+a {
+  width: 100%;
 }

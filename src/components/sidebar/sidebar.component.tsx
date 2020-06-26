@@ -2,7 +2,7 @@ import React from 'react'
 import { always, toggle } from 'kremling'
 import { Link, useRouteMatch } from 'react-router-dom'
 import styles from './sidebar.component.css'
-import FlatLogo from '../../assets/img/logo/flat-logo-48.svg'
+import FlatLogo from '../../assets/img/logo/Antara Logo@1x.png'
 import SidebarMenuItems from './sidebar.menu'
 
 const Sidebar = () => {
@@ -10,8 +10,8 @@ const Sidebar = () => {
   const isActive = (rootUrl: string) => path === rootUrl
   return (
     <div className={styles.sidebar}>
-      <div className={styles.logo}>
-        <FlatLogo />
+      <div className={styles.logoContainer}>
+        <img src={FlatLogo} width="40px" height="40px" />
       </div>
       {SidebarMenuItems.map((item) => (
         <div key={item.name}>
@@ -23,7 +23,7 @@ const Sidebar = () => {
           >
             {isActive(item.rootUrl) && <div className={styles.borderItemTop} />}
             <Link to={item.rootUrl}>
-              <button className={`btn ${styles.menuLink}`}>
+              <button className={`btn-unstyled ${styles.menuLink}`}>
                 <div style={{ marginBottom: '.5rem' }}>{item.icon}</div>
                 <h5
                   className={toggle(

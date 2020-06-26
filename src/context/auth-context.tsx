@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { User } from '../types/user'
+import keys from '../constants/session-storage'
 
 type AuthContextType = {
   user: User
@@ -16,13 +17,13 @@ const AuthContext = React.createContext<AuthContextType>({
 })
 
 function AuthProvider({ user, children }: any) {
-  const session = sessionStorage.getItem('user')
-    ? JSON.parse(sessionStorage.getItem('user') || '')
+  const session = sessionStorage.getItem(keys.USER)
+    ? JSON.parse(sessionStorage.getItem(keys.USER) || '')
     : null
   const [currentUser, setCurrentUser] = useState(user || session)
 
   const logout = () => {
-    sessionStorage.removeItem('user')
+    sessionStorage.removeItem(keys.USER)
     setCurrentUser(null)
   }
 

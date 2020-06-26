@@ -1,20 +1,14 @@
 import React from 'react'
 import ClipboardCrossPlusIcon from '../../assets/img/icons/cross-clipboard.svg'
 import TasksIcon from '../../assets/img/icons/ calendar-checked.svg'
-import TableIcon from '../../assets/img/icons/ table.svg'
 import PresentationIcon from '../../assets/img/icons/ presentation.svg'
 import ClipboardTextIcon from '../../assets/img/icons/ clipboard-text.svg'
 
 const SidebarMenuItems = [
   {
-    name: 'Members Table',
-    icon: <TableIcon />,
-    rootUrl: '/',
-  },
-  {
-    name: 'Benefeciary Dashboard',
+    name: 'Beneficiary Dashboard',
     icon: <ClipboardCrossPlusIcon />,
-    rootUrl: '/bene/',
+    rootUrl: '/',
   },
   {
     name: 'HN Tasks Summary',

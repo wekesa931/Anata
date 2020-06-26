@@ -17,8 +17,20 @@
   --blue-light: #c6dfeb;
   --greyscale-3: #cccccc;
   --greyscale-1: #222222;
+  --greyscale-2: #777777;
+  --greyscale-4: #eeeeee;
+  --greyscale-5: #f5f5f5;
+  --dark: #1f2532;
+  --neutral-base: rgb(247, 247, 247);
+  --neutral-darker: #e8e8e8;
+  --neutral-light: #fafafa;
+  --white: #ffffff;
+  --border-regular: rgb(204, 204, 204);
+  --border-light: #eeeeee;
   --turquoise-base: #42bcda;
   --purple-base: #26187b;
+  --purple-light: #e0ddf1;
+  --purple-dark: #1f1849;
   --nav-bg: #07396b;
 }
 
@@ -35,7 +47,7 @@ body,
 .dashboard-container {
   border-radius: 16px 0 0 0;
   padding: 1rem;
-  background: white;
+  background: var(--white);
 }
 
 /* typography */
@@ -113,7 +125,7 @@ h5,
   font-size: 24px;
   line-height: 30px;
   letter-spacing: -0.05em;
-  color: white;
+  color: var(--white);
 }
 
 .hnos {
@@ -123,11 +135,11 @@ h5,
   font-size: 24px;
   line-height: 30px;
   letter-spacing: -0.05em;
-  color: white;
+  color: var(--blue-light);
 }
 
 .text-white {
-  color: white;
+  color: var(--white);
 }
 
 .text-blue-light {
@@ -156,23 +168,59 @@ h5,
 }
 
 /** buttons **/
-button.btn {
+button.btn-unstyled {
   background: none;
   border: none;
   outline: none;
 }
 
+button.btn {
+  border-radius: 12px;
+  padding: 13px;
+  font-family: Rubik;
+  font-style: normal;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
+  height: 44px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn:disabled {
+  color: var(--greyscale-3);
+}
+
 button.btn-icon {
   padding: 0.25rem;
   margin: 0 0.25rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+button.btn-primary {
+  background: var(--orange-base);
+  box-shadow: 0px 8px 16px rgba(255, 152, 0, 0.3);
+  color: #ffffff;
+}
+
+button.btn-secondary {
+  background: #ffffff;
+  box-shadow: 0px 8px 16px rgba(56, 94, 126, 0.2);
+  color: var(--orange-base);
 }
 
 .appContainer {
-  background: whitesmoke;
+  background: var(--neutral-base);
 }
 
 .card {
-  border: 1px solid lightgrey;
+  border: 0.1px solid var(--greyscale-3);
   border-radius: 0.5rem;
   padding: 0.5rem;
 }

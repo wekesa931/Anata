@@ -1,3 +1,6 @@
+.navWrapper {
+  position: relative;
+}
 .navbar {
   display: flex;
   flex: 1;
@@ -15,12 +18,41 @@
   align-items: center;
 }
 
-.drawer {
-  width: 15rem;
-  flex-shrink: 0;
-}
-
-.drawerHeader {
+/* user menu */
+.userMenuContainer {
   display: flex;
   justify-content: flex-end;
+  position: absolute;
+  width: 100%;
+  margin: 0.25rem;
+}
+
+.userMenu {
+  background-color: var(--white);
+  padding: 0.5rem;
+  width: 12rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-right: 0.5rem;
+}
+
+.userImage {
+  width: 75px;
+  border-radius: 50%;
+  margin: 0.5rem;
+}
+
+.userProfile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.userEmail {
+  color: var(--greyscale-3);
+  font-weight: 400;
+  margin-top: 0.5rem;
 }
