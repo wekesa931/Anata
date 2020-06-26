@@ -21,7 +21,7 @@ const SidebarMenuItems = [
     rootUrl: '/population',
   },
   {
-    name: 'Forms',
+    name: 'Forms We Love',
     icon: <ClipboardTextIcon />,
     rootUrl: '/forms',
   },

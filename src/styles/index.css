@@ -15,6 +15,7 @@
   --blue-base: #608eb6;
   --blue-dark: #205284;
   --blue-light: #c6dfeb;
+  --blue-bg: #ebeff3;
   --greyscale-3: #cccccc;
   --greyscale-1: #222222;
   --greyscale-2: #777777;
@@ -41,13 +42,10 @@ body,
   height: 100%;
 }
 
-.dashboard {
-  background-color: var(--nav-bg);
-}
 .dashboard-container {
   border-radius: 16px 0 0 0;
-  padding: 1rem;
   background: var(--white);
+  flex: 1;
 }
 
 /* typography */
@@ -220,7 +218,7 @@ button.btn-secondary {
 }
 
 .card {
-  border: 0.1px solid var(--greyscale-3);
+  border: 0.1px solid var(--border-regular);
   border-radius: 0.5rem;
   padding: 0.5rem;
 }

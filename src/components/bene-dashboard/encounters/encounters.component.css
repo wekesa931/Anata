@@ -1,0 +1,28 @@
+.formName {
+  font-family: 'Rubik', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 20px;
+  text-transform: uppercase;
+  color: #608eb6;
+}
+
+.formDescription {
+  font-family: 'Karla', serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 18px;
+  color: #000000;
+  margin-bottom: 1rem;
+}
+
+.divider {
+  border: 0.5px solid #eeeeee;
+  width: 60%;
+}
+
+.formBlock {
+  padding: 1rem 0.5rem 0.5rem 0.5rem;
+}

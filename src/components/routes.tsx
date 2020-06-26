@@ -5,6 +5,7 @@ import NavBar from './navbar/navbar.component'
 import { useUser } from '../context/user-context'
 import Sidebar from './sidebar/sidebar.component'
 import Forms from './forms/forms.component'
+import Dashboard from '../pages/dashboard/dashboard'
 
 const Routes = () => {
   return (
@@ -14,7 +15,7 @@ const Routes = () => {
           <Login />
         </Route>
         <ProtectedRoute exact path="/">
-          <h1>Members!</h1>
+          <Dashboard />
         </ProtectedRoute>
         <ProtectedRoute exact path="/bene/">
           <h1>Bene Dashboard</h1>
@@ -42,11 +43,16 @@ function ProtectedRoute({ children, ...rest }: any) {
         user ? (
           <div className="d-flex" style={{ height: '100%' }}>
             <Sidebar />
-            <div style={{ flex: 1 }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                flex: 1,
+                backgroundColor: 'var(--nav-bg)',
+              }}
+            >
               <NavBar />
-              <div className="dashboard">
-                <div className="dashboard-container">{children}</div>
-              </div>
+              <div className="dashboard-container">{children}</div>
             </div>
           </div>
         ) : (
