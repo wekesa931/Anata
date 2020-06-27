@@ -59,6 +59,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
+      favicon: './src/assets/img/logo/Antara Logo@1x.png',
     }),
     new webpack.DefinePlugin({
       'process.env': env,

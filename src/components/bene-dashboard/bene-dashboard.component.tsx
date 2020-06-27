@@ -3,7 +3,7 @@ import { useRouteMatch } from 'react-router-dom'
 import BioData from './biodata/biodata.component'
 import Encounters from './encounters/encounters.component'
 import airtableFetch from '../../utils/airtableFetch'
-import styles from './patient-dashboard.component.css'
+import styles from './bene-dashboard.component.css'
 
 import { useUser } from '../../context/user-context'
 

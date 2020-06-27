@@ -11,7 +11,12 @@ const Sidebar = () => {
   return (
     <div className={styles.sidebar}>
       <div className={styles.logoContainer}>
-        <img src={FlatLogo} width="40px" height="40px" />
+        <img
+          src={FlatLogo}
+          width="40px"
+          height="40px"
+          alt="antara small logo"
+        />
       </div>
       {SidebarMenuItems.map((item) => (
         <div key={item.name}>

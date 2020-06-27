@@ -24,6 +24,7 @@ const UserMenu = () => {
             <img
               src={user.profileObj.imageUrl || ''}
               className={styles.userImage}
+              alt="user"
             />
             <h4>
               {`${user.profileObj.givenName} ${user.profileObj.familyName}`}
