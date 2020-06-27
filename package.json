@@ -8,12 +8,12 @@
   },
   "scripts": {
     "bundle": "webpack",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "node server.js",
     "dev": "webpack-dev-server --mode development --open --hot --port 5000",
     "lint": "eslint --fix './src/**/*.{js,jsx,ts,tsx}'",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'",
-    "prebuild": "npm run lint && npm run format",
+    "prebuild": "npm run lint && npm run format && npm run test",
     "build": "webpack --mode production",
     "check-types": "tsc"
   },
@@ -27,12 +27,14 @@
     "@babel/preset-react": "^7.10.0",
     "@babel/preset-typescript": "^7.9.0",
     "@svgr/webpack": "^5.4.0",
-    "@testing-library/react": "^10.3.0",
+    "@testing-library/react": "^10.4.3",
+    "@types/jest": "^26.0.3",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "@typescript-eslint/eslint-plugin": "^3.3.0",
     "@typescript-eslint/parser": "^3.3.0",
+    "babel-jest": "^26.1.0",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.5.3",
     "dotenv": "^8.2.0",
@@ -41,9 +43,10 @@
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
     "husky": "^4.2.5",
-    "jest": "^26.0.1",
+    "jest": "^26.1.0",
     "prettier": "^2.0.5",
     "pretty-quick": "^2.0.1",
+    "react-test-renderer": "^16.13.1",
     "style-loader": "^1.2.1",
     "typescript": "^3.9.3",
     "webpack": "^4.43.0",
@@ -64,7 +67,13 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "pretty-quick --staged && npm run test"
+    }
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
     }
   }
 }
