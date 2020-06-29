@@ -24,42 +24,6 @@ const Dashboard = () => {
       airtableUrl:
         'https://airtable.com/embed/shr1Vt8OfiwYt87mT?viewControls=on',
     },
-    {
-      name: 'Members table',
-      description: 'View all member details.',
-      airtableUrl:
-        'https://airtable.com/embed/shrMjDe4yAifyJLyV?viewControls=on',
-    },
-    {
-      name: 'Baseline',
-      description: 'View member baselines.',
-      airtableUrl:
-        'https://airtable.com/embed/shrxDM8cg1gCh7ku9?viewControls=on',
-    },
-    {
-      name: 'Vitals',
-      description: 'View all member vitals.',
-      airtableUrl:
-        'https://airtable.com/embed/shr1Vt8OfiwYt87mT?viewControls=on',
-    },
-    {
-      name: 'Members table',
-      description: 'View all member details.',
-      airtableUrl:
-        'https://airtable.com/embed/shrMjDe4yAifyJLyV?viewControls=on',
-    },
-    {
-      name: 'Baseline',
-      description: 'View member baselines.',
-      airtableUrl:
-        'https://airtable.com/embed/shrxDM8cg1gCh7ku9?viewControls=on',
-    },
-    {
-      name: 'Vitals',
-      description: 'View all member vitals.',
-      airtableUrl:
-        'https://airtable.com/embed/shr1Vt8OfiwYt87mT?viewControls=on',
-    },
   ]
 
   const [activeView, setActiveView] = React.useState(0)
