@@ -47,7 +47,7 @@ const NavBar = () => {
       <div className={styles.navbar}>
         <div className={styles.logoContainer}>
           <span className="logo">antara</span>
-          <span className="hnos">HNOS</span>
+          <span className="hnos">health</span>
         </div>
         <div className="d-flex flex-align-center flex-justify-end flex-one">
           <button className="btn-icon">

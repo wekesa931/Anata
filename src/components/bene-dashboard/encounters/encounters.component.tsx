@@ -5,16 +5,7 @@ type EncountersProps = {
 }
 
 const Encounters = ({ member }: EncountersProps) => {
-  React.useEffect(() => {
-    // airtableFetch('').then(response => {
-    //     setPreviousFilledForms(response.records[1]);
-    // })
-  }, [])
-  return (
-    <div style={{ padding: '40px' }}>
-      <h2>Previously Filled Forms {member}</h2>
-    </div>
-  )
+  return <h1>Encounters</h1>
 }
 
 export default Encounters

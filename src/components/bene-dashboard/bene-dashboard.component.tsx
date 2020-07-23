@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouteMatch } from 'react-router-dom'
 import BioData from './biodata/biodata.component'
-import Encounters from './encounters/encounters.component'
 import airtableFetch from '../../utils/airtableFetch'
 import styles from './bene-dashboard.component.css'
 
@@ -28,7 +27,6 @@ const PatientDashboard = () => {
     <div className={styles.container}>
       <div className="card">
         <BioData member={member} />
-        <Encounters member={member} />
       </div>
       <div className="card" style={{ width: '550px' }} />
       <div className="card" style={{ width: '350px' }} />

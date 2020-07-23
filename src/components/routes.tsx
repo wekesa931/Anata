@@ -6,6 +6,7 @@ import { useUser } from '../context/user-context'
 import Sidebar from './sidebar/sidebar.component'
 import Forms from './forms/forms.component'
 import Dashboard from '../pages/dashboard/dashboard'
+import PatientDashboard from './bene-dashboard/bene-dashboard.component'
 
 const Routes = () => {
   return (
@@ -17,8 +18,8 @@ const Routes = () => {
         <ProtectedRoute exact path="/">
           <Dashboard />
         </ProtectedRoute>
-        <ProtectedRoute exact path="/bene/">
-          <h1>Bene Dashboard</h1>
+        <ProtectedRoute exact path="/member/:recId">
+          <PatientDashboard />
         </ProtectedRoute>
         <ProtectedRoute exact path="/tasks">
           <h1>Tasks!</h1>
