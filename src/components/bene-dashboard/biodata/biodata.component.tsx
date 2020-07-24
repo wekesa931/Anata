@@ -5,15 +5,15 @@ type BioDataProps = {
   member: any
 }
 
-function getAssignedHn(assigned_hn: any) {
-  if (assigned_hn) {
-    return assigned_hn[0]['name']
+function getAssignedHn(assignedHN: any) {
+  if (assignedHN) {
+    return assignedHN[0]['name']
   }
   return null
 }
 
 const BioData = ({ member }: BioDataProps) => {
-  const assigned_hn = getAssignedHn(member['HN Assigned (from HN Meetings)'])
+  const assignedHN = getAssignedHn(member['HN Assigned (from HN Meetings)'])
 
   return (
     <div>
@@ -32,7 +32,7 @@ const BioData = ({ member }: BioDataProps) => {
               >
                 Lead HN:
               </td>
-              <td className={styles.bioDataTableColumn}>{assigned_hn}</td>
+              <td className={styles.bioDataTableColumn}>{assignedHN}</td>
             </tr>
             <tr>
               <td
