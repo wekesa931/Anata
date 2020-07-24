@@ -25,11 +25,11 @@ const PatientDashboard = () => {
 
   return member ? (
     <div className={styles.container}>
-      <div className="card">
+      <div>
         <BioData member={member} />
       </div>
-      <div className="card" style={{ width: '550px' }} />
-      <div className="card" style={{ width: '350px' }} />
+      <div style={{ width: '550px' }} />
+      <div style={{ width: '350px' }} />
     </div>
   ) : null
 }

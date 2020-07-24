@@ -1,3 +1,51 @@
-.biodata {
-  display: flex;
+.heading {
+  width: 112px;
+  height: 28px;
+  left: 124px;
+  top: 120px;
+  font-family: 'Rubik', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 28px;
+  color: #222222;
+}
+
+.bioDataCard {
+  width: 336px;
+  height: 254px;
+  left: 128px;
+  top: 164px;
+  background: #07396b;
+  border: 1px solid #205284;
+  box-sizing: border-box;
+  border-radius: 24px;
+}
+
+.beneNameAgeGender {
+  margin-top: 16px;
+  margin-left: 16px;
+  font-family: 'Rubik', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: #ff9800;
+}
+
+.bioDataTable {
+  margin-left: 16px;
+  margin-top: 10px;
+  font-family: 'Karla', sans-serif;
+  font-style: normal;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.bioDataKey {
+  font-weight: bold;
+}
+
+.bioDataTableColumn {
+  height: 26px;
 }

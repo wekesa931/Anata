@@ -5,23 +5,97 @@ type BioDataProps = {
   member: any
 }
 
+function getAssignedHn(assigned_hn: any) {
+  if (assigned_hn) {
+    return assigned_hn[0]['name']
+  }
+  return null
+}
+
 const BioData = ({ member }: BioDataProps) => {
+  const assigned_hn = getAssignedHn(member['HN Assigned (from HN Meetings)'])
+
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Biodata</h2>
-      <div className="card" style={{ height: '300px' }}>
-        <div className={styles.biodata}>
-          <div>
-            <div style={{ textAlign: 'center' }} />
-            <div>{member['Full Name']}</div>
-          </div>
-          <div style={{ fontSize: 12 }}>
-            <div>Antara ID: {member['Antara ID']}</div>
-            <div>AHC #: {member['AHC Number']}</div>
-            <div>NHIF: {member['NHIF Number']}</div>
-          </div>
-        </div>
-        <div className={styles.biodata} />
+    <div>
+      <h2 className={styles.heading}> Summary</h2>
+
+      <div className={styles.bioDataCard}>
+        <h3 className={styles.beneNameAgeGender}>
+          {member['Full Name']}, {member['Age']} {member['Sex'].charAt(0)}
+        </h3>
+
+        <table className={styles.bioDataTable}>
+          <tbody>
+            <tr>
+              <td
+                className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+              >
+                Lead HN:
+              </td>
+              <td className={styles.bioDataTableColumn}>{assigned_hn}</td>
+            </tr>
+            <tr>
+              <td
+                className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+              >
+                AHC Number:
+              </td>
+              <td className={styles.bioDataTableColumn}>
+                {member['AHC Number']}
+              </td>
+            </tr>
+            <tr>
+              <td
+                className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+              >
+                Active Since:
+              </td>
+              <td className={styles.bioDataTableColumn}>
+                {member['Midterm Inclusion Date']}
+              </td>
+            </tr>
+            <tr>
+              <td
+                className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+              >
+                Coverage:
+              </td>
+              <td className={styles.bioDataTableColumn}>
+                {member['Avenue Plan']}
+              </td>
+            </tr>
+            <tr>
+              <td
+                className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+              >
+                Riders:
+              </td>
+              <td className={styles.bioDataTableColumn}>
+                {member['Riders'].join(', ')}
+              </td>
+            </tr>
+            <tr>
+              <td
+                className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+              >
+                Employer:
+              </td>
+              <td className={styles.bioDataTableColumn}>
+                {member['Employer']}
+              </td>
+            </tr>
+            <tr>
+              <td
+                className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+              >
+                Contact Info:
+              </td>
+              <td className={styles.bioDataTableColumn}>
+                {member['Phone 1']}, {member['Phone 2']}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   )
