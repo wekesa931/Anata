@@ -8,7 +8,8 @@
   },
   "scripts": {
     "bundle": "webpack",
-    "test": "jest",
+    "test": "jest --verbose",
+    "test:watch": "jest --watch --verbose",
     "start": "node server.js",
     "dev": "webpack-dev-server --mode development --open --hot --port 5000",
     "lint": "eslint --fix './src/**/*.{js,jsx,ts,tsx}'",

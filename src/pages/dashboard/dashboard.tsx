@@ -3,20 +3,33 @@ import styles from './dashboard.component.css'
 import { always } from 'kremling'
 import CircleChevronRight from '../../assets/img/icons/ circle-chevron-right.svg'
 import AirtableIframe from '../../components/airtableIframe/airtableIframe.component'
+import { useUser } from '../../context/user-context'
+import HNCalendarViews from './hntasks-views'
 
-const Dashboard = () => {
+const HNDashboard = () => {
+  const user = useUser()
+
+  const getTasksView = () => {
+    // @ts-ignore
+    if (user && HNCalendarViews[user.profileObj.email]) {
+      // @ts-ignore
+      return HNCalendarViews[user.profileObj.email].hntasks
+    } else {
+      return 'https://airtable.com/embed/shr9X5XXxg3sVTdpp?viewControls=on'
+    }
+  }
+
   const views = [
     {
-      name: 'Members table',
+      name: 'Members',
       description: 'View all member details.',
       airtableUrl:
         'https://airtable.com/embed/shrMjDe4yAifyJLyV?viewControls=on',
     },
     {
-      name: 'Baseline',
-      description: 'View member baselines.',
-      airtableUrl:
-        'https://airtable.com/embed/shrxDM8cg1gCh7ku9?viewControls=on',
+      name: 'HN Tasks',
+      description: 'Your view of HN tasks',
+      airtableUrl: getTasksView(),
     },
     {
       name: 'Vitals',
@@ -75,4 +88,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default HNDashboard
