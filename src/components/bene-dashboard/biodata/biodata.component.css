@@ -1,8 +1,8 @@
 .heading {
   width: 112px;
   height: 28px;
-  left: 124px;
-  top: 120px;
+  margin-left: 16px;
+  margin-top: 56px;
   font-family: 'Rubik', sans-serif;
   font-style: normal;
   font-weight: 500;
@@ -13,9 +13,8 @@
 
 .bioDataCard {
   width: 336px;
-  height: 254px;
-  left: 128px;
-  top: 164px;
+  margin-left: 16px;
+  margin-top: 16px;
   background: #07396b;
   border: 1px solid #205284;
   box-sizing: border-box;
@@ -25,6 +24,7 @@
 .beneNameAgeGender {
   margin-top: 16px;
   margin-left: 16px;
+  width: 272px;
   font-family: 'Rubik', sans-serif;
   font-style: normal;
   font-weight: 500;
@@ -35,17 +35,25 @@
 
 .bioDataTable {
   margin-left: 16px;
-  margin-top: 10px;
+  margin-top: 20px;
+  width: 304px;
   font-family: 'Karla', sans-serif;
   font-style: normal;
   font-size: 14px;
   color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.bioDataTableColumn {
+  padding-bottom: 8px;
+  padding-top: 8px;
 }
 
 .bioDataKey {
   font-weight: bold;
+  width: 96px;
 }
 
-.bioDataTableColumn {
-  height: 26px;
+.bioDataValue {
+  padding-left: 16px;
 }

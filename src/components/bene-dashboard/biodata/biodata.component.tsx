@@ -32,7 +32,11 @@ const BioData = ({ member }: BioDataProps) => {
               >
                 Lead HN:
               </td>
-              <td className={styles.bioDataTableColumn}>{assignedHN}</td>
+              <td
+                className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+              >
+                {assignedHN}
+              </td>
             </tr>
             <tr>
               <td
@@ -40,7 +44,9 @@ const BioData = ({ member }: BioDataProps) => {
               >
                 AHC Number:
               </td>
-              <td className={styles.bioDataTableColumn}>
+              <td
+                className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+              >
                 {member['AHC Number']}
               </td>
             </tr>
@@ -50,7 +56,9 @@ const BioData = ({ member }: BioDataProps) => {
               >
                 Active Since:
               </td>
-              <td className={styles.bioDataTableColumn}>
+              <td
+                className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+              >
                 {member['Midterm Inclusion Date']}
               </td>
             </tr>
@@ -60,7 +68,9 @@ const BioData = ({ member }: BioDataProps) => {
               >
                 Coverage:
               </td>
-              <td className={styles.bioDataTableColumn}>
+              <td
+                className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+              >
                 {member['Avenue Plan']}
               </td>
             </tr>
@@ -70,7 +80,9 @@ const BioData = ({ member }: BioDataProps) => {
               >
                 Riders:
               </td>
-              <td className={styles.bioDataTableColumn}>
+              <td
+                className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+              >
                 {member['Riders'].join(', ')}
               </td>
             </tr>
@@ -80,7 +92,9 @@ const BioData = ({ member }: BioDataProps) => {
               >
                 Employer:
               </td>
-              <td className={styles.bioDataTableColumn}>
+              <td
+                className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+              >
                 {member['Employer']}
               </td>
             </tr>
@@ -90,7 +104,9 @@ const BioData = ({ member }: BioDataProps) => {
               >
                 Contact Info:
               </td>
-              <td className={styles.bioDataTableColumn}>
+              <td
+                className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+              >
                 {member['Phone 1']}, {member['Phone 2']}
               </td>
             </tr>
