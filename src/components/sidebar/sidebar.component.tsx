@@ -7,7 +7,8 @@ import SidebarMenuItems from './sidebar.menu'
 
 const Sidebar = () => {
   const { path } = useRouteMatch()
-  const isActive = (rootUrl: string) => path === rootUrl
+  const isActive = (rootUrl: string) =>
+    path === rootUrl || path.startsWith(rootUrl)
   return (
     <div className={styles.sidebar}>
       <div className={styles.logoContainer}>

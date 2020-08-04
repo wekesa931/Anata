@@ -1,30 +1,28 @@
 import React from 'react'
-import styles from './dashboard.component.css'
 import { always } from 'kremling'
+import styles from './dashboard.component.css'
 import CircleChevronRight from '../../assets/img/icons/ circle-chevron-right.svg'
 import AirtableIframe from '../../components/airtableIframe/airtableIframe.component'
 import { useUser } from '../../context/user-context'
 import HNCalendarViews from './hntasks-views'
+import config from '../../config/config'
 
 const HNDashboard = () => {
   const user = useUser()
+  const { iframes } = config
 
   const getTasksView = () => {
-    // @ts-ignore
     if (user && HNCalendarViews[user.profileObj.email]) {
-      // @ts-ignore
       return HNCalendarViews[user.profileObj.email].hntasks
-    } else {
-      return 'https://airtable.com/embed/shr9X5XXxg3sVTdpp?viewControls=on'
     }
+    return `https://airtable.com/embed/shr9X5XXxg3sVTdpp?viewControls=on`
   }
 
   const views = [
     {
       name: 'Members',
       description: 'View all member details.',
-      airtableUrl:
-        'https://airtable.com/embed/shrMjDe4yAifyJLyV?viewControls=on',
+      airtableUrl: `https://airtable.com/embed/${iframes.members}?viewControls=on`,
     },
     {
       name: 'HN Tasks',

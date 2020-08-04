@@ -25,7 +25,7 @@ const Login = () => {
   ) => {
     sessionStorage.setItem('user', JSON.stringify(response))
     setCurrentUser(response)
-    history.push('/')
+    history.push('/member')
   }
 
   return (

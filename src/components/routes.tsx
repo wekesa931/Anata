@@ -18,14 +18,11 @@ const Routes = () => {
         <ProtectedRoute exact path="/">
           <Dashboard />
         </ProtectedRoute>
+        <ProtectedRoute exact path="/member">
+          <Dashboard />
+        </ProtectedRoute>
         <ProtectedRoute exact path="/member/:recId">
           <PatientDashboard />
-        </ProtectedRoute>
-        <ProtectedRoute exact path="/tasks">
-          <h1>Tasks!</h1>
-        </ProtectedRoute>
-        <ProtectedRoute exact path="/population">
-          <h1>Population and charts</h1>
         </ProtectedRoute>
         <ProtectedRoute exact path="/forms">
           <Forms />

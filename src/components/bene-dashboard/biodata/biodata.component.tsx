@@ -7,7 +7,7 @@ type BioDataProps = {
 
 function getAssignedHn(assignedHN: any) {
   if (assignedHN) {
-    return assignedHN[0]['name']
+    return assignedHN[0].name
   }
   return null
 }
@@ -21,7 +21,7 @@ const BioData = ({ member }: BioDataProps) => {
 
       <div className={styles.bioDataCard}>
         <h3 className={styles.beneNameAgeGender}>
-          {member['Full Name']}, {member['Age']} {member['Sex'].charAt(0)}
+          {member['Full Name']}, {member.Age} {member.Sex.charAt(0)}
         </h3>
 
         <table className={styles.bioDataTable}>
@@ -83,7 +83,7 @@ const BioData = ({ member }: BioDataProps) => {
               <td
                 className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
               >
-                {member['Riders'].join(', ')}
+                {member.Riders.join(', ')}
               </td>
             </tr>
             <tr>
@@ -95,7 +95,7 @@ const BioData = ({ member }: BioDataProps) => {
               <td
                 className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
               >
-                {member['Employer']}
+                {member.Employer}
               </td>
             </tr>
             <tr>
