@@ -5,7 +5,7 @@ import NavBar from './navbar/navbar.component'
 import { useUser } from '../context/user-context'
 import Sidebar from './sidebar/sidebar.component'
 import Forms from './forms/forms.component'
-import Dashboard from '../pages/dashboard/dashboard'
+import Dashboard from './main-dashboard/main-dashboard'
 import PatientDashboard from './bene-dashboard/bene-dashboard.component'
 
 const Routes = () => {
@@ -16,6 +16,9 @@ const Routes = () => {
           <Login />
         </Route>
         <ProtectedRoute exact path="/">
+          <Dashboard />
+        </ProtectedRoute>
+        <ProtectedRoute exact path="/member">
           <Dashboard />
         </ProtectedRoute>
         <ProtectedRoute exact path="/member">

@@ -4,7 +4,7 @@ import { always } from 'kremling'
 import { useRouteMatch } from 'react-router-dom'
 import forms from './forms'
 import styles from './forms.component.css'
-import AirtableIframe from '../airtableIframe/airtableIframe.component'
+import AirtableIframe from '../utils/airtableIframe/airtableIframe.component'
 import VectorIcon from '../../assets/img/vector/telemedicine.png'
 
 type FormProps = {

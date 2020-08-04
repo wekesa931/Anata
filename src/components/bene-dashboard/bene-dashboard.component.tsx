@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouteMatch } from 'react-router-dom'
-import BioData from './biodata/biodata.component'
-import airtableFetch from '../../utils/airtableFetch'
+import BioData from './summary/biodata/biodata.component'
+import airtableFetch from '../../resources/airtableFetch'
 import styles from './bene-dashboard.component.css'
 
 import { useUser } from '../../context/user-context'

@@ -17,7 +17,7 @@ const BioData = ({ member }: BioDataProps) => {
 
   return (
     <div>
-      <h2 className={styles.heading}> Summary</h2>
+      <h2>Summary</h2>
 
       <div className={styles.bioDataCard}>
         <h3 className={styles.beneNameAgeGender}>

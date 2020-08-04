@@ -1,10 +1,10 @@
 import React from 'react'
 import { always } from 'kremling'
-import styles from './dashboard.component.css'
+import styles from './main-dashboard.component.css'
 import CircleChevronRight from '../../assets/img/icons/ circle-chevron-right.svg'
-import AirtableIframe from '../../components/airtableIframe/airtableIframe.component'
+import AirtableIframe from '../utils/airtableIframe/airtableIframe.component'
 import { useUser } from '../../context/user-context'
-import HNCalendarViews from './hntasks-views'
+import HNCalendarViews from './hn-views'
 import config from '../../config/config'
 
 const HNDashboard = () => {

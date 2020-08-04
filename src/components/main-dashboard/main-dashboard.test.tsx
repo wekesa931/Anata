@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import HNDashboard from './dashboard'
+import HNDashboard from './main-dashboard'
 
 describe('<HNDashboard/>', () => {
   it('should render', () => {
