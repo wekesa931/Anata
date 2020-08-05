@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
-import { toggle } from 'kremling'
+import { always } from 'kremling'
 import styles from './tabs.component.css'
 
 const Tab = ({ activeTab, label, onClick }: any) => {
   return (
     <button
-      className={toggle(
-        'btn btn-secondary',
-        'btn btn-unstyled',
-        activeTab === label
-      )}
+      className={always(styles.tab)
+        .toggle('btn btn-secondary', 'btn btn-unstyled', activeTab === label)
+        .maybe('text-bold', activeTab === label)}
       onClick={() => onClick(label)}
     >
       {label}
@@ -25,7 +23,7 @@ const Tabs = ({ children }: any) => {
   }
 
   return (
-    <div style={{ marginTop: '28px' }}>
+    <div style={{ marginTop: '16px' }}>
       <div className={styles.tabs}>
         {children.map((child: any) => {
           const { label } = child.props

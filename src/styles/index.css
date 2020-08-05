@@ -33,6 +33,7 @@
   --purple-light: #e0ddf1;
   --purple-dark: #1f1849;
   --nav-bg: #07396b;
+  --turquoise-base: #42bcda;
 }
 
 html,
@@ -323,6 +324,10 @@ li {
 
 .margin-top-24 {
   margin-top: 24px;
+}
+
+.margin-top-8 {
+  margin-top: 8px;
 }
 
 .margin-bottom-16 {

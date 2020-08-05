@@ -10,7 +10,7 @@ import Actions from './actions/actions.component'
 
 const PatientDashboard = () => {
   const [recId, setRecId] = useState<string>()
-  const [member, setMember] = useState<any>()
+  const [member, setMember] = useState<any>(null)
   const { params } = useRouteMatch<any>()
   const user = useUser()
 
@@ -30,10 +30,16 @@ const PatientDashboard = () => {
       <div className="dashboard-content dashboard-raised-content">
         <BioData member={member} />
       </div>
-      <div className="dashboard-content" style={{ flex: 1 }}>
+      <div
+        className="dashboard-content"
+        style={{ flex: 1, borderRight: '1px solid var(--blue-light)' }}
+      >
         <Views member={member} />
       </div>
-      <div className="dashboard-content" style={{ width: '368px' }}>
+      <div
+        className="dashboard-content"
+        style={{ width: '368px', background: 'white' }}
+      >
         <Actions member={member} />
       </div>
     </div>
