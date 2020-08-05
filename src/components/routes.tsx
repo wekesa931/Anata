@@ -21,9 +21,6 @@ const Routes = () => {
         <ProtectedRoute exact path="/member">
           <Dashboard />
         </ProtectedRoute>
-        <ProtectedRoute exact path="/member">
-          <Dashboard />
-        </ProtectedRoute>
         <ProtectedRoute exact path="/member/:recId">
           <PatientDashboard />
         </ProtectedRoute>

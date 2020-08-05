@@ -1,0 +1,29 @@
+.meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.notes {
+  background: #ffffff;
+  border: 1px solid var(--blue-light);
+  border-left: 4px solid var(--orange-light);
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 8px 8px 8px 4px;
+  white-space: wrap;
+  display: flex;
+}
+
+.notes:hover {
+  border-left: 4px solid var(--orange-base);
+  cursor: pointer;
+}
+
+.showIcon {
+  opacity: 1;
+}
+
+.hideIcon {
+  opacity: 0;
+}

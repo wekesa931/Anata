@@ -5,6 +5,8 @@ import airtableFetch from '../../resources/airtableFetch'
 import styles from './bene-dashboard.component.css'
 
 import { useUser } from '../../context/user-context'
+import Views from './views/views.component'
+import Actions from './actions/actions.component'
 
 const PatientDashboard = () => {
   const [recId, setRecId] = useState<string>()
@@ -25,11 +27,15 @@ const PatientDashboard = () => {
 
   return member ? (
     <div className={styles.container}>
-      <div>
+      <div className="dashboard-content dashboard-raised-content">
         <BioData member={member} />
       </div>
-      <div style={{ width: '550px' }} />
-      <div style={{ width: '350px' }} />
+      <div className="dashboard-content" style={{ flex: 1 }}>
+        <Views member={member} />
+      </div>
+      <div className="dashboard-content" style={{ width: '368px' }}>
+        <Actions member={member} />
+      </div>
     </div>
   ) : null
 }

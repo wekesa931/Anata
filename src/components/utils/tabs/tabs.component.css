@@ -1,0 +1,21 @@
+.tabContent {
+  height: 70vh;
+  overflow-y: scroll;
+  margin-top: 44px;
+}
+
+.tabs {
+  display: flex;
+  color: var(--blue-base);
+  justify-content: space-between;
+  margin-bottom: 44px;
+}
+
+.tabs > .active {
+  color: var(--orange-base);
+}
+
+.tab {
+  margin-right: 24px;
+  margin-top: 28px;
+}
