@@ -16,7 +16,8 @@
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'",
     "prebuild": "npm run lint && npm run format && npm run test",
     "build": "webpack --mode production",
-    "check-types": "tsc"
+    "check-types": "tsc",
+    "heroku-prebuild": "echo -e \"@antarahealth:registry=https://npm.pkg.github.com/:_authToken=\\${NPM_AUTH_TOKEN}\" > .npmrc"
   },
   "author": "Antara Health",
   "license": "ISC",
