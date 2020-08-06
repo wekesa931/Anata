@@ -11,7 +11,7 @@
     "test": "jest --verbose",
     "test:watch": "jest --watch --verbose",
     "start": "node server.js",
-    "dev": "webpack-dev-server --mode development --hot --port 5000",
+    "dev": "webpack-dev-server --mode development --port 5000",
     "lint": "eslint --fix './src/**/*.{js,jsx,ts,tsx}'",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'",
     "prebuild": "npm run lint && npm run format && npm run test",

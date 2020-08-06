@@ -73,7 +73,17 @@ const BloodPressure = () => {
   ]
 
   return (
-    bp && <Table title="Blood Pressure and Pulse" columns={columns} data={bp} />
+    bp && (
+      <Table
+        title="Blood Pressure and Pulse"
+        columns={columns}
+        data={bp.filter(
+          (result) =>
+            result['Average Daily Systolic'] ||
+            result['Average Daily Diastolic']
+        )}
+      />
+    )
   )
 }
 

@@ -8,7 +8,11 @@ const Modal = ({ open, setModalOpen, heading, children }: any) => {
   return (
     <>
       {open && (
-        <Dialog onClose={() => setModalOpen(false)} width="480px">
+        <Dialog
+          onClose={() => setModalOpen(false)}
+          width="480px"
+          height="560px"
+        >
           <Dialog.CloseButton />
           <Heading>{heading}</Heading>
           {children}

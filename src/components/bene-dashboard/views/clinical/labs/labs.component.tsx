@@ -24,7 +24,21 @@ const Lipids = () => {
     })
   }, [recId])
 
-  return lipids && <Table title="Lipids" columns={columns} data={lipids} />
+  return (
+    lipids && (
+      <Table
+        title="Lipids"
+        columns={columns}
+        data={lipids.filter(
+          (lipid) =>
+            lipid['Total Cholesterol'] ||
+            lipid.HDL ||
+            lipid.LDL ||
+            lipid.Triglyceride
+        )}
+      />
+    )
+  )
 }
 
 const GlucoseMonitoring = () => {
@@ -49,7 +63,17 @@ const GlucoseMonitoring = () => {
 
   return (
     glucose && (
-      <Table title="Glucose Monitoring" columns={columns} data={glucose} />
+      <Table
+        title="Glucose Monitoring"
+        columns={columns}
+        data={glucose.filter((value) => {
+          return (
+            value['Fasting Blood Sugar'] ||
+            value['Random Blood Sugar'] ||
+            value.HbA1c
+          )
+        })}
+      />
     )
   )
 }
