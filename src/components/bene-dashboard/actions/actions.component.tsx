@@ -7,10 +7,10 @@ const Actions = () => {
     <div>
       <h2>Actions</h2>
       <Tabs>
-        <div label="Actions" />
         <div label="Interaction Logs">
           <InteractionLogs />
         </div>
+        <div label="Actions" />
         <div label="Settings">
           See ya later, <em>Alligator</em>!
         </div>

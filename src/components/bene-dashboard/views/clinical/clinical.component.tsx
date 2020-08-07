@@ -13,9 +13,15 @@ const Clinical = () => {
         <Vitals />
       </div>
       <div>
-        <FilledForms />
-        <Appointments />
-        <Medications />
+        <div className="margin-bottom-16">
+          <FilledForms />
+        </div>
+        <div className="margin-bottom-16">
+          <Appointments />
+        </div>
+        <div className="margin-bottom-16">
+          <Medications />
+        </div>
       </div>
     </div>
   )

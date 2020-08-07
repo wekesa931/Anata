@@ -69,10 +69,12 @@ const Table = ({ title, columns, data }: TableProps) => {
 
   return (
     <>
-      <div className={styles.tableContainer}>
-        <div className={`${styles.titleContainer} margin-top-8`}>
-          <h5 className={styles.title}>{title}</h5>
-        </div>
+      <div className={`${styles.tableContainer} margin-top-8`}>
+        {title && (
+          <div className={styles.titleContainer}>
+            <h5 className={styles.title}>{title}</h5>
+          </div>
+        )}
         <table className={`${styles.table} margin-bottom-8`}>
           <thead>
             <tr>

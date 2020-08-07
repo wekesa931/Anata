@@ -1,7 +1,29 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import airtableFetch from '../../../../../resources/airtableFetch'
+import Table from '../../../../utils/table/table.component'
 
 const Appointments = () => {
-  return <div />
+  const { recId } = useParams()
+  const [appointments, setAppointments] = useState<any[]>([])
+  useEffect(() => {
+    airtableFetch(
+      `appointments/list/0?filterByFormula=FIND("${recId}", {Member Record ID})`
+    ).then((response) => {
+      const apps = Object.keys(response).map((key) => response[key])
+      setAppointments(apps)
+    })
+  }, [recId])
+  const columns = [
+    { name: 'Appt Date', format: 'dd/mmm/yy', key: 'start_date_time' },
+    { name: 'Status', format: '\n', key: 'Status' },
+  ]
+  return (
+    <div>
+      <h4>Appoinmtents</h4>
+      <Table title="" columns={columns} data={appointments} />
+    </div>
+  )
 }
 
 export default Appointments
