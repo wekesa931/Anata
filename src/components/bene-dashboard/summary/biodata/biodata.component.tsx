@@ -22,7 +22,8 @@ const BioData = ({ member }: BioDataProps) => {
       {member && (
         <div className={styles.bioDataCard}>
           <h3 className={styles.beneNameAgeGender}>
-            {member['Full Name']}, {member.Age} {member.Sex.charAt(0)}
+            {member['Full Name']}, {member.Age}{' '}
+            {member.Sex && member.Sex.charAt(0)}
           </h3>
 
           <table className={styles.bioDataTable}>
@@ -84,7 +85,7 @@ const BioData = ({ member }: BioDataProps) => {
                 <td
                   className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                 >
-                  {member.Riders.join(', ')}
+                  {member.Riders && member.Riders.join(', ')}
                 </td>
               </tr>
               <tr>

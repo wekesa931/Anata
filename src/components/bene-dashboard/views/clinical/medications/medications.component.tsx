@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 import airtableFetch from '../../../../../resources/airtableFetch'
-import styles from './medications.component.css'
+import List from '../../../../utils/list/list.component'
 
 const Medcations = () => {
   const { recId } = useParams()
@@ -12,7 +12,12 @@ const Medcations = () => {
     airtableFetch(
       `medications/list/0?view=Master%20View&filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((response) => {
-      const meds = Object.keys(response).map((key) => response[key])
+      const meds = Object.keys(response)
+        .map((key) => response[key])
+        .map((data) => ({
+          data,
+          name: `${data['Drug Name']}, ${data.Frequency}, ${data.Duration} days`,
+        }))
       setMedications(meds)
     })
   }, [recId])
@@ -26,40 +31,20 @@ const Medcations = () => {
     return 'Not Refillable'
   }
 
+  const getStartDate = (medication: any) => {
+    return `Start Date: ${dayjs(medication['Start Date']).format("DD MMM 'YY")}`
+  }
+
   return (
     <div>
       <h4>Medications</h4>
-      <>
-        {medications.length ? (
-          medications.map((medication) => (
-            <button
-              style={{ width: '100%', textAlign: 'start' }}
-              className="btn-unstyled margin-top-8"
-            >
-              <div className={styles.meta}>
-                <p className="text-tiny">
-                  Start Date:{' '}
-                  {dayjs(medication['Start Date']).format("DD MMM 'YY")}
-                </p>
-                <p className="text-tiny">{getRefillText(medication)}</p>
-              </div>
-              <div className={styles.notes}>
-                <div style={{ width: '12px', marginRight: '6px' }} />
-                <div>
-                  <p className="text-normal">
-                    {medication['Drug Name']}, {medication.Frequency},{' '}
-                    {medication.Duration} days
-                  </p>
-                </div>
-              </div>
-            </button>
-          ))
-        ) : (
-          <div className={`${styles.notes} margin-top-8`}>
-            <p className="text-normal">No medications found</p>
-          </div>
-        )}
-      </>
+      <List
+        list={medications}
+        emptyListText="No medications recorded"
+        getTopLeftText={getStartDate}
+        getTopRightText={getRefillText}
+        paginate
+      />
     </div>
   )
 }

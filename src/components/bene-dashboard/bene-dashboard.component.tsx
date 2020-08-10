@@ -40,7 +40,7 @@ const PatientDashboard = () => {
         className="dashboard-content"
         style={{ width: '368px', background: 'white' }}
       >
-        <Actions member={member} />
+        <Actions />
       </div>
     </div>
   ) : null

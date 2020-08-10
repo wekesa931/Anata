@@ -20,6 +20,8 @@ const airtableFetch = (table: string, token = getTokenFromSessionStorage()) => {
   }).then((response) => {
     if (response.status === 403) {
       history.push('/login')
+      const pathUrl = window.location.href
+      window.location.href = pathUrl
     }
     return response.json()
   })

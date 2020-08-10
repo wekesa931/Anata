@@ -7,7 +7,7 @@
 .notes {
   background: #ffffff;
   border: 1px solid var(--blue-light);
-  border-left: 4px solid var(--blue-light);
+  border-left: 4px solid var(--turquoise-base);
   box-sizing: border-box;
   border-radius: 4px;
   padding: 8px 8px 8px 4px;
@@ -26,4 +26,21 @@
 
 .hideIcon {
   opacity: 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.tableBtn {
+  color: var(--blue-base);
+  font-family: 'Karla';
+  font-weight: bold;
+  margin: 0px 4px;
+  background: var(--neutral-light) !important;
+  border: 1px solid var(--blue-light) !important;
+  padding: 4px;
+  border-radius: 4px;
 }

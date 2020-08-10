@@ -15,7 +15,7 @@ const HNDashboard = () => {
     if (user && HNCalendarViews[user.profileObj.email]) {
       return HNCalendarViews[user.profileObj.email].hntasks
     }
-    return `https://airtable.com/embed/shr9X5XXxg3sVTdpp?viewControls=on`
+    return `https://airtable.com/embed/shrNXlc6vFKhenKN0?viewControls=on`
   }
 
   const views = [
