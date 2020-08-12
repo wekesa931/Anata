@@ -36,11 +36,8 @@ const PatientDashboard = () => {
       >
         <Views member={member} />
       </div>
-      <div
-        className="dashboard-content"
-        style={{ width: '368px', background: 'white' }}
-      >
-        <Actions />
+      <div className="dashboard-content dashboard-raised-content">
+        <Actions member={member} />
       </div>
     </div>
   ) : null
