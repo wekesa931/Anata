@@ -36,7 +36,10 @@ const PatientDashboard = () => {
       >
         <Views member={member} />
       </div>
-      <div className="dashboard-content dashboard-raised-content">
+      <div
+        className="dashboard-content dashboard-raised-content"
+        style={{ width: '420px' }}
+      >
         <Actions member={member} />
       </div>
     </div>

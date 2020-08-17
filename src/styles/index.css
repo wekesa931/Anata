@@ -36,6 +36,17 @@
   --turquoise-base: #42bcda;
 }
 
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: #608eb6;
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
 html,
 body,
 #root,
@@ -51,8 +62,8 @@ body,
 
 .dashboard-content {
   padding-top: 56px;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: 8px;
+  padding-right: 8px;
   height: 100%;
   display: flex;
   flex-direction: column;

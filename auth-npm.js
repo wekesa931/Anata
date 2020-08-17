@@ -10,7 +10,6 @@ function writeRegistryFile() {
     registryUrl.replace(/(^\w+:|^)/, '') + '/:_authToken=${NPM_TOKEN}'
   const registryString = `${scope}:registry=${registryUrl}`
   const contents = `${registryString}${os.EOL}${authString}${os.EOL}`
-  console.log('CONTENTS', contents)
   fs.writeFileSync(npmrc, contents)
 }
 

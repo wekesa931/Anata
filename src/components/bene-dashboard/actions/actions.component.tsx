@@ -14,9 +14,7 @@ const Actions = ({ member }: any) => {
         <div label="Interaction Logs">
           <InteractionLogs />
         </div>
-        <div label="Settings">
-          See ya later, <em>Alligator</em>!
-        </div>
+        <div label="Settings">Settings</div>
       </Tabs>
     </div>
   )
