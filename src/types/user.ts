@@ -14,3 +14,12 @@ export type User = {
   tokenObj: any
   wc: any
 } | null
+
+export type hmp = {
+  hmpSendDate: string | null
+  hmpNumber: string | null
+  hmpStatus: string | null
+  hmpDay: number | null
+  hmpLink: string | null
+  hmpPhase: string | null
+}

@@ -110,6 +110,14 @@ h5,
   line-height: 18px;
 }
 
+h6,
+.text-heading-6 {
+  font-family: 'Karla';
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+}
+
 .heading-caption {
   font-family: 'Karla';
   font-size: 14px;

@@ -1,10 +1,14 @@
 .bioDataCard {
   width: 336px;
   margin-top: 16px;
-  background: #07396b;
+  background: var(--nav-bg);
   border: 1px solid #205284;
-  box-sizing: border-box;
   border-radius: 24px;
+  max-height: 80vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-bottom: 12px;
+  margin-bottom: 50px;
 }
 
 .beneNameAgeGender {
@@ -16,18 +20,14 @@
   font-weight: 500;
   font-size: 20px;
   line-height: 24px;
-  color: #ff9800;
+  color: var(--orange-base);
 }
 
 .bioDataTable {
   margin-left: 16px;
   margin-top: 20px;
   width: 304px;
-  font-family: 'Karla', sans-serif;
-  font-style: normal;
-  font-size: 14px;
-  color: #ffffff;
-  margin-bottom: 16px;
+  color: var(--white);
 }
 
 .bioDataTableColumn {
@@ -36,10 +36,149 @@
 }
 
 .bioDataKey {
-  font-weight: bold;
   width: 96px;
 }
 
 .bioDataValue {
   padding-left: 16px;
+}
+
+.topSummaryColumns {
+  float: left;
+  width: 75px;
+  color: var(--white);
+}
+
+/* Clear floats after the columns */
+.topSummaryRow:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.topSummaryRow {
+  margin-left: 16px;
+  margin-top: 16px;
+  line-height: 16px;
+}
+
+.topSummaryColumnHeadings {
+  border-bottom: 1px solid #ff9800;
+  line-height: 16px;
+  width: 64px;
+}
+
+.topSummaryRowContent {
+  line-height: 16px;
+  width: 64px;
+}
+
+.hrLine {
+  margin-left: 16px;
+  margin-right: 16px;
+  border: 1px solid #608eb6;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
+.clinicalHeading {
+  width: 143px;
+  height: 20px;
+  margin-left: 16px;
+  color: var(--orange-base);
+}
+
+.clinicalTopRow:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.clinicalTopRow {
+  margin-left: 16px;
+  margin-top: 16px;
+  font-weight: bold;
+  line-height: 16px;
+}
+
+.clinicalTopColumns {
+  float: left;
+  width: 100px;
+  color: var(--white);
+}
+
+.clinicalTopColumnHeadings {
+  border-bottom: 1px solid #ff9800;
+  line-height: 16px;
+  width: 84px;
+}
+
+.clinicalTopRowContent {
+  line-height: 16px;
+  width: 64px;
+}
+
+.conditionsHeading {
+  border-bottom: 1px solid #ff9800;
+  line-height: 16px;
+  width: 84px;
+  color: var(--white);
+  margin-left: 16px;
+  margin-top: 12px;
+}
+
+.conditionsContent {
+  line-height: 16px;
+  width: 304px;
+  color: var(--white);
+  margin-left: 16px;
+}
+
+.dateHelperText {
+  line-height: 12px;
+  margin-top: 4px;
+  color: var(--white);
+}
+
+.dateHelperText2 {
+  margin-left: 75px;
+}
+
+.clinicalBottomRow:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.clinicalBottomRow {
+  margin-left: 16px;
+  margin-top: 16px;
+  line-height: 16px;
+}
+
+.clinicalBottomColumns {
+  float: left;
+  width: 150px;
+  color: var(--white);
+  padding-right: 8px;
+}
+
+.clinicalBottomColumnHeadings {
+  border-bottom: 1px solid #ff9800;
+  line-height: 16px;
+  width: 84px;
+}
+
+.clinicalBottomRowContent {
+  line-height: 16px;
+}
+
+.allergies {
+  color: red;
+  font-weight: bold;
+  padding-right: 12px;
+}
+
+.hmps {
+  padding-bottom: 5px;
 }
