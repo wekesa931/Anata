@@ -1,4 +1,4 @@
-import { createBrowserHistory } from 'history'
+import history from '../constants/history'
 import constants from '../constants/session-storage'
 
 const baseUrl = process.env.NODE_PROXY_URL
@@ -12,16 +12,13 @@ const getTokenFromSessionStorage = () => {
 }
 
 const airtableFetch = (table: string, token = getTokenFromSessionStorage()) => {
-  const history = createBrowserHistory()
   return fetch(`${baseUrl}/${table}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }).then((response) => {
     if (response.status === 403) {
-      history.push('/login')
-      const pathUrl = window.location.href
-      window.location.href = pathUrl
+      history.push('/login', { from: history.location })
     }
     return response.json()
   })

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom'
+import { Switch, Route, Redirect, Router } from 'react-router-dom'
 import Login from './login/login.component'
 import NavBar from './navbar/navbar.component'
 import { useUser } from '../context/user-context'
@@ -7,14 +7,12 @@ import Sidebar from './sidebar/sidebar.component'
 import Forms from './forms/forms.component'
 import Dashboard from './main-dashboard/main-dashboard'
 import PatientDashboard from './bene-dashboard/bene-dashboard.component'
+import history from '../constants/history'
 
 const Routes = () => {
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route path="/login">
-          <Login />
-        </Route>
+    <Router history={history}>
+        <Route exact path="/login" component={Login}/>
         <ProtectedRoute exact path="/">
           <Dashboard />
         </ProtectedRoute>
@@ -27,8 +25,7 @@ const Routes = () => {
         <ProtectedRoute exact path="/forms">
           <Forms />
         </ProtectedRoute>
-      </Switch>
-    </BrowserRouter>
+    </Router>
   )
 }
 

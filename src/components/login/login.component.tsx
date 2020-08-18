@@ -11,6 +11,7 @@ import googleLogo from '../../assets/img/vector/google.png'
 
 const Login = () => {
   const history = useHistory()
+  const { location } = history
   const { setCurrentUser } = useAuth()
   const [error, setError] = React.useState<string>('')
   const [isLoggingIn, setLoggingIn] = React.useState<boolean>(false)
@@ -25,7 +26,10 @@ const Login = () => {
   ) => {
     sessionStorage.setItem('user', JSON.stringify(response))
     setCurrentUser(response)
-    history.push('/member')
+    if (location && location.state && location.state.from) {
+      return history.push(location.state.from)
+    }
+    return history.push('/member')
   }
 
   return (

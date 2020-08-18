@@ -62,7 +62,7 @@
     "dayjs": "^1.8.31",
     "express": "^4.17.1",
     "heroku-ssl-redirect": "^0.0.4",
-    "history": "^5.0.0",
+    "history": "^4.10.1",
     "kremling": "^2.0.4",
     "path": "^0.12.7",
     "react": "^16.13.1",
