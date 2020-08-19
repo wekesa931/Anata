@@ -4,11 +4,12 @@ import { Label, Text } from '@airtable/blocks/ui'
 import styles from './list.component.css'
 import ExpandIcon from '../../../assets/img/icons/arrows-diagonals-bltr.svg'
 import Modal from '../modals/modal.component'
+import Tooltip from '../tooltip/tooltip.component'
 
 type ListProps = {
   list: { name: string; data: any }[]
-  getTopLeftText?: (data: any) => string
-  getTopRightText?: (data: any) => string
+  getTopLeftText?: (data: any) => string | JSX.Element | null
+  getTopRightText?: (data: any) => string | JSX.Element | null
   paginate?: boolean
   modalTitle?: string
   emptyListText?: string
@@ -89,17 +90,19 @@ const List = ({
                     </p>
                   </div>
                   <div className={styles.notes}>
-                    <div
-                      style={{ width: '12px', marginRight: '6px' }}
-                      className={toggle(
-                        styles.showIcon,
-                        styles.hideIcon,
-                        isHovering === i
-                      )}
-                    >
-                      <ExpandIcon />
-                    </div>
-                    <div>
+                    <Tooltip title="Expand Record">
+                      <div
+                        style={{ width: '12px', marginRight: '6px' }}
+                        className={toggle(
+                          styles.showIcon,
+                          styles.hideIcon,
+                          isHovering === i
+                        )}
+                      >
+                        <ExpandIcon />
+                      </div>
+                    </Tooltip>
+                    <div style={{ flex: 1 }}>
                       <p className="text-normal">{item.name}</p>
                     </div>
                   </div>

@@ -39,7 +39,7 @@ module.exports = {
         ],
       },
       {
-        test: /index\.css$/,
+        test: /(index|tippy)\.css$/,
         use: ['style-loader', 'css-loader'],
       },
       {

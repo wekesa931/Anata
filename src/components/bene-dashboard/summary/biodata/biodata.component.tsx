@@ -318,7 +318,7 @@ const BioData = ({ member }: BioDataProps) => {
   const assignedHN = getAssignedHn(member['HN Assigned (from HN Meetings)'])
 
   return (
-    <div>
+    <div className={styles.wrapper}>
       <h2>Summary</h2>
 
       {member && (

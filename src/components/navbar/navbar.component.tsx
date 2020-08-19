@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import MenuDotsIcon from '../../assets/img/icons/menu_dots.svg'
-import UserIcon from '../../assets/img/icons/ user.svg'
+import UserIcon from '../../assets/img/icons/user.svg'
 import styles from './navbar.component.css'
 import { useUser } from '../../context/user-context'
 import { useAuth } from '../../context/auth-context'

@@ -5,6 +5,7 @@ import { Label, Text } from '@airtable/blocks/ui'
 import ExpandIcon from '../../../assets/img/icons/arrows-diagonals-bltr.svg'
 import styles from './table.component.css'
 import Modal from '../modals/modal.component'
+import Tooltip from '../tooltip/tooltip.component'
 
 type TableProps = {
   title: string
@@ -106,7 +107,9 @@ const Table = ({ title, columns, data }: TableProps) => {
                       highlightedRow === i
                     )}
                   >
-                    <ExpandIcon />
+                    <Tooltip title="Expand Record">
+                      <ExpandIcon />
+                    </Tooltip>
                   </td>
                   {columns
                     .map((column) => column.key)

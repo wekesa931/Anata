@@ -34,6 +34,9 @@
   --purple-dark: #1f1849;
   --nav-bg: #07396b;
   --turquoise-base: #42bcda;
+  --yellow-dark: #806c15;
+  --red-base: #d56261;
+  --green-base: #8ab98e;
 }
 
 ::-webkit-scrollbar {
@@ -195,6 +198,25 @@ h6,
   color: var(--blue-dark);
 }
 
+.text-danger {
+  color: var(--red-base);
+}
+
+.text-warning {
+  color: var(--yellow-dark);
+}
+
+.text-success {
+  color: var(--green-base);
+}
+
+.text-disabled {
+  color: var(--greyscale-3);
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
 /** flex **/
 .d-flex {
   display: flex;
@@ -210,6 +232,11 @@ h6,
 
 .flex-one {
   flex: 1;
+}
+
+.tippy-popper .tippy-tooltip.tooltip-theme * {
+  background: #fff5d2 !important;
+  color: var(--greyscale-1);
 }
 
 /** buttons **/
@@ -347,6 +374,10 @@ li {
 
 .margin-top-8 {
   margin-top: 8px;
+}
+
+.margin-top-16 {
+  margin-top: 16px;
 }
 
 .margin-bottom-16 {
