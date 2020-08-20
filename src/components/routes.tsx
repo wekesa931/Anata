@@ -12,7 +12,8 @@ import history from '../constants/history'
 const Routes = () => {
   return (
     <Router history={history}>
-        <Route exact path="/login" component={Login}/>
+      <Switch>
+        <Route exact path="/login" component={Login} />
         <ProtectedRoute exact path="/">
           <Dashboard />
         </ProtectedRoute>
@@ -25,6 +26,7 @@ const Routes = () => {
         <ProtectedRoute exact path="/forms">
           <Forms />
         </ProtectedRoute>
+      </Switch>
     </Router>
   )
 }

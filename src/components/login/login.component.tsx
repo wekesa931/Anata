@@ -26,8 +26,13 @@ const Login = () => {
   ) => {
     sessionStorage.setItem('user', JSON.stringify(response))
     setCurrentUser(response)
-    if (location && location.state && location.state.from) {
-      return history.push(location.state.from)
+    if (
+      history &&
+      history.location &&
+      history.location.state &&
+      history.location.state.from
+    ) {
+      return history.push(history.location.state.from)
     }
     return history.push('/member')
   }
