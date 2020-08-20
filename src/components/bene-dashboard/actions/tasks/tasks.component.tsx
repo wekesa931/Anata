@@ -109,7 +109,7 @@ const Tasks = () => {
   return (
     <div className="margin-top-16">
       <h4>Tasks</h4>
-      {(uncompletedTasks.length || completedTasks.length) && (
+      {uncompletedTasks.length || completedTasks.length ? (
         <List
           list={[
             completedTasks[completedTasks.length - 1],
@@ -119,7 +119,7 @@ const Tasks = () => {
           getTopRightText={getTaskNotes}
           modalTitle="Task"
         />
-      )}
+      ) : null}
     </div>
   )
 }
