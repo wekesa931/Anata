@@ -11,7 +11,6 @@ import googleLogo from '../../assets/img/vector/google.png'
 
 const Login = () => {
   const history = useHistory()
-  const { location } = history
   const { setCurrentUser } = useAuth()
   const [error, setError] = React.useState<string>('')
   const [isLoggingIn, setLoggingIn] = React.useState<boolean>(false)
