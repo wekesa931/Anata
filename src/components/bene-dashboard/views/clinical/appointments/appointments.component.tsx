@@ -20,7 +20,7 @@ const Appointments = () => {
   ]
   return (
     <div>
-      <h4>Appoinmtents</h4>
+      <h4>Appointments</h4>
       <Table title="" columns={columns} data={appointments} />
     </div>
   )

@@ -8,8 +8,7 @@ import Tooltip from '../../../utils/tooltip/tooltip.component'
 
 const Tasks = () => {
   const { recId } = useParams()
-  const [completedTasks, setCompletedTasks] = useState<any[]>([])
-  const [uncompletedTasks, setUncompletedTasks] = useState<any[]>([])
+  const [allTasks, setAllTasks] = useState<any[]>([])
 
   const getDisplayedInfo = (data: any) => {
     return data.Status !== 'Complete' ? (
@@ -28,22 +27,39 @@ const Tasks = () => {
         <div style={{ position: 'relative' }}>
           {data['Assigned HN Name'] && (
             <Tooltip title={data['Assigned HN Name']}>
-              <Icon name="user" fill="var(--greyscale-2)" />
+              {!data['Assigned HN Name'].includes('Antara Bot') ? (
+                <Icon name="user" fill="var(--greyscale-2)" />
+              ) : (
+                <Icon name="lightning" fill="var(--greyscale-2)" />
+              )}
             </Tooltip>
           )}
         </div>
       </span>
     ) : (
-      <s
-        className="text-disabled"
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
-        {dayjs(data['Due Date']).format('DD MMM YYYY')} {data.Type}
-      </s>
+      <div className="d-flex">
+        <s
+          className="text-disabled"
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
+        >
+          {dayjs(data['Due Date']).format('DD MMM YYYY')} {data.Type}
+        </s>
+        <span style={{ position: 'relative' }}>
+          {data['Assigned HN Name'] && (
+            <Tooltip title={data['Assigned HN Name']}>
+              {!data['Assigned HN Name'].includes('Antara Bot') ? (
+                <Icon name="user" fill="var(--greyscale-3)" />
+              ) : (
+                <Icon name="lightning" fill="var(--greyscale-3)" />
+              )}
+            </Tooltip>
+          )}
+        </span>
+      </div>
     )
   }
   useEffect(() => {
@@ -57,12 +73,7 @@ const Tasks = () => {
           name: getDisplayedInfo(data),
         }))
 
-      setCompletedTasks(
-        mappedResponse.filter((task: any) => task.data.Status === 'Complete')
-      )
-      setUncompletedTasks(
-        mappedResponse.filter((task: any) => task.data.Status !== 'Complete')
-      )
+      setAllTasks(mappedResponse)
     })
   }, [recId])
 
@@ -109,15 +120,13 @@ const Tasks = () => {
   return (
     <div className="margin-top-16">
       <h4>Tasks</h4>
-      {uncompletedTasks.length || completedTasks.length ? (
+      {allTasks ? (
         <List
-          list={[
-            completedTasks[completedTasks.length - 1],
-            ...uncompletedTasks,
-          ]}
+          list={allTasks}
           getTopLeftText={getPriority}
           getTopRightText={getTaskNotes}
           modalTitle="Task"
+          emptyListText="No tasks found."
         />
       ) : null}
     </div>

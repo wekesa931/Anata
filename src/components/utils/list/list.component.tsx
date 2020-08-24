@@ -65,7 +65,7 @@ const List = ({
 
   return (
     <div>
-      {displayedData ? (
+      {displayedData.length > 0 ? (
         <>
           {displayedData.map((item, i) => {
             return (

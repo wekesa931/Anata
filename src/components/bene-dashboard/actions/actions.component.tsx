@@ -6,9 +6,9 @@ import Tasks from './tasks/tasks.component'
 
 const Actions = ({ member }: any) => {
   return (
-    <div style={{ width: '360px' }}>
+    <div>
       <h2>Actions</h2>
-      <Tabs>
+      <Tabs currentTab={1}>
         <div label="Actions">
           <Communication member={member} />
           <Tasks />
