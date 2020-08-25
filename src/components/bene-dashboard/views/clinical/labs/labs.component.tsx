@@ -17,7 +17,7 @@ const Lipids = () => {
 
   useEffect(() => {
     airtableFetch(
-      `chl/list/0?filterByFormula=FIND("${recId}", {Member Record ID})`
+      `chl/list/0?view=HN%20Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((response) => {
       const labResults = Object.keys(response).map((key) => response[key])
       setLipids(labResults)
@@ -54,7 +54,7 @@ const GlucoseMonitoring = () => {
 
   useEffect(() => {
     airtableFetch(
-      `dm/list/0?filterByFormula=FIND("${recId}", {Member Record ID})`
+      `dm/list/0?view=HN%20Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((response) => {
       const labResults = Object.keys(response).map((key) => response[key])
       setGlucose(labResults)

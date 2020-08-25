@@ -9,14 +9,14 @@ const FilledForms = () => {
 
   useEffect(() => {
     const hifPromise = airtableFetch(
-      `hif/list/0?view=HN Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})`
+      `hif/list/0?view=HN%20Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((res) => {
       const result = Object.keys(res).map((key) => res[key])[0]
       return result
     })
 
     const baselinePromise = airtableFetch(
-      `baseline/list/0?view=HN Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})`
+      `baseline/list/0?view=HN%20Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((res) => {
       const result = Object.keys(res).map((key) => res[key])[0]
       return result

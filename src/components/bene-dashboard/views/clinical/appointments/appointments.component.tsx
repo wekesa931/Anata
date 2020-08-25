@@ -8,7 +8,7 @@ const Appointments = () => {
   const [appointments, setAppointments] = useState<any[]>([])
   useEffect(() => {
     airtableFetch(
-      `appointments/list/0?filterByFormula=FIND("${recId}", {Member Record ID})`
+      `appointments/list/0?view=HN%20Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((response) => {
       const apps = Object.keys(response).map((key) => response[key])
       setAppointments(apps)
