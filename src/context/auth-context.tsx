@@ -17,13 +17,13 @@ const AuthContext = React.createContext<AuthContextType>({
 })
 
 function AuthProvider({ user, children }: any) {
-  const session = sessionStorage.getItem(keys.USER)
-    ? JSON.parse(sessionStorage.getItem(keys.USER) || '')
+  const session = localStorage.getItem(keys.USER)
+    ? JSON.parse(localStorage.getItem(keys.USER) || '')
     : null
   const [currentUser, setCurrentUser] = useState(user || session)
 
   const logout = () => {
-    sessionStorage.removeItem(keys.USER)
+    localStorage.removeItem(keys.USER)
     setCurrentUser(null)
   }
 

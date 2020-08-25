@@ -23,7 +23,7 @@ const Login = () => {
   const successfulSignIn = (
     response: GoogleLoginResponse | GoogleLoginResponseOffline
   ) => {
-    sessionStorage.setItem('user', JSON.stringify(response))
+    localStorage.setItem('user', JSON.stringify(response))
     setCurrentUser(response)
     if (
       history &&

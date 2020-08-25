@@ -8,6 +8,13 @@ const Medcations = () => {
   const { recId } = useParams()
   const [medications, setMedications] = useState<any[]>([])
 
+  const getDrugName = (data: any) => {
+    if (data['Drug Name'] === 'Other') {
+      return data['Other Medication']
+    }
+    return data['Drug Name']
+  }
+
   useEffect(() => {
     airtableFetch(
       `medications/list/0?view=Master%20View&filterByFormula=FIND("${recId}", {Member Record ID})`
@@ -16,7 +23,9 @@ const Medcations = () => {
         .map((key) => response[key])
         .map((data) => ({
           data,
-          name: `${data['Drug Name']}, ${data.Frequency}, ${data.Duration} days`,
+          name: `${getDrugName(data)}, ${data.Frequency}, ${
+            data.Duration
+          } days`,
         }))
       setMedications(meds)
     })

@@ -168,7 +168,9 @@ const Table = ({ title, columns, data }: TableProps) => {
                     padding="8px"
                     borderRadius="4px"
                   >
-                    {clickedRow[info]}
+                    {typeof clickedRow[info] === 'object'
+                      ? JSON.stringify(clickedRow[info])
+                      : clickedRow[info]}
                   </Text>
                 </div>
               )
