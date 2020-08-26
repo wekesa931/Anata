@@ -72,8 +72,20 @@ const Tasks = () => {
           data,
           name: getDisplayedInfo(data),
         }))
-
-      setAllTasks(mappedResponse)
+      const completedTasks = mappedResponse.filter(
+        (task) => task.data.Status === 'Complete'
+      )
+      const uncompletedTasks = mappedResponse.filter(
+        (task) => task.data.Status !== 'Complete'
+      )
+      const tasks = []
+      if (completedTasks.length) {
+        tasks.push(completedTasks[0])
+      }
+      if (uncompletedTasks.length) {
+        tasks.push(...uncompletedTasks)
+      }
+      setAllTasks(tasks)
     })
   }, [recId])
 

@@ -13,9 +13,7 @@ const Views = () => {
         <div label="Health Mgmt Plans">
           <h1>HMPs</h1>
         </div>
-        <div label="AHC Virtual Care">
-          See ya later, <em>Alligator</em>!
-        </div>
+        <div label="AHC Virtual Care">Partner Views</div>
       </Tabs>
     </div>
   )

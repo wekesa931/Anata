@@ -167,27 +167,35 @@ const ConditionsSummarry = () => {
           <h6 className={`text-bold ${styles.clinicalBottomColumnHeadings}`}>
             Interventions
           </h6>
-          {interventions.map((intervention: any, index: number) => (
-            <li
-              className={`text-small ${styles.clinicalBottomRowContent}`}
-              key={index}
-            >
-              {intervention}{' '}
-            </li>
-          ))}
+          {interventions.length ? (
+            interventions.map((intervention: any, index: number) => (
+              <li
+                className={`text-small ${styles.clinicalBottomRowContent}`}
+                key={index}
+              >
+                {intervention}{' '}
+              </li>
+            ))
+          ) : (
+            <p className={`text-small ${styles.clinicalTopRowContent}`}>None</p>
+          )}
         </div>
         <div className={styles.clinicalBottomColumns}>
           <h6 className={`text-bold ${styles.clinicalBottomColumnHeadings}`}>
             Milestones
           </h6>
-          {milestones.map((milestone: any, index: number) => (
-            <li
-              className={`text-small ${styles.clinicalBottomRowContent}`}
-              key={index}
-            >
-              {milestone}{' '}
-            </li>
-          ))}
+          {milestones.length ? (
+            milestones.map((milestone: any, index: number) => (
+              <li
+                className={`text-small ${styles.clinicalBottomRowContent}`}
+                key={index}
+              >
+                {milestone}{' '}
+              </li>
+            ))
+          ) : (
+            <p className={`text-small ${styles.clinicalTopRowContent}`}>None</p>
+          )}
         </div>
       </div>
     </div>
@@ -197,7 +205,7 @@ const ConditionsSummarry = () => {
 const HifSummary = () => {
   const [allergies, setAllergies] = useState<any>([])
   const [riskFactor, setRiskFactor] = useState<any>([])
-  const [bloodGroup, setBloodGroup] = useState<any>()
+  const [bloodGroup, setBloodGroup] = useState<string>('Not recorded')
 
   const { recId } = useParams()
 
@@ -245,14 +253,18 @@ const HifSummary = () => {
         <h6 className={`text-bold ${styles.clinicalTopColumnHeadings}`}>
           Allergies
         </h6>
-        {allergies.map((allergy: any, index: number) => (
-          <li
-            className={`text-small ${styles.clinicalTopRowContent}`}
-            key={index}
-          >
-            {allergy}{' '}
-          </li>
-        ))}
+        {allergies.length ? (
+          allergies.map((allergy: any, index: number) => (
+            <li
+              className={`text-small ${styles.clinicalTopRowContent}`}
+              key={index}
+            >
+              {allergy}{' '}
+            </li>
+          ))
+        ) : (
+          <p className={`text-small ${styles.clinicalTopRowContent}`}>None</p>
+        )}
       </div>
       <div className={styles.clinicalTopColumns}>
         <h6 className={`text-bold ${styles.clinicalTopColumnHeadings}`}>
@@ -266,14 +278,18 @@ const HifSummary = () => {
         <h6 className={`text-bold ${styles.clinicalTopColumnHeadings}`}>
           Risk Factors
         </h6>
-        {riskFactor.map((risk: any, index: number) => (
-          <li
-            className={`text-small ${styles.clinicalTopRowContent}`}
-            key={index}
-          >
-            FH: {risk}{' '}
-          </li>
-        ))}
+        {riskFactor.length ? (
+          riskFactor.map((risk: any, index: number) => (
+            <li
+              className={`text-small ${styles.clinicalTopRowContent}`}
+              key={index}
+            >
+              FH: {risk}{' '}
+            </li>
+          ))
+        ) : (
+          <p className={`text-small ${styles.clinicalTopRowContent}`}>None</p>
+        )}
       </div>
     </div>
   )
@@ -415,7 +431,7 @@ const BioData = ({ member }: BioDataProps) => {
                 <td
                   className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                 >
-                  {member.Employer}
+                  {member.Employer || member['Account Name']}
                 </td>
               </tr>
               <tr>
@@ -427,7 +443,8 @@ const BioData = ({ member }: BioDataProps) => {
                 <td
                   className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                 >
-                  {member['Phone 1']}, {member['Phone 2']}
+                  {member['Phone 1']}
+                  {member['Phone 2'] ? `, ${member['Phone 2']}` : null}
                 </td>
               </tr>
             </tbody>

@@ -38,7 +38,7 @@ const PatientDashboard = () => {
       </div>
       <div
         className="dashboard-content dashboard-raised-content"
-        style={{ width: '420px' }}
+        style={{ width: '372px' }}
       >
         <Actions member={member} />
       </div>
