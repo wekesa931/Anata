@@ -8,13 +8,6 @@ type BioDataProps = {
   member: any
 }
 
-function getAssignedHn(assignedHN: any) {
-  if (assignedHN) {
-    return assignedHN[0].name
-  }
-  return null
-}
-
 const riskFactors = (
   diabetes: string,
   highBloodPressure: string,
@@ -331,8 +324,6 @@ const GeneralSummary = () => {
 }
 
 const BioData = ({ member }: BioDataProps) => {
-  const assignedHN = getAssignedHn(member['HN Assigned (from HN Meetings)'])
-
   return (
     <div className={styles.wrapper}>
       <h2>Summary</h2>
@@ -359,7 +350,7 @@ const BioData = ({ member }: BioDataProps) => {
                 <td
                   className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                 >
-                  {assignedHN}
+                  {member['Lead HN']}
                 </td>
               </tr>
               <tr>
