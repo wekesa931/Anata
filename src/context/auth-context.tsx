@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import storage from '../helpers/secure-storage'
 import { User } from '../types/user'
-import keys from '../constants/session-storage'
+import keys from '../constants/storage'
 
+dayjs.extend(utc)
 type AuthContextType = {
   user: User
   setCurrentUser: (user: User) => void
@@ -17,13 +21,17 @@ const AuthContext = React.createContext<AuthContextType>({
 })
 
 function AuthProvider({ user, children }: any) {
-  const session = localStorage.getItem(keys.USER)
-    ? JSON.parse(localStorage.getItem(keys.USER) || '')
-    : null
-  const [currentUser, setCurrentUser] = useState(user || session)
+  const tokenExpiry = storage.get(keys.EXPIRY)
+  let loggedInUser = storage.get(keys.USER)
+  const tokenExpired = dayjs.utc(tokenExpiry).local().isBefore(dayjs())
 
+  if (tokenExpired) {
+    loggedInUser = null
+  }
+
+  const [currentUser, setCurrentUser] = useState(user || loggedInUser)
   const logout = () => {
-    localStorage.removeItem(keys.USER)
+    storage.removeAll()
     setCurrentUser(null)
   }
 

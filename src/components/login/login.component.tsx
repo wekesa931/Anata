@@ -4,10 +4,13 @@ import GoogleLogin, {
   GoogleLoginResponse,
   GoogleLoginResponseOffline,
 } from 'react-google-login'
+import dayjs from 'dayjs'
 import { useAuth } from '../../context/auth-context'
 import styles from './login.component.css'
 import logo from '../../assets/img/logo/antara-logo.png'
 import googleLogo from '../../assets/img/vector/google.png'
+import storage from '../../helpers/secure-storage'
+import keys from '../../constants/storage'
 
 const Login = () => {
   const history = useHistory()
@@ -23,7 +26,8 @@ const Login = () => {
   const successfulSignIn = (
     response: GoogleLoginResponse | GoogleLoginResponseOffline
   ) => {
-    localStorage.setItem('user', JSON.stringify(response))
+    storage.set(keys.EXPIRY, dayjs().add(59, 'minute'))
+    storage.set(keys.USER, JSON.stringify(response))
     setCurrentUser(response)
     if (
       history &&

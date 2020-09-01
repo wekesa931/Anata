@@ -70,6 +70,7 @@
     "react-google-login": "^5.1.20",
     "react-router-dom": "^5.2.0",
     "react-tippy": "^1.4.0",
+    "secure-ls": "^1.2.6",
     "webpack-bundle-analyzer": "^3.8.0"
   },
   "husky": {
