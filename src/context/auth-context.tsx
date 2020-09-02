@@ -29,6 +29,10 @@ function AuthProvider({ user, children }: any) {
     loggedInUser = null
   }
 
+  if (loggedInUser) {
+    loggedInUser = JSON.parse(loggedInUser)
+  }
+
   const [currentUser, setCurrentUser] = useState(user || loggedInUser)
   const logout = () => {
     storage.removeAll()
