@@ -42,7 +42,7 @@ const FilledForms = () => {
       'Full Name (ID) (from Members)',
     ]
 
-    const forms = ['hif', 'baseline', 'nif', 'ncf', 'activity', 'minorhif']
+    const forms = [ 'baseline', 'hif', 'nif', 'ncf', 'activity', 'minorhif']
 
     const getFields = (fields: any) => {
       const keys = Object.keys(fields).filter(
