@@ -96,44 +96,46 @@ const ConditionsSummarry = () => {
       if (response) {
         const memberInterventions: any[] = []
         const memberConditions: any[] = []
+        const uniqueConditions = new Set()
         const memberMilestones: any[] = []
 
-        Object.keys(response).forEach((condition: any) => {
-          if (response[condition]['Condition Status'] === 'Active') {
-            memberConditions.push({
-              condition: response[condition].Condition,
-              stage: response[condition].Stage,
-            })
-
-            const milestoneTypes = [
-              'Other Caloric Milestones',
-              'Other Caloric Reduction Milestone',
-              'Salt Reduction Milestone',
-              'Diabetes Control Milestone',
-              'Activity Milestone',
-              'Asthma Action Plan Milestone',
-              'Physical Therapy Milestone',
-              'Other functional Milestone',
-              'Other BMI Milestone',
-              'Medication Reduction Plan Milestone',
-              'Functional Milestone',
-            ]
-
-            milestoneTypes.forEach((milestoneType) => {
-              if (response[condition][milestoneType]) {
-                memberMilestones.push(response[condition][milestoneType])
-              }
-            })
-
-            if (response[condition].Interventions != null) {
-              memberInterventions.push(
-                response[condition].Interventions.join(', ')
-              )
-            }
+        Object.keys(response).forEach((key) => {
+          if (
+            !uniqueConditions.has(response[key].Condition) &&
+            response[key]['Condition Status'] === 'Active'
+          ) {
+            memberConditions.push(response[key])
+            uniqueConditions.add(response[key].Condition)
           }
         })
 
-        setInterventions(memberInterventions)
+        memberConditions.forEach((condition: any) => {
+          const milestoneTypes = [
+            'Other Caloric Milestones',
+            'Other Caloric Reduction Milestone',
+            'Salt Reduction Milestone',
+            'Diabetes Control Milestone',
+            'Activity Milestone',
+            'Asthma Action Plan Milestone',
+            'Physical Therapy Milestone',
+            'Other functional Milestone',
+            'Other BMI Milestone',
+            'Medication Reduction Plan Milestone',
+            'Functional Milestone',
+          ]
+
+          milestoneTypes.forEach((milestoneType) => {
+            if (condition[milestoneType]) {
+              memberMilestones.push(condition[milestoneType])
+            }
+          })
+
+          if (condition.Interventions) {
+            memberInterventions.push(condition.Interventions)
+          }
+        })
+
+        setInterventions(Array.from(new Set(memberInterventions.flat())))
         setConditions(memberConditions)
         setMilestones(memberMilestones)
       }
@@ -148,7 +150,7 @@ const ConditionsSummarry = () => {
       <div className={`text-small ${styles.conditionsContent}`}>
         {conditions.map((condition: any, index: number) => (
           <li key={index}>
-            {condition.condition} Stage {condition.stage} Active
+            {condition.Condition} Stage {condition.Stage} Active
           </li>
         ))}
       </div>
@@ -327,13 +329,14 @@ const BioData = ({ member }: BioDataProps) => {
   return (
     <div className={styles.wrapper}>
       <h2>Summary</h2>
-
       {member && (
         <div className={styles.bioDataCard}>
-          <h3 className={styles.beneNameAgeGender}>
-            {member['Full Name']}, {member.Age}{' '}
-            {member.Sex && member.Sex.charAt(0)}
-          </h3>
+          <div className={styles.beneNameContainer}>
+            <h3 className={styles.beneNameAgeGender}>
+              {member['Full Name']}, {member.Age}{' '}
+              {member.Sex && member.Sex.charAt(0)}
+            </h3>
+          </div>
 
           <GeneralSummary />
 

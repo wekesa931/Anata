@@ -14,6 +14,13 @@
   overflow-x: hidden;
 }
 
+.beneNameContainer {
+  position: sticky;
+  top: 0;
+  background: var(--nav-bg);
+  padding: 8px;
+}
+
 .beneNameAgeGender {
   margin-top: 16px;
   margin-left: 16px;
