@@ -34,7 +34,16 @@ const Bmi = ({ bmiInfo }: BMIProps) => {
     { name: 'BMI', format: 'kg/m2', key: 'BMI' },
   ]
 
-  return bmiInfo && <Table title="BMI" columns={columns} data={bmiInfo} />
+  return (
+    bmiInfo && (
+      <Table
+        title="BMI"
+        columns={columns}
+        data={bmiInfo}
+        dateColumnKey="Date"
+      />
+    )
+  )
 }
 
 const OtherVitals = ({ otherVitals }: OtherVitalsInfoProps) => {
@@ -48,7 +57,12 @@ const OtherVitals = ({ otherVitals }: OtherVitalsInfoProps) => {
 
   return (
     otherVitals && (
-      <Table title="Other Vitals" columns={columns} data={otherVitals} />
+      <Table
+        title="Other Vitals"
+        columns={columns}
+        data={otherVitals}
+        dateColumnKey="Date"
+      />
     )
   )
 }
@@ -82,6 +96,7 @@ const BloodPressure = () => {
             result['Average Daily Systolic'] ||
             result['Average Daily Diastolic']
         )}
+        dateColumnKey="Date"
       />
     )
   )

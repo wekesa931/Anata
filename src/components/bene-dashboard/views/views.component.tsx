@@ -1,21 +1,128 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Tabs from '../../utils/tabs/tabs.component'
 import Clinical from './clinical/clinical.component'
+import Icon from '../../utils/icon/icon.component'
+import styles from './views.component.css'
+import Radio from '../../utils/radio/radio.component'
+import { DateSortProvider, useDateSort } from '../../../context/sort.context'
+
+type SortDialogProps = {
+  onClose: () => void
+}
+
+const SortDialog = ({ onClose }: SortDialogProps) => {
+  const { sort, setSort } = useDateSort()
+  const sortOptions = [
+    {
+      name: 'desc',
+      label: 'Sort most recent date first (descending)',
+      value: 'desc',
+    },
+    {
+      name: 'asc',
+      label: 'Sort oldest date first (ascending)',
+      value: 'asc',
+    },
+  ]
+  const onSortChange = ($event: Event, sortDir: any) => {
+    $event.preventDefault()
+    setSort(sortDir)
+  }
+  return (
+    <div className={styles.sortContainer}>
+      <div
+        className="d-flex"
+        style={{ alignItems: 'center', justifyContent: 'space-between' }}
+      >
+        <h6 className="text-blue-dark">Sort and Filter Views</h6>
+        <button className="btn-icon" onClick={onClose}>
+          <Icon name="close" height={16} width={16} />
+        </button>
+      </div>
+      <hr />
+      <form>
+        {sortOptions.map((option) => (
+          <Radio
+            {...option}
+            onChange={onSortChange}
+            checked={sort === option.value}
+            key={option.value}
+          />
+        ))}
+      </form>
+    </div>
+  )
+}
+
+const SortButton = ({ openSortDialog, setOpenSortDialog }: any) => {
+  const { sort } = useDateSort()
+  return (
+    <button
+      className={sort === 'asc' ? 'btn-icon active' : 'btn-icon'}
+      onClick={() => {
+        setOpenSortDialog(!openSortDialog)
+      }}
+      style={{ margin: 0, padding: 0 }}
+    >
+      <Icon name="options" width={40} height={24} fill="var(--blue-base)" />
+    </button>
+  )
+}
 
 const Views = () => {
+  const [openSortDialog, setOpenSortDialog] = useState(false)
   return (
-    <div>
-      <h2>Views</h2>
-      <Tabs>
-        <div label="Clinical Summary">
-          <Clinical />
+    <DateSortProvider>
+      <div
+        className="d-flex p-absolute"
+        style={!openSortDialog ? { alignItems: 'center' } : {}}
+      >
+        <h2>Views</h2>
+        <div
+          className="d-flex"
+          style={{ marginLeft: '16px' }}
+          key={openSortDialog ? 1 : 0}
+        >
+          <div>
+            <button
+              className="btn-icon active"
+              style={{ margin: '0 8px 0px 0', padding: 0 }}
+            >
+              <Icon
+                name="table"
+                width={40}
+                height={24}
+                fill="var(--blue-base)"
+              />
+            </button>
+          </div>
+          {!openSortDialog ? (
+            <div className={styles.animatedDiv}>
+              <SortButton
+                setOpenSortDialog={setOpenSortDialog}
+                openSortDialog={openSortDialog}
+              />
+            </div>
+          ) : (
+            <div className={styles.animatedDiv}>
+              <SortDialog onClose={() => setOpenSortDialog(false)} />
+            </div>
+          )}
         </div>
-        <div label="Health Mgmt Plans">
-          <h1>HMPs</h1>
-        </div>
-        <div label="AHC Virtual Care">Partner Views</div>
-      </Tabs>
-    </div>
+      </div>
+      <div className="margin-top-32">
+        <Tabs>
+          <div label="Clinical Summary">
+            <Clinical />
+          </div>
+          <div label="Workflows">
+            <h1>HMPs</h1>
+          </div>
+          <div label="Nutrition">Nutrition</div>
+          <div label="Partners">Partners</div>
+        </Tabs>
+      </div>
+    </DateSortProvider>
   )
 }
 

@@ -6,6 +6,7 @@ import ExpandIcon from '../../../assets/img/icons/arrows-diagonals-bltr.svg'
 import styles from './table.component.css'
 import Modal from '../modals/modal.component'
 import Tooltip from '../tooltip/tooltip.component'
+import { useDateSort } from '../../../context/sort.context'
 
 type TableProps = {
   title: string
@@ -15,26 +16,53 @@ type TableProps = {
     format: string
   }[]
   data: any[]
+  dateColumnKey: string
 }
 
-const Table = ({ title, columns, data }: TableProps) => {
+const Table = ({ title, columns, data, dateColumnKey }: TableProps) => {
+  const { sort: globalDateSort } = useDateSort()
   const [displayedData, setDisplayedData] = useState<any[]>([])
   const [highlightedRow, setHighlightedRow] = useState<number>()
   const [clickedRow, setClickedRow] = useState<any>()
   const [modalOpen, setModalOpen] = useState(false)
+  const [sortedData, setSortedData] = useState(data)
 
   useEffect(() => {
-    setDisplayedData(data.length > 3 ? data.slice(0, 3) : data)
-  }, [data])
+    const sortAsc = (arr: any[]) => {
+      return arr
+        .slice()
+        .sort((a, b) =>
+          dayjs(b[dateColumnKey]).isBefore(a[dateColumnKey]) ? 1 : -1
+        )
+    }
+
+    const sortDesc = (arr: any[]) => {
+      return arr
+        .slice()
+        .sort((a, b) =>
+          dayjs(b[dateColumnKey]).isAfter(a[dateColumnKey]) ? 1 : -1
+        )
+    }
+
+    return globalDateSort === 'asc'
+      ? setSortedData(sortAsc(data))
+      : setSortedData(sortDesc(data))
+  }, [data, dateColumnKey, globalDateSort])
+
+  useEffect(() => {
+    setDisplayedData(
+      sortedData.length > 3 ? sortedData.slice(0, 3) : sortedData
+    )
+  }, [sortedData])
 
   const displayMore = () => {
     const itemDisplayed = displayedData.length
-    const itemsNotDisplayed = data.length - itemDisplayed
-    if (itemDisplayed < data.length) {
+    const itemsNotDisplayed = sortedData.length - itemDisplayed
+    if (itemDisplayed < sortedData.length) {
       if (itemsNotDisplayed > 3) {
-        setDisplayedData(data.slice(0, itemDisplayed + 3))
+        setDisplayedData(sortedData.slice(0, itemDisplayed + 3))
       } else {
-        setDisplayedData(data)
+        setDisplayedData(sortedData)
       }
     }
   }
@@ -50,15 +78,15 @@ const Table = ({ title, columns, data }: TableProps) => {
     return dayjs(unixms).format("DD MMM 'YY")
   }
 
-  const format = (_data: any) => {
-    const dataType = typeof _data
+  const format = (_dt: any) => {
+    const dataType = typeof _dt
     switch (dataType) {
       case 'number':
-        return _data.toFixed(1)
+        return _dt.toFixed(1)
       case 'string':
-        return isNaN(Date.parse(_data)) ? _data : dateFormat(Date.parse(_data))
+        return isNaN(Date.parse(_dt)) ? _dt : dateFormat(Date.parse(_dt))
       default:
-        return _data
+        return _dt
     }
   }
 
@@ -94,7 +122,7 @@ const Table = ({ title, columns, data }: TableProps) => {
             {displayedData.length ? (
               displayedData.map((row, i) => (
                 <tr
-                  key={row}
+                  key={row[dateColumnKey]}
                   onMouseEnter={() => setHighlightedRow(i)}
                   onMouseLeave={() => setHighlightedRow(undefined)}
                   onClick={(e) => rowOnClick(e, row)}
@@ -130,7 +158,7 @@ const Table = ({ title, columns, data }: TableProps) => {
           </tbody>
         </table>
         <div className={styles.pagination}>
-          {data.length > 3 && data.length !== displayedData.length && (
+          {sortedData.length > 3 && sortedData.length !== displayedData.length && (
             <button
               className={`btn-unstyled ${styles.tableBtn}`}
               onClick={displayMore}

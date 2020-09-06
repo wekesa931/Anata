@@ -21,7 +21,12 @@ const Appointments = () => {
   return (
     <div>
       <h4>Appointments</h4>
-      <Table title="" columns={columns} data={appointments} />
+      <Table
+        title=""
+        columns={columns}
+        data={appointments}
+        dateColumnKey="start_date_time"
+      />
     </div>
   )
 }

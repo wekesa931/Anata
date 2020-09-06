@@ -1,0 +1,23 @@
+.sortContainer {
+  background: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  width: 279px;
+  box-shadow: 0px 8px 16px rgba(56, 94, 126, 0.2);
+}
+
+.animatedDiv {
+  animation: fadeIn 0.2s;
+  height: auto;
+}
+
+@keyframes fadeIn {
+  from {
+    margin-top: -10px;
+    opacity: 0.5;
+  }
+  to {
+    margin-top: 0;
+    opacity: 1;
+  }
+}

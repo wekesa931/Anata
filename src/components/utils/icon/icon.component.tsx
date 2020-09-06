@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from 'react'
 
 type IconProps = {
   name: string
-  size?: number
+  width?: number
+  height?: number
   fill?: string
 }
 
-const Icon = ({ name, size = 24, fill = '#000' }: IconProps) => {
+const Icon = ({ name, width = 24, height = 24, fill = '#000' }: IconProps) => {
   const iconRef = useRef(null)
   const [loading, setLoading] = useState(false)
 
@@ -32,7 +33,7 @@ const Icon = ({ name, size = 24, fill = '#000' }: IconProps) => {
     const { current: ImportedIcon } = iconRef
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    return <ImportedIcon width={size} height={size} fill={fill} />
+    return <ImportedIcon width={width} height={height} fill={fill} />
   }
 
   return null

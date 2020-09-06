@@ -52,6 +52,7 @@ const Medcations = () => {
         emptyListText="No medications recorded"
         getTopLeftText={getStartDate}
         getTopRightText={getRefillText}
+        dateColumnKey="Start Date"
         paginate
       />
     </div>

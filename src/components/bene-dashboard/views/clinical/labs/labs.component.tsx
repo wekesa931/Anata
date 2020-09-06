@@ -36,6 +36,7 @@ const Lipids = () => {
             lipid.LDL ||
             lipid.Triglyceride
         )}
+        dateColumnKey="Test Date"
       />
     )
   )
@@ -73,6 +74,7 @@ const GlucoseMonitoring = () => {
             value.HbA1c
           )
         })}
+        dateColumnKey="Test Date"
       />
     )
   )

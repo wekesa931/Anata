@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { toggle } from 'kremling'
 import { Label, Text } from '@airtable/blocks/ui'
+import dayjs from 'dayjs'
 import styles from './list.component.css'
 import ExpandIcon from '../../../assets/img/icons/arrows-diagonals-bltr.svg'
 import Modal from '../modals/modal.component'
 import Tooltip from '../tooltip/tooltip.component'
+import { useDateSort } from '../../../context/sort.context'
 
 type ListProps = {
   list: { name: string; data: any }[]
@@ -13,6 +15,7 @@ type ListProps = {
   paginate?: boolean
   modalTitle?: string
   emptyListText?: string
+  dateColumnKey?: string
 }
 
 const List = ({
@@ -20,6 +23,7 @@ const List = ({
   getTopLeftText,
   getTopRightText,
   modalTitle,
+  dateColumnKey,
   paginate = false,
   emptyListText = 'No data available',
 }: ListProps) => {
@@ -29,13 +33,53 @@ const List = ({
   const [displayedData, setDisplayedData] = useState<
     { name: string; data: any }[]
   >([])
+  const [sortedList, setSortedList] = useState(list)
+  const { sort: globalDateSort } = useDateSort()
 
   useEffect(() => {
-    if (paginate && list.length > 3) {
-      return setDisplayedData(list.slice(0, 3))
+    const sortAsc = (arr: any[]) => {
+      const sortedArr = dateColumnKey
+        ? arr
+            .slice()
+            .sort((a, b) =>
+              dayjs(b.data[dateColumnKey]).isBefore(a.data[dateColumnKey])
+                ? 1
+                : -1
+            )
+        : arr.slice()
+      return sortedArr
     }
-    return setDisplayedData(list)
-  }, [list, paginate])
+
+    const sortDesc = (arr: any[]) => {
+      const sortedArr = dateColumnKey
+        ? arr
+            .slice()
+            .sort((a, b) =>
+              dayjs(b.data[dateColumnKey]).isAfter(a.data[dateColumnKey])
+                ? 1
+                : -1
+            )
+        : arr.slice()
+      return sortedArr
+    }
+    return globalDateSort === 'asc'
+      ? setSortedList(sortAsc(list))
+      : setSortedList(sortDesc(list))
+  }, [list, dateColumnKey, globalDateSort])
+
+  useEffect(() => {
+    if (paginate && sortedList.length > 3) {
+      return setDisplayedData(sortedList.slice(0, 3))
+    }
+    return setDisplayedData(sortedList)
+  }, [sortedList, paginate])
+
+  useEffect(() => {
+    if (paginate && sortedList.length > 3) {
+      return setDisplayedData(sortedList.slice(0, 3))
+    }
+    return setDisplayedData(sortedList)
+  }, [paginate, sortedList])
 
   const displayObject = (obj: any) => {
     if (Array.isArray(obj)) {
@@ -46,12 +90,12 @@ const List = ({
 
   const displayMore = () => {
     const itemDisplayed = displayedData.length
-    const itemsNotDisplayed = list.length - itemDisplayed
-    if (itemDisplayed < list.length) {
+    const itemsNotDisplayed = sortedList.length - itemDisplayed
+    if (itemDisplayed < sortedList.length) {
       if (itemsNotDisplayed > 3) {
-        setDisplayedData(list.slice(0, itemDisplayed + 3))
+        setDisplayedData(sortedList.slice(0, itemDisplayed + 3))
       } else {
-        setDisplayedData(list)
+        setDisplayedData(sortedList)
       }
     }
   }
@@ -112,8 +156,8 @@ const List = ({
           })}
           <div className={styles.pagination}>
             {paginate &&
-              list.length > 3 &&
-              list.length !== displayedData.length && (
+              sortedList.length > 3 &&
+              sortedList.length !== displayedData.length && (
                 <button
                   className={`btn-unstyled ${styles.tableBtn}`}
                   onClick={displayMore}
