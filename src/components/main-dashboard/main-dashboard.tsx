@@ -29,12 +29,6 @@ const HNDashboard = () => {
       description: 'Your view of HN tasks',
       airtableUrl: getTasksView(),
     },
-    {
-      name: 'Vitals',
-      description: 'View all member vitals.',
-      airtableUrl:
-        'https://airtable.com/embed/shr1Vt8OfiwYt87mT?viewControls=on',
-    },
   ]
 
   const [activeView, setActiveView] = React.useState(0)

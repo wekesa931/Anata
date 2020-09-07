@@ -47,7 +47,6 @@ const NavBar = () => {
   return (
     <div className={styles.navWrapper}>
       <div className={styles.navbar}>
-        
         <div className={styles.logoContainer}>
           <LogoIcon className="icon-white" />
         </div>

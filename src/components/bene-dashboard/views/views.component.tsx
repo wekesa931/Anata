@@ -36,7 +36,12 @@ const SortDialog = ({ onClose }: SortDialogProps) => {
       >
         <h6 className="text-blue-dark">Sort and Filter Views</h6>
         <button className="btn-icon" onClick={onClose}>
-          <Icon name="close" height={16} width={16} />
+          <Icon
+            name="close_16"
+            height={16}
+            width={16}
+            fill="var(--blue-base)"
+          />
         </button>
       </div>
       <hr />

@@ -113,7 +113,8 @@ const List = ({
         <>
           {displayedData.map((item, i) => {
             return (
-              item && item.data && (
+              item &&
+              item.data && (
                 <button
                   style={{ margin: '8px 0', width: '100%', textAlign: 'start' }}
                   className="btn-unstyled"

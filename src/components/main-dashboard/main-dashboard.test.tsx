@@ -10,7 +10,6 @@ describe('<HNDashboard/>', () => {
   it('displays various links to views', () => {
     render(<HNDashboard />)
     expect(screen.getAllByText('Members')).toBeTruthy()
-    expect(screen.getAllByText('Vitals')).toBeTruthy()
     expect(screen.getAllByText('HN Tasks')).toBeTruthy()
   })
 })

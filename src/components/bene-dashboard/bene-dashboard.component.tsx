@@ -1,48 +1,42 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useRouteMatch } from 'react-router-dom'
 import BioData from './summary/biodata/biodata.component'
-import airtableFetch from '../../resources/airtableFetch'
 import styles from './bene-dashboard.component.css'
-
-import { useUser } from '../../context/user-context'
 import Views from './views/views.component'
 import Actions from './actions/actions.component'
+import Fetcher from '../utils/fetcher/fetcher'
 
 const PatientDashboard = () => {
   const [recId, setRecId] = useState<string>()
-  const [member, setMember] = useState<any>(null)
   const { params } = useRouteMatch<any>()
-  const user = useUser()
+
   if (params.recId && recId !== params.recId) {
     setRecId(params.recId)
   }
-  useEffect(() => {
-    if (recId && user) {
-      airtableFetch(`members/${recId}`, user.tokenId).then((response: any) => {
-        setMember(response)
-      })
-    }
-  }, [recId, user])
 
-  return member ? (
-    <div className={styles.container}>
-      <div className="dashboard-content dashboard-raised-content padding-top-32">
-        <BioData member={member} />
-      </div>
-      <div
-        className="dashboard-content padding-top-32"
-        style={{ flex: 1, borderRight: '1px solid var(--blue-light)' }}
-      >
-        <Views member={member} />
-      </div>
-      <div
-        className="dashboard-content dashboard-raised-content padding-top-32"
-        style={{ width: '372px', borderRadius: '0px' }}
-      >
-        <Actions member={member} />
-      </div>
-    </div>
-  ) : null
+  return (
+    <Fetcher url={`members/${recId}`} contextKey={recId} skeleton={false}>
+      {(response: any) => (
+        <div className={styles.container}>
+          <div className="dashboard-content dashboard-raised-content padding-top-32">
+            <BioData member={response} />
+          </div>
+          <div
+            className="dashboard-content padding-top-32"
+            style={{ flex: 1, borderRight: '1px solid var(--blue-light)' }}
+          >
+            <Views member={response} />
+          </div>
+          <div
+            className="dashboard-content dashboard-raised-content padding-top-32"
+            style={{ width: '372px', borderRadius: '0px' }}
+          >
+            <Actions member={response} />
+          </div>
+        </div>
+      )}
+    </Fetcher>
+  )
 }
 
 export default PatientDashboard

@@ -338,119 +338,121 @@ const BioData = ({ member }: BioDataProps) => {
             </h3>
           </div>
 
-          <GeneralSummary />
+          <div className={styles.summariesContainer}>
+            <GeneralSummary />
 
-          <hr className={styles.hrLine} />
+            <hr className={styles.hrLine} />
 
-          <table className={`text-normal ${styles.bioDataTable}`}>
-            <tbody>
-              <tr>
-                <td
-                  className={`text-bold ${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                >
-                  Lead HN:
-                </td>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                >
-                  {member['Lead HN']}
-                </td>
-              </tr>
-              <tr>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                >
-                  National ID:
-                </td>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                >
-                  {member['Kenya National ID Number']}
-                </td>
-              </tr>
-              <tr>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                >
-                  AHC Number:
-                </td>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                >
-                  {member['AHC Number']}
-                </td>
-              </tr>
-              <tr>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                >
-                  Active Since:
-                </td>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                >
-                  {member['Midterm Inclusion Date']}
-                </td>
-              </tr>
-              <tr>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                >
-                  Coverage:
-                </td>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                >
-                  {member['Avenue Plan']}
-                </td>
-              </tr>
-              <tr>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                >
-                  Riders:
-                </td>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                >
-                  {member.Riders && member.Riders.join(', ')}
-                </td>
-              </tr>
-              <tr>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                >
-                  Employer:
-                </td>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                >
-                  {member.Employer || member['Account Name']}
-                </td>
-              </tr>
-              <tr>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                >
-                  Contact Info:
-                </td>
-                <td
-                  className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                >
-                  {member['Phone 1']}
-                  {member['Phone 2'] ? `, ${member['Phone 2']}` : null}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            <table className={`text-normal ${styles.bioDataTable}`}>
+              <tbody>
+                <tr>
+                  <td
+                    className={`text-bold ${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    Lead HN:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    {member['Lead HN']}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    National ID:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    {member['Kenya National ID Number']}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    AHC Number:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    {member['AHC Number']}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    Active Since:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    {member['Midterm Inclusion Date']}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    Coverage:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    {member['Avenue Plan']}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    Riders:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    {member.Riders && member.Riders.join(', ')}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    Employer:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    {member.Employer || member['Account Name']}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    Contact Info:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    {member['Phone 1']}
+                    {member['Phone 2'] ? `, ${member['Phone 2']}` : null}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
 
-          <hr className={styles.hrLine} />
+            <hr className={styles.hrLine} />
 
-          <h4 className={styles.clinicalHeading}>Clinical Summary</h4>
+            <h4 className={styles.clinicalHeading}>Clinical Summary</h4>
 
-          <HifSummary />
+            <HifSummary />
 
-          <ConditionsSummarry />
+            <ConditionsSummarry />
+          </div>
         </div>
       )}
     </div>

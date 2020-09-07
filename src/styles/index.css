@@ -40,14 +40,15 @@
 }
 
 ::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 2px;
+  width: 4px;
+  margin-left: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: #608eb6;
+  border-radius: 6px;
+  background-color: var(--blue-base);
   box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  border: solid 3px transparent;
 }
 
 html,
@@ -418,6 +419,10 @@ li {
 
 .full-height {
   height: 100%;
+}
+
+.full-width {
+  width: 100%;
 }
 
 .appContainer {
