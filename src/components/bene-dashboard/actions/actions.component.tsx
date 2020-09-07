@@ -6,7 +6,7 @@ import Tasks from './tasks/tasks.component'
 
 const Actions = ({ member }: any) => {
   return (
-    <div>
+    <div className="full-height d-flex" style={{ flexDirection: 'column' }}>
       <h2>Actions</h2>
       <Tabs currentTab={1}>
         <div label="Actions">

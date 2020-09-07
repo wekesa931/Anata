@@ -45,6 +45,7 @@ function ProtectedRoute({ children, ...rest }: any) {
                 display: 'flex',
                 flexDirection: 'column',
                 flex: 1,
+                overflow: 'hidden',
                 backgroundColor: 'var(--nav-bg)',
               }}
             >

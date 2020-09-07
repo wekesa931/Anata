@@ -41,7 +41,7 @@
 
 ::-webkit-scrollbar {
   -webkit-appearance: none;
-  width: 3px;
+  width: 2px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -61,10 +61,10 @@ body,
   background: var(--white);
   flex: 1;
   border-radius: 16px 0 0 0;
+  height: calc(100% - 64px);
 }
 
 .dashboard-content {
-  padding-top: 56px;
   padding-left: 8px;
   padding-right: 8px;
   height: 100%;
@@ -402,6 +402,22 @@ li {
 /** Positioning **/
 .p-absolute {
   position: absolute;
+}
+
+.p-relative {
+  position: relative;
+}
+
+.padding-top-16 {
+  padding-top: 16px;
+}
+
+.padding-top-32 {
+  padding-top: 32px;
+}
+
+.full-height {
+  height: 100%;
 }
 
 .appContainer {

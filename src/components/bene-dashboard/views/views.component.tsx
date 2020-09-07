@@ -73,44 +73,44 @@ const Views = () => {
   const [openSortDialog, setOpenSortDialog] = useState(false)
   return (
     <DateSortProvider>
-      <div
-        className="d-flex p-absolute"
-        style={!openSortDialog ? { alignItems: 'center' } : {}}
-      >
-        <h2>Views</h2>
+      <div className="full-height">
         <div
-          className="d-flex"
-          style={{ marginLeft: '16px' }}
-          key={openSortDialog ? 1 : 0}
+          className="d-flex p-relative"
+          style={!openSortDialog ? { alignItems: 'center' } : {}}
         >
-          <div>
-            <button
-              className="btn-icon active"
-              style={{ margin: '0 8px 0px 0', padding: 0 }}
-            >
-              <Icon
-                name="table"
-                width={40}
-                height={24}
-                fill="var(--blue-base)"
-              />
-            </button>
+          <h2>Views</h2>
+          <div
+            className="d-flex p-absolute"
+            style={{ left: '80px' }}
+            key={openSortDialog ? 1 : 0}
+          >
+            <div>
+              <button
+                className="btn-icon active"
+                style={{ margin: '0 8px 0px 0', padding: 0 }}
+              >
+                <Icon
+                  name="table"
+                  width={40}
+                  height={24}
+                  fill="var(--blue-base)"
+                />
+              </button>
+            </div>
+            {!openSortDialog ? (
+              <div className={styles.animatedDiv}>
+                <SortButton
+                  setOpenSortDialog={setOpenSortDialog}
+                  openSortDialog={openSortDialog}
+                />
+              </div>
+            ) : (
+              <div className={styles.animatedDiv}>
+                <SortDialog onClose={() => setOpenSortDialog(false)} />
+              </div>
+            )}
           </div>
-          {!openSortDialog ? (
-            <div className={styles.animatedDiv}>
-              <SortButton
-                setOpenSortDialog={setOpenSortDialog}
-                openSortDialog={openSortDialog}
-              />
-            </div>
-          ) : (
-            <div className={styles.animatedDiv}>
-              <SortDialog onClose={() => setOpenSortDialog(false)} />
-            </div>
-          )}
         </div>
-      </div>
-      <div className="margin-top-32">
         <Tabs>
           <div label="Clinical Summary">
             <Clinical />

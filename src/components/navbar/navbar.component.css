@@ -1,12 +1,13 @@
 .navWrapper {
   position: relative;
+  height: 64px;
 }
 .navbar {
   display: flex;
   flex: 1;
   background-color: var(--nav-bg);
-  padding: 0 0.5rem;
-  height: 4rem;
+  padding: 0 8px;
+  height: 100%;
 }
 
 .navbarLogo {

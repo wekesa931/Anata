@@ -1,13 +1,11 @@
 .tabContent {
-  max-height: 70vh;
   overflow-y: scroll;
-  margin-top: 24px;
+  margin-top: 32px;
 }
 
 .tabs {
   display: flex;
   color: var(--blue-base);
-  margin-bottom: 12px;
   margin-right: 24px;
 }
 

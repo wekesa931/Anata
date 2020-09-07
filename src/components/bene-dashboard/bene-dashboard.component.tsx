@@ -27,18 +27,18 @@ const PatientDashboard = () => {
 
   return member ? (
     <div className={styles.container}>
-      <div className="dashboard-content dashboard-raised-content">
+      <div className="dashboard-content dashboard-raised-content padding-top-32">
         <BioData member={member} />
       </div>
       <div
-        className="dashboard-content"
+        className="dashboard-content padding-top-32"
         style={{ flex: 1, borderRight: '1px solid var(--blue-light)' }}
       >
         <Views member={member} />
       </div>
       <div
-        className="dashboard-content dashboard-raised-content"
-        style={{ width: '372px' }}
+        className="dashboard-content dashboard-raised-content padding-top-32"
+        style={{ width: '372px', borderRadius: '0px' }}
       >
         <Actions member={member} />
       </div>

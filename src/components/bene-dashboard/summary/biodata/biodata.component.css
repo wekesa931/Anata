@@ -1,17 +1,16 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  max-height: 85vh;
+  height: 100%;
 }
 
 .bioDataCard {
   margin-top: 16px;
   background: var(--nav-bg);
   border: 1px solid #205284;
-  border-radius: 24px;
+  border-radius: 24px 24px 0px 0px;
   flex: 1;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .beneNameContainer {
@@ -19,6 +18,7 @@
   top: 0;
   background: var(--nav-bg);
   padding: 8px;
+  border-radius: 24px;
 }
 
 .beneNameAgeGender {

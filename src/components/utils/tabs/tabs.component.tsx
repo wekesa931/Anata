@@ -22,7 +22,15 @@ const Tabs = ({ children, currentTab = 0 }: any) => {
   }
 
   return (
-    <div style={{ marginTop: '16px' }}>
+    <div
+      style={{
+        marginTop: '16px',
+        height: 'calc(100% - 48px)',
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
+      }}
+    >
       <div className={styles.tabs}>
         {children.map((child: any) => {
           const { label } = child.props
