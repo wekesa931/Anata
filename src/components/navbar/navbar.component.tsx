@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import MenuDotsIcon from '../../assets/img/icons/menu_dots.svg'
 import UserIcon from '../../assets/img/icons/user.svg'
+import LogoIcon from '../../assets/img/icons/logo-nav.svg'
 import styles from './navbar.component.css'
 import { useUser } from '../../context/user-context'
 import { useAuth } from '../../context/auth-context'
+import SearchInput from '../search/search.component'
 
 const UserMenu = () => {
   const user = useUser()
@@ -45,14 +47,18 @@ const NavBar = () => {
   return (
     <div className={styles.navWrapper}>
       <div className={styles.navbar}>
+        
         <div className={styles.logoContainer}>
-          <span className="logo">antara</span>
-          <span className="hnos">health</span>
+          <LogoIcon className="icon-white" />
         </div>
+
+        <SearchInput />
+
         <div className="d-flex flex-align-center flex-justify-end flex-one">
           <button className="btn-icon">
             <MenuDotsIcon className="icon-white" />
           </button>
+
           <button
             className="btn-icon"
             onClick={() => setShowUserMenu(!showUserMenu)}

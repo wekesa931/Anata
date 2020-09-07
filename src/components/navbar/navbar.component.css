@@ -17,6 +17,7 @@
 .logoContainer {
   display: flex;
   align-items: center;
+  flex: 0.4;
 }
 
 /* user menu */

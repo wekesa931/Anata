@@ -13,8 +13,7 @@ const PatientDashboard = () => {
   const [member, setMember] = useState<any>(null)
   const { params } = useRouteMatch<any>()
   const user = useUser()
-
-  if (params.recId && !recId) {
+  if (params.recId && recId !== params.recId) {
     setRecId(params.recId)
   }
   useEffect(() => {
