@@ -10,7 +10,7 @@
     "bundle": "webpack",
     "test": "jest --verbose",
     "test:watch": "jest --watch --verbose",
-    "start": "npm run build && node server.js",
+    "start": "node server.js",
     "dev": "webpack-dev-server --mode development --port 5000",
     "lint": "eslint --fix './src/**/*.{js,jsx,ts,tsx}'",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'",
