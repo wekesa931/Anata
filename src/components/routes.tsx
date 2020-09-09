@@ -4,7 +4,6 @@ import Login from './login/login.component'
 import NavBar from './navbar/navbar.component'
 import { useUser } from '../context/user-context'
 import Sidebar from './sidebar/sidebar.component'
-import Forms from './forms/forms.component'
 import Dashboard from './main-dashboard/main-dashboard'
 import PatientDashboard from './bene-dashboard/bene-dashboard.component'
 import history from '../constants/history'
@@ -22,9 +21,6 @@ const Routes = () => {
         </ProtectedRoute>
         <ProtectedRoute exact path="/member/:recId">
           <PatientDashboard />
-        </ProtectedRoute>
-        <ProtectedRoute exact path="/forms">
-          <Forms />
         </ProtectedRoute>
       </Switch>
     </Router>

@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import Downshift from 'downshift'
 import { throttle } from 'throttle-debounce'
-import { Link } from 'react-router-dom'
-import history from '../../constants/history'
+import { Link, useHistory } from 'react-router-dom'
 import SearchIcon from '../../assets/img/icons/search.svg'
 import CloseIcon from '../../assets/img/icons/close.svg'
 import airtableFetch from '../../resources/airtableFetch'
@@ -20,6 +19,7 @@ interface resultItemType {
 const SearchInput = () => {
   const [results, setResults] = useState<Array<resultItemType>>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const history = useHistory()
 
   const searchMembers = (q: string) => {
     const throttleFunc = throttle(
@@ -60,7 +60,7 @@ const SearchInput = () => {
     stateAndHelpers: { clearSelection: () => any }
   ) => {
     if (item) {
-      history.push(`/member/${item.id}`, { from: history.location })
+      history.push(`/member/${item.id}`)
     }
     // clear selection
     stateAndHelpers.clearSelection()
@@ -111,7 +111,7 @@ const SearchInput = () => {
           {inputValue && !isLoading && (
             <div className={styles.searchResultsWrap}>
               {results && results.length > 0 && isOpen && (
-                <ul {...getMenuProps()}>
+                <ul {...getMenuProps()} data-testid="bene-list">
                   {results.map((item: any, index: number) => (
                     <li
                       {...getItemProps({

@@ -22,7 +22,7 @@ const Sidebar = () => {
         </Link>
       </div>
       {SidebarMenuItems.map((item) => (
-        <div key={item.name}>
+        <div key={item.name} data-testid="sidebar-links">
           <div
             className={always(styles.menuItem).maybe(
               styles.active,
