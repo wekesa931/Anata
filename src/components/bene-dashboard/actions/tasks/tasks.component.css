@@ -1,0 +1,45 @@
+.newTaskCard {
+  background: #ffffff;
+  border: 1px solid #ff9800;
+  box-shadow: 0px 8px 16px rgba(255, 152, 0, 0.25);
+  border-radius: 12px 0px 12px 12px;
+  padding: 4px 0px 8px 12px;
+  width: 192px;
+  height: 204px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 36px;
+}
+
+.cardTitle {
+  border-bottom: 1px solid var(--orange-light);
+  margin-right: 12px;
+  padding: 4px;
+}
+
+.taskForms {
+  margin-top: 8px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.add {
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: -webkit-transform;
+  -moz-transition-property: -moz-transform;
+  -o-transition-property: -o-transform;
+  transition-property: transform;
+}
+
+.close {
+  -webkit-transform: rotate(46deg);
+  -moz-transform: rotate(46deg);
+  -o-transform: rotate(46deg);
+  -ms-transform: rotate(46deg);
+  transform: rotate(46deg);
+}

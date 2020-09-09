@@ -108,53 +108,59 @@ const List = ({
   }
 
   return (
-    <div>
+    <div style={{ margin: '8px' }}>
       {displayedData.length > 0 ? (
         <>
-          {displayedData.map((item, i) => {
-            return (
-              item &&
-              item.data && (
-                <button
-                  style={{ margin: '8px 0', width: '100%', textAlign: 'start' }}
-                  className="btn-unstyled"
-                  onClick={() => {
-                    setOpenItem(item)
-                    setModalOpen(true)
-                  }}
-                  key={i}
-                  onMouseEnter={() => setIsHovering(i)}
-                  onMouseLeave={() => setIsHovering(undefined)}
-                >
-                  <div className={styles.meta}>
-                    <p className="text-tiny">
-                      {getTopLeftText && getTopLeftText(item.data)}
-                    </p>
-                    <p className="text-tiny">
-                      {getTopRightText && getTopRightText(item.data)}
-                    </p>
-                  </div>
-                  <div className={styles.notes}>
-                    <Tooltip title="Expand Record">
-                      <div
-                        style={{ width: '12px', marginRight: '6px' }}
-                        className={toggle(
-                          styles.showIcon,
-                          styles.hideIcon,
-                          isHovering === i
-                        )}
-                      >
-                        <ExpandIcon />
+          <div data-testid="data-list">
+            {displayedData.map((item, i) => {
+              return (
+                item &&
+                item.data && (
+                  <button
+                    style={{
+                      margin: '8px 0',
+                      width: '100%',
+                      textAlign: 'start',
+                    }}
+                    className="btn-unstyled"
+                    onClick={() => {
+                      setOpenItem(item)
+                      setModalOpen(true)
+                    }}
+                    key={i}
+                    onMouseEnter={() => setIsHovering(i)}
+                    onMouseLeave={() => setIsHovering(undefined)}
+                  >
+                    <div className={styles.meta}>
+                      <div className="text-tiny">
+                        {getTopLeftText && getTopLeftText(item.data)}
                       </div>
-                    </Tooltip>
-                    <div style={{ flex: 1 }}>
-                      <p className="text-normal">{item.name}</p>
+                      <div className="text-tiny">
+                        {getTopRightText && getTopRightText(item.data)}
+                      </div>
                     </div>
-                  </div>
-                </button>
+                    <div className={styles.notes}>
+                      <Tooltip title="Expand Record">
+                        <div
+                          style={{ width: '12px', marginRight: '6px' }}
+                          className={toggle(
+                            styles.showIcon,
+                            styles.hideIcon,
+                            isHovering === i
+                          )}
+                        >
+                          <ExpandIcon />
+                        </div>
+                      </Tooltip>
+                      <div style={{ flex: 1 }}>
+                        <div className="text-normal">{item.name}</div>
+                      </div>
+                    </div>
+                  </button>
+                )
               )
-            )
-          })}
+            })}
+          </div>
           <div className={styles.pagination}>
             {paginate &&
               sortedList.length > 3 &&

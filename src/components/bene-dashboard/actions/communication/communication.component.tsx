@@ -22,9 +22,14 @@ const Communication = ({ member }: any) => {
             Communication
             <button className={styles.toggler} onClick={showCommunicationBlock}>
               {communicationBlock ? (
-                <Icon name="chevron-top" fill="white" />
+                <Icon name="chevron-top" fill="white" width={16} height={16} />
               ) : (
-                <Icon name="chevron-bottom" fill="white" />
+                <Icon
+                  name="chevron-bottom"
+                  fill="white"
+                  width={16}
+                  height={16}
+                />
               )}
             </button>
           </h4>

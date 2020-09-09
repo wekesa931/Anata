@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
-import { Button, Dialog, Heading } from '@airtable/blocks/ui'
+import { Dialog, Heading } from '@airtable/blocks/ui'
 
 const Modal = ({ open, setModalOpen, heading, children }: any) => {
   useEffect(() => {
     setModalOpen(open)
   })
   return (
-    <>
+    <div data-testid="modal">
       {open && (
         <Dialog
           onClose={() => setModalOpen(false)}
@@ -16,12 +16,9 @@ const Modal = ({ open, setModalOpen, heading, children }: any) => {
           <Dialog.CloseButton />
           <Heading>{heading}</Heading>
           {children}
-          <div style={{ float: 'right' }}>
-            <Button onClick={() => setModalOpen(false)}>Close</Button>
-          </div>
         </Dialog>
       )}
-    </>
+    </div>
   )
 }
 

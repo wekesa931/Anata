@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import MenuDotsIcon from '../../assets/img/icons/menu_dots.svg'
-import UserIcon from '../../assets/img/icons/user.svg'
 import LogoIcon from '../../assets/img/icons/logo-nav.svg'
 import styles from './navbar.component.css'
 import { useUser } from '../../context/user-context'
 import { useAuth } from '../../context/auth-context'
 import SearchInput from '../search/search.component'
+import Icon from '../utils/icon/icon.component'
 
 const UserMenu = () => {
   const user = useUser()
@@ -62,7 +62,7 @@ const NavBar = () => {
             className="btn-icon"
             onClick={() => setShowUserMenu(!showUserMenu)}
           >
-            <UserIcon className="icon-white" />
+            <Icon name="user" fill="white" />
           </button>
         </div>
       </div>

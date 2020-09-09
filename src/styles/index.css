@@ -216,6 +216,10 @@ h6,
   color: var(--greyscale-3);
 }
 
+.text-primary {
+  color: var(--orange-base);
+}
+
 .text-capitalize {
   text-transform: capitalize;
 }
@@ -285,6 +289,12 @@ button.btn-icon {
 button.btn-icon.active {
   background: white;
   box-shadow: 0px 8px 16px rgba(56, 94, 126, 0.2);
+  border-radius: 12px;
+}
+
+button.btn-small {
+  width: 40px;
+  height: 24px;
   border-radius: 12px;
 }
 

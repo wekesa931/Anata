@@ -5,10 +5,58 @@ import airtableFetch from '../../../../resources/airtableFetch'
 import List from '../../../utils/list/list.component'
 import Icon from '../../../utils/icon/icon.component'
 import Tooltip from '../../../utils/tooltip/tooltip.component'
+import styles from './tasks.component.css'
+import Radio from '../../../utils/radio/radio.component'
+import Modal from '../../../utils/modals/modal.component'
+import AirtableIframe from '../../../utils/airtableIframe/airtableIframe.component'
+import { useAuth } from '../../../../context/auth-context'
 
 const Tasks = () => {
   const { recId } = useParams()
   const [allTasks, setAllTasks] = useState<any[]>([])
+  const [showNewTaskForm, setShowNewTaskForm] = useState(false)
+  const [openForm, setOpenForm] = useState<any>()
+  const [hn, setHN] = useState<any>({})
+  const { user } = useAuth()
+
+  useEffect(() => {
+    if (user && user.profileObj) {
+      airtableFetch(
+        `team/list/0?view=Grid%20view&filterByFormula=FIND("${user.profileObj.email}", {Email})`
+      ).then((res) => {
+        const currentHN = Object.keys(res).map((key: any) => res[key])
+        if (currentHN.length) {
+          setHN(currentHN[0])
+        }
+      })
+    }
+  }, [user])
+
+  const taskForms = [
+    {
+      name: 'Health Navigator Task Form',
+      url: `https://airtable.com/embed/shrSPv5zEGvh1nm22?prefill_Member=${recId}`,
+      hnField: 'Assignee',
+    },
+    {
+      name: 'Interaction Log Form',
+      url: `https://airtable.com/embed/shrKQ5efAEh9z3618?prefill_Member=${recId}]`,
+      hnField: 'Health Navigator',
+    },
+    {
+      name: 'Medication Prescription Form',
+      url: `https://airtable.com/embed/shrH0jDDogdH2ySWr?prefill_Member=${recId}`,
+    },
+    {
+      name: 'Appointment Form',
+      url: `https://airtable.com/embed/shrZWjIcj1g2zMA5S?prefill_Member=${recId}`,
+      hnField: 'Health Navigator',
+    },
+    {
+      name: 'Nutritional Consultation Form',
+      url: `https://airtable.com/embed/shrFmDt0AU4XjbsAr?prefill_Member=${recId}`,
+    },
+  ]
 
   const getDisplayedInfo = (data: any) => {
     return data.Status !== 'Complete' ? (
@@ -129,19 +177,70 @@ const Tasks = () => {
     }
     return null
   }
+
   return (
-    <div className="margin-top-16">
-      <h4>Tasks</h4>
-      {allTasks ? (
-        <List
-          list={allTasks}
-          getTopLeftText={getPriority}
-          getTopRightText={getTaskNotes}
-          modalTitle="Task"
-          emptyListText="No tasks found."
-        />
-      ) : null}
-    </div>
+    <>
+      <div className="margin-top-16">
+        <div className="d-flex" style={{ justifyContent: 'space-between' }}>
+          <h4>Tasks</h4>
+          <div style={{ position: 'relative', display: 'flex' }}>
+            {showNewTaskForm && (
+              <div className={styles.newTaskCard}>
+                <div className={styles.cardTitle}>
+                  <h6 className="text-primary">Create New:</h6>
+                </div>
+                <div className={styles.taskForms}>
+                  {taskForms.map(({ name, url, hnField }) => {
+                    return (
+                      <Radio
+                        label={name}
+                        value={url}
+                        name={name}
+                        onChange={() => setOpenForm({ name, url, hnField })}
+                        checked={
+                          showNewTaskForm && openForm && openForm.url === url
+                        }
+                        key={name}
+                      />
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+            <button
+              className="btn-icon btn-small btn-primary"
+              onClick={() => setShowNewTaskForm(!showNewTaskForm)}
+            >
+              <div
+                className={`${styles.add} ${
+                  showNewTaskForm ? `${styles.close}` : null
+                }`}
+              >
+                <Icon name="plus" fill="white" width={16} height={16} />
+              </div>
+            </button>
+          </div>
+        </div>
+
+        {allTasks ? (
+          <List
+            list={allTasks}
+            getTopLeftText={getPriority}
+            getTopRightText={getTaskNotes}
+            modalTitle="Task"
+            emptyListText="No tasks found."
+          />
+        ) : null}
+      </div>
+      {openForm && (
+        <Modal open={openForm} setModalOpen={setOpenForm} heading="">
+          <AirtableIframe
+            src={`${openForm.url}&prefill_${openForm.hnField}=${hn['Record ID']}`}
+            style={{ border: 'none', height: '95%', padding: '12px' }}
+          />
+        </Modal>
+      )}
+    </>
   )
 }
 

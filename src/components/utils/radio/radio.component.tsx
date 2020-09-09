@@ -12,13 +12,18 @@ type RadioProps = {
 const Radio = ({ label, name, value, onChange, checked }: RadioProps) => {
   return (
     <button className="btn-unstyled" onClick={(e) => onChange(e, value)}>
-      <label htmlFor={name} className={`${styles.container} text-small`}>
+      <label
+        htmlFor={name}
+        className={`${styles.container} text-small`}
+        aria-labelledby={name}
+      >
         {label}
         <input
           name={name}
           type="radio"
           value={value}
           checked={checked}
+          id={name}
           readOnly
         />
         <span className={styles.checkmark} />
