@@ -290,7 +290,20 @@ const HifSummary = () => {
   )
 }
 
-const GeneralSummary = () => {
+const GeneralSummary = ({ member }: any) => {
+  const [frs, setFrs] = useState<number | null>()
+
+  useEffect(() => {
+    airtableFetch(
+      `fcvd/list/0?filterByFormula=FIND("${member['Antara ID']}", {Antara Member ID})`
+    ).then((res) => {
+      const record = Object.keys(res).map((key) => res[key])[0]
+      if (record) {
+        setFrs(record['Percent Risk'])
+      }
+    })
+  }, [member])
+
   return (
     <div className={`text-normal ${styles.topSummaryRow}`}>
       <div className={styles.topSummaryColumns}>
@@ -304,7 +317,7 @@ const GeneralSummary = () => {
       <div className={styles.topSummaryColumns}>
         <h6 className={`text-bold  ${styles.topSummaryColumnHeadings}`}>FRS</h6>
         <span className={`text-small ${styles.topSummaryRowContent}`}>
-          (TBD)
+          {frs || 'Unavailable'}
         </span>
       </div>
       <div className={styles.topSummaryColumns}>
@@ -339,7 +352,7 @@ const BioData = ({ member }: BioDataProps) => {
           </div>
 
           <div className={styles.summariesContainer}>
-            <GeneralSummary />
+            <GeneralSummary member={member} />
 
             <hr className={styles.hrLine} />
 
