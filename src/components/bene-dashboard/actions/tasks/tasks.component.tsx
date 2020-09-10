@@ -159,7 +159,7 @@ const Tasks = () => {
           <span className="text-capitalize">{` (${record.Status})`}</span>
         </span>
       ) : (
-        <span style={{ color: 'var(--blue-base)' }}>
+        <span className={getPriorityColor(record['Task Priority'])}>
           <span className="text-bold text-capitalize">
             {record['Task Priority']} priority
           </span>

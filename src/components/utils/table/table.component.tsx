@@ -14,6 +14,7 @@ type TableProps = {
     name: string
     key: string
     format: string
+    info?: string
   }[]
   data: any[]
   dateColumnKey: string
@@ -82,7 +83,7 @@ const Table = ({ title, columns, data, dateColumnKey }: TableProps) => {
     const dataType = typeof _dt
     switch (dataType) {
       case 'number':
-        return _dt.toFixed(1)
+        return _dt % 1 === 0 ? _dt : _dt.toFixed(2)
       case 'string':
         return isNaN(Date.parse(_dt)) ? _dt : dateFormat(Date.parse(_dt))
       default:
@@ -110,9 +111,23 @@ const Table = ({ title, columns, data, dateColumnKey }: TableProps) => {
               <>
                 <th style={{ opacity: 0 }}>icon</th>
                 {columns.map((column) => (
-                  <th key={column.name} className={styles.th}>
-                    <p className="text-small text-bold">{column.name}</p>
-                    <p className="text-tiny text-bold">{column.format}</p>
+                  <th
+                    key={column.name}
+                    className={
+                      column.info ? `${styles.th} ${styles.info}` : styles.th
+                    }
+                  >
+                    {column.info ? (
+                      <Tooltip title={column.info}>
+                        <p className="text-small text-bold">{column.name}</p>
+                        <p className="text-tiny text-bold">{column.format}</p>
+                      </Tooltip>
+                    ) : (
+                      <>
+                        <p className="text-small text-bold">{column.name}</p>
+                        <p className="text-tiny text-bold">{column.format}</p>
+                      </>
+                    )}
                   </th>
                 ))}
               </>

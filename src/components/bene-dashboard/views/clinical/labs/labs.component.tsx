@@ -9,10 +9,43 @@ const Lipids = () => {
 
   const columns = [
     { name: 'Date', format: 'dd/mmm/yy', key: 'Test Date' },
-    { name: 'TC', format: 'mg/dL', key: 'Total Cholesterol' },
-    { name: 'HDL', format: 'mg/dL', key: 'HDL' },
-    { name: 'LDL', format: 'mg/dL', key: 'LDL' },
-    { name: 'TG', format: 'mg/dL', key: 'Triglyceride' },
+    {
+      name: 'TC',
+      format: 'mg/dL',
+      key: 'Total Cholesterol',
+      info: `<200 mg/dL: Desirable,
+            200-239 mg/dL: Borderline,
+            >240 mg/dL: High`,
+    },
+    {
+      name: 'HDL',
+      format: 'mg/dL',
+      key: 'HDL',
+      info: `Men < 40mg/dL: Poor,
+             Women <50 mg/dL: Poor,
+             40-59 mg/dL: Better,
+             > 60 mg/dL: Best`,
+    },
+    {
+      name: 'LDL',
+      format: 'mg/dL',
+      key: 'LDL',
+      info: `<70 mg/dL: target if coronary artery disease,
+            < 100 mg/dL: target if @ risk for coronary artery disease,
+            100-129 mg/dL: Normal,
+            130-159 mg/dL: Borderline high,
+            160-189 mg/dL: High,
+            190 mg/dL and above: Very high`,
+    },
+    {
+      name: 'TG',
+      format: 'mg/dL',
+      key: 'Triglyceride',
+      info: `<150 mg/dL: Desirable,
+            150-199 mg/dL: Borderline High,
+            200-499 mg/dL: High,
+            > 500 mg/dL : Very High`,
+    },
   ]
 
   useEffect(() => {
@@ -48,9 +81,25 @@ const GlucoseMonitoring = () => {
 
   const columns = [
     { name: 'Date', format: 'dd/mmm/yy', key: 'Test Date' },
-    { name: 'Fasted', format: 'mmol/L', key: 'Fasting Blood Sugar' },
+    {
+      name: 'Fasted',
+      format: 'mmol/L',
+      key: 'Fasting Blood Sugar',
+      info: `Normal: <5.5 mmol/l,
+             Pre-diabetic: 5.5-6.9 mmol/l,
+             Diabetic: >7 mmol/l,
+             Target for Diabetics: <7 mmol/l`,
+    },
     { name: 'RBS', format: 'mmol/L', key: 'Random Blood Sugar' },
-    { name: 'HBA1C', format: '%', key: 'HbA1c' },
+    {
+      name: 'HBA1C',
+      format: '%',
+      key: 'HbA1c',
+      info: `Normal:  <5.7%,
+             Pre-diabetes: 5.7-6.4%,
+             Diabetic: >6.5%,
+             Target Level for Diabetics: <7.5%`,
+    },
   ]
 
   useEffect(() => {

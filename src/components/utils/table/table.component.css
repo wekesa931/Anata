@@ -70,6 +70,10 @@
   font-size: 12px;
 }
 
+.th.info:hover {
+  background-color: var(--orange-light);
+}
+
 .dataRow:hover > .td {
   background: var(--orange-light);
   cursor: pointer;
