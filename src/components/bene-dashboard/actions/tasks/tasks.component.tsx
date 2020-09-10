@@ -56,6 +56,23 @@ const Tasks = () => {
       name: 'Nutritional Consultation Form',
       url: `https://airtable.com/embed/shrFmDt0AU4XjbsAr?prefill_Member=${recId}`,
     },
+    {
+      name: 'Vitals Intake Form',
+      url: `https://airtable.com/embed/shr0VkCzeprnRSIhA?prefill_Member=${recId}`,
+      hnField: 'Staff',
+    },
+    {
+      name: 'BP Monitoring Intake',
+      url: `https://airtable.com/embed/shrJo1OLcSNVTTA0w?prefill_Member=${recId}`,
+    },
+    {
+      name: 'CHL Monitoring Intake',
+      url: `https://airtable.com/embed/shreiiEvt7m7qg6az?prefill_Member=${recId}`,
+    },
+    {
+      name: 'DM Monitoring',
+      url: `https://airtable.com/embed/shrbn21wPY6Vj0Ufv?prefill_Member=${recId}`,
+    },
   ]
 
   const getDisplayedInfo = (data: any) => {
