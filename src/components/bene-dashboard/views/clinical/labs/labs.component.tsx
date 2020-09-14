@@ -90,7 +90,7 @@ const GlucoseMonitoring = () => {
              Diabetic: >7 mmol/l,
              Target for Diabetics: <7 mmol/l`,
     },
-    { name: 'RBS', format: 'mmol/L', key: 'Random Blood Sugar' },
+    { name: 'RBS', format: 'mmol/L', key: 'random_bs' },
     {
       name: 'HBA1C',
       format: '%',
@@ -116,13 +116,7 @@ const GlucoseMonitoring = () => {
       <Table
         title="Glucose Monitoring"
         columns={columns}
-        data={glucose.filter((value) => {
-          return (
-            value['Fasting Blood Sugar'] ||
-            value['Random Blood Sugar'] ||
-            value.HbA1c
-          )
-        })}
+        data={glucose}
         dateColumnKey="Test Date"
       />
     )
