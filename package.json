@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "@airtable/blocks": "0.0.53",
-    "@antarahealth/comms-ui": "^1.2.0",
+    "@antarahealth/comms-ui": "git+https://fatmali:f4adbe08c0630e04ea651efb187ac295d5a3e5d5@github.com/antarahealth/comms-ui#pull/3/head",
     "body-parser": "^1.19.0",
     "dayjs": "^1.8.31",
     "downshift": "^6.0.5",
