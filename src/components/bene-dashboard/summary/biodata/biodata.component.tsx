@@ -339,6 +339,8 @@ const GeneralSummary = ({ member }: any) => {
 }
 
 const BioData = ({ member }: BioDataProps) => {
+  const isMinor = (age: number) => age < 18
+
   return (
     <div className={styles.wrapper}>
       <h2>Summary</h2>
@@ -446,13 +448,19 @@ const BioData = ({ member }: BioDataProps) => {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
                   >
-                    Contact Info:
+                    {isMinor(member.Age)
+                      ? 'Guardian Contact Info'
+                      : 'Contact Info:'}
                   </td>
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                    {member['Phone 1']}
-                    {member['Phone 2'] ? `, ${member['Phone 2']}` : null}
+                    {isMinor(member.Age)
+                      ? member['Primary Phone 1']
+                      : member['Phone 1']}
+                    {!isMinor(member.Age) && member['Phone 2']
+                      ? `, ${member['Phone 2']}`
+                      : null}
                   </td>
                 </tr>
               </tbody>
