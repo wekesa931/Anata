@@ -1,17 +1,23 @@
 import React, { useState } from 'react'
 import CommsUI from '@antarahealth/comms-ui'
 import { useUser } from '../../../../context/user-context'
+import { useComms } from '../../../../context/comms-context'
 import styles from './communication.component.css'
 import Icon from '../../../utils/icon/icon.component'
 
 const Communication = ({ member }: any) => {
   const [communicationBlock, setCommunicationBlock] = useState<boolean>(true)
   const user = useUser()
+  const { setCommsStatus } = useComms()
 
   const showCommunicationBlock = () =>
     communicationBlock
       ? setCommunicationBlock(false)
       : setCommunicationBlock(true)
+
+  const onCall = (inProgress: boolean | null) => {
+    setCommsStatus({ callInProgress: inProgress })
+  }
 
   return (
     user &&
@@ -52,6 +58,7 @@ const Communication = ({ member }: any) => {
                   phoneNumber: member['Phone 1'],
                   antara_id: member['Antara ID'],
                 }}
+                onCall={onCall}
               />
             </div>
           </div>
