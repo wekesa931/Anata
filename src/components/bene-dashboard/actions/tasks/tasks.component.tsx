@@ -35,43 +35,55 @@ const Tasks = () => {
   const taskForms = [
     {
       name: 'Health Navigator Task Form',
-      url: `https://airtable.com/embed/shrSPv5zEGvh1nm22?prefill_Member=${recId}`,
+      url: 'shrSPv5zEGvh1nm22',
       hnField: 'Assignee',
     },
     {
       name: 'Interaction Log Form',
-      url: `https://airtable.com/embed/shrKQ5efAEh9z3618?prefill_Member=${recId}]`,
+      url: 'shrKQ5efAEh9z3618',
       hnField: 'Health Navigator',
     },
     {
+      name: 'PAFU',
+      url: 'shrCRi52uE0oDSpme',
+    },
+    {
       name: 'Medication Prescription Form',
-      url: `https://airtable.com/embed/shrH0jDDogdH2ySWr?prefill_Member=${recId}`,
+      url: 'shrH0jDDogdH2ySWr',
     },
     {
       name: 'Appointment Form',
-      url: `https://airtable.com/embed/shrZWjIcj1g2zMA5S?prefill_Member=${recId}`,
+      url: 'shrZWjIcj1g2zMA5S',
       hnField: 'Health Navigator',
     },
     {
       name: 'Nutritional Consultation Form',
-      url: `https://airtable.com/embed/shrFmDt0AU4XjbsAr?prefill_Member=${recId}`,
+      url: 'shrFmDt0AU4XjbsAr',
     },
     {
       name: 'Vitals Intake Form',
-      url: `https://airtable.com/embed/shr0VkCzeprnRSIhA?prefill_Member=${recId}`,
+      url: 'shr0VkCzeprnRSIhA',
       hnField: 'Staff',
     },
     {
       name: 'BP Monitoring Intake',
-      url: `https://airtable.com/embed/shrJo1OLcSNVTTA0w?prefill_Member=${recId}`,
+      url: 'shrJo1OLcSNVTTA0w',
     },
     {
       name: 'CHL Monitoring Intake',
-      url: `https://airtable.com/embed/shreiiEvt7m7qg6az?prefill_Member=${recId}`,
+      url: 'shreiiEvt7m7qg6az',
     },
     {
       name: 'DM Monitoring',
-      url: `https://airtable.com/embed/shrbn21wPY6Vj0Ufv?prefill_Member=${recId}`,
+      url: 'shrbn21wPY6Vj0Ufv',
+    },
+    {
+      name: 'Baseline Form',
+      url: 'shrPou8GMbw9pKWpZ',
+    },
+    {
+      name: 'HIF',
+      url: 'shrQlDyAynyeYDxT0',
     },
   ]
 
@@ -252,7 +264,7 @@ const Tasks = () => {
       {openForm && (
         <Modal open={openForm} setModalOpen={setOpenForm} heading="">
           <AirtableIframe
-            src={`${openForm.url}&prefill_${openForm.hnField}=${hn['Record ID']}`}
+            src={`https://airtable.com/embed/${openForm.url}?prefill_${openForm.hnField}=${hn['Record ID']}&prefill_Member=${recId}`}
             style={{ border: 'none', height: '95%', padding: '12px' }}
           />
         </Modal>

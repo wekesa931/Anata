@@ -3,12 +3,10 @@ import Tasks from './tasks.component'
 import renderWithRouter from '../../../../../__mocks__/custom-render'
 import {
   screen,
-  findByTestId,
   cleanup,
   findByText,
   fireEvent,
   getByTestId,
-  findByLabelText,
   waitFor,
 } from '@testing-library/react'
 import tasks_mock_response from '../../../../../__mocks__/tasks.mock'

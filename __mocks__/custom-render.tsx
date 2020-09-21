@@ -2,7 +2,9 @@ import React from 'react'
 import { Router } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
 import { render } from '@testing-library/react'
-import AppContext from '../src/context'
+import { AuthProvider } from '../src/context/auth-context'
+import { UserProvider } from '../src/context/user-context'
+import mockUser from './user-mock'
 
 function renderWithRouter(
   ui: any,
@@ -14,9 +16,11 @@ function renderWithRouter(
   } = {}
 ): any {
   const Wrapper = ({ children }: any) => (
-    <AppContext>
-      <Router history={history}>{children}</Router>
-    </AppContext>
+    <AuthProvider user={mockUser}>
+      <UserProvider>
+        <Router history={history}>{children}</Router>
+      </UserProvider>
+    </AuthProvider>
   )
   return {
     ...render(ui, { wrapper: Wrapper }),

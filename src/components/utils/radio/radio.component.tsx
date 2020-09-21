@@ -11,7 +11,10 @@ type RadioProps = {
 
 const Radio = ({ label, name, value, onChange, checked }: RadioProps) => {
   return (
-    <button className="btn-unstyled" onClick={(e) => onChange(e, value)}>
+    <button
+      className="btn-unstyled full-width"
+      onClick={(e) => onChange(e, value)}
+    >
       <label
         htmlFor={name}
         className={`${styles.container} text-small`}
