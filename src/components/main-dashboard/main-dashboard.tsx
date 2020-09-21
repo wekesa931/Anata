@@ -4,30 +4,30 @@ import styles from './main-dashboard.component.css'
 import CircleChevronRight from '../../assets/img/icons/ circle-chevron-right.svg'
 import AirtableIframe from '../utils/airtableIframe/airtableIframe.component'
 import { useUser } from '../../context/user-context'
-import HNCalendarViews from './hn-views'
 import config from '../../config/config'
+import Tabs from '../utils/tabs/tabs.component'
 
 const HNDashboard = () => {
   const user = useUser()
   const { iframes } = config
 
   const getTasksView = () => {
-    if (user && HNCalendarViews[user.profileObj.email]) {
-      return HNCalendarViews[user.profileObj.email].hntasks
+    if (user && iframes[user.profileObj.email]) {
+      return iframes[user.profileObj.email].hntasks
     }
-    return `https://airtable.com/embed/${iframes.hntasks}?viewControls=on`
+    return iframes.default.hntasks
   }
 
   const views = [
     {
       name: 'Members',
       description: 'View all member details.',
-      airtableUrl: `https://airtable.com/embed/${iframes.members}?viewControls=on`,
+      airtableUrl: `https://airtable.com/embed/${iframes.default.members}?viewControls=on`,
     },
     {
       name: 'HN Tasks',
       description: 'Your view of HN tasks',
-      airtableUrl: getTasksView(),
+      hasCalendar: true,
     },
   ]
 
@@ -44,7 +44,7 @@ const HNDashboard = () => {
               <button
                 className="btn-unstyled btn-list"
                 onClick={() => setActiveView(index)}
-                key={view.airtableUrl}
+                key={view.name}
               >
                 <div
                   className={always('list-item-heading').maybe(
@@ -74,7 +74,26 @@ const HNDashboard = () => {
         <p className="text-heading-2 margin-bottom-16">
           {views[activeView].name}
         </p>
-        <AirtableIframe src={views[activeView].airtableUrl} />
+        {!views[activeView].hasCalendar ? (
+          <AirtableIframe src={views[activeView].airtableUrl} />
+        ) : (
+          <Tabs>
+            <div label="Calendar">
+              <AirtableIframe
+                src={`https://airtable.com/embed/${
+                  getTasksView().calendar
+                }?viewControls=on`}
+              />
+            </div>
+            <div label="Grid">
+              <AirtableIframe
+                src={`https://airtable.com/embed/${
+                  getTasksView().grid
+                }?viewControls=on`}
+              />
+            </div>
+          </Tabs>
+        )}
       </div>
     </div>
   )

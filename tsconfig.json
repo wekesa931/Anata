@@ -17,7 +17,7 @@
       "es2017.object",
       "dom"
     ],
-    "module": "esnext",
+    "module": "commonjs",
     "removeComments": true,
     "alwaysStrict": true,
     "allowUnreachableCode": false,
@@ -30,6 +30,7 @@
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true
   }
 }
