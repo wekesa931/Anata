@@ -33,7 +33,8 @@ const Login = () => {
       history &&
       history.location &&
       history.location.state &&
-      history.location.state.from
+      history.location.state.from &&
+      history.location.state.from !== '/login'
     ) {
       return history.push(history.location.state.from)
     }
