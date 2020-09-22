@@ -153,11 +153,21 @@ const Tasks = () => {
         (task) => task.data.Status === 'Complete'
       )
       const uncompletedTasks = mappedResponse.filter(
-        (task) => task.data.Status !== 'Complete'
+        (task) =>
+          task.data.Status !== 'Complete' &&
+          !dayjs().isSame(dayjs(task.data['Due Date']), 'day')
+      )
+      const todaysTasks = mappedResponse.filter(
+        (task) =>
+          task.data.Status !== 'Complete' &&
+          dayjs().isSame(dayjs(task.data['Due Date']), 'day')
       )
       const tasks = []
       if (completedTasks.length) {
         tasks.push(completedTasks[0])
+      }
+      if (todaysTasks.length) {
+        tasks.push(...todaysTasks)
       }
       if (uncompletedTasks.length) {
         tasks.push(...uncompletedTasks)

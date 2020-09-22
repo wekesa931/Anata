@@ -8,7 +8,7 @@ const Actions = ({ member }: any) => {
   return (
     <div className="full-height d-flex" style={{ flexDirection: 'column' }}>
       <h2>Actions</h2>
-      <Tabs currentTab={1}>
+      <Tabs currentTab={0}>
         <div label="Actions">
           <Communication member={member} />
           <Tasks />
