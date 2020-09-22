@@ -141,7 +141,7 @@ const Tasks = () => {
   }
   useEffect(() => {
     airtableFetch(
-      `hntasks/list/0?view=HN Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})`
+      `hntasks/list/0?view=HN Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})&sort[0][field]=Due Date&sort[0][direction]=asc`
     ).then((response) => {
       const mappedResponse = Object.keys(response)
         .map((key) => response[key])
@@ -157,18 +157,12 @@ const Tasks = () => {
           task.data.Status !== 'Complete' &&
           !dayjs().isSame(dayjs(task.data['Due Date']), 'day')
       )
-      const todaysTasks = mappedResponse.filter(
-        (task) =>
-          task.data.Status !== 'Complete' &&
-          dayjs().isSame(dayjs(task.data['Due Date']), 'day')
-      )
+
       const tasks = []
       if (completedTasks.length) {
         tasks.push(completedTasks[0])
       }
-      if (todaysTasks.length) {
-        tasks.push(...todaysTasks)
-      }
+
       if (uncompletedTasks.length) {
         tasks.push(...uncompletedTasks)
       }
