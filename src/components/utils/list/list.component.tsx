@@ -108,7 +108,7 @@ const List = ({
   }
 
   return (
-    <div style={{ margin: '8px' }}>
+    <div style={{ margin: '8px 0px' }}>
       {displayedData.length > 0 ? (
         <>
           <div data-testid="data-list">
