@@ -34,7 +34,7 @@ const Login = () => {
       history.location &&
       history.location.state &&
       history.location.state.from &&
-      history.location.state.from !== '/login'
+      history.location.state.from.pathname !== '/login'
     ) {
       return history.push(history.location.state.from)
     }
