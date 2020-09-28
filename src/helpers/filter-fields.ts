@@ -1,6 +1,5 @@
-const getAllowedFieldsUrl = (fields: string[]) => {
-  const mappedFields = fields.map((field) => `fields[]=${field}`)
-  return mappedFields.join('&')
+const filterFields = (fields: string[]) => {
+  return fields.map((field) => `fields[]=${field}`).join('&')
 }
 
-export default getAllowedFieldsUrl
+export default filterFields

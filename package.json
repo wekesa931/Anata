@@ -66,6 +66,7 @@
     "dayjs": "^1.8.31",
     "downshift": "^6.0.5",
     "express": "^4.17.1",
+    "formik": "^2.1.5",
     "heroku-ssl-redirect": "^0.0.4",
     "history": "^4.10.1",
     "kremling": "^2.0.4",
@@ -90,6 +91,9 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
     },
-    "globalSetup": "./jest.global.js"
+    "globalSetup": "./jest.global.js",
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-dom/extend-expect"
+    ]
   }
 }

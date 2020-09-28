@@ -228,12 +228,20 @@ h6,
   display: flex;
 }
 
+.flex-direction-column {
+  flex-direction: column;
+}
+
 .flex-align-center {
   align-items: center;
 }
 
 .flex-justify-end {
   justify-content: flex-end;
+}
+
+.flex-justify-space-between {
+  justify-content: space-between;
 }
 
 .flex-one {
@@ -270,10 +278,12 @@ button.btn {
   align-items: center;
   justify-content: center;
   outline: none;
+  margin: 0px 4px;
 }
 
 .btn:disabled {
   color: var(--greyscale-3);
+  background-color: var(--white);
 }
 
 button.btn-icon {
@@ -299,6 +309,7 @@ button.btn-small {
   width: 40px;
   height: 24px;
   border-radius: 12px;
+  font-size: 10px;
 }
 
 button.btn-primary {
@@ -328,6 +339,35 @@ button.btn-list {
 button.btn-list:hover {
   background-color: var(--orange-light);
   border-radius: 8px;
+}
+
+/** Form Controls **/
+
+form {
+  margin: 8px 0;
+}
+
+label {
+  font-size: 14px;
+}
+
+input.form-control,
+select.form-control,
+textarea.form-control {
+  width: 100%;
+  border: 2px solid var(--border-light);
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: var(--white);
+  padding: 8px;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+}
+
+input.form-control:focus,
+select.form-control:focus,
+textarea.form-control:focus {
+  outline-color: var(--blue-base);
 }
 
 /** lists **/

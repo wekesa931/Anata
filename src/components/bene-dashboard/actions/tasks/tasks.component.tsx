@@ -10,6 +10,8 @@ import Radio from '../../../utils/radio/radio.component'
 import Modal from '../../../utils/modals/modal.component'
 import AirtableIframe from '../../../utils/airtableIframe/airtableIframe.component'
 import { useAuth } from '../../../../context/auth-context'
+import filterFields from '../../../../helpers/filter-fields'
+import TASK_FIELDS from './tasks-fields'
 
 const Tasks = () => {
   const { recId } = useParams()
@@ -87,21 +89,18 @@ const Tasks = () => {
     },
   ]
 
+  const StrikeThrough = ({ children }: any) => {
+    return <s className="text-disabled">{children}</s>
+  }
+
   const getDisplayedInfo = (data: any) => {
-    return data.Status !== 'Complete' ? (
-      <span
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-          alignItems: 'center',
-        }}
-      >
+    const DisplayInfo = () => (
+      <div className={styles.taskContainer}>
         <span className="text-bold">
           {dayjs(data['Due Date']).format('DD MMM YYYY')}
         </span>
         <span>{data.Type}</span>
-        <div style={{ position: 'relative' }}>
+        <div className="p-relative">
           {data['Assigned HN Name'] && (
             <Tooltip title={data['Assigned HN Name']}>
               {!data['Assigned HN Name'].includes('Antara Bot') ? (
@@ -112,50 +111,56 @@ const Tasks = () => {
             </Tooltip>
           )}
         </div>
-      </span>
-    ) : (
-      <div className="d-flex">
-        <s
-          className="text-disabled"
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            width: '100%',
-          }}
-        >
-          {dayjs(data['Due Date']).format('DD MMM YYYY')} {data.Type}
-        </s>
-        <span style={{ position: 'relative' }}>
-          {data['Assigned HN Name'] && (
-            <Tooltip title={data['Assigned HN Name']}>
-              {!data['Assigned HN Name'].includes('Antara Bot') ? (
-                <Icon name="user" fill="var(--greyscale-3)" />
-              ) : (
-                <Icon name="lightning" fill="var(--greyscale-3)" />
-              )}
-            </Tooltip>
-          )}
-        </span>
       </div>
     )
+    return data.Status === 'Complete' ? (
+      <StrikeThrough>
+        <DisplayInfo />
+      </StrikeThrough>
+    ) : (
+      <DisplayInfo />
+    )
+  }
+
+  const includeFieldTypes = (data) => {
+    return Object.keys(data).map((key) => {
+      const field = TASK_FIELDS.find(({ name }) => name === key)
+      return field ? { value: data[key], ...field } : data
+    })
   }
   useEffect(() => {
+    const fields = [
+      'Type',
+      'Due Date',
+      'Task Notes',
+      'Status',
+      'Task Priority',
+      'Collect Condition Data',
+      'Assignee',
+      'Assigned HN Name',
+      'Last Status changed at',
+    ]
     airtableFetch(
-      `hntasks/list/0?view=HN Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})&sort[0][field]=Due Date&sort[0][direction]=asc`
+      `hntasks/list/0?view=HN Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})&${filterFields(
+        fields
+      )}&sort[0][field]=Due Date&sort[0][direction]=asc`
     ).then((response) => {
       const mappedResponse = Object.keys(response)
-        .map((key) => response[key])
-        .map((data) => ({
-          data,
+        .map((key) => ({ data: response[key], id: key }))
+        .map(({ data, id }) => ({
+          data: includeFieldTypes(data),
           name: getDisplayedInfo(data),
+          id,
         }))
-      const completedTasks = mappedResponse.filter(
-        (task) => task.data.Status === 'Complete'
+      const completedTasks = mappedResponse.filter((task) =>
+        task.data.find(
+          ({ name, value }) => name === 'Status' && value === 'Complete'
+        )
       )
-      const uncompletedTasks = mappedResponse.filter(
-        (task) =>
-          task.data.Status !== 'Complete' &&
-          !dayjs().isSame(dayjs(task.data['Due Date']), 'day')
+      const uncompletedTasks = mappedResponse.filter((task) =>
+        task.data.find(
+          ({ name, value }) => name === 'Status' && value !== 'Complete'
+        )
       )
 
       const tasks = []
@@ -182,33 +187,44 @@ const Tasks = () => {
         return ''
     }
   }
-  const getPriority = (record: any) => {
-    if (record['Task Priority']) {
-      return record.Status !== 'Complete' ? (
-        <span className={getPriorityColor(record['Task Priority'])}>
+  const getPriority = (record: any[]) => {
+    const field = record.reduce(
+      (obj, { name, value }) => ({ ...obj, [name]: value }),
+      {}
+    )
+
+    if (field['Task Priority']) {
+      return field.Status !== 'Complete' ? (
+        <span className={getPriorityColor(field['Task Priority'])}>
           <span className="text-bold text-capitalize">
-            {record['Task Priority']} priority
+            {field['Task Priority']} priority
           </span>
-          <span className="text-capitalize">{` (${record.Status})`}</span>
+          <span className="text-capitalize">{` (${field.Status})`}</span>
         </span>
       ) : (
-        <span className={getPriorityColor(record['Task Priority'])}>
+        <span className={getPriorityColor(field['Task Priority'])}>
           <span className="text-bold text-capitalize">
-            {record['Task Priority']} priority
+            {field['Task Priority']} priority
           </span>
-          <span className="text-capitalize">{` (${record.Status}, ${dayjs(
-            record['Last Status changed at']
+          <span className="text-capitalize">{` (${field.Status}, ${dayjs(
+            field['Last Status changed at']
           ).format('DD MMM YYYY')})`}</span>
         </span>
       )
     }
-    return `No Priority (${record.Status})`
+    return `No Priority (${field.Status})`
   }
   const getTaskNotes = (record: any) => {
     if (record.Status !== 'Complete') {
       return record['Task Notes']
     }
     return null
+  }
+  const updateTask = (task: { id: string; fields: any }) => {
+    return airtableFetch('hntasks', 'post', {
+      id: task.id,
+      fields: { ...task.fields, Assignee: [task.fields.Assignee] },
+    })
   }
 
   return (
@@ -262,6 +278,8 @@ const Tasks = () => {
             getTopRightText={getTaskNotes}
             modalTitle="Task"
             emptyListText="No tasks found."
+            editable
+            onEdit={updateTask}
           />
         ) : null}
       </div>

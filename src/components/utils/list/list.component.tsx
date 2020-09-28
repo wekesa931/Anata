@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { toggle } from 'kremling'
-import { Label, Text } from '@airtable/blocks/ui'
 import dayjs from 'dayjs'
 import styles from './list.component.css'
 import ExpandIcon from '../../../assets/img/icons/arrows-diagonals-bltr.svg'
-import Modal from '../modals/modal.component'
 import Tooltip from '../tooltip/tooltip.component'
 import { useDateSort } from '../../../context/sort.context'
+import ListModal from './list-modal.component'
 
 type ListProps = {
   list: { name: string; data: any }[]
@@ -16,6 +15,8 @@ type ListProps = {
   modalTitle?: string
   emptyListText?: string
   dateColumnKey?: string
+  editable?: boolean
+  onEdit?: (values: { id: string; fields: any }) => Promise<any>
 }
 
 const List = ({
@@ -26,9 +27,15 @@ const List = ({
   dateColumnKey,
   paginate = false,
   emptyListText = 'No data available',
+  editable = false,
+  onEdit,
 }: ListProps) => {
   const [isHovering, setIsHovering] = useState<number>()
-  const [openItem, setOpenItem] = useState<{ name: string; data: any }>()
+  const [openItem, setOpenItem] = useState<{
+    name: string
+    id: string
+    data: any
+  }>()
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [displayedData, setDisplayedData] = useState<
     { name: string; data: any }[]
@@ -80,13 +87,6 @@ const List = ({
     }
     return setDisplayedData(sortedList)
   }, [paginate, sortedList])
-
-  const displayObject = (obj: any) => {
-    if (Array.isArray(obj)) {
-      return obj.join(',')
-    }
-    return Object.keys(obj).map((key) => `${key}: ${obj[key]}`)
-  }
 
   const displayMore = () => {
     const itemDisplayed = displayedData.length
@@ -188,32 +188,16 @@ const List = ({
         </div>
       )}
       {modalOpen && openItem && (
-        <Modal
-          open={modalOpen}
-          setModalOpen={setModalOpen}
-          heading={modalTitle || openItem.name}
-        >
-          {openItem.data &&
-            Object.keys(openItem.data).map((info, i) => {
-              return (
-                <div key={info} style={{ margin: '16px 0' }}>
-                  <Label htmlFor={`input${i}`}>{info}</Label>
-                  <Text
-                    variant="paragraph"
-                    id={`input${i}`}
-                    border="1px solid whitesmoke"
-                    backgroundColor="whitesmoke"
-                    padding="8px"
-                    borderRadius="4px"
-                  >
-                    {typeof openItem.data[info] === 'object'
-                      ? displayObject(openItem.data[info])
-                      : openItem.data[info]}
-                  </Text>
-                </div>
-              )
-            })}
-        </Modal>
+        <>
+          <ListModal
+            modalOpen={modalOpen}
+            setModalOpen={setModalOpen}
+            openItem={openItem}
+            modalTitle={modalTitle || openItem.name}
+            editable={editable}
+            onEdit={onEdit}
+          />
+        </>
       )}
     </div>
   )

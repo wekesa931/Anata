@@ -12,11 +12,14 @@ const getTokenFromLocalStorage = () => {
   return ''
 }
 
-const airtableFetch = (table: string, token = getTokenFromLocalStorage()) => {
+const airtableFetch = (table: string, method = 'GET', data = {}) => {
   return fetch(`${baseUrl}/${table}`, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+      'Content-Type': 'application/json',
     },
+    method,
+    body: method === 'GET' ? null : JSON.stringify(data),
   }).then((response) => {
     if (response.status === 403) {
       history.push('/login', { from: history.location })
