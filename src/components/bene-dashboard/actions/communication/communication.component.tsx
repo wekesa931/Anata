@@ -9,15 +9,36 @@ const Communication = ({ member }: any) => {
   const [communicationBlock, setCommunicationBlock] = useState<boolean>(true)
   const user = useUser()
   const { setCommsStatus } = useComms()
+  const [client, setClient] = useState<any>()
 
   const showCommunicationBlock = () =>
     communicationBlock
       ? setCommunicationBlock(false)
       : setCommunicationBlock(true)
 
-  const onCall = (inProgress: boolean | null) => {
-    setCommsStatus({ callInProgress: inProgress })
+  const onCall = (callClient: any) => {
+    setClient(callClient)
   }
+
+  React.useEffect(() => {
+    if (client) {
+      client.on(
+        'callaccepted',
+        () => {
+          setCommsStatus({ callInProgress: true })
+        },
+        false
+      )
+
+      client.on(
+        'hangup',
+        () => {
+          setCommsStatus({ callInProgress: false })
+        },
+        false
+      )
+    }
+  }, [client, setCommsStatus])
 
   return (
     user &&
@@ -59,6 +80,7 @@ const Communication = ({ member }: any) => {
                   antara_id: member['Antara ID'],
                 }}
                 onCall={onCall}
+                memberSpecific
               />
             </div>
           </div>
