@@ -154,15 +154,17 @@ const ListModal = (props: ListModalProps) => {
   }
 
   const getInitialValues = () => {
-    return openItem.data.reduce(
-      (obj, field) => ({
-        [field.name]: Array.isArray(field.value)
-          ? field.value.join()
-          : field.value,
-        ...obj,
-      }),
-      {}
-    )
+    return openItem.data
+      .filter((field) => !field.calculated)
+      .reduce(
+        (obj, field) => ({
+          [field.name]: Array.isArray(field.value)
+            ? field.value.join()
+            : field.value,
+          ...obj,
+        }),
+        {}
+      )
   }
 
   return (
