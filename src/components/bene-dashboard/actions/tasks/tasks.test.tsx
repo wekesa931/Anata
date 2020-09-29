@@ -34,22 +34,6 @@ describe('<Tasks />', () => {
     expect(screen.getByText('No tasks found.')).not.toBeNull()
   })
 
-  test('displays new tasks button and renders form on click', async () => {
-    await act(async () => {
-      renderWithRouter(<Tasks />)
-    })
-    const newTaskButton = await screen.getByRole('button')
-    fireEvent.click(newTaskButton)
-    const sampleForm = screen.getByLabelText('Nutritional Consultation Form')
-    expect(sampleForm).not.toBeNull()
-    expect(screen.getByLabelText('Appointment Form')).not.toBeNull()
-    expect(screen.getByLabelText('Medication Prescription Form')).not.toBeNull()
-    expect(screen.getByLabelText('Health Navigator Task Form')).not.toBeNull()
-    expect(screen.getByLabelText('Interaction Log Form')).not.toBeNull()
-    fireEvent.click(sampleForm)
-    const modal = await screen.getByTestId('modal')
-  })
-
   test('the first task is complete and displayed with all details', async () => {
     airtableFetch.mockReturnValue(Promise.resolve(tasks_mock_response))
     const { findByTestId } = renderWithRouter(<Tasks />)

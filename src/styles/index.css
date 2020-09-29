@@ -232,6 +232,10 @@ h6,
   flex-direction: column;
 }
 
+.flex-1 {
+  flex: 1;
+}
+
 .flex-align-center {
   align-items: center;
 }

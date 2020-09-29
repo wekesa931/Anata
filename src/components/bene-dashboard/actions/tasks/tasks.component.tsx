@@ -6,88 +6,12 @@ import List from '../../../utils/list/list.component'
 import Icon from '../../../utils/icon/icon.component'
 import Tooltip from '../../../utils/tooltip/tooltip.component'
 import styles from './tasks.component.css'
-import Radio from '../../../utils/radio/radio.component'
-import Modal from '../../../utils/modals/modal.component'
-import AirtableIframe from '../../../utils/airtableIframe/airtableIframe.component'
-import { useAuth } from '../../../../context/auth-context'
 import filterFields from '../../../../helpers/filter-fields'
 import TASK_FIELDS from './tasks-fields'
 
 const Tasks = () => {
   const { recId } = useParams()
   const [allTasks, setAllTasks] = useState<any[]>([])
-  const [showNewTaskForm, setShowNewTaskForm] = useState(false)
-  const [openForm, setOpenForm] = useState<any>()
-  const [hn, setHN] = useState<any>({})
-  const { user } = useAuth()
-
-  useEffect(() => {
-    if (user && user.profileObj) {
-      airtableFetch(
-        `team/list/0?view=Grid%20view&filterByFormula=FIND("${user.profileObj.email}", {Email})`
-      ).then((res) => {
-        const currentHN = Object.keys(res).map((key: any) => res[key])
-        if (currentHN.length) {
-          setHN(currentHN[0])
-        }
-      })
-    }
-  }, [user])
-
-  const taskForms = [
-    {
-      name: 'Health Navigator Task Form',
-      url: 'shrSPv5zEGvh1nm22',
-      hnField: 'Assignee',
-    },
-    {
-      name: 'Interaction Log Form',
-      url: 'shrKQ5efAEh9z3618',
-      hnField: 'Health Navigator',
-    },
-    {
-      name: 'PAFU',
-      url: 'shrCRi52uE0oDSpme',
-    },
-    {
-      name: 'Medication Prescription Form',
-      url: 'shrH0jDDogdH2ySWr',
-    },
-    {
-      name: 'Appointment Form',
-      url: 'shrZWjIcj1g2zMA5S',
-      hnField: 'Health Navigator',
-    },
-    {
-      name: 'Nutritional Consultation Form',
-      url: 'shrFmDt0AU4XjbsAr',
-    },
-    {
-      name: 'Vitals Intake Form',
-      url: 'shr0VkCzeprnRSIhA',
-      hnField: 'Staff',
-    },
-    {
-      name: 'BP Monitoring Intake',
-      url: 'shrJo1OLcSNVTTA0w',
-    },
-    {
-      name: 'CHL Monitoring Intake',
-      url: 'shreiiEvt7m7qg6az',
-    },
-    {
-      name: 'DM Monitoring',
-      url: 'shrbn21wPY6Vj0Ufv',
-    },
-    {
-      name: 'Baseline Form',
-      url: 'shrPou8GMbw9pKWpZ',
-    },
-    {
-      name: 'HIF',
-      url: 'shrQlDyAynyeYDxT0',
-    },
-  ]
 
   const StrikeThrough = ({ children }: any) => {
     return <s className="text-disabled">{children}</s>
@@ -232,43 +156,6 @@ const Tasks = () => {
       <div className="margin-top-16">
         <div className="d-flex" style={{ justifyContent: 'space-between' }}>
           <h4>Tasks</h4>
-          <div style={{ position: 'relative', display: 'flex' }}>
-            {showNewTaskForm && (
-              <div className={styles.newTaskCard}>
-                <div className={styles.cardTitle}>
-                  <h6 className="text-primary">Create New:</h6>
-                </div>
-                <div className={styles.taskForms}>
-                  {taskForms.map(({ name, url, hnField }) => {
-                    return (
-                      <Radio
-                        label={name}
-                        value={url}
-                        name={name}
-                        onChange={() => setOpenForm({ name, url, hnField })}
-                        checked={
-                          showNewTaskForm && openForm && openForm.url === url
-                        }
-                        key={name}
-                      />
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-            <button
-              className="btn-icon btn-small btn-primary"
-              onClick={() => setShowNewTaskForm(!showNewTaskForm)}
-            >
-              <div
-                className={`${styles.add} ${
-                  showNewTaskForm ? `${styles.close}` : null
-                }`}
-              >
-                <Icon name="plus" fill="white" width={16} height={16} />
-              </div>
-            </button>
-          </div>
         </div>
 
         {allTasks ? (
@@ -283,14 +170,6 @@ const Tasks = () => {
           />
         ) : null}
       </div>
-      {openForm && (
-        <Modal open={openForm} setModalOpen={setOpenForm} heading="">
-          <AirtableIframe
-            src={`https://airtable.com/embed/${openForm.url}?prefill_${openForm.hnField}=${hn['Record ID']}&prefill_Member=${recId}`}
-            style={{ border: 'none', height: '95%', padding: '12px' }}
-          />
-        </Modal>
-      )}
     </>
   )
 }

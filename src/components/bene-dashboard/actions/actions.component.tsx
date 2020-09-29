@@ -1,10 +1,11 @@
 import React from 'react'
-import InteractionLogs from './interaction-logs/interaction-logs.component'
+import Tabs from '../../utils/tabs/tabs.component'
 import Communication from './communication/communication.component'
+import Forms from './forms/forms.component'
 import Tasks from './tasks/tasks.component'
 
 const Actions = ({ member }: any) => {
-  const tabs = ['Actions', 'Interactions', 'Settings']
+  const tabs = ['Actions', 'Forms', 'Settings']
   const [activeTab, setActiveTab] = React.useState<string>(tabs[0])
   return (
     <div className="full-height d-flex" style={{ flexDirection: 'column' }}>
@@ -34,7 +35,7 @@ const Actions = ({ member }: any) => {
           <Tasks />
         </div>
         <div className={activeTab === tabs[1] ? '' : 'hidden'}>
-          <InteractionLogs />
+          <Forms />
         </div>
         <div className={activeTab === tabs[2] ? '' : 'hidden'}>Settings</div>
       </div>

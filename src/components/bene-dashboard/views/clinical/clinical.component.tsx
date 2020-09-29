@@ -4,6 +4,7 @@ import Vitals from './vitals/vitals.component'
 import FilledForms from './filled-forms/filled-forms.component'
 import Appointments from './appointments/appointments.component'
 import Medications from './medications/medications.component'
+import InteractionLogs from './interaction-logs/interaction-logs.component'
 
 const Clinical = () => {
   return (
@@ -21,6 +22,9 @@ const Clinical = () => {
         </div>
         <div className="margin-bottom-16">
           <Medications />
+        </div>
+        <div className="margin-bottom-16">
+          <InteractionLogs />
         </div>
       </div>
     </div>

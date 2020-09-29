@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { useParams } from 'react-router-dom'
-import airtableFetch from '../../../../resources/airtableFetch'
-import List from '../../../utils/list/list.component'
+import airtableFetch from '../../../../../resources/airtableFetch'
+import List from '../../../../utils/list/list.component'
 
 const InteractionLogs = () => {
   const [interactions, setInteractions] = useState<any>()
@@ -35,6 +35,7 @@ const InteractionLogs = () => {
           getTopRightText={(data) => data['HN Name']}
           emptyListText="No interaction logs recorded."
           modalTitle="Interaction log"
+          paginate
         />
       </div>
     </div>
