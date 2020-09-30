@@ -1,5 +1,4 @@
 import React from 'react'
-import Tabs from '../../utils/tabs/tabs.component'
 import Communication from './communication/communication.component'
 import Forms from './forms/forms.component'
 import Tasks from './tasks/tasks.component'
