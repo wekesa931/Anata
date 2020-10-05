@@ -17,6 +17,7 @@ const AirtableIframe = ({ src, style }: AirtableIframePropType) => {
       height="100%"
       style={style || { background: 'transparent' }}
       title={`Airtable view from ${src}`}
+      scrolling="yes"
     />
   )
 }
