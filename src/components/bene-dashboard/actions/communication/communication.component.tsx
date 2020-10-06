@@ -6,6 +6,7 @@ import styles from './communication.component.css'
 import Icon from '../../../utils/icon/icon.component'
 
 const Communication = ({ member }: any) => {
+  
   const [communicationBlock, setCommunicationBlock] = useState<boolean>(true)
   const user = useUser()
   const { setCommsStatus } = useComms()
@@ -78,6 +79,7 @@ const Communication = ({ member }: any) => {
                   fullName: member['Full Name'],
                   phoneNumber: member['Phone 1'],
                   antara_id: member['Antara ID'],
+                  airtable_rec_id: member['recID']
                 }}
                 onCall={onCall}
                 memberSpecific
