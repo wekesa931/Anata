@@ -3,7 +3,7 @@ import Chevron from './chevron'
 import styles from './accordion.component.css'
 
 function Accordion({ title, children }: { title: string; children: any }) {
-  const [active, setActive] = useState('')
+  const [active, setActive] = useState<string>()
   const [rotate, setRotate] = useState(styles.accordion__icon)
   const [height, setHeight] = useState('0px')
 
@@ -33,9 +33,11 @@ function Accordion({ title, children }: { title: string; children: any }) {
       <div
         className={styles.accordion__content}
         ref={contentDiv}
-        style={{ height: `${height}` }}
+        style={{ height: `${height}`, overflowY: 'scroll' }}
       >
-        <div className={styles.accordion__text}>{children}</div>
+        {active !== undefined && (
+          <div className={styles.accordion__text}>{children}</div>
+        )}
       </div>
     </div>
   )

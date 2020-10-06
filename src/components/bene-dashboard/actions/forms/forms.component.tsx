@@ -32,7 +32,7 @@ const FormAccordion = ({
     <Accordion title={form.name}>
       <AirtableIframe
         src={`https://airtable.com/embed/${form.url}?prefill_${form.hnField}=${hn['Record ID']}&prefill_Member=${recId}`}
-        style={{ border: 'none', height: '100%', padding: '12px' }}
+        style={{ border: 'none' }}
       />
     </Accordion>
   )
