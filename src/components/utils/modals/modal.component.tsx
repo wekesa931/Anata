@@ -1,12 +1,8 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Dialog } from '@airtable/blocks/ui'
 import CloseIcon from '../../../assets/img/icons/close_16.svg'
 
 const Modal = ({ open, setModalOpen, heading, children }: any) => {
-  useEffect(() => {
-    setModalOpen(open)
-  })
-
   return (
     <div data-testid="modal">
       {open && (

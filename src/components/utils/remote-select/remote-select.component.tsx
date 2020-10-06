@@ -1,7 +1,7 @@
-import Downshift from 'downshift'
 import React, { useEffect, useState } from 'react'
+import Downshift from 'downshift'
+import useAirtableFetch from '../../../hooks/airtable-fetch.hook'
 import filterFields from '../../../helpers/filter-fields'
-import airtableFetch from '../../../resources/airtableFetch'
 
 type RemoteSelectProps = {
   lookupUrl: string
@@ -26,19 +26,21 @@ const RemoteSelect = ({
     value: string
   } | null>(null)
 
+  const url = lookupFieldNames
+    ? `${lookupUrl}/list/0?${filterFields(lookupFieldNames)}`
+    : `${lookupUrl}/list/0`
+  const { data } = useAirtableFetch(url)
+
   useEffect(() => {
     if (prefetch) {
-      const url = lookupFieldNames
-        ? `${lookupUrl}/list/0?${filterFields(lookupFieldNames)}`
-        : `${lookupUrl}/list/0`
-      airtableFetch(url).then((res) => {
-        const results = Object.keys(res)
-          .map((key) => res[key])
-          .map((obj) => ({ label: obj.Name, value: obj['Record ID'] }))
+      const results = Object.keys(data)
+        .map((key) => data[key])
+        .map((obj) => ({ label: obj.Name, value: obj['Record ID'] }))
+      if (results) {
         setItems(results)
-      })
+      }
     }
-  }, [prefetch, lookupUrl, lookupFieldNames])
+  }, [data, prefetch])
 
   const onChange = (selection: { label: string; value: string } | null) => {
     if (selection) {

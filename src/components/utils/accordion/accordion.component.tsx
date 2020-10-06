@@ -17,7 +17,7 @@ function Accordion({ title, children }: { title: string; children: any }) {
         : `${styles.accordion__icon} ${styles.rotate}`
     )
     if (contentDiv && contentDiv.current) {
-      setHeight(active === 'active' ? '0px' : `650px`)
+      setHeight(active === 'active' ? '0px' : `960px`)
     }
   }
 

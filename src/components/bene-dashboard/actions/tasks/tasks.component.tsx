@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
+import { useParams } from 'react-router-dom'
 import airtableFetch from '../../../../resources/airtableFetch'
 import List from '../../../utils/list/list.component'
 import Icon from '../../../utils/icon/icon.component'
@@ -8,10 +8,26 @@ import Tooltip from '../../../utils/tooltip/tooltip.component'
 import styles from './tasks.component.css'
 import filterFields from '../../../../helpers/filter-fields'
 import TASK_FIELDS from './tasks-fields'
+import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
 
 const Tasks = () => {
-  const { recId } = useParams()
   const [allTasks, setAllTasks] = useState<any[]>([])
+  const { recId } = useParams()
+  const fields = [
+    'Type',
+    'Due Date',
+    'Task Notes',
+    'Status',
+    'Task Priority',
+    'Collect Condition Data',
+    'Assignee',
+    'Assigned HN Name',
+    'Last Status changed at',
+  ]
+  const url = `hntasks/list/0?view=HN Dashboard&${filterFields(
+    fields
+  )}&sort[0][field]=Due Date&sort[0][direction]=asc&filterByFormula=FIND("${recId}", {Member Record ID})`
+  const { data: response, refresh: refetchTasks } = useAirtableFetch(url)
 
   const StrikeThrough = ({ children }: any) => {
     return <s className="text-disabled">{children}</s>
@@ -53,22 +69,7 @@ const Tasks = () => {
     })
   }
   useEffect(() => {
-    const fields = [
-      'Type',
-      'Due Date',
-      'Task Notes',
-      'Status',
-      'Task Priority',
-      'Collect Condition Data',
-      'Assignee',
-      'Assigned HN Name',
-      'Last Status changed at',
-    ]
-    airtableFetch(
-      `hntasks/list/0?view=HN Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})&${filterFields(
-        fields
-      )}&sort[0][field]=Due Date&sort[0][direction]=asc`
-    ).then((response) => {
+    if (response) {
       const mappedResponse = Object.keys(response)
         .map((key) => ({ data: response[key], id: key }))
         .map(({ data, id }) => ({
@@ -96,8 +97,8 @@ const Tasks = () => {
         tasks.push(...uncompletedTasks)
       }
       setAllTasks(tasks)
-    })
-  }, [recId])
+    }
+  }, [response])
 
   const getPriorityColor = (priority: string) => {
     switch (priority.toLowerCase()) {
@@ -144,11 +145,12 @@ const Tasks = () => {
     }
     return null
   }
-  const updateTask = (task: { id: string; fields: any }) => {
-    return airtableFetch('hntasks', 'post', {
+  const updateTask = async (task: { id: string; fields: any }) => {
+    await airtableFetch('hntasks', 'post', {
       id: task.id,
       fields: { ...task.fields, Assignee: [task.fields.Assignee] },
     })
+    return refetchTasks()
   }
 
   return (

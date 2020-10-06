@@ -17,6 +17,7 @@ const Actions = ({ member }: any) => {
             }`}
             style={{ marginRight: '24px', height: '44px' }}
             onClick={() => setActiveTab(tab)}
+            key={tab}
           >
             {tab}
           </button>

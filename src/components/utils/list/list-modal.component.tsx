@@ -2,6 +2,8 @@ import { Label, Text } from '@airtable/blocks/ui'
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import { Field, Form, Formik } from 'formik'
 import { Tooltip } from 'react-tippy'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 import Modal from '../modals/modal.component'
 import EditIcon from '../../../assets/img/icons/edit.svg'
 import AirtableField from '../../../types/airtable-field'
@@ -108,6 +110,7 @@ const CustomField = (customField: CustomFieldProps) => {
 }
 
 const ListModal = (props: ListModalProps) => {
+  const MySwal = withReactContent(Swal)
   const {
     modalOpen,
     setModalOpen,
@@ -150,6 +153,15 @@ const ListModal = (props: ListModalProps) => {
       const task = { id: openItem.id, fields: values }
       await onEdit(task)
       setFormDisabled(true)
+      setModalOpen(false)
+      MySwal.fire({
+        position: 'top-right',
+        icon: 'success',
+        title: 'Your changes have been saved.',
+        showConfirmButton: false,
+        timer: 5000,
+        toast: true,
+      })
     }
   }
 
@@ -168,71 +180,74 @@ const ListModal = (props: ListModalProps) => {
   }
 
   return (
-    <Modal
-      open={modalOpen}
-      setModalOpen={setModalOpen}
-      heading={<ModalHeader />}
-    >
-      {openItem.data &&
-        (editable ? (
-          <Formik initialValues={getInitialValues()} onSubmit={handleSubmit}>
-            {({ isSubmitting }) => (
-              <Form key="list-edit-form">
-                {openItem.data.map((field) => {
-                  return !field.calculated ? (
-                    <div
-                      key={field.name}
-                      className="d-flex flex-direction-column"
-                    >
-                      <Label htmlFor={field.name}>{field.name}</Label>
-                      <CustomField {...field} disabled={formDisabled} />
-                    </div>
-                  ) : null
-                })}
-                {!formDisabled && (
-                  <div className="d-flex margin-top-8">
-                    <button
-                      className="btn btn-primary"
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? 'Saving...' : 'Save'}
-                    </button>
-                    {!isSubmitting && (
-                      <button
-                        className="btn btn-secondary"
-                        onClick={() => setFormDisabled(true)}
+    open && (
+      <Modal
+        open={modalOpen}
+        setModalOpen={setModalOpen}
+        heading={<ModalHeader />}
+      >
+        {modalOpen}
+        {openItem.data &&
+          (editable ? (
+            <Formik initialValues={getInitialValues()} onSubmit={handleSubmit}>
+              {({ isSubmitting }) => (
+                <Form key="list-edit-form">
+                  {openItem.data.map((field) => {
+                    return !field.calculated ? (
+                      <div
+                        key={field.name}
+                        className="d-flex flex-direction-column"
                       >
-                        Cancel
+                        <Label htmlFor={field.name}>{field.name}</Label>
+                        <CustomField {...field} disabled={formDisabled} />
+                      </div>
+                    ) : null
+                  })}
+                  {!formDisabled && (
+                    <div className="d-flex margin-top-8">
+                      <button
+                        className="btn btn-primary"
+                        type="submit"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? 'Saving...' : 'Save'}
                       </button>
-                    )}
-                  </div>
-                )}
-              </Form>
-            )}
-          </Formik>
-        ) : (
-          Object.keys(openItem.data).map((info, i) => {
-            return (
-              <div key={info} style={{ margin: '16px 0' }}>
-                <Label htmlFor={`input${i}`}>{info}</Label>
-                <Text
-                  variant="paragraph"
-                  id={`input${i}`}
-                  border="1px solid whitesmoke"
-                  backgroundColor="whitesmoke"
-                  padding="8px"
-                  borderRadius="4px"
-                >
-                  {typeof openItem.data[info] === 'object'
-                    ? displayObject(openItem.data[info])
-                    : openItem.data[info]}
-                </Text>
-              </div>
-            )
-          })
-        ))}
-    </Modal>
+                      {!isSubmitting && (
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => setFormDisabled(true)}
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </Form>
+              )}
+            </Formik>
+          ) : (
+            Object.keys(openItem.data).map((info, i) => {
+              return (
+                <div key={info} style={{ margin: '16px 0' }}>
+                  <Label htmlFor={`input${i}`}>{info}</Label>
+                  <Text
+                    variant="paragraph"
+                    id={`input${i}`}
+                    border="1px solid whitesmoke"
+                    backgroundColor="whitesmoke"
+                    padding="8px"
+                    borderRadius="4px"
+                  >
+                    {typeof openItem.data[info] === 'object'
+                      ? displayObject(openItem.data[info])
+                      : openItem.data[info]}
+                  </Text>
+                </div>
+              )
+            })
+          ))}
+      </Modal>
+    )
   )
 }
 

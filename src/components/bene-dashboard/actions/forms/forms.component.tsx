@@ -44,7 +44,7 @@ const Forms = () => {
       <h3>Forms</h3>
       <div className="margin-top-16 flex-1">
         {FORMS.map((form) => (
-          <FormAccordion form={form} />
+          <FormAccordion form={form} key={form.name} />
         ))}
       </div>
     </div>
