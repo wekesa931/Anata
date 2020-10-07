@@ -37,7 +37,7 @@ const HNDashboard = () => {
     <div className={styles.dashboard}>
       <div className={styles.dashboardLinks}>
         <h5 className={styles.heading}>All table links</h5>
-        <p className="text-heading-2">Choose an Airtable View</p>
+        <p className="text-heading-2">Choose a view</p>
         <div className="margin-top-24">
           {views.map((view, index) => {
             return (
