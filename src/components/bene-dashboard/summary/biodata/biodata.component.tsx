@@ -8,7 +8,7 @@ type BioDataProps = {
   member: any
 }
 
-const riskFactors = (
+const getRiskFactors = (
   diabetes: string,
   highBloodPressure: string,
   cholesterol: string
@@ -82,7 +82,7 @@ const Hmp = () => {
   )
 }
 
-const ConditionsSummarry = () => {
+const ConditionsSummary = () => {
   const [conditions, setConditions] = useState<any>([])
   const [interventions, setInterventions] = useState<any>([])
   const [milestones, setMilestones] = useState<any>([])
@@ -101,7 +101,8 @@ const ConditionsSummarry = () => {
 
         Object.keys(response).forEach((key) => {
           if (
-            !uniqueConditions.has(response[key].Condition) &&
+            (!uniqueConditions.has(response[key].Condition) ||
+              response[key].Condition === 'Other') &&
             response[key]['Condition Status'] === 'Active'
           ) {
             memberConditions.push(response[key])
@@ -150,7 +151,10 @@ const ConditionsSummarry = () => {
       <div className={`text-small ${styles.conditionsContent}`}>
         {conditions.map((condition: any, index: number) => (
           <li key={index}>
-            {condition.Condition} Stage {condition.Stage} Active
+            {condition.Condition === 'Other'
+              ? condition['Other, specify']
+              : condition.Condition}{' '}
+            Stage {condition.Stage} Active
           </li>
         ))}
       </div>
@@ -222,7 +226,7 @@ const HifSummary = () => {
           const memberBloodGroup =
             response[record_id]['What is your Blood Type?']
 
-          const riskFactorArray = riskFactors(
+          const riskFactorArray = getRiskFactors(
             response[record_id][
               'Does anyone in your immediate family (Grandparents, Parents, Siblings) have Diabetes?'
             ],
@@ -472,7 +476,7 @@ const BioData = ({ member }: BioDataProps) => {
 
             <HifSummary />
 
-            <ConditionsSummarry />
+            <ConditionsSummary />
           </div>
         </div>
       )}
