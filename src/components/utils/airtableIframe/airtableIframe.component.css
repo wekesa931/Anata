@@ -1,0 +1,5 @@
+.iframeContainer {
+  height: 960px;
+  background: url(../../../assets/img/icons/loading.svg) center center no-repeat;
+  border-color: red;
+}

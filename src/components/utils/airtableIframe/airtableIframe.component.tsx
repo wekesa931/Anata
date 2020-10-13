@@ -1,4 +1,5 @@
 import React, { CSSProperties } from 'react'
+import styles from './airtableIframe.component.css'
 
 type AirtableIframePropType = {
   src: string
@@ -10,15 +11,17 @@ type AirtableIframePropType = {
 
 const AirtableIframe = ({ src, style }: AirtableIframePropType) => {
   return (
-    <iframe
-      src={src}
-      frameBorder="0"
-      width="100%"
-      height="960"
-      style={style || { background: 'transparent' }}
-      title={`Airtable view from ${src}`}
-      scrolling="yes"
-    />
+    <div className={styles.iframeContainer}>
+      <iframe
+        src={src}
+        frameBorder="0"
+        width="100%"
+        height="960"
+        style={style || { background: 'transparent' }}
+        title={`Airtable view from ${src}`}
+        scrolling="yes"
+      />
+    </div>
   )
 }
 
