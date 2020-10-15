@@ -2,15 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import airtableFetch from '../../../../resources/airtableFetch'
 import { useAuth } from '../../../../context/auth-context'
-import Accordion from '../../../utils/accordion/accordion.component'
-import AirtableIframe from '../../../utils/airtableIframe/airtableIframe.component'
 import FORMS from './forms'
 
-const FormAccordion = ({
-  form,
-}: {
-  form: { name: string; url: string; hnField?: string }
-}) => {
+const Forms = () => {
   const { recId } = useParams()
   const [hn, setHN] = useState<any>({})
   const { user } = useAuth()
@@ -27,24 +21,23 @@ const FormAccordion = ({
       })
     }
   }, [user])
-
-  return (
-    <Accordion title={form.name}>
-      <AirtableIframe
-        src={`https://airtable.com/embed/${form.url}?prefill_${form.hnField}=${hn['Record ID']}&prefill_Member=${recId}`}
-        style={{ border: 'none' }}
-      />
-    </Accordion>
-  )
-}
-
-const Forms = () => {
+  const openForm = (form: { url: string; name: string; hnField?: string }) => {
+    window.open(
+      `https://airtable.com/${form.url}?prefill_${form.hnField}=${hn['Record ID']}&prefill_Member=${recId}`,
+      form.name
+    )
+  }
   return (
     <div className="d-flex flex-direction-column">
       <h3>Forms</h3>
       <div className="margin-top-16 flex-1">
         {FORMS.map((form) => (
-          <FormAccordion form={form} key={form.name} />
+          <button
+            onClick={() => openForm(form)}
+            className="full-width btn btn-secondary"
+          >
+            {form.name}
+          </button>
         ))}
       </div>
     </div>
