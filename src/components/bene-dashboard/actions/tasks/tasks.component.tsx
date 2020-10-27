@@ -26,7 +26,7 @@ const Tasks = () => {
   ]
   const url = `hntasks/list/0?view=HN Dashboard&${filterFields(
     fields
-  )}&sort[0][field]=Due Date&sort[0][direction]=asc&filterByFormula=FIND("${recId}", {Member Record ID})`
+  )}&sort=[{"field":"Due Date","direction":"asc"}]&filterByFormula=FIND("${recId}", {Member Record ID})`
   const { data: response, refresh: refetchTasks } = useAirtableFetch(url)
 
   const StrikeThrough = ({ children }: any) => {
