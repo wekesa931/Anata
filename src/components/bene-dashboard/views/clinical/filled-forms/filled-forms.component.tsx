@@ -42,7 +42,29 @@ const FilledForms = () => {
       'Full Name (ID) (from Members)',
     ]
 
-    const forms = ['baseline', 'hif', 'nif', 'ncf', 'activity', 'minorhif']
+    const forms = [
+      'baseline', 
+      'hif', 
+      'nif', 
+      'ncf', 
+      'activity', 
+      'minorhif',
+      'hntasks',
+      'interactions', 
+      'pafu', 
+      'medications',
+      'appointments',
+      'vitals',
+      'bp',
+      'chl',
+      'dm',
+      'conditions',
+      'hmp',
+      'clinicalrounds',
+      'kits',
+      'interventions',
+      'interventions_tracking'
+    ]
 
     const getFields = (fields: any) => {
       const keys = Object.keys(fields).filter(
@@ -52,10 +74,10 @@ const FilledForms = () => {
       keys.forEach((key) => Object.assign(obj, { [key]: fields[key] }))
       return obj
     }
-
+    //
     const getForm = (form: string) => {
       return airtableFetch(
-        `${form}/list/0?view=HN%20Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})`
+        `${form}/list/0?filterByFormula=FIND("${recId}",{Member Record ID})&maxRecords=1&sort=[{"field":"created_at", "direction":"desc"}]`
       ).then((res) => {
         const result = Object.keys(res).map((key) => res[key])[0]
         return result ? getFields(result) : result
@@ -68,14 +90,30 @@ const FilledForms = () => {
       if (response.every((form) => form === undefined)) {
         setFilledForms([])
       } else {
-        setFilledForms([
-          { name: 'Baseline', data: response[0] },
-          { name: 'HIF', data: response[1] },
-          { name: 'NIF', data: response[2] },
-          { name: 'Nutritional Consultation', data: response[3] },
-          { name: 'Activity', data: response[4] },
-          { name: 'Minor HIF', data: response[5] },
-        ])
+        const formResponses = [
+          { name: 'Baseline', data: response[forms.indexOf('baseline')] },
+          { name: 'HIF', data: response[forms.indexOf('hif')] },
+          { name: 'NIF', data: response[forms.indexOf('nif')] },
+          { name: 'Nutritional Consultation', data: response[forms.indexOf('ncf')] },
+          { name: 'Activity', data: response[forms.indexOf('activity')] },
+          { name: 'Minor HIF', data: response[forms.indexOf('minorhif')] },
+          { name: 'HN Tasks', data: response[forms.indexOf('hntasks')] },
+          { name: 'Interactions', data: response[forms.indexOf('interactions')] },
+          { name: 'PAFU', data: response[forms.indexOf('pafu')] },
+          { name: 'Medications', data: response[forms.indexOf('medications')] },
+          { name: 'Appointments', data: response[forms.indexOf('appointments')] },
+          { name: 'Vitals', data: response[forms.indexOf('vitals')] },
+          { name: 'BP Monitoring', data: response[forms.indexOf('bp')] },
+          { name: 'CHL Monitoring', data: response[forms.indexOf('chl')] },
+          { name: 'Diabetes Monitoring', data: response[forms.indexOf('dm')] },
+          { name: 'Conditions', data: response[forms.indexOf('conditions')] },
+          { name: 'HMP', data: response[forms.indexOf('hmp')] },
+          { name: 'Clinical Rounds', data: response[forms.indexOf('clinicalrounds')] },
+          { name: 'Monitoring Kit', data: response[forms.indexOf('kits')] },
+          { name: 'Intervention', data: response[forms.indexOf('interventions')] },
+          { name: 'Intervention Tracking', data: response[forms.indexOf('interventions_tracking')] }
+        ]
+        setFilledForms(formResponses)
       }
     })
   }, [recId])
