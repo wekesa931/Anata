@@ -35,6 +35,8 @@ const InteractionLogs = () => {
           getTopRightText={(data) => data['HN Name']}
           emptyListText="No interaction logs recorded."
           modalTitle="Interaction log"
+          defaultNoElements={6}
+          elementIncrement={6}
           paginate
         />
       </div>

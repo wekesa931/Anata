@@ -13,6 +13,8 @@ type ListProps = {
   getTopRightText?: (data: any) => string | JSX.Element | null
   paginate?: boolean
   modalTitle?: string
+  defaultNoElements?: number
+  elementIncrement?: number
   emptyListText?: string
   dateColumnKey?: string
   editable?: boolean
@@ -25,6 +27,8 @@ const List = ({
   getTopRightText,
   modalTitle,
   dateColumnKey,
+  defaultNoElements = 3,
+  elementIncrement = 3,
   paginate = false,
   emptyListText = 'No data available',
   editable = false,
@@ -75,25 +79,18 @@ const List = ({
   }, [list, dateColumnKey, globalDateSort])
 
   useEffect(() => {
-    if (paginate && sortedList.length > 3) {
-      return setDisplayedData(sortedList.slice(0, 3))
+    if (paginate && sortedList.length > defaultNoElements) {
+      return setDisplayedData(sortedList.slice(0, defaultNoElements))
     }
     return setDisplayedData(sortedList)
-  }, [sortedList, paginate])
-
-  useEffect(() => {
-    if (paginate && sortedList.length > 3) {
-      return setDisplayedData(sortedList.slice(0, 3))
-    }
-    return setDisplayedData(sortedList)
-  }, [paginate, sortedList])
+  }, [sortedList, paginate, defaultNoElements])
 
   const displayMore = () => {
     const itemDisplayed = displayedData.length
     const itemsNotDisplayed = sortedList.length - itemDisplayed
     if (itemDisplayed < sortedList.length) {
-      if (itemsNotDisplayed > 3) {
-        setDisplayedData(sortedList.slice(0, itemDisplayed + 3))
+      if (itemsNotDisplayed > elementIncrement) {
+        setDisplayedData(sortedList.slice(0, itemDisplayed + elementIncrement))
       } else {
         setDisplayedData(sortedList)
       }
@@ -102,8 +99,8 @@ const List = ({
 
   const displayLess = () => {
     const itemDisplayed = displayedData.length
-    if (displayedData.length > 3) {
-      setDisplayedData(displayedData.slice(0, itemDisplayed - 3))
+    if (displayedData.length > elementIncrement) {
+      setDisplayedData(displayedData.slice(0, itemDisplayed - elementIncrement))
     }
   }
 
@@ -163,7 +160,7 @@ const List = ({
           </div>
           <div className={styles.pagination}>
             {paginate &&
-              sortedList.length > 3 &&
+              sortedList.length > defaultNoElements &&
               sortedList.length !== displayedData.length && (
                 <button
                   className={`btn-unstyled ${styles.tableBtn}`}
@@ -172,7 +169,7 @@ const List = ({
                   More
                 </button>
               )}
-            {paginate && displayedData.length > 3 && (
+            {paginate && displayedData.length > defaultNoElements && (
               <button
                 className={`btn-unstyled ${styles.tableBtn}`}
                 onClick={displayLess}
