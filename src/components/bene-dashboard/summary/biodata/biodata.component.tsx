@@ -446,6 +446,15 @@ const BioData = ({ member }: BioDataProps) => {
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
                     {member.Employer || member['Account Name']}
+                    <span
+                      className={
+                        member['Member Status'] === 'Active'
+                          ? 'text-success'
+                          : 'text-danger'
+                      }
+                    >
+                      {` (${member['Member Status']})`}
+                    </span>
                   </td>
                 </tr>
                 <tr>
