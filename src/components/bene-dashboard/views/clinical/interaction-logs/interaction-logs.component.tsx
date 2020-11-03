@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import { useParams } from 'react-router-dom'
 import airtableFetch from '../../../../../resources/airtableFetch'
 import List from '../../../../utils/list/list.component'
+import analytics from '../../../../../helpers/segment'
 
 const InteractionLogs = () => {
   const [interactions, setInteractions] = useState<any>()
@@ -19,6 +20,7 @@ const InteractionLogs = () => {
         }))
       setInteractions(mappedResponse)
     })
+    analytics.track('Interaction Logs View Opened')
   }, [recId])
 
   const getInteractionDate = ({ encounter_datetime }: any) => {

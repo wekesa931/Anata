@@ -54,6 +54,7 @@ const Medcations = () => {
         getTopRightText={getRefillText}
         dateColumnKey="Start Date"
         paginate
+        modalTitle="Medication"
       />
     </div>
   )

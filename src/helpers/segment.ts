@@ -1,6 +1,6 @@
 import segment from './analytics'
 
-const env_check = process.env.NODE_ENV
+const env_check = process.env.NODE_ENV === 'PROD'
 
 const analytics = {
   identify: (id: any) => {

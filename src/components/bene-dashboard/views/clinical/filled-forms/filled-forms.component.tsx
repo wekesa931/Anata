@@ -143,6 +143,7 @@ const FilledForms = () => {
         list={filledForms}
         emptyListText="No Forms found for this member"
         paginate
+        modalTitle="Filled Form"
       />
     </div>
   )
