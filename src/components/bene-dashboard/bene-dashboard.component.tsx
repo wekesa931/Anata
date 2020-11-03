@@ -5,6 +5,7 @@ import styles from './bene-dashboard.component.css'
 import Views from './views/views.component'
 import Actions from './actions/actions.component'
 import Fetcher from '../utils/fetcher/fetcher'
+import analytics from '../../helpers/segment'
 
 const PatientDashboard = () => {
   const [recId, setRecId] = useState<string>()
@@ -13,6 +14,12 @@ const PatientDashboard = () => {
   if (params.recId && recId !== params.recId) {
     setRecId(params.recId)
   }
+
+  React.useEffect(() => {
+    if (recId) {
+      analytics.page()
+    }
+  }, [recId])
 
   return (
     <Fetcher url={`members/${recId}`} contextKey={recId} skeleton={false}>

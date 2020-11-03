@@ -9,6 +9,7 @@ import styles from './tasks.component.css'
 import filterFields from '../../../../helpers/filter-fields'
 import TASK_FIELDS from './tasks-fields'
 import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
+import analytics from '../../../../helpers/segment'
 
 const Tasks = () => {
   const [allTasks, setAllTasks] = useState<any[]>([])
@@ -149,6 +150,9 @@ const Tasks = () => {
     await airtableFetch('hntasks', 'post', {
       id: task.id,
       fields: { ...task.fields, Assignee: [task.fields.Assignee] },
+    })
+    analytics.track(`Tasks Updated`, {
+      bene: recId,
     })
     return refetchTasks()
   }

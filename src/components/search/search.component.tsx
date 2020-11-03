@@ -6,6 +6,7 @@ import SearchIcon from '../../assets/img/icons/search.svg'
 import CloseIcon from '../../assets/img/icons/close.svg'
 import airtableFetch from '../../resources/airtableFetch'
 import styles from './search.component.css'
+import analytics from '../../helpers/segment'
 
 interface resultItemType {
   id: string
@@ -55,11 +56,14 @@ const SearchInput = () => {
     return throttleFunc()
   }
 
-  const onItemChange = (
+  const onResultClicked = (
     item: resultItemType | null,
     stateAndHelpers: { clearSelection: () => any }
   ) => {
     if (item) {
+      analytics.track('Bene Searched', {
+        bene: item.id,
+      })
       history.push(`/member/${item.id}`)
     }
     // clear selection
@@ -68,7 +72,7 @@ const SearchInput = () => {
 
   return (
     <Downshift
-      onChange={onItemChange}
+      onChange={onResultClicked}
       itemToString={(item) => (item ? `${item['Full Name']}` : '')}
       onInputValueChange={searchMembers}
     >

@@ -6,6 +6,7 @@ import ExpandIcon from '../../../assets/img/icons/arrows-diagonals-bltr.svg'
 import Tooltip from '../tooltip/tooltip.component'
 import { useDateSort } from '../../../context/sort.context'
 import ListModal from './list-modal.component'
+import analytics from '../../../helpers/segment'
 
 type ListProps = {
   list: { name: string; data: any }[]
@@ -123,6 +124,7 @@ const List = ({
                     onClick={() => {
                       setOpenItem(item)
                       setModalOpen(true)
+                      analytics.track(`${modalTitle} Opened`)
                     }}
                     key={i}
                     onMouseEnter={() => setIsHovering(i)}

@@ -43,15 +43,15 @@ const FilledForms = () => {
     ]
 
     const forms = [
-      'baseline', 
-      'hif', 
-      'nif', 
-      'ncf', 
-      'activity', 
+      'baseline',
+      'hif',
+      'nif',
+      'ncf',
+      'activity',
       'minorhif',
       'hntasks',
-      'interactions', 
-      'pafu', 
+      'interactions',
+      'pafu',
       'medications',
       'appointments',
       'vitals',
@@ -63,7 +63,7 @@ const FilledForms = () => {
       'clinicalrounds',
       'kits',
       'interventions',
-      'interventions_tracking'
+      'interventions_tracking',
     ]
 
     const getFields = (fields: any) => {
@@ -94,24 +94,42 @@ const FilledForms = () => {
           { name: 'Baseline', data: response[forms.indexOf('baseline')] },
           { name: 'HIF', data: response[forms.indexOf('hif')] },
           { name: 'NIF', data: response[forms.indexOf('nif')] },
-          { name: 'Nutritional Consultation', data: response[forms.indexOf('ncf')] },
+          {
+            name: 'Nutritional Consultation',
+            data: response[forms.indexOf('ncf')],
+          },
           { name: 'Activity', data: response[forms.indexOf('activity')] },
           { name: 'Minor HIF', data: response[forms.indexOf('minorhif')] },
           { name: 'HN Tasks', data: response[forms.indexOf('hntasks')] },
-          { name: 'Interactions', data: response[forms.indexOf('interactions')] },
+          {
+            name: 'Interactions',
+            data: response[forms.indexOf('interactions')],
+          },
           { name: 'PAFU', data: response[forms.indexOf('pafu')] },
           { name: 'Medications', data: response[forms.indexOf('medications')] },
-          { name: 'Appointments', data: response[forms.indexOf('appointments')] },
+          {
+            name: 'Appointments',
+            data: response[forms.indexOf('appointments')],
+          },
           { name: 'Vitals', data: response[forms.indexOf('vitals')] },
           { name: 'BP Monitoring', data: response[forms.indexOf('bp')] },
           { name: 'CHL Monitoring', data: response[forms.indexOf('chl')] },
           { name: 'Diabetes Monitoring', data: response[forms.indexOf('dm')] },
           { name: 'Conditions', data: response[forms.indexOf('conditions')] },
           { name: 'HMP', data: response[forms.indexOf('hmp')] },
-          { name: 'Clinical Rounds', data: response[forms.indexOf('clinicalrounds')] },
+          {
+            name: 'Clinical Rounds',
+            data: response[forms.indexOf('clinicalrounds')],
+          },
           { name: 'Monitoring Kit', data: response[forms.indexOf('kits')] },
-          { name: 'Intervention', data: response[forms.indexOf('interventions')] },
-          { name: 'Intervention Tracking', data: response[forms.indexOf('interventions_tracking')] }
+          {
+            name: 'Intervention',
+            data: response[forms.indexOf('interventions')],
+          },
+          {
+            name: 'Intervention Tracking',
+            data: response[forms.indexOf('interventions_tracking')],
+          },
         ]
         setFilledForms(formResponses)
       }

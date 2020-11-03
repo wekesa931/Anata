@@ -9,6 +9,7 @@ import { useAuth } from '../../context/auth-context'
 import { useComms } from '../../context/comms-context'
 import SearchInput from '../search/search.component'
 import Icon from '../utils/icon/icon.component'
+import analytics from '../../helpers/segment'
 
 const UserMenu = () => {
   const user = useUser()
@@ -17,6 +18,7 @@ const UserMenu = () => {
 
   const logout = () => {
     auth.logout()
+    analytics.track('User LoggedOut')
     history.push('/login')
   }
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import analytics from '../../../../helpers/segment'
 import airtableFetch from '../../../../resources/airtableFetch'
 import { useAuth } from '../../../../context/auth-context'
 import FORMS from './forms'
@@ -22,6 +23,10 @@ const Forms = () => {
     }
   }, [user])
   const openForm = (form: { url: string; name: string; hnField?: string }) => {
+    analytics.track('Form Opened', {
+      name,
+      bene: recId,
+    })
     window.open(
       `https://airtable.com/${form.url}?prefill_${form.hnField}=${hn['Record ID']}&prefill_Member=${recId}`,
       form.name

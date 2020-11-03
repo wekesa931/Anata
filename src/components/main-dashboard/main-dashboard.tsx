@@ -6,6 +6,7 @@ import AirtableIframe from '../utils/airtableIframe/airtableIframe.component'
 import { useUser } from '../../context/user-context'
 import config from '../../config/config'
 import Tabs from '../utils/tabs/tabs.component'
+import analytics from '../../helpers/segment'
 
 const HNDashboard = () => {
   const user = useUser()
@@ -43,7 +44,12 @@ const HNDashboard = () => {
             return (
               <button
                 className="btn-unstyled btn-list"
-                onClick={() => setActiveView(index)}
+                onClick={() => {
+                  analytics.page({
+                    title: `Main Dashboard: ${view.name}`,
+                  })
+                  setActiveView(index)
+                }}
                 key={view.name}
               >
                 <div

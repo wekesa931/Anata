@@ -7,6 +7,7 @@ import styles from './table.component.css'
 import Modal from '../modals/modal.component'
 import Tooltip from '../tooltip/tooltip.component'
 import { useDateSort } from '../../../context/sort.context'
+import analytics from '../../../helpers/segment'
 
 type TableProps = {
   title: string
@@ -95,6 +96,7 @@ const Table = ({ title, columns, data, dateColumnKey }: TableProps) => {
     event.stopPropagation()
     setClickedRow(row)
     setModalOpen(true)
+    analytics.track(`${title} Opened`)
   }
 
   return (
