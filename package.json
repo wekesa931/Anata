@@ -66,7 +66,7 @@
   "dependencies": {
     "@airtable/blocks": "0.0.53",
     "@analytics/segment": "^0.5.0",
-    "@antarahealth/comms-ui": "^3.1.0",
+    "@antarahealth/comms-ui": "^3.2.0",
     "analytics": "^0.5.5",
     "body-parser": "^1.19.0",
     "dayjs": "^1.8.31",
