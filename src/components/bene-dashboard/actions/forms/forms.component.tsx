@@ -24,7 +24,7 @@ const Forms = () => {
   }, [user])
   const openForm = (form: { url: string; name: string; hnField?: string }) => {
     analytics.track('Form Opened', {
-      form_name: name,
+      form_name: form.name,
       bene: recId,
     })
     window.open(
