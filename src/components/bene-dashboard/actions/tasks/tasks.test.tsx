@@ -108,4 +108,15 @@ describe('<Tasks />', () => {
     expect(screen.queryByTestId('list-modal-form-cancel-btn')).toBeNull()
     expect(screen.getByText(/saved/)).not.toBeNull()
   })
+
+  test('the first task has button to open external url', async () => {
+    airtableFetch.mockReturnValue(Promise.resolve(tasks_mock_response))
+    window.open = jest.fn()
+    renderWithRouter(<Tasks />)
+    const openTaskUrlBtns = await screen.findAllByTestId('task-url-link')
+    expect(openTaskUrlBtns[0]).toHaveAttribute(
+      'href',
+      'https://airtable.com/shrKQ5efAEh9z3618?prefill_Member=member_record_id&prefill_Health Navigator=assigned_hn'
+    )
+  })
 })

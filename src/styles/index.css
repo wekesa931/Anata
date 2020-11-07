@@ -265,6 +265,7 @@ button.btn-unstyled {
   background: none;
   border: none;
   outline: none;
+  cursor: pointer;
 }
 
 button.btn {

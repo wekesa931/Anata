@@ -13,7 +13,7 @@
   "scripts": {
     "bundle": "webpack",
     "test": "jest --verbose --setupFiles dotenv/config",
-    "test:watch": "jest --watch --verbose",
+    "test:watch": "jest --watch --verbose --setupFiles dotenv/config",
     "start": "node server.js",
     "dev": "webpack-dev-server --mode development --port 5000",
     "lint": "eslint --fix './src/**/*.{js,jsx,ts,tsx}'",

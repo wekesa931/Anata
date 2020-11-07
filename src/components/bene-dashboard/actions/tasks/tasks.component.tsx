@@ -24,43 +24,20 @@ const Tasks = () => {
     'Assignee',
     'Assigned HN Name',
     'Last Status changed at',
+    'Open URL',
   ]
   const url = `hntasks/list/0?view=HN Dashboard&${filterFields(
     fields
   )}&sort=[{"field":"Due Date","direction":"asc"}]&filterByFormula=FIND("${recId}", {Member Record ID})`
-  const { data: response, refresh: refetchTasks } = useAirtableFetch(url)
+  const {
+    data: response,
+    refresh: refetchTasks,
+    isLoading,
+    isError,
+  } = useAirtableFetch(url)
 
   const StrikeThrough = ({ children }: any) => {
     return <s className="text-disabled">{children}</s>
-  }
-
-  const getDisplayedInfo = (data: any) => {
-    const DisplayInfo = () => (
-      <div className={styles.taskContainer}>
-        <span className="text-bold">
-          {dayjs(data['Due Date']).format('DD MMM YYYY')}
-        </span>
-        <span>{data.Type}</span>
-        <div className="p-relative">
-          {data['Assigned HN Name'] && (
-            <Tooltip title={data['Assigned HN Name']}>
-              {!data['Assigned HN Name'].includes('Antara Bot') ? (
-                <Icon name="user" fill="var(--greyscale-2)" />
-              ) : (
-                <Icon name="lightning" fill="var(--greyscale-2)" />
-              )}
-            </Tooltip>
-          )}
-        </div>
-      </div>
-    )
-    return data.Status === 'Complete' ? (
-      <StrikeThrough>
-        <DisplayInfo />
-      </StrikeThrough>
-    ) : (
-      <DisplayInfo />
-    )
   }
 
   const includeFieldTypes = (data) => {
@@ -70,6 +47,54 @@ const Tasks = () => {
     })
   }
   useEffect(() => {
+    const getDisplayedInfo = (data: any) => {
+      const DisplayInfo = () => (
+        <div className={styles.taskContainer}>
+          <span className="text-bold">
+            {dayjs(data['Due Date']).format('DD MMM YYYY')}
+          </span>
+          <span>{data.Type}</span>
+          <div className="d-flex flex-align-center">
+            {data['Open URL'] && data['Open URL'].url && (
+              <Tooltip title="Open URL">
+                <a
+                  href={data['Open URL'].url}
+                  target="__blank"
+                  className="btn-unstyled"
+                  data-testid="task-url-link"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Icon
+                    name="external-link"
+                    width={16}
+                    height={16}
+                    fill="var(--blue-base)"
+                  />
+                </a>
+              </Tooltip>
+            )}
+            <div className="p-relative margin-left-8">
+              {data['Assigned HN Name'] && (
+                <Tooltip title={data['Assigned HN Name']}>
+                  {!data['Assigned HN Name'].includes('Antara Bot') ? (
+                    <Icon name="user" fill="var(--greyscale-2)" />
+                  ) : (
+                    <Icon name="lightning" fill="var(--greyscale-2)" />
+                  )}
+                </Tooltip>
+              )}
+            </div>
+          </div>
+        </div>
+      )
+      return data.Status === 'Complete' ? (
+        <StrikeThrough>
+          <DisplayInfo />
+        </StrikeThrough>
+      ) : (
+        <DisplayInfo />
+      )
+    }
     if (response) {
       const mappedResponse = Object.keys(response)
         .map((key) => ({ data: response[key], id: key }))
@@ -164,7 +189,7 @@ const Tasks = () => {
           <h4>Tasks</h4>
         </div>
 
-        {allTasks ? (
+        {allTasks && !isLoading && !isError && (
           <List
             list={allTasks}
             getTopLeftText={getPriority}
@@ -174,7 +199,18 @@ const Tasks = () => {
             editable
             onEdit={updateTask}
           />
-        ) : null}
+        )}
+        {isLoading && (
+          <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+            <Icon name="loading" />
+            <p className="text-small">Loading Tasks...</p>
+          </div>
+        )}
+        {isError && (
+          <p className="text-small text-danger margin-top-24">
+            An error occurred while fetching tasks, please refresh the page.
+          </p>
+        )}
       </div>
     </>
   )
