@@ -1,11 +1,11 @@
 import React from 'react'
 import { screen, cleanup, act } from '@testing-library/react'
 import InteractionLogs from './interaction-logs.component'
-import renderWithRouter from '../../../../../../__mocks__/custom-render'
-import mockInteractions from '../../../../../../__mocks__/interactions-mock'
-import airtableFetch from '../../../../../resources/airtableFetch'
+import renderWithRouter from '../../../../../__mocks__/custom-render'
+import mockInteractions from '../../../../../__mocks__/interactions-mock'
+import airtableFetch from '../../../../resources/airtableFetch'
 
-jest.mock('../../../../../resources/airtableFetch')
+jest.mock('../../../../resources/airtableFetch')
 
 describe('<InteractionLogs />', () => {
   afterEach(() => {
@@ -15,8 +15,8 @@ describe('<InteractionLogs />', () => {
   it('renders', async () => {
     airtableFetch.mockResolvedValue({})
     renderWithRouter(<InteractionLogs />)
+    expect(screen.getByText(/Loading/)).not.toBeNull()
     await act(airtableFetch)
-    expect(screen.getByText('No interaction logs recorded.')).not.toBeNull()
   })
 
   it('displays list of interaction logs', async () => {

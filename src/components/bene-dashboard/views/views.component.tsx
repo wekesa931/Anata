@@ -5,7 +5,8 @@ import Icon from '../../utils/icon/icon.component'
 import styles from './views.component.css'
 import Radio from '../../utils/radio/radio.component'
 import { DateSortProvider, useDateSort } from '../../../context/sort.context'
-import InteractionLogs from './clinical/interaction-logs/interaction-logs.component'
+import InteractionLogs from './interaction-logs/interaction-logs.component'
+import Nutrition from './nutrition/nutrition.component'
 
 type SortDialogProps = {
   onClose: () => void
@@ -124,11 +125,9 @@ const Views = () => {
           <div label="Interactions">
             <InteractionLogs />
           </div>
-          <div label="Workflows">
-            <h1>HMPs</h1>
+          <div label="Nutrition">
+            <Nutrition />
           </div>
-          <div label="Nutrition">Nutrition</div>
-          <div label="Partners">Partners</div>
         </Tabs>
       </div>
     </DateSortProvider>
