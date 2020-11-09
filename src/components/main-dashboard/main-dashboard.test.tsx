@@ -11,5 +11,6 @@ describe('<HNDashboard/>', () => {
     render(<HNDashboard />)
     expect(screen.getAllByText('Members')).toBeTruthy()
     expect(screen.getAllByText('HN Tasks')).toBeTruthy()
+    expect(screen.getAllByText('HN Meetings')).toBeTruthy()
   })
 })

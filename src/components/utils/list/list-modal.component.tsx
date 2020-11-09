@@ -79,6 +79,16 @@ const CustomField = (customField: CustomFieldProps) => {
           disabled={disabled}
         />
       )
+    case 'datetime':
+      return (
+        <Field
+          name={name}
+          id={name}
+          type="datetime-local"
+          className="form-control"
+          disabled={disabled}
+        />
+      )
     case 'long-text':
       return (
         <Field

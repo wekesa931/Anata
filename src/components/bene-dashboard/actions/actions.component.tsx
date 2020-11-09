@@ -1,10 +1,11 @@
 import React from 'react'
 import Communication from './communication/communication.component'
 import Forms from './forms/forms.component'
+import Meetings from './meetings/meetings.component'
 import Tasks from './tasks/tasks.component'
 
 const Actions = ({ member }: any) => {
-  const tabs = ['Actions', 'Forms', 'Settings']
+  const tabs = ['Actions', 'Forms', 'Meetings']
   const [activeTab, setActiveTab] = React.useState<string>(tabs[0])
   return (
     <div className="full-height d-flex" style={{ flexDirection: 'column' }}>
@@ -37,7 +38,9 @@ const Actions = ({ member }: any) => {
         <div className={activeTab === tabs[1] ? '' : 'hidden'}>
           <Forms />
         </div>
-        <div className={activeTab === tabs[2] ? '' : 'hidden'}>Settings</div>
+        <div className={activeTab === tabs[2] ? '' : 'hidden'}>
+          <Meetings />
+        </div>
       </div>
     </div>
   )

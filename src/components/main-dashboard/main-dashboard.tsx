@@ -19,6 +19,13 @@ const HNDashboard = () => {
     return iframes.default.hntasks
   }
 
+  const getMeetingsView = () => {
+    if (user && user.profileObj && iframes[user.profileObj.email]) {
+      return iframes[user.profileObj.email].meetings
+    }
+    return iframes.default.meetings
+  }
+
   const views = [
     {
       name: 'Members',
@@ -29,6 +36,11 @@ const HNDashboard = () => {
       name: 'HN Tasks',
       description: 'Your view of HN tasks',
       hasCalendar: true,
+    },
+    {
+      name: 'HN Meetings',
+      description: 'Your view of HN meetings',
+      airtableUrl: `https://airtable.com/embed/${getMeetingsView()}?viewControls=on`,
     },
   ]
 

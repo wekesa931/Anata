@@ -8,6 +8,7 @@ type AirtableField = {
     | 'number'
     | 'date'
     | 'long-text'
+    | 'datetime'
   options?: { label: string; value: string }[]
   lookupUrl?: string
   value?: any
