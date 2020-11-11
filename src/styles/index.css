@@ -223,6 +223,10 @@ h6,
 .text-capitalize {
   text-transform: capitalize;
 }
+
+.text-align-center {
+  text-align: center;
+}
 /** flex **/
 .d-flex {
   display: flex;
@@ -468,6 +472,10 @@ li {
   position: relative;
 }
 
+.p-sticky {
+  position: sticky;
+}
+
 .padding-top-16 {
   padding-top: 16px;
 }
@@ -482,6 +490,10 @@ li {
 
 .full-width {
   width: 100%;
+}
+
+.half-width {
+  width: 50%;
 }
 
 .appContainer {

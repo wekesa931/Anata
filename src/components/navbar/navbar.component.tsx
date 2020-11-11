@@ -10,6 +10,7 @@ import { useComms } from '../../context/comms-context'
 import SearchInput from '../search/search.component'
 import Icon from '../utils/icon/icon.component'
 import analytics from '../../helpers/segment'
+import TaskMenu from './task-menu/task-menu.component'
 
 const UserMenu = () => {
   const user = useUser()
@@ -48,6 +49,7 @@ const UserMenu = () => {
 
 const NavBar = () => {
   const [showUserMenu, setShowUserMenu] = useState<boolean>(false)
+  const [showTasksMenu, setShowTasksMenu] = useState<boolean>(false)
   const {
     commsStatus: { callInProgress },
   } = useComms()
@@ -63,6 +65,12 @@ const NavBar = () => {
 
         <div className="d-flex flex-align-center flex-justify-end flex-one">
           {callInProgress && <RedBlinkingDot />}
+          <button
+            className="btn-icon"
+            onClick={() => setShowTasksMenu(!showTasksMenu)}
+          >
+            <Icon name="calendar-dates" fill="white" />
+          </button>
           <button className="btn-icon">
             <MenuDotsIcon className="icon-white" />
           </button>
@@ -76,6 +84,7 @@ const NavBar = () => {
         </div>
       </div>
       {showUserMenu && <UserMenu />}
+      {showTasksMenu && <TaskMenu />}
     </div>
   )
 }
