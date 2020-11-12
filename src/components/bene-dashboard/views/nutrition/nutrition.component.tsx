@@ -59,10 +59,9 @@ const Nutrition = () => {
     'Calculated Daily Potassium',
   ]
   const { data, isLoading, isError } = useAirtableFetch(
-    `ncf/list/0?
-    filterByFormula=FIND("${recId}", {Member Record ID})
-    &sort=[{"field":"Date of Consultation","direction":"desc"}]
-    &${filterFields(allowedFields)}`
+    `ncf/list/0?filterByFormula=FIND("${recId}", {Member Record ID})&sort=[{"field":"Date of Consultation","direction":"desc"}]&${filterFields(
+      allowedFields
+    )}`
   )
   React.useEffect(() => {
     if (data) {
