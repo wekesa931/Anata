@@ -8,7 +8,7 @@ import Icon from '../../../utils/icon/icon.component'
 import Tooltip from '../../../utils/tooltip/tooltip.component'
 import MEETING_FIELDS from './meeting-fields'
 import analytics from '../../../../helpers/segment'
-import airtableFetch from '../../../../resources/airtableFetch'
+import airtableFetch from '../../../../resources/airtable-fetch'
 
 const Meetings = () => {
   const [meetings, setMeetings] = React.useState<any[]>([])

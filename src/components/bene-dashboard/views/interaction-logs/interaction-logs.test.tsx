@@ -3,9 +3,9 @@ import { screen, cleanup, act } from '@testing-library/react'
 import InteractionLogs from './interaction-logs.component'
 import renderWithRouter from '../../../../../__mocks__/custom-render'
 import mockInteractions from '../../../../../__mocks__/interactions-mock'
-import airtableFetch from '../../../../resources/airtableFetch'
+import airtableFetch from '../../../../resources/airtable-fetch'
 
-jest.mock('../../../../resources/airtableFetch')
+jest.mock('../../../../resources/airtable-fetch')
 
 describe('<InteractionLogs />', () => {
   afterEach(() => {

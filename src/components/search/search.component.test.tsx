@@ -1,12 +1,12 @@
 import React from 'react'
 import { render, fireEvent, act, screen, waitFor } from '@testing-library/react'
-import airtableFetch from '../../resources/airtableFetch'
+import airtableFetch from '../../resources/airtable-fetch'
 import '@testing-library/jest-dom/extend-expect'
 import SearchComponent from './search.component'
 import mockPatientSearchResponse from '../../../__mocks__/patient-list.mock'
 import renderWithRouter from '../../../__mocks__/custom-render'
 
-jest.mock('../../resources/airtableFetch', () => {
+jest.mock('../../resources/airtable-fetch', () => {
   return jest.fn().mockImplementation(() => {
     return Promise.resolve(null)
   })

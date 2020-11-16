@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import analytics from '../../../../helpers/segment'
-import airtableFetch from '../../../../resources/airtableFetch'
+import airtableFetch from '../../../../resources/airtable-fetch'
 import { useAuth } from '../../../../context/auth-context'
 import FORMS from './forms'
 

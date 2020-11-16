@@ -4,7 +4,7 @@ import { throttle } from 'throttle-debounce'
 import { Link, useHistory } from 'react-router-dom'
 import SearchIcon from '../../assets/img/icons/search.svg'
 import CloseIcon from '../../assets/img/icons/close.svg'
-import airtableFetch from '../../resources/airtableFetch'
+import airtableFetch from '../../resources/airtable-fetch'
 import styles from './search.component.css'
 import analytics from '../../helpers/segment'
 

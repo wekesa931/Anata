@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react'
-import airtableFetch from '../resources/airtableFetch'
+import airtableFetch from '../resources/airtable-fetch'
 
 const useAirtableFetch = (url: string) => {
   const reducer = (

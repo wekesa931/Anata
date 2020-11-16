@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
-import airtableFetch from '../../../../../resources/airtableFetch'
+import airtableFetch from '../../../../../resources/airtable-fetch'
 import List from '../../../../utils/list/list.component'
 
 const Medcations = () => {

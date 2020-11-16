@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { useParams } from 'react-router-dom'
-import airtableFetch from '../../../../resources/airtableFetch'
+import airtableFetch from '../../../../resources/airtable-fetch'
 import List from '../../../utils/list/list.component'
 import Icon from '../../../utils/icon/icon.component'
 import Tooltip from '../../../utils/tooltip/tooltip.component'

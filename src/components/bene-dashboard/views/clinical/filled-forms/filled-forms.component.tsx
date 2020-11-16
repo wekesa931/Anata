@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import airtableFetch from '../../../../../resources/airtableFetch'
+import airtableFetch from '../../../../../resources/airtable-fetch'
 import List from '../../../../utils/list/list.component'
 
 const FilledForms = () => {

@@ -10,10 +10,10 @@ import {
   waitFor,
 } from '@testing-library/react'
 import tasks_mock_response from '../../../../../__mocks__/tasks.mock'
-import airtableFetch from '../../../../resources/airtableFetch'
+import airtableFetch from '../../../../resources/airtable-fetch'
 import { act } from 'react-dom/test-utils'
 
-jest.mock('../../../../resources/airtableFetch')
+jest.mock('../../../../resources/airtable-fetch')
 
 airtableFetch.mockResolvedValue({})
 

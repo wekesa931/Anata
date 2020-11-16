@@ -1,6 +1,6 @@
 import React from 'react'
 import * as Loads from 'react-loads'
-import airtableFetch from '../../../resources/airtableFetch'
+import airtableFetch from '../../../resources/airtable-fetch'
 import LoadingIcon from '../../../assets/img/icons/loading.svg'
 import ListSkeletonLoader from '../skeleton-loader/skeleton-loader.component'
 

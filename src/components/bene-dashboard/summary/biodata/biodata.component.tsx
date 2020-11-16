@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { hmp } from '../../../../types/user'
 import styles from './biodata.component.css'
-import airtableFetch from '../../../../resources/airtableFetch'
+import airtableFetch from '../../../../resources/airtable-fetch'
 
 type BioDataProps = {
   member: any
