@@ -27,7 +27,7 @@ const Task = ({ name, url }: any) => {
 
 const TaskMenu = () => {
   const user = useUser()
-  const email = user && user.profileObj && user.profileObj.email
+  const email = user && user.email
   const [dueDate, setDueDate] = useState(dayjs().format('YYYY-MM-DD'))
   const [tasks, setTasks] = useState<any[]>([])
   const [url, setUrl] = useState('')

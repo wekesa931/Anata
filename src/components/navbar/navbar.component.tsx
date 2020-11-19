@@ -29,14 +29,12 @@ const UserMenu = () => {
         <div className={`card ${styles.userMenu}`}>
           <div className={styles.userProfile}>
             <img
-              src={user.profileObj.imageUrl || ''}
+              src={user.picture || ''}
               className={styles.userImage}
               alt="user"
             />
-            <h4>
-              {`${user.profileObj.givenName} ${user.profileObj.familyName}`}
-            </h4>
-            <h5 className={styles.userEmail}>{`${user.profileObj.email}`}</h5>
+            <h4>{`${user.given_name} ${user.family_name}`}</h4>
+            <h5 className={styles.userEmail}>{`${user.email}`}</h5>
           </div>
           <button className="btn btn-secondary" onClick={logout}>
             Log out

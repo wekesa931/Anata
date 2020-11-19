@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
+import { useGoogleLogout } from 'react-google-login'
 import storage from '../helpers/secure-storage'
 import { User } from '../types/user'
 import keys from '../constants/storage'
@@ -21,13 +22,10 @@ const AuthContext = React.createContext<AuthContextType>({
 })
 
 function AuthProvider({ user, children }: any) {
-  const tokenExpiry = storage.get(keys.EXPIRY)
   let loggedInUser = storage.get(keys.USER)
-  const tokenExpired = dayjs.utc(tokenExpiry).local().isBefore(dayjs())
-
-  if (tokenExpired) {
-    loggedInUser = null
-  }
+  const { signOut } = useGoogleLogout({
+    clientId: process.env.GOOGLE_CLIENT_ID || '',
+  })
 
   if (loggedInUser) {
     loggedInUser = JSON.parse(loggedInUser)
@@ -37,6 +35,7 @@ function AuthProvider({ user, children }: any) {
   const logout = () => {
     storage.removeAll()
     setCurrentUser(null)
+    signOut()
   }
 
   return (

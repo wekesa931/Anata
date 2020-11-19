@@ -1,7 +1,8 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import GoogleLogin from 'react-google-login'
-import dayjs from 'dayjs'
+import jwt_decode from 'jwt-decode'
+import axios from 'axios'
 import { useAuth } from '../../context/auth-context'
 import styles from './login.component.css'
 import logo from '../../assets/img/logo/antara-logo.png'
@@ -24,16 +25,36 @@ const Login = () => {
     })
   }
 
-  const successfulSignIn = (response: any) => {
-    storage.set(keys.EXPIRY, dayjs().add(59, 'minute'))
-    storage.set(keys.USER, JSON.stringify(response))
-    setCurrentUser(response)
-    if (response.profileObj) {
-      analytics.identify(response.profileObj.email, {
-        firstName: response.profileObj.givenName,
-        lastName: response.profileObj.familyName,
-      })
-      analytics.track('User LoggedIn')
+  const getRefreshTokenFromNodeProxy = async (code: string) => {
+    const tokens = await axios({
+      url: `${process.env.NODE_PROXY_URL}/auth`,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      data: JSON.stringify({ code }),
+    }).then(({ data }) => data)
+    return tokens
+  }
+
+  const successfulSignIn = async (response: any) => {
+    // pass one time code from google to node proxy to generate
+    // access token and refresh token for authentication
+    const authToken = await getRefreshTokenFromNodeProxy(response.code)
+
+    if (authToken && authToken.refresh_token) {
+      storage.set(keys.REFRESH_TOKEN, authToken.refresh_token)
+    }
+
+    if (authToken && authToken.id_token) {
+      const userObj = jwt_decode(authToken.id_token)
+      setCurrentUser(userObj)
+      storage.set(keys.USER, JSON.stringify({ ...authToken, ...userObj }))
+      if (userObj) {
+        analytics.identify(userObj.email)
+        analytics.track('User LoggedIn')
+      }
     }
     if (
       history &&
@@ -46,7 +67,6 @@ const Login = () => {
     }
     return history.push('/member')
   }
-
   return (
     <div className={styles.container}>
       <div className={` ${styles.loginCard}`}>
@@ -80,6 +100,10 @@ const Login = () => {
             onRequest={() => setLoggingIn(true)}
             cookiePolicy="single_host_origin"
             disabled={isLoggingIn}
+            accessType="offline"
+            responseType="code"
+            prompt="consent"
+            isSignedIn
           />
         </div>
         <p

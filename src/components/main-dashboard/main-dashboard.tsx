@@ -13,15 +13,15 @@ const HNDashboard = () => {
   const { iframes } = config
 
   const getTasksView = () => {
-    if (user && iframes[user.profileObj.email]) {
-      return iframes[user.profileObj.email].hntasks
+    if (user && iframes[user.email]) {
+      return iframes[user.email].hntasks
     }
     return iframes.default.hntasks
   }
 
   const getMeetingsView = () => {
-    if (user && user.profileObj && iframes[user.profileObj.email]) {
-      return iframes[user.profileObj.email].meetings
+    if (user && iframes[user.email]) {
+      return iframes[user.email].meetings
     }
     return iframes.default.meetings
   }
