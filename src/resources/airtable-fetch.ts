@@ -27,16 +27,26 @@ axios.interceptors.response.use(
       return history.push('/login', { from: history.location })
     }
     if (status === 401) {
-      return refreshToken().then(({ data }) => {
-        const userObj = jwt_decode(data.id_token)
-        storage.set(constants.USER, JSON.stringify({ ...data, ...userObj }))
-        return axios.request({
-          ...error.config,
-          headers: {
-            Authorization: `Bearer ${data.id_token}`,
-          },
-        })
-      })
+      return refreshToken().then(
+        (response) => {
+          if (response.data) {
+            const { data } = response
+            const userObj = jwt_decode(data.id_token)
+            storage.set(constants.USER, JSON.stringify({ ...data, ...userObj }))
+            return axios.request({
+              ...error.config,
+              headers: {
+                Authorization: `Bearer ${data.id_token}`,
+              },
+            })
+          }
+          return null
+        },
+        () => {
+          // refreshing the token failed
+          return history.push('/login', { from: history.location })
+        }
+      )
     }
     return Promise.reject(error)
   }

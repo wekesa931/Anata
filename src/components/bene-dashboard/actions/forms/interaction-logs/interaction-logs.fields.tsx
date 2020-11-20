@@ -131,7 +131,7 @@ const useInteractionFormFields = () => {
       type: 'text',
       condition: (values) =>
         values.inboundInteractionCategory &&
-        values.inboundInteractionCategory === 'Other',
+        values.inboundInteractionCategory.includes('Other'),
     },
     {
       label: 'Outbound Interaction Category',
@@ -168,7 +168,7 @@ const useInteractionFormFields = () => {
       type: 'text',
       condition: (values) =>
         values.outboundInteractionCategory &&
-        values.outboundInteractionCategory === 'Other',
+        values.outboundInteractionCategory.includes('Other'),
     },
     {
       label: 'Interactor Summary Notes',

@@ -52,7 +52,7 @@ const InteractionLogsValidationSchema = Yup.object().shape({
     otherwise: Yup.array(),
   }),
   otherCategoryInbound: Yup.string().when('inboundInteractionCategory', {
-    is: 'Other',
+    is: (category) => category && category.includes('Other'),
     then: Yup.string().required(
       'Required when inbound interaction category is other'
     ),
@@ -70,7 +70,7 @@ const InteractionLogsValidationSchema = Yup.object().shape({
       otherwise: Yup.array(),
     }),
   otherCategoryOutbound: Yup.string().when('outboundInteractionCategory', {
-    is: 'Other',
+    is: (category) => category && category.includes('Other'),
     then: Yup.string().required(
       'Required when outbound interaction category is other'
     ),

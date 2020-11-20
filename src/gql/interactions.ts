@@ -5,6 +5,7 @@ const GET_INTERACTIONS = gql`
     interaction(antaraId: $antaraId) {
       interactionStartedAt
       interactionSummaryNotes
+      interactorType
       healthNavigator {
         fullName
       }
