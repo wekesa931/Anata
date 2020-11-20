@@ -83,6 +83,11 @@ const FORMS = [
     name: 'Intervention Data Collection Form',
     url: 'shrU6coJtTURljj15',
   },
+  {
+    name: 'Interaction Log (New)',
+    url: `/interaction/create`,
+    airtableUrl: false,
+  },
 ]
 
 export default FORMS

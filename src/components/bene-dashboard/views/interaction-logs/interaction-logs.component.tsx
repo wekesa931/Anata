@@ -1,48 +1,56 @@
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
-import { useParams } from 'react-router-dom'
+import { useQuery } from '@apollo/client'
 import List from '../../../utils/list/list.component'
 import analytics from '../../../../helpers/segment'
-import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
+import { GET_INTERACTIONS } from '../../../../gql/interactions'
+import { useMember } from '../../../../context/member.context'
 
 const InteractionLogs = () => {
   const [interactions, setInteractions] = useState<any>()
-  const { recId } = useParams()
-  const url = `interactions/list/0?filterByFormula=FIND("${recId}", {Member Record ID})&fields[]=encounter_datetime&fields[]=Interactor Type&fields[]=Mode of Communication&fields[]=Interaction Summary Notes&fields[]=HN Name&fields[]=Member Name&fields[]=Antara ID&fields[]=Reporting Week`
-  const { data, isLoading, isError } = useAirtableFetch(url)
+  const { member } = useMember()
+  const { loading, error, data } = useQuery(GET_INTERACTIONS, {
+    variables: { antaraId: member['Antara ID'] },
+  })
+
+  const getInteractionDate = ({ interactionStartedAt }: any) => {
+    return dayjs(interactionStartedAt).format("DD MMM 'YY, H:mm A")
+  }
+
+  const getHN = ({ healthNavigator }: any) => {
+    return healthNavigator.fullName
+  }
+
   useEffect(() => {
-    if (data) {
-      const mappedResponse = Object.keys(data)
-        .map((key) => data[key])
-        .map((log) => ({
-          data: log,
-          name: log['Interaction Summary Notes'],
-        }))
+    if (data && data.interaction) {
+      const mappedResponse = data.interaction.map((interaction: any) => ({
+        data: interaction,
+        name: interaction.interactionSummaryNotes,
+      }))
       setInteractions(mappedResponse)
-      analytics.track('Interaction Logs View Opened')
     }
   }, [data])
 
-  const getInteractionDate = ({ encounter_datetime }: any) => {
-    return dayjs(encounter_datetime).format("DD MMM 'YY, H:mm A")
-  }
+  useEffect(() => {
+    analytics.track('Interaction Logs Opened')
+  }, [])
 
   return (
     <>
       <h4>Interaction Logs</h4>
-      {isLoading && (
+      {loading && (
         <div className="d-flex flex-direction-column flex-align-center margin-top-32">
           <LoadingIcon />
           <p className="text-small">Loading Interaction Logs</p>
         </div>
       )}
-      {interactions && interactions.length > 0 && (
+      {interactions && !loading && (
         <div className="interactions">
           <List
             list={interactions}
             getTopLeftText={getInteractionDate}
-            getTopRightText={(log) => log['HN Name']}
+            getTopRightText={getHN}
             emptyListText="No interaction logs recorded."
             modalTitle="Interaction log"
             defaultNoElements={6}
@@ -51,7 +59,7 @@ const InteractionLogs = () => {
           />
         </div>
       )}
-      {isError && (
+      {error && (
         <p className="text-danger">
           An error occurred while displaying interaction logs, please refresh
           the page, if it persists contact help desk.

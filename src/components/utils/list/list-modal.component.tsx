@@ -1,13 +1,12 @@
 import { Label, Text } from '@airtable/blocks/ui'
 import React, { Dispatch, SetStateAction, useState } from 'react'
-import { Field, Form, Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import { Tooltip } from 'react-tippy'
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
 import Modal from '../modals/modal.component'
 import EditIcon from '../../../assets/img/icons/edit.svg'
 import AirtableField from '../../../types/airtable-field'
-import RemoteSelect from '../remote-select/remote-select.component'
+import FormField from '../form-field/form-field.component'
+import Toasts from '../../../helpers/toast'
 
 type ListModalProps = {
   modalOpen: boolean
@@ -18,109 +17,7 @@ type ListModalProps = {
   onEdit?: (values: { id: string; fields: any }) => Promise<any>
 }
 
-type CustomFieldProps = AirtableField & {
-  disabled: boolean
-}
-
-const CustomField = (customField: CustomFieldProps) => {
-  const {
-    name,
-    type,
-    disabled,
-    options = [],
-    lookupUrl,
-    lookupFieldNames,
-  } = customField
-  switch (type) {
-    case 'single-select':
-      return (
-        <Field
-          as="select"
-          name={name}
-          id={name}
-          className="form-control"
-          disabled={disabled}
-        >
-          {options &&
-            options.map((option) => (
-              <option key={option.label} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-        </Field>
-      )
-    case 'number':
-      return (
-        <Field
-          name={name}
-          id={name}
-          type="number"
-          className="form-control"
-          disabled={disabled}
-        />
-      )
-    case 'text':
-      return (
-        <Field
-          name={name}
-          id={name}
-          type="text"
-          className="form-control"
-          disabled={disabled}
-        />
-      )
-    case 'date':
-      return (
-        <Field
-          name={name}
-          id={name}
-          type="date"
-          className="form-control"
-          disabled={disabled}
-        />
-      )
-    case 'datetime':
-      return (
-        <Field
-          name={name}
-          id={name}
-          type="datetime-local"
-          className="form-control"
-          disabled={disabled}
-        />
-      )
-    case 'long-text':
-      return (
-        <Field
-          as="textarea"
-          name={name}
-          id={name}
-          className="form-control"
-          disabled={disabled}
-        />
-      )
-    case 'lookup':
-      return (
-        <Field name={name} className="form-control" disabled={disabled}>
-          {({ field, form }) => (
-            <RemoteSelect
-              lookupUrl={lookupUrl || ''}
-              lookupFieldNames={lookupFieldNames}
-              field={field}
-              form={form}
-              prefetch
-              disabled={disabled}
-            />
-          )}
-        </Field>
-      )
-    default:
-      return null
-  }
-}
-
 const ListModal = (props: ListModalProps) => {
-  const MySwal = withReactContent(Swal)
   const {
     modalOpen,
     setModalOpen,
@@ -164,14 +61,7 @@ const ListModal = (props: ListModalProps) => {
       await onEdit(task)
       setFormDisabled(true)
       setModalOpen(false)
-      MySwal.fire({
-        position: 'top-right',
-        icon: 'success',
-        title: 'Your changes have been saved.',
-        showConfirmButton: false,
-        timer: 5000,
-        toast: true,
-      })
+      Toasts.showSuccessNotification()
     }
   }
 
@@ -209,7 +99,7 @@ const ListModal = (props: ListModalProps) => {
                         className="d-flex flex-direction-column"
                       >
                         <Label htmlFor={field.name}>{field.name}</Label>
-                        <CustomField {...field} disabled={formDisabled} />
+                        <FormField {...field} disabled={formDisabled} />
                       </div>
                     ) : null
                   })}

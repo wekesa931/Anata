@@ -1,0 +1,55 @@
+.list {
+  border: 1px solid var(--blue-light);
+  border-radius: 0px 0px 4px 4px;
+}
+
+.listItem {
+  padding: 4px;
+  border-bottom: 1px solid var(--blue-light);
+  font-family: 'Karla';
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.listItem:hover {
+  background: var(--blue-light);
+}
+
+.selectedItem {
+  background: var(--blue-base);
+  padding: 2px;
+  border-radius: 4px;
+  font-family: 'Karla';
+  font-size: 14px;
+  color: white;
+  margin-right: 2px;
+}
+
+.removeBtn {
+  margin-left: 4px;
+  padding: 4px;
+  color: white;
+}
+
+.removeBtn:hover {
+  background-color: var(--red-base);
+}
+
+.toggleBtn {
+  position: absolute;
+  top: 8px;
+  right: 2px;
+  padding: 8px;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.container {
+  position: relative;
+}
+
+.input {
+  margin-bottom: -2px;
+}

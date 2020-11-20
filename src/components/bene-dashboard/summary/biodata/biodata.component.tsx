@@ -3,10 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { hmp } from '../../../../types/user'
 import styles from './biodata.component.css'
 import airtableFetch from '../../../../resources/airtable-fetch'
-
-type BioDataProps = {
-  member: any
-}
+import { useMember } from '../../../../context/member.context'
 
 const getRiskFactors = (
   diabetes: string,
@@ -342,7 +339,8 @@ const GeneralSummary = ({ member }: any) => {
   )
 }
 
-const BioData = ({ member }: BioDataProps) => {
+const BioData = () => {
+  const { member } = useMember()
   const isMinor = (age: number) => age < 18
 
   return (

@@ -6,6 +6,7 @@ import Views from './views/views.component'
 import Actions from './actions/actions.component'
 import Fetcher from '../utils/fetcher/fetcher'
 import analytics from '../../helpers/segment'
+import { MemberProvider } from '../../context/member.context'
 
 const PatientDashboard = () => {
   const [recId, setRecId] = useState<string>()
@@ -24,23 +25,25 @@ const PatientDashboard = () => {
   return (
     <Fetcher url={`members/${recId}`} contextKey={recId} skeleton={false}>
       {(response: any) => (
-        <div className={styles.container}>
-          <div className="dashboard-content dashboard-raised-content padding-top-32">
-            <BioData member={response} />
+        <MemberProvider member={response}>
+          <div className={styles.container}>
+            <div className="dashboard-content dashboard-raised-content padding-top-32">
+              <BioData />
+            </div>
+            <div
+              className="dashboard-content padding-top-32"
+              style={{ flex: 1, borderRight: '1px solid var(--blue-light)' }}
+            >
+              <Views />
+            </div>
+            <div
+              className="dashboard-content dashboard-raised-content padding-top-32"
+              style={{ width: '372px', borderRadius: '0px' }}
+            >
+              <Actions />
+            </div>
           </div>
-          <div
-            className="dashboard-content padding-top-32"
-            style={{ flex: 1, borderRight: '1px solid var(--blue-light)' }}
-          >
-            <Views member={response} />
-          </div>
-          <div
-            className="dashboard-content dashboard-raised-content padding-top-32"
-            style={{ width: '372px', borderRadius: '0px' }}
-          >
-            <Actions member={response} />
-          </div>
-        </div>
+        </MemberProvider>
       )}
     </Fetcher>
   )

@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import Downshift from 'downshift'
 import useAirtableFetch from '../../../hooks/airtable-fetch.hook'
 import filterFields from '../../../helpers/filter-fields'
+import styles from './remote-select.component.css'
 
 type RemoteSelectProps = {
   lookupUrl: string
   prefetch: boolean
-  lookupFieldNames?: string[]
+  lookupFieldNames: string[]
   field: any
   form: any
   disabled: boolean
@@ -24,7 +25,7 @@ const RemoteSelect = ({
   const [initialValue, setInitialValue] = useState<{
     label: string
     value: string
-  } | null>(null)
+  } | null>({ label: 'Loading...', value: '' })
 
   const url = lookupFieldNames
     ? `${lookupUrl}/list/0?${filterFields(lookupFieldNames)}`
@@ -35,12 +36,15 @@ const RemoteSelect = ({
     if (prefetch) {
       const results = Object.keys(data)
         .map((key) => data[key])
-        .map((obj) => ({ label: obj.Name, value: obj['Record ID'] }))
+        .map((obj) => ({
+          label: obj[lookupFieldNames[0]],
+          value: obj[lookupFieldNames[1]],
+        }))
       if (results) {
         setItems(results)
       }
     }
-  }, [data, prefetch])
+  }, [data, prefetch, lookupFieldNames])
 
   const onChange = (selection: { label: string; value: string } | null) => {
     if (selection) {
@@ -78,10 +82,13 @@ const RemoteSelect = ({
             <input
               {...getInputProps()}
               className="form-control"
-              disabled={disabled}
+              disabled={
+                disabled ||
+                (selectedItem ? selectedItem.label === 'Loading...' : false)
+              }
             />
           </div>
-          <ul {...getMenuProps()}>
+          <ul {...getMenuProps()} className={isOpen ? styles.list : undefined}>
             {isOpen
               ? items
                   .filter((item) => {
@@ -95,13 +102,19 @@ const RemoteSelect = ({
                   .map((item, index) => (
                     <li
                       {...getItemProps({
-                        key: item.value,
+                        key: item.value || index,
                         index,
                         item,
                         style: {
                           backgroundColor:
-                            highlightedIndex === index ? 'lightgray' : 'white',
+                            highlightedIndex === index
+                              ? 'var(--blue-light)'
+                              : 'white',
                           fontWeight: selectedItem === item ? 'bold' : 'normal',
+                          fontSize: '14px',
+                          padding: '4px',
+                          borderBottom: '1px solid var(--border-light)',
+                          color: 'var(--blue-base)',
                         },
                       })}
                     >

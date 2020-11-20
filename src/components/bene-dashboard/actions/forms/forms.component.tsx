@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useRouteMatch } from 'react-router-dom'
 import analytics from '../../../../helpers/segment'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import { useAuth } from '../../../../context/auth-context'
 import FORMS from './forms'
+import { useMember } from '../../../../context/member.context'
 
 const Forms = () => {
   const { recId } = useParams()
   const [hn, setHN] = useState<any>({})
   const { user } = useAuth()
+  const { member } = useMember()
+  const match = useRouteMatch()
 
   useEffect(() => {
     if (user && user.email) {
@@ -22,15 +25,30 @@ const Forms = () => {
       })
     }
   }, [user])
-  const openForm = (form: { url: string; name: string; hnField?: string }) => {
+  const openForm = (form: {
+    url: string
+    name: string
+    hnField?: string
+    airtableUrl: boolean
+  }) => {
     analytics.track('Form Opened', {
       form_name: form.name,
       bene: recId,
     })
-    window.open(
-      `https://airtable.com/${form.url}?prefill_${form.hnField}=${hn['Record ID']}&prefill_Member=${recId}`,
-      form.name
-    )
+    const url = form.airtableUrl
+      ? `https://airtable.com/${form.url}?prefill_${form.hnField}=${hn['Record ID']}&prefill_Member=${recId}`
+      : `${match.url}${form.url}?data=${encodeURIComponent(
+          JSON.stringify({
+            member: {
+              'Full Name': member['Full Name'],
+              'Antara ID': member['Antara ID'],
+            },
+            user: {
+              email: user && user.email,
+            },
+          })
+        )}`
+    window.open(url, form.name)
   }
   return (
     <div className="d-flex flex-direction-column">

@@ -4,11 +4,13 @@ import { useUser } from '../../../../context/user-context'
 import { useComms } from '../../../../context/comms-context'
 import styles from './communication.component.css'
 import Icon from '../../../utils/icon/icon.component'
+import { useMember } from '../../../../context/member.context'
 
-const Communication = ({ member }: any) => {
+const Communication = () => {
   const [communicationBlock, setCommunicationBlock] = useState<boolean>(true)
   const user = useUser()
   const { setCommsStatus } = useComms()
+  const { member } = useMember()
   const [client, setClient] = useState<any>()
 
   const showCommunicationBlock = () =>
