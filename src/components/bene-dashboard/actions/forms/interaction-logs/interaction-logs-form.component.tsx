@@ -3,6 +3,7 @@ import { ErrorMessage, Formik, FormikHelpers } from 'formik'
 import { useMutation } from '@apollo/client'
 import { useLocation } from 'react-router-dom'
 import qs from 'query-string'
+import dayjs from 'dayjs'
 import FormField from '../../../../utils/form-field/form-field.component'
 import Toasts from '../../../../../helpers/toast'
 import InteractionLogsValidationSchema from './interaction-logs-validation-schema'
@@ -12,10 +13,12 @@ import {
   CREATE_INTERACTION,
 } from '../../../../../gql/interactions'
 import styles from './interaction-logs-form.component.css'
+import analytics from '../../../../../helpers/segment'
 
 const InteractionLogsForm = () => {
   const { search } = useLocation()
   const { data } = qs.parse(search)
+  const [startTime, setStartTime] = dayjs()
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const { member, user } = JSON.parse(data)
@@ -27,6 +30,12 @@ const InteractionLogsForm = () => {
     awaitRefetchQueries: true,
   })
 
+  React.useEffect(() => {
+    analytics.track('Interaction Log Form Opened', {
+      member: member['Antara ID'],
+    })
+  }, [member])
+
   const onSubmit = (values: any, { setSubmitting }: FormikHelpers<any>) => {
     createInteraction({
       variables: {
@@ -37,9 +46,22 @@ const InteractionLogsForm = () => {
         },
       },
     })
-      .catch(() => Toasts.showErrorNotification())
+      .catch((e) => {
+        Toasts.showErrorNotification()
+        analytics.track('Interaction Log Submit Failure', {
+          member: member['Antara ID'],
+          error: e,
+        })
+      })
       .then(() => {
         setSubmitting(false)
+        analytics.track('Interaction Log Submitted', {
+          member: member['Antara ID'],
+        })
+        analytics.track('Interaction Log Time To Submit (mins)', {
+          timeTaken: dayjs().diff(startTime, 'minute'),
+        })
+        setStartTime(dayjs())
         Toasts.showSuccessConfirmationDialog(
           'Form saved successfully!',
           'Submit another one?',
