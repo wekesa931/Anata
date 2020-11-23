@@ -18,14 +18,25 @@ const InteractionLogs = () => {
     return dayjs(interactionStartedAt).format("DD MMM 'YY, H:mm A")
   }
 
-  const getHN = ({ healthNavigator }: any) => {
-    return healthNavigator.fullName
+  const getHN = (interaction: any) => {
+    return interaction['health Navigator'].fullName
   }
 
   useEffect(() => {
     if (data && data.interaction) {
       const mappedResponse = data.interaction.map((interaction: any) => ({
-        data: interaction,
+        data: Object.keys(interaction).reduce((acc, key) => {
+          if (key === 'healthNavigator') {
+            return {
+              ...acc,
+              [key.replace(/([A-Z])/g, ' $1')]: interaction[key].fullName,
+            }
+          }
+          return {
+            ...acc,
+            [key.replace(/([A-Z])/g, ' $1')]: interaction[key],
+          }
+        }, {}),
         name: interaction.interactionSummaryNotes,
       }))
       setInteractions(mappedResponse)

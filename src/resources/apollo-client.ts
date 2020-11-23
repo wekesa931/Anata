@@ -17,11 +17,10 @@ const getTokenFromLocalStorage = () => {
   return ''
 }
 
-const authToken = getTokenFromLocalStorage()
-
-const authMiddleWare = (token: string) =>
+const authMiddleWare = () =>
   new ApolloLink((operation, forward) => {
-    if (authToken) {
+    const token = getTokenFromLocalStorage()
+    if (token) {
       operation.setContext({
         headers: {
           authorization: `Bearer ${token}`,
@@ -68,11 +67,10 @@ const handleErrors = onError(
 )
 
 const apolloClient = new ApolloClient({
-  link: ApolloLink.from([
-    handleErrors,
-    authMiddleWare(authToken).concat(httpLink),
-  ]),
-  cache: new InMemoryCache(),
+  link: ApolloLink.from([handleErrors, authMiddleWare().concat(httpLink)]),
+  cache: new InMemoryCache({
+    addTypename: false,
+  }),
 })
 
 export default apolloClient

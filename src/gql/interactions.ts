@@ -6,6 +6,12 @@ const GET_INTERACTIONS = gql`
       interactionStartedAt
       interactionSummaryNotes
       interactorType
+      interactionDirection
+      inboundInteractionCategory
+      outboundInteractionCategory
+      otherCategoryOutbound
+      otherCategoryInbound
+      flagForReview
       healthNavigator {
         fullName
       }

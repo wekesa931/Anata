@@ -35,19 +35,20 @@ const Forms = () => {
       form_name: form.name,
       bene: recId,
     })
-    const url = form.airtableUrl
-      ? `https://airtable.com/${form.url}?prefill_${form.hnField}=${hn['Record ID']}&prefill_Member=${recId}`
-      : `${match.url}${form.url}?data=${encodeURIComponent(
-          JSON.stringify({
-            member: {
-              'Full Name': member['Full Name'],
-              'Antara ID': member['Antara ID'],
-            },
-            user: {
-              email: user && user.email,
-            },
-          })
-        )}`
+    const url =
+      form.airtableUrl === false
+        ? `${match.url}${form.url}?data=${encodeURIComponent(
+            JSON.stringify({
+              member: {
+                'Full Name': member['Full Name'],
+                'Antara ID': member['Antara ID'],
+              },
+              user: {
+                email: user && user.email,
+              },
+            })
+          )}`
+        : `https://airtable.com/${form.url}?prefill_${form.hnField}=${hn['Record ID']}&prefill_Member=${recId}`
     window.open(url, form.name)
   }
   return (

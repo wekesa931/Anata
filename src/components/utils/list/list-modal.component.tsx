@@ -2,6 +2,7 @@ import { Label, Text } from '@airtable/blocks/ui'
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import { Form, Formik } from 'formik'
 import { Tooltip } from 'react-tippy'
+import dayjs from 'dayjs'
 import Modal from '../modals/modal.component'
 import EditIcon from '../../../assets/img/icons/edit.svg'
 import AirtableField from '../../../types/airtable-field'
@@ -28,10 +29,41 @@ const ListModal = (props: ListModalProps) => {
   } = props
   const [formDisabled, setFormDisabled] = useState<boolean>(true)
   const displayObject = (obj: any) => {
-    if (Array.isArray(obj)) {
-      return obj.join(',')
+    if (obj) {
+      if (Array.isArray(obj)) {
+        return obj.join(',')
+      }
+      return Object.keys(obj).map((key) => `${key}: ${obj[key]}`)
     }
-    return Object.keys(obj).map((key) => `${key}: ${obj[key]}`)
+    return null
+  }
+
+  const displayString = (str: string) => {
+    if (Date.parse(str)) {
+      return dayjs(str).format('DD MMM YYYY HH:mm')
+    }
+    return str
+  }
+
+  const format = (data) => {
+    switch (typeof data) {
+      case 'object':
+        return displayObject(data)
+      case 'string':
+        return displayString(data)
+      default:
+        return data
+    }
+  }
+
+  const isNotNull = (data) => {
+    if (data) {
+      if (Array.isArray(data) && data.length === 0) {
+        return true
+      }
+      return false
+    }
+    return true
   }
 
   const ModalHeader = () => {
@@ -128,21 +160,23 @@ const ListModal = (props: ListModalProps) => {
           ) : (
             Object.keys(openItem.data).map((info, i) => {
               return (
-                <div key={info} style={{ margin: '16px 0' }}>
-                  <Label htmlFor={`input${i}`}>{info}</Label>
-                  <Text
-                    variant="paragraph"
-                    id={`input${i}`}
-                    border="1px solid whitesmoke"
-                    backgroundColor="whitesmoke"
-                    padding="8px"
-                    borderRadius="4px"
-                  >
-                    {typeof openItem.data[info] === 'object'
-                      ? displayObject(openItem.data[info])
-                      : openItem.data[info]}
-                  </Text>
-                </div>
+                !isNotNull(openItem.data[info]) && (
+                  <div key={info} style={{ margin: '16px 0' }}>
+                    <Label className="text-capitalize" htmlFor={`input${i}`}>
+                      {info}
+                    </Label>
+                    <Text
+                      variant="paragraph"
+                      id={`input${i}`}
+                      border="1px solid whitesmoke"
+                      backgroundColor="whitesmoke"
+                      padding="8px"
+                      borderRadius="4px"
+                    >
+                      {format(openItem.data[info])}
+                    </Text>
+                  </div>
+                )
               )
             })
           ))}
