@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { ErrorMessage, Formik, FormikHelpers } from 'formik'
 import { useMutation } from '@apollo/client'
 import { useLocation } from 'react-router-dom'
@@ -18,7 +18,7 @@ import analytics from '../../../../../helpers/segment'
 const InteractionLogsForm = () => {
   const { search } = useLocation()
   const { data } = qs.parse(search)
-  const [startTime, setStartTime] = dayjs()
+  const [startTime, setStartTime] = useState(dayjs())
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const { member, user } = JSON.parse(data)
