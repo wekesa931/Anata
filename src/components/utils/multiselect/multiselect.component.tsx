@@ -107,6 +107,7 @@ const MultiSelect = ({ form, field, options }: any) => {
             onBlur={(e) => {
               field.onBlur(e)
             }}
+            aria-labelledby={`${field.name}Label`}
           />
           <button
             {...getToggleButtonProps({

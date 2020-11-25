@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { ErrorMessage, Formik, FormikHelpers } from 'formik'
 import { useMutation } from '@apollo/client'
 import { useLocation } from 'react-router-dom'
@@ -92,7 +92,7 @@ const InteractionLogsForm = () => {
               (field) =>
                 (!field.condition || field.condition(values)) && (
                   <div className="margin-bottom-16" key={field.name}>
-                    <label htmlFor={field.name}>
+                    <label htmlFor={field.name} id={`${field.name}Label`}>
                       {field.label} <span className="text-danger">*</span>
                     </label>
                     <FormField

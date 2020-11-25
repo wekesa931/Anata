@@ -1,10 +1,14 @@
 import React from 'react'
 import { Router } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
-import { render } from '@testing-library/react'
+import { render, RenderResult } from '@testing-library/react'
 import { AuthProvider } from '../src/context/auth-context'
 import { UserProvider } from '../src/context/user-context'
 import mockUser from './user-mock'
+
+type CustomRenderResult = RenderResult & {
+  history: any
+}
 
 function renderWithRouter(
   ui: any,
@@ -14,7 +18,7 @@ function renderWithRouter(
     route = '/',
     history = createBrowserHistory(),
   } = {}
-): any {
+): CustomRenderResult {
   const Wrapper = ({ children }: any) => (
     <AuthProvider user={mockUser}>
       <UserProvider>

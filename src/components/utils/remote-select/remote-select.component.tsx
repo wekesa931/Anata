@@ -86,6 +86,7 @@ const RemoteSelect = ({
                 disabled ||
                 (selectedItem ? selectedItem.label === 'Loading...' : false)
               }
+              aria-labelledby={`${field.name}Label`}
             />
           </div>
           <ul {...getMenuProps()} className={isOpen ? styles.list : undefined}>
