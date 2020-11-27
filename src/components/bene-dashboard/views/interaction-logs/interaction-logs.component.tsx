@@ -4,13 +4,13 @@ import { useQuery } from '@apollo/client'
 import List from '../../../utils/list/list.component'
 import analytics from '../../../../helpers/segment'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
-import { GET_INTERACTIONS } from '../../../../gql/interactions'
+import { GET_MEMBER_INTERACTIONS } from '../../../../gql/interactions'
 import { useMember } from '../../../../context/member.context'
 
 const InteractionLogs = () => {
   const [interactions, setInteractions] = useState<any>()
   const { member } = useMember()
-  const { loading, error, data } = useQuery(GET_INTERACTIONS, {
+  const { loading, error, data } = useQuery(GET_MEMBER_INTERACTIONS, {
     variables: { antaraId: member['Antara ID'] },
   })
 
@@ -22,23 +22,29 @@ const InteractionLogs = () => {
     return interaction['health Navigator'].fullName
   }
 
+  const toSentenceCase = (str: string) => {
+    return str.replace(/([A-Z])/g, ' $1')
+  }
+
   useEffect(() => {
-    if (data && data.interaction) {
-      const mappedResponse = data.interaction.map((interaction: any) => ({
-        data: Object.keys(interaction).reduce((acc, key) => {
-          if (key === 'healthNavigator') {
+    if (data && data.memberInteractions) {
+      const mappedResponse = data.memberInteractions.edges.map(
+        ({ node }: any) => ({
+          data: Object.keys(node).reduce((acc, key) => {
+            if (key === 'healthNavigator') {
+              return {
+                ...acc,
+                [toSentenceCase(key)]: node[key].fullName,
+              }
+            }
             return {
               ...acc,
-              [key.replace(/([A-Z])/g, ' $1')]: interaction[key].fullName,
+              [toSentenceCase(key)]: node[key],
             }
-          }
-          return {
-            ...acc,
-            [key.replace(/([A-Z])/g, ' $1')]: interaction[key],
-          }
-        }, {}),
-        name: interaction.interactionSummaryNotes,
-      }))
+          }, {}),
+          name: node.interactionSummaryNotes,
+        })
+      )
       setInteractions(mappedResponse)
     }
   }, [data])

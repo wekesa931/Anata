@@ -277,7 +277,8 @@ button.btn-unstyled {
   cursor: pointer;
 }
 
-button.btn {
+button.btn,
+a.btn {
   border-radius: 12px;
   padding: 13px;
   font-family: Rubik;
@@ -319,30 +320,35 @@ button.btn-icon.active {
   border-radius: 12px;
 }
 
-button.btn-small {
+button.btn-small,
+a.btn-small {
   width: 40px;
   height: 24px;
   border-radius: 12px;
   font-size: 10px;
 }
 
-button.btn-primary {
+button.btn-primary,
+a.btn-primary {
   background: var(--orange-base);
   box-shadow: 0px 8px 16px rgba(255, 152, 0, 0.3);
   color: #ffffff;
 }
 
-button.btn-primary:hover {
+button.btn-primary:hover,
+a.btn-primary:hover {
   background: var(--blue-base);
 }
 
-button.btn-secondary {
+button.btn-secondary,
+a.btn-secondary {
   background: #ffffff;
   box-shadow: 0px 8px 16px rgba(56, 94, 126, 0.2);
   color: var(--orange-base);
 }
 
-button.btn-secondary:hover {
+button.btn-secondary:hover,
+a.btn-secondary:hover {
   background: var(--border-light);
 }
 
@@ -386,6 +392,7 @@ textarea.form-control {
   padding: 8px;
   box-sizing: border-box;
   margin: 8px 0px;
+  font-family: Karla, sans-serif;
 }
 
 input.form-control:focus,

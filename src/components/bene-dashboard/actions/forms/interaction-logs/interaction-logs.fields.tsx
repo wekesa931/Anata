@@ -180,12 +180,10 @@ const useInteractionFormFields = () => {
       label: 'Flag for Review',
       name: 'flagForReview',
       type: 'single-select',
-      options: ['Not Flagged', 'Flagged For Review', 'Reviewed'].map(
-        (option) => ({
-          label: option,
-          value: option,
-        })
-      ),
+      options: ['Yes', 'No', 'Reviewed'].map((option) => ({
+        label: option,
+        value: option,
+      })),
       required: true,
     },
   ]

@@ -7,6 +7,7 @@ import { useUser } from '../../context/user-context'
 import config from '../../config/config'
 import Tabs from '../utils/tabs/tabs.component'
 import analytics from '../../helpers/segment'
+import FlagForReview from './flag-for-review/flag-for-review.component'
 
 const HNDashboard = () => {
   const user = useUser()
@@ -42,9 +43,37 @@ const HNDashboard = () => {
       description: 'Your view of HN meetings',
       airtableUrl: `https://airtable.com/embed/${getMeetingsView()}?viewControls=on`,
     },
+    {
+      name: 'Interactions',
+      description: 'All benes interactions in one place',
+      component: () => <FlagForReview />,
+    },
   ]
 
   const [activeView, setActiveView] = React.useState(0)
+
+  const AirtableView = ({ view }: { view: number }) => {
+    return !views[view].hasCalendar ? (
+      <AirtableIframe src={views[view].airtableUrl || ''} />
+    ) : (
+      <Tabs>
+        <div label="Calendar">
+          <AirtableIframe
+            src={`https://airtable.com/embed/${
+              getTasksView().calendar
+            }?viewControls=on`}
+          />
+        </div>
+        <div label="Grid">
+          <AirtableIframe
+            src={`https://airtable.com/embed/${
+              getTasksView().grid
+            }?viewControls=on`}
+          />
+        </div>
+      </Tabs>
+    )
+  }
 
   return (
     <div className={styles.dashboard}>
@@ -92,25 +121,10 @@ const HNDashboard = () => {
         <p className="text-heading-2 margin-bottom-16">
           {views[activeView].name}
         </p>
-        {!views[activeView].hasCalendar ? (
-          <AirtableIframe src={views[activeView].airtableUrl} />
+        {views[activeView].component ? (
+          views[activeView].component()
         ) : (
-          <Tabs>
-            <div label="Calendar">
-              <AirtableIframe
-                src={`https://airtable.com/embed/${
-                  getTasksView().calendar
-                }?viewControls=on`}
-              />
-            </div>
-            <div label="Grid">
-              <AirtableIframe
-                src={`https://airtable.com/embed/${
-                  getTasksView().grid
-                }?viewControls=on`}
-              />
-            </div>
-          </Tabs>
+          <AirtableView view={activeView} />
         )}
       </div>
     </div>

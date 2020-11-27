@@ -76,6 +76,7 @@ const NavBar = () => {
           <button
             className="btn-icon"
             onClick={() => setShowUserMenu(!showUserMenu)}
+            data-testid="user-menu-btn"
           >
             <Icon name="user" fill="white" />
           </button>

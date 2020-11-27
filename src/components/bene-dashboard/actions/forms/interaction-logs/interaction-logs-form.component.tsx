@@ -9,7 +9,7 @@ import Toasts from '../../../../../helpers/toast'
 import InteractionLogsValidationSchema from './interaction-logs-validation-schema'
 import useInteractionFormFields from './interaction-logs.fields'
 import {
-  GET_INTERACTIONS,
+  GET_MEMBER_INTERACTIONS,
   CREATE_INTERACTION,
 } from '../../../../../gql/interactions'
 import styles from './interaction-logs-form.component.css'
@@ -25,7 +25,10 @@ const InteractionLogsForm = () => {
   const fields = useInteractionFormFields()
   const [createInteraction] = useMutation(CREATE_INTERACTION, {
     refetchQueries: [
-      { query: GET_INTERACTIONS, variables: { antaraId: member['Antara ID'] } },
+      {
+        query: GET_MEMBER_INTERACTIONS,
+        variables: { antaraId: member['Antara ID'] },
+      },
     ],
     awaitRefetchQueries: true,
   })
@@ -53,26 +56,34 @@ const InteractionLogsForm = () => {
           error: e,
         })
       })
-      .then(() => {
+      .then((response) => {
         setSubmitting(false)
-        analytics.track('Interaction Log Submitted', {
-          member: member['Antara ID'],
-        })
-        analytics.track('Interaction Log Time To Submit (mins)', {
-          timeTaken: dayjs().diff(startTime, 'minute'),
-        })
-        setStartTime(dayjs())
-        Toasts.showSuccessConfirmationDialog(
-          'Form saved successfully!',
-          'Submit another one?',
-          'Return to dashboard',
-          () => {
-            window.close()
-          },
-          () => {
-            window.location.reload()
-          }
-        )
+        if (response.data.createInteraction.status === 200) {
+          analytics.track('Interaction Log Submitted', {
+            member: member['Antara ID'],
+          })
+          analytics.track('Interaction Log Time To Submit (mins)', {
+            timeTaken: dayjs().diff(startTime, 'minute'),
+          })
+          setStartTime(dayjs())
+          Toasts.showSuccessConfirmationDialog(
+            'Form saved successfully!',
+            'Submit another one?',
+            'Return to dashboard',
+            () => {
+              window.close()
+            },
+            () => {
+              window.location.reload()
+            }
+          )
+        } else {
+          Toasts.showErrorNotification()
+          analytics.track('Interaction Log Submit Failure', {
+            member: member['Antara ID'],
+            error: response.data.message,
+          })
+        }
       })
   }
   return (
