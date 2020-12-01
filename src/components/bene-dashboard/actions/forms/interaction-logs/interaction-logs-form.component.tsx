@@ -8,10 +8,7 @@ import FormField from '../../../../utils/form-field/form-field.component'
 import Toasts from '../../../../../helpers/toast'
 import InteractionLogsValidationSchema from './interaction-logs-validation-schema'
 import useInteractionFormFields from './interaction-logs.fields'
-import {
-  GET_MEMBER_INTERACTIONS,
-  CREATE_INTERACTION,
-} from '../../../../../gql/interactions'
+import { CREATE_INTERACTION } from '../../../../../gql/interactions'
 import styles from './interaction-logs-form.component.css'
 import analytics from '../../../../../helpers/segment'
 
@@ -23,21 +20,17 @@ const InteractionLogsForm = () => {
   // @ts-ignore
   const { member, user } = JSON.parse(data)
   const fields = useInteractionFormFields()
-  const [createInteraction] = useMutation(CREATE_INTERACTION, {
-    refetchQueries: [
-      {
-        query: GET_MEMBER_INTERACTIONS,
-        variables: { antaraId: member['Antara ID'] },
-      },
-    ],
-    awaitRefetchQueries: true,
-  })
+  const [createInteraction] = useMutation(CREATE_INTERACTION)
 
   React.useEffect(() => {
     analytics.track('Interaction Log Form Opened', {
       member: member['Antara ID'],
     })
   }, [member])
+
+  const extractUsername = (email: string) => {
+    return email.replace(/@.*$/, '')
+  }
 
   const onSubmit = (values: any, { setSubmitting }: FormikHelpers<any>) => {
     createInteraction({
@@ -46,6 +39,8 @@ const InteractionLogsForm = () => {
           ...values,
           member: member['Antara ID'],
           historyUserIdField: user && user.email,
+          healthNavigator:
+            values.healthNavigator && extractUsername(values.healthNavigator),
         },
       },
     })
@@ -58,7 +53,11 @@ const InteractionLogsForm = () => {
       })
       .then((response) => {
         setSubmitting(false)
-        if (response.data.createInteraction.status === 200) {
+        if (
+          response &&
+          response.data &&
+          response.data.createInteraction.status === 200
+        ) {
           analytics.track('Interaction Log Submitted', {
             member: member['Antara ID'],
           })
@@ -81,7 +80,7 @@ const InteractionLogsForm = () => {
           Toasts.showErrorNotification()
           analytics.track('Interaction Log Submit Failure', {
             member: member['Antara ID'],
-            error: response.data.message,
+            error: response,
           })
         }
       })

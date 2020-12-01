@@ -6,9 +6,8 @@ import dayjs from 'dayjs'
 import airtableFetch from '../../../../../resources/airtable-fetch'
 import { act } from 'react-dom/test-utils'
 import team from '../../../../../../__mocks__/team.mock'
-import { fireEvent } from '@testing-library/react'
+import { fireEvent, waitFor } from '@testing-library/react'
 import { CREATE_INTERACTION } from '../../../../../gql/interactions'
-import { FieldArray } from 'formik'
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -23,7 +22,28 @@ jest.mock('../../../../../resources/airtable-fetch', () => {
     return Promise.resolve({})
   })
 })
-const render = (mocks?: any[]) => {
+
+const mutation_variables = {
+  input: {
+    member: 'TRIAL-ID16',
+    interactionStartedAt: '2020-11-30T13:46',
+    healthNavigator: 'fatma',
+    interactorType: 'Beneficiary',
+    interactorName: undefined,
+    relationshipType: undefined,
+    modeOfCommunication: 'SMS',
+    interactionDirection: 'Outbound interaction',
+    inboundInteractionCategory: undefined,
+    otherCategoryInbound: undefined,
+    outboundInteractionCategory: ['Education'],
+    otherCategoryOutbound: undefined,
+    interactionSummaryNotes: 'Test Summary Notes',
+    flagForReview: 'Yes',
+    historyUserIdField: 'fatma@antarahealth.com',
+  },
+}
+
+const render = (mocks: any[] = []) => {
   return renderWithRouter(
     <MockedProvider mocks={mocks} addTypename={false}>
       <InteractionLogsForm />
@@ -139,6 +159,20 @@ describe('<InteractionLogsForm/>', () => {
     ;(airtableFetch as jest.Mock).mockResolvedValue(team)
     const wrapper = render()
     await act(airtableFetch)
+    const submitButton = wrapper.getByText('Submit')
+    const interactionStartDate = wrapper.getByLabelText(/Encounter Date/)
+    fireEvent.change(interactionStartDate, {
+      target: { value: dayjs().add(1, 'd').format('YYYY-MM-DDTHH:mm') },
+    })
+    fireEvent.click(submitButton)
+    await waitFor(() => {
+      wrapper.getByText('Type is required')
+      wrapper.getByText('Mode of communication is required')
+      wrapper.getByText('Interaction type is required')
+      wrapper.getByText('Summary notes is required')
+      wrapper.getByText('Flag for review is required')
+      wrapper.getByText('Interaction date should not be a future date')
+    })
   })
 
   test('it should display success message after successful submit', async () => {
@@ -146,28 +180,15 @@ describe('<InteractionLogsForm/>', () => {
       {
         request: {
           query: CREATE_INTERACTION,
-          variables: {
-            input: {
-              member: 'TRIAL-ID16',
-              interactionStartedAt: '2020-11-24T13:16',
-              healthNavigator: 'fatma@antarahealth.com',
-              interactorType: 'Relative',
-              interactorName: 'Test Interactor',
-              relationshipType: 'Other',
-              modeOfCommunication: 'Email',
-              interactionDirection: 'Outbound interaction',
-              outboundInteractionCategory: ['Other'],
-              otherCategoryOutbound: 'test',
-              interactionSummaryNotes: 'ddd',
-              flagForReview: 'Not Flagged',
-              historyUserIdField: 'fatma@antarahealth.com',
-            },
-          },
+          variables: mutation_variables,
         },
-        result: { data: { status: 200 } },
+        result: {
+          data: { createInteraction: { status: 200, message: 'Success' } },
+        },
       },
     ]
     const wrapper = render(mocks)
+    const interactionStartedAt = wrapper.getByLabelText(/Encounter Date/)
     const interactorField = wrapper.getByLabelText(/Interactor Type/)
     const modeOfCommField = wrapper.getByLabelText(/Mode of Communication/)
     const directionField = wrapper.getByLabelText(/Interaction Direction/)
@@ -178,7 +199,8 @@ describe('<InteractionLogsForm/>', () => {
       { field: modeOfCommField, value: 'SMS' },
       { field: directionField, value: 'Outbound interaction' },
       { field: notesField, value: 'Test Summary Notes' },
-      { field: flagField, value: 'Not Flagged' },
+      { field: flagField, value: 'Yes' },
+      { field: interactionStartedAt, value: '2020-11-30T13:46' },
     ]
     fields.forEach(({ field, value }) => {
       act(() => {
@@ -188,14 +210,58 @@ describe('<InteractionLogsForm/>', () => {
     fireEvent.change(wrapper.getByLabelText(/Outbound Interaction Category/), {
       target: { value: ['Education'] },
     })
-    const comboBox = wrapper.container.querySelector('#downshift-1-item-0')
+    const comboBox = wrapper.getByText('Education')
     if (comboBox) {
       fireEvent.click(comboBox)
     }
     const submitButton = wrapper.getByText('Submit')
     fireEvent.click(submitButton)
     wrapper.getByText('Submitting...')
-    await new Promise((resolve) => setTimeout(resolve, 5))
-    //wrapper.getByText(/Form saved successfully!/)
+    await waitFor(() => wrapper.getByText('Form saved successfully!'))
+  })
+
+  test('it should display error message on error!', async () => {
+    const mocks = [
+      {
+        request: {
+          query: CREATE_INTERACTION,
+          variables: mutation_variables,
+        },
+        error: new Error('Aw Shucks!'),
+      },
+    ]
+    const wrapper = render(mocks)
+    const interactionStartedAt = wrapper.getByLabelText(/Encounter Date/)
+    const interactorField = wrapper.getByLabelText(/Interactor Type/)
+    const modeOfCommField = wrapper.getByLabelText(/Mode of Communication/)
+    const directionField = wrapper.getByLabelText(/Interaction Direction/)
+    const notesField = wrapper.getByLabelText(/Interactor Summary Notes/)
+    const flagField = wrapper.getByLabelText(/Flag for Review/)
+    const fields = [
+      { field: interactorField, value: 'Beneficiary' },
+      { field: modeOfCommField, value: 'SMS' },
+      { field: directionField, value: 'Outbound interaction' },
+      { field: notesField, value: 'Test Summary Notes' },
+      { field: flagField, value: 'Yes' },
+      { field: interactionStartedAt, value: '2020-11-30T13:46' },
+    ]
+    fields.forEach(({ field, value }) => {
+      act(() => {
+        fireEvent.change(field, { target: { value } })
+      })
+    })
+    fireEvent.change(wrapper.getByLabelText(/Outbound Interaction Category/), {
+      target: { value: ['Education'] },
+    })
+    const comboBox = wrapper.getByText('Education')
+    if (comboBox) {
+      fireEvent.click(comboBox)
+    }
+    const submitButton = wrapper.getByText('Submit')
+    fireEvent.click(submitButton)
+    wrapper.getByText('Submitting...')
+    await waitFor(() =>
+      wrapper.getByText('An error occurred while trying to save, please retry.')
+    )
   })
 })

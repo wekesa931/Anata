@@ -31,6 +31,7 @@ const MultiSelect = ({ form, field, options }: any) => {
   } = useCombobox({
     inputValue: value,
     selectedItem: null,
+    defaultIsOpen: true,
     items: getFilteredItems(),
     stateReducer: (_state, actionAndChanges) => {
       const { changes, type } = actionAndChanges
@@ -55,12 +56,12 @@ const MultiSelect = ({ form, field, options }: any) => {
         case useCombobox.stateChangeTypes.ItemClick:
         case useCombobox.stateChangeTypes.InputBlur:
           if (selectedItem && !selectedItems.includes(selectedItem)) {
-            setValue('')
-            addSelectedItem(selectedItem)
             form.setFieldValue(field.name, [
               ...selectedItems.map((item) => item.value),
               selectedItem.value,
             ])
+            setValue('')
+            addSelectedItem(selectedItem)
           }
           break
         default:
