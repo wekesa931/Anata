@@ -6,8 +6,8 @@ const FORMS = [
   },
   {
     name: 'Interaction Log Form',
-    url: 'shrKQ5efAEh9z3618',
-    hnField: 'Health Navigator',
+    url: `/interaction/create`,
+    airtableUrl: false,
   },
   {
     name: 'PAFU',
@@ -82,11 +82,6 @@ const FORMS = [
   {
     name: 'Intervention Data Collection Form',
     url: 'shrU6coJtTURljj15',
-  },
-  {
-    name: 'Interaction Log (New)',
-    url: `/interaction/create`,
-    airtableUrl: false,
   },
 ]
 
