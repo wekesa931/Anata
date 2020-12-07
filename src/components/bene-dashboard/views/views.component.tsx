@@ -7,6 +7,7 @@ import Radio from '../../utils/radio/radio.component'
 import { DateSortProvider, useDateSort } from '../../../context/sort.context'
 import InteractionLogs from './interaction-logs/interaction-logs.component'
 import Nutrition from './nutrition/nutrition.component'
+import ErrorBoundary from '../../error-boundary/error-boundary.component'
 
 type SortDialogProps = {
   onClose: () => void
@@ -120,13 +121,19 @@ const Views = () => {
         </div>
         <Tabs>
           <div label="Clinical Summary">
-            <Clinical />
+            <ErrorBoundary>
+              <Clinical />
+            </ErrorBoundary>
           </div>
           <div label="Interactions">
-            <InteractionLogs />
+            <ErrorBoundary>
+              <InteractionLogs />
+            </ErrorBoundary>
           </div>
           <div label="Nutrition">
-            <Nutrition />
+            <ErrorBoundary>
+              <Nutrition />
+            </ErrorBoundary>
           </div>
         </Tabs>
       </div>

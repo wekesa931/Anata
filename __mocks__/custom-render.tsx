@@ -5,6 +5,8 @@ import { render, RenderResult } from '@testing-library/react'
 import { AuthProvider } from '../src/context/auth-context'
 import { UserProvider } from '../src/context/user-context'
 import mockUser from './user-mock'
+import { MemberProvider } from '../src/context/member.context'
+import mockMember from './member.mock'
 
 type CustomRenderResult = RenderResult & {
   history: any
@@ -22,7 +24,9 @@ function renderWithRouter(
   const Wrapper = ({ children }: any) => (
     <AuthProvider user={mockUser}>
       <UserProvider>
-        <Router history={history}>{children}</Router>
+        <MemberProvider member={mockMember}>
+          <Router history={history}>{children}</Router>
+        </MemberProvider>
       </UserProvider>
     </AuthProvider>
   )

@@ -2,14 +2,17 @@ import React from 'react'
 import '../styles/index.css'
 import Routes from './routes'
 import AppContexts from '../context'
+import ErrorBoundary from './error-boundary/error-boundary.component'
 
 const App = () => {
   return (
-    <div className="appContainer">
-      <AppContexts>
-        <Routes />
-      </AppContexts>
-    </div>
+    <ErrorBoundary>
+      <div className="appContainer">
+        <AppContexts>
+          <Routes />
+        </AppContexts>
+      </div>
+    </ErrorBoundary>
   )
 }
 

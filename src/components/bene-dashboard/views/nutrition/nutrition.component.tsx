@@ -92,6 +92,7 @@ const Nutrition = () => {
           list={consultations}
           getTopLeftText={getTopLeftText}
           modalTitle="Nutritional Consultation"
+          dateColumnKey="Date of Consultation"
         />
       )}
       {isError && (

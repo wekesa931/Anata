@@ -14,12 +14,14 @@ const InteractionLogs = () => {
     variables: { antaraId: member['Antara ID'] },
   })
 
-  const getInteractionDate = ({ interactionStartedAt }: any) => {
-    return dayjs(interactionStartedAt).format("DD MMM 'YY, H:mm A")
+  const getInteractionDate = (interaction: any) => {
+    return dayjs(interaction['interaction Started At']).format(
+      "DD MMM 'YY, H:mm A"
+    )
   }
 
   const getHN = (interaction: any) => {
-    return interaction['health Navigator'].fullName
+    return interaction['health Navigator']
   }
 
   const toSentenceCase = (str: string) => {
@@ -70,6 +72,7 @@ const InteractionLogs = () => {
             getTopRightText={getHN}
             emptyListText="No interaction logs recorded."
             modalTitle="Interaction log"
+            dateColumnKey="interaction Started At"
             defaultNoElements={6}
             elementIncrement={6}
             paginate

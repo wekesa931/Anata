@@ -1,6 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import GoogleLogin from 'react-google-login'
+import Bugsnag from '@bugsnag/js'
 import jwt_decode from 'jwt-decode'
 import axios from 'axios'
 import { useAuth } from '../../context/auth-context'
@@ -54,6 +55,11 @@ const Login = () => {
       if (userObj) {
         analytics.identify(userObj.email)
         analytics.track('User LoggedIn')
+        Bugsnag.setUser(
+          authToken.id_token,
+          userObj.email,
+          `${userObj.given_name} ${userObj.family_name}`
+        )
       }
     }
     if (

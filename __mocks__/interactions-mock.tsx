@@ -1,23 +1,41 @@
 const mockInteractions = {
-  rec8u5rdCFkm8Rary: {
-    encounter_datetime: '2020-09-17T16:13:00.000Z',
-    'Interactor Type': 'Pharmacy',
-    'Mode of Communication': 'Phone call',
-    'Interaction Summary Notes': 'Julius is faring well.',
-    'Reporting Week': '38',
-    'HN Name': ['Super Man'],
-    'Member Name': ['Julius Test Kabangi'],
-    'Antara ID': ['TRIAL-ID3'],
-  },
-  rec8u5rdCFkdm8Rary: {
-    encounter_datetime: '2020-09-15T16:13:00.000Z',
-    'Interactor Type': 'Employer',
-    'Mode of Communication': 'Whatsapp',
-    'Interaction Summary Notes': 'Julius is not faring well today.',
-    'Reporting Week': '39',
-    'HN Name': ['Super Man Two'],
-    'Member Name': ['Julius Test Kabangi'],
-    'Antara ID': ['TRIAL-ID3'],
+  data: {
+    memberInteractions: {
+      edges: [
+        {
+          node: {
+            interactionStartedAt: '2020-02-18T16:37:00+00:00',
+            interactionSummaryNotes: 'Test Sumamary Notes',
+            interactorType: 'BENEFICIARY',
+            interactionDirection: 'OUTBOUND_INTERACTION',
+            inboundInteractionCategory: null,
+            outboundInteractionCategory: null,
+            otherCategoryOutbound: null,
+            otherCategoryInbound: null,
+            flagForReview: 'NO',
+            healthNavigator: {
+              fullName: 'Test HN 1',
+            },
+          },
+        },
+        {
+          node: {
+            interactionStartedAt: '2020-02-20T12:27:00+00:00',
+            interactionSummaryNotes: 'Shes doing very well',
+            interactorType: 'BENEFICIARY',
+            interactionDirection: 'OUTBOUND_INTERACTION',
+            inboundInteractionCategory: null,
+            outboundInteractionCategory: null,
+            otherCategoryOutbound: null,
+            otherCategoryInbound: null,
+            flagForReview: 'NO',
+            healthNavigator: {
+              fullName: 'Test HN 2',
+            },
+          },
+        },
+      ],
+    },
   },
 }
 export default mockInteractions
