@@ -81,7 +81,7 @@ const useInteractionFormFields = () => {
       label: 'Mode of Communication',
       name: 'modeOfCommunication',
       type: 'single-select',
-      options: ['SMS', 'Email', 'Whatsapp', 'In-person', 'Phone call'].map(
+      options: ['SMS', 'Email', 'WhatsApp', 'In-person', 'Phone call'].map(
         (option) => ({
           label: option,
           value: option,
