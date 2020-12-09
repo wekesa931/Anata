@@ -73,7 +73,7 @@ const BloodPressure = () => {
 
   useEffect(() => {
     airtableFetch(
-      `bp/list/0?view=HN%20Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})`
+      `bp/list?filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((response) => {
       const labResults = Object.keys(response).map((key) => response[key])
       setBp(labResults)
@@ -108,7 +108,7 @@ const Vitals = () => {
 
   useEffect(() => {
     airtableFetch(
-      `vitals/list/0?view=HN%20Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})`
+      `vitals/list?filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((response) => {
       const labResults = Object.keys(response).map((key) => response[key])
       setVitals(labResults)

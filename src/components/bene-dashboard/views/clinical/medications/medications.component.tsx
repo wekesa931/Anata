@@ -17,7 +17,7 @@ const Medcations = () => {
 
   useEffect(() => {
     airtableFetch(
-      `medications/list/0?view=HN%20Dashboard%20Active%20Medications&filterByFormula=FIND("${recId}", {Member Record ID})`
+      `medications/list?view=HN%20Dashboard%20Active%20Medications&filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((response) => {
       const meds = Object.keys(response)
         .map((key) => response[key])

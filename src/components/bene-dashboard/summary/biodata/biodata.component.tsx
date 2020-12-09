@@ -33,7 +33,7 @@ const Hmp = () => {
 
   useEffect(() => {
     airtableFetch(
-      `hmp/list/0?view=HN Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})`
+      `hmp/list?filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((response) => {
       if (response) {
         const hmps: hmp[] = []
@@ -88,7 +88,7 @@ const ConditionsSummary = () => {
 
   useEffect(() => {
     airtableFetch(
-      `conditions/list/0?view=HN Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})`
+      `conditions/list?filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((response) => {
       if (response) {
         const memberInterventions: any[] = []
@@ -207,7 +207,7 @@ const HifSummary = () => {
 
   useEffect(() => {
     airtableFetch(
-      `hif/list/0?view=HN Dashboard&filterByFormula=FIND("${recId}", {Member Record ID})`
+      `hif/list?filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((response) => {
       if (response) {
         const record_id = Object.keys(response)[0]
@@ -296,7 +296,7 @@ const GeneralSummary = ({ member }: any) => {
 
   useEffect(() => {
     airtableFetch(
-      `fcvd/list/0?filterByFormula=FIND("${member['Antara ID']}", {Antara Member ID})`
+      `fcvd/list?filterByFormula=FIND("${member['Antara ID']}", {Antara Member ID})`
     ).then((res) => {
       const record = Object.keys(res).map((key) => res[key])[0]
       if (record) {

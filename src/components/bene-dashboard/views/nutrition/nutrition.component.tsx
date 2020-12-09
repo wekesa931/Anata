@@ -59,7 +59,7 @@ const Nutrition = () => {
     'Calculated Daily Potassium',
   ]
   const { data, isLoading, isError } = useAirtableFetch(
-    `ncf/list/0?filterByFormula=FIND("${recId}", {Member Record ID})&sort=[{"field":"Date of Consultation","direction":"desc"}]&${filterFields(
+    `ncf/list?filterByFormula=FIND("${recId}", {Member Record ID})&sort=[{"field":"Date of Consultation","direction":"desc"}]&${filterFields(
       allowedFields
     )}`
   )

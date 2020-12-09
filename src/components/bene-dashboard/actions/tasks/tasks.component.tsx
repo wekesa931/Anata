@@ -34,7 +34,7 @@ const Tasks = () => {
     'Last Status changed at',
     'Open URL',
   ]
-  const url = `hntasks/list/0?view=HN Dashboard&${filterFields(
+  const url = `hntasks/list?${filterFields(
     fields
   )}&sort=[{"field":"Due Date","direction":"asc"}]&filterByFormula=FIND("${recId}", {Member Record ID})`
   const {

@@ -77,7 +77,7 @@ const FilledForms = () => {
     //
     const getForm = (form: string) => {
       return airtableFetch(
-        `${form}/list/0?filterByFormula=FIND("${recId}",{Member Record ID})&maxRecords=1&sort=[{"field":"created_at", "direction":"desc"}]`
+        `${form}/list?filterByFormula=FIND("${recId}",{Member Record ID})&maxRecords=1&sort=[{"field":"created_at", "direction":"desc"}]`
       ).then((res) => {
         const result = Object.keys(res).map((key) => res[key])[0]
         return result ? getFields(result) : result

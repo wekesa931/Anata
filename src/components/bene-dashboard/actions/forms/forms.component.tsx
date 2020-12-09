@@ -16,7 +16,7 @@ const Forms = () => {
   useEffect(() => {
     if (user && user.email) {
       airtableFetch(
-        `team/list/0?view=Grid%20view&filterByFormula=FIND("${user.email}", {Email})`
+        `team/list?filterByFormula=FIND("${user.email}", {Email})`
       ).then((res) => {
         const currentHN = Object.keys(res).map((key: any) => res[key])
         if (currentHN.length) {

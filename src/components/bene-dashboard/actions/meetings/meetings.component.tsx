@@ -24,7 +24,7 @@ const Meetings = () => {
     'Followup tasks (rollup)',
   ]
   const { data, isLoading, isError, refresh } = useAirtableFetch(
-    `meetings/list/0?
+    `meetings/list?
     &filterByFormula=FIND("${recId}", {memberRecIds})
     &sort=[{"field":"Date","direction":"desc"}]
     &${filterFields(allowedFields)}`

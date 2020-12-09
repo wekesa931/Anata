@@ -31,7 +31,7 @@ const SearchInput = () => {
         if (q) {
           setIsLoading(true)
           const searchQ = `filterByFormula=IF(FIND("${q.toLowerCase()}", LOWER({Full Name})), TRUE(), FALSE())&fields[]=Full Name&fields[]=Age&fields[]=Sex&fields[]=Employer`
-          airtableFetch(`members/list/0?${searchQ}`).then((response: any) => {
+          airtableFetch(`members/list?${searchQ}`).then((response: any) => {
             let finalRes = []
             if (response && Object.keys(response).length > 0) {
               finalRes = Object.keys(response).map((recId: string) => ({

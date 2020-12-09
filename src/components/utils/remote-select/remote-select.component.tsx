@@ -28,8 +28,8 @@ const RemoteSelect = ({
   } | null>({ label: 'Loading...', value: '' })
 
   const url = lookupFieldNames
-    ? `${lookupUrl}/list/0?${filterFields(lookupFieldNames)}`
-    : `${lookupUrl}/list/0`
+    ? `${lookupUrl}/list?${filterFields(lookupFieldNames)}`
+    : `${lookupUrl}/list`
   const { data } = useAirtableFetch(url)
 
   useEffect(() => {
