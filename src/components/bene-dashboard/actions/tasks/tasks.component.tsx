@@ -13,6 +13,14 @@ import analytics from '../../../../helpers/segment'
 
 const Tasks = () => {
   const [allTasks, setAllTasks] = useState<any[]>([])
+  const [filteredTasks, setFilteredTasks] = useState<any[]>([])
+  const status = [
+    'Complete',
+    'Not Started',
+    'In Progress',
+    'Cancelled',
+    'Not Applicable',
+  ]
   const { recId } = useParams()
   const fields = [
     'Type',
@@ -103,26 +111,14 @@ const Tasks = () => {
           name: getDisplayedInfo(data),
           id,
         }))
-      const completedTasks = mappedResponse.filter((task) =>
-        task.data.find(
-          ({ name, value }) => name === 'Status' && value === 'Complete'
+      setAllTasks(mappedResponse)
+      setFilteredTasks(
+        mappedResponse.filter((task) =>
+          task.data.find(
+            ({ name, value }: any) => name === 'Status' && value !== 'Complete'
+          )
         )
       )
-      const uncompletedTasks = mappedResponse.filter((task) =>
-        task.data.find(
-          ({ name, value }) => name === 'Status' && value !== 'Complete'
-        )
-      )
-
-      const tasks = []
-      if (completedTasks.length) {
-        tasks.push(completedTasks[0])
-      }
-
-      if (uncompletedTasks.length) {
-        tasks.push(...uncompletedTasks)
-      }
-      setAllTasks(tasks)
     }
   }, [response])
 
@@ -182,16 +178,46 @@ const Tasks = () => {
     return refetchTasks()
   }
 
+  const filterByStatus = (val: string) => {
+    if (val === 'All Incomplete') {
+      return allTasks.filter((task) =>
+        task.data.find(
+          ({ name, value }: any) => name === 'Status' && value !== 'Complete'
+        )
+      )
+    }
+    return allTasks.filter((task) =>
+      task.data.find(
+        ({ name, value }: any) => name === 'Status' && value === val
+      )
+    )
+  }
+
   return (
     <>
       <div className="margin-top-16">
-        <div className="d-flex" style={{ justifyContent: 'space-between' }}>
+        <div
+          className="d-flex flex-align-center"
+          style={{ justifyContent: 'space-between' }}
+        >
           <h4>Tasks</h4>
+          <div>
+            <select
+              onChange={(e) => setFilteredTasks(filterByStatus(e.target.value))}
+              className="form-control"
+              data-testid="status-filter"
+            >
+              <option selected>All Incomplete</option>
+              {status.map((stat) => (
+                <option>{stat}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {allTasks && !isLoading && !isError && (
           <List
-            list={allTasks}
+            list={filteredTasks}
             getTopLeftText={getPriority}
             getTopRightText={getTaskNotes}
             modalTitle="Task"

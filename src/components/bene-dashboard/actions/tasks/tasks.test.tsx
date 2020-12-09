@@ -34,22 +34,12 @@ describe('<Tasks />', () => {
     expect(screen.getByText('No tasks found.')).not.toBeNull()
   })
 
-  test('the first task is complete and displayed with all details', async () => {
-    airtableFetch.mockReturnValue(Promise.resolve(tasks_mock_response))
-    const { findByTestId } = renderWithRouter(<Tasks />)
-    const list = await findByTestId('data-list')
-    const firstItem = list.children[0]
-    expect(await findByText(firstItem, /Complete/i)).not.toBeNull()
-    expect(await findByText(firstItem, /Medium Priority/i)).not.toBeNull()
-    expect(await findByText(firstItem, /21 Aug 2020/i)).not.toBeNull()
-  })
-
   test('displays tasks properly in a list', async () => {
     airtableFetch.mockReturnValue(Promise.resolve(tasks_mock_response))
     const { findByTestId } = renderWithRouter(<Tasks />)
     const list = await findByTestId('data-list')
-    const secondItem = list.children[1]
-    expect(list.children.length).toBe(3)
+    const secondItem = list.children[0]
+    expect(list.children.length).toBe(2)
     expect(await findByText(secondItem, /Not Started/i)).not.toBeNull()
     expect(await findByText(secondItem, /High Priority/i)).not.toBeNull()
     expect(await findByText(secondItem, /19 Aug 2020/i)).not.toBeNull()
@@ -64,7 +54,7 @@ describe('<Tasks />', () => {
     airtableFetch.mockReturnValue(Promise.resolve(tasks_mock_response))
     const { container } = renderWithRouter(<Tasks />)
     const list = await screen.findByTestId('data-list')
-    const thirdItem = list.children[2]
+    const thirdItem = list.children[1]
     await act(async () => {
       fireEvent.click(thirdItem)
     })
@@ -79,7 +69,7 @@ describe('<Tasks />', () => {
     airtableFetch.mockReturnValue(Promise.resolve(tasks_mock_response))
     const { container } = renderWithRouter(<Tasks />)
     const list = await screen.findByTestId('data-list')
-    const thirdItem = list.children[2]
+    const thirdItem = list.children[1]
     await act(async () => {
       fireEvent.click(thirdItem)
     })
@@ -116,7 +106,39 @@ describe('<Tasks />', () => {
     const openTaskUrlBtns = await screen.findAllByTestId('task-url-link')
     expect(openTaskUrlBtns[0]).toHaveAttribute(
       'href',
-      'https://airtable.com/shrKQ5efAEh9z3618?prefill_Member=member_record_id&prefill_Health Navigator=assigned_hn'
+      'https://airtable.com/tbl3iBWzYVWEpdLje/viwZ1H1vBNJVMmpBJ?blocks=hide'
     )
+  })
+
+  test('filters by status', async () => {
+    airtableFetch.mockReturnValue(Promise.resolve(tasks_mock_response))
+    window.open = jest.fn()
+    renderWithRouter(<Tasks />)
+    const selectBox = screen.getByTestId('status-filter')
+    const list = await screen.findByTestId('data-list')
+    expect(list.children.length).toBe(2)
+    fireEvent.change(selectBox, {
+      target: {
+        value: 'Not Started',
+      },
+    })
+    expect(await screen.findByText('Not Started')).not.toBeNull()
+    expect(list.children.length).toBe(1)
+    fireEvent.change(selectBox, {
+      target: {
+        value: 'Complete',
+      },
+    })
+    await waitFor(() => {
+      expect(list.children.length).toBe(6)
+    })
+    fireEvent.change(selectBox, {
+      target: {
+        value: 'All Incomplete',
+      },
+    })
+    await waitFor(() => {
+      expect(list.children.length).toBe(2)
+    })
   })
 })
