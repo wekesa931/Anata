@@ -4,6 +4,7 @@ import { throttle } from 'throttle-debounce'
 import { Link, useHistory } from 'react-router-dom'
 import SearchIcon from '../../assets/img/icons/search.svg'
 import CloseIcon from '../../assets/img/icons/close.svg'
+import LoadingIcon from '../../assets/img/icons/loading.svg'
 import airtableFetch from '../../resources/airtable-fetch'
 import styles from './search.component.css'
 import analytics from '../../helpers/segment'
@@ -109,6 +110,11 @@ const SearchInput = () => {
               >
                 <CloseIcon />
               </button>
+            )}
+            {isLoading && (
+              <div className={styles.loadingIcon}>
+                <LoadingIcon />
+              </div>
             )}
           </div>
 

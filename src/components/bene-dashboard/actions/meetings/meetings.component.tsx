@@ -26,6 +26,7 @@ const Meetings = () => {
   const { data, isLoading, isError, refresh } = useAirtableFetch(
     `meetings/list/0?
     &filterByFormula=FIND("${recId}", {memberRecIds})
+    &sort=[{"field":"Date","direction":"desc"}]
     &${filterFields(allowedFields)}`
   )
 
