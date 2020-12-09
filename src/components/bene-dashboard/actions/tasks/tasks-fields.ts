@@ -84,6 +84,8 @@ const TASK_FIELDS: AirtableField[] = [
       'In Progress',
       'Complete',
       'On Hold',
+      'Cancelled',
+      'Not Applicable',
     ].map((option) => ({ label: option, value: option })),
   },
   {
