@@ -11,6 +11,7 @@ import useInteractionFormFields from './interaction-logs.fields'
 import { CREATE_INTERACTION } from '../../../../../gql/interactions'
 import styles from './interaction-logs-form.component.css'
 import analytics from '../../../../../helpers/segment'
+import Bugsnag from '@bugsnag/js'
 
 const InteractionLogsForm = () => {
   const { search } = useLocation()
@@ -46,10 +47,7 @@ const InteractionLogsForm = () => {
     })
       .catch((e) => {
         Toasts.showErrorNotification()
-        analytics.track('Interaction Log Submit Failure', {
-          member: member['Antara ID'],
-          error: e,
-        })
+        Bugsnag.notify(e)
       })
       .then((response) => {
         setSubmitting(false)
@@ -59,7 +57,11 @@ const InteractionLogsForm = () => {
           response.data.createInteraction.status === 200
         ) {
           analytics.track('Interaction Log Submitted', {
+            ...values,
             member: member['Antara ID'],
+            historyUserIdField: user && user.email,
+            healthNavigator:
+              values.healthNavigator && extractUsername(values.healthNavigator),
           })
           analytics.track('Interaction Log Time To Submit (mins)', {
             timeTaken: dayjs().diff(startTime, 'minute'),
@@ -78,10 +80,12 @@ const InteractionLogsForm = () => {
           )
         } else {
           Toasts.showErrorNotification()
-          analytics.track('Interaction Log Submit Failure', {
-            member: member['Antara ID'],
-            error: response,
-          })
+          Bugsnag.notify(
+            (response &&
+              response.errors &&
+              new Error(response.errors.join(','))) ||
+              new Error('Interaction Log Submit Failure')
+          )
         }
       })
   }
