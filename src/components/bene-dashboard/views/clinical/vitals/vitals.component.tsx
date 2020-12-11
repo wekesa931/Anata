@@ -28,10 +28,21 @@ type OtherVitalsInfoProps = {
 
 const Bmi = ({ bmiInfo }: BMIProps) => {
   const columns = [
-    { name: 'Date', format: 'dd/mmm/yy', key: 'Date' },
+    {
+      name: 'Date',
+      format: 'dd/mmm/yy',
+      key: 'Date',
+    },
     { name: 'Height', format: 'm', key: 'Height' },
     { name: 'Weight', format: 'kg', key: 'Weight' },
-    { name: 'BMI', format: 'kg/m2', key: 'BMI' },
+    {
+      name: 'BMI',
+      format: 'kg/m2',
+      key: 'BMI',
+      info: `Stage 1: BMI 25-30
+             Stage 2: BMI 30-40
+             Stage 3: BMI >40`,
+    },
   ]
 
   return (
@@ -82,8 +93,22 @@ const BloodPressure = () => {
 
   const columns = [
     { name: 'Date', format: 'dd/mmm/yy', key: 'Date' },
-    { name: 'Sys', format: 'mmHg', key: 'Average Daily Systolic' },
-    { name: 'Dia', format: 'mmHg', key: 'Average Daily Diastolic' },
+    {
+      name: 'Sys',
+      format: 'mmHg',
+      key: 'Average Daily Systolic',
+      info: `Elevated BP: 120-130 mmHg,
+             Stage 1 Hypertension: 130-140 mmHg,
+             Stage 2 Hypertension: >140 mmHg`,
+    },
+    {
+      name: 'Dia',
+      format: 'mmHg',
+      key: 'Average Daily Diastolic',
+      info: `Elevated BP: <80 mmHg,
+             Stage 1 Hypertension: 80-89 mmHg,
+             Stage 2 Hypertension: >90 mmHg`,
+    },
   ]
 
   return (
