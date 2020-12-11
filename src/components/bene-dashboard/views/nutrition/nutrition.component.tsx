@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import dayjs from 'dayjs'
 import filterFields from '../../../../helpers/filter-fields'
 import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
-import List from '../../../utils/list/list.component'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
+import Table from '../../../utils/table/table.component'
 
 const Nutrition = () => {
   const { recId } = useParams()
@@ -57,30 +56,81 @@ const Nutrition = () => {
     'Weekly Potassium - Nuts',
     'Weekly Potassium - roots',
     'Calculated Daily Potassium',
+    'Total Daily Glycemic Load',
+    'Nutritional Consultation #',
+  ]
+  const columns = [
+    { name: '#', format: '', key: 'Nutritional Consultation #' },
+    { name: 'Date', format: 'dd/mmm/yy', key: 'Date of Consultation' },
+    { name: 'BMR', format: '', key: 'Basal Metabolic Rate' },
+    {
+      name: 'Caloric Intake',
+      key: 'Estimated Daily Caloric Intake',
+      format: 'kcal',
+    },
+    {
+      name: 'Caloric Needs',
+      key: 'Estimated Caloric Needs',
+      format: 'kcal',
+    },
+    {
+      name: 'Glycemic load',
+      key: 'Total Daily Glycemic Load',
+      format: '',
+      info: `Level [0]: <100 (Recommended for diabetes)
+      Level [1]: 80-180 (Normal)
+      Level [2]: >180 (High)`,
+    },
+    {
+      name: 'Sodium Intake',
+      key: 'Calculated Estimated Daily Sodium',
+      format: 'mg',
+      info: `Level [0]: <1500mg (Recommended for hypertensives)
+      Level [1]: 1500-2500mg (Normal)
+      Level [2]: 2500-3500mg (High)
+      Level [3]: 3500-4500mg (Very High)
+      Level [4]: >4500mg (Excessively High)`,
+    },
+    {
+      name: 'Potassium Intake',
+      key: 'Calculated Daily Potassium',
+      format: 'mg',
+      info: `Level [0]: >3500mg (Recommended)
+      Level [1]: 2500-3500mg (Normal)
+      Level [2]: 1500-2500mg (Low)
+      Level [3]: <1500mg (Inadequate)`,
+    },
+    {
+      name: 'Chol. Intake',
+      key: 'Daily estimated cholesterol intake',
+      format: 'mg',
+      info: `Level [0]: <200mg (Recommended for those with heart disease)
+Level [1]: 200-300mg (Normal)
+Level [2]: 300-500mg (High)
+Level [3]: >500mg (Very High)`,
+    },
+    {
+      name: 'Recommendation',
+      key: 'Recommendation',
+      format: '',
+    },
   ]
   const { data, isLoading, isError } = useAirtableFetch(
-    `ncf/list?filterByFormula=FIND("${recId}", {Member Record ID})&sort=[{"field":"Date of Consultation","direction":"desc"}]&${filterFields(
-      allowedFields
-    )}`
+    encodeURI(
+      `ncf/list/0?filterByFormula=FIND("${recId}", {Member Record ID})&sort=[{"field":"Date of Consultation","direction":"desc"}]&${filterFields(
+        allowedFields
+      )}`
+    )
   )
   React.useEffect(() => {
     if (data) {
-      const mappedData = Object.keys(data)
-        .map((key) => ({ consultation: data[key], id: key }))
-        .map(({ consultation, id }) => ({
-          data: consultation,
-          name: consultation.Assessment,
-          id,
-        }))
+      const mappedData = Object.keys(data).map((key) => data[key])
       setConsultations(mappedData)
     }
   }, [data])
-  const getTopLeftText = (consultation: any) =>
-    dayjs(consultation['Date of Consultation']).format('DD MMM YYYY')
 
   return (
     <>
-      <h4>Nutritional Consultations</h4>
       {isLoading && (
         <div className="d-flex flex-direction-column flex-align-center margin-top-32">
           <LoadingIcon />
@@ -88,10 +138,10 @@ const Nutrition = () => {
         </div>
       )}
       {consultations.length > 0 && (
-        <List
-          list={consultations}
-          getTopLeftText={getTopLeftText}
-          modalTitle="Nutritional Consultation"
+        <Table
+          title="Nutritional Consultations"
+          columns={columns}
+          data={consultations}
           dateColumnKey="Date of Consultation"
         />
       )}

@@ -107,7 +107,10 @@ const Table = ({ title, columns, data, dateColumnKey }: TableProps) => {
             <h5 className={styles.title}>{title}</h5>
           </div>
         )}
-        <table className={`${styles.table} margin-bottom-8`}>
+        <table
+          className={`${styles.table} margin-bottom-8`}
+          data-testid="data-table"
+        >
           <thead>
             <tr>
               <>

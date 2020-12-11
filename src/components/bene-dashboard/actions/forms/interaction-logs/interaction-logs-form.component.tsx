@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/client'
 import { useLocation } from 'react-router-dom'
 import qs from 'query-string'
 import dayjs from 'dayjs'
+import Bugsnag from '@bugsnag/js'
 import FormField from '../../../../utils/form-field/form-field.component'
 import Toasts from '../../../../../helpers/toast'
 import InteractionLogsValidationSchema from './interaction-logs-validation-schema'
@@ -11,7 +12,6 @@ import useInteractionFormFields from './interaction-logs.fields'
 import { CREATE_INTERACTION } from '../../../../../gql/interactions'
 import styles from './interaction-logs-form.component.css'
 import analytics from '../../../../../helpers/segment'
-import Bugsnag from '@bugsnag/js'
 
 const InteractionLogsForm = () => {
   const { search } = useLocation()
