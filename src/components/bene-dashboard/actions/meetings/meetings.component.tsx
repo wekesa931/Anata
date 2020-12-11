@@ -26,8 +26,7 @@ const Meetings = () => {
   const { data, isLoading, isError, refresh } = useAirtableFetch(
     `meetings/list?
     &filterByFormula=FIND("${recId}", {memberRecIds})
-    &sort=[{"field":"Date","direction":"desc"}]
-    &${filterFields(allowedFields)}`
+    &sort=[{"field":"Date","direction":"desc"}]`
   )
 
   const openNewTaskForm = (e: any, url: string) => {
