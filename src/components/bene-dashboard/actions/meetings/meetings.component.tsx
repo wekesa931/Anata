@@ -3,7 +3,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
 import List from '../../../utils/list/list.component'
-import filterFields from '../../../../helpers/filter-fields'
+// import filterFields from '../../../../helpers/filter-fields'
 import Icon from '../../../utils/icon/icon.component'
 import Tooltip from '../../../utils/tooltip/tooltip.component'
 import MEETING_FIELDS from './meeting-fields'
@@ -13,16 +13,16 @@ import airtableFetch from '../../../../resources/airtable-fetch'
 const Meetings = () => {
   const [meetings, setMeetings] = React.useState<any[]>([])
   const { recId } = useParams()
-  const allowedFields = [
-    'Meeting Type',
-    'Date',
-    'Status',
-    'Meeting Notes',
-    'HIF filled',
-    'New Task',
-    'Summary',
-    'Followup tasks (rollup)',
-  ]
+  // const allowedFields = [
+  //   'Meeting Type',
+  //   'Date',
+  //   'Status',
+  //   'Meeting Notes',
+  //   'HIF filled',
+  //   'New Task',
+  //   'Summary',
+  //   'Followup tasks (rollup)',
+  // ]
   const { data, isLoading, isError, refresh } = useAirtableFetch(
     `meetings/list?
     &filterByFormula=FIND("${recId}", {memberRecIds})
