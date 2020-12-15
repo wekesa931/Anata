@@ -4,7 +4,7 @@ import airtableFetch from '../../resources/airtable-fetch'
 import '@testing-library/jest-dom/extend-expect'
 import SearchComponent from './search.component'
 import mockPatientSearchResponse from '../../../__mocks__/patient-list.mock'
-import renderWithRouter from '../../../__mocks__/custom-render'
+import renderWithRouter from '../../../__mocks__/custom-render.mock'
 
 jest.mock('../../resources/airtable-fetch', () => {
   return jest.fn().mockImplementation(() => {

@@ -1,6 +1,6 @@
 import React from 'react'
 import Sidebar from './sidebar.component'
-import renderWithRouter from '../../../__mocks__/custom-render'
+import renderWithRouter from '../../../__mocks__/custom-render.mock'
 import { screen, fireEvent } from '@testing-library/react'
 
 describe('<Sidebar />', () => {

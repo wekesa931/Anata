@@ -1,5 +1,5 @@
 import React from 'react'
-import renderWithRouter from '../../../../../../__mocks__/custom-render'
+import renderWithRouter from '../../../../../../__mocks__/custom-render.mock'
 import InteractionLogsForm from './interaction-logs-form.component'
 import { MockedProvider } from '@apollo/client/testing'
 import dayjs from 'dayjs'

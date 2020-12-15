@@ -1,6 +1,6 @@
 import React from 'react'
 import Tasks from './tasks.component'
-import renderWithRouter from '../../../../../__mocks__/custom-render'
+import renderWithRouter from '../../../../../__mocks__/custom-render.mock'
 import {
   screen,
   cleanup,

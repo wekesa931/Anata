@@ -1,6 +1,6 @@
 import React from 'react'
 import { act } from 'react-dom/test-utils'
-import renderWithRouter from '../../../../../__mocks__/custom-render'
+import renderWithRouter from '../../../../../__mocks__/custom-render.mock'
 import nutritionalConsultationsMock from '../../../../../__mocks__/nutritional-consultations.mock'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import Nutrition from './nutrition.component'

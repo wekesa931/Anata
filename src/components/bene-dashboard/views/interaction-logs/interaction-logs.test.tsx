@@ -1,6 +1,6 @@
 import React from 'react'
 import InteractionLogs from './interaction-logs.component'
-import renderWithRouter from '../../../../../__mocks__/custom-render'
+import renderWithRouter from '../../../../../__mocks__/custom-render.mock'
 import { MockedProvider } from '@apollo/client/testing'
 import { GET_MEMBER_INTERACTIONS } from '../../../../gql/interactions'
 import mockInteractions from '../../../../../__mocks__/interactions-mock'

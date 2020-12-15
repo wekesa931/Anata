@@ -4,7 +4,7 @@ import { createBrowserHistory } from 'history'
 import { render, RenderResult } from '@testing-library/react'
 import { AuthProvider } from '../src/context/auth-context'
 import { UserProvider } from '../src/context/user-context'
-import mockUser from './user-mock'
+import mockUser from './user.mock'
 import { MemberProvider } from '../src/context/member.context'
 import mockMember from './member.mock'
 
