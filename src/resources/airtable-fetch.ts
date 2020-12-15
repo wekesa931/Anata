@@ -18,19 +18,16 @@ const getTokenFromLocalStorage = () => {
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    const {
-      config,
-      response: { status },
-    } = error
+    const { config, response } = error
     if (config.url === 'https://oauth2.googleapis.com/token') {
       // if refreshing the token failed, enforce login
       return history.push('/login', { from: history.location })
     }
-    if (status === 401) {
+    if (response && response.status === 401) {
       return refreshToken().then(
-        (response) => {
-          if (response.data) {
-            const { data } = response
+        (res) => {
+          if (res && res.data) {
+            const { data } = res
             const userObj = jwt_decode(data.id_token)
             storage.set(constants.USER, JSON.stringify({ ...data, ...userObj }))
             return axios.request({

@@ -12,15 +12,15 @@ const getRiskFactors = (
 ) => {
   const riskFactorArray = []
 
-  if (diabetes.toLowerCase() === 'yes') {
+  if (diabetes && diabetes.toLowerCase() === 'yes') {
     riskFactorArray.push('Diabetes')
   }
 
-  if (highBloodPressure.toLowerCase() === 'yes') {
+  if (highBloodPressure && highBloodPressure.toLowerCase() === 'yes') {
     riskFactorArray.push('High Blood Pressure')
   }
 
-  if (cholesterol.toLowerCase() === 'yes') {
+  if (cholesterol && cholesterol.toLowerCase() === 'yes') {
     riskFactorArray.push('Cholesterol')
   }
 
