@@ -51,24 +51,4 @@ describe('<InteractionLogsView/>', () => {
       'Dietary milestones: <1500 mg sodium/day, maintain a 2000 kcal diet and increase her activity levels.'
     )
   })
-  //   test('it displays error message on failure', async () => {
-  //     const errorMocks = [
-  //       {
-  //         request: {
-  //           query: GET_MEMBER_INTERACTIONS,
-  //           variables: {
-  //             antaraId: 'TRIAL-ID16',
-  //           },
-  //         },
-  //         error: new Error('aw shucks!'),
-  //       },
-  //     ]
-  //     const { queryByText, getByText } = render(errorMocks)
-  //     await new Promise((resolve) => setTimeout(resolve, 0))
-  //     expect(
-  //       getByText(
-  //         /An error occurred while displaying interaction logs, please refresh the page, if it persists contact help desk./
-  //       )
-  //     ).not.toBeNull()
-  //   })
 })

@@ -6,7 +6,7 @@ import List from '../../../utils/list/list.component'
 import Icon from '../../../utils/icon/icon.component'
 import Tooltip from '../../../utils/tooltip/tooltip.component'
 import styles from './tasks.component.css'
-// import filterFields from '../../../../helpers/filter-fields'
+import filterFields from '../../../../helpers/filter-fields'
 import TASK_FIELDS from './tasks-fields'
 import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
 import analytics from '../../../../helpers/segment'
@@ -22,19 +22,21 @@ const Tasks = () => {
     'Not Applicable',
   ]
   const { recId } = useParams()
-  // const fields = [
-  //   'Type',
-  //   'Due Date',
-  //   'Task Notes',
-  //   'Status',
-  //   'Task Priority',
-  //   'Collect Condition Data',
-  //   'Assignee',
-  //   'Assigned HN Name',
-  //   'Last Status changed at',
-  //   'Open URL',
-  // ]
-  const url = `hntasks/list?sort=[{"field":"Due Date","direction":"asc"}]&filterByFormula=FIND("${recId}", {Member Record ID})`
+  const fields = [
+    'Type',
+    'Due Date',
+    'Task Notes',
+    'Status',
+    'Task Priority',
+    'Collect Condition Data',
+    'Assignee',
+    'Assigned HN Name',
+    'Last Status changed at',
+    'Open URL',
+  ]
+  const url = `hntasks/list?${filterFields(
+    fields
+  )}&sort=[{"field":"Due Date","direction":"asc"}]&filterByFormula=FIND("${recId}", {Member Record ID})`
   const {
     data: response,
     refresh: refetchTasks,
@@ -205,9 +207,9 @@ const Tasks = () => {
               className="form-control"
               data-testid="status-filter"
             >
-              <option selected>All Incomplete</option>
+              <option key="all">All Incomplete</option>
               {status.map((stat) => (
-                <option>{stat}</option>
+                <option key={stat}>{stat}</option>
               ))}
             </select>
           </div>

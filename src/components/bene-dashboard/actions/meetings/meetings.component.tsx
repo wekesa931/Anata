@@ -3,7 +3,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
 import List from '../../../utils/list/list.component'
-// import filterFields from '../../../../helpers/filter-fields'
+import filterFields from '../../../../helpers/filter-fields'
 import Icon from '../../../utils/icon/icon.component'
 import Tooltip from '../../../utils/tooltip/tooltip.component'
 import MEETING_FIELDS from './meeting-fields'
@@ -13,26 +13,22 @@ import airtableFetch from '../../../../resources/airtable-fetch'
 const Meetings = () => {
   const [meetings, setMeetings] = React.useState<any[]>([])
   const { recId } = useParams()
-  // const allowedFields = [
-  //   'Meeting Type',
-  //   'Date',
-  //   'Status',
-  //   'Meeting Notes',
-  //   'HIF filled',
-  //   'New Task',
-  //   'Summary',
-  //   'Followup tasks (rollup)',
-  // ]
+  const allowedFields = [
+    'Meeting Type',
+    'Date',
+    'Status',
+    'Meeting Notes',
+    'HIF filled',
+    'New Task',
+    'Summary',
+    'Followup tasks (rollup)',
+  ]
   const { data, isLoading, isError, refresh } = useAirtableFetch(
     `meetings/list?
     &filterByFormula=FIND("${recId}", {memberRecIds})
-    &sort=[{"field":"Date","direction":"desc"}]`
+    &sort=[{"field":"Date","direction":"desc"}]
+    &${filterFields(allowedFields)}`
   )
-
-  const openNewTaskForm = (e: any, url: string) => {
-    e.stopPropagation()
-    window.open(url, '__blank')
-  }
 
   const updateMeeting = async (meeting: { id: string; fields: any }) => {
     await airtableFetch('meetings', 'post', {
@@ -71,9 +67,11 @@ const Meetings = () => {
           <span>
             {meeting['New Task'] && (
               <Tooltip title="New task">
-                <button
-                  onClick={(e) => openNewTaskForm(e, meeting['New Task'])}
+                <a
+                  href={meeting['New Task']}
+                  target="__blank"
                   className="btn-unstyled"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <Icon
                     name="external-link"
@@ -81,7 +79,7 @@ const Meetings = () => {
                     width={16}
                     height={16}
                   />
-                </button>
+                </a>
               </Tooltip>
             )}
           </span>

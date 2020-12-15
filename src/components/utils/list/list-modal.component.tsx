@@ -124,12 +124,9 @@ const ListModal = (props: ListModalProps) => {
             <Formik initialValues={getInitialValues()} onSubmit={handleSubmit}>
               {({ isSubmitting }) => (
                 <Form key="list-edit-form">
-                  {openItem.data.map((field) => {
+                  {openItem.data.map((field, index) => {
                     return !field.calculated ? (
-                      <div
-                        key={field.name}
-                        className="d-flex flex-direction-column"
-                      >
+                      <div key={index} className="d-flex flex-direction-column">
                         <Label htmlFor={field.name}>{field.name}</Label>
                         <FormField {...field} disabled={formDisabled} />
                       </div>

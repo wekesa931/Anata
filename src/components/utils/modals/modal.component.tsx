@@ -17,7 +17,7 @@ const Modal = ({ open, setModalOpen, heading, children }: any) => {
               <CloseIcon />
             </button>
           </div>
-          {children}
+          <>{children}</>
         </Dialog>
       )}
     </div>

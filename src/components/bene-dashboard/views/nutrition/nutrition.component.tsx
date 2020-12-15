@@ -117,8 +117,8 @@ Level [3]: >500mg (Very High)`,
   ]
   const { data, isLoading, isError } = useAirtableFetch(
     encodeURI(
-      `ncf/list?filterByFormula=FIND("${recId}", {Member Record ID})&sort=[{"field":"Date of Consultation","direction":"desc"}]&${filterFields(
-        allowedFields
+      `ncf/list?filterByFormula=FIND("${recId}", {Member Record ID})&sort=[{"field":"Date of Consultation","direction":"desc"}]&${encodeURIComponent(
+        filterFields(allowedFields)
       )}`
     )
   )

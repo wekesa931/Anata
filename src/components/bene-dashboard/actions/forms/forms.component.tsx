@@ -59,6 +59,7 @@ const Forms = () => {
           <button
             onClick={() => openForm(form)}
             className="full-width btn btn-secondary"
+            key={form.name}
           >
             {form.name}
           </button>
