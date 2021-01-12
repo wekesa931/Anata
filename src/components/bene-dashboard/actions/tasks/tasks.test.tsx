@@ -11,33 +11,60 @@ import {
 } from '@testing-library/react'
 import tasks_mock_response from '../../../../../__mocks__/tasks.mock'
 import airtableFetch from '../../../../resources/airtable-fetch'
+import { MockedProvider } from '@apollo/client/testing'
 import { act } from 'react-dom/test-utils'
+import {GET_MEMBER_TASKS} from "../../../../gql/hn_tasks";
+import mockHnTasks from "../../../../../__mocks__/hn-tasks-mock";
 
 jest.mock('../../../../resources/airtable-fetch')
 
 airtableFetch.mockResolvedValue({})
+
+const mocks = [
+  {
+    request: {
+      query: GET_MEMBER_TASKS,
+      variables: {
+        antaraId: 'TRIAL-ID16',
+      },
+    },
+    result: () => {
+      return mockHnTasks
+    },
+  },
+]
+
+
+const renderWithMocks = (mocks: any[] = []) => {
+  return renderWithRouter(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <Tasks />
+      </MockedProvider>
+  )
+}
 
 describe('<Tasks />', () => {
   afterEach(cleanup)
 
   it('is rendered', async () => {
     await act(async () => {
-      renderWithRouter(<Tasks />)
+      renderWithMocks(mocks)
     })
     expect(screen.getByText('Tasks')).not.toBeNull()
   })
 
   test('displays empty message if there are no tasks', async () => {
     await act(async () => {
-      renderWithRouter(<Tasks />)
+      renderWithMocks(mocks)
     })
     expect(screen.getByText('No tasks found.')).not.toBeNull()
   })
 
   test('displays tasks properly in a list', async () => {
     airtableFetch.mockReturnValue(Promise.resolve(tasks_mock_response))
-    const { findByTestId } = renderWithRouter(<Tasks />)
-    const list = await findByTestId('data-list')
+    renderWithMocks(mocks)
+    // const { findByTestId } = renderWithRouter(<Tasks />)
+    const list = await screen.findByTestId('data-list')
     const secondItem = list.children[0]
     expect(list.children.length).toBe(2)
     expect(await findByText(secondItem, /Not Started/i)).not.toBeNull()
@@ -52,7 +79,7 @@ describe('<Tasks />', () => {
 
   test('displays task in detail inside a modal', async () => {
     airtableFetch.mockReturnValue(Promise.resolve(tasks_mock_response))
-    const { container } = renderWithRouter(<Tasks />)
+    const { container } = renderWithMocks(mocks)
     const list = await screen.findByTestId('data-list')
     const thirdItem = list.children[1]
     await act(async () => {
@@ -67,7 +94,7 @@ describe('<Tasks />', () => {
 
   test('enables task edit inside modal', async () => {
     airtableFetch.mockReturnValue(Promise.resolve(tasks_mock_response))
-    const { container } = renderWithRouter(<Tasks />)
+    const { container } = renderWithMocks(mocks)
     const list = await screen.findByTestId('data-list')
     const thirdItem = list.children[1]
     await act(async () => {
@@ -102,7 +129,7 @@ describe('<Tasks />', () => {
   test('the first task has button to open external url', async () => {
     airtableFetch.mockReturnValue(Promise.resolve(tasks_mock_response))
     window.open = jest.fn()
-    renderWithRouter(<Tasks />)
+    renderWithMocks(mocks)
     const openTaskUrlBtns = await screen.findAllByTestId('task-url-link')
     expect(openTaskUrlBtns[0]).toHaveAttribute(
       'href',
@@ -113,7 +140,7 @@ describe('<Tasks />', () => {
   test('filters by status', async () => {
     airtableFetch.mockReturnValue(Promise.resolve(tasks_mock_response))
     window.open = jest.fn()
-    renderWithRouter(<Tasks />)
+    renderWithMocks(mocks)
     const selectBox = screen.getByTestId('status-filter')
     const list = await screen.findByTestId('data-list')
     expect(list.children.length).toBe(2)
@@ -130,7 +157,7 @@ describe('<Tasks />', () => {
       },
     })
     await waitFor(() => {
-      expect(list.children.length).toBe(6)
+      expect(list.children.length).toBe(7)
     })
     fireEvent.change(selectBox, {
       target: {

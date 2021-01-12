@@ -12,6 +12,7 @@ const Icon = ({ name, width = 24, height = 24, fill = '#000' }: IconProps) => {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    let isCancelled = false
     setLoading(true)
     const importIcon = async () => {
       try {
@@ -23,10 +24,18 @@ const Icon = ({ name, width = 24, height = 24, fill = '#000' }: IconProps) => {
         // eslint-disable-next-line no-console
         console.error(`An error occured while loading the svg from ${name}`)
       } finally {
-        setLoading(false)
+        if (!isCancelled) {
+          setLoading(false)
+        }
       }
     }
-    importIcon()
+    if (!isCancelled) {
+      importIcon()
+    }
+    // Cleanup
+    return () => {
+      isCancelled = true
+    }
   }, [name])
 
   if (!loading && iconRef.current) {
