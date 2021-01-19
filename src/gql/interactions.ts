@@ -9,6 +9,7 @@ const GET_MEMBER_INTERACTIONS = gql`
           interactionSummaryNotes
           interactorType
           interactionDirection
+          modeOfCommunication
           inboundInteractionCategory
           outboundInteractionCategory
           otherCategoryOutbound

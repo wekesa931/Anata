@@ -10,6 +10,7 @@ const mockInteractions = {
             interactionDirection: 'OUTBOUND_INTERACTION',
             inboundInteractionCategory: null,
             outboundInteractionCategory: null,
+            modeOfCommunication: 'WHATSAPP',
             otherCategoryOutbound: null,
             otherCategoryInbound: null,
             flagForReview: 'NO',
@@ -28,6 +29,7 @@ const mockInteractions = {
             outboundInteractionCategory: null,
             otherCategoryOutbound: null,
             otherCategoryInbound: null,
+            modeOfCommunication: 'PHONE_CALL',
             flagForReview: 'NO',
             healthNavigator: {
               fullName: 'Test HN 2',

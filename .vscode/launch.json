@@ -9,7 +9,8 @@
       "request": "launch",
       "name": "Debug React Run",
       "url": "http://localhost:5000",
-      "webRoot": "${workspaceFolder}/src"
+      "webRoot": "${workspaceFolder}/src",
+      "smartStep": true
     }
   ]
 }

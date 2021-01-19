@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import styles from './list.component.css'
 import ExpandIcon from '../../../assets/img/icons/arrows-diagonals-bltr.svg'
 import Tooltip from '../tooltip/tooltip.component'
-import { useDateSort } from '../../../context/sort.context'
+import { useSortFilter } from '../../../context/sort-filter-views.context'
 import ListModal from './list-modal.component'
 import analytics from '../../../helpers/segment'
 
@@ -46,7 +46,9 @@ const List = ({
     { name: string; data: any }[]
   >([])
   const [sortedList, setSortedList] = useState(list)
-  const { sort: globalDateSort } = useDateSort()
+  const {
+    ops: { sort: globalDateSort },
+  } = useSortFilter()
 
   useEffect(() => {
     const sortAsc = (arr: any[]) => {

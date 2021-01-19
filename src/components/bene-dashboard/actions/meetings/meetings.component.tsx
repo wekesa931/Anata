@@ -12,6 +12,7 @@ import airtableFetch from '../../../../resources/airtable-fetch'
 
 const Meetings = () => {
   const [meetings, setMeetings] = React.useState<any[]>([])
+  const [filteredMeetings, setFilteredMeetings] = React.useState<any[]>([])
   const { recId } = useParams()
   const allowedFields = [
     'Meeting Type',
@@ -29,6 +30,14 @@ const Meetings = () => {
     &sort=[{"field":"Date","direction":"desc"}]
     &${filterFields(allowedFields)}`
   )
+  const status = [
+    'Scheduled',
+    'Done',
+    'Rescheduling',
+    'Scheduled - 2nd',
+    'Scheduled - 3rd',
+    'Missed',
+  ]
 
   const updateMeeting = async (meeting: { id: string; fields: any }) => {
     await airtableFetch('meetings', 'post', {
@@ -95,29 +104,62 @@ const Meetings = () => {
           id,
         }))
       setMeetings(mappedResponse)
+      setFilteredMeetings(mappedResponse)
     }
   }, [data])
 
+  const getMeetingDate = (meeting: any) =>
+    dayjs(
+      meeting.reduce((obj, { name, value }) => ({ ...obj, [name]: value }), {})
+        .Date
+    ).format("DD MMM 'YY HH:mmA")
+
+  const getMeetingStatus = (meeting) =>
+    meeting.reduce((obj, { name, value }) => ({ ...obj, [name]: value }), {})
+      .Status
+
+  const filterByStatus = (val: string) => {
+    if (val === 'All') {
+      return meetings.filter((meeting) =>
+        meeting.data.find(
+          ({ name, value }: any) => name === 'Status' && value !== 'Complete'
+        )
+      )
+    }
+    return meetings.filter((meeting) =>
+      meeting.data.find(
+        ({ name, value }: any) => name === 'Status' && value === val
+      )
+    )
+  }
+
   return (
     <div>
-      <h3>Meetings</h3>
-      {meetings && !isLoading && (
+      <div
+        className="d-flex flex-align-center"
+        style={{ justifyContent: 'space-between' }}
+      >
+        <h4>Meetings</h4>
+        <div>
+          <select
+            onChange={(e) =>
+              setFilteredMeetings(filterByStatus(e.target.value))
+            }
+            className="form-control"
+            data-testid="status-filter"
+          >
+            <option key="all">All</option>
+            {status.map((stat) => (
+              <option key={stat}>{stat}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      {filteredMeetings && !isLoading && (
         <List
-          list={meetings}
-          getTopLeftText={(meeting) =>
-            dayjs(
-              meeting.reduce(
-                (obj, { name, value }) => ({ ...obj, [name]: value }),
-                {}
-              ).Date
-            ).format("DD MMM 'YY HH:mmA")
-          }
-          getTopRightText={(meeting) =>
-            meeting.reduce(
-              (obj, { name, value }) => ({ ...obj, [name]: value }),
-              {}
-            ).Status
-          }
+          list={filteredMeetings}
+          getTopLeftText={getMeetingDate}
+          getTopRightText={getMeetingStatus}
           emptyListText="No meetings found for this member"
           editable
           onEdit={updateMeeting}

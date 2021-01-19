@@ -6,7 +6,7 @@ import ExpandIcon from '../../../assets/img/icons/arrows-diagonals-bltr.svg'
 import styles from './table.component.css'
 import Modal from '../modals/modal.component'
 import Tooltip from '../tooltip/tooltip.component'
-import { useDateSort } from '../../../context/sort.context'
+import { useSortFilter } from '../../../context/sort-filter-views.context'
 import analytics from '../../../helpers/segment'
 
 type TableProps = {
@@ -22,7 +22,9 @@ type TableProps = {
 }
 
 const Table = ({ title, columns, data, dateColumnKey }: TableProps) => {
-  const { sort: globalDateSort } = useDateSort()
+  const {
+    ops: { sort: globalDateSort },
+  } = useSortFilter()
   const [displayedData, setDisplayedData] = useState<any[]>([])
   const [highlightedRow, setHighlightedRow] = useState<number>()
   const [clickedRow, setClickedRow] = useState<any>()

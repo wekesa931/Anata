@@ -2,36 +2,57 @@ import React, { useState } from 'react'
 import { always } from 'kremling'
 import styles from './tabs.component.css'
 
-const Tab = ({ activeTab, label, onClick }: any) => {
-  return (
+const Tab = ({ activeTab, label, onClick, orientation }: any) => {
+  const isActive = activeTab === label
+  const isVertical = orientation === 'vertical'
+  return isVertical ? (
     <button
-      className={always(styles.tab)
+      className={always(`btn-unstyled ${styles.tab} ${styles.vertical}`).maybe(
+        styles.active,
+        isActive
+      )}
+      onClick={(e) => {
+        e.preventDefault()
+        onClick(label)
+      }}
+    >
+      {label}
+    </button>
+  ) : (
+    <button
+      className={always(`${styles.tab} ${styles.horizontal}`)
         .toggle('btn btn-secondary', 'btn btn-unstyled', activeTab === label)
         .maybe('text-bold', activeTab === label)}
-      onClick={() => onClick(label)}
+      onClick={(e) => {
+        e.preventDefault()
+        onClick(label)
+      }}
     >
       {label}
     </button>
   )
 }
 
-const Tabs = ({ children, currentTab = 0 }: any) => {
+const Tabs = ({ children, currentTab = 0, orientation }: any) => {
   const [activeTab, setActiveTab] = useState(children[currentTab].props.label)
+  const isVertical = orientation === 'vertical'
   const onClickTabItem = (tab: string) => {
     setActiveTab(tab)
   }
 
   return (
     <div
-      style={{
-        marginTop: '16px',
-        height: 'calc(100% - 48px)',
-        display: 'flex',
-        flexDirection: 'column',
-        flex: 1,
-      }}
+      className={
+        isVertical
+          ? `${styles.tabWrapper}`
+          : `${styles.tabWrapper} ${styles.horizontal}`
+      }
     >
-      <div className={styles.tabs}>
+      <div
+        className={
+          isVertical ? `${styles.tabs} ${styles.vertical}` : styles.tabs
+        }
+      >
         {children.map((child: any) => {
           const { label } = child.props
 
@@ -41,11 +62,18 @@ const Tabs = ({ children, currentTab = 0 }: any) => {
               key={label}
               label={label}
               onClick={onClickTabItem}
+              orientation={orientation}
             />
           )
         })}
       </div>
-      <div className={styles.tabContent}>
+      <div
+        className={
+          isVertical
+            ? `${styles.tabContent} ${styles.vertical}`
+            : `${styles.tabContent} ${styles.horizontal}`
+        }
+      >
         {children.map((child: any) => {
           if (child.props.label !== activeTab) {
             return null
