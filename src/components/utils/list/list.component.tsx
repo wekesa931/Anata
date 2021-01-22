@@ -20,8 +20,8 @@ type ListProps = {
   emptyListText?: string
   dateColumnKey?: string
   editable?: boolean
-  onEdit?: (values: { id: string; fields: any }) => Promise<any>,
-  listItemActions?: Function,
+  onEdit?: (values: { id: string; fields: any }) => Promise<any>
+  listItemActions?: (openItem: any, callback: () => null) => JSX.Element | null
   editableFields?: AirtableField[]
 }
 

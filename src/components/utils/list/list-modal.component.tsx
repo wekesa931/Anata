@@ -16,7 +16,7 @@ type ListModalProps = {
   openItem: { name: string; id: string; data: AirtableField[] }
   editable?: boolean
   onEdit?: (values: { id: string; fields: any }) => Promise<any>
-  actions?: Function
+  actions?: () => JSX.Element | null
   editableFields?: AirtableField[]
 }
 
