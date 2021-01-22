@@ -16,6 +16,8 @@ type ListModalProps = {
   openItem: { name: string; id: string; data: AirtableField[] }
   editable?: boolean
   onEdit?: (values: { id: string; fields: any }) => Promise<any>
+  actions?: Function
+  editableFields?: AirtableField[]
 }
 
 const ListModal = (props: ListModalProps) => {
@@ -26,6 +28,8 @@ const ListModal = (props: ListModalProps) => {
     openItem,
     editable,
     onEdit,
+    actions,
+    editableFields,
   } = props
   const [formDisabled, setFormDisabled] = useState<boolean>(true)
   const displayObject = (obj: any) => {
@@ -56,6 +60,25 @@ const ListModal = (props: ListModalProps) => {
     }
   }
 
+  const fieldsToEdit = () => {
+    if (editableFields) {
+      return editableFields?.map((field, index) => (
+        <div key={index} className="d-flex flex-direction-column">
+          <Label htmlFor={field.name}>{field.name}</Label>
+          <FormField {...field} disabled={formDisabled} />
+        </div>
+      ))
+    }
+    return openItem.data.map((field, index) => {
+      return !field.calculated ? (
+        <div key={index} className="d-flex flex-direction-column">
+          <Label htmlFor={field.name}>{field.name}</Label>
+          <FormField {...field} disabled={formDisabled} />
+        </div>
+      ) : null
+    })
+  }
+
   const isNotNull = (data) => {
     if (data) {
       if (Array.isArray(data) && data.length === 0) {
@@ -70,17 +93,21 @@ const ListModal = (props: ListModalProps) => {
     return (
       <div className="full-width d-flex flex-align-center flex-justify-space-between">
         <h3>{modalTitle}</h3>
-        {editable && formDisabled && (
+        {formDisabled && (
           <div className="d-flex">
-            <button
-              className="btn-icon"
-              onClick={() => setFormDisabled(false)}
-              data-testid="modal-edit-btn"
-            >
-              <Tooltip title="Update">
-                <EditIcon />
-              </Tooltip>
-            </button>
+            {actions ? (
+              actions(() => setFormDisabled(false))
+            ) : (
+              <button
+                className="btn-icon"
+                onClick={() => setFormDisabled(false)}
+                data-testid="modal-edit-btn"
+              >
+                <Tooltip title="Update">
+                  <EditIcon />
+                </Tooltip>
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -89,7 +116,7 @@ const ListModal = (props: ListModalProps) => {
 
   const handleSubmit = async (values: any) => {
     if (onEdit) {
-      const task = { id: openItem.id, fields: values }
+      const task = { id: openItem.id || openItem?.data?.id, fields: values }
       await onEdit(task)
       setFormDisabled(true)
       setModalOpen(false)
@@ -98,17 +125,31 @@ const ListModal = (props: ListModalProps) => {
   }
 
   const getInitialValues = () => {
-    return openItem.data
-      .filter((field) => !field.calculated)
-      .reduce(
-        (obj, field) => ({
-          [field.name]: Array.isArray(field.value)
-            ? field.value.join()
-            : field.value,
-          ...obj,
-        }),
-        {}
-      )
+    if (editableFields) {
+      return editableFields
+        .map((f) => f.name)
+        .reduce(
+          (acc, curV) => ({
+            ...acc,
+            [curV]: '',
+          }),
+          {}
+        )
+    }
+    return (
+      openItem?.data?.filter &&
+      openItem?.data
+        ?.filter((field) => !field.calculated)
+        .reduce(
+          (obj, field) => ({
+            [field.name]: Array.isArray(field.value)
+              ? field.value.join()
+              : field.value,
+            ...obj,
+          }),
+          {}
+        )
+    )
   }
 
   return (
@@ -124,14 +165,7 @@ const ListModal = (props: ListModalProps) => {
             <Formik initialValues={getInitialValues()} onSubmit={handleSubmit}>
               {({ isSubmitting }) => (
                 <Form key="list-edit-form">
-                  {openItem.data.map((field, index) => {
-                    return !field.calculated ? (
-                      <div key={index} className="d-flex flex-direction-column">
-                        <Label htmlFor={field.name}>{field.name}</Label>
-                        <FormField {...field} disabled={formDisabled} />
-                      </div>
-                    ) : null
-                  })}
+                  {fieldsToEdit()}
                   {!formDisabled && (
                     <div className="d-flex margin-top-8">
                       <button

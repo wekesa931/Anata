@@ -4,10 +4,12 @@ import dayjs from 'dayjs'
 import airtableFetch from '../../../../../resources/airtable-fetch'
 import List from '../../../../utils/list/list.component'
 import { useSortFilter } from '../../../../../context/sort-filter-views.context'
+import AirtableField from '../../../../../types/airtable-field'
 
 const Medications = () => {
   const { recId } = useParams()
   const [medications, setMedications] = useState<any[]>([])
+  const [editable, setEditable] = useState<boolean>(false)
   const [filteredMedications, setFilteredMedications] = useState<any[]>([])
   const {
     ops: {
@@ -52,7 +54,7 @@ const Medications = () => {
       `medications/list?filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((response) => {
       const meds = Object.keys(response)
-        .map((key) => response[key])
+        .map((key) => ({ id: key, ...response[key] }))
         .map((data) => ({
           data,
           name: renderInfo(data),
@@ -65,7 +67,7 @@ const Medications = () => {
     return () => {
       isCancelled = true
     }
-  }, [recId])
+  }, [recId, editable])
 
   useEffect(() => {
     const isStopped = (med: any) => med.Stopped || med['Stop Date']
@@ -107,8 +109,54 @@ const Medications = () => {
     return 'Not Refillable'
   }
 
+  const editableFields = (): AirtableField[] => {
+    return [
+      {
+        name: 'Stop Date',
+        type: 'date',
+      },
+      {
+        name: 'Stopped Notes',
+        type: 'long-text',
+      },
+    ]
+  }
+
+  const updateMedication = async (updates: { id: string; fields: any }) => {
+    await airtableFetch('medications', 'post', {
+      id: updates.id,
+      fields: { ...updates.fields },
+    })
+    setEditable(false)
+  }
+
   const renderStartDate = (medication: any) => {
     return `Start Date: ${dayjs(medication['Start Date']).format("DD MMM 'YY")}`
+  }
+
+  const medicationListItemAction = (item: any, actionCallback?: any) => {
+    if (item?.data['Status'] !== 'ONGOING') return null
+    return (
+      <>
+        <button
+          className="btn-icon"
+          onClick={() => {
+            setEditable(true)
+            actionCallback()
+          }}
+          data-testid="modal-stop-btn"
+        >
+          Stop
+        </button>
+        <button
+          className="btn-icon"
+          onClick={() => window.open(item.data['Refill URL'].url, 'refill')}
+          data-testid="modal-refill-btn"
+        >
+          Refill
+        </button>
+      </>
+    )
   }
 
   return (
@@ -127,6 +175,10 @@ const Medications = () => {
         dateColumnKey="Start Date"
         paginate
         modalTitle="Medication"
+        editable={editable}
+        onEdit={updateMedication}
+        editableFields={editableFields()}
+        listItemActions={medicationListItemAction}
       />
     </div>
   )

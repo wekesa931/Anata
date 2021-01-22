@@ -7,6 +7,7 @@ import Tooltip from '../tooltip/tooltip.component'
 import { useSortFilter } from '../../../context/sort-filter-views.context'
 import ListModal from './list-modal.component'
 import analytics from '../../../helpers/segment'
+import AirtableField from '../../../types/airtable-field'
 
 type ListProps = {
   list: { name: string; data: any }[]
@@ -19,7 +20,9 @@ type ListProps = {
   emptyListText?: string
   dateColumnKey?: string
   editable?: boolean
-  onEdit?: (values: { id: string; fields: any }) => Promise<any>
+  onEdit?: (values: { id: string; fields: any }) => Promise<any>,
+  listItemActions?: Function,
+  editableFields?: AirtableField[]
 }
 
 const List = ({
@@ -34,6 +37,8 @@ const List = ({
   emptyListText = 'No data available',
   editable = false,
   onEdit,
+  listItemActions,
+  editableFields,
 }: ListProps) => {
   const [isHovering, setIsHovering] = useState<number>()
   const [openItem, setOpenItem] = useState<{
@@ -197,6 +202,8 @@ const List = ({
             modalTitle={modalTitle || openItem.name}
             editable={editable}
             onEdit={onEdit}
+            actions={listItemActions?.bind(null, openItem)}
+            editableFields={editableFields}
           />
         </>
       )}
