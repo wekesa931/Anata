@@ -30,6 +30,7 @@ const Forms = () => {
     name: string
     hnField?: string
     airtableUrl: boolean
+    url_sandbox: string
   }) => {
     analytics.track('Form Opened', {
       form_name: form.name,
@@ -48,7 +49,9 @@ const Forms = () => {
               },
             })
           )}`
-        : `https://airtable.com/${form.url}?prefill_${form.hnField}=${hn['Record ID']}&prefill_Member=${recId}`
+        : `https://airtable.com/${
+            process.env.PROD ? form.url : form.url_sandbox
+          }?prefill_${form.hnField}=${hn['Record ID']}&prefill_Member=${recId}`
     window.open(url, form.name)
   }
   return (
