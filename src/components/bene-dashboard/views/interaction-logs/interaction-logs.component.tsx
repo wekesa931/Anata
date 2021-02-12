@@ -22,9 +22,11 @@ const InteractionLogs = () => {
   } = useSortFilter()
 
   const getInteractionDate = (interaction: any) => {
-    return dayjs(interaction['interaction Started At']).format(
-      "DD MMM 'YY, H:mm A"
-    )
+    // temporary workaround until timezones are fixed on the database
+    // remove .utc after
+    return dayjs
+      .utc(interaction['interaction Started At'])
+      .format("DD MMM 'YY, HH:mm A")
   }
 
   const getHN = (interaction: any) => {

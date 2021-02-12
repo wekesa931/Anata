@@ -60,7 +60,7 @@ const Meetings = () => {
         ? {
             value:
               field.type === 'datetime'
-                ? dayjs(meeting[key]).format('YYYY-MM-DDThh:mm')
+                ? dayjs(meeting[key]).format('YYYY-MM-DDTHH:mm')
                 : meeting[key],
             ...field,
           }
@@ -108,11 +108,12 @@ const Meetings = () => {
     }
   }, [data])
 
-  const getMeetingDate = (meeting: any) =>
-    dayjs(
+  const getMeetingDate = (meeting: any) => {
+    return dayjs(
       meeting.reduce((obj, { name, value }) => ({ ...obj, [name]: value }), {})
         .Date
-    ).format("DD MMM 'YY HH:mmA")
+    ).format("DD MMM 'YY hh:mmA")
+  }
 
   const getMeetingStatus = (meeting) =>
     meeting.reduce((obj, { name, value }) => ({ ...obj, [name]: value }), {})
