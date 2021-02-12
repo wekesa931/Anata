@@ -153,7 +153,9 @@ const SearchInput = () => {
                 <div className={styles.noResultWrap}>
                   <span className={styles.noResultMsg}>
                     {inputValue.length >= 4
-                      ? 'Your search - <strong>{inputValue}</strong> - did not match any member.'
+                      ? `Your search - ${(
+                          <strong>${inputValue}</strong>
+                        )} - did not match any member.`
                       : "Search requires a minimum of 4 characters of the bene's name"}
                   </span>
                   {inputValue.length >= 4 && (
