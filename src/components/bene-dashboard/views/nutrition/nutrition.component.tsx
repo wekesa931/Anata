@@ -76,7 +76,7 @@ const Nutrition = () => {
     {
       name: 'Glycemic load',
       key: 'Total Daily Glycemic Load',
-      format: '',
+      format: 'GI',
       info: `Level [0]: <100 (Recommended for diabetes)
       Level [1]: 80-180 (Normal)
       Level [2]: >180 (High)`,
