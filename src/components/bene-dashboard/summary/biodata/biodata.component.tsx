@@ -228,7 +228,7 @@ const HifSummary = () => {
               'Does anyone in your immediate family (Grandparents, Parents, Siblings) have Diabetes?'
             ],
             response[record_id][
-              'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Blood Pressure??'
+              'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Blood Pressure?'
             ],
             response[record_id][
               'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Cholesterol Levels?'
