@@ -50,7 +50,7 @@ const FlagForReview = () => {
             className="btn btn-secondary"
             to={`/member/${node.member.atRecordId}`}
           >
-            Open
+            Open Dashboard
           </Link>
         </div>
       </div>
