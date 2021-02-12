@@ -26,19 +26,24 @@ const Medications = () => {
 
   useEffect(() => {
     let isCancelled = false
-    const isStopped = (med: any) => med.Stopped || med['Stop Date']
 
-    const isFinished = (med: any) =>
-      new Date() > new Date(med['Stop Date (Calculated)'])
+    const getStatusClassName = (status: any) => {
+      switch (status) {
+        case 'FINISHED':
+          return 'badge badge-warning'
+        case 'STOPPED':
+          return 'badge badge-danger'
+        case 'ONGOING':
+          return 'badge badge-success'
+        default:
+          return 'badge'
+      }
+    }
 
     const renderMedicationStatus = (med: any) => {
-      if (isStopped(med)) {
-        return <span className="badge badge-danger">Stopped</span>
-      }
-      if (isFinished(med)) {
-        return <span className="badge badge-warning">Finished</span>
-      }
-      return <span className="badge badge-success">Ongoing</span>
+      return (
+        <span className={getStatusClassName(med.Status)}>{med.Status}</span>
+      )
     }
     const renderInfo = (med: any) => {
       return (
@@ -70,23 +75,13 @@ const Medications = () => {
   }, [recId, editable])
 
   useEffect(() => {
-    const isStopped = (med: any) => med.Stopped || med['Stop Date']
-
-    const isFinished = (med: any) =>
-      new Date() > new Date(med['Stop Date (Calculated)'])
-
-    const isOngoing = (med: any) => !isStopped(med) && !isFinished(med)
     let isCancelled = false
     if (filters) {
       let meds = medications
       if (filters.status) {
-        if (filters.status === 'finished') {
-          meds = meds.filter(({ data }) => isFinished(data))
-        } else if (filters.status === 'stopped') {
-          meds = meds.filter(({ data }) => isStopped(data))
-        } else if (filters.status === 'ongoing') {
-          meds = meds.filter(({ data }) => isOngoing(data))
-        }
+        meds = meds.filter(
+          ({ data }) => data.Status === filters.status.toUpperCase()
+        )
       }
       if (filters.name) {
         meds = meds.filter((med) => med['Drug Name'] === filters.name)
