@@ -151,6 +151,7 @@ const Tasks = () => {
     'Assigned HN Name',
     'Last Status changed at',
     'Open URL',
+    'Prescription Drug Names',
   ]
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
     const sortArg = `sort=[{"field":"Due Date","direction":"asc"}]`
@@ -207,6 +208,11 @@ const Tasks = () => {
             {dayjs(hnTask['Due Date']).format('DD MMM YYYY')}
           </span>
           <span>{hnTask.Type}</span>
+          {hnTask['Prescription Drug Names'] && (
+            <span className="badge badge-warning">
+              {hnTask['Prescription Drug Names']}
+            </span>
+          )}
           <div className="d-flex flex-align-center">
             {hnTask['Open URL'] && hnTask['Open URL'].url && (
               <Tooltip title="Open URL">
