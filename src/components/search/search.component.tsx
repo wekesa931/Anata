@@ -151,18 +151,22 @@ const SearchInput = () => {
               )}
               {inputValue && results.length === 0 && (
                 <div className={styles.noResultWrap}>
-                  <span className={styles.noResultMsg}>
-                    {inputValue.length >= 4
-                      ? `Your search - ${(
-                          <strong>${inputValue}</strong>
-                        )} - did not match any member.`
-                      : "Search requires a minimum of 4 characters of the bene's name"}
-                  </span>
-                  {inputValue.length >= 4 && (
-                    <ul className={styles.noResultSuggestion}>
-                      <li>Make sure the word is spelled correctly.</li>
-                      <li>Try a different alternate name.</li>
-                    </ul>
+                  {inputValue.length >= 4 ? (
+                    <>
+                      <span className={styles.noResultMsg}>
+                        Your search - <strong>{inputValue}</strong> - did not
+                        match any member.
+                      </span>
+                      <ul className={styles.noResultSuggestion}>
+                        <li>Make sure the word is spelled correctly.</li>
+                        <li>Try a different alternate name.</li>
+                      </ul>
+                    </>
+                  ) : (
+                    <span className={styles.noResultMsg}>
+                      Search requires a minimum of 4 characters of the
+                      bene&lsquo;s name
+                    </span>
                   )}
                 </div>
               )}
