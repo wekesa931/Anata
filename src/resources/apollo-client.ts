@@ -2,7 +2,12 @@
 /* eslint-disable no-console */
 import fetch from 'node-fetch'
 import jwt_decode from 'jwt-decode'
-import { ApolloClient, ApolloLink, InMemoryCache } from '@apollo/client'
+import {
+  ApolloClient,
+  ApolloLink,
+  fromPromise,
+  InMemoryCache,
+} from '@apollo/client'
 import { HttpLink } from '@apollo/client/link/http'
 import { onError } from '@apollo/client/link/error'
 import constants from '../constants/storage'
@@ -37,6 +42,9 @@ const httpLink = new HttpLink({
 })
 
 const handleErrors = onError(
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  // eslint-disable-next-line consistent-return
   ({ graphQLErrors, networkError, response, operation, forward }) => {
     if (graphQLErrors)
       graphQLErrors.map(({ message, locations, path }) =>
@@ -46,20 +54,23 @@ const handleErrors = onError(
       )
     if (networkError) {
       if (networkError.statusCode === 403 || networkError.statusCode === 401) {
-        refreshToken().then(({ data }) => {
-          const userObj = jwt_decode(data.id_token)
-          storage.set(constants.USER, JSON.stringify({ ...data, ...userObj }))
-          // modify the operation context with a new token
-          const oldHeaders = operation.getContext().headers
-          operation.setContext({
-            headers: {
-              ...oldHeaders,
-              Authorization: `Bearer ${data.id_token}`,
-            },
+        return fromPromise(refreshToken())
+          .filter((value) => Boolean(value))
+          .flatMap(({ data }) => {
+            const userObj = jwt_decode(data.id_token)
+            storage.set(constants.USER, JSON.stringify({ ...data, ...userObj }))
+            const oldHeaders = operation.getContext().headers
+            // modify the operation context with a new token
+            operation.setContext({
+              headers: {
+                ...oldHeaders,
+                authorization: `Bearer ${data.id_token}`,
+              },
+            })
+
+            // retry the request, returning the new observable
+            return forward(operation)
           })
-          // retry the request, returning the new observable
-          return forward(operation)
-        })
       }
       console.warn(`[Network error]: ${response}`)
     }
