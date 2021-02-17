@@ -16,7 +16,7 @@ type ListModalProps = {
   openItem: { name: string; id: string; data: AirtableField[] }
   editable?: boolean
   onEdit?: (values: { id: string; fields: any }) => Promise<any>
-  actions?: () => JSX.Element | null
+  actions?: (callback: any) => JSX.Element | null
   editableFields?: AirtableField[]
 }
 
@@ -49,7 +49,7 @@ const ListModal = (props: ListModalProps) => {
     return str
   }
 
-  const format = (data) => {
+  const format = (data: any) => {
     switch (typeof data) {
       case 'object':
         return displayObject(data)
@@ -79,7 +79,7 @@ const ListModal = (props: ListModalProps) => {
     })
   }
 
-  const isNotNull = (data) => {
+  const isNotNull = (data: any) => {
     if (data) {
       if (Array.isArray(data) && data.length === 0) {
         return true
@@ -95,9 +95,8 @@ const ListModal = (props: ListModalProps) => {
         <h3>{modalTitle}</h3>
         {formDisabled && (
           <div className="d-flex">
-            {actions ? (
-              actions(() => setFormDisabled(false))
-            ) : (
+            {actions && actions(() => setFormDisabled(false))}
+            {editable && (
               <button
                 className="btn-icon"
                 onClick={() => setFormDisabled(false)}
