@@ -112,7 +112,7 @@ const Meetings = () => {
     return dayjs(
       meeting.reduce((obj, { name, value }) => ({ ...obj, [name]: value }), {})
         .Date
-    ).format("DD MMM 'YY hh:mmA")
+    ).format("DD MMM 'YY HH:mmA")
   }
 
   const getMeetingStatus = (meeting) =>
