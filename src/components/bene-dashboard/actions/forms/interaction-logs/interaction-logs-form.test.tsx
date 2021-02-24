@@ -26,7 +26,7 @@ jest.mock('../../../../../resources/airtable-fetch', () => {
 const mutation_variables = {
   input: {
     member: 'TRIAL-ID16',
-    interactionStartedAt: '2020-11-30T13:46',
+    interactionStartedAt: '2020-11-30T13:46:00.000Z',
     healthNavigator: 'fatma',
     interactorType: 'Beneficiary',
     interactorName: undefined,

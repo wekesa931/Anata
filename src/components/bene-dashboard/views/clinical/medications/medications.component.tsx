@@ -130,7 +130,7 @@ const Medications = () => {
   }
 
   const medicationListItemAction = (item: any, actionCallback?: any) => {
-    if (item?.data['Status'] !== 'ONGOING') return null
+    if (item?.data.Status !== 'ONGOING') return null
     return (
       <>
         <button

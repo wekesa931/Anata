@@ -34,15 +34,17 @@ const InteractionLogsForm = () => {
   }
 
   const onSubmit = (values: any, { setSubmitting }: FormikHelpers<any>) => {
+    const input = {
+      ...values,
+      member: member['Antara ID'],
+      interactionStartedAt: dayjs(values.interactionStartedAt).toISOString(),
+      historyUserIdField: user && user.email,
+      healthNavigator:
+        values.healthNavigator && extractUsername(values.healthNavigator),
+    }
     createInteraction({
       variables: {
-        input: {
-          ...values,
-          member: member['Antara ID'],
-          historyUserIdField: user && user.email,
-          healthNavigator:
-            values.healthNavigator && extractUsername(values.healthNavigator),
-        },
+        input,
       },
     })
       .catch((e) => {
