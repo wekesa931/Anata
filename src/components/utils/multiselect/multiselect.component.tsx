@@ -88,9 +88,9 @@ const MultiSelect = ({ form, field, options }: any) => {
                 removeSelectedItem(selectedItem)
                 form.setFieldValue(
                   field.name,
-                  selectedItems.filter(
-                    (item) => item.value !== selectedItem.value
-                  )
+                  selectedItems
+                    .filter((item) => item.value !== selectedItem.value)
+                    .map((item) => item.value)
                 )
               }}
             >
