@@ -1,10 +1,9 @@
-.formContainer {
+.form {
   display: flex;
   justify-content: flex-end;
   width: 100%;
 }
 
-.form {
-  width: 380px;
-  padding: 8px;
+.filtersMenu {
+  background-color: white;
 }

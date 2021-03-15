@@ -25,8 +25,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  height: 16px;
-  width: 16px;
+  height: 24px;
+  width: 24px;
   background-color: white;
   border: 1px solid var(--blue-light);
   border-radius: 50%;

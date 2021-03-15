@@ -2,9 +2,9 @@ import { useCombobox, useMultipleSelection } from 'downshift'
 import React from 'react'
 import styles from './multiselect.component.css'
 
-const MultiSelect = ({ form, field, options }: any) => {
+const MultiSelect = ({ form, field, options, onChange, defaultValue }: any) => {
   const [value, setValue] = React.useState<string | undefined>('')
-  const initialSelectedItems = []
+  const [initialSelectedItems] = React.useState(defaultValue || [])
   const {
     getSelectedItemProps,
     getDropdownProps,
@@ -31,7 +31,6 @@ const MultiSelect = ({ form, field, options }: any) => {
   } = useCombobox({
     inputValue: value,
     selectedItem: null,
-    defaultIsOpen: true,
     items: getFilteredItems(),
     stateReducer: (_state, actionAndChanges) => {
       const { changes, type } = actionAndChanges
@@ -40,7 +39,7 @@ const MultiSelect = ({ form, field, options }: any) => {
         case useCombobox.stateChangeTypes.ItemClick:
           return {
             ...changes,
-            isOpen: true, // keep the menu open after selection.
+            isOpen: false, // keep the menu open after selection.
           }
         default:
           break
@@ -60,6 +59,12 @@ const MultiSelect = ({ form, field, options }: any) => {
               ...selectedItems.map((item) => item.value),
               selectedItem.value,
             ])
+            if (onChange) {
+              onChange([
+                ...selectedItems.map((item) => item.value),
+                selectedItem.value,
+              ])
+            }
             setValue('')
             addSelectedItem(selectedItem)
           }
@@ -92,6 +97,13 @@ const MultiSelect = ({ form, field, options }: any) => {
                     .filter((item) => item.value !== selectedItem.value)
                     .map((item) => item.value)
                 )
+                if (onChange) {
+                  onChange(
+                    selectedItems
+                      .filter((item) => item.value !== selectedItem.value)
+                      .map((item) => item.value)
+                  )
+                }
               }}
             >
               &#10005;
