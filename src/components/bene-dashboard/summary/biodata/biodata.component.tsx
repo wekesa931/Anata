@@ -151,7 +151,7 @@ const ConditionsSummary = () => {
             {condition.Condition === 'Other'
               ? condition['Other, specify']
               : condition.Condition}{' '}
-            Stage {condition.Stage} Active
+            Stage {condition['Starting Stage']} Active
           </li>
         ))}
       </div>

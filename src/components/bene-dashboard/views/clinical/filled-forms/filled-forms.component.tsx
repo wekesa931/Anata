@@ -50,7 +50,6 @@ const FilledForms = () => {
       'activity',
       'minorhif',
       'hntasks',
-      'interactions',
       'pafu',
       'medications',
       'appointments',
@@ -85,7 +84,6 @@ const FilledForms = () => {
     }
 
     const promises = forms.map((form) => getForm(form))
-
     Promise.all(promises).then((response) => {
       if (response.every((form) => form === undefined)) {
         setFilledForms([])
