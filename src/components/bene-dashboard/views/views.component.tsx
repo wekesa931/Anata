@@ -11,6 +11,7 @@ import InteractionLogs from './interaction-logs/interaction-logs.component'
 import Nutrition from './nutrition/nutrition.component'
 import ErrorBoundary from '../../error-boundary/error-boundary.component'
 import SortDialog from './sort-and-filter.component/sort-and-filter.component'
+import Conditions from './conditions/conditions.component'
 
 const SortButton = ({ openSortDialog, setOpenSortDialog }: any) => {
   const {
@@ -77,6 +78,11 @@ const Views = () => {
           <div label="Clinical Summary">
             <ErrorBoundary>
               <Clinical />
+            </ErrorBoundary>
+          </div>
+          <div label="Conditions">
+            <ErrorBoundary>
+              <Conditions />
             </ErrorBoundary>
           </div>
           <div label="Interactions">

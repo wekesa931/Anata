@@ -40,6 +40,8 @@ const SortDialog = ({ onClose }: SortDialogProps) => {
 
   const medication_status = ['Ongoing', 'Finished', 'Stopped']
 
+  const condition_status = ['Active', 'Inactive', 'HX']
+
   const appointment_service = [
     'Baseline',
     'Clinical Review',
@@ -206,6 +208,27 @@ const SortDialog = ({ onClose }: SortDialogProps) => {
                     <option>All</option>
                     {interaction_communication.map((comm) => (
                       <option>{comm}</option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <div label="Conditions">
+                <label htmlFor="condStatus" className="text-small">
+                  Status
+                  <select
+                    className="form-control small"
+                    id="condStatus"
+                    value={filters.conditions.status}
+                    onChange={(e) =>
+                      onFilterChange(SortFilterActions.FILTER_CONDITIONS, {
+                        status:
+                          e.target.value === 'All' ? null : e.target.value,
+                      })
+                    }
+                  >
+                    <option>All</option>
+                    {condition_status.map((status) => (
+                      <option>{status}</option>
                     ))}
                   </select>
                 </label>

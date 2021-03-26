@@ -3,7 +3,12 @@ import React, { useReducer, Dispatch } from 'react'
 type ContextType = {
   ops: {
     sort: string
-    filters: { appointments: any; medications: any; interactions: any }
+    filters: {
+      appointments: any
+      medications: any
+      interactions: any
+      conditions: any
+    }
   }
   updateOps: Dispatch<{ type: string; payload: any }>
 }
@@ -15,6 +20,7 @@ const SortFilterContext = React.createContext<ContextType>({
       appointments: null,
       medications: null,
       interactions: null,
+      conditions: null,
     },
   },
   updateOps: ({ type }) => type,
@@ -25,6 +31,7 @@ enum Actions {
   FILTER_APPOINTMENTS = 'filterAppts',
   FILTER_MEDICATIONS = 'filterMeds',
   FILTER_INTERACTIONS = 'filterInteractions',
+  FILTER_CONDITIONS = 'filterConditions',
 }
 
 function SortFilterProvider({ children }: any) {
@@ -46,6 +53,14 @@ function SortFilterProvider({ children }: any) {
           filters: {
             ...state.filters,
             medications: { ...state.filters.medications, ...action.payload },
+          },
+        }
+      case Actions.FILTER_CONDITIONS:
+        return {
+          ...state,
+          filters: {
+            ...state.filters,
+            conditions: { ...state.filters.conditions, ...action.payload },
           },
         }
       case Actions.FILTER_INTERACTIONS:
@@ -76,6 +91,9 @@ function SortFilterProvider({ children }: any) {
         type: null,
         direction: null,
         mode_of_communication: null,
+      },
+      conditions: {
+        status: 'Active',
       },
     },
   }

@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 import { Label, Text } from '@airtable/blocks/ui'
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import { Form, Formik } from 'formik'
@@ -43,7 +44,7 @@ const ListModal = (props: ListModalProps) => {
   }
 
   const displayString = (str: string) => {
-    if (Date.parse(str)) {
+    if (Date.parse(str) && Number.isNaN(parseInt(str))) {
       return dayjs(str).format('DD MMM YYYY HH:mm')
     }
     return str
