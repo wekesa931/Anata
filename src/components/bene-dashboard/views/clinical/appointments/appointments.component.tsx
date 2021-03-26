@@ -1,8 +1,96 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSortFilter } from '../../../../../context/sort-filter-views.context'
 import airtableFetch from '../../../../../resources/airtable-fetch'
+import Icon from '../../../../utils/icon/icon.component'
+import Modal from '../../../../utils/modals/modal.component'
 import Table from '../../../../utils/table/table.component'
+
+const PafuView = ({ data }: any) => {
+  const [showPafu, setShowPafu] = useState(false)
+  const [pafuRecordId, setPafuRecordId] = useState('')
+  const [pafu, setPafu] = useState({})
+  const [loading, setLoading] = useState(false)
+  const fields = [
+    'Received reminder',
+    'Know medication purpose',
+    'Received referral',
+    'Health management plan',
+    'Appointment Type',
+    'Received diagnosis',
+    'Received next appointment',
+    'Asked to make payment',
+    'Medication Information available',
+    'Received medication',
+    'Antara Facilities',
+    'Had imaging (Ray, CT Scan, Ultrasound or MRI)',
+    'Antara awareness',
+    'On a scale from 1-10, how likely are you to recommend Avenue services to your friends?',
+    'Had lab test',
+    'Attended appointment?',
+  ]
+
+  useEffect(() => {
+    if (pafuRecordId) {
+      setLoading(true)
+      airtableFetch(`pafu/${pafuRecordId}`)
+        .then((res: any) => {
+          setPafu(res)
+        })
+        .finally(() => setLoading(false))
+    }
+  }, [pafuRecordId])
+
+  const openPafu = (e: any) => {
+    e.stopPropagation()
+    setShowPafu(true)
+    setPafuRecordId(data[0])
+  }
+  return (
+    <>
+      <button
+        className="btn btn-small btn-secondary"
+        onClick={(e) => openPafu(e)}
+      >
+        PAFU
+      </button>
+      {showPafu && (
+        <Modal
+          heading={<h3>PAFU</h3>}
+          open={showPafu}
+          setModalOpen={setShowPafu}
+        >
+          {pafu &&
+            Object.keys(pafu)
+              .filter((key) => fields.includes(key))
+              .map((key) => {
+                return (
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <label htmlFor={key}>
+                      {key}
+                      <input
+                        className="form-control"
+                        disabled
+                        value={`${pafu[key]}`}
+                        id={key}
+                      />
+                    </label>
+                  </div>
+                )
+              })}
+          {loading && (
+            <div className="d-flex flex-direction-column flex-align-center">
+              <Icon name="loading" />
+              Loading Pafu
+            </div>
+          )}
+        </Modal>
+      )}
+    </>
+  )
+}
 
 const Appointments = () => {
   const { recId } = useParams()
@@ -51,6 +139,13 @@ const Appointments = () => {
   const columns = [
     { name: 'Appt Date', format: 'dd/mmm/yy', key: 'start_date_time' },
     { name: 'Status', format: '\n', key: 'Status' },
+    {
+      name: 'PAFU',
+      key: 'PAFU',
+      format: '\n',
+      type: 'UI',
+      component: ({ data }: any) => <PafuView data={data} />,
+    },
   ]
   return (
     <div>
@@ -66,7 +161,7 @@ const Appointments = () => {
         )}
       </div>
       <Table
-        title=""
+        title="Appointment"
         columns={columns}
         data={filteredAppointments}
         dateColumnKey="start_date_time"

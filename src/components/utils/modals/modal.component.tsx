@@ -13,7 +13,13 @@ const Modal = ({ open, setModalOpen, heading, children }: any) => {
         >
           <div className="d-flex flex-align-center">
             <div className="full-width">{heading}</div>
-            <button className="btn-icon" onClick={() => setModalOpen(false)}>
+            <button
+              className="btn-icon"
+              onClick={(e) => {
+                e.stopPropagation()
+                setModalOpen(false)
+              }}
+            >
               <CloseIcon />
             </button>
           </div>

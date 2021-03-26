@@ -16,6 +16,8 @@ type TableProps = {
     key: string
     format: string
     info?: string
+    type?: string
+    component?: any
   }[]
   data: any[]
   dateColumnKey: string
@@ -144,7 +146,7 @@ const Table = ({ title, columns, data, dateColumnKey }: TableProps) => {
             {displayedData.length ? (
               displayedData.map((row, i) => (
                 <tr
-                  key={row[dateColumnKey]}
+                  key={`${row[dateColumnKey]}${i}`}
                   onMouseEnter={() => setHighlightedRow(i)}
                   onMouseLeave={() => setHighlightedRow(undefined)}
                   onClick={(e) => rowOnClick(e, row)}
@@ -161,13 +163,25 @@ const Table = ({ title, columns, data, dateColumnKey }: TableProps) => {
                       <ExpandIcon />
                     </Tooltip>
                   </td>
-                  {columns
-                    .map((column) => column.key)
-                    .map((key) => (
-                      <td className={`text-normal ${styles.td}`} key={key}>
-                        {format(row[key]) || '-'}
+                  {columns.map((column, idx) => {
+                    return column.type === 'UI' && column.component ? (
+                      <td
+                        className={`text-normal ${styles.td}`}
+                        key={`${column.key}${idx}`}
+                      >
+                        {row[column.key] ? (
+                          <column.component data={row[column.key]} />
+                        ) : null}
                       </td>
-                    ))}
+                    ) : (
+                      <td
+                        className={`text-normal ${styles.td}`}
+                        key={`${column.key}${idx}`}
+                      >
+                        {format(row[column.key]) || '-'}
+                      </td>
+                    )
+                  })}
                 </tr>
               ))
             ) : (
@@ -202,7 +216,7 @@ const Table = ({ title, columns, data, dateColumnKey }: TableProps) => {
         <Modal
           open={modalOpen}
           setModalOpen={setModalOpen}
-          heading={`${title}`}
+          heading={<h3>{title}</h3>}
         >
           {Object.keys(clickedRow)
             .filter((key) => key !== 'created_by' && key !== 'Member')
