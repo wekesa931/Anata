@@ -6,6 +6,7 @@
   max-height: 192px;
   overflow-y: scroll;
   background-color: white;
+  top: 46px;
 }
 
 .listItem {

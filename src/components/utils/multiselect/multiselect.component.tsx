@@ -134,29 +134,29 @@ const MultiSelect = ({ form, field, options, onChange, defaultValue }: any) => {
           >
             &#9660;
           </button>
+          <ul {...getMenuProps()} className={isOpen ? styles.list : ''}>
+            {isOpen &&
+              getFilteredItems().map((item, index) => (
+                <li
+                  style={
+                    selectedItems.includes(item)
+                      ? {
+                          color: 'var(--border-regular)',
+                          background: 'var(--border-light)',
+                        }
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({ item, index })}
+                  className={styles.listItem}
+                >
+                  {item.label}
+                  {selectedItems.includes(item) && <span>&#x2713;</span>}
+                </li>
+              ))}
+          </ul>
         </div>
       </div>
-      <ul {...getMenuProps()} className={isOpen ? styles.list : ''}>
-        {isOpen &&
-          getFilteredItems().map((item, index) => (
-            <li
-              style={
-                selectedItems.includes(item)
-                  ? {
-                      color: 'var(--border-regular)',
-                      background: 'var(--border-light)',
-                    }
-                  : {}
-              }
-              key={`${item}${index}`}
-              {...getItemProps({ item, index })}
-              className={styles.listItem}
-            >
-              {item.label}
-              {selectedItems.includes(item) && <span>&#x2713;</span>}
-            </li>
-          ))}
-      </ul>
     </div>
   )
 }
