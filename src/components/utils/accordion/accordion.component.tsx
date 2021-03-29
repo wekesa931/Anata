@@ -28,6 +28,7 @@ function Accordion({ title, children }: { title: string; children: any }) {
     <div className={styles.accordion__section}>
       <button
         className={`${styles.accordion} ${active}`}
+        data-testid="toggle"
         onClick={toggleAccordion}
       >
         <p className={styles.accordion__title}>{title}</p>
@@ -36,6 +37,7 @@ function Accordion({ title, children }: { title: string; children: any }) {
       <div
         className={styles.accordion__content}
         ref={contentDiv}
+        data-testid="content"
         style={{ display, overflowY: 'scroll' }}
       >
         {active !== undefined && (
