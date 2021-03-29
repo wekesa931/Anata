@@ -7,7 +7,7 @@ This is a React app pulls data from Airtable and provides a simpler UI for our c
 1. Get or create your Github [access token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) and add it in your `.zshrc` or `.bashprofile` as an environment variable with `export NPM_TOKEN=<github_access_toke>`. (_This token to install our custom npm libraries from our private npm registry_). Once set, test it using `echo $NPM_TOKEN`.
 2. Run `git clone git@github.com:antarahealth/scribe2.git`
 3. Login to the npm repository by running `npm login --registry=https://npm.pkg.github.com`
-4. then run `cd hn-dahsboard && npm install`
+4. then run `cd scribe2 && npm install`
 5. Create a new `.env` on the root dir and add the required variables from `.env.example`. (Reach out to the team for the .env variables)
 6. run `npm run dev`
 

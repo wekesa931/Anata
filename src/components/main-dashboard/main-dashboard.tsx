@@ -84,6 +84,7 @@ const HNDashboard = () => {
           {views.map((view, index) => {
             return (
               <button
+                data-testid={view.name}
                 className="btn-unstyled btn-list"
                 onClick={() => {
                   analytics.page({
@@ -118,7 +119,10 @@ const HNDashboard = () => {
         </div>
       </div>
       <div className={styles.dashboardView}>
-        <p className="text-heading-2 margin-bottom-16">
+        <p
+          data-testid="hn-text-heading"
+          className="text-heading-2 margin-bottom-16"
+        >
           {views[activeView].name}
         </p>
         {views[activeView].component ? (
