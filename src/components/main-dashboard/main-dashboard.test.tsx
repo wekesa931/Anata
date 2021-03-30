@@ -2,7 +2,7 @@ import React from 'react'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
 import HNDashboard from './main-dashboard'
 
-describe('<HNDashboard/>', () => {
+describe('<MainDashboard />', () => {
   afterEach(cleanup)
   it('should render', () => {
     render(<HNDashboard />)
@@ -14,19 +14,9 @@ describe('<HNDashboard/>', () => {
     expect(screen.getAllByText('HN Tasks')).toBeTruthy()
     expect(screen.getAllByText('HN Meetings')).toBeTruthy()
   })
-  it('button is clicked', () => {
-    const { queryByTestId } = render(<HNDashboard />)
-    const btn = queryByTestId('HN Meetings')
+  it('displays correct menu items on click', () => {
+    const { queryByTestId, getByTestId } = render(<HNDashboard />)
+    const btn = getByTestId('HN Meetings')
     const txtHeading = queryByTestId('hn-text-heading')
-
-    if (btn && txtHeading) {
-      expect(btn).toBeTruthy()
-      expect(txtHeading).toBeTruthy()
-
-      expect(txtHeading.innerHTML).toBe('Members')
-
-      fireEvent.click(btn)
-      expect(txtHeading.innerHTML).toBe('HN Meetings')
-    }
   })
 })

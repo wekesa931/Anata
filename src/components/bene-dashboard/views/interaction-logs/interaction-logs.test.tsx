@@ -1,6 +1,7 @@
 import React from 'react'
 import InteractionLogs from './interaction-logs.component'
 import renderWithRouter from '../../../../../__mocks__/custom-render.mock'
+import { cleanup } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { GET_MEMBER_INTERACTIONS } from '../../../../gql/interactions'
 import mockInteractions from '../../../../../__mocks__/interactions-mock'
@@ -27,13 +28,16 @@ const render = (mocks: any[] = []) => {
 }
 
 describe('<InteractionLogsView/>', () => {
+  afterEach(cleanup)
   test('should render', () => {
     render(mocks)
   })
+
   test('should display loading', () => {
     const wrapper = render(mocks)
     expect(wrapper.findByText('Loading Interaction Logs')).not.toBeNull()
   })
+
   test('should display list interaction logs correctly', async () => {
     const { queryByText } = render(mocks)
     await new Promise((resolve) => setTimeout(resolve, 0))
@@ -42,6 +46,7 @@ describe('<InteractionLogsView/>', () => {
     expect(queryByText(/20 Feb '20, 12:27 PM/)).not.toBeNull()
     expect(queryByText(/Test HN 1/)).not.toBeNull()
   })
+
   test('it displays error message on failure', async () => {
     const errorMocks = [
       {
@@ -54,7 +59,7 @@ describe('<InteractionLogsView/>', () => {
         error: new Error('aw shucks!'),
       },
     ]
-    const { queryByText, getByText } = render(errorMocks)
+    const { getByText } = render(errorMocks)
     await new Promise((resolve) => setTimeout(resolve, 0))
     expect(
       getByText(
