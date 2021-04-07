@@ -8,7 +8,11 @@ import Table from '../../../utils/table/table.component'
 const Nutrition = () => {
   const { recId } = useParams()
   const [consultations, setConsultations] = useState<any[]>([])
-  const allowedFields = [
+  const allowedFields: string[] = [
+    'Date of Consultation',
+    'Nutritional Consultation #',
+    'Name (First)',
+    'Name (Last)',
     'Do you have any of the following conditions?',
     'Breakfast',
     'Lunch',
@@ -23,14 +27,23 @@ const Nutrition = () => {
     'High Salt Foods (Seasoning like Royco, Maggi cubes, Soy sauce, Tomato Paste)',
     'High Salt Foods (Table Salt)',
     'Is salt added to your food when cooked?',
+    'Basal Daily Sodium',
+    'Calculated Estimated Daily Sodium',
     'High Potassium Foods (Dark green leafy or traditional/kienyeji vegetables)',
     'High Potassium Foods (Ripe bananas)',
     'High Potassium Foods (Cooked plantains/ green bananas)',
     'High Potassium Foods (Unsalted nuts)',
     'High Potassium Foods (Root vegetables like beetroot, sweet potatoes, arrow roots or yams)',
+    'Basal Daily Potassium',
+    'Calculated Daily Potassium',
     'Basal Metabolic Rate',
-    'Estimated Caloric Needs',
     'Estimated Daily Caloric Intake',
+    'Estimated Caloric Needs',
+    'Breakfast Glycemic Load',
+    'Lunch Glycemic Load',
+    'Snacks Glycemic Load',
+    'Dinner Glycemic Load',
+    'Total Daily Glycemic Load',
     'Eggs',
     'Solid Cooking Fats',
     'Deep Fried',
@@ -39,9 +52,7 @@ const Nutrition = () => {
     'Daily estimated cholesterol intake',
     'Assessment',
     'Recommendation',
-    'Basal Daily Sodium',
-    'Basal Daily Potassium',
-    'Date of Consultation',
+    'Summary',
     'Weekly Sodium - Canned Foods',
     'Weekly Sodium - Meats',
     'Weekly Sodium - Snacks',
@@ -49,15 +60,11 @@ const Nutrition = () => {
     'Weekly Sodium - Table Salt',
     'Weekly Sodium - Condiments',
     'Weekly Sodium - Seasonings',
-    'Calculated Estimated Daily Sodium',
     'Weekly Potassium - Leafy Greens',
     'Weekly Potassium - Bannanas',
     'Weekly Potassium - Plantains',
     'Weekly Potassium - Nuts',
     'Weekly Potassium - roots',
-    'Calculated Daily Potassium',
-    'Total Daily Glycemic Load',
-    'Nutritional Consultation #',
   ]
   const columns = [
     { name: '#', format: '', key: 'Nutritional Consultation #' },
@@ -143,6 +150,7 @@ Level [3]: >500mg (Very High)`,
           columns={columns}
           data={consultations}
           dateColumnKey="Date of Consultation"
+          modalFields={allowedFields}
         />
       )}
       {isError && (

@@ -21,9 +21,16 @@ type TableProps = {
   }[]
   data: any[]
   dateColumnKey: string
+  modalFields?: string[]
 }
 
-const Table = ({ title, columns, data, dateColumnKey }: TableProps) => {
+const Table = ({
+  title,
+  columns,
+  data,
+  dateColumnKey,
+  modalFields,
+}: TableProps) => {
   const {
     ops: { sort: globalDateSort },
   } = useSortFilter()
@@ -216,10 +223,14 @@ const Table = ({ title, columns, data, dateColumnKey }: TableProps) => {
         <Modal
           open={modalOpen}
           setModalOpen={setModalOpen}
+          fields={modalFields}
           heading={<h3>{title}</h3>}
         >
-          {Object.keys(clickedRow)
-            .filter((key) => key !== 'created_by' && key !== 'Member')
+          {(modalFields || Object.keys(clickedRow))
+            .filter(
+              (key) =>
+                key !== 'created_by' && key !== 'Member' && key in clickedRow
+            )
             .map((info, i) => {
               return (
                 <div key={info} style={{ margin: '16px 0' }}>
