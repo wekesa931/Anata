@@ -12,7 +12,7 @@ const Clinical = () => {
         <Labs />
         <Vitals />
       </div>
-      <div>
+      <div style={{ flex: 1 }}>
         <div className="margin-bottom-16">
           <FilledForms />
         </div>

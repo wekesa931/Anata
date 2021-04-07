@@ -30,14 +30,7 @@ const Meetings = () => {
     &sort=[{"field":"Date","direction":"desc"}]
     &${filterFields(allowedFields)}`
   )
-  const status = [
-    'Scheduled',
-    'Done',
-    'Rescheduling',
-    'Scheduled - 2nd',
-    'Scheduled - 3rd',
-    'Missed',
-  ]
+  const status = ['Scheduled', 'Missed', 'Done', 'Rescheduled by member']
 
   const updateMeeting = async (meeting: { id: string; fields: any }) => {
     await airtableFetch('meetings', 'post', {

@@ -18,5 +18,7 @@ describe('<MainDashboard />', () => {
     const { queryByTestId, getByTestId } = render(<HNDashboard />)
     const btn = getByTestId('HN Meetings')
     const txtHeading = queryByTestId('hn-text-heading')
+    expect(btn).toBeTruthy()
+    expect(txtHeading).toBeTruthy()
   })
 })

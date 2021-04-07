@@ -8,7 +8,7 @@ This is a React app pulls data from Airtable and provides a simpler UI for our c
 2. Run `git clone git@github.com:antarahealth/scribe2.git`
 3. Login to the npm repository by running `npm login --registry=https://npm.pkg.github.com`
 4. then run `cd scribe2 && npm install`
-5. Create a new `.env` on the root dir and add the required variables from `.env.example`. (Reach out to the team for the .env variables)
+5. Create a new `.env` on the root dir and add the required variables from `.env.example`. The environment variables can be accessed [here](https://antara.1password.com/vaults/vlce5zlfjwpfukscylhotjfbga/allitems/2xfh2jcgdj4y6hfelfe3h2hf3a)
 6. run `npm run dev`
 
 # Tests
