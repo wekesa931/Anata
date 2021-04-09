@@ -91,6 +91,11 @@ const InteractionLogsForm = () => {
         }
       })
   }
+
+  React.useEffect(() => {
+    document.title = `Scribe: ${member['Full Name']} Interaction Log Form`
+  }, [member])
+
   return (
     <div className={styles.formContainer}>
       <h2 className={styles.formName}>Interaction Logs Form</h2>

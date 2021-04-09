@@ -4,11 +4,24 @@ import airtableFetch from '../../../resources/airtable-fetch'
 import LoadingIcon from '../../../assets/img/icons/loading.svg'
 import ListSkeletonLoader from '../skeleton-loader/skeleton-loader.component'
 
-const Fetcher = ({ url, contextKey, children, skeleton = true }: any) => {
+const Fetcher = ({
+  url,
+  contextKey,
+  children,
+  skeleton = true,
+  getDocumentTitle,
+}: any) => {
   const { response, error, isPending, isResolved } = Loads.useLoads(
     contextKey,
     () => airtableFetch(url)
   )
+
+  React.useEffect(() => {
+    if (getDocumentTitle && response) {
+      document.title = getDocumentTitle(response)
+    }
+  }, [getDocumentTitle, response])
+
   return (
     <>
       {isPending && (

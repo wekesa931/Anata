@@ -75,6 +75,10 @@ const HNDashboard = () => {
     )
   }
 
+  React.useEffect(() => {
+    document.title = `Scribe Home: ${views[activeView].name}`
+  }, [activeView, views])
+
   return (
     <div className={styles.dashboard}>
       <div className={styles.dashboardLinks}>

@@ -22,8 +22,17 @@ const PatientDashboard = () => {
     }
   }, [recId])
 
+  const getDocumentTitle = (member: any) => {
+    return `Scribe: ${member['Full Name'] ? member['Full Name'] : 'Loading'}`
+  }
+
   return (
-    <Fetcher url={`members/${recId}`} contextKey={recId} skeleton={false}>
+    <Fetcher
+      url={`members/${recId}`}
+      contextKey={recId}
+      skeleton={false}
+      getDocumentTitle={getDocumentTitle}
+    >
       {(response: any) => (
         <MemberProvider member={response}>
           <div className={styles.container}>

@@ -73,6 +73,11 @@ const Login = () => {
     }
     return history.push('/member')
   }
+
+  React.useEffect(() => {
+    document.title = `Scribe: Login`
+  }, [])
+
   return (
     <div className={styles.container}>
       <div className={` ${styles.loginCard}`}>
