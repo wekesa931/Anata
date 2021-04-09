@@ -11,6 +11,7 @@ import filterFields from '../../../../helpers/filter-fields'
 import TASK_FIELDS from './tasks-fields'
 import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
 import analytics from '../../../../helpers/segment'
+import PrescriptionName from './PrescriptionNames'
 
 import { GET_MEMBER_TASKS } from '../../../../gql/hn_tasks'
 import { useMember } from '../../../../context/member.context'
@@ -152,7 +153,9 @@ const Tasks = () => {
     'Last Status changed at',
     'Open URL',
     'Prescription Drug Names',
+    'Other Prescription Drug Name',
   ]
+
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
     const sortArg = `sort=[{"field":"Due Date","direction":"asc"}]`
     const filterArg = `filterByFormula=FIND("${memberRecordId}", {Member Record ID})`
@@ -161,6 +164,7 @@ const Tasks = () => {
     const fieldsArg = filterFields(queryFields)
     return `hntasks/list?${fieldsArg}&${sortArg}&${filterArg}`
   }
+
   const {
     data: airtableRecords,
     refresh: refetchTasks,
@@ -209,9 +213,10 @@ const Tasks = () => {
           </span>
           <span>{hnTask.Type}</span>
           {hnTask['Prescription Drug Names'] && (
-            <span className="badge badge-warning">
-              {hnTask['Prescription Drug Names']}
-            </span>
+            <PrescriptionName
+              value={hnTask['Prescription Drug Names']}
+              otherMeds={hnTask['Other Prescription Drug Name']}
+            />
           )}
           <div className="d-flex flex-align-center">
             {hnTask['Open URL'] && hnTask['Open URL'].url && (

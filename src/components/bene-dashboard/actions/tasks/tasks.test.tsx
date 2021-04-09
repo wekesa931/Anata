@@ -8,13 +8,15 @@ import {
   fireEvent,
   getByTestId,
   waitFor,
+  render,
 } from '@testing-library/react'
+import PrescriptionName from './PrescriptionNames'
 import tasks_mock_response from '../../../../../__mocks__/tasks.mock'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import { MockedProvider } from '@apollo/client/testing'
 import { act } from 'react-dom/test-utils'
-import {GET_MEMBER_TASKS} from "../../../../gql/hn_tasks";
-import mockHnTasks from "../../../../../__mocks__/hn-tasks-mock";
+import { GET_MEMBER_TASKS } from '../../../../gql/hn_tasks'
+import mockHnTasks from '../../../../../__mocks__/hn-tasks-mock'
 
 jest.mock('../../../../resources/airtable-fetch')
 
@@ -34,12 +36,11 @@ const mocks = [
   },
 ]
 
-
 const renderWithMocks = (mocks: any[] = []) => {
   return renderWithRouter(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <Tasks />
-      </MockedProvider>
+    <MockedProvider mocks={mocks} addTypename={false}>
+      <Tasks />
+    </MockedProvider>
   )
 }
 
@@ -167,5 +168,27 @@ describe('<Tasks />', () => {
     await waitFor(() => {
       expect(list.children.length).toBe(2)
     })
+  })
+})
+
+describe('<PrescriptionName />', () => {
+  afterEach(cleanup)
+
+  it('is rendered', async () => {
+    render(<PrescriptionName value={'Other'} otherMeds={'Panadol'} />)
+  })
+  it('displays main prescription medicine', () => {
+    const { getByTestId } = render(
+      <PrescriptionName value={'Panadol'} otherMeds={null} />
+    )
+    const prescription = getByTestId('prescription-name')
+    expect(prescription.innerHTML).toBe('Panadol')
+  })
+  it('displays secondary prescription medicine when primary is other', () => {
+    const { getByTestId } = render(
+      <PrescriptionName value={'Other'} otherMeds={'Parasitamol'} />
+    )
+    const prescription = getByTestId('prescription-name')
+    expect(prescription.innerHTML).toBe('Parasitamol')
   })
 })
