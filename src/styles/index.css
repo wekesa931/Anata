@@ -42,8 +42,8 @@
   --red-light: #f9e6e5;
   --red-dark: #972323;
   --green-base: #8ab98e;
-  --green-dark: #39703E;
-  --green-light: #DEEFE0;
+  --green-dark: #39703e;
+  --green-light: #deefe0;
 }
 
 ::-webkit-scrollbar {
@@ -642,4 +642,9 @@ a {
 
 .badge-warning {
   background-color: var(--yellow-light);
+}
+
+.form-btns {
+  border-radius: 3px !important;
+  margin: 3px 4px !important;
 }

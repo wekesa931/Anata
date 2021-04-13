@@ -102,5 +102,10 @@ const FORMS = [
     url_sandbox: 'shrgUN3XkQlhH4j9z',
     url: 'shrU6coJtTURljj15',
   },
+  {
+    name: 'Logistics Task',
+    url_sandbox: 'shrOOFzBkaz7wIOuU',
+    url: 'shruHjY6gGmXxdags',
+  },
 ]
 export default FORMS

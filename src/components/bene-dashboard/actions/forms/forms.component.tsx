@@ -61,7 +61,7 @@ const Forms = () => {
         {FORMS.map((form) => (
           <button
             onClick={() => openForm(form)}
-            className="full-width btn btn-secondary"
+            className="full-width btn btn-secondary form-btns"
             key={form.name}
           >
             {form.name}
