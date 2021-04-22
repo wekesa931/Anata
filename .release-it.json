@@ -1,0 +1,23 @@
+{
+  "github": {
+    "release": true,
+    "releaseName": "Release v${version}",
+    "tokenRef": "NPM_TOKEN"
+  },
+  "git": {
+    "commit": true,
+    "commitMessage": "v${version}",
+    "requireUpstream": true,
+    "tagName": "v${version}",
+    "tagAnnotation": "Release ${version}",
+    "push": true,
+    "changelog": "auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs",
+    "pushArgs": ["--follow-tags"]
+  },
+  "npm": {
+    "publish": false
+  },
+  "hooks": {
+    "after:bump": "auto-changelog -p"
+  }
+}
