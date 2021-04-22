@@ -24,6 +24,8 @@ After your PR is reviewed and approved, it can be merged into the master branch.
 
 ## Deploying to production ⚠️
 
+`Note: You must have rights to push to`master`before you can deploy.`
+
 When we have a bunch of features ready and merged to master and want to deploy to our users:
 
 We use [release-it ](https://github.com/release-it/release-it) to automate releasing on Github, so check out master locally.
