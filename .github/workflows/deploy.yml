@@ -25,7 +25,7 @@ jobs:
         env:
           # all variables starting with HD_ will be created/updated in
           # heroku config vars during actions deployment
-          HD_COMMIT: ${{ GITHUB_SHA }}
+          HD_COMMIT: ${{ github.sha }}
           HD_VERSION: ${{ steps.version.outputs.version }}
           HD_RELEASE_DATE: ${{ steps.date.outputs.date }}
           HD_ON_HEROKU: true
