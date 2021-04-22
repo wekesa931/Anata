@@ -12,7 +12,8 @@
     "tagAnnotation": "Release ${version}",
     "push": true,
     "changelog": "auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs",
-    "pushArgs": ["--follow-tags"]
+    "pushArgs": ["--follow-tags"],
+    "commitArgs": ["--no-verify"]
   },
   "npm": {
     "publish": false
