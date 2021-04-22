@@ -3,13 +3,16 @@ const dotenv = require('dotenv')
 
 const result = dotenv.config()
 
-const commitHash = require('child_process')
-  .execSync('git rev-parse --short HEAD')
-  .toString()
+if (!result.error && result.parsed) {
+  console.log(result.parsed)
+  const commitHash = require('child_process')
+    .execSync('git rev-parse --short HEAD')
+    .toString()
 
-const currentVersion = require('child_process')
-  .execSync('git name-rev --tags --name-only $(git rev-parse HEAD)')
-  .toString()
+  const currentVersion = require('child_process')
+    .execSync('git name-rev --tags --name-only $(git rev-parse HEAD)')
+    .toString()
+}
 
 let envs = {
   BUILD_DATE: dayjs().format('DD MMM YYYY HH:mma'),

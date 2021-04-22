@@ -19,6 +19,6 @@
     "publish": false
   },
   "hooks": {
-    "after:bump": "auto-changelog -p"
+    "after:bump": "auto-changelog -p && echo \"${git name-rev --tags --name-only $(git rev-parse HEAD)}@${git rev-parse --short HEAD}\" >> .release-version"
   }
 }
