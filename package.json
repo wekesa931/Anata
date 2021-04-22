@@ -1,6 +1,6 @@
 {
   "name": "antara-hn-dashboard",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Dashboard for day-to-day HN tasks",
   "main": "index.js",
   "engines": {
