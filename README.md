@@ -22,15 +22,19 @@ After your PR is reviewed and approved, it can be merged into the master branch.
 1. Test - This [deployment](hn-dashboard-test.herokuapp.com) the HNOS test [backend](https://antara-hnos-test.herokuapp.com/graphql/). This helps us test the frontend features with backend that has not been deployed to production.
 2. Beta - This [deployment](hn-dashboard-beta.herokuapp.com) uses prod environment variables where we could test your feture with other features altogether just the way they would behave in production.
 
-When we have a bunch of features ready and want to deploy to our users, we deploy in two steps:
+When we have a bunch of features ready and merged to master and want to deploy to our users:
 
-## Step 1: Tag and Release on Github
+We use [release-it ](https://github.com/release-it/release-it) to automate releasing on Github, so check out master locally. Pull the latest changes and then run `npm run release`. This commands does the following things automatically:
 
-We use [release-it ](https://github.com/release-it/release-it) to automate releasing on Github, so check out master locally. Pull the latest changes and then run `npm run release`. After a successful github release, proceed to the next step.
+1. Updates your package.json to have the new version number.
+2. It also automatically updates the CHANGELOG.md with the all commits since the last release.
+3. `git add` and `git commit` that change, with a commit message of v1.0.0 (or similar)
+4. Creates an annotated git tag named v1.0.0 whose message is v1.0.0
+5. Runs any prepublish or prepublishOnly scripts in the package.json. See https://docs.npmjs.com/misc/scripts
+6. Pushes the tag to github via `git push --follow-tags`.
+7. Creates a new release for that tag with the release notes automatically generated via `auto-changelog`.
 
-## Step 2: Deploy on Heroku
-
-Head over to our Heroku dashboard and **manually** deploy the master branch on the production app in the [pipeline](https://dashboard.heroku.com/pipelines/0a14a346-098f-4411-b64c-dfb0198da040).
+After a successful github release, this [Github action](.github/workflows/deploy.yml) is triggered to deploy the app to production on heroku.
 
 # Design
 
