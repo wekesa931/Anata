@@ -22,9 +22,13 @@ After your PR is reviewed and approved, it can be merged into the master branch.
 1. Test - This [deployment](hn-dashboard-test.herokuapp.com) the HNOS test [backend](https://antara-hnos-test.herokuapp.com/graphql/). This helps us test the frontend features with backend that has not been deployed to production.
 2. Beta - This [deployment](hn-dashboard-beta.herokuapp.com) uses prod environment variables where we could test your feture with other features altogether just the way they would behave in production.
 
+## Deploying to production ⚠️
+
 When we have a bunch of features ready and merged to master and want to deploy to our users:
 
-We use [release-it ](https://github.com/release-it/release-it) to automate releasing on Github, so check out master locally. Pull the latest changes and then run `npm run release`. This commands does the following things automatically:
+We use [release-it ](https://github.com/release-it/release-it) to automate releasing on Github, so check out master locally.
+
+Pull the latest changes and then run `npm run release`. This commands does the following things automatically (be very sure you want to deploy when you run it ⚠️):
 
 1. Updates your package.json to have the new version number.
 2. It also automatically updates the CHANGELOG.md with the all commits since the last release.
