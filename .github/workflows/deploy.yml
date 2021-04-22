@@ -10,9 +10,21 @@ jobs:
   steps:
     - name: Checkout
       uses: actions/checkout@v1
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%d-%m-%Y,%H:%M')"
+    - name: Get the version
+      id: version
+      run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
     - name: Deploy
       uses: AkhileshNS/heroku-deploy@v3.12.12
       with:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
         heroku_email: "dev-admin@antarahealth.com"
         heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+      env:
+        # all variables starting with HD_ will be created/updated in 
+        # heroku config vars during actions deployment
+        HD_COMMIT: ${{ GITHUB_SHA }}
+        HD_VERSION: ${{ steps.version.outputs.version }}
+        HD_RELEASE_DATE: ${{ steps.date.outputs.date }}
