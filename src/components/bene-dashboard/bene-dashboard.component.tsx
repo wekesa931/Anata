@@ -18,7 +18,9 @@ const PatientDashboard = () => {
 
   React.useEffect(() => {
     if (recId) {
-      analytics.page()
+      analytics.page('Member Dashboard', {
+        memberId: recId,
+      })
     }
   }, [recId])
 
