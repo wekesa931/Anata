@@ -30,6 +30,30 @@ const PafuView = ({ data }: any) => {
     'On a scale from 1-10, how likely are you to recommend Avenue services to your friends?',
     'Had lab test',
     'Attended appointment?',
+    'Specify Facility',
+    'Diagnosis',
+    'Know lab test purpose',
+    'Lab test purpose',
+    'Know imaging purpose',
+    'Imaging purpose',
+    'Referral Location',
+    'Referral Location(Other)',
+    'Referral Date',
+    'Other Referral',
+    'Specialty types',
+    'Reason for Referral',
+    'Referral Provider Name',
+    'Medication',
+    'Medication purpose',
+    'Medication Information available',
+    'Health management plan',
+    'Additional information',
+    'Next appointment date',
+    'Reason for Missed Appointments',
+    'Reason for admission',
+    'Date of Admission',
+    'Date of Discharge',
+    'Specialist',
   ]
 
   useEffect(() => {
@@ -48,6 +72,7 @@ const PafuView = ({ data }: any) => {
     setShowPafu(true)
     setPafuRecordId(data[0])
   }
+
   return (
     <>
       <button
