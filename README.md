@@ -6,7 +6,7 @@ This is a React app pulls data from Airtable and provides a simpler UI for our c
 
 1. Get or create your Github [access token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) and add it in your `.zshrc` or `.bashprofile` as an environment variable with `export NPM_TOKEN=<github_access_toke>`. (_This token to install our custom npm libraries from our private npm registry_). Once set, test it using `echo $NPM_TOKEN`.
 2. Run `git clone git@github.com:antarahealth/scribe2.git`
-3. Login to the npm repository by running `npm login --registry=https://npm.pkg.github.com`
+3. Login to the npm repository by running `npm login --registry=https://npm.pkg.github.com` When asked for the credentials to login in for npm. Use your github login details however use the **access-token** that you had generated as your password..
 4. then run `cd scribe2 && npm install`
 5. Create a new `.env` on the root dir and add the required variables from `.env.example`. The environment variables can be accessed [here](https://antara.1password.com/vaults/vlce5zlfjwpfukscylhotjfbga/allitems/2xfh2jcgdj4y6hfelfe3h2hf3a)
 6. run `npm run dev`
@@ -45,3 +45,12 @@ After a successful github release, this [Github action](.github/workflows/deploy
 # Design
 
 The designs are hosted on [figma](https://www.figma.com/file/zoM5pHUmM8SKHQQSyOfVkV/HN-Dashboard?node-id=574%3A1) and the styleguide is on [Coda](https://coda.io/d/Design-System_d7jJWI59uLp/Meeting-Notes_sub2f#_lukZq).
+
+
+# Gotchas
+
+Have a look at the below for some problems you might face as you do set-up. Also please remember to enlarge this list as you encounter issues.
+
+- When doing doing `npm i` you might face **npm dependency tree error** in that case run `npm install --cache /tmp/empty-cache --legacy-peer-deps` This issue is due to npm 7 and node 16 check this [post](https://stackoverflow.com/questions/65549858/eresolve-unable-to-resolve-dependency-tree-when-installing-npm-react-facebook) for more insight. 
+- on setting up your `NODE_PROXY_URL` environment variable use the **local version** 
+you can get this environment variables on [here]- (https://my.1password.com/vaults/vlce5zlfjwpfukscylhotjfbga/allitems/2xfh2jcgdj4y6hfelfe3h2hf3a).
