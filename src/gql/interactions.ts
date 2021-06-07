@@ -46,6 +46,7 @@ const GET_ALL_FLAGGED_INTERACTIONS = gql`
             firstName
             surname
             middleName
+            atRecordId
           }
           healthNavigator {
             fullName
