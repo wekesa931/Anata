@@ -46,6 +46,12 @@ const Lipids = () => {
             200-499 mg/dL: High,
             > 500 mg/dL : Very High`,
     },
+    {
+      name: 'T.Type',
+      format: 'F/NF',
+      key: 'Lipid panel test type',
+      info: `Test Type for Fasting / Non fasting`,
+    },
   ]
 
   useEffect(() => {
@@ -62,13 +68,7 @@ const Lipids = () => {
       <Table
         title="Lipids"
         columns={columns}
-        data={lipids.filter(
-          (lipid) =>
-            lipid['Total Cholesterol'] ||
-            lipid.HDL ||
-            lipid.LDL ||
-            lipid.Triglyceride
-        )}
+        data={lipids}
         dateColumnKey="Test Date"
       />
     )
