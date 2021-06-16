@@ -33,7 +33,7 @@ const Sidebar = () => {
   } else if (path.includes('member')) {
     items = SidebarMenuItems
   }
-  const handleDropDownMenu = e => {
+  const handleDropDownMenu = (e: EventTarget) => {
     if (e.innerText === 'Tasks') {
       setDropDownTodo(!showDropDownTodo)
     }
@@ -41,30 +41,61 @@ const Sidebar = () => {
       setDropDownPopulation(!showDropDownPopulation)
     }
   }
-  const subList = (item, index) => (
+  const subList = (
+    item: {
+      name: string
+      icon:
+        | boolean
+        | React.ReactChild
+        | React.ReactFragment
+        | React.ReactPortal
+        | null
+        | undefined
+    },
+    index: number
+  ) => (
     <li
       className={`${styles.subList} ${styles.menuLink}`}
-      onClick={(event) => {
+      onClick={() => {
         analytics.page({
           title: `Main Dashboard: ${item.name}`,
         })
         handleSublistClick(index)
         setSublist(item.name)
+        // eslint-disable-next-line no-unused-expressions
         path.includes('member') && history.push('/')
       }}
       onKeyDown={() => handleOnClick(index)}
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
       role="button"
       tabIndex={index}
       key={item.name}
     >
-      <span className={toggle('text-orange', 'text-grey', item.name === subItem)}>{item.icon}</span>
+      <span
+        className={toggle('text-orange', 'text-grey', item.name === subItem)}
+      >
+        {item.icon}
+      </span>
       <h5 className={toggle('text-orange', 'text-grey', item.name === subItem)}>
         {item.name}
       </h5>
     </li>
   )
 
-  const lists = (item, index) => (
+  const lists = (
+    item: {
+      name: string
+      subItems: any
+      icon:
+        | boolean
+        | React.ReactChild
+        | React.ReactFragment
+        | React.ReactPortal
+        | null
+        | undefined
+    },
+    index: number
+  ) => (
     <li
       className={`${styles.list} ${styles.menuLink}`}
       onClick={(event) => {
@@ -75,23 +106,41 @@ const Sidebar = () => {
         setDropDownPopulation(false)
         handleOnClick(index)
         handleDropDownMenu(event.target)
+        // eslint-disable-next-line no-unused-expressions
         path.includes('member') && history.push('/')
       }}
       onKeyDown={() => handleOnClick(index)}
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
       role="button"
       tabIndex={index}
       key={item.name}
       data-testid={`item-${item.name}`}
     >
       {item.subItems && !showDropDownTodo && item.name === 'Tasks' && (
-        <ArrowRight className= {styles.arrowRight} />)}
+        <ArrowRight className={styles.arrowRight} />
+      )}
       {item.subItems && showDropDownTodo && item.name === 'Tasks' && (
-        <ArrowDown className= {styles.arrowRight} />)}
-      {item.subItems && !showDropDownPopulation && item.name === 'Population' && (
-          <ArrowRight className= {styles.arrowRight} />)}
-      {item.subItems && showDropDownPopulation && item.name === 'Population' && (
-          <ArrowDown className= {styles.arrowDown} />)}
-      <span className={toggle('text-orange', 'text-grey', activeView.name === item.name)}>{item.icon}</span>
+        <ArrowDown className={styles.arrowRight} />
+      )}
+      {item.subItems &&
+        !showDropDownPopulation &&
+        item.name === 'Population' && (
+          <ArrowRight className={styles.arrowRight} />
+        )}
+      {item.subItems &&
+        showDropDownPopulation &&
+        item.name === 'Population' && (
+          <ArrowDown className={styles.arrowDown} />
+        )}
+      <span
+        className={toggle(
+          'text-orange',
+          'text-grey',
+          activeView.name === item.name
+        )}
+      >
+        {item.icon}
+      </span>
       <h5
         className={toggle(
           'text-orange',
@@ -126,10 +175,16 @@ const Sidebar = () => {
               )}
               key={item.name}
             >
-              <div className= {item.name}>
+              <div className={item.name}>
                 {lists(item, index)}
-                {subItems && showDropDownTodo && item.name === 'Tasks' && subItems.map( (element,index ) => subList(element, index))}
-                {subItems && showDropDownPopulation && item.name === 'Population' && subItems.map( (element,index ) => subList(element, index))}
+                {subItems &&
+                  showDropDownTodo &&
+                  item.name === 'Tasks' &&
+                  subItems.map((element: any, i: any) => subList(element, i))}
+                {subItems &&
+                  showDropDownPopulation &&
+                  item.name === 'Population' &&
+                  subItems.map((element: any, i: any) => subList(element, i))}
               </div>
             </div>
           )

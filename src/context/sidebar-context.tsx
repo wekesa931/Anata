@@ -10,13 +10,13 @@ type sidebar = {
 }
 
 const SidebarContext = React.createContext<sidebar>({
-  handleOnClick: (index: number) => {
+  handleOnClick: () => {
     return null
   },
   activeSubView: '',
   activeIndex: 0,
   activeView: '',
-  handleSublistClick: (index: number) => {
+  handleSublistClick: () => {
     return null
   },
 })
@@ -41,6 +41,7 @@ const SidebarProvider = ({ children }: any) => {
   }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line
     activeView.subItems && setActiveSubViewItem(activeView.subItems[activeSubViewIndex])
   }, [activeSubViewIndex, activeView])
 

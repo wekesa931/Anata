@@ -19,8 +19,12 @@ const HNDashboard = () => {
   }
 
   const AirtableView = () => {
-    const subListUrl = process.env.PROD ? activeSubView.rootUrl : activeSubView.url_sandbox
-    const listUrl = process.env.PROD ? activeView.rootUrl : activeView.url_sandbox
+    const subListUrl = process.env.PROD
+      ? activeSubView.rootUrl
+      : activeSubView.url_sandbox
+    const listUrl = process.env.PROD
+      ? activeView.rootUrl
+      : activeView.url_sandbox
     return !activeView.hasCalendar ? (
       <AirtableIframe src={activeSubView ? subListUrl : listUrl} />
     ) : (
@@ -56,7 +60,11 @@ const HNDashboard = () => {
         >
           {activeSubView ? activeSubView.name : activeView.name}
         </p>
-        {activeView.component || activeSubView.component ? (activeView.component || activeSubView.component) : (<AirtableView/>)}
+        {activeView.component || activeSubView.component ? (
+          activeView.component || activeSubView.component
+        ) : (
+          <AirtableView />
+        )}
       </div>
     </div>
   )
