@@ -1,8 +1,7 @@
 .dashboard {
-  background: var(--blue-bg);
+  background: var(--white);
   height: 100%;
   display: flex;
-  border-radius: 16px 0 0 0;
 }
 
 .heading {

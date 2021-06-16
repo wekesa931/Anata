@@ -1,11 +1,81 @@
 import React from 'react'
-import ClipboardCrossPlusIcon from '../../assets/img/icons/cross-clipboard.svg'
+import {
+  User,
+  Minimize,
+  CheckCircle,
+  MapPin,
+  Clipboard,
+  List,
+  Thermometer,
+  Activity,
+  Users,
+  Phone,
+  TrendingUp,
+} from 'react-feather'
+import config from '../../config/config'
+import FlagForReview from './flag-for-review/flag-for-review.component'
 
+const { iframes } = config
 const SidebarMenuItems = [
   {
-    name: 'Beneficiary Dashboard',
-    icon: <ClipboardCrossPlusIcon />,
-    rootUrl: '/member',
+    name: 'Members',
+    icon: <User />,
+    rootUrl: `https://airtable.com/embed/${iframes.default.members}?viewControls=on`,
+    url_sandbox: 'https://airtable.com/embed/shrZAZDHnRGQy1Fuw'
+  },
+  {
+    name: 'Interactions',
+    icon: <Minimize />,
+    component: <FlagForReview />,
+  },
+  {
+    name: 'Tasks',
+    icon: <CheckCircle />,
+    subItems: [
+      { name: 'HN Tasks', icon: <CheckCircle />, rootUrl: 'https://airtable.com/embed/shrlDv3haSmnW2KXm?backgroundColor=green&viewControls=on', url_sandbox: 'https://airtable.com/embed/shrgqHM3zICH0Nzxr?backgroundColor=pink&viewControls=on'},
+      { name: 'Callbacks', icon: <Phone />, rootUrl: 'https://airtable.com/embed/shrWh9lzYTjGX7fDT?backgroundColor=green&viewControls=on',  url_sandbox: 'https://airtable.com/embed/shrYHGNNigfYV0ewB?backgroundColor=pink&viewControls=on'},
+      { name: 'Members Tasks', icon: <CheckCircle />, rootUrl: 'https://airtable.com/embed/shrz0HHYQVgNuca5v/tbljwCFIDT2vG65AH?backgroundColor=green&viewControls=on',  url_sandbox: 'https://airtable.com/embed/shrRQv6wWFAxMJf4A?backgroundColor=pink&viewControls=on'},
+    ],
+  },
+  {
+    name: 'Meetings',
+    icon: <MapPin />,
+    url_sandbox: 'https://airtable.com/embed/shr3KzBGdO2VZqKvq',
+  },
+  // related to a single member
+  {
+    name: 'Prescription',
+    icon: <Clipboard />,
+    rootUrl: 'https://airtable.com/embed/shrJJPowmXuMD3lwD?backgroundColor=green&viewControls=on',
+    url_sandbox: 'https://airtable.com/embed/shribeyiP3MeCBRhH?backgroundColor=pink&viewControls=on'
+  },
+  {
+    name: 'HMP',
+    icon: <List />,
+    rootUrl:'https://airtable.com/embed/shrTQVb2Z78fziamV?backgroundColor=green&viewControls=on',
+    url_sandbox: 'https://airtable.com/embed/shrWNJpP9NTiUKwjV?backgroundColor=pink&viewControls=on'
+  },
+  {
+    name: 'Conditions',
+    icon: <Thermometer />,
+    rootUrl: 'https://airtable.com/embed/shr1IJ9aQ9QhE8O9I?backgroundColor=green&viewControls=on',
+    url_sandbox: 'https://airtable.com/embed/shraxVG3xU1zyzymx?backgroundColor=pink&viewControls=on'
+  },
+  {
+    name: 'Interventions',
+    icon: <Activity />,
+    rootUrl: 'https://airtable.com/embed/shr0y89LFGiiT4oHz?backgroundColor=green&viewControls=on',
+    url_sandbox: 'https://airtable.com/embed/shriAhSRYFESlmIiP?backgroundColor=pink&viewControls=on'
+  },
+  {
+    name: 'Population',
+    icon: <Users />,
+    subItems: [
+      { name: 'Members', icon: <User />, rootUrl: `https://airtable.com/embed/${iframes.default.members}?viewControls=on` },
+      { name: 'NPS', icon: <TrendingUp />, rootUrl: 'https://airtable.com/embed/shrKb4Z74A074oLaF?backgroundColor=green&viewControls=on' },
+      { name: 'Interactions', icon: <Minimize />, component: <FlagForReview /> },
+    ],
+    url_sandbox: ''
   },
 ]
 

@@ -1,55 +1,140 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { always, toggle } from 'kremling'
-import { Link, useRouteMatch } from 'react-router-dom'
+import { Link, useRouteMatch, useHistory } from 'react-router-dom'
+import { ArrowRight, ArrowDown } from 'react-feather'
 import styles from './sidebar.component.css'
 import FlatLogo from '../../assets/img/logo/Antara Logo@1x.png'
 import SidebarMenuItems from './sidebar.menu'
+import { useUser } from '../../context/user-context'
+import { useSidebar } from '../../context/sidebar-context'
+import analytics from '../../helpers/segment'
+import config from '../../config/config'
 
 const Sidebar = () => {
+  const history = useHistory()
+  const user = useUser()
+  const { iframes } = config
+  const { handleOnClick, activeView, handleSublistClick } = useSidebar()
   const { path } = useRouteMatch()
-  const isActive = (rootUrl: string) =>
-    path === rootUrl || path.startsWith(rootUrl)
+  const [showDropDownTodo, setDropDownTodo] = useState(false)
+  const [showDropDownPopulation, setDropDownPopulation] = useState(false)
+  const [subItem, setSublist] = useState('')
+
+  const getMeetingsView = () => {
+    if (user && iframes[user.email]) {
+      return iframes[user.email].meetings
+    }
+    return iframes.default.meetings
+  }
+  let items: any = []
+  if (path === '/') {
+    items = SidebarMenuItems.slice(0, 8)
+    items[3].rootUrl = `https://airtable.com/embed/${getMeetingsView()}?viewControls=on`
+  } else if (path.includes('member')) {
+    items = SidebarMenuItems
+  }
+  const handleDropDownMenu = e => {
+    if (e.innerText === 'Tasks') {
+      setDropDownTodo(!showDropDownTodo)
+    }
+    if (e.innerText === 'Population') {
+      setDropDownPopulation(!showDropDownPopulation)
+    }
+  }
+  const subList = (item, index) => (
+    <li
+      className={`${styles.subList} ${styles.menuLink}`}
+      onClick={(event) => {
+        analytics.page({
+          title: `Main Dashboard: ${item.name}`,
+        })
+        handleSublistClick(index)
+        setSublist(item.name)
+        path.includes('member') && history.push('/')
+      }}
+      onKeyDown={() => handleOnClick(index)}
+      role="button"
+      tabIndex={index}
+      key={item.name}
+    >
+      <span className={toggle('text-orange', 'text-grey', item.name === subItem)}>{item.icon}</span>
+      <h5 className={toggle('text-orange', 'text-grey', item.name === subItem)}>
+        {item.name}
+      </h5>
+    </li>
+  )
+
+  const lists = (item, index) => (
+    <li
+      className={`${styles.list} ${styles.menuLink}`}
+      onClick={(event) => {
+        analytics.page({
+          title: `Main Dashboard: ${item.name}`,
+        })
+        setDropDownTodo(false)
+        setDropDownPopulation(false)
+        handleOnClick(index)
+        handleDropDownMenu(event.target)
+        path.includes('member') && history.push('/')
+      }}
+      onKeyDown={() => handleOnClick(index)}
+      role="button"
+      tabIndex={index}
+      key={item.name}
+      data-testid={`item-${item.name}`}
+    >
+      {item.subItems && !showDropDownTodo && item.name === 'Tasks' && (
+        <ArrowRight className= {styles.arrowRight} />)}
+      {item.subItems && showDropDownTodo && item.name === 'Tasks' && (
+        <ArrowDown className= {styles.arrowRight} />)}
+      {item.subItems && !showDropDownPopulation && item.name === 'Population' && (
+          <ArrowRight className= {styles.arrowRight} />)}
+      {item.subItems && showDropDownPopulation && item.name === 'Population' && (
+          <ArrowDown className= {styles.arrowDown} />)}
+      <span className={toggle('text-orange', 'text-grey', activeView.name === item.name)}>{item.icon}</span>
+      <h5
+        className={toggle(
+          'text-orange',
+          'text-grey',
+          activeView.name === item.name
+        )}
+      >
+        {item.name === 'Tasks' ? <b>{item.name}</b> : item.name}
+      </h5>
+    </li>
+  )
   return (
     <div className={styles.sidebar}>
       <div className={styles.logoContainer}>
         <Link to="/">
           <img
             src={FlatLogo}
-            width="40px"
-            height="40px"
+            width="32px"
+            height="32px"
             alt="antara small logo"
           />
         </Link>
       </div>
-      {SidebarMenuItems.map((item) => (
-        <div key={item.name} data-testid="sidebar-links">
-          <div
-            className={always(styles.menuItem).maybe(
-              styles.active,
-              isActive(item.rootUrl)
-            )}
-          >
-            {isActive(item.rootUrl) && <div className={styles.borderItemTop} />}
-            <Link to={item.rootUrl}>
-              <button className={`btn-unstyled ${styles.menuLink}`}>
-                <div style={{ marginBottom: '.5rem' }}>{item.icon}</div>
-                <h5
-                  className={toggle(
-                    'text-blue-light',
-                    'text-blue-dark',
-                    !isActive(item.rootUrl)
-                  )}
-                >
-                  {item.name}
-                </h5>
-              </button>
-            </Link>
-            {isActive(item.rootUrl) && (
-              <div className={styles.borderItemBottom} />
-            )}
-          </div>
-        </div>
-      ))}
+      <div className="sidebar" data-testid="sidebar-links">
+        {items.map((item: any, index: any) => {
+          const { subItems } = item
+          return (
+            <div
+              className={always(styles.menuItem).maybe(
+                styles.active,
+                activeView.name === item.name
+              )}
+              key={item.name}
+            >
+              <div className= {item.name}>
+                {lists(item, index)}
+                {subItems && showDropDownTodo && item.name === 'Tasks' && subItems.map( (element,index ) => subList(element, index))}
+                {subItems && showDropDownPopulation && item.name === 'Population' && subItems.map( (element,index ) => subList(element, index))}
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

@@ -5,7 +5,7 @@
 .navbar {
   display: flex;
   flex: 1;
-  background-color: var(--nav-bg);
+  background-color: var(--white);
   padding: 0 8px;
   height: 100%;
 }
@@ -57,4 +57,7 @@
   color: var(--greyscale-3);
   font-weight: 400;
   margin-top: 0.5rem;
+}
+hr{
+  border-color: #e8eaed;
 }

@@ -1,16 +1,14 @@
 import React from 'react'
-import { always } from 'kremling'
 import styles from './main-dashboard.component.css'
-import CircleChevronRight from '../../assets/img/icons/ circle-chevron-right.svg'
 import AirtableIframe from '../utils/airtableIframe/airtableIframe.component'
 import { useUser } from '../../context/user-context'
 import config from '../../config/config'
 import Tabs from '../utils/tabs/tabs.component'
-import analytics from '../../helpers/segment'
-import FlagForReview from './flag-for-review/flag-for-review.component'
+import { useSidebar } from '../../context/sidebar-context'
 
 const HNDashboard = () => {
   const user = useUser()
+  const { activeView, activeSubView } = useSidebar()
   const { iframes } = config
 
   const getTasksView = () => {
@@ -20,41 +18,11 @@ const HNDashboard = () => {
     return iframes.default.hntasks
   }
 
-  const getMeetingsView = () => {
-    if (user && iframes[user.email]) {
-      return iframes[user.email].meetings
-    }
-    return iframes.default.meetings
-  }
-
-  const views = [
-    {
-      name: 'Members',
-      description: 'View all member details.',
-      airtableUrl: `https://airtable.com/embed/${iframes.default.members}?viewControls=on`,
-    },
-    {
-      name: 'HN Tasks',
-      description: 'Your view of HN tasks',
-      hasCalendar: true,
-    },
-    {
-      name: 'HN Meetings',
-      description: 'Your view of HN meetings',
-      airtableUrl: `https://airtable.com/embed/${getMeetingsView()}?viewControls=on`,
-    },
-    {
-      name: 'Interactions',
-      description: 'All benes interactions in one place',
-      component: () => <FlagForReview />,
-    },
-  ]
-
-  const [activeView, setActiveView] = React.useState(0)
-
-  const AirtableView = ({ view }: { view: number }) => {
-    return !views[view].hasCalendar ? (
-      <AirtableIframe src={views[view].airtableUrl || ''} />
+  const AirtableView = () => {
+    const subListUrl = process.env.PROD ? activeSubView.rootUrl : activeSubView.url_sandbox
+    const listUrl = process.env.PROD ? activeView.rootUrl : activeView.url_sandbox
+    return !activeView.hasCalendar ? (
+      <AirtableIframe src={activeSubView ? subListUrl : listUrl} />
     ) : (
       <Tabs>
         <div label="Calendar">
@@ -76,64 +44,19 @@ const HNDashboard = () => {
   }
 
   React.useEffect(() => {
-    document.title = `Scribe Home: ${views[activeView].name}`
-  }, [activeView, views])
+    document.title = `Scribe Home: ${activeView.name}`
+  }, [activeView])
 
   return (
     <div className={styles.dashboard}>
-      <div className={styles.dashboardLinks}>
-        <h5 className={styles.heading}>All table links</h5>
-        <p className="text-heading-2">Choose a view</p>
-        <div className="margin-top-24">
-          {views.map((view, index) => {
-            return (
-              <button
-                data-testid={view.name}
-                className="btn-unstyled btn-list"
-                onClick={() => {
-                  analytics.page({
-                    title: `Main Dashboard: ${view.name}`,
-                  })
-                  setActiveView(index)
-                }}
-                key={view.name}
-              >
-                <div
-                  className={always('list-item-heading').maybe(
-                    'list-item-active',
-                    index === activeView
-                  )}
-                >
-                  {view.name}
-                  <p>
-                    <CircleChevronRight
-                      fill={
-                        index === activeView
-                          ? 'var(--orange-base)'
-                          : 'var(--blue-base)'
-                      }
-                    />
-                  </p>
-                </div>
-                <p className="list-item-description">{view.description}</p>
-                <div className="divider" />
-              </button>
-            )
-          })}
-        </div>
-      </div>
       <div className={styles.dashboardView}>
         <p
           data-testid="hn-text-heading"
           className="text-heading-2 margin-bottom-16"
         >
-          {views[activeView].name}
+          {activeSubView ? activeSubView.name : activeView.name}
         </p>
-        {views[activeView].component ? (
-          views[activeView].component()
-        ) : (
-          <AirtableView view={activeView} />
-        )}
+        {activeView.component || activeSubView.component ? (activeView.component || activeSubView.component) : (<AirtableView/>)}
       </div>
     </div>
   )

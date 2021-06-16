@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import MenuDotsIcon from '../../assets/img/icons/menu_dots.svg'
-import LogoIcon from '../../assets/img/icons/logo-nav.svg'
 import RedBlinkingDot from '../../assets/img/icons/red-dot.svg'
 import styles from './navbar.component.css'
 import { useUser } from '../../context/user-context'
@@ -55,10 +54,6 @@ const NavBar = () => {
   return (
     <div className={styles.navWrapper}>
       <div className={styles.navbar}>
-        <div className={styles.logoContainer}>
-          <LogoIcon className="icon-white" />
-        </div>
-
         <SearchInput />
 
         <div className="d-flex flex-align-center flex-justify-end flex-one">
@@ -67,7 +62,7 @@ const NavBar = () => {
             className="btn-icon"
             onClick={() => setShowTasksMenu(!showTasksMenu)}
           >
-            <Icon name="calendar-dates" fill="white" />
+            <Icon name="calendar-dates" fill="var(--greyscale-6)" />
           </button>
           <button className="btn-icon">
             <MenuDotsIcon className="icon-white" />
@@ -78,10 +73,11 @@ const NavBar = () => {
             onClick={() => setShowUserMenu(!showUserMenu)}
             data-testid="user-menu-btn"
           >
-            <Icon name="user" fill="white" />
+            <Icon name="user" fill="var(--greyscale-6)" />
           </button>
         </div>
       </div>
+      <hr />
       {showUserMenu && <UserMenu />}
       {showTasksMenu && <TaskMenu />}
     </div>
