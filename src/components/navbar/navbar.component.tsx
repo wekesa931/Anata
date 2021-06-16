@@ -77,7 +77,6 @@ const NavBar = () => {
           </button>
         </div>
       </div>
-      <hr />
       {showUserMenu && <UserMenu />}
       {showTasksMenu && <TaskMenu />}
     </div>

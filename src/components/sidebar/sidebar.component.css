@@ -13,7 +13,6 @@
 .menuLink > h5{
   font-weight: 100;
   font-size: 16px;
-  color: #8b95a5;
 }
 .menuItem > span{
   margin-right: 8px;
@@ -29,6 +28,7 @@
   align-items: center;
   margin-left: 32px;
   padding: 8px;
+  color: #8b95a5
 }
 
 .menuItem.active {
@@ -36,14 +36,14 @@
 }
 
 .logoContainer {
-  text-align: center;
   border-bottom: 1px solid var(--greyscale-7);
-  padding: 0 16px 0 32px;
+  padding: 0 16px 0 16px;
   min-height: 44px;
 }
 
 .list {
   display: flex;
+  height: 37px;
 }
 
 .subList {
