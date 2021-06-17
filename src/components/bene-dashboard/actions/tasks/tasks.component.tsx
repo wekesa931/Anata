@@ -12,6 +12,7 @@ import TASK_FIELDS from './tasks-fields'
 import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
 import analytics from '../../../../helpers/segment'
 import PrescriptionName from './PrescriptionNames'
+import CallsCallout from '../calls/calls.component'
 
 import { GET_MEMBER_TASKS } from '../../../../gql/hn_tasks'
 import { useMember } from '../../../../context/member.context'
@@ -237,6 +238,11 @@ const Tasks = () => {
                 </a>
               </Tooltip>
             )}
+
+            {hnTask.Type && hnTask.Type.toLowerCase().includes('call') && (
+              <CallsCallout />
+            )}
+
             <div className="p-relative margin-left-8">
               {hnTask['Assigned HN Name'] && (
                 <Tooltip title={hnTask['Assigned HN Name']}>
@@ -368,7 +374,7 @@ const Tasks = () => {
 
   return (
     <>
-      <div className="margin-top-16">
+      <div>
         <div
           className="d-flex flex-align-center"
           style={{ justifyContent: 'space-between' }}

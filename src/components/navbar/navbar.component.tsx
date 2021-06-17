@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import MenuDotsIcon from '../../assets/img/icons/menu_dots.svg'
-import RedBlinkingDot from '../../assets/img/icons/red-dot.svg'
 import styles from './navbar.component.css'
 import { useUser } from '../../context/user-context'
 import { useAuth } from '../../context/auth-context'
-import { useComms } from '../../context/comms-context'
 import SearchInput from '../search/search.component'
 import Icon from '../utils/icon/icon.component'
 import analytics from '../../helpers/segment'
@@ -47,9 +45,6 @@ const UserMenu = () => {
 const NavBar = () => {
   const [showUserMenu, setShowUserMenu] = useState<boolean>(false)
   const [showTasksMenu, setShowTasksMenu] = useState<boolean>(false)
-  const {
-    commsStatus: { callInProgress },
-  } = useComms()
 
   return (
     <div className={styles.navWrapper}>
@@ -57,7 +52,6 @@ const NavBar = () => {
         <SearchInput />
 
         <div className="d-flex flex-align-center flex-justify-end flex-one">
-          {callInProgress && <RedBlinkingDot />}
           <button
             className="btn-icon"
             onClick={() => setShowTasksMenu(!showTasksMenu)}

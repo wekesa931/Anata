@@ -8,24 +8,27 @@ import Dashboard from './main-dashboard/main-dashboard'
 import BeneDashboard from './bene-dashboard/bene-dashboard.component'
 import history from '../constants/history'
 import InteractionLogsForm from './bene-dashboard/actions/forms/interaction-logs/interaction-logs-form.component'
+import GlobalNotifications from './utils/notification/global-notifications'
 
 const Routes = () => {
   return (
     <Router history={history}>
       <Switch>
-        <Route exact path="/login" component={Login} />
-        <ProtectedRoute exact path="/">
-          <Dashboard />
-        </ProtectedRoute>
-        <ProtectedRoute exact path="/member">
-          <Dashboard />
-        </ProtectedRoute>
-        <ProtectedRoute exact path="/member/:recId">
-          <BeneDashboard />
-        </ProtectedRoute>
-        <ProtectedRoute path="/member/:recId/interaction/create">
-          <InteractionLogsForm />
-        </ProtectedRoute>
+        <GlobalNotifications>
+          <Route exact path="/login" component={Login} />
+          <ProtectedRoute exact path="/">
+            <Dashboard />
+          </ProtectedRoute>
+          <ProtectedRoute exact path="/member">
+            <Dashboard />
+          </ProtectedRoute>
+          <ProtectedRoute exact path="/member/:recId">
+            <BeneDashboard />
+          </ProtectedRoute>
+          <ProtectedRoute path="/member/:recId/interaction/create">
+            <InteractionLogsForm />
+          </ProtectedRoute>
+        </GlobalNotifications>
       </Switch>
     </Router>
   )

@@ -46,11 +46,10 @@ After a successful github release, this [Github action](.github/workflows/deploy
 
 The designs are hosted on [figma](https://www.figma.com/file/zoM5pHUmM8SKHQQSyOfVkV/HN-Dashboard?node-id=574%3A1) and the styleguide is on [Coda](https://coda.io/d/Design-System_d7jJWI59uLp/Meeting-Notes_sub2f#_lukZq).
 
-
 # Gotchas
 
 Have a look at the below for some problems you might face as you do set-up. Also please remember to enlarge this list as you encounter issues.
 
-- When doing doing `npm i` you might face **npm dependency tree error** in that case run `npm install --cache /tmp/empty-cache --legacy-peer-deps` This issue is due to npm 7 and node 16 check this [post](https://stackoverflow.com/questions/65549858/eresolve-unable-to-resolve-dependency-tree-when-installing-npm-react-facebook) for more insight. 
-- on setting up your `NODE_PROXY_URL` environment variable use the **local version** 
-you can get this environment variables on [here]- (https://my.1password.com/vaults/vlce5zlfjwpfukscylhotjfbga/allitems/2xfh2jcgdj4y6hfelfe3h2hf3a).
+- When doing doing `npm i` you might face **npm dependency tree error** in that case run `npm install --cache /tmp/empty-cache --legacy-peer-deps` This issue is due to npm 7 and node 16 check this [post](https://stackoverflow.com/questions/65549858/eresolve-unable-to-resolve-dependency-tree-when-installing-npm-react-facebook) for more insight.
+- on setting up your `NODE_PROXY_URL` environment variable use the **local version**
+  you can get this environment variables on [here]- (https://my.1password.com/vaults/vlce5zlfjwpfukscylhotjfbga/allitems/2xfh2jcgdj4y6hfelfe3h2hf3a).

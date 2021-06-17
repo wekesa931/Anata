@@ -7,6 +7,8 @@ import { UserProvider } from '../src/context/user-context'
 import mockUser from './user.mock'
 import { MemberProvider } from '../src/context/member.context'
 import mockMember from './member.mock'
+import { ApolloProvider } from '@apollo/client'
+import mockClient from './contact-mocks'
 
 type CustomRenderResult = RenderResult & {
   history: any
@@ -22,13 +24,15 @@ function renderWithRouter(
   } = {}
 ): CustomRenderResult {
   const Wrapper = ({ children }: any) => (
-    <AuthProvider user={mockUser}>
-      <UserProvider>
-        <MemberProvider member={mockMember}>
-          <Router history={history}>{children}</Router>
-        </MemberProvider>
-      </UserProvider>
-    </AuthProvider>
+    <ApolloProvider client={mockClient}>
+      <AuthProvider user={mockUser}>
+        <UserProvider>
+          <MemberProvider member={mockMember}>
+            <Router history={history}>{children}</Router>
+          </MemberProvider>
+        </UserProvider>
+      </AuthProvider>
+    </ApolloProvider>
   )
   return {
     ...render(ui, { wrapper: Wrapper }),

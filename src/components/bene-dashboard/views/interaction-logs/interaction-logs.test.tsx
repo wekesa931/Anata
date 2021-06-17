@@ -5,6 +5,11 @@ import { cleanup } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { GET_MEMBER_INTERACTIONS } from '../../../../gql/interactions'
 import mockInteractions from '../../../../../__mocks__/interactions-mock'
+
+jest.mock('../../../../helpers/analytics', () => {
+  return jest.fn(() => {})
+})
+
 const mocks = [
   {
     request: {

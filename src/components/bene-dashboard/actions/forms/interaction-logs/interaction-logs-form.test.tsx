@@ -9,6 +9,10 @@ import team from '../../../../../../__mocks__/team.mock'
 import { fireEvent, waitFor } from '@testing-library/react'
 import { CREATE_INTERACTION } from '../../../../../gql/interactions'
 
+jest.mock('../../../../../helpers/analytics', () => {
+  return jest.fn(() => {})
+})
+
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useLocation: () => ({

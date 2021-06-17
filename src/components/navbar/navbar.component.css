@@ -23,6 +23,7 @@
 
 /* user menu */
 .userMenuContainer {
+  z-index: 2001;
   display: flex;
   justify-content: flex-end;
   position: absolute;

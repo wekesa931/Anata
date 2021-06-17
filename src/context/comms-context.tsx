@@ -1,4 +1,10 @@
+import { useMutation } from '@apollo/client'
 import React, { useState } from 'react'
+import { SAVE_FCM_TOKEN } from '../gql/comms'
+import { getRegToken } from '../comms/fcm'
+import { useUser } from './user-context'
+import Toasts from '../helpers/toast'
+import logError from '../components/utils/Bugsnag/Bugsnag'
 
 type CommsStatus = {
   callInProgress: boolean | null
@@ -15,9 +21,36 @@ const CommsContext = React.createContext<CommsContextType>({
 })
 
 function CommsProvider({ children }: any) {
+  const user = useUser()
+  const [saveFCMToken] = useMutation(SAVE_FCM_TOKEN)
   const [currentCommsStatus, setCurrentCommsStatus] = useState<CommsStatus>({
     callInProgress: false,
   })
+  const [registered, setregistered] = useState<boolean>(false)
+
+  React.useEffect(() => {
+    if (!registered) {
+      const getToken = async () => {
+        try {
+          const token = await getRegToken()
+          const response = await saveFCMToken({
+            variables: {
+              identifier: user?.email,
+              token,
+            },
+          })
+          if (response.data.registerToken.status === 200) {
+            setregistered(true)
+          }
+        } catch (e) {
+          Toasts.showErrorNotification()
+          logError(e)
+        }
+      }
+      getToken()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <CommsContext.Provider

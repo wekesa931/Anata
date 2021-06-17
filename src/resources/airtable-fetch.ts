@@ -50,16 +50,20 @@ axios.interceptors.response.use(
 )
 
 const airtableFetch = async (table: string, method?: any, data = {}) => {
-  const response = await axios({
-    url: `${baseUrl}/${table}`,
-    headers: {
-      Authorization: `Bearer ${getTokenFromLocalStorage()}`,
-      'Content-Type': 'application/json',
-    },
-    method: method || 'GET',
-    data: method === 'GET' ? null : JSON.stringify(data),
-  })
-  return response.data
+  try {
+    const response = await axios({
+      url: `${baseUrl}/${table}`,
+      headers: {
+        Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+        'Content-Type': 'application/json',
+      },
+      method: method || 'GET',
+      data: method === 'GET' ? null : JSON.stringify(data),
+    })
+    return response.data
+  } catch (e) {
+    return e.message
+  }
 }
 
 export default airtableFetch

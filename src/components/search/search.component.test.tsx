@@ -12,6 +12,9 @@ jest.mock('../../resources/airtable-fetch', () => {
   })
 })
 
+jest.mock('../../helpers/analytics', () => {
+  return jest.fn(() => {})
+})
 const mockHistoryPush = jest.fn()
 
 jest.mock('react-router-dom', () => ({

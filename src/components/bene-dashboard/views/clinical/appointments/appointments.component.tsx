@@ -46,7 +46,6 @@ const PafuView = ({ data }: any) => {
     'Medication',
     'Medication purpose',
     'Medication Information available',
-    'Health management plan',
     'Additional information',
     'Next appointment date',
     'Reason for Missed Appointments',
@@ -54,6 +53,7 @@ const PafuView = ({ data }: any) => {
     'Date of Admission',
     'Date of Discharge',
     'Specialist',
+    'Health management plan description',
   ]
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const PafuView = ({ data }: any) => {
               .filter((key) => fields.includes(key))
               .map((key) => {
                 return (
-                  <div onClick={(e) => e.stopPropagation()}>
+                  <div key={key} onClick={(e) => e.stopPropagation()}>
                     <label htmlFor={key}>
                       {key}
                       <input

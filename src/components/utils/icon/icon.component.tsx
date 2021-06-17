@@ -22,7 +22,7 @@ const Icon = ({ name, width = 24, height = 24, fill = '#000' }: IconProps) => {
         iconRef.current = namedImport
       } catch (err) {
         // eslint-disable-next-line no-console
-        console.error(`An error occured while loading the svg from ${name}`)
+        // console.error(`An error occured while loading the svg from ${name}`)
       } finally {
         if (!isCancelled) {
           setLoading(false)

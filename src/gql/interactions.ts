@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 const GET_MEMBER_INTERACTIONS = gql`
-  query($antaraId: String!) {
+  query ($antaraId: String!) {
     memberInteractions(antaraId: $antaraId) {
       edges {
         node {
@@ -33,7 +33,7 @@ const CREATE_INTERACTION = gql`
 `
 
 const GET_ALL_FLAGGED_INTERACTIONS = gql`
-  query($startDate: DateTime!, $endDate: DateTime!) {
+  query ($startDate: DateTime!, $endDate: DateTime!) {
     allInteractions(
       flagForReview: "Yes"
       interactionStartedAt_Date_Gte: $startDate
@@ -71,7 +71,7 @@ const GET_ALL_FLAGGED_INTERACTIONS = gql`
 `
 
 const GET_ALL_INTERACTIONS = gql`
-  query($startDate: DateTime!, $endDate: DateTime!) {
+  query ($startDate: DateTime!, $endDate: DateTime!) {
     allInteractions(
       interactionStartedAt_Date_Gte: $startDate
       interactionStartedAt_Date_Lte: $endDate

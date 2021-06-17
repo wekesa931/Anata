@@ -11,6 +11,10 @@ jest.mock('../../../../resources/airtable-fetch', () => {
   })
 })
 
+jest.mock('../../../../helpers/analytics', () => {
+  return jest.fn(() => {})
+})
+
 describe('<InteractionLogsView/>', () => {
   test('should render', () => {
     renderWithRouter(<Nutrition />)

@@ -1,0 +1,29 @@
+.messageBlock {
+  display: flex;
+  align-items: flex-start;
+  border-bottom: 1px solid whitesmoke;
+}
+
+.message {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.messageText {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 14px;
+  flex: 1;
+}
+
+.listHeading {
+  background-color: #fff;
+  box-shadow: 0px 2px 4px 0px rgba(96, 142, 182, 0.2);
+  height: 32px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

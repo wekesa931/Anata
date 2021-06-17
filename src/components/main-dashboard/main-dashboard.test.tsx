@@ -1,11 +1,24 @@
-
 import React from 'react'
-import renderer from 'react-test-renderer';
+import { screen } from '@testing-library/react'
+import renderWithRouter from '../../../__mocks__/custom-render.mock'
 import HNDashboard from './main-dashboard'
+
+jest.mock('../../helpers/analytics', () => {
+  return jest.fn(() => {})
+})
+
+// describe('<mainDashboard>', () => {
+//   it('should render correctly', () => {
+//     const tree = renderer.create(<HNDashboard/>).toJSON()
+//     expect (tree).toMatchSnapshot()
+//     // expect(true).toBeTruthy()
+//   })
+// })
 
 describe('<mainDashboard>', () => {
   it('should render correctly', () => {
-    const tree = renderer.create(<HNDashboard/>).toJSON()
-    expect (tree).toMatchSnapshot()
+    renderWithRouter(<HNDashboard />)
+    const dash = screen.getByTestId('main-dash')
+    expect(dash).toBeTruthy()
   })
 })

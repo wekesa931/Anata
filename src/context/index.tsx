@@ -1,5 +1,6 @@
 import React from 'react'
 import { ApolloProvider } from '@apollo/client'
+import { ToastProvider } from 'react-toast-notifications'
 import { UserProvider } from './user-context'
 import { AuthProvider } from './auth-context'
 import { CommsProvider } from './comms-context'
@@ -12,7 +13,9 @@ const AppContexts = ({ children }: any) => {
       <AuthProvider>
         <UserProvider>
           <SidebarProvider>
-            <CommsProvider>{children}</CommsProvider>
+            <ToastProvider>
+              <CommsProvider>{children}</CommsProvider>
+            </ToastProvider>
           </SidebarProvider>
         </UserProvider>
       </AuthProvider>

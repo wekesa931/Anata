@@ -19,6 +19,10 @@ import { GET_MEMBER_TASKS } from '../../../../gql/hn_tasks'
 import mockHnTasks from '../../../../../__mocks__/hn-tasks-mock'
 
 jest.mock('../../../../resources/airtable-fetch')
+jest.mock('../calls/calls.component.tsx', () => <></>)
+jest.mock('../../../../helpers/analytics', () => {
+  return jest.fn(() => {})
+})
 
 airtableFetch.mockResolvedValue({})
 
@@ -72,8 +76,9 @@ describe('<Tasks />', () => {
     expect(await findByText(secondItem, /High Priority/i)).not.toBeNull()
     expect(await findByText(secondItem, /19 Aug 2020/i)).not.toBeNull()
     expect(
-      await (await findByText(secondItem, /High Priority/i)).parentElement
-        ?.className
+      await (
+        await findByText(secondItem, /High Priority/i)
+      ).parentElement?.className
     ).toBe('text-danger')
     expect(await findByText(secondItem, /Rx: Refill/i)).not.toBeNull()
   })

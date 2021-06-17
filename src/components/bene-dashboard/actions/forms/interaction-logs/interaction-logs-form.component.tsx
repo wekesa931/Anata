@@ -12,6 +12,7 @@ import useInteractionFormFields from './interaction-logs.fields'
 import { CREATE_INTERACTION } from '../../../../../gql/interactions'
 import styles from './interaction-logs-form.component.css'
 import analytics from '../../../../../helpers/segment'
+import logError from '../../../../utils/Bugsnag/Bugsnag'
 
 const InteractionLogsForm = () => {
   const { search } = useLocation()
@@ -49,7 +50,7 @@ const InteractionLogsForm = () => {
     })
       .catch((e) => {
         Toasts.showErrorNotification()
-        Bugsnag.notify(e)
+        logError(e)
       })
       .then((response) => {
         setSubmitting(false)

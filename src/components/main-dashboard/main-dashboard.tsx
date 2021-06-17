@@ -52,7 +52,7 @@ const HNDashboard = () => {
   }, [activeView])
 
   return (
-    <div className={styles.dashboard}>
+    <div data-testid="main-dash" className={styles.dashboard}>
       <div className={styles.dashboardView}>
         <p
           data-testid="hn-text-heading"

@@ -2,6 +2,10 @@ import React from 'react'
 import Login from './login.component'
 import { render, screen, fireEvent } from '@testing-library/react'
 
+jest.mock('../../helpers/analytics', () => {
+  return jest.fn(() => {})
+})
+
 describe('<Login/>', () => {
   it('renders <Login/> successfully', () => {
     render(<Login />)

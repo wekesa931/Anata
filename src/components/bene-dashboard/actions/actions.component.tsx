@@ -1,38 +1,65 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Communication from './communication/communication.component'
 import Forms from './forms/forms.component'
 import Meetings from './meetings/meetings.component'
 import Tasks from './tasks/tasks.component'
+import Icon from '../../utils/icon/icon.component'
+import CallsCallout from './calls/calls.component'
+import CallFloatingBox from './calls/callConsole.component'
+import { useCall } from '../../../context/calls-context'
 
-const Actions = ({ member }: any) => {
+const Actions = () => {
   const tabs = ['Actions', 'Forms', 'Meetings']
   const [activeTab, setActiveTab] = React.useState<string>(tabs[0])
+  const tabAction = (tab: string) => {
+    setActiveTab(tab)
+  }
+  const { setCounterValue } = useCall()
+
+  useEffect(() => {
+    setCounterValue()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
-    <div className="full-height d-flex" style={{ flexDirection: 'column' }}>
-      <h2>Actions</h2>
-      <div className="margin-top-16 d-flex text-blue-base">
-        {tabs.map((tab) => (
+    <div className="full-height d-flex flex-column">
+      <CallFloatingBox />
+      <div className="d-flex flex-between">
+        <div className="d-flex flex-between text-blue-base relative">
+          {tabs.map((tab) => (
+            <button
+              className={`tab-btn btn ${
+                activeTab === tab ? 'action-btn text-bold' : 'btn-unstyled'
+              }`}
+              onClick={() => tabAction(tab)}
+              key={tab}
+            >
+              <p
+                className={`btn-text ${
+                  activeTab === tab ? 'btn-active-text' : 'btn-passive-text'
+                }`}
+              >
+                {tab}
+              </p>
+            </button>
+          ))}
+        </div>
+        <div className="d-flex flex-between communication-icons">
           <button
-            className={`btn ${
-              activeTab === tab ? 'btn-secondary text-bold' : 'btn-unstyled'
-            }`}
-            style={{ marginRight: '24px', height: '44px' }}
-            onClick={() => setActiveTab(tab)}
-            key={tab}
+            className="btn"
+            style={{
+              color: activeTab === 'Messages' ? '#58a9f3' : '#af9090',
+              backgroundColor: activeTab === 'Messages' ? '#e7f3fd' : '#e8eaed',
+            }}
+            onClick={() => tabAction('Messages')}
           >
-            {tab}
+            <Icon name="message-circle" fill="#efefef" width={16} height={16} />
           </button>
-        ))}
+          <CallsCallout />
+        </div>
       </div>
-      <div
-        style={{
-          overflowY: 'scroll',
-          marginTop: '32px',
-          flex: 1,
-        }}
-      >
+      <div className="flex-scroll">
         <div className={activeTab === tabs[0] ? '' : 'hidden'}>
-          <Communication member={member} />
           <Tasks />
         </div>
         <div className={activeTab === tabs[1] ? '' : 'hidden'}>
@@ -40,6 +67,9 @@ const Actions = ({ member }: any) => {
         </div>
         <div className={activeTab === tabs[2] ? '' : 'hidden'}>
           <Meetings />
+        </div>
+        <div className={activeTab === 'Messages' ? '' : 'hidden'}>
+          <Communication />
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 const GET_MEMBER_TASKS = gql`
-  query($antaraId: String!) {
+  query ($antaraId: String!) {
     memberHnTasks(antaraId: $antaraId) {
       edges {
         node {

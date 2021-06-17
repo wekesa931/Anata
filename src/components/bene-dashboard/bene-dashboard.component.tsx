@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouteMatch } from 'react-router-dom'
 import BioData from './summary/biodata/biodata.component'
 import styles from './bene-dashboard.component.css'
@@ -7,6 +7,7 @@ import Actions from './actions/actions.component'
 import Fetcher from '../utils/fetcher/fetcher'
 import analytics from '../../helpers/segment'
 import { MemberProvider } from '../../context/member.context'
+import { CallProvider } from '../../context/calls-context'
 
 const PatientDashboard = () => {
   const [recId, setRecId] = useState<string>()
@@ -16,7 +17,7 @@ const PatientDashboard = () => {
     setRecId(params.recId)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (recId) {
       analytics.page('Member Dashboard', {
         memberId: recId,
@@ -37,23 +38,25 @@ const PatientDashboard = () => {
     >
       {(response: any) => (
         <MemberProvider member={response}>
-          <div className={styles.container}>
-            <div className="dashboard-content dashboard-raised-content padding-top-32">
-              <BioData />
+          <CallProvider>
+            <div className={styles.container}>
+              <div className="dashboard-content dashboard-raised-content padding-top-32">
+                <BioData />
+              </div>
+              <div
+                className="dashboard-content padding-top-32"
+                style={{ flex: 1, borderRight: '1px solid var(--blue-light)' }}
+              >
+                <Views />
+              </div>
+              <div
+                className="dashboard-content dashboard-raised-content padding-top-32"
+                style={{ width: '339px', borderRadius: '0px' }}
+              >
+                <Actions />
+              </div>
             </div>
-            <div
-              className="dashboard-content padding-top-32"
-              style={{ flex: 1, borderRight: '1px solid var(--blue-light)' }}
-            >
-              <Views />
-            </div>
-            <div
-              className="dashboard-content dashboard-raised-content padding-top-32"
-              style={{ width: '372px', borderRadius: '0px' }}
-            >
-              <Actions />
-            </div>
-          </div>
+          </CallProvider>
         </MemberProvider>
       )}
     </Fetcher>

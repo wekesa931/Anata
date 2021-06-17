@@ -24,7 +24,7 @@ const Fetcher = ({
 
   return (
     <>
-      {isPending && (
+      {isPending && !isResolved && (
         <div
           className="full-height d-flex"
           style={{ alignItems: 'center', justifyContent: 'center' }}
