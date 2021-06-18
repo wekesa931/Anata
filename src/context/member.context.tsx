@@ -66,7 +66,7 @@ function MemberProvider({ member, children }: any) {
 
   React.useEffect(() => {
     if (rawApiRecords) {
-      setmemberContactDetails(rawApiRecords.beneficiary.edges[0].node)
+      setmemberContactDetails(rawApiRecords?.beneficiary.edges[0]?.node)
     }
   }, [rawApiRecords])
 
