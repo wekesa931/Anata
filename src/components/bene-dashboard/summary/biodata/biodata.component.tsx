@@ -147,30 +147,36 @@ const ConditionsSummary = () => {
         <h6 className="text-bold">Conditions</h6>
       </div>
       <div className={`text-small ${styles.conditionsContent}`}>
-        {conditions.map((condition: any, index: number) => (
-          <li
-            key={index}
-            style={{
-              borderBottom: '0.5px lightgrey solid',
-              paddingBottom: '2px',
-              marginBottom: '2px',
-            }}
-          >
-            {index + 1}.{' '}
-            {condition.Condition === 'Other'
-              ? condition['Other, specify']
-              : `${condition.Condition}, `}
-            {condition['Starting clinical status'] &&
-              `${(<b>Starting Clinical Status:</b>)}${
-                condition['Starting clinical status']
-              }, `}
-            {condition['Current clinical status'] &&
-              `${(<b>Current Clinical Status:</b>)}${
-                condition['Current clinical status']
-              }, `}
-            <b>Condition Status:</b> {condition['Condition Status']}
-          </li>
-        ))}
+        {conditions.map((condition: any, index: number) => {
+          return (
+            <li
+              key={index}
+              style={{
+                borderBottom: '0.5px lightgrey solid',
+                paddingBottom: '2px',
+                marginBottom: '2px',
+              }}
+            >
+              {index + 1}.{' '}
+              {condition.Condition === 'Other'
+                ? condition['Other, specify']
+                : `${condition.Condition}, `}
+              {condition['Starting clinical status'] && (
+                <>
+                  <b>Starting Clinical Status: </b>
+                  {condition['Starting clinical status']},
+                </>
+              )}
+              {condition['Current clinical status'] && (
+                <>
+                  <b>Current Clinical Status: </b>
+                  {condition['Current clinical status']},
+                </>
+              )}
+              <b>Condition Status:</b> {condition['Condition Status']}
+            </li>
+          )
+        })}
       </div>
 
       <Hmp />

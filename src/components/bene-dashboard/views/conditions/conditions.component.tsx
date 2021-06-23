@@ -93,6 +93,7 @@ const Conditions = () => {
           defaultNoElements={6}
           elementIncrement={6}
           paginate
+          conditionComponent
         />
       )}
       {isError && (

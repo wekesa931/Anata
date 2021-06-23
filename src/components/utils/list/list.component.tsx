@@ -23,6 +23,7 @@ type ListProps = {
   onEdit?: (values: { id: string; fields: any }) => Promise<any>
   listItemActions?: (openItem: any, callback: () => null) => JSX.Element | null
   editableFields?: AirtableField[]
+  conditionComponent?: boolean
 }
 
 const List = ({
@@ -39,6 +40,7 @@ const List = ({
   onEdit,
   listItemActions,
   editableFields,
+  conditionComponent,
 }: ListProps) => {
   const [isHovering, setIsHovering] = useState<number>()
   const [openItem, setOpenItem] = useState<{
@@ -159,7 +161,29 @@ const List = ({
                         </div>
                       </Tooltip>
                       <div style={{ flex: 1 }}>
-                        <div className="text-normal">{item.name}</div>
+                        {!conditionComponent ? (
+                          <div className="text-normal">{item.name}</div>
+                        ) : (
+                          <div>
+                            {item.data.Condition === 'Other'
+                              ? item.data['Other, specify']
+                              : `${item.data.Condition}, `}
+                            {item.data['Starting clinical status'] && (
+                              <>
+                                <b>Starting Clinical Status: </b>
+                                {item.data['Starting clinical status']},
+                              </>
+                            )}
+                            {item.data['Current clinical status'] && (
+                              <>
+                                <b>Current Clinical Status: </b>
+                                {item.data['Current clinical status']},
+                              </>
+                            )}
+                            <b>Condition Status:</b>{' '}
+                            {item.data['Condition Status']}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </button>
