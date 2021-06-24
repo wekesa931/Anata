@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import MenuDotsIcon from '../../assets/img/icons/menu_dots.svg'
 import styles from './navbar.component.css'
@@ -8,6 +8,7 @@ import SearchInput from '../search/search.component'
 import Icon from '../utils/icon/icon.component'
 import analytics from '../../helpers/segment'
 import TaskMenu from './task-menu/task-menu.component'
+import useClickOutside from '../../hooks/click-outside-hook'
 
 const UserMenu = () => {
   const user = useUser()
@@ -45,9 +46,12 @@ const UserMenu = () => {
 const NavBar = () => {
   const [showUserMenu, setShowUserMenu] = useState<boolean>(false)
   const [showTasksMenu, setShowTasksMenu] = useState<boolean>(false)
-
+  const nodeRefCal = useRef<HTMLButtonElement>(null)
+  const nodeRefUser = useRef<HTMLButtonElement>(null)
+  useClickOutside(nodeRefUser, () => setShowTasksMenu(false))
+  useClickOutside(nodeRefUser, () => setShowUserMenu(false))
   return (
-    <div className={styles.navWrapper}>
+    <div className={styles.navWrapper} data-testid="container-calender-btn">
       <div className={styles.navbar}>
         <SearchInput />
 
@@ -55,6 +59,8 @@ const NavBar = () => {
           <button
             className="btn-icon"
             onClick={() => setShowTasksMenu(!showTasksMenu)}
+            ref={nodeRefCal}
+            data-testid="calender-btn"
           >
             <Icon name="calendar-dates" fill="var(--greyscale-6)" />
           </button>
@@ -66,6 +72,7 @@ const NavBar = () => {
             className="btn-icon"
             onClick={() => setShowUserMenu(!showUserMenu)}
             data-testid="user-menu-btn"
+            ref={nodeRefUser}
           >
             <Icon name="user" fill="var(--greyscale-6)" />
           </button>
