@@ -29,13 +29,13 @@ function CommsProvider({ children }: any) {
   const [registered, setregistered] = useState<boolean>(false)
 
   React.useEffect(() => {
-    if (!registered) {
+    if (!registered && user) {
       const getToken = async () => {
         try {
           const token = await getRegToken()
           const response = await saveFCMToken({
             variables: {
-              identifier: user?.email,
+              identifier: user.email,
               token,
             },
           })
@@ -50,7 +50,7 @@ function CommsProvider({ children }: any) {
       getToken()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [user])
 
   return (
     <CommsContext.Provider

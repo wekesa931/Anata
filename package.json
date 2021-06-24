@@ -91,6 +91,7 @@
     "history": "^4.10.1",
     "jwt-decode": "^3.0.0",
     "kremling": "^2.0.4",
+    "mock-apollo-client": "^1.1.0",
     "node-fetch": "^2.6.1",
     "path": "^0.12.7",
     "query-string": "^6.13.7",
@@ -108,7 +109,6 @@
     "throttle-debounce": "^2.3.0",
     "watchpack-chokidar2": "^2.0.1",
     "webpack-bundle-analyzer": "^3.8.0",
-    "mock-apollo-client": "^1.1.0",
     "yup": "^0.29.3"
   },
   "husky": {
