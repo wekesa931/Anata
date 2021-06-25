@@ -1,6 +1,6 @@
 import React from 'react'
 import NavBar from './navbar.component'
-import { render, screen, fireEvent, act, waitFor ,cleanup} from '@testing-library/react'
+import { render, screen, fireEvent, waitFor ,cleanup} from '@testing-library/react'
 
 
 jest.mock('../../helpers/analytics', () => {
@@ -22,7 +22,16 @@ describe.only('<Navbar', () => {
     const outside = await screen.findByTestId('user-menu-btn')
     waitFor(async ()=>{
      await fireEvent.click(outside)
-    } ) 
+    } )
     expect (contentByTxt).not.toBeInTheDocument()
+  }) 
+  it ('should show tips on hover', async() => {
+    render(<NavBar/>)
+    const profile = screen.getByTestId('user-menu-btn')
+    await waitFor(()=> {
+      fireEvent.mouseEnter(profile, { bubbles: true })
+      expect(screen.findByText('Profile')).toBeTruthy()
+    }) 
+    
   })
 })

@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
-import MenuDotsIcon from '../../assets/img/icons/menu_dots.svg'
 import styles from './navbar.component.css'
 import { useUser } from '../../context/user-context'
 import { useAuth } from '../../context/auth-context'
@@ -8,6 +7,7 @@ import SearchInput from '../search/search.component'
 import Icon from '../utils/icon/icon.component'
 import analytics from '../../helpers/segment'
 import TaskMenu from './task-menu/task-menu.component'
+import Tooltip from '../utils/tooltip/tooltip.component'
 import useClickOutside from '../../hooks/click-outside-hook'
 
 const UserMenu = () => {
@@ -20,7 +20,6 @@ const UserMenu = () => {
     analytics.track('User LoggedOut')
     history.push('/login')
   }
-
   return (
     user && (
       <div className={styles.userMenuContainer}>
@@ -46,9 +45,9 @@ const UserMenu = () => {
 const NavBar = () => {
   const [showUserMenu, setShowUserMenu] = useState<boolean>(false)
   const [showTasksMenu, setShowTasksMenu] = useState<boolean>(false)
-  const nodeRefCal = useRef<HTMLButtonElement>(null)
-  const nodeRefUser = useRef<HTMLButtonElement>(null)
-  useClickOutside(nodeRefUser, () => setShowTasksMenu(false))
+  const nodeRefCal = useRef<HTMLDivElement>(null)
+  const nodeRefUser = useRef<HTMLDivElement>(null)
+  useClickOutside(nodeRefCal, () => setShowTasksMenu(false))
   useClickOutside(nodeRefUser, () => setShowUserMenu(false))
   return (
     <div className={styles.navWrapper} data-testid="container-calender-btn">
@@ -56,30 +55,36 @@ const NavBar = () => {
         <SearchInput />
 
         <div className="d-flex flex-align-center flex-justify-end flex-one">
-          <button
-            className="btn-icon"
-            onClick={() => setShowTasksMenu(!showTasksMenu)}
-            ref={nodeRefCal}
-            data-testid="calender-btn"
-          >
-            <Icon name="calendar-dates" fill="var(--greyscale-6)" />
-          </button>
-          <button className="btn-icon">
-            <MenuDotsIcon className="icon-white" />
-          </button>
-
-          <button
-            className="btn-icon"
-            onClick={() => setShowUserMenu(!showUserMenu)}
-            data-testid="user-menu-btn"
-            ref={nodeRefUser}
-          >
-            <Icon name="user" fill="var(--greyscale-6)" />
-          </button>
+          <Tooltip title="Tasks">
+            <button
+              className="btn-icon"
+              onClick={() => setShowTasksMenu(!showTasksMenu)}
+              data-testid="calender-btn"
+            >
+              <Icon name="calendar-dates" fill="var(--greyscale-6)" />
+            </button>
+          </Tooltip>
+          <Tooltip title="Profile">
+            <button
+              className="btn-icon"
+              onClick={() => setShowUserMenu(!showUserMenu)}
+              data-testid="user-menu-btn"
+            >
+              <Icon name="user" fill="var(--greyscale-6)" />
+            </button>
+          </Tooltip>
         </div>
       </div>
-      {showUserMenu && <UserMenu />}
-      {showTasksMenu && <TaskMenu />}
+      {showUserMenu && (
+        <div ref={nodeRefUser}>
+          <UserMenu />
+        </div>
+      )}
+      {showTasksMenu && (
+        <div ref={nodeRefCal}>
+          <TaskMenu />
+        </div>
+      )}
     </div>
   )
 }
