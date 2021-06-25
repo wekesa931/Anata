@@ -50,10 +50,10 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
       member_details: [
         {
           antara_id: getAntaraId(currentMember),
-          member_phone: currentMember.phoneNumber,
-          receiver_phone: currentMember.phoneNumber,
-          full_name: currentMember.fullName,
-          airtable_rec_id: currentMember.airtable_rec_id,
+          member_phone: currentMember['Phone 1'],
+          receiver_phone: currentMember['Phone 1'],
+          full_name: currentMember['Full Name'],
+          airtable_rec_id: currentMember.recID,
         },
       ],
     }
