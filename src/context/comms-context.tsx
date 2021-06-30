@@ -43,7 +43,6 @@ function CommsProvider({ children }: any) {
             setregistered(true)
           }
         } catch (e) {
-          Toasts.showErrorNotification()
           logError(e)
         }
       }
