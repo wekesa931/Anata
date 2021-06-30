@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { SAVE_FCM_TOKEN } from '../gql/comms'
 import { getRegToken } from '../comms/fcm'
 import { useUser } from './user-context'
-import Toasts from '../helpers/toast'
 import logError from '../components/utils/Bugsnag/Bugsnag'
 
 type CommsStatus = {
