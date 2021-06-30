@@ -155,7 +155,7 @@ const UpNextTask = ({ allTasks, dueDate }: any) => {
       <div className="up-next-content" key={index}>
         <div>
           <p>{task.data[0].value}</p>
-          <div className="due-date">Due {due.slice(0, -2)}</div>
+          <div className="due-date due-color">Due {due.slice(0, -2)}</div>
         </div>
         <div>
           {task.data[5].Type &&

@@ -57,7 +57,7 @@ const CallConsoleForms = () => {
   }
 
   return (
-    <div style={{ height: '75%' }}>
+    <div style={{ height: '65%' }}>
       <div
         style={{ borderBottom: focused ? '2px solid #e8eaed' : 'none' }}
         className="d-flex flex-between align-center call-forms"
@@ -91,7 +91,7 @@ const CallConsoleForms = () => {
       {showError ? (
         <Notification title="Warning" message="No form with that name exists" />
       ) : (
-        <div className="scroll max-height call-forms-list">
+        <div className="scroll call-forms-list">
           {filteredForms.map((form) => (
             <button
               // @ts-ignore

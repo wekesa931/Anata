@@ -1,21 +1,25 @@
-import * as React from 'react'
+import React, { useState } from 'react'
+import { Repeat, AlertTriangle, PhoneForwarded } from 'react-feather'
 import Icon from '../../../utils/icon/icon.component'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import { useCall } from '../../../../context/calls-context'
 import { useMember } from '../../../../context/member.context'
 import Timer from '../../../../comms/components/calls/CountUp'
 import CallConsoleForms from './forms'
+import HNAndCSList from './staff.component'
 
 const CallFloatingBox = () => {
   const { member } = useMember()
   const [isOpen, setisOpen] = React.useState(true)
   const { activeCall, completeCall } = useCall()
+  const [showTransferList, setshowTransferList] = useState(false)
 
   const isRinging = activeCall?.state === 'RINGING'
   const participantBusy = activeCall?.state === 'MEMBERMISSED'
   const staffBusy = activeCall?.state === 'STAFFMISSED'
   const isActive = activeCall?.state === 'ONGOING'
   const isFulfilled = activeCall?.state === 'FULFILLED'
+  const isTransfered = activeCall?.state === 'TRANSFERED'
   const participantLeft = activeCall?.state === 'MEMBERLEFT'
 
   const subTitle = () => {
@@ -34,20 +38,22 @@ const CallFloatingBox = () => {
 
   const callColorCodes = {
     CALLENDED: '#182c4c',
-    INBOUND: '#70e381',
+    INBOUND: '#1084ee',
     OUTBOUND: '#1084ee',
     ONGOING: '#ebfbed',
     MEMBERMISSED: '#ffebea',
     STAFFMISSED: '#ffebea',
     MEMBERLEFT: '#ffebea',
     FULFILLED: '#f9fafc',
+    TRANSFERED: '#f9fafc',
     RINGING: '#f9fafc',
   }
 
   const consoleColor = () => {
     if (
       activeCall?.state === 'FULFILLED' ||
-      activeCall?.state === 'STAFFMISSED'
+      activeCall?.state === 'STAFFMISSED' ||
+      activeCall?.state === 'TRANSFERED'
     ) {
       return '#182c4c'
     }
@@ -71,17 +77,15 @@ const CallFloatingBox = () => {
         style={{
           backgroundColor: activeCall && consoleColor(),
         }}
-        className="call-header d-flex flex-between align-center"
+        className="relative call-header d-flex flex-between align-center"
       >
+        {showTransferList && <HNAndCSList displayList={setshowTransferList} />}
         <div style={{ width: '40%' }}>
           <p className="call-type-title">
             {activeCall.title ?? 'Inbound Call'}
           </p>
-          {activeCall?.date && (
-            <p className="call-floating-date">{new Date().toDateString()}</p>
-          )}
         </div>
-        {isFulfilled || participantBusy || staffBusy ? (
+        {isFulfilled || participantBusy || staffBusy || isTransfered ? (
           <span
             className="pointer"
             role="button"
@@ -125,6 +129,19 @@ const CallFloatingBox = () => {
           </span>
         )}
       </div>
+      {activeCall.forwardTo && !isTransfered && (
+        <div className="forward-to flex-between">
+          <div className="d-flex mt-ten">
+            <span>
+              <PhoneForwarded className="icon-style" />
+            </span>
+            <p>Calling {activeCall.forwardTo}</p>
+          </div>
+          <div className="mt-ten">
+            <LoadingIcon />
+          </div>
+        </div>
+      )}
       {(participantBusy || staffBusy) && (
         <div className="no-answer">
           <div
@@ -145,11 +162,47 @@ const CallFloatingBox = () => {
           </div>
         </div>
       )}
+
+      {isTransfered && (
+        <div className="no-answer">
+          <div
+            className="d-flex flex-center align-center"
+            style={{ color: '#98eba5' }}
+          >
+            <PhoneForwarded className="icon-style-large" />
+          </div>
+          <p>{activeCall.title}</p>
+          <p>transfered</p>
+          <div className="task-created d-flex align-center">
+            <p>{activeCall.forwardTo}</p>
+          </div>
+        </div>
+      )}
+
       {(isActive ||
         isFulfilled ||
         participantBusy ||
         participantLeft ||
+        isTransfered ||
         staffBusy) && <CallConsoleForms />}
+      {!activeCall.forwardTo && !isTransfered && (
+        <div className="full-width d-flex flex-end transfer-container">
+          <button className="d-flex emergency-btn" onClick={() => null}>
+            <AlertTriangle
+              className="emergency-btn-icon"
+              style={{ width: 16, height: 16 }}
+            />
+            <p>Emergency</p>
+          </button>
+          <button
+            className="d-flex"
+            onClick={() => setshowTransferList(!showTransferList)}
+          >
+            <Repeat style={{ width: 16, height: 16 }} />
+            <p>Transfer to</p>
+          </button>
+        </div>
+      )}
     </div>
   )
 }

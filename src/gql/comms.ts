@@ -18,6 +18,23 @@ const SAVE_FCM_TOKEN = gql`
   }
 `
 
+const TRANSFER_CALL = gql`
+  mutation transferCall(
+    $phoneNumber: String!
+    $session: String!
+    $staffEmail: String!
+  ) {
+    transferCall(
+      phoneNumber: $phoneNumber
+      session: $session
+      staffEmail: $staffEmail
+    ) {
+      status
+      message
+    }
+  }
+`
+
 const MEMBER_CONTACT_DETAILS = gql`
   query beneficiary($antaraId: String!) {
     beneficiary(antaraId: $antaraId) {
@@ -74,4 +91,10 @@ const GET_CALL_LOG = gql`
 `
 
 // eslint-disable-next-line import/prefer-default-export
-export { MAKE_CALL, SAVE_FCM_TOKEN, MEMBER_CONTACT_DETAILS, GET_CALL_LOG }
+export {
+  MAKE_CALL,
+  SAVE_FCM_TOKEN,
+  MEMBER_CONTACT_DETAILS,
+  GET_CALL_LOG,
+  TRANSFER_CALL,
+}

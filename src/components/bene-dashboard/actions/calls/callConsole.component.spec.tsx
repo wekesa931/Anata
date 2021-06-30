@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { MockedProvider } from '@apollo/client/testing'
 import { act } from 'react-dom/test-utils'
 import { screen, cleanup, fireEvent } from '@testing-library/react'

@@ -3,8 +3,9 @@ import { useMutation, useQuery } from '@apollo/client'
 import { useLocation } from 'react-router-dom'
 import { useMember } from './member.context'
 import { useUser } from './user-context'
-import { GET_CALL_LOG, MAKE_CALL } from '../gql/comms'
+import { GET_CALL_LOG, MAKE_CALL, TRANSFER_CALL } from '../gql/comms'
 import useFCMState from '../comms/fcm/fcm.hook'
+import logError from '../components/utils/Bugsnag/Bugsnag'
 
 export type ILogs = {
   node: {
@@ -15,6 +16,7 @@ export type ILogs = {
     sessionStarted: boolean
     memberPhone: string
     memberAirtableId: string
+    roomName: string
   }
 }
 
@@ -32,11 +34,14 @@ type Call = {
     | 'STAFFMISSED'
     | 'MEMBERMISSED'
     | 'MEMBERLEFT'
+    | 'TRANSFERED'
   assigned: string
   date?: Date
   duration?: string
   initialCallTime: number
   member: string
+  forwardTo?: string
+  session?: string
 }
 
 type ContextType = {
@@ -45,11 +50,17 @@ type ContextType = {
   callError?: string | null
   completeCall: () => void
   initiateCall: (callContact: CallContact, onCallInitiated: () => void) => void
+  initiateTransfer: (staff: {
+    phone: string
+    email: string
+    fullName: string
+  }) => void
   setCounterValue: () => void
 }
 
 const CallContext = React.createContext<ContextType>({
   initiateCall: () => null,
+  initiateTransfer: () => null,
   completeCall: () => null,
   setCounterValue: () => null,
 })
@@ -63,6 +74,7 @@ function CallProvider({ children }: any) {
   const [callError, setcallError] = useState<string | null>(null)
   const { fcmState } = useFCMState()
   const [initiateConferenceCall] = useMutation(MAKE_CALL)
+  const [initiateCallTransfer] = useMutation(TRANSFER_CALL)
   const user = useUser()
   const { data } = useQuery(GET_CALL_LOG)
   const location = useLocation()
@@ -112,7 +124,7 @@ function CallProvider({ children }: any) {
         )
 
         if (isActiveCallingMember) {
-          setActiveCall(call)
+          setActiveCall({ ...call, session: ongoingCall.roomName })
         }
       }
     }
@@ -126,6 +138,7 @@ function CallProvider({ children }: any) {
    * */
   useEffect(() => {
     if (activeCall?.state !== 'FULFILLED') {
+      let conferenceName = ''
       const callUpdates: Call = {} as Call
       const isStaff = fcmState.data.is_staff === 'true'
       if (fcmState.notification.title === 'Call Ongoing') {
@@ -154,7 +167,17 @@ function CallProvider({ children }: any) {
           callUpdates.state = 'MEMBERLEFT'
         }
       }
-      setActiveCall({ ...activeCall, ...callUpdates })
+      if (fcmState.data.conference) {
+        conferenceName = fcmState.data.conference
+      }
+
+      if (Object.keys(callUpdates).length !== 0) {
+        setActiveCall({
+          ...activeCall,
+          ...callUpdates,
+          session: conferenceName,
+        })
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fcmState.notification.title])
@@ -180,6 +203,42 @@ function CallProvider({ children }: any) {
     }
     setcallError('Invalid or No number found for member')
     return null
+  }
+
+  const initiateTransfer = ({
+    phone,
+    email,
+    fullName,
+  }: {
+    phone: string
+    email: string
+    fullName: string
+  }) => {
+    if (activeCall) {
+      setActiveCall({ ...activeCall, forwardTo: fullName })
+    }
+    initiateCallTransfer({
+      variables: {
+        phoneNumber: phone,
+        staffEmail: email,
+        session: activeCall?.session,
+      },
+    })
+      .then((response) => {
+        if (response.data.transferCall.status === 200) {
+          if (activeCall) {
+            setActiveCall({
+              ...activeCall,
+              state: 'TRANSFERED',
+              forwardTo: fullName,
+            })
+          }
+        }
+      })
+      .catch((e) => {
+        setcallError(e.message)
+        logError(e.message)
+      })
   }
 
   const initiateCall = (
@@ -237,6 +296,7 @@ function CallProvider({ children }: any) {
         callError,
         completeCall,
         initiateCall,
+        initiateTransfer,
         setCounterValue,
       }}
     >

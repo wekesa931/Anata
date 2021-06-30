@@ -20,7 +20,7 @@
   border-left: 4px solid var(--orange-base);
   cursor: pointer;
 }
-.noborder{
+.noborder {
   background: #ffffff;
   white-space: wrap;
   display: flex;
@@ -53,6 +53,6 @@
   padding: 4px;
   border-radius: 4px;
 }
-.justify-start{
+.justify-start {
   justify-content: start;
 }

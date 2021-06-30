@@ -52,7 +52,7 @@
   transform: rotate(46deg);
 }
 
-.taskContainerInner{
+.taskContainerInner {
   font-weight: 500;
   font-size: 14;
   color: #182c4c;
@@ -61,19 +61,16 @@
   width: 100%;
   flex-direction: column;
 }
-.taskDiv{
-  display:flex;
-  justify-content: space-between
+.taskDiv {
+  display: flex;
+  justify-content: space-between;
 }
-.taskDue{
-
-    font-weight: 500;
-    font-size: 14;
-    color: #8b95a5;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    align-items: center
-
+.taskDue {
+  font-weight: 500;
+  font-size: 14;
+  color: #8b95a5;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
 }
-
