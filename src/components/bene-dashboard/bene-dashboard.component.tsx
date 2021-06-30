@@ -6,6 +6,7 @@ import styles from './bene-dashboard.component.css'
 import Views from './views/views.component'
 import Actions from './actions/actions.component'
 import Fetcher from '../utils/fetcher/fetcher'
+import ErrorBoundary from '../error-boundary/error-boundary.component'
 import analytics from '../../helpers/segment'
 import { MemberProvider } from '../../context/member.context'
 import { CallProvider } from '../../context/calls-context'
@@ -43,7 +44,9 @@ const PatientDashboard = () => {
           <CallProvider>
             <div className={styles.container}>
               <div className="dashboard-content dashboard-raised-content padding-top-32">
-                <BioData />
+                <ErrorBoundary>
+                  <BioData />
+                </ErrorBoundary>
               </div>
               <div
                 className="dashboard-content padding-top-32"

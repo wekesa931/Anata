@@ -7,6 +7,7 @@ import Icon from '../../utils/icon/icon.component'
 import CallsCallout from './calls/calls.component'
 import CallFloatingBox from './calls/callConsole.component'
 import { useCall } from '../../../context/calls-context'
+import ErrorBoundary from '../../error-boundary/error-boundary.component'
 
 const Actions = () => {
   const tabs = ['Actions', 'Forms', 'Meetings']
@@ -60,16 +61,24 @@ const Actions = () => {
       </div>
       <div className="flex-scroll">
         <div className={activeTab === tabs[0] ? '' : 'hidden'}>
-          <Tasks />
+          <ErrorBoundary>
+            <Tasks />
+          </ErrorBoundary>
         </div>
         <div className={activeTab === tabs[1] ? '' : 'hidden'}>
-          <Forms />
+          <ErrorBoundary>
+            <Forms />
+          </ErrorBoundary>
         </div>
         <div className={activeTab === tabs[2] ? '' : 'hidden'}>
-          <Meetings />
+          <ErrorBoundary>
+            <Meetings />
+          </ErrorBoundary>
         </div>
         <div className={activeTab === 'Messages' ? '' : 'hidden'}>
-          <Communication />
+          <ErrorBoundary>
+            <Communication />
+          </ErrorBoundary>
         </div>
       </div>
     </div>

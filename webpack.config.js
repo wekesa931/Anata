@@ -66,18 +66,6 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': env,
     }),
-    new BugsnagBuildReporterPlugin({
-        apiKey: '08051b1d342d0c2d6b7102d7e046b02d',
-        appVersion: package.version
-      },
-      {}
-    ),
-    new BugsnagSourceMapUploaderPlugin({
-        apiKey: '08051b1d342d0c2d6b7102d7e046b02d',
-        appVersion: package.version,
-        overwrite: true
-      }
-    ),
     new webpack.optimize.ModuleConcatenationPlugin(),
   ],
   devtool: 'sourcemap',
@@ -90,4 +78,20 @@ module.exports = {
     contentBase: './',
     hot: true,
   },
+}
+
+if (process.env.NODE_ENV == 'production') {
+  module.exports.plugins.push(
+    new BugsnagBuildReporterPlugin({
+        apiKey: '08051b1d342d0c2d6b7102d7e046b02d',
+        appVersion: package.version
+      },
+      {}
+    ),
+    new BugsnagSourceMapUploaderPlugin({
+      apiKey: '08051b1d342d0c2d6b7102d7e046b02d',
+      appVersion: package.version,
+      overwrite: true
+    })
+  );
 }
