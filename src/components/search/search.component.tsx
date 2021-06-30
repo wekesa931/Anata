@@ -66,6 +66,7 @@ const SearchInput = () => {
         bene: item.id,
       })
       history.push(`/member/${item.id}`)
+      location.reload()
     }
     // clear selection
     stateAndHelpers.clearSelection()
