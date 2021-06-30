@@ -7,11 +7,10 @@
 .notes {
   background: #ffffff;
   border: 1px solid var(--blue-light);
-  border-left: 4px solid var(--turquoise-base);
   box-sizing: border-box;
   border-radius: 4px;
-  padding: 8px 8px 8px 4px;
   white-space: wrap;
+  padding: 8px 8px 8px 4px;
   display: flex;
   position: relative;
   align-items: center;
@@ -20,6 +19,14 @@
 .notes:hover {
   border-left: 4px solid var(--orange-base);
   cursor: pointer;
+}
+.noborder{
+  background: #ffffff;
+  white-space: wrap;
+  display: flex;
+  position: relative;
+  align-items: center;
+  border: none;
 }
 
 .showIcon {
@@ -45,4 +52,7 @@
   border: 1px solid var(--blue-light) !important;
   padding: 4px;
   border-radius: 4px;
+}
+.justify-start{
+  justify-content: start;
 }

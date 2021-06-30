@@ -4,4 +4,5 @@
   background: var(--blue-bg);
   height: 100%;
   border-radius: 16px 0 0 0;
+  position: relative;
 }

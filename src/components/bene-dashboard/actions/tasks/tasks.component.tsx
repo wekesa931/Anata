@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
+import calendar from 'dayjs/plugin/calendar'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
+import { User, ExternalLink } from 'react-feather'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import List from '../../../utils/list/list.component'
 import Icon from '../../../utils/icon/icon.component'
@@ -130,16 +132,52 @@ function useMergedRecords(airtableRecords, apiRecords) {
   return mergedRecords
 }
 
+const UpNextTask = ({ allTasks, dueDate }: any) => {
+  let upnext = []
+  const upNextTasks = (tasks) => {
+    const val = tasks
+      .filter((task: any) => task.data.find(({ name }: any) => name === 'Type'))
+      .sort(
+        (a: any, b: any) =>
+          Date.parse(b.data[5]['Due Date']) - Date.parse(a.data[5]['Due Date'])
+      )
+    return val
+  }
+  try {
+    upnext = upNextTasks(allTasks)
+  } catch (error) {
+    upnext = []
+  }
+
+  return upnext.slice(0, 2).map((task, index) => {
+    const due = dueDate(task.data[5]['Due Date'])
+    return (
+      <div className="up-next-content" key={index}>
+        <div>
+          <p>{task.data[0].value}</p>
+          <div className="due-date">Due {due.slice(0, -2)}</div>
+        </div>
+        <div>
+          {task.data[5].Type &&
+            task.data[5].Type.toLowerCase().includes('call') && (
+              <CallsCallout />
+            )}
+        </div>
+      </div>
+    )
+  })
+}
+
 const Tasks = () => {
   const [allTasks, setAllTasks] = useState<any[]>([])
   const [filteredTasks, setFilteredTasks] = useState<any[]>([])
 
   const status = [
     'Complete',
-    'Not Started',
     'In Progress',
     'Cancelled',
     'Not Applicable',
+    'All Incomplete',
   ]
   const { recId } = useParams()
   const fields = [
@@ -209,51 +247,54 @@ const Tasks = () => {
     function renderDisplayInfo(hnTask: any) {
       return () => (
         <div className={styles.taskContainer}>
-          <span className="text-bold">
-            {dayjs(hnTask['Due Date']).format('DD MMM YYYY')}
-          </span>
-          <span>{hnTask.Type}</span>
-          {hnTask['Prescription Drug Names'] && (
-            <PrescriptionName
-              value={hnTask['Prescription Drug Names']}
-              otherMeds={hnTask['Other Prescription Drug Name']}
-            />
-          )}
-          <div className="d-flex flex-align-center">
-            {hnTask['Open URL'] && hnTask['Open URL'].url && (
-              <Tooltip title="Open URL">
-                <a
-                  href={hnTask['Open URL'].url}
-                  target="__blank"
-                  className="btn-unstyled"
-                  data-testid="task-url-link"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Icon
-                    name="external-link"
-                    width={16}
-                    height={16}
-                    fill="var(--blue-base)"
-                  />
-                </a>
-              </Tooltip>
-            )}
-
-            {hnTask.Type && hnTask.Type.toLowerCase().includes('call') && (
-              <CallsCallout />
-            )}
-
-            <div className="p-relative margin-left-8">
-              {hnTask['Assigned HN Name'] && (
-                <Tooltip title={hnTask['Assigned HN Name']}>
-                  {!hnTask['Assigned HN Name'].includes('Antara Bot') ? (
-                    <Icon name="user" fill="var(--greyscale-2)" />
-                  ) : (
-                    <Icon name="lightning" fill="var(--greyscale-2)" />
-                  )}
+          <div className={styles.taskContainerInner}>
+            <div className={styles.taskDiv}>
+              <span>{hnTask.Type}</span>
+              {hnTask['Prescription Drug Names'] && (
+                <PrescriptionName
+                  value={hnTask['Prescription Drug Names']}
+                  otherMeds={hnTask['Other Prescription Drug Name']}
+                />
+              )}
+              {hnTask['Open URL'] && hnTask['Open URL'].url && (
+                <Tooltip title="Open URL">
+                  <a
+                    href={hnTask['Open URL'].url}
+                    target="__blank"
+                    className="btn-unstyled"
+                    data-testid="task-url-link"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <ExternalLink width={16} height={16} />
+                  </a>
                 </Tooltip>
               )}
+              {hnTask.Type && hnTask.Type.toLowerCase().includes('call') && (
+                <CallsCallout />
+              )}
             </div>
+
+            <div className="p-relative">
+              {hnTask['Assigned HN Name'] && (
+                <div>
+                  {!hnTask['Assigned HN Name'].includes('Antara Bot') ? (
+                    <div>
+                      <User width={16} height={16} />
+                      <span> {hnTask['Assigned HN Name']}</span>
+                    </div>
+                  ) : (
+                    <div>
+                      <User width={16} height={16} />
+                      <span> {hnTask['Assigned HN Name']}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+          <div className={styles.taskDue}>
+            <span className="status">{hnTask.Status}</span>
+            <span>{dayjs(hnTask['Due Date']).format('DD MMM YYYY')}</span>
           </div>
         </div>
       )
@@ -313,6 +354,7 @@ const Tasks = () => {
         return ''
     }
   }
+
   const getPriority = (record: any[]) => {
     const field = record.reduce(
       (obj, { name, value }) => ({ ...obj, [name]: value }),
@@ -325,7 +367,6 @@ const Tasks = () => {
           <span className="text-bold text-capitalize">
             {field['Task Priority']} priority
           </span>
-          <span className="text-capitalize">{` (${field.Status})`}</span>
         </span>
       ) : (
         <span className={getPriorityColor(field['Task Priority'])}>
@@ -340,6 +381,7 @@ const Tasks = () => {
     }
     return `No Priority (${field.Status})`
   }
+
   const getTaskNotes = (record: any) => {
     if (record.Status !== 'Complete') {
       return record['Task Notes']
@@ -372,28 +414,46 @@ const Tasks = () => {
     )
   }
 
+  const dueDate = (val: any) => {
+    dayjs.extend(calendar)
+    return dayjs(val).calendar(dayjs(), {
+      sameDay: '[Today] h:mm A',
+      nextDay: '[Tomorrow] h:mm A',
+      nextWeek: 'dddd [] h:mm A',
+      lastDay: '[Yesterday] h:mm A',
+      lastWeek: '[Last] dddd [] h:mm A',
+      sameElse: 'DD/MM/YYYY',
+    })
+  }
+
   return (
     <>
-      <div>
-        <div
-          className="d-flex flex-align-center"
-          style={{ justifyContent: 'space-between' }}
-        >
+      <div className="margin-top-16">
+        {allTasks && (
+          <>
+            <p className="up-next">Up next</p>
+            <UpNextTask
+              allTasks={allTasks}
+              getTaskNotes={getTaskNotes}
+              dueDate={dueDate}
+            />
+          </>
+        )}
+        <div className="justify-start d-flex flex-align-center">
           <h4>Tasks</h4>
           <div>
             <select
               onChange={(e) => setFilteredTasks(filterByStatus(e.target.value))}
-              className="form-control"
+              className="remove-border form-control"
               data-testid="status-filter"
             >
-              <option key="all">All Incomplete</option>
+              <option key="Not Started">Not Started</option>
               {status.map((stat) => (
                 <option key={stat}>{stat}</option>
               ))}
             </select>
           </div>
         </div>
-
         {allTasks &&
           !isAirtableLoading &&
           !isApiLoading &&
@@ -407,6 +467,7 @@ const Tasks = () => {
               emptyListText="No tasks found."
               editable
               onEdit={updateTask}
+              upNext
             />
           )}
         {/* Only show the Loading Message if either data sources are loading */}

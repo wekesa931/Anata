@@ -72,7 +72,6 @@ describe('<Tasks />', () => {
     const list = await screen.findByTestId('data-list')
     const secondItem = list.children[0]
     expect(list.children.length).toBe(2)
-    expect(await findByText(secondItem, /Not Started/i)).not.toBeNull()
     expect(await findByText(secondItem, /High Priority/i)).not.toBeNull()
     expect(await findByText(secondItem, /19 Aug 2020/i)).not.toBeNull()
     expect(
@@ -80,6 +79,7 @@ describe('<Tasks />', () => {
         await findByText(secondItem, /High Priority/i)
       ).parentElement?.className
     ).toBe('text-danger')
+    expect(await findByText(secondItem, /19 Aug 2020/i)).not.toBeNull()
     expect(await findByText(secondItem, /Rx: Refill/i)).not.toBeNull()
   })
 
@@ -155,23 +155,15 @@ describe('<Tasks />', () => {
         value: 'Not Started',
       },
     })
-    expect(await screen.findByText('Not Started')).not.toBeNull()
+    expect(await screen.findAllByText('Not Started')).not.toBeNull()
     expect(list.children.length).toBe(1)
     fireEvent.change(selectBox, {
       target: {
-        value: 'Complete',
+        value: 'All',
       },
     })
     await waitFor(() => {
-      expect(list.children.length).toBe(7)
-    })
-    fireEvent.change(selectBox, {
-      target: {
-        value: 'All Incomplete',
-      },
-    })
-    await waitFor(() => {
-      expect(list.children.length).toBe(2)
+      expect(list.children.length).toBe(1)
     })
   })
 })

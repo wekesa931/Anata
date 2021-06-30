@@ -23,7 +23,9 @@ type ListProps = {
   onEdit?: (values: { id: string; fields: any }) => Promise<any>
   listItemActions?: (openItem: any, callback: () => null) => JSX.Element | null
   editableFields?: AirtableField[]
+  dueDate?: (data: any) => string | JSX.Element | null
   conditionComponent?: boolean
+  upNext?: boolean
 }
 
 const List = ({
@@ -41,6 +43,7 @@ const List = ({
   listItemActions,
   editableFields,
   conditionComponent,
+  upNext,
 }: ListProps) => {
   const [isHovering, setIsHovering] = useState<number>()
   const [openItem, setOpenItem] = useState<{
@@ -125,7 +128,6 @@ const List = ({
                 item.data && (
                   <button
                     style={{
-                      margin: '8px 0',
                       width: '100%',
                       textAlign: 'start',
                     }}
@@ -147,7 +149,13 @@ const List = ({
                         {getTopRightText && getTopRightText(item.data)}
                       </div>
                     </div>
-                    <div className={styles.notes}>
+                    <div
+                      className={
+                        upNext
+                          ? `${styles.noborder} ${styles.notes}`
+                          : `${styles.notes}`
+                      }
+                    >
                       <Tooltip title="Expand Record">
                         <div
                           style={{ width: '12px', marginRight: '6px' }}

@@ -31,7 +31,7 @@ const Sidebar = () => {
     items = SidebarMenuItems.slice(0, 8)
     items[3].rootUrl = `https://airtable.com/embed/${getMeetingsView()}?viewControls=on`
   } else if (path.includes('member')) {
-    items = SidebarMenuItems
+    items = SidebarMenuItems.slice(0, 8)
   }
   const handleDropDownMenu = (e: EventTarget) => {
     if (e.innerText === 'Tasks') {
