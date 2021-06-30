@@ -2,7 +2,7 @@ import * as React from 'react'
 import styles from './notification.component.css'
 
 export interface IProps {
-  title: 'Warning' | 'Error'
+  title: 'Warning' | 'Error' | 'Info'
   message: string
 }
 
@@ -10,10 +10,12 @@ const Notification = ({ message, title }: IProps) => {
   const backgroundColor = {
     Error: '#ffebea',
     Warning: '#fff5e5',
+    Info: '#ffcb80',
   }
   const textColor = {
     Warning: '#ff9800',
     Error: '#ff3b30',
+    Info: '#ff9800',
   }
   return (
     <div

@@ -21,7 +21,7 @@ import { useMember } from '../../../../context/member.context'
 
 type RecordWithId = { data: any; id: string }
 
-function useTransformedApiRecords(rawApiRecords) {
+function useTransformedApiRecords(rawApiRecords: any) {
   // Transforms HN Task records from Scribe API into the same format used by Airtable records
   const [apiRecords, setApiRecords] = useState<any[]>([])
 
@@ -42,7 +42,7 @@ function useTransformedApiRecords(rawApiRecords) {
     }
     // TODO: Replace this with a callback so that this custom hook
     // can be reused for other record types
-    const transformApiRecord = (node, mapData: any) => {
+    const transformApiRecord = (node: any, mapData: any) => {
       const data = Object.keys(node).reduce((acc, key) => {
         let airKey = mapData[key]
         let value = node[key]
@@ -160,7 +160,7 @@ const UpNextTask = ({ allTasks, dueDate }: any) => {
         <div>
           {task.data[5].Type &&
             task.data[5].Type.toLowerCase().includes('call') && (
-              <CallsCallout />
+              <CallsCallout tasksType="CALLBACK" airtableId={task.airtId} />
             )}
         </div>
       </div>
@@ -270,7 +270,7 @@ const Tasks = () => {
                 </Tooltip>
               )}
               {hnTask.Type && hnTask.Type.toLowerCase().includes('call') && (
-                <CallsCallout />
+                <CallsCallout tasksType="CALLBACK" airtableId={hnTask.airtId} />
               )}
             </div>
 
@@ -318,7 +318,7 @@ const Tasks = () => {
       const recordsWithMetadata = addKeyToValue(records).map(({ data, id }) => {
         return {
           data: includeFieldTypes(data),
-          name: getDisplayedInfo(data),
+          name: getDisplayedInfo({ ...data, airtId: id }),
           id, // Airtable Record ID
         }
       })

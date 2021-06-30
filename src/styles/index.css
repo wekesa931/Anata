@@ -243,6 +243,10 @@ h6,
   margin-top: 10px;
 }
 
+.ml-twenty {
+  margin-left: 20px;
+}
+
 .mb-ten {
   margin-bottom: 10px;
 }
@@ -781,6 +785,10 @@ a {
   display: none;
 }
 
+.white-text {
+  color: #ffffff;
+}
+
 .relative {
   position: relative;
 }
@@ -867,6 +875,7 @@ a {
 }
 
 .call-type-title {
+  margin-right: 3px;
   flex-grow: 0;
   font-family: Rubik, sans-serif;
   font-size: 20px;
@@ -877,6 +886,12 @@ a {
   letter-spacing: normal;
   text-align: left;
   color: #ffffff;
+}
+
+.info-icon {
+  cursor: pointer;
+  width: 13px;
+  height: 13px;
 }
 
 .call-floating-date {
@@ -1304,9 +1319,74 @@ a {
   color: #182c4c;
 }
 
+.history-callout {
+  position: absolute;
+
+  left: 125px;
+  top: 19px;
+  width: 304px;
+  height: 254px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2.8px 2.2px 0 rgba(0, 0, 0, 0.02),
+    0 6.7px 5.3px 0 rgba(0, 0, 0, 0.03), 0 12.5px 10px 0 rgba(0, 0, 0, 0.04),
+    0 22.3px 17.9px 0 rgba(0, 0, 0, 0.04), 0 41.8px 33.4px 0 rgba(0, 0, 0, 0.05),
+    0 100px 80px 0 rgba(0, 0, 0, 0.07);
+  border: solid 1px #e8eaed;
+  background-color: #ffffff;
+}
+
+.box-header {
+  width: 40%;
+  color: #ffffff;
+}
+
+.callback-history {
+  text-transform: capitalize;
+  width: 90px;
+  height: 18px;
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: #8b95a5;
+}
+
+.history-container {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.history-value {
+  width: 180px;
+  color: #182c4c !important;
+}
+
+.icon-size {
+  width: 16px;
+  height: 16px;
+}
+
+.active-staff {
+  width: 16px;
+  height: 16px;
+}
+
 .icon-style {
   width: 16px;
   height: 16px;
+  margin-left: 7px;
+  color: #8b95a5;
 }
 .icon-style-large {
   width: 34px;
@@ -1317,6 +1397,27 @@ a {
   margin: 0 !important;
 }
 
+.phone-off {
+  color: #ff9d97;
+}
+
+.phone-forward {
+  color: #98eba5;
+}
+
+.number-type {
+  color: #8b95a5;
+  font-size: 12px;
+}
+
+.task-form {
+  height: 65%;
+}
+
+.task-form-list {
+  color: #182c4c;
+}
+
 .up-next-content {
   display: flex;
   justify-content: space-between;
@@ -1325,12 +1426,10 @@ a {
   background-color: #f9fafc;
   height: 56px;
   width: 307px;
-  opacity: 0.8;
   padding: 8px;
 }
 .up-next-content p {
   flex-grow: 0;
-  opacity: 0.8;
   font-family: Rubik;
   font-size: 14px;
   font-weight: 500;

@@ -5,6 +5,7 @@ import ContactList from './contacts.component'
 import Notification from '../../../utils/notification/notification.component'
 import { useMember } from '../../../../context/member.context'
 import { useCall } from '../../../../context/calls-context'
+import DropDownComponent from '../../../../helpers/dropdown-helper'
 
 const nameSplitter = (name: string) => {
   const parts = name.split(' ', 2)
@@ -22,11 +23,17 @@ const Contacts = [
   { 'Emergency 2': null },
 ]
 
-const CallsCallout = () => {
+const CallsCallout = ({
+  tasksType,
+  airtableId,
+}: {
+  tasksType?: string
+  airtableId?: string
+}) => {
   const [memberContacts, setmemberContacts] = React.useState(Contacts)
   const { memberContact: loadedContacts } = useMember()
   const [isPhoneChooserOpen, setIsPhoneChooserOpen] = useState<boolean>(false)
-  const { callError } = useCall()
+  const { callError, setHistoryRecordId } = useCall()
 
   const checkProperties = (obj: any) => {
     // eslint-disable-next-line
@@ -41,6 +48,9 @@ const CallsCallout = () => {
   }
 
   const handleCallClick = (e: { stopPropagation: () => void }) => {
+    if (airtableId) {
+      setHistoryRecordId(airtableId)
+    }
     setIsPhoneChooserOpen(!isPhoneChooserOpen)
     e.stopPropagation()
   }
@@ -85,32 +95,38 @@ const CallsCallout = () => {
       >
         <Icon name="phone" fill="#efefef" width={16} height={16} />
       </a>
-
-      <div
-        data-testid="phone-list"
-        className="phone-number-callout"
-        style={{ display: isPhoneChooserOpen ? 'block' : 'none' }}
-      >
-        {callError && (
-          <div>
-            <Notification title="Error" message={callError ?? ''} />
+      {isPhoneChooserOpen && (
+        <DropDownComponent
+          isVisible={isPhoneChooserOpen}
+          setvisibility={setIsPhoneChooserOpen}
+        >
+          <div data-testid="phone-list" className="phone-number-callout">
+            {callError && (
+              <div>
+                <Notification title="Error" message={callError ?? ''} />
+              </div>
+            )}
+            {memberContacts.length > 0 ? (
+              memberContacts.map((con, i) => (
+                <div className="mb-ten" key={i}>
+                  <ContactList
+                    tasksType={tasksType}
+                    relevantContact={con}
+                    onCallInitiated={onCallInitiated}
+                  />
+                </div>
+              ))
+            ) : (
+              <div>
+                <Notification
+                  title="Error"
+                  message="No contact found for member"
+                />
+              </div>
+            )}
           </div>
-        )}
-        {memberContacts.length > 0 ? (
-          memberContacts.map((con, i) => (
-            <div className="mb-ten" key={i}>
-              <ContactList
-                relevantContact={con}
-                onCallInitiated={onCallInitiated}
-              />
-            </div>
-          ))
-        ) : (
-          <div>
-            <Notification title="Error" message="No contact found for member" />
-          </div>
-        )}
-      </div>
+        </DropDownComponent>
+      )}
     </div>
   )
 }

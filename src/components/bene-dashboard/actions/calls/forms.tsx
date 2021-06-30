@@ -57,13 +57,13 @@ const CallConsoleForms = () => {
   }
 
   return (
-    <div style={{ height: '65%' }}>
+    <div className="task-form">
       <div
         style={{ borderBottom: focused ? '2px solid #e8eaed' : 'none' }}
         className="d-flex flex-between align-center call-forms"
       >
-        <div style={{ width: '100%' }} className="d-flex align-center">
-          <span style={{ color: '#182c4c' }}>
+        <div className="d-flex align-center full-width">
+          <span className="task-form-list">
             <Icon name="form-search" fill="#ffffff" width={18} height={19} />
           </span>
 

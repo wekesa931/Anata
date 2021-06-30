@@ -7,9 +7,14 @@ import Notification from '../../../utils/notification/notification.component'
 export interface IProps {
   relevantContact: any
   onCallInitiated: () => void
+  tasksType?: string
 }
 
-const ContactList = ({ relevantContact, onCallInitiated }: IProps) => {
+const ContactList = ({
+  relevantContact,
+  onCallInitiated,
+  tasksType,
+}: IProps) => {
   const [isRinging, setisRinging] = React.useState(false)
   const [notificationError, setnotificationError] = React.useState<
     string | null
@@ -45,7 +50,7 @@ const ContactList = ({ relevantContact, onCallInitiated }: IProps) => {
     e.stopPropagation()
     setisRinging(!isRinging)
     try {
-      initiateCall(relevantContact, onCallInitiated)
+      initiateCall(relevantContact, onCallInitiated, tasksType)
     } catch (error) {
       setnotificationError(error.message)
       setTimeout(() => {
@@ -84,9 +89,7 @@ const ContactList = ({ relevantContact, onCallInitiated }: IProps) => {
         onClick={calloutChange}
       >
         <div className="d-flex flex-column align-start">
-          <p style={{ color: '#8b95a5', fontSize: '12px' }}>
-            {numberType(relevantContact, true)}
-          </p>
+          <p className="number-type">{numberType(relevantContact, true)}</p>
           <p
             className="member-phone-num"
             style={{

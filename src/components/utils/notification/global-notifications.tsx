@@ -22,15 +22,16 @@ const GlobalNotifications = ({ children }: any) => {
     setdisplay('none')
     const displayNotification = async () => {
       if (data) {
-        const logs: ILogs[] = data.conferenceSessions.edges
+        const rawLogs = data.conferenceSessions.edges
+        const logs: ILogs[] = rawLogs.map((log: { node: ILogs }) => log.node)
         const activeCallLog = logs.filter(
           (log) =>
-            log.node.agentEmail === user?.email &&
-            log.node.sessionStarted === true &&
-            !log.node.sessionEnded
+            log.agentEmail === user?.email &&
+            log.sessionStarted === true &&
+            !log.sessionEnded
         )
         if (activeCallLog && activeCallLog.length > 0) {
-          const memberId = activeCallLog[0].node.memberAirtableId
+          const memberId = activeCallLog[0].memberAirtableId
           const response = await airtableFetch(`members/${memberId}`)
           setmemberOnCall(response)
           const isActiveCallingMember =

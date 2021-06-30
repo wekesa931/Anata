@@ -34,7 +34,7 @@ const AvailableHnOrCs = ({ staff, selected, setSelected }: IProps) => {
       <span data-testid="check-mark" className="hn-name-check">
         {isActiveCsOrHn && (
           <span data-testid="check-mark-icon">
-            <Check className="icon-style" />
+            <Check className="active-staff" />
           </span>
         )}
       </span>

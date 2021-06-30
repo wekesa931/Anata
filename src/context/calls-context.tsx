@@ -8,16 +8,17 @@ import useFCMState from '../comms/fcm/fcm.hook'
 import logError from '../components/utils/Bugsnag/Bugsnag'
 
 export type ILogs = {
-  node: {
-    startedAt: string
-    callDirection: string
-    agentEmail: string
-    sessionEnded: boolean
-    sessionStarted: boolean
-    memberPhone: string
-    memberAirtableId: string
-    roomName: string
-  }
+  startedAt: string
+  callDirection: string
+  agentEmail: string
+  sessionEnded: boolean
+  sessionStarted: boolean
+  memberPhone: string
+  memberAirtableId: string
+  roomName: string
+  inCallDuration: number
+  createdAt: string
+  callbackTaskId: string
 }
 
 type CallContact = {
@@ -26,7 +27,7 @@ type CallContact = {
 
 type Call = {
   title: string
-  type: 'INBOUND' | 'OUTBOUND'
+  type: 'INBOUND' | 'OUTBOUND' | 'CALLBACK'
   state:
     | 'ONGOING'
     | 'RINGING'
@@ -42,6 +43,7 @@ type Call = {
   member: string
   forwardTo?: string
   session?: string
+  callbackHistoryId?: string
 }
 
 type ContextType = {
@@ -56,6 +58,7 @@ type ContextType = {
     fullName: string
   }) => void
   setCounterValue: () => void
+  setHistoryRecordId: (id: string) => void
 }
 
 const CallContext = React.createContext<ContextType>({
@@ -63,6 +66,7 @@ const CallContext = React.createContext<ContextType>({
   initiateTransfer: () => null,
   completeCall: () => null,
   setCounterValue: () => null,
+  setHistoryRecordId: () => null,
 })
 
 function CallProvider({ children }: any) {
@@ -92,20 +96,21 @@ function CallProvider({ children }: any) {
 
   /*
    *
-   * This is the logic tocheck an active call
+   * This is the logic to check an active call
    *
    * */
   useEffect(() => {
     if (data) {
-      const logs: ILogs[] = data.conferenceSessions.edges
-      const activeCallLog = logs.filter(
+      const rawLogs = data.conferenceSessions.edges
+      const logs: ILogs[] = rawLogs.map((log: { node: ILogs }) => log.node)
+      const activeCallLog = logs.find(
         (log) =>
-          log.node.agentEmail === user?.email &&
-          log.node.sessionStarted === true &&
-          !log.node.sessionEnded
+          log.agentEmail === user?.email &&
+          log.sessionStarted === true &&
+          !log.sessionEnded
       )
-      if (activeCallLog && activeCallLog.length > 0) {
-        const ongoingCall = activeCallLog[0].node
+      if (activeCallLog) {
+        const ongoingCall = activeCallLog
         const call = {
           title: callTitle(ongoingCall.callDirection.toLocaleLowerCase()),
           type: ongoingCall.callDirection,
@@ -142,7 +147,10 @@ function CallProvider({ children }: any) {
       const callUpdates: Call = {} as Call
       const isStaff = fcmState.data.is_staff === 'true'
       if (fcmState.notification.title === 'Call Ongoing') {
-        if (!activeCall || Object.keys(activeCall).length === 0) {
+        if (
+          !activeCall ||
+          Object.prototype.hasOwnProperty.call(activeCall, 'title')
+        ) {
           callUpdates.title = 'Inbound Call'
           callUpdates.type = 'INBOUND'
           callUpdates.assigned = user ? user.email : ''
@@ -243,9 +251,13 @@ function CallProvider({ children }: any) {
 
   const initiateCall = (
     callContact: CallContact,
-    onCallInitiated: (call: Call) => void
+    onCallInitiated: (call: Call) => void,
+    type = 'OUTBOUND'
   ) => {
-    if (activeCall && Object.keys(activeCall).length !== 0) {
+    if (
+      activeCall &&
+      Object.prototype.hasOwnProperty.call(activeCall, 'title')
+    ) {
       throw new Error('Call in progress')
     }
     const phoneNum = formatPhoneForSubmission(numberType(callContact, false))
@@ -260,13 +272,13 @@ function CallProvider({ children }: any) {
           if (response.data.placeCall.status === 200) {
             const call = {
               title: 'Outbound Call',
-              type: 'OUTBOUND',
+              type,
               state: 'RINGING',
               assigned: user ? user.email : '',
               member: phoneNum,
               initialCallTime: 0,
             }
-            setActiveCall(call)
+            setActiveCall({ ...activeCall, ...call })
             setActiveCallContact(callContact)
             onCallInitiated(response.data)
           } else {
@@ -287,6 +299,9 @@ function CallProvider({ children }: any) {
   const setCounterValue = () => {
     setcounter((val) => val + 1)
   }
+  const setHistoryRecordId = (id: string) => {
+    setActiveCall({ ...activeCall, callbackHistoryId: id })
+  }
 
   return (
     <CallContext.Provider
@@ -298,6 +313,7 @@ function CallProvider({ children }: any) {
         initiateCall,
         initiateTransfer,
         setCounterValue,
+        setHistoryRecordId,
       }}
     >
       {children}

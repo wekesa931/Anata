@@ -84,6 +84,7 @@ const GET_CALL_LOG = gql`
           inCallDuration
           memberAntaraId
           memberAirtableId
+          callbackTaskId
         }
       }
     }
