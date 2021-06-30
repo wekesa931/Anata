@@ -9,7 +9,6 @@ import {
 } from '../../../../gql/comms'
 import renderWithRouter from '../../../../../__mocks__/custom-render.mock'
 import CallsCallout from './calls.component'
-import Actions from '../actions.component'
 import ContactList from './contacts.component'
 import CallFloatingBox from './callConsole.component'
 import mockHnTasks from '../../../../../__mocks__/hn-tasks-mock'
@@ -127,7 +126,6 @@ describe('Call Functionality ', () => {
         >
           <>
             <CallsCallout />
-            <Actions />
           </>
         </MockedProvider>
       )

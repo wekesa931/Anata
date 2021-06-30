@@ -3,6 +3,7 @@ import Bugsnag from '@bugsnag/js'
 import startBugsnag from '../../helpers/bugsnag'
 
 startBugsnag()
+
 const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React)
 
 const ErrorView = (props: any) => {
