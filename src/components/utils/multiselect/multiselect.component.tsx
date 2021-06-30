@@ -18,6 +18,7 @@ const MultiSelect = ({ form, field, options, onChange, defaultValue }: any) => {
       ? options.filter(
           (item) =>
             selectedItems.indexOf(item) < 0 &&
+            item.label &&
             item.label.toLowerCase().startsWith(value.toLowerCase())
         )
       : options
