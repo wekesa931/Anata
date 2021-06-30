@@ -425,11 +425,17 @@ const Tasks = () => {
       sameElse: 'DD/MM/YYYY',
     })
   }
+  const isReadytoShowTasks =
+    allTasks?.length > 0 &&
+    !isAirtableLoading &&
+    !isApiLoading &&
+    !isAirtableError &&
+    !apiError
 
   return (
     <>
       <div className="margin-top-16">
-        {allTasks && (
+        {isReadytoShowTasks && (
           <>
             <p className="up-next">Up next</p>
             <UpNextTask
@@ -454,22 +460,18 @@ const Tasks = () => {
             </select>
           </div>
         </div>
-        {allTasks &&
-          !isAirtableLoading &&
-          !isApiLoading &&
-          !isAirtableError &&
-          !apiError && (
-            <List
-              list={filteredTasks}
-              getTopLeftText={getPriority}
-              getTopRightText={getTaskNotes}
-              modalTitle="Task"
-              emptyListText="No tasks found."
-              editable
-              onEdit={updateTask}
-              upNext
-            />
-          )}
+        {isReadytoShowTasks && (
+          <List
+            list={filteredTasks}
+            getTopLeftText={getPriority}
+            getTopRightText={getTaskNotes}
+            modalTitle="Task"
+            emptyListText="No tasks found."
+            editable
+            onEdit={updateTask}
+            upNext
+          />
+        )}
         {/* Only show the Loading Message if either data sources are loading */}
         {(isAirtableLoading || isApiLoading) && (
           <div className="d-flex flex-direction-column flex-align-center margin-top-32">
