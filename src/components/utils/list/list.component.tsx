@@ -25,7 +25,6 @@ type ListProps = {
   editableFields?: AirtableField[]
   dueDate?: (data: any) => string | JSX.Element | null
   conditionComponent?: boolean
-  upNext?: boolean
 }
 
 const List = ({
@@ -43,7 +42,6 @@ const List = ({
   listItemActions,
   editableFields,
   conditionComponent,
-  upNext,
 }: ListProps) => {
   const [isHovering, setIsHovering] = useState<number>()
   const [openItem, setOpenItem] = useState<{
@@ -121,84 +119,76 @@ const List = ({
     <div style={{ margin: '8px 0px' }}>
       {displayedData.length > 0 ? (
         <>
-          <div data-testid="data-list">
-            {displayedData.map((item, i) => {
-              return (
-                item &&
-                item.data && (
-                  <button
-                    style={{
-                      width: '100%',
-                      textAlign: 'start',
-                    }}
-                    className="btn-unstyled"
-                    onClick={() => {
-                      setOpenItem(item)
-                      setModalOpen(true)
-                      analytics.track(`${modalTitle} Opened`)
-                    }}
-                    key={i}
-                    onMouseEnter={() => setIsHovering(i)}
-                    onMouseLeave={() => setIsHovering(undefined)}
-                  >
-                    <div className={styles.meta}>
-                      <div className="text-tiny">
-                        {getTopLeftText && getTopLeftText(item.data)}
-                      </div>
-                      <div className="text-tiny">
-                        {getTopRightText && getTopRightText(item.data)}
-                      </div>
+          {displayedData.map((item, i) => {
+            return (
+              item &&
+              item.data && (
+                <button
+                  style={{
+                    width: '100%',
+                    textAlign: 'start',
+                  }}
+                  className="btn-unstyled"
+                  onClick={() => {
+                    setOpenItem(item)
+                    setModalOpen(true)
+                    analytics.track(`${modalTitle} Opened`)
+                  }}
+                  key={i}
+                  onMouseEnter={() => setIsHovering(i)}
+                  onMouseLeave={() => setIsHovering(undefined)}
+                >
+                  <div className={styles.meta}>
+                    <div className="text-tiny">
+                      {getTopLeftText && getTopLeftText(item.data)}
                     </div>
-                    <div
-                      className={
-                        upNext
-                          ? `${styles.noborder} ${styles.notes}`
-                          : `${styles.notes}`
-                      }
-                    >
-                      <Tooltip title="Expand Record">
-                        <div
-                          style={{ width: '12px', marginRight: '6px' }}
-                          className={toggle(
-                            styles.showIcon,
-                            styles.hideIcon,
-                            isHovering === i
-                          )}
-                        >
-                          <ExpandIcon />
-                        </div>
-                      </Tooltip>
-                      <div style={{ flex: 1 }}>
-                        {!conditionComponent ? (
-                          <div className="text-normal">{item.name}</div>
-                        ) : (
-                          <div>
-                            {item.data.Condition === 'Other'
-                              ? item.data['Other, specify']
-                              : `${item.data.Condition}, `}
-                            {item.data['Starting clinical status'] && (
-                              <>
-                                <b>Starting Clinical Status: </b>
-                                {item.data['Starting clinical status']},
-                              </>
-                            )}
-                            {item.data['Current clinical status'] && (
-                              <>
-                                <b>Current Clinical Status: </b>
-                                {item.data['Current clinical status']},
-                              </>
-                            )}
-                            <b>Condition Status:</b>{' '}
-                            {item.data['Condition Status']}
-                          </div>
+                    <div className="text-tiny">
+                      {getTopRightText && getTopRightText(item.data)}
+                    </div>
+                  </div>
+                  <div className={styles.notes}>
+                    <Tooltip title="Expand Record">
+                      <div
+                        style={{ width: '12px', marginRight: '6px' }}
+                        className={toggle(
+                          styles.showIcon,
+                          styles.hideIcon,
+                          isHovering === i
                         )}
+                      >
+                        <ExpandIcon />
                       </div>
+                    </Tooltip>
+                    <div style={{ flex: 1 }}>
+                      {!conditionComponent ? (
+                        <div className="text-normal">{item.name}</div>
+                      ) : (
+                        <div>
+                          {item.data.Condition === 'Other'
+                            ? item.data['Other, specify']
+                            : `${item.data.Condition}, `}
+                          {item.data['Starting clinical status'] && (
+                            <>
+                              <b>Starting Clinical Status: </b>
+                              {item.data['Starting clinical status']},
+                            </>
+                          )}
+                          {item.data['Current clinical status'] && (
+                            <>
+                              <b>Current Clinical Status: </b>
+                              {item.data['Current clinical status']},
+                            </>
+                          )}
+                          <b>Condition Status:</b>{' '}
+                          {item.data['Condition Status']}
+                        </div>
+                      )}
                     </div>
-                  </button>
-                )
+                  </div>
+                </button>
               )
-            })}
-          </div>
+            )
+          })}
           <div className={styles.pagination}>
             {paginate &&
               sortedList.length > defaultNoElements &&

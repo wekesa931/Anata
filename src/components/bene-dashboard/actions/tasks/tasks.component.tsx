@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
-import calendar from 'dayjs/plugin/calendar'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { User, ExternalLink } from 'react-feather'
@@ -132,45 +131,10 @@ function useMergedRecords(airtableRecords, apiRecords) {
   return mergedRecords
 }
 
-const UpNextTask = ({ allTasks, dueDate }: any) => {
-  let upnext = []
-  const upNextTasks = (tasks) => {
-    const val = tasks
-      .filter((task: any) => task.data.find(({ name }: any) => name === 'Type'))
-      .sort(
-        (a: any, b: any) =>
-          Date.parse(b.data[5]['Due Date']) - Date.parse(a.data[5]['Due Date'])
-      )
-    return val
-  }
-  try {
-    upnext = upNextTasks(allTasks)
-  } catch (error) {
-    upnext = []
-  }
-
-  return upnext.slice(0, 2).map((task, index) => {
-    const due = dueDate(task.data[5]['Due Date'])
-    return (
-      <div className="up-next-content" key={index}>
-        <div>
-          <p>{task.data[0].value}</p>
-          <div className="due-date due-color">Due {due.slice(0, -2)}</div>
-        </div>
-        <div>
-          {task.data[5].Type &&
-            task.data[5].Type.toLowerCase().includes('call') && (
-              <CallsCallout tasksType="CALLBACK" airtableId={task.airtId} />
-            )}
-        </div>
-      </div>
-    )
-  })
-}
-
 const Tasks = () => {
   const [allTasks, setAllTasks] = useState<any[]>([])
   const [filteredTasks, setFilteredTasks] = useState<any[]>([])
+  const [upnextTasks, setUpnextTasks] = useState<any[]>([])
 
   const status = [
     'Complete',
@@ -339,6 +303,17 @@ const Tasks = () => {
           )
         )
       )
+
+      setUpnextTasks(
+        recordsToDisplay
+          .filter((task) =>
+            task.data.find(
+              ({ name, value }: any) =>
+                name === 'Status' && value === 'Not Started'
+            )
+          )
+          .slice(0, 2)
+      )
     }
   }, [mergedRecords])
 
@@ -414,17 +389,6 @@ const Tasks = () => {
     )
   }
 
-  const dueDate = (val: any) => {
-    dayjs.extend(calendar)
-    return dayjs(val).calendar(dayjs(), {
-      sameDay: '[Today] h:mm A',
-      nextDay: '[Tomorrow] h:mm A',
-      nextWeek: 'dddd [] h:mm A',
-      lastDay: '[Yesterday] h:mm A',
-      lastWeek: '[Last] dddd [] h:mm A',
-      sameElse: 'DD/MM/YYYY',
-    })
-  }
   const isReadytoShowTasks =
     allTasks?.length > 0 &&
     !isAirtableLoading &&
@@ -438,11 +402,17 @@ const Tasks = () => {
         {isReadytoShowTasks && (
           <>
             <p className="up-next">Up next</p>
-            <UpNextTask
-              allTasks={allTasks}
-              getTaskNotes={getTaskNotes}
-              dueDate={dueDate}
-            />
+            <div data-testid="data-list-2">
+              <List
+                list={upnextTasks}
+                getTopLeftText={getPriority}
+                getTopRightText={getTaskNotes}
+                modalTitle="Task"
+                emptyListText="No tasks found."
+                editable
+                onEdit={updateTask}
+              />
+            </div>
           </>
         )}
         <div className="justify-start d-flex flex-align-center">
@@ -461,16 +431,18 @@ const Tasks = () => {
           </div>
         </div>
         {isReadytoShowTasks && (
-          <List
-            list={filteredTasks}
-            getTopLeftText={getPriority}
-            getTopRightText={getTaskNotes}
-            modalTitle="Task"
-            emptyListText="No tasks found."
-            editable
-            onEdit={updateTask}
-            upNext
-          />
+          <div data-testid="data-list-1">
+            <List
+              list={filteredTasks}
+              getTopLeftText={getPriority}
+              getTopRightText={getTaskNotes}
+              modalTitle="Task"
+              data-testid="data-list-1"
+              emptyListText="No tasks found."
+              editable
+              onEdit={updateTask}
+            />
+          </div>
         )}
         {/* Only show the Loading Message if either data sources are loading */}
         {(isAirtableLoading || isApiLoading) && (
