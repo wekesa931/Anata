@@ -224,7 +224,7 @@ const Tasks = () => {
 
   useEffect(() => {
     function getAssignedHnName(assigned: string | { fullName: string }) {
-      return typeof assigned === 'string' ? assigned : assigned.fullName
+      return typeof assigned === 'string' ? assigned : assigned?.fullName || ''
     }
     // Display the mergedRecords
     function renderDisplayInfo(hnTask: any) {
