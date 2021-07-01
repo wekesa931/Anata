@@ -67,9 +67,22 @@ function useTransformedApiRecords(rawApiRecords: any) {
         },
       }
     }
-    const transformApiRecords = (records, mapData) => {
+    const transformApiRecords = (
+      records: { memberHnTasks: { edges: any[] } },
+      mapData: {
+        type: string
+        dueDate: string
+        taskNotes: string
+        status: string
+        taskPriority: string
+        measurementsToTake: string
+        assignee: { fullName: string }
+        lastStatusChangedAt: string
+        formUrl: string
+      }
+    ) => {
       const mappedResponse = records.memberHnTasks.edges.reduce(
-        (acc, { node }: any) => {
+        (acc: any, { node }: any) => {
           const newEntry = transformApiRecord(node, mapData)
           Object.assign(acc, newEntry)
           return acc
@@ -90,7 +103,10 @@ function useTransformedApiRecords(rawApiRecords: any) {
   return apiRecords
 }
 
-function useMergedRecords(airtableRecords, apiRecords) {
+function useMergedRecords(
+  airtableRecords: React.SetStateAction<any[]>,
+  apiRecords: any[]
+) {
   // Produces Merged Records from airtableRecords and apiRecords
   const [mergedRecords, setMergedRecords] = useState<any[]>([])
 
@@ -192,7 +208,7 @@ const Tasks = () => {
     return <s className="text-disabled">{children}</s>
   }
 
-  const includeFieldTypes = (data) => {
+  const includeFieldTypes = (data: { [x: string]: any }) => {
     return Object.keys(data).map((key) => {
       const field = TASK_FIELDS.find(({ name }) => name === key)
       return field ? { value: data[key], ...field } : data
@@ -244,12 +260,17 @@ const Tasks = () => {
                   {!hnTask['Assigned HN Name'].includes('Antara Bot') ? (
                     <div>
                       <User width={16} height={16} />
-                      <span> {hnTask['Assigned HN Name']}</span>
+                      <span>Antara bot</span>
                     </div>
                   ) : (
                     <div>
                       <User width={16} height={16} />
-                      <span> {hnTask['Assigned HN Name']}</span>
+                      {Array.isArray(hnTask['Assigned HN Name']) &&
+                        hnTask['Assigned HN Name'].map(
+                          (assigned: { fullName: string }, index: number) => (
+                            <span key={index}>{assigned.fullName}</span>
+                          )
+                        )}
                     </div>
                   )}
                 </div>
