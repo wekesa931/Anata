@@ -223,6 +223,9 @@ const Tasks = () => {
   }
 
   useEffect(() => {
+    function getAssignedHnName(assigned: string | { fullName: string }) {
+      return typeof assigned === 'string' ? assigned : assigned.fullName
+    }
     // Display the mergedRecords
     function renderDisplayInfo(hnTask: any) {
       return () => (
@@ -236,8 +239,11 @@ const Tasks = () => {
                     <User width={14} height={14} />
                     {Array.isArray(hnTask['Assigned HN Name']) &&
                       hnTask['Assigned HN Name'].map(
-                        (assigned: string, index: number) => (
-                          <span key={index}>{assigned}</span>
+                        (
+                          assigned: string | { fullName: string },
+                          index: number
+                        ) => (
+                          <span key={index}>{getAssignedHnName(assigned)}</span>
                         )
                       )}
                   </div>
