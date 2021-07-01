@@ -65,6 +65,13 @@
   display: flex;
   justify-content: space-between;
 }
+.taskNameWrap {
+  flex-direction: 'column'
+}
+.taskAssignee{
+  color: #8b95a5; 
+  font-size: '14px'
+}
 .taskDue {
   font-weight: 500;
   font-size: 14;

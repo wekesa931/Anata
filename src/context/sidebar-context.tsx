@@ -42,7 +42,8 @@ const SidebarProvider = ({ children }: any) => {
 
   useEffect(() => {
     // eslint-disable-next-line
-    activeView.subItems && setActiveSubViewItem(activeView.subItems[activeSubViewIndex])
+    activeView.subItems &&
+      setActiveSubViewItem(activeView.subItems[activeSubViewIndex])
   }, [activeSubViewIndex, activeView])
 
   return (

@@ -229,7 +229,21 @@ const Tasks = () => {
         <div className={styles.taskContainer}>
           <div className={styles.taskContainerInner}>
             <div className={styles.taskDiv}>
-              <span>{hnTask.Type}</span>
+              <div className={styles.taskNameWrap}>
+                <span>{hnTask.Type}</span>
+                {hnTask['Assigned HN Name'] && (
+                  <div className={styles.taskAssignee}>
+                    <User width={14} height={14} />
+                    {Array.isArray(hnTask['Assigned HN Name']) &&
+                      hnTask['Assigned HN Name'].map(
+                        (assigned: string, index: number) => (
+                          <span key={index}>{assigned}</span>
+                        )
+                      )}
+                  </div>
+                )}
+              </div>
+
               {hnTask['Prescription Drug Names'] && (
                 <PrescriptionName
                   value={hnTask['Prescription Drug Names']}
@@ -251,29 +265,6 @@ const Tasks = () => {
               )}
               {hnTask.Type && hnTask.Type.toLowerCase().includes('call') && (
                 <CallsCallout tasksType="CALLBACK" airtableId={hnTask.airtId} />
-              )}
-            </div>
-
-            <div className="p-relative">
-              {hnTask['Assigned HN Name'] && (
-                <div>
-                  {!hnTask['Assigned HN Name'].includes('Antara Bot') ? (
-                    <div>
-                      <User width={16} height={16} />
-                      <span>Antara bot</span>
-                    </div>
-                  ) : (
-                    <div>
-                      <User width={16} height={16} />
-                      {Array.isArray(hnTask['Assigned HN Name']) &&
-                        hnTask['Assigned HN Name'].map(
-                          (assigned: { fullName: string }, index: number) => (
-                            <span key={index}>{assigned.fullName}</span>
-                          )
-                        )}
-                    </div>
-                  )}
-                </div>
               )}
             </div>
           </div>
