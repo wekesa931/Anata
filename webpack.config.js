@@ -1,12 +1,12 @@
 const path = require('path')
 const webpack = require('webpack')
+const CopyPlugin = require('copy-webpack-plugin')
 const dotenv = require('dotenv')
 const env = require('./env')
 const package = require('./package.json')
 const { BugsnagBuildReporterPlugin, BugsnagSourceMapUploaderPlugin} = require('webpack-bugsnag-plugins')
 
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-
 module.exports = {
   entry: './src/index',
   output: {
@@ -80,8 +80,16 @@ module.exports = {
   },
 }
 
-if (process.env.NODE_ENV == 'production') {
+if (process.env.NODE_ENV && process.env.NODE_ENV !== 'local') {
   module.exports.plugins.push(
+    new CopyPlugin({
+        patterns: [
+        {
+          from: 'firebase-messaging-sw.js',
+          to: 'firebase-messaging-sw.js'
+        }
+      ]
+    }),
     new BugsnagBuildReporterPlugin({
         apiKey: '08051b1d342d0c2d6b7102d7e046b02d',
         appVersion: package.version

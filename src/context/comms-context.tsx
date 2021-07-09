@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { SAVE_FCM_TOKEN } from '../gql/comms'
 import { getRegToken } from '../comms/fcm'
 import { useUser } from './user-context'
@@ -27,7 +27,7 @@ function CommsProvider({ children }: any) {
   })
   const [registered, setregistered] = useState<boolean>(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!registered && user) {
       const getToken = async () => {
         try {
