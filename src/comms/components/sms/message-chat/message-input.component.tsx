@@ -92,7 +92,7 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
 
   return (
     <>
-      <form style={{ position: 'absolute', left: 0, bottom: 0, right: 0 }}>
+      <form style={{ position: 'fixed', bottom: 0, width: '339px' }}>
         <InputContainer>
           <Input
             placeholder="Type something..."

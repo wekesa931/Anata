@@ -75,7 +75,6 @@ const MessageChat = ({
       />
       <div
         style={{
-          height: '256px',
           overflowY: 'scroll',
           clear: 'both',
         }}

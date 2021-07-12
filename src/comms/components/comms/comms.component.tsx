@@ -14,7 +14,7 @@ type CallProps = {
 const Comms = ({ memberSpecific, fcmState }: CallProps) => {
   return (
     <>
-      <div style={{ height: '348px', overflowY: 'scroll' }}>
+      <div style={{ height: '100%', overflowY: 'scroll' }}>
         <MessageChat memberSpecific={memberSpecific} fcmState={fcmState} />
       </div>
     </>
