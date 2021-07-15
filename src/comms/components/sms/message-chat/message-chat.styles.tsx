@@ -1,37 +1,83 @@
 import styled from '@emotion/styled'
 
 const SenderDiv = styled.div`
-  background: #ebeff3;
-  border: 1px solid #c6dfeb;
-  box-sizing: border-box;
-  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 4px;
+  margin: 8px 48px 32px 16px;
   padding: 8px;
-  margin-right: auto;
-  margin-left: 8px;
-  font-family: 'Karla';
-  flex: 1;
+  border-radius: 12px;
+  background-color: #f9fafc;
 `
 
 const RecipientDiv = styled.div`
-  background: #ffffff;
-  border: 1px solid #ff9800;
-  box-sizing: border-box;
-  border-radius: 8px;
-  margin-left: auto;
-  margin-right: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 4px;
+  margin: 8px 15px 8px 49px;
   padding: 8px;
-  flex: 1;
+  border-radius: 12px;
+  background-color: #fff5e5;
 `
 
 const GreyText = styled.div`
-  font-style: normal;
-  font-weight: normal;
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 5px 0 0;
+  font-family: Rubik;
   font-size: 10px;
-  line-height: 12px;
-  text-align: center;
-  margin-right: 8px;
-  color: #cccccc;
-  text-transform: uppercase;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.6;
+  letter-spacing: -0.2px;
+  text-align: left;
+  color: #d1d5db;
 `
+const OrangeText = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 4px 0 142px;
+  font-family: Rubik;
+  font-size: 10px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.6;
+  letter-spacing: -0.2px;
+  text-align: left;
+  color: #ffcb80;
+`
+const DeliveredText = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 16px;
+  flex-grow: 0;
+  margin: 0 0 0 5px;
+  padding: 4px 2.7px 4.7px 2.7px;
+  transform: translate(143%);
+}
+`
+const DeliveredTextRight = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 16px;
+  flex-grow: 0;
+  margin: 0 0 0 5px;
+  padding: 4px 2.7px 4.7px 2.7px;
+}`
 
-export { GreyText, RecipientDiv, SenderDiv }
+export {
+  GreyText,
+  RecipientDiv,
+  SenderDiv,
+  OrangeText,
+  DeliveredText,
+  DeliveredTextRight,
+}

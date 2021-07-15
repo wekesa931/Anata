@@ -1,9 +1,9 @@
 /*eslint-disable */
 import React, { useRef, useEffect, useState } from 'react'
 import dayjs from 'dayjs'
+import { Check } from "react-feather";
 import MessageInput from './message-input.component'
-import Icon from '../../icons/icon.component'
-import { SenderDiv, RecipientDiv, GreyText } from './message-chat.styles'
+import { SenderDiv, RecipientDiv, OrangeText, GreyText, DeliveredText, DeliveredTextRight } from './message-chat.styles'
 import TopBar from '../../topbar/topbar.component'
 import { fetchSMSByPhoneNumber } from '../../../resources/sms.resource'
 import { useMember } from '../../../../context/member.context'
@@ -51,20 +51,12 @@ const MessageChat = ({
     }
   }, [messages])
 
-  const getDate = (date: string | Date) => {
-    return dayjs(date).format('DD MMM YYYY')
-  }
-
   const getTime = (date: string | Date) => {
-    return dayjs(date).format('hh:mm A')
+    return dayjs(date).format('hh:mm')
   }
 
   const fromMember = (phone_number: string) => {
     return member && member['Phone 1'] === phone_number
-  }
-
-  const messageType = (msg_type: string) => {
-    return msg_type === 'CHAT'
   }
 
   return member ? (
@@ -91,32 +83,45 @@ const MessageChat = ({
             key={index}
           >
             {fromMember(message.sender_phone) ? (
+              
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Icon name="user" />
-                <SenderDiv>{message.message}</SenderDiv>
+                <SenderDiv>{message.message}
+                   <GreyText>
+                <div style={{transform:'translate(143%)'}}>{getTime(message.sent_received)}</div>
+               {message?.sent_received &&
+               <>
+                  <DeliveredText>
+                        <Check width='16px' height='16px' />
+                  </DeliveredText>
+                  <DeliveredTextRight>
+                      <Check width='16px' height='16px' />
+                  </DeliveredTextRight>
+               </>
+            
+               }
+                </GreyText>
+                   
+                </SenderDiv>             
               </div>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <RecipientDiv>{message.message}</RecipientDiv>
-                {messageType(message.msg_type) ? (
-                  <Icon name="user" fill="#FF9800" />
-                ) : (
-                  <Icon name="lightning" fill="#FF9800" />
-                )}
+                <RecipientDiv>{message.message}
+                <OrangeText>
+                <div style={{transform:'translate(143%)'}}>{getTime(message.sent_received)}</div>
+               {message?.delivery_time &&
+               <>
+                  <DeliveredText>
+                        <Check width='16px' height='16px' />
+                  </DeliveredText>
+                  <DeliveredTextRight>
+                      <Check width='16px' height='16px' />
+                  </DeliveredTextRight>
+               </>
+               }
+                </OrangeText>
+                </RecipientDiv>
               </div>
             )}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: fromMember(message.sender_phone)
-                  ? 'flex-start'
-                  : 'flex-end',
-                margin: '4px 32px',
-              }}
-            >
-              <GreyText>{getDate(message.sent_received)}</GreyText>
-              <GreyText>{getTime(message.sent_received)}</GreyText>
-            </div>
           </div>
         ))}
         <div ref={messagesEndRef} />
