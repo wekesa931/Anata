@@ -1,6 +1,8 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useToasts } from 'react-toast-notifications'
 import { ConfirmationDialog } from '@airtable/blocks/ui'
+import { useMutation } from '@apollo/client'
+import { SEND_SMS } from '../../../../gql/sms'
 import {
   Input,
   SendButton,
@@ -10,19 +12,14 @@ import {
   IntercomButton,
   Intercomdiv,
 } from './message-input.styles'
-// eslint-disable-next-line no-unused-vars
-import { sendSMS, AntaraSMS } from '../../../resources/sms.resource'
 import { useUser } from '../../../../context/user-context'
-// eslint-disable-next-line no-unused-vars
-import { Member, useMember } from '../../../../context/member.context'
+import { useMember } from '../../../../context/member.context'
 import analytics from '../../../../helpers/segment'
 
 type MessageInputProps = {
   messages: any[]
   setMessages: any
 }
-
-const ANTARA_SHORTCODE = process.env.ANTARA_SHORTCODE as string
 
 const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
   const { member } = useMember()
@@ -35,8 +32,9 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const user = useUser()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
-
-  React.useEffect(() => {
+  const [sendSms] = useMutation(SEND_SMS)
+  
+  useEffect(() => {
     if(textAreaRef && textAreaRef.current) {
       const { scrollHeight } = textAreaRef?.current
       if (scrollHeight > 20 && scrollHeight < 200) {
@@ -48,7 +46,7 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
     }
   }, [message, textAreaRef])
 
-  React.useEffect(() => {
+  useEffect(() => {
     setMessage(messageTemplate)
   }, [messageTemplate])
 
@@ -61,61 +59,46 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
     setChannel(event.target.value)
   }
 
-  const getAntaraId = (currentMember: Member) => {
-    if (!currentMember.antara_id) {
-      return 'no_antara_id'
-    }
-    return currentMember.antara_id
-  }
-
-  const createAntaraSms = (currentMember: Member): AntaraSMS => {
-    return {
-      message,
-      antara_email: user ? user.email : '',
-      msg_type: 'CHAT',
-      sender_phone: ANTARA_SHORTCODE,
-      member_details: [
-        {
-          antara_id: getAntaraId(currentMember),
-          member_phone: currentMember['Phone 1'],
-          receiver_phone: currentMember['Phone 1'],
-          full_name: currentMember['Full Name'],
-          airtable_rec_id: currentMember.recID,
-        },
-      ],
-    }
-  }
-
   const sendMessage = () => {
-    const sms = message && member ? createAntaraSms(member) : null
-    if (!member['Phone 1']) {
-      addToast('No phone number', {
-        appearance: 'error',
-        autoDismiss: true,
-      })
-      setCharCount(0)
-      setSendingSMS(false)
-      setMessage('')
-    }
+    const sms = { message }
     if (sms && member) {
-      sendSMS(sms).then(({ code }) => {
-        if (code === 200) {
-          setMessages([...messages, sms])
-          setMessage('')
-          addToast('Message Sent', {
-            appearance: 'success',
+      sendSms({
+        variables: {
+          message: sms,
+          antaraId: member['Antara ID'],
+        },
+      })
+        .then((res) => {
+          if (res?.data.sendSms.status === 404) {
+            addToast(res?.data.sendSms.message, {
+              appearance: 'error',
+              autoDismiss: true,
+            })
+            setCharCount(0)
+            setSendingSMS(false)
+            setMessage('')
+          }
+          if (res?.data.sendSms.status === 200) {
+            addToast(res?.data.sendSms.message, {
+              appearance: 'success',
+              autoDismiss: true,
+            })
+            setMessages([...messages, sms])
+            setCharCount(0)
+            setSendingSMS(false)
+            setMessage('')
+          }
+        })
+        .catch((error) => {
+          addToast(error.message, {
+            appearance: 'error',
             autoDismiss: true,
           })
-          member.messageTemplate = ''
-          analytics.track('SMS sent', {
-            hn: user ? user.email : '',
-            bene_id: member.airtable_rec_id,
-            phone_number: member.phoneNumber,
-            sms,
-          })
-        }
-        setSendingSMS(false)
-      })
+          setCharCount(0)
+          setSendingSMS(false)
+          setMessage('')
+        })
+      setSendingSMS(false)
     }
   }
 
