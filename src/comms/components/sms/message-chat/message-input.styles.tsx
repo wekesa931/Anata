@@ -74,5 +74,34 @@ const InputOption = styled.div`
   gap: 4px;
   padding: 0;
 `
+const Intercomdiv = styled.div`
+  display: flex;
 
-export { Input, SendButton, InputArea, InputSpan, InputOption }
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`
+const IntercomButton = styled.button`
+  flex-grow: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  background-color: #58a9f3;
+  border: none;
+  color: white;
+  margin-bottom: 16px;
+`
+
+export {
+  Input,
+  SendButton,
+  InputArea,
+  InputSpan,
+  InputOption,
+  IntercomButton,
+  Intercomdiv,
+}

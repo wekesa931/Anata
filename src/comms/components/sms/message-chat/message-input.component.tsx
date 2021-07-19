@@ -7,6 +7,8 @@ import {
   InputArea,
   InputSpan,
   InputOption,
+  IntercomButton,
+  Intercomdiv,
 } from './message-input.styles'
 // eslint-disable-next-line no-unused-vars
 import { sendSMS, AntaraSMS } from '../../../resources/sms.resource'
@@ -27,7 +29,7 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
   const messageTemplate = (member && member.messageTemplate) || ''
   const [message, setMessage] = useState<string>(messageTemplate)
   const [charCount, setCharCount] = useState<number>(0)
-  const [channel, setChannel] = useState<string>('')
+  const [channel, setChannel] = useState<string>('app')
   const [sendingSMS, setSendingSMS] = useState<boolean>(false)
   const { addToast } = useToasts()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -35,14 +37,16 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
   React.useEffect(() => {
-    const { scrollHeight } = textAreaRef?.current
-    if (scrollHeight > 20 && scrollHeight < 200) {
-      textAreaRef.current.style.height = `${scrollHeight}px`
+    if(textAreaRef && textAreaRef.current) {
+      const { scrollHeight } = textAreaRef?.current
+      if (scrollHeight > 20 && scrollHeight < 200) {
+        textAreaRef.current.style.height = `${scrollHeight}px`
+      }
+      if (textAreaRef?.current?.innerHTML === '') {
+        textAreaRef.current.style.height = `20px`
+      }
     }
-    if (textAreaRef?.current?.innerHTML === '') {
-      textAreaRef.current.style.height = `20px`
-    }
-  }, [message])
+  }, [message, textAreaRef])
 
   React.useEffect(() => {
     setMessage(messageTemplate)
@@ -103,7 +107,6 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
             autoDismiss: true,
           })
           member.messageTemplate = ''
-          // setCurrentMember(member)
           analytics.track('SMS sent', {
             hn: user ? user.email : '',
             bene_id: member.airtable_rec_id,
@@ -122,6 +125,13 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
     setIsDialogOpen(true)
   }
 
+  const redirectToIntercom = (event: any) => {
+    event.preventDefault()
+    const link =
+      'https://app.intercom.com/a/apps/diysybw8/users/6079172ea912092d812adbf1/all-conversations'
+    window.open(link, 'blank_intercom')
+  }
+
   return (
     <>
       <form style={{ position: 'fixed', bottom: 0, width: '339px' }}>
@@ -138,27 +148,47 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
               <option value="sms">Sms</option>
             </select>
           </InputOption>
-
-          <Input
-            ref={textAreaRef}
-            placeholder="Text"
-            value={message}
-            onChange={handleChange}
-            autoFocus
-          />
-          <span>
-            {charCount > 150 &&
-              channel === 'sms' &&
-              `This sms will overflow to two separate SMSes`}
-          </span>
-          <SendButton
-            onClick={confirmSend}
-            disabled={!message || sendingSMS}
-            data-testid="sms-send-btn"
-            style={{ backgroundColor: message ? '#58a9f3' : '#87c1f7' }}
-          >
-            {sendingSMS ? 'Sending...' : 'Send'}
-          </SendButton>
+          {
+            channel === 'app' ? 
+            (
+              <Intercomdiv>
+                <IntercomButton
+                  onClick={(e) => redirectToIntercom(e)}
+                  data-testid="intercom-link"
+                >
+                  Go to intercom
+                </IntercomButton>
+              </Intercomdiv>
+            ) : 
+            (
+              <>
+                <Input
+                  ref={textAreaRef}
+                  placeholder="Text"
+                  value={message}
+                  onChange={handleChange}
+                  autoFocus
+                  style={{ display: channel === 'app' ? 'none' : 'flex' }}
+                />
+                <span>
+                  {charCount > 150 &&
+                    channel === 'sms' &&
+                    `This sms will overflow to two separate SMSes`}
+                </span>
+                <SendButton
+                  onClick={confirmSend}
+                  disabled={!message || sendingSMS}
+                  data-testid="sms-send-btn"
+                  style={{
+                    backgroundColor: message ? '#58a9f3' : '#87c1f7',
+                    display: 'flex',
+                  }}
+                >
+                  {sendingSMS ? 'Sending...' : 'Send'}
+                </SendButton>
+              </>
+            )
+          }
         </InputArea>
       </form>
 
