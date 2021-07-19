@@ -1469,7 +1469,7 @@ a {
   border: none;
   outline: none;
 }
-.transform-icon{
+.chat-delivery{
   transform:translate(80%);
   white-space: nowrap;
 }

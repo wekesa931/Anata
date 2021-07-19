@@ -33,9 +33,9 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
   const user = useUser()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [sendSms] = useMutation(SEND_SMS)
-  
+
   useEffect(() => {
-    if(textAreaRef && textAreaRef.current) {
+    if (textAreaRef && textAreaRef.current) {
       const { scrollHeight } = textAreaRef?.current
       if (scrollHeight > 20 && scrollHeight < 200) {
         textAreaRef.current.style.height = `${scrollHeight}px`
@@ -64,7 +64,7 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
     if (sms && member) {
       sendSms({
         variables: {
-          message: sms,
+          message: sms.message,
           antaraId: member['Antara ID'],
         },
       })
@@ -131,47 +131,43 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
               <option value="sms">Sms</option>
             </select>
           </InputOption>
-          {
-            channel === 'app' ? 
-            (
-              <Intercomdiv>
-                <IntercomButton
-                  onClick={(e) => redirectToIntercom(e)}
-                  data-testid="intercom-link"
-                >
-                  Go to intercom
-                </IntercomButton>
-              </Intercomdiv>
-            ) : 
-            (
-              <>
-                <Input
-                  ref={textAreaRef}
-                  placeholder="Text"
-                  value={message}
-                  onChange={handleChange}
-                  autoFocus
-                  style={{ display: channel === 'app' ? 'none' : 'flex' }}
-                />
-                <span>
-                  {charCount > 150 &&
-                    channel === 'sms' &&
-                    `This sms will overflow to two separate SMSes`}
-                </span>
-                <SendButton
-                  onClick={confirmSend}
-                  disabled={!message || sendingSMS}
-                  data-testid="sms-send-btn"
-                  style={{
-                    backgroundColor: message ? '#58a9f3' : '#87c1f7',
-                    display: 'flex',
-                  }}
-                >
-                  {sendingSMS ? 'Sending...' : 'Send'}
-                </SendButton>
-              </>
-            )
-          }
+          {channel === 'app' ? (
+            <Intercomdiv>
+              <IntercomButton
+                onClick={(e) => redirectToIntercom(e)}
+                data-testid="intercom-link"
+              >
+                Go to intercom
+              </IntercomButton>
+            </Intercomdiv>
+          ) : (
+            <>
+              <Input
+                ref={textAreaRef}
+                placeholder="Text"
+                value={message}
+                onChange={handleChange}
+                autoFocus
+                style={{ display: channel === 'app' ? 'none' : 'flex' }}
+              />
+              <span>
+                {charCount > 150 &&
+                  channel === 'sms' &&
+                  `This sms will overflow to two separate SMSes`}
+              </span>
+              <SendButton
+                onClick={confirmSend}
+                disabled={!message || sendingSMS}
+                data-testid="sms-send-btn"
+                style={{
+                  backgroundColor: message ? '#58a9f3' : '#87c1f7',
+                  display: 'flex',
+                }}
+              >
+                {sendingSMS ? 'Sending...' : 'Send'}
+              </SendButton>
+            </>
+          )}
         </InputArea>
       </form>
 
