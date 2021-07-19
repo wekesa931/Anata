@@ -1465,12 +1465,27 @@ a {
   text-align: left;
   color: #182c4c;
 }
-.message-input{
+
+#intercom-image .intercom-container img {
+  width: 100%;
+  cursor: pointer;
+}
+
+#modal-image .intercom-container {
+  display: flex;
+  justify-content: center;
+}
+.intercom-container img {
+  width: 50%;
+}
+.message-input {
   border: none;
   outline: none;
 }
-.chat-delivery{
-  transform:translate(80%);
+.transform-icon {
+  transform: translate(80%);
+}
+.chat-delivery {
+  transform: translate(80%);
   white-space: nowrap;
 }
-

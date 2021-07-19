@@ -22,4 +22,5 @@ const GET_MEMBER_CHATS = gql`
   }
 `
 
+// eslint-disable-next-line import/prefer-default-export
 export { GET_MEMBER_CHATS, SEND_SMS }

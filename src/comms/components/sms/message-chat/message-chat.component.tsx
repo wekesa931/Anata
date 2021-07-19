@@ -1,6 +1,7 @@
 /*eslint-disable */
 import React, { useRef, useEffect, useState } from 'react'
 import dayjs from 'dayjs'
+import parse from 'html-react-parser'
 import { Check } from 'react-feather'
 import MessageInput from './message-input.component'
 import {
@@ -17,6 +18,7 @@ import { useMember } from '../../../../context/member.context'
 import { useQuery } from '@apollo/client'
 import { GET_MEMBER_CHATS } from '../../../../gql/sms'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
+import Modal from '../../../../components/utils/modals/modal.component'
 
 export type Message = {
   message: string
@@ -26,6 +28,8 @@ export type Message = {
 }
 
 const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
+  const [modalOpen, setmodalOpen] = useState<boolean>(false)
+  const [modalContent, setmodalContent] = useState<Element | null>(null)
   const [allMemberMessages, setallMemberMessages] = useState<Message[]>([])
   const messagesEndRef = useRef(null)
   const { member } = useMember()
@@ -62,11 +66,34 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
   }, [allMemberMessages])
 
   const getTime = (date: string | Date) => {
-    return dayjs(date).format('hh:mm A')
+    return dayjs(date).format('hh:mm')
+  }
+
+  const renderMessage = (msg: string) => {
+    if (msg.includes('</div>') || msg.includes('</p>')) {
+      if (msg.includes('<img')) {
+        return (
+          <div
+            onClick={() => {
+              setmodalOpen(!modalOpen)
+              setmodalContent(parse(msg) as unknown as Element)
+            }}
+          >
+            <span id="intercom-image">{parse(msg)}</span>
+          </div>
+        )
+      } else {
+        return parse(msg)
+      }
+    }
+    return <TextMessage>{msg}</TextMessage>
   }
 
   return member ? (
     <div>
+      <Modal open={modalOpen} setModalOpen={setmodalOpen} heading={null}>
+        <span id="modal-image">{modalContent}</span>
+      </Modal>
       <TopBar
         title={`SMS Text ${member['Full Name']}`}
         goBack={!memberSpecific ? '/sms' : null}
@@ -75,7 +102,7 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
         style={{
           overflowY: 'scroll',
           clear: 'both',
-          paddingBottom:'250px'
+          paddingBottom: '250px',
         }}
         data-testid="thread"
       >
@@ -93,7 +120,7 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
             {message.isInbound ? (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <SenderDiv>
-                  {message.message}
+                  {renderMessage(message.message)}
                   <GreyText>
                     <div className="chat-delivery">{getTime(new Date())}</div>
                     <>
@@ -110,7 +137,13 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <RecipientDiv>
-                  <TextMessage>{message.message}</TextMessage>
+                  {renderMessage(message.message)}
+                  <OrangeText>
+                    <div style={{ transform: 'translate(143%)' }}>
+                      {getTime(new Date())}
+                    </div>
+                    <TextMessage>{message.message}</TextMessage>
+                  </OrangeText>
                   <OrangeText>
                     <div className="chat-delivery">{getTime(new Date())}</div>
                     <>

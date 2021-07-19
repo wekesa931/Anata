@@ -91,6 +91,7 @@
     "graphql": "^15.4.0",
     "heroku-ssl-redirect": "^0.0.4",
     "history": "^4.10.1",
+    "html-react-parser": "^1.2.7",
     "jwt-decode": "^3.0.0",
     "kremling": "^2.0.4",
     "mock-apollo-client": "^1.1.0",
