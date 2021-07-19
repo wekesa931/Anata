@@ -6,10 +6,23 @@ const SenderDiv = styled.div`
   justify-content: flex-start;
   align-items: stretch;
   gap: 4px;
-  margin: 8px 48px 32px 16px;
   padding: 8px;
   border-radius: 12px;
   background-color: #f9fafc;
+`
+
+const TextMessage = styled.p`
+  align-self: stretch;
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: #182c4c;
 `
 
 const RecipientDiv = styled.div`
@@ -80,4 +93,5 @@ export {
   OrangeText,
   DeliveredText,
   DeliveredTextRight,
+  TextMessage,
 }

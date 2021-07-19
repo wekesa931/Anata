@@ -1,62 +1,68 @@
 /*eslint-disable */
 import React, { useRef, useEffect, useState } from 'react'
 import dayjs from 'dayjs'
-import { Check } from "react-feather";
+import { Check } from 'react-feather'
 import MessageInput from './message-input.component'
-import { SenderDiv, RecipientDiv, OrangeText, GreyText, DeliveredText, DeliveredTextRight } from './message-chat.styles'
+import {
+  TextMessage,
+  SenderDiv,
+  RecipientDiv,
+  OrangeText,
+  GreyText,
+  DeliveredText,
+  DeliveredTextRight,
+} from './message-chat.styles'
 import TopBar from '../../topbar/topbar.component'
-import { fetchSMSByPhoneNumber } from '../../../resources/sms.resource'
 import { useMember } from '../../../../context/member.context'
+import { useQuery } from '@apollo/client'
+import { GET_MEMBER_CHATS } from '../../../../gql/sms'
+import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 
 export type Message = {
   message: string
-  sender_phone: string
-  sent_received: string
-  msg_type: string
+  direction: string
+  status: string
+  isInbound: boolean
 }
 
-const MessageChat = ({
-  memberSpecific,
-  fcmState,
-}: {
-  memberSpecific?: boolean
-  fcmState?: {
-    notification: {
-      title: string
-      body: string
-    }
-  }
-}) => {
-  const [messages, setMessages] = useState<Message[]>([])
+const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
+  const [allMemberMessages, setallMemberMessages] = useState<Message[]>([])
   const messagesEndRef = useRef(null)
-
   const { member } = useMember()
+  const { data, loading } = useQuery(GET_MEMBER_CHATS, {
+    variables: { antaraId: member['Antara ID'] },
+  })
+
   const scrollToBottom = () => {
     // @ts-ignore
     messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
   }
-  useEffect(() => {
-    if (member) {
-      fetchSMSByPhoneNumber(encodeURIComponent(member['Phone 1'])).then(
-        ({ details }) => {
-          setMessages(details)
-        }
-      )
-    }
-  }, [member, fcmState])
 
   useEffect(() => {
-    if (messages.length) {
+    const getMemberChats = () => {
+      if (data) {
+        const uncleanedData: { node: Message }[] = data.memberMessages.edges
+        const refinedChats = uncleanedData.map((dat) => {
+          const isInbound = dat.node.direction === 'Inbound'
+          return {
+            ...dat.node,
+            isInbound: isInbound,
+          }
+        })
+        setallMemberMessages(refinedChats)
+      }
+    }
+    getMemberChats()
+  }, [data])
+
+  useEffect(() => {
+    if (allMemberMessages.length) {
       scrollToBottom()
     }
-  }, [messages])
+  }, [allMemberMessages])
 
   const getTime = (date: string | Date) => {
     return dayjs(date).format('hh:mm A')
-  }
-
-  const fromMember = (phone_number: string) => {
-    return member && member['Phone 1'] === phone_number
   }
 
   return member ? (
@@ -73,7 +79,8 @@ const MessageChat = ({
         }}
         data-testid="thread"
       >
-        {messages.map((message: Message, index: number) => (
+        {loading && <LoadingIcon />}
+        {allMemberMessages.map((message: Message, index: number) => (
           <div
             style={{
               display: 'flex',
@@ -83,50 +90,48 @@ const MessageChat = ({
             }}
             key={index}
           >
-            {fromMember(message.sender_phone) ? (
-              
+            {message.isInbound ? (
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <SenderDiv>{message.message}
-                   <GreyText>
-                <div className="transform-icon">{getTime(message.sent_received)}</div>
-               {message?.sent_received &&
-               <>
-                  <DeliveredText>
-                        <Check width='16px' height='16px' />
-                  </DeliveredText>
-                  <DeliveredTextRight>
-                      <Check width='16px' height='16px' />
-                  </DeliveredTextRight>
-               </>
-            
-               }
-                </GreyText>
-                   
-                </SenderDiv>             
+                <SenderDiv>
+                  {message.message}
+                  <GreyText>
+                    <div className="chat-delivery">{getTime(new Date())}</div>
+                    <>
+                      <DeliveredText>
+                        <Check width="16px" height="16px" />
+                      </DeliveredText>
+                      <DeliveredTextRight>
+                        <Check width="16px" height="16px" />
+                      </DeliveredTextRight>
+                    </>
+                  </GreyText>
+                </SenderDiv>
               </div>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <RecipientDiv>{message.message}
-                <OrangeText>
-                <div className="transform-icon">{getTime(message.sent_received)}</div>
-               {message?.delivery_time &&
-               <>
-                  <DeliveredText>
-                        <Check width='16px' height='16px' />
-                  </DeliveredText>
-                  <DeliveredTextRight>
-                      <Check width='16px' height='16px' />
-                  </DeliveredTextRight>
-               </>
-               }
-                </OrangeText>
+                <RecipientDiv>
+                  <TextMessage>{message.message}</TextMessage>
+                  <OrangeText>
+                    <div className="chat-delivery">{getTime(new Date())}</div>
+                    <>
+                      <DeliveredText>
+                        <Check width="16px" height="16px" />
+                      </DeliveredText>
+                      <DeliveredTextRight>
+                        <Check width="16px" height="16px" />
+                      </DeliveredTextRight>
+                    </>
+                  </OrangeText>
                 </RecipientDiv>
               </div>
             )}
           </div>
         ))}
         <div ref={messagesEndRef} />
-        <MessageInput messages={messages} setMessages={setMessages} />
+        <MessageInput
+          messages={allMemberMessages}
+          setMessages={setallMemberMessages}
+        />
       </div>
     </div>
   ) : null
