@@ -5,7 +5,6 @@ import parse from 'html-react-parser'
 import { Check } from 'react-feather'
 import MessageInput from './message-input.component'
 import {
-  TextMessage,
   SenderDiv,
   RecipientDiv,
   OrangeText,
@@ -86,7 +85,7 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
         return parse(msg)
       }
     }
-    return <TextMessage>{msg}</TextMessage>
+    return parse(msg)
   }
 
   return member ? (
@@ -138,12 +137,6 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <RecipientDiv>
                   {renderMessage(message.message)}
-                  <OrangeText>
-                    <div style={{ transform: 'translate(143%)' }}>
-                      {getTime(new Date())}
-                    </div>
-                    <TextMessage>{message.message}</TextMessage>
-                  </OrangeText>
                   <OrangeText>
                     <div className="chat-delivery">{getTime(new Date())}</div>
                     <>

@@ -28,6 +28,7 @@ const TextMessage = styled.p`
 const RecipientDiv = styled.div`
   display: flex;
   flex-direction: column;
+  max-width: 300px;
   justify-content: flex-start;
   align-items: flex-start;
   gap: 4px;
