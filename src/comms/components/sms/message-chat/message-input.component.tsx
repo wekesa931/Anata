@@ -1,13 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useToasts } from 'react-toast-notifications'
 import { ConfirmationDialog } from '@airtable/blocks/ui'
-import { InputContainer, Input, SendButton } from './message-input.styles'
+import {
+  Input,
+  SendButton,
+  InputArea,
+  InputSpan,
+  InputOption,
+} from './message-input.styles'
 // eslint-disable-next-line no-unused-vars
 import { sendSMS, AntaraSMS } from '../../../resources/sms.resource'
 import { useUser } from '../../../../context/user-context'
 // eslint-disable-next-line no-unused-vars
 import { Member, useMember } from '../../../../context/member.context'
-import Icon from '../../icons/icon.component'
 import analytics from '../../../../helpers/segment'
 
 type MessageInputProps = {
@@ -21,10 +26,23 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
   const { member } = useMember()
   const messageTemplate = (member && member.messageTemplate) || ''
   const [message, setMessage] = useState<string>(messageTemplate)
+  const [charCount, setCharCount] = useState<number>(0)
+  const [channel, setChannel] = useState<string>('')
   const [sendingSMS, setSendingSMS] = useState<boolean>(false)
   const { addToast } = useToasts()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const user = useUser()
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
+
+  React.useEffect(() => {
+    const { scrollHeight } = textAreaRef?.current
+    if (scrollHeight > 20 && scrollHeight < 200) {
+      textAreaRef.current.style.height = `${scrollHeight}px`
+    }
+    if (textAreaRef?.current?.innerHTML === '') {
+      textAreaRef.current.style.height = `20px`
+    }
+  }, [message])
 
   React.useEffect(() => {
     setMessage(messageTemplate)
@@ -32,6 +50,11 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
 
   const handleChange = ($event: any) => {
     setMessage($event.target.value)
+    setCharCount($event.target.value.length)
+  }
+
+  const handleSelectedChannel = (event: any) => {
+    setChannel(event.target.value)
   }
 
   const getAntaraId = (currentMember: Member) => {
@@ -61,6 +84,15 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
 
   const sendMessage = () => {
     const sms = message && member ? createAntaraSms(member) : null
+    if (!member['Phone 1']) {
+      addToast('No phone number', {
+        appearance: 'error',
+        autoDismiss: true,
+      })
+      setCharCount(0)
+      setSendingSMS(false)
+      setMessage('')
+    }
     if (sms && member) {
       sendSMS(sms).then(({ code }) => {
         if (code === 200) {
@@ -93,29 +125,43 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
   return (
     <>
       <form style={{ position: 'fixed', bottom: 0, width: '339px' }}>
-        <InputContainer>
+        <InputArea>
+          <InputOption>
+            <InputSpan>Send</InputSpan>
+            <select
+              name="message-types"
+              id="msg-types"
+              className="message-input"
+              onChange={(e) => handleSelectedChannel(e)}
+            >
+              <option value="app">App</option>
+              <option value="sms">Sms</option>
+            </select>
+          </InputOption>
+
           <Input
-            placeholder="Type something..."
+            ref={textAreaRef}
+            placeholder="Text"
             value={message}
             onChange={handleChange}
             autoFocus
           />
+          <span>
+            {charCount > 150 &&
+              channel === 'sms' &&
+              `This sms will overflow to two separate SMSes`}
+          </span>
           <SendButton
             onClick={confirmSend}
             disabled={!message || sendingSMS}
             data-testid="sms-send-btn"
+            style={{ backgroundColor: message ? '#58a9f3' : '#87c1f7' }}
           >
-            {sendingSMS ? (
-              'Sending...'
-            ) : (
-              <Icon
-                name="circle-arrow-top"
-                fill={message ? '#FF9800' : '#C6DFEB'}
-              />
-            )}
+            {sendingSMS ? 'Sending...' : 'Send'}
           </SendButton>
-        </InputContainer>
+        </InputArea>
       </form>
+
       {isDialogOpen && (
         <ConfirmationDialog
           title="Are you sure?"

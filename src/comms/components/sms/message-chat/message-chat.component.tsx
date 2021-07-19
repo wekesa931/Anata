@@ -52,7 +52,7 @@ const MessageChat = ({
   }, [messages])
 
   const getTime = (date: string | Date) => {
-    return dayjs(date).format('hh:mm')
+    return dayjs(date).format('hh:mm A')
   }
 
   const fromMember = (phone_number: string) => {
@@ -69,6 +69,7 @@ const MessageChat = ({
         style={{
           overflowY: 'scroll',
           clear: 'both',
+          paddingBottom:'250px'
         }}
         data-testid="thread"
       >
@@ -87,7 +88,7 @@ const MessageChat = ({
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <SenderDiv>{message.message}
                    <GreyText>
-                <div style={{transform:'translate(143%)'}}>{getTime(message.sent_received)}</div>
+                <div className="transform-icon">{getTime(message.sent_received)}</div>
                {message?.sent_received &&
                <>
                   <DeliveredText>
@@ -107,7 +108,7 @@ const MessageChat = ({
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <RecipientDiv>{message.message}
                 <OrangeText>
-                <div style={{transform:'translate(143%)'}}>{getTime(message.sent_received)}</div>
+                <div className="transform-icon">{getTime(message.sent_received)}</div>
                {message?.delivery_time &&
                <>
                   <DeliveredText>

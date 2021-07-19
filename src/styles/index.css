@@ -1465,3 +1465,12 @@ a {
   text-align: left;
   color: #182c4c;
 }
+.message-input{
+  border: none;
+  outline: none;
+}
+.transform-icon{
+  transform:translate(80%);
+  white-space: nowrap;
+}
+
