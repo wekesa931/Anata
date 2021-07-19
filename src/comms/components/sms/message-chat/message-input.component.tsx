@@ -111,7 +111,7 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
   const redirectToIntercom = (event: any) => {
     event.preventDefault()
     const link =
-      'https://app.intercom.com/a/apps/diysybw8/users/6079172ea912092d812adbf1/all-conversations'
+      'https://app.intercom.com/a/apps/diysybw8/users/6049949ae9d91e046ff83cc6/all-conversations'
     window.open(link, 'blank_intercom')
   }
 
