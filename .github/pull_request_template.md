@@ -9,3 +9,5 @@
 2. Do this
 3. Do that
 4. Observe new changes at play
+
+### Attach an image/video explaining the impact to the user
