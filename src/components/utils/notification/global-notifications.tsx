@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
+import { XCircle } from 'react-feather'
 import { useHistory, useLocation } from 'react-router-dom'
 import useFCMState from '../../../comms/fcm/fcm.hook'
 import Icon from '../icon/icon.component'
@@ -11,7 +12,7 @@ import airtableFetch from '../../../resources/airtable-fetch'
 
 const GlobalNotifications = ({ children }: any) => {
   const [display, setdisplay] = useState('none')
-  const [memberOnCall, setmemberOnCall] = useState()
+  const [memberOnCall, setmemberOnCall] = useState(null)
   const { fcmState } = useFCMState()
   const { data } = useQuery(GET_CALL_LOG)
   const user = useUser()
@@ -24,14 +25,14 @@ const GlobalNotifications = ({ children }: any) => {
       if (data) {
         const rawLogs = data.conferenceSessions.edges
         const logs: ILogs[] = rawLogs.map((log: { node: ILogs }) => log.node)
-        const activeCallLog = logs.filter(
+        const activeCallLog = logs.find(
           (log) =>
             log.agentEmail === user?.email &&
             log.sessionStarted === true &&
             !log.sessionEnded
         )
-        if (activeCallLog && activeCallLog.length > 0) {
-          const memberId = activeCallLog[0].memberAirtableId
+        if (activeCallLog) {
+          const memberId = activeCallLog.memberAirtableId
           const response = await airtableFetch(`members/${memberId}`)
           setmemberOnCall(response)
           const isActiveCallingMember =
@@ -48,6 +49,7 @@ const GlobalNotifications = ({ children }: any) => {
 
   const navigateToMember = () => {
     setdisplay('none')
+    setmemberOnCall(null)
     history.push(`/member/${memberOnCall.recID}`)
   }
 
@@ -77,19 +79,30 @@ const GlobalNotifications = ({ children }: any) => {
     <>
       <div style={{ display }} className={styles.inboundNotification}>
         <div className="d-flex align-center">
-          <Icon name="phone-call" fill="white" width={24} height={24} />
-          <div className="ml-10 d-flex flex-column">
-            <p className={styles.memberName}>
-              {memberOnCall && memberOnCall['Full Name']}
-            </p>
-            <button
-              className={styles.goToDashboard}
-              onKeyDown={navigateToMember}
-              onClick={navigateToMember}
-            >
-              Go to Member Dashboard
-            </button>
-          </div>
+          {memberOnCall ? (
+            <>
+              <Icon name="phone-call" fill="white" width={24} height={24} />
+              <div className="ml-10 d-flex flex-column">
+                <p className={styles.memberName}>
+                  {memberOnCall && memberOnCall['Full Name']}
+                </p>
+                <button
+                  className={styles.goToDashboard}
+                  onKeyDown={navigateToMember}
+                  onClick={navigateToMember}
+                >
+                  Go to Member Dashboard
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <XCircle className={styles.error} width="36px" height="36px" />
+              <p className={styles.error}>
+                Incoming call but Member dashboard not found
+              </p>
+            </>
+          )}
         </div>
       </div>
       {children}
