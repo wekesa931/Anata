@@ -117,7 +117,7 @@ body,
   max-width: 339px;
   flex-direction: column;
   display: flex;
-  flex: 1
+  flex: 1;
 }
 
 .comment-call {
@@ -1122,8 +1122,7 @@ a {
 }
 
 .communication-icons {
-  
-} 
+}
 
 .communication-icons button {
   height: 37px !important;
@@ -1200,6 +1199,10 @@ a {
 
 .emergency-btn p {
   color: #ff3b30;
+}
+
+.danger-btn {
+  background-color: red;
 }
 
 .emergency-btn:hover {

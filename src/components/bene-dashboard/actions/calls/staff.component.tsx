@@ -52,8 +52,7 @@ const HNAndCSList = ({
   const [antaraStaffData, setantaraStaffData] = useState<IAntaraStaff[]>([])
   const [error, seterror] = useState<string | null>(null)
   const { data, loading } = useQuery(GET_ANTARA_STAFF)
-  const disableTransferButton =
-    !antaraStaffData || Object.keys(antaraStaffData).length === 0
+  const disableTransferButton = !selected
 
   const initiateCallTransfer = () => {
     displayList(false)
@@ -76,14 +75,18 @@ const HNAndCSList = ({
       setantaraStaffData(staffData)
     }
   }, [data])
-
-  return (
-    <div className="p-absolute staff-list">
-      {loading && (
+  if (loading) {
+    return (
+      <div className="p-absolute staff-list">
         <span className="d-flex flex-center full-width mt-twenty">
           <LoadingIcon />
         </span>
-      )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="p-absolute staff-list">
       {error && <Notification title="Error" message={error} />}
       <div className="staff-names scroll">
         {antaraStaffData.map((staff) => (
@@ -96,7 +99,16 @@ const HNAndCSList = ({
           </div>
         ))}
       </div>
-      <div className="transfer d-flex flex-end">
+      <div className="transfer d-flex flex-between">
+        <button
+          className="danger-btn"
+          onClick={() => {
+            setselected(null)
+            displayList(false)
+          }}
+        >
+          <p>Cancel</p>
+        </button>
         <button
           style={{ background: disableTransferButton ? '#87c1f7' : '#1084ee' }}
           disabled={disableTransferButton}
