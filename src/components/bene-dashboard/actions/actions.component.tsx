@@ -23,7 +23,7 @@ const Actions = () => {
   }, [])
 
   return (
-    <div className="full-height d-flex flex-column">
+    <div className="full-height d-flex flex-column flex-1">
       <CallFloatingBox />
       <div className="d-flex flex-between">
         <div className="d-flex flex-between text-blue-base relative">

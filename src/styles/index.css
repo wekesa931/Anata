@@ -86,19 +86,20 @@ body,
 }
 
 .hide-show {
-  position: absolute;
   top: 68px;
-  right: 315px;
   border: none;
+  width: 44px;
   background-color: #ffffff;
+  cursor: pointer;
 }
 
 .hide-show-right {
-  position: absolute;
   top: 68px;
   right: 0px;
   border: none;
-  background-color: var(--blue-bg);
+  flex: 1;
+  cursor: pointer;
+  background-color: #ffffff;
 }
 
 .dashboard-raised-content {
@@ -112,8 +113,11 @@ body,
 }
 
 .right-sidebar {
-  padding-top: 22px !important;
-  width: 339px;
+  padding-top: 8px !important;
+  max-width: 339px;
+  flex-direction: column;
+  display: flex;
+  flex: 1
 }
 
 .comment-call {
@@ -1116,6 +1120,10 @@ a {
   height: 37px;
   padding: 0px !important;
 }
+
+.communication-icons {
+  
+} 
 
 .communication-icons button {
   height: 37px !important;

@@ -14,7 +14,7 @@ import { CallProvider } from '../../context/calls-context'
 const PatientDashboard = () => {
   const [recId, setRecId] = useState<string>()
   const { params } = useRouteMatch<any>()
-  const [expandActions, setExpandActions] = useState<boolean>(true)
+  const [rightSidebarOpen, setRightSidebarOpen] = useState<boolean>(true)
 
   if (params.recId && recId !== params.recId) {
     setRecId(params.recId)
@@ -30,6 +30,10 @@ const PatientDashboard = () => {
 
   const getDocumentTitle = (member: any) => {
     return `Scribe: ${member['Full Name'] ? member['Full Name'] : 'Loading'}`
+  }
+
+  const toggleRightSideBar = () => {
+    setRightSidebarOpen(!rightSidebarOpen)
   }
 
   return (
@@ -54,32 +58,37 @@ const PatientDashboard = () => {
               >
                 <Views />
               </div>
-              <div
-                className="right-sidebar dashboard-content dashboard-raised-content "
-                style={{
-                  display: expandActions ? 'flex' : 'none',
-                }}
-              >
-                <Actions />
+
+              <div className="dashboard-content dashboard-raised-content">
+                <div className="right-sidebar">
+                  {rightSidebarOpen ? (
+                    <>
+                      <button
+                        className="hide-show"
+                        onClick={toggleRightSideBar}
+                      >
+                        <ArrowRightCircle />
+                      </button>
+                      <div
+                        style={{
+                          display: 'flex',
+                        }}
+                      >
+                        <Actions />
+                      </div>
+                    </>
+                  ) : (
+                    <button
+                      className="hide-show-right"
+                      onClick={toggleRightSideBar}
+                    >
+                      <ArrowLeftCircle />
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </CallProvider>
-          {expandActions && (
-            <button
-              className="hide-show"
-              onClick={() => setExpandActions(!expandActions)}
-            >
-              <ArrowRightCircle />
-            </button>
-          )}
-          {!expandActions && (
-            <button
-              className="hide-show-right"
-              onClick={() => setExpandActions(!expandActions)}
-            >
-              <ArrowLeftCircle />
-            </button>
-          )}
         </MemberProvider>
       )}
     </Fetcher>
