@@ -1,13 +1,5 @@
 import { useEffect, useState } from 'react'
-import FCM from './index' // getAndPostRegToken, // fetchAllAndClear as fetchAllFCMAndClear,
-
-type FCMState = {
-  data: any
-  notification: {
-    title: string
-    body: string
-  }
-}
+import FCM, { fetchAllAndClear, FCMState } from './index'
 
 const useFCMState = () => {
   const [fcmState, setFcmState] = useState<FCMState>({
@@ -19,6 +11,15 @@ const useFCMState = () => {
   })
 
   useEffect(() => {
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        fetchAllAndClear().then((re) => {
+          if (re.length > 0) {
+            setFcmState(re[0])
+          }
+        })
+      }
+    })
     FCM.onMessage((payload) => {
       setFcmState(payload)
     })

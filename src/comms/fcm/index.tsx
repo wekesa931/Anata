@@ -2,6 +2,14 @@ import firebase from 'firebase/app'
 import 'firebase/messaging'
 import { fetchAll, clearTable } from '../resources/localstorage.resources'
 
+export type FCMState = {
+  data: any
+  notification: {
+    title: string
+    body: string
+  }
+}
+
 const NOTIFICATIONTABLE = 'notificationItems'
 
 const firebaseConfig = {
@@ -18,21 +26,15 @@ firebase.initializeApp(firebaseConfig)
 
 const messaging = firebase.messaging()
 
-interface Notification {
-  createdAt: number
-  origin: string
-  message: string
-}
-
-export function fetchAllAndClear(): Promise<Array<Notification>> {
-  return fetchAll<Notification>(NOTIFICATIONTABLE).then(
-    (notifications: Array<Notification>) => {
+export function fetchAllAndClear(): Promise<Array<FCMState>> {
+  return fetchAll<FCMState>(NOTIFICATIONTABLE).then(
+    (notifications: Array<FCMState>) => {
       if (notifications.length === 0) {
         return []
       }
       // @ts-ignore
       return clearTable(NOTIFICATIONTABLE).then(() => {
-        return notifications.sort((a, b) => a.createdAt - b.createdAt)
+        return notifications
       })
     }
   )
