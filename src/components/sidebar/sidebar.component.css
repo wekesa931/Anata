@@ -6,6 +6,9 @@
   background-color: var(--white);
   font-size: 16px;
 }
+.sidebar:hover{
+  cursor: pointer;
+}
 
 .active .menuLink {
   color: var(--orange-base);
@@ -47,7 +50,8 @@
 
 .subList {
   display:flex;
-  padding-left: 10px
+  margin-left: 45px;
+  cursor: pointer;
 }
 
 .arrowRight, .arrowDown {

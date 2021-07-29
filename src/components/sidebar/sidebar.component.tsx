@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { always, toggle } from 'kremling'
+import { toggle } from 'kremling'
 import { Link, useRouteMatch, useHistory } from 'react-router-dom'
 import { ArrowRight, ArrowDown } from 'react-feather'
 import styles from './sidebar.component.css'
@@ -14,12 +14,12 @@ const Sidebar = () => {
   const history = useHistory()
   const user = useUser()
   const { iframes } = config
-  const { handleOnClick, activeView, handleSublistClick } = useSidebar()
+  const { handleOnClick, activeView, handleSublistClick, prev, activeSubView } =
+    useSidebar()
   const { path } = useRouteMatch()
   const [showDropDownTodo, setDropDownTodo] = useState(false)
   const [showDropDownPopulation, setDropDownPopulation] = useState(false)
   const [subItem, setSublist] = useState('')
-
   const getMeetingsView = () => {
     if (user && iframes[user.email]) {
       return iframes[user.email].meetings
@@ -32,14 +32,6 @@ const Sidebar = () => {
     items[3].rootUrl = `https://airtable.com/embed/${getMeetingsView()}?viewControls=on`
   } else if (path.includes('member')) {
     items = SidebarMenuItems.slice(0, 8)
-  }
-  const handleDropDownMenu = (e: EventTarget) => {
-    if (e.innerText === 'Tasks') {
-      setDropDownTodo(!showDropDownTodo)
-    }
-    if (e.innerText === 'Population') {
-      setDropDownPopulation(!showDropDownPopulation)
-    }
   }
   const subList = (
     item: {
@@ -60,7 +52,7 @@ const Sidebar = () => {
         analytics.page({
           title: `Main Dashboard: ${item.name}`,
         })
-        handleSublistClick(index)
+        handleSublistClick(item)
         setSublist(item.name)
         // eslint-disable-next-line no-unused-expressions
         path.includes('member') && history.push('/')
@@ -95,63 +87,81 @@ const Sidebar = () => {
         | undefined
     },
     index: number
-  ) => (
-    <li
-      className={`${styles.list} ${styles.menuLink}`}
-      onClick={(event) => {
-        analytics.page({
-          title: `Main Dashboard: ${item.name}`,
-        })
-        setDropDownTodo(false)
-        setDropDownPopulation(false)
-        handleOnClick(index)
-        handleDropDownMenu(event.target)
-        // eslint-disable-next-line no-unused-expressions
-        path.includes('member') && history.push('/')
-      }}
-      onKeyDown={() => handleOnClick(index)}
-      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
-      role="button"
-      tabIndex={index}
-      key={item.name}
-      data-testid={`item-${item.name}`}
-    >
-      {item.subItems && !showDropDownTodo && item.name === 'Tasks' && (
-        <ArrowRight className={styles.arrowRight} />
-      )}
-      {item.subItems && showDropDownTodo && item.name === 'Tasks' && (
-        <ArrowDown className={styles.arrowRight} />
-      )}
-      {item.subItems &&
-        !showDropDownPopulation &&
-        item.name === 'Population' && (
-          <ArrowRight className={styles.arrowRight} />
-        )}
-      {item.subItems &&
-        showDropDownPopulation &&
-        item.name === 'Population' && (
-          <ArrowDown className={styles.arrowDown} />
-        )}
-      <span
-        className={toggle(
-          'text-orange',
-          'text-grey',
-          activeView.name === item.name
-        )}
+  ) => {
+    const is_tasks = item.name === 'Tasks'
+    const hideDropdown =
+      item.subItems && !showDropDownTodo && item.name === 'Tasks'
+    const showDropDown =
+      item.subItems && showDropDownTodo && item.name === 'Tasks'
+    const handleColorChange =
+      activeView.name === item.name && item.name !== 'Tasks' && !activeSubView
+    const handleSublist =
+      prev.name === item.name &&
+      item.name !== 'Tasks' &&
+      !subItem &&
+      activeView.name === 'Tasks'
+    return (
+      <li
+        className={`${styles.list} ${styles.menuLink}`}
+        onClick={() => {
+          analytics.page({
+            title: `Main Dashboard: ${item.name}`,
+          })
+          setDropDownPopulation(false)
+          setSublist('')
+          handleOnClick(index)
+          is_tasks && setDropDownTodo(!showDropDownTodo)
+          handleSublistClick('')
+          path.includes('member') && history.push('/')
+        }}
+        onKeyDown={() => handleOnClick(index)}
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
+        role="button"
+        tabIndex={index}
+        key={item.name}
+        data-testid={`item-${item.name}`}
       >
-        {item.icon}
-      </span>
-      <h5
-        className={toggle(
-          'text-orange',
-          'text-grey',
-          activeView.name === item.name
+        {hideDropdown && (
+          <span>
+            <ArrowRight className={styles.arrowRight} />
+          </span>
         )}
-      >
-        {item.name === 'Tasks' ? <b>{item.name}</b> : item.name}
-      </h5>
-    </li>
-  )
+        {showDropDown && (
+          <span className="dropdown-button">
+            <ArrowDown className={styles.arrowRight} />
+          </span>
+        )}
+        {item.subItems &&
+          !showDropDownPopulation &&
+          item.name === 'Population' && (
+            <ArrowRight className={styles.arrowRight} />
+          )}
+        {item.subItems &&
+          showDropDownPopulation &&
+          item.name === 'Population' && (
+            <ArrowDown className={styles.arrowDown} />
+          )}
+        <span
+          className={toggle(
+            'text-orange',
+            'text-grey',
+            handleColorChange
+          ).maybe('text-orange', handleSublist)}
+        >
+          {item.icon}
+        </span>
+        <h5
+          className={toggle(
+            'text-orange',
+            'text-grey',
+            handleColorChange
+          ).maybe('text-orange', handleSublist)}
+        >
+          {item.name === 'Tasks' ? <b>{item.name}</b> : item.name}
+        </h5>
+      </li>
+    )
+  }
   return (
     <div className={styles.sidebar}>
       <div className={styles.logoContainer}>
@@ -169,9 +179,13 @@ const Sidebar = () => {
           const { subItems } = item
           return (
             <div
-              className={always(styles.menuItem).maybe(
+              className={toggle(
+                'menuItem',
+                'tasks',
+                item.name !== 'Tasks'
+              ).maybe(
                 styles.active,
-                activeView.name === item.name
+                activeView.name === item.name && item.name !== 'Tasks'
               )}
               key={item.name}
             >

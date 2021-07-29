@@ -1,56 +1,51 @@
 import React from 'react'
 import styles from './main-dashboard.component.css'
 import AirtableIframe from '../utils/airtableIframe/airtableIframe.component'
-import { useUser } from '../../context/user-context'
-import config from '../../config/config'
-import Tabs from '../utils/tabs/tabs.component'
 import { useSidebar } from '../../context/sidebar-context'
 
 const HNDashboard = () => {
-  const user = useUser()
-  const { activeView, activeSubView } = useSidebar()
-  const { iframes } = config
-
-  const getTasksView = () => {
-    if (user && iframes[user.email]) {
-      return iframes[user.email].hntasks
-    }
-    return iframes.default.hntasks
-  }
+  const { activeView, activeSubView, prev } = useSidebar()
 
   const AirtableView = () => {
     const subListUrl = process.env.PROD
-      ? activeSubView.rootUrl
-      : activeSubView.url_sandbox
+      ? activeSubView?.rootUrl
+      : activeSubView?.url_sandbox
     const listUrl = process.env.PROD
-      ? activeView.rootUrl
-      : activeView.url_sandbox
-    return !activeView.hasCalendar ? (
-      <AirtableIframe src={activeSubView ? subListUrl : listUrl} />
-    ) : (
-      <Tabs>
-        <div label="Calendar">
-          <AirtableIframe
-            src={`https://airtable.com/embed/${
-              getTasksView().calendar
-            }?viewControls=on`}
-          />
-        </div>
-        <div label="Grid">
-          <AirtableIframe
-            src={`https://airtable.com/embed/${
-              getTasksView().grid
-            }?viewControls=on`}
-          />
-        </div>
-      </Tabs>
-    )
+      ? activeView?.rootUrl
+      : activeView?.url_sandbox
+    const prevUrl = process.env.PROD ? prev?.rootUrl : prev?.url_sandbox
+    const urlToShow = () => {
+      if (activeView.name === 'Tasks' && !activeSubView) {
+        return prevUrl
+      }
+      if (activeSubView) {
+        return subListUrl
+      }
+
+      return listUrl
+    }
+    if (!prev.component) {
+      return <AirtableIframe src={urlToShow()} />
+    }
+    if (!activeSubView && prev.component && activeView.name === 'Tasks') {
+      return prev.component
+    }
+
+    return <AirtableIframe src={urlToShow()} />
   }
 
   React.useEffect(() => {
     document.title = `Scribe Home: ${activeView.name}`
   }, [activeView])
-
+  const view = () => {
+    if (activeSubView) {
+      return activeSubView.name
+    }
+    if (activeView.name === 'Tasks') {
+      return prev.name
+    }
+    return activeView.name
+  }
   return (
     <div data-testid="main-dash" className={styles.dashboard}>
       <div className={styles.dashboardView}>
@@ -58,10 +53,10 @@ const HNDashboard = () => {
           data-testid="hn-text-heading"
           className="text-heading-2 margin-bottom-16"
         >
-          {activeSubView ? activeSubView.name : activeView.name}
+          {view()}
         </p>
-        {activeView.component || activeSubView.component ? (
-          activeView.component || activeSubView.component
+        {activeView?.component && !activeSubView ? (
+          activeView?.component
         ) : (
           <AirtableView />
         )}

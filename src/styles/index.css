@@ -1476,6 +1476,10 @@ a {
   color: #182c4c;
 }
 
+.dropdown-button{
+  color: var(--greyscale-6);
+  border: none;
+}
 #intercom-image .intercom-container img {
   width: 100%;
   cursor: pointer;

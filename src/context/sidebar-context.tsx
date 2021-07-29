@@ -6,7 +6,8 @@ type sidebar = {
   activeView: any
   activeSubView: any
   activeIndex: number
-  handleSublistClick: (index: number) => void
+  handleSublistClick: (item: any) => void
+  prev: any
 }
 
 const SidebarContext = React.createContext<sidebar>({
@@ -19,32 +20,32 @@ const SidebarContext = React.createContext<sidebar>({
   handleSublistClick: () => {
     return null
   },
+  prev: '',
 })
 
 const SidebarProvider = ({ children }: any) => {
+  const [prev, setPrev] = useState<any>('')
   const [activeIndex, setActive] = useState(0)
   const [activeView, setActiveView] = useState(menu[0])
-  const [activeSubViewIndex, setActiveSubView] = useState(0)
-  const [activeSubView, setActiveSubViewItem] = useState('')
+  const [activeSubView, setActiveSubViewItem] = useState<any>('')
 
-  const handleOnClick = useCallback((index: number) => {
-    setActiveSubViewItem('')
-    setActive(index)
-  }, [])
+  const handleOnClick = useCallback(
+    (index: number) => {
+      if (activeView.name !== 'Tasks') {
+        setPrev(activeView)
+      }
+      setActive(index)
+    },
+    [activeView]
+  )
 
   useEffect(() => {
     setActiveView(menu[activeIndex])
   }, [activeIndex])
 
-  const handleSublistClick = useCallback((index: number) => {
-    setActiveSubView(index)
+  const handleSublistClick = useCallback((item: any) => {
+    setActiveSubViewItem(item)
   }, [])
-
-  useEffect(() => {
-    // eslint-disable-next-line
-    activeView.subItems &&
-      setActiveSubViewItem(activeView.subItems[activeSubViewIndex])
-  }, [activeSubViewIndex, activeView])
 
   return (
     <SidebarContext.Provider
@@ -54,6 +55,7 @@ const SidebarProvider = ({ children }: any) => {
         activeIndex,
         activeSubView,
         handleSublistClick,
+        prev,
       }}
     >
       {children}

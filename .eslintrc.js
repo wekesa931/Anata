@@ -14,5 +14,6 @@ module.exports = {
     'no-restricted-globals': 'off',
     'react/no-array-index-key': 'off',
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
-  },
+    'no-unused-expressions': ["error", { "allowShortCircuit": true, "allowTernary": true  }],
+  }
 }

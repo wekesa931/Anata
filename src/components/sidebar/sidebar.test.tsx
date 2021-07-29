@@ -22,8 +22,8 @@ describe('<Sidebar />', () => {
     renderWithRouter(<Sidebar />)
   })
 
-  it('displays sidebar links', () => {
-    const sidebarLinksContainer = screen.getByTestId('sidebar-links')
+  it('displays sidebar links', async () => {
+    const sidebarLinksContainer = await screen.getByTestId('sidebar-links')
     expect(sidebarLinksContainer.children.length).toBe(8)
     screen.getByText(/Members/)
   })
