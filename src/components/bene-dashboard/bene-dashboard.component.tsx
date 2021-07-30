@@ -64,6 +64,7 @@ const PatientDashboard = () => {
                     <div
                       style={{
                         display: 'flex',
+                        overflowY: 'scroll',
                       }}
                     >
                       <Actions />

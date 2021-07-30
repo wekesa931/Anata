@@ -123,6 +123,7 @@ body,
   flex-direction: column;
   display: flex;
   flex: 1;
+  overflow-y: scroll;
 }
 
 .comment-call {
@@ -279,7 +280,7 @@ h6,
 }
 
 .flex-scroll {
-  overflow-y: 'scroll';
+  overflow-y: scroll;
   flex: 1;
 }
 
