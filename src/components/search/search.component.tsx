@@ -9,6 +9,10 @@ import airtableFetch from '../../resources/airtable-fetch'
 import styles from './search.component.css'
 import analytics from '../../helpers/segment'
 
+interface IProps {
+  unknownMemberSearch?: boolean
+  memberInfo?: (info: any) => void
+}
 interface resultItemType {
   id: string
   displayName: string
@@ -18,7 +22,7 @@ interface resultItemType {
   Sex: string
 }
 
-const SearchInput = () => {
+const SearchInput = ({ unknownMemberSearch, memberInfo }: IProps) => {
   const [results, setResults] = useState<Array<resultItemType>>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const history = useHistory()
@@ -57,6 +61,12 @@ const SearchInput = () => {
     return throttleFunc()
   }
 
+  const setMemberInfo = (info: any) => {
+    if (memberInfo) {
+      memberInfo(info)
+    }
+  }
+
   const onResultClicked = (
     item: resultItemType | null,
     stateAndHelpers: { clearSelection: () => any }
@@ -65,8 +75,12 @@ const SearchInput = () => {
       analytics.track('Bene Searched', {
         bene: item.id,
       })
-      history.push(`/member/${item.id}`)
-      location.reload()
+      if (unknownMemberSearch) {
+        setMemberInfo(item)
+      } else {
+        history.push(`/member/${item.id}`)
+        location.reload()
+      }
     }
     // clear selection
     stateAndHelpers.clearSelection()
@@ -89,8 +103,9 @@ const SearchInput = () => {
         selectedItem,
         getRootProps,
       }) => (
-        <div className={styles.searchWrap}>
+        <div id="search-wrap" className={styles.searchWrap}>
           <div
+            id="search-input-wrap"
             className={styles.searchInputWrap}
             {...getRootProps(undefined, { suppressRefError: true })}
           >
@@ -139,13 +154,23 @@ const SearchInput = () => {
                       })}
                       className={styles.resultItem}
                     >
-                      <Link
-                        to={{
-                          pathname: `/member/${item.id}`,
-                        }}
-                      >
-                        <span>{item.displayName}</span>
-                      </Link>
+                      {unknownMemberSearch ? (
+                        <div
+                          aria-hidden="true"
+                          onClick={() => setMemberInfo(item)}
+                          onKeyDown={() => setMemberInfo(item)}
+                        >
+                          <span>{item.displayName}</span>
+                        </div>
+                      ) : (
+                        <Link
+                          to={{
+                            pathname: `/member/${item.id}`,
+                          }}
+                        >
+                          <span>{item.displayName}</span>
+                        </Link>
+                      )}
                     </li>
                   ))}
                 </ul>

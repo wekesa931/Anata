@@ -8,10 +8,13 @@ import Timer from '../../../../comms/components/calls/CountUp'
 import CallConsoleForms from './forms'
 import HNAndCSList from './staff.component'
 import CallbackHistory, { HistoryLogs } from './callbackHistory.component'
+import SearchInput from '../../../search/search.component'
+import SaveContactView from './updateBeneContactView'
 
 const CallFloatingBox = () => {
   const { member } = useMember()
   const [isOpen, setisOpen] = React.useState(true)
+  const [memberInfo, setmemberInfo] = useState(null)
   const [displayHistory, setdisplayHistory] = useState(false)
   const { activeCall, completeCall } = useCall()
   const [showTransferList, setshowTransferList] = useState(false)
@@ -24,6 +27,15 @@ const CallFloatingBox = () => {
   const isFulfilled = activeCall?.state === 'FULFILLED'
   const isTransfered = activeCall?.state === 'TRANSFERED'
   const participantLeft = activeCall?.state === 'MEMBERLEFT'
+  const isKnownMember = activeCall?.memberName !== 'Unknown Caller'
+  const shouldDisplayForms =
+    isKnownMember &&
+    (isActive ||
+      isFulfilled ||
+      participantBusy ||
+      participantLeft ||
+      isTransfered ||
+      staffBusy)
 
   const subTitle = () => {
     let subtitle = `Calling  ${activeCall?.member}...`
@@ -38,6 +50,9 @@ const CallFloatingBox = () => {
     }
     return subtitle
   }
+  const displayHistoryLogs = isCallBack && subTitle().includes('Calling')
+  const displayActionButtons =
+    !activeCall?.forwardTo && !isTransfered && !subTitle().includes('Calling')
 
   const callColorCodes = {
     CALLENDED: '#182c4c',
@@ -93,6 +108,11 @@ const CallFloatingBox = () => {
         <div className="d-flex relative box-header">
           <p className="call-type-title">
             {activeCall.title ?? 'Inbound Call'}
+            <br />
+            <span>
+              <strong>{activeCall.member} </strong>
+              <span>{activeCall.memberName}</span>
+            </span>
           </p>
           {isCallBack && (
             <Info
@@ -192,34 +212,38 @@ const CallFloatingBox = () => {
           </div>
         </div>
       )}
-      {isCallBack && subTitle().includes('Calling') && (
+      {displayHistoryLogs && (
         <div className="ml-twenty mt-twenty">
           <HistoryLogs />
         </div>
       )}
-      {(isActive ||
-        isFulfilled ||
-        participantBusy ||
-        participantLeft ||
-        isTransfered ||
-        staffBusy) && <CallConsoleForms />}
-      {!activeCall.forwardTo &&
-        !isTransfered &&
-        !subTitle().includes('Calling') && (
-          <div className="full-width d-flex flex-end transfer-container">
-            <button className="d-flex emergency-btn" onClick={() => null}>
-              <AlertTriangle className="emergency-btn-icon icon-size" />
-              <p>Emergency</p>
-            </button>
-            <button
-              className="d-flex"
-              onClick={() => setshowTransferList(!showTransferList)}
-            >
-              <Repeat className="icon-size" />
-              <p>Transfer to</p>
-            </button>
+      {!isKnownMember &&
+        (memberInfo ? (
+          <SaveContactView
+            callerNum={activeCall.member}
+            memberInfo={memberInfo}
+          />
+        ) : (
+          <div className="unknown-member">
+            <SearchInput unknownMemberSearch memberInfo={setmemberInfo} />
           </div>
-        )}
+        ))}
+      {shouldDisplayForms && <CallConsoleForms />}
+      {displayActionButtons && (
+        <div className="full-width d-flex flex-end transfer-container">
+          <button className="d-flex emergency-btn" onClick={() => null}>
+            <AlertTriangle className="emergency-btn-icon icon-size" />
+            <p>Emergency</p>
+          </button>
+          <button
+            className="d-flex"
+            onClick={() => setshowTransferList(!showTransferList)}
+          >
+            <Repeat className="icon-size" />
+            <p>Transfer to</p>
+          </button>
+        </div>
+      )}
     </div>
   )
 }

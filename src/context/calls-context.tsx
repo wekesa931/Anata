@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
-import { useLocation } from 'react-router-dom'
-import { useMember } from './member.context'
 import { useUser } from './user-context'
 import { GET_CALL_LOG, MAKE_CALL, TRANSFER_CALL } from '../gql/comms'
 import useFCMState from '../comms/fcm/fcm.hook'
 import logError from '../components/utils/Bugsnag/Bugsnag'
+import airtableFetch from '../resources/airtable-fetch'
 
 export type ILogs = {
   startedAt: string
@@ -41,6 +40,7 @@ type Call = {
   duration?: string
   initialCallTime: number
   member: string
+  memberName: string
   forwardTo?: string
   session?: string
   callbackHistoryId?: string
@@ -51,7 +51,13 @@ type ContextType = {
   activeCallContact?: CallContact | null
   callError?: string | null
   completeCall: () => void
-  initiateCall: (callContact: CallContact, onCallInitiated: () => void) => void
+  setCallerName: (name: string) => void
+  initiateCall: (
+    callContact: CallContact,
+    onCallInitiated: () => void,
+    memberAntaraId: string,
+    type?: string
+  ) => void
   initiateTransfer: (staff: {
     phone: string
     email: string
@@ -64,16 +70,18 @@ type ContextType = {
 const CallContext = React.createContext<ContextType>({
   initiateCall: () => null,
   initiateTransfer: () => null,
+  setCallerName: () => null,
   completeCall: () => null,
   setCounterValue: () => null,
   setHistoryRecordId: () => null,
 })
 
 function CallProvider({ children }: any) {
-  const { member } = useMember()
   const [activeCallContact, setActiveCallContact] =
     useState<CallContact | null>()
   const [counter, setcounter] = useState(0)
+  const [activeCallingMember, setactiveCallingMember] =
+    useState<string>('Unknown Caller')
   const [activeCall, setActiveCall] = useState<Call | null>()
   const [callError, setcallError] = useState<string | null>(null)
   const { fcmState } = useFCMState()
@@ -81,7 +89,6 @@ function CallProvider({ children }: any) {
   const [initiateCallTransfer] = useMutation(TRANSFER_CALL)
   const user = useUser()
   const { data } = useQuery(GET_CALL_LOG)
-  const location = useLocation()
   const participantBusy =
     fcmState.notification.title === 'Participant Busy' ||
     fcmState.notification.title === 'Participant No Answer'
@@ -92,6 +99,14 @@ function CallProvider({ children }: any) {
       titleName = 'Inbound Call'
     }
     return titleName
+  }
+  const getMemberOnCallfromAirtable = async (memberId: string) => {
+    const result = await airtableFetch(`members/${memberId}`)
+    if (result) {
+      setactiveCallingMember(result['Full Name'])
+    } else {
+      setactiveCallingMember('Unknown Caller')
+    }
   }
 
   /*
@@ -110,12 +125,14 @@ function CallProvider({ children }: any) {
           !log.sessionEnded
       )
       if (activeCallLog) {
+        getMemberOnCallfromAirtable(activeCallLog.memberAirtableId)
         const ongoingCall = activeCallLog
         const call = {
           title: callTitle(ongoingCall.callDirection.toLocaleLowerCase()),
           type: ongoingCall.callDirection,
           state: 'ONGOING',
           assigned: user ? user.email : '',
+          memberName: activeCallingMember,
           member: ongoingCall.memberPhone,
           initialCallTime:
             (new Date().getMinutes() -
@@ -124,17 +141,11 @@ function CallProvider({ children }: any) {
             (new Date().getSeconds() -
               new Date(ongoingCall.startedAt).getSeconds()),
         }
-        const isActiveCallingMember = window.location.pathname.includes(
-          ongoingCall.memberAirtableId
-        )
-
-        if (isActiveCallingMember) {
-          setActiveCall({ ...call, session: ongoingCall.roomName })
-        }
+        setActiveCall({ ...call, session: ongoingCall.roomName })
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, location.pathname, counter])
+  }, [data, counter])
 
   /*
    *
@@ -144,9 +155,13 @@ function CallProvider({ children }: any) {
   useEffect(() => {
     if (activeCall?.state !== 'FULFILLED') {
       let conferenceName = ''
+      let callerNum = null
       const callUpdates: Call = {} as Call
       const isStaff = fcmState.data.is_staff === 'true'
-      if (fcmState.notification.title === 'Call Ongoing') {
+      if (
+        fcmState.notification.title === 'Call Ongoing' ||
+        fcmState.notification.title === 'Incoming Call'
+      ) {
         if (
           !activeCall ||
           Object.prototype.hasOwnProperty.call(activeCall, 'title')
@@ -178,12 +193,18 @@ function CallProvider({ children }: any) {
       if (fcmState.data.conference) {
         conferenceName = fcmState.data.conference
       }
+      if (fcmState.data.caller_phone) {
+        callerNum = fcmState.data.caller_phone
+      }
 
       if (Object.keys(callUpdates).length !== 0) {
+        getMemberOnCallfromAirtable(fcmState.data.member_airtable_id)
         setActiveCall({
           ...activeCall,
           ...callUpdates,
+          member: callerNum,
           session: conferenceName,
+          memberName: activeCallingMember,
         })
       }
     }
@@ -252,6 +273,7 @@ function CallProvider({ children }: any) {
   const initiateCall = (
     callContact: CallContact,
     onCallInitiated: (call: Call) => void,
+    memberAntaraId: string,
     type = 'OUTBOUND'
   ) => {
     if (
@@ -264,7 +286,7 @@ function CallProvider({ children }: any) {
     if (phoneNum) {
       initiateConferenceCall({
         variables: {
-          antaraId: member['Antara ID'],
+          antaraId: memberAntaraId,
           recipient: phoneNum,
         },
       })
@@ -295,12 +317,16 @@ function CallProvider({ children }: any) {
     setActiveCallContact(null)
     setActiveCall(null)
     setcallError(null)
+    setactiveCallingMember('Unknown Caller')
   }
   const setCounterValue = () => {
     setcounter((val) => val + 1)
   }
   const setHistoryRecordId = (id: string) => {
     setActiveCall({ ...activeCall, callbackHistoryId: id })
+  }
+  const setCallerName = (name: string) => {
+    setActiveCall({ ...activeCall, memberName: name })
   }
 
   return (
@@ -309,6 +335,7 @@ function CallProvider({ children }: any) {
         activeCallContact,
         activeCall,
         callError,
+        setCallerName,
         completeCall,
         initiateCall,
         initiateTransfer,

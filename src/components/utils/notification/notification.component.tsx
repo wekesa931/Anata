@@ -1,4 +1,5 @@
 import * as React from 'react'
+import parse from 'html-react-parser'
 import styles from './notification.component.css'
 
 export interface IProps {
@@ -33,7 +34,7 @@ const Notification = ({ message, title }: IProps) => {
         >
           {title}:
         </span>
-        <p className={styles.textContainer}>{message}</p>
+        <p className={styles.textContainer}>{parse(message)}</p>
       </div>
     </div>
   )

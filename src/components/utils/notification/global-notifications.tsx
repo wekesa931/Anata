@@ -98,9 +98,7 @@ const GlobalNotifications = ({ children }: any) => {
           ) : (
             <>
               <XCircle className={styles.error} width="36px" height="36px" />
-              <p className={styles.error}>
-                Incoming call but Member dashboard not found
-              </p>
+              <p className={styles.error}>Incoming call from unknown number</p>
             </>
           )}
         </div>

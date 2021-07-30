@@ -3,6 +3,7 @@ import Icon from '../../../utils/icon/icon.component'
 import { useCall } from '../../../../context/calls-context'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import Notification from '../../../utils/notification/notification.component'
+import { useMember } from '../../../../context/member.context'
 
 export interface IProps {
   relevantContact: any
@@ -19,6 +20,7 @@ const ContactList = ({
   const [notificationError, setnotificationError] = React.useState<
     string | null
   >(null)
+  const { member } = useMember()
   const { initiateCall } = useCall()
   const numberType = (num: any, isKey: boolean): string => {
     let value = ''
@@ -50,7 +52,12 @@ const ContactList = ({
     e.stopPropagation()
     setisRinging(!isRinging)
     try {
-      initiateCall(relevantContact, onCallInitiated, tasksType)
+      initiateCall(
+        relevantContact,
+        onCallInitiated,
+        member['Antara ID'],
+        tasksType
+      )
     } catch (error) {
       setnotificationError(error.message)
       setTimeout(() => {

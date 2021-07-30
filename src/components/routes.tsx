@@ -9,25 +9,30 @@ import BeneDashboard from './bene-dashboard/bene-dashboard.component'
 import history from '../constants/history'
 import InteractionLogsForm from './bene-dashboard/actions/forms/interaction-logs/interaction-logs-form.component'
 import GlobalNotifications from './utils/notification/global-notifications'
+import { CallProvider } from '../context/calls-context'
+import CallFloatingBox from './bene-dashboard/actions/calls/callConsole.component'
 
 const Routes = () => {
   return (
     <Router history={history}>
       <Switch>
         <GlobalNotifications>
-          <Route exact path="/login" component={Login} />
-          <ProtectedRoute exact path="/">
-            <Dashboard />
-          </ProtectedRoute>
-          <ProtectedRoute exact path="/member">
-            <Dashboard />
-          </ProtectedRoute>
-          <ProtectedRoute exact path="/member/:recId">
-            <BeneDashboard />
-          </ProtectedRoute>
-          <ProtectedRoute path="/member/:recId/interaction/create">
-            <InteractionLogsForm />
-          </ProtectedRoute>
+          <CallProvider>
+            <CallFloatingBox />
+            <Route exact path="/login" component={Login} />
+            <ProtectedRoute exact path="/">
+              <Dashboard />
+            </ProtectedRoute>
+            <ProtectedRoute exact path="/member">
+              <Dashboard />
+            </ProtectedRoute>
+            <ProtectedRoute exact path="/member/:recId">
+              <BeneDashboard />
+            </ProtectedRoute>
+            <ProtectedRoute path="/member/:recId/interaction/create">
+              <InteractionLogsForm />
+            </ProtectedRoute>
+          </CallProvider>
         </GlobalNotifications>
       </Switch>
     </Router>

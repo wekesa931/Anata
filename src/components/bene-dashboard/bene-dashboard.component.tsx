@@ -9,7 +9,6 @@ import Fetcher from '../utils/fetcher/fetcher'
 import ErrorBoundary from '../error-boundary/error-boundary.component'
 import analytics from '../../helpers/segment'
 import { MemberProvider } from '../../context/member.context'
-import { CallProvider } from '../../context/calls-context'
 
 const PatientDashboard = () => {
   const [recId, setRecId] = useState<string>()
@@ -45,50 +44,42 @@ const PatientDashboard = () => {
     >
       {(response: any) => (
         <MemberProvider member={response}>
-          <CallProvider>
-            <div className={styles.container}>
-              <div className="dashboard-content dashboard-raised-content padding-top-32">
-                <ErrorBoundary>
-                  <BioData />
-                </ErrorBoundary>
-              </div>
-              <div
-                className="dashboard-content padding-top-32"
-                style={{ flex: 1, borderRight: '1px solid var(--blue-light)' }}
-              >
-                <Views />
-              </div>
+          <div className={styles.container}>
+            <div className="dashboard-content dashboard-raised-content padding-top-32">
+              <ErrorBoundary>
+                <BioData />
+              </ErrorBoundary>
+            </div>
+            <div className="dashboard-content padding-top-32 bene-views">
+              <Views />
+            </div>
 
-              <div className="dashboard-content dashboard-raised-content">
-                <div className="right-sidebar">
-                  {rightSidebarOpen ? (
-                    <>
-                      <button
-                        className="hide-show"
-                        onClick={toggleRightSideBar}
-                      >
-                        <ArrowRightCircle />
-                      </button>
-                      <div
-                        style={{
-                          display: 'flex',
-                        }}
-                      >
-                        <Actions />
-                      </div>
-                    </>
-                  ) : (
-                    <button
-                      className="hide-show-right"
-                      onClick={toggleRightSideBar}
-                    >
-                      <ArrowLeftCircle />
+            <div className="dashboard-content dashboard-raised-content">
+              <div className="right-sidebar">
+                {rightSidebarOpen ? (
+                  <>
+                    <button className="hide-show" onClick={toggleRightSideBar}>
+                      <ArrowRightCircle />
                     </button>
-                  )}
-                </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                      }}
+                    >
+                      <Actions />
+                    </div>
+                  </>
+                ) : (
+                  <button
+                    className="hide-show-right"
+                    onClick={toggleRightSideBar}
+                  >
+                    <ArrowLeftCircle />
+                  </button>
+                )}
               </div>
             </div>
-          </CallProvider>
+          </div>
         </MemberProvider>
       )}
     </Fetcher>

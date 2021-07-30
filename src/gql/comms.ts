@@ -89,7 +89,19 @@ const GET_CALL_LOG = gql`
     }
   }
 `
-
+const UPDATE_CONTACT = gql`
+  mutation updateBeneficiaryContacts($input: BeneficiaryContactInput!) {
+    updateBeneficiaryContacts(input: $input) {
+      status
+      message
+      validationErrors
+      data {
+        contactPhone1
+        contactPhone2
+      }
+    }
+  }
+`
 // eslint-disable-next-line import/prefer-default-export
 export {
   MAKE_CALL,
@@ -97,4 +109,5 @@ export {
   MEMBER_CONTACT_DETAILS,
   GET_CALL_LOG,
   TRANSFER_CALL,
+  UPDATE_CONTACT,
 }

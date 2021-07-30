@@ -5,7 +5,6 @@ import Meetings from './meetings/meetings.component'
 import Tasks from './tasks/tasks.component'
 import Icon from '../../utils/icon/icon.component'
 import CallsCallout from './calls/calls.component'
-import CallFloatingBox from './calls/callConsole.component'
 import { useCall } from '../../../context/calls-context'
 import ErrorBoundary from '../../error-boundary/error-boundary.component'
 
@@ -24,7 +23,6 @@ const Actions = () => {
 
   return (
     <div className="full-height d-flex flex-column flex-1">
-      <CallFloatingBox />
       <div className="d-flex flex-between">
         <div className="d-flex flex-between text-blue-base relative">
           {tabs.map((tab) => (
