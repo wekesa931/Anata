@@ -8,7 +8,7 @@ import Dashboard from './main-dashboard/main-dashboard'
 import BeneDashboard from './bene-dashboard/bene-dashboard.component'
 import history from '../constants/history'
 import InteractionLogsForm from './bene-dashboard/actions/forms/interaction-logs/interaction-logs-form.component'
-import GlobalNotifications from './utils/notification/global-notifications'
+import { FcmProvider } from '../context/fcm/fcm.context'
 import { CallProvider } from '../context/calls-context'
 import CallFloatingBox from './bene-dashboard/actions/calls/callConsole.component'
 
@@ -16,7 +16,7 @@ const Routes = () => {
   return (
     <Router history={history}>
       <Switch>
-        <GlobalNotifications>
+        <FcmProvider>
           <CallProvider>
             <CallFloatingBox />
             <Route exact path="/login" component={Login} />
@@ -33,7 +33,7 @@ const Routes = () => {
               <InteractionLogsForm />
             </ProtectedRoute>
           </CallProvider>
-        </GlobalNotifications>
+        </FcmProvider>
       </Switch>
     </Router>
   )

@@ -15,6 +15,14 @@ import mockHnTasks from '../../../../../__mocks__/hn-tasks-mock'
 import { GET_MEMBER_TASKS } from '../../../../gql/hn_tasks'
 import mockCallSession from '../../../../../__mocks__/call-session-mocks'
 
+jest.mock('firebase/app', () => {
+  return {
+    auth: jest.fn(),
+    messaging: jest.fn(),
+    initializeApp: jest.fn(),
+  }
+})
+
 jest.mock('../../../../helpers/analytics', () => {
   return jest.fn(() => null)
 })
@@ -33,18 +41,18 @@ jest.mock('react-toast-notifications', () => ({
   }),
 }))
 
-jest.mock('../../../../comms/fcm/fcm.hook', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      fcmState: {
-        notification: {
-          title: 'Call Ongoing',
-          body: '',
-        },
-      },
-    }
-  })
-})
+// jest.mock('../../../../comms/fcm/fcm.hook', () => {
+//   return jest.fn().mockImplementation(() => {
+//     return {
+//       fcmState: {
+//         notification: {
+//           title: 'Call Ongoing',
+//           body: '',
+//         },
+//       },
+//     }
+//   })
+// })
 
 const callSession = {
   request: {

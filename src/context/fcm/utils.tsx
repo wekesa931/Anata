@@ -1,6 +1,9 @@
 import firebase from 'firebase/app'
 import 'firebase/messaging'
-import { fetchAll, clearTable } from '../resources/localstorage.resources'
+import {
+  fetchAll,
+  clearTable,
+} from '../../comms/resources/localstorage.resources'
 
 export type FCMState = {
   data: any

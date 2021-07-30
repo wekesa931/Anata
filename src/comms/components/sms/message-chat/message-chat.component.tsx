@@ -1,8 +1,9 @@
-/*eslint-disable */
 import React, { useRef, useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import parse from 'html-react-parser'
 import { Check } from 'react-feather'
+import { useParams } from 'react-router-dom'
+import { useQuery } from '@apollo/client'
 import MessageInput from './message-input.component'
 import {
   SenderDiv,
@@ -14,10 +15,10 @@ import {
 } from './message-chat.styles'
 import TopBar from '../../topbar/topbar.component'
 import { useMember } from '../../../../context/member.context'
-import { useQuery } from '@apollo/client'
 import { GET_MEMBER_CHATS } from '../../../../gql/sms'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import Modal from '../../../../components/utils/modals/modal.component'
+import { useFcm } from '../../../../context/fcm/fcm.context'
 
 export type Message = {
   message: string
@@ -32,7 +33,10 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
   const [allMemberMessages, setallMemberMessages] = useState<Message[]>([])
   const messagesEndRef = useRef(null)
   const { member } = useMember()
-  const { data, loading } = useQuery(GET_MEMBER_CHATS, {
+  const { recId } = useParams()
+  const { pushNotification, setPushNotification } = useFcm()
+
+  const { data, loading, refetch } = useQuery(GET_MEMBER_CHATS, {
     variables: { antaraId: member['Antara ID'] },
   })
 
@@ -41,25 +45,47 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
     messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
   }
 
+  const openImage = (msg: string) => {
+    setmodalOpen(!modalOpen)
+    setmodalContent(parse(msg) as unknown as Element)
+  }
+
   useEffect(() => {
-    const getMemberChats = () => {
-      if (data) {
-        const uncleanedData: { node: Message }[] = data.memberMessages.edges
-        const refinedChats = uncleanedData.map((dat) => {
-          const isInbound = dat.node.direction === 'Inbound'
-          return {
-            ...dat.node,
-            isInbound: isInbound,
-          }
-        })
-        setallMemberMessages(refinedChats)
-      }
+    const memberAtIdfromPush =
+      pushNotification?.data?.member_airtable_id ||
+      pushNotification?.data?.airtable_id
+    const isEligible =
+      recId &&
+      recId === memberAtIdfromPush &&
+      pushNotification?.data?.event?.toLowerCase().includes('message')
+
+    if (isEligible) {
+      refetch()
+      setPushNotification(null)
     }
-    getMemberChats()
+  }, [
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    pushNotification?.notification.body,
+    pushNotification,
+    recId,
+    refetch,
+    setPushNotification,
+  ])
+
+  useEffect(() => {
+    const uncleanedData: { node: Message }[] = data?.memberMessages?.edges
+    const refinedChats = uncleanedData?.map((dat) => {
+      const isInbound = dat.node.direction === 'Inbound'
+      return {
+        ...dat.node,
+        isInbound,
+      }
+    })
+    setallMemberMessages(refinedChats)
   }, [data])
 
   useEffect(() => {
-    if (allMemberMessages.length) {
+    if (allMemberMessages?.length) {
       scrollToBottom()
     }
   }, [allMemberMessages])
@@ -72,18 +98,12 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
     if (msg.includes('</div>') || msg.includes('</p>')) {
       if (msg.includes('<img')) {
         return (
-          <div
-            onClick={() => {
-              setmodalOpen(!modalOpen)
-              setmodalContent(parse(msg) as unknown as Element)
-            }}
-          >
+          <button onClick={() => openImage(msg)}>
             <span id="intercom-image">{parse(msg)}</span>
-          </div>
+          </button>
         )
-      } else {
-        return parse(msg)
       }
+      return parse(msg)
     }
     return parse(msg)
   }
@@ -106,7 +126,7 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
         data-testid="thread"
       >
         {loading && <LoadingIcon />}
-        {allMemberMessages.map((message: Message, index: number) => (
+        {allMemberMessages?.map((message: Message, index: number) => (
           <div
             style={{
               display: 'flex',
@@ -164,4 +184,3 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
 }
 
 export default MessageChat
-/*eslint-disable */

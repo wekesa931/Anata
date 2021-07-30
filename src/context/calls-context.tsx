@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { useUser } from './user-context'
 import { GET_CALL_LOG, MAKE_CALL, TRANSFER_CALL } from '../gql/comms'
-import useFCMState from '../comms/fcm/fcm.hook'
+import { useFcm } from './fcm/fcm.context'
 import logError from '../components/utils/Bugsnag/Bugsnag'
 import airtableFetch from '../resources/airtable-fetch'
 
@@ -84,14 +84,14 @@ function CallProvider({ children }: any) {
     useState<string>('Unknown Caller')
   const [activeCall, setActiveCall] = useState<Call | null>()
   const [callError, setcallError] = useState<string | null>(null)
-  const { fcmState } = useFCMState()
+  const { pushNotification } = useFcm()
   const [initiateConferenceCall] = useMutation(MAKE_CALL)
   const [initiateCallTransfer] = useMutation(TRANSFER_CALL)
   const user = useUser()
   const { data } = useQuery(GET_CALL_LOG)
   const participantBusy =
-    fcmState.notification.title === 'Participant Busy' ||
-    fcmState.notification.title === 'Participant No Answer'
+    pushNotification?.notification.title === 'Participant Busy' ||
+    pushNotification?.notification.title === 'Participant No Answer'
 
   const callTitle = (value: string) => {
     let titleName = 'Outbound Call'
@@ -157,10 +157,10 @@ function CallProvider({ children }: any) {
       let conferenceName = ''
       let callerNum = null
       const callUpdates: Call = {} as Call
-      const isStaff = fcmState.data.is_staff === 'true'
+      const isStaff = pushNotification?.data?.is_staff === 'true'
       if (
-        fcmState.notification.title === 'Call Ongoing' ||
-        fcmState.notification.title === 'Incoming Call'
+        pushNotification?.notification?.title === 'Call Ongoing' ||
+        pushNotification?.notification?.title === 'Incoming Call'
       ) {
         if (
           !activeCall ||
@@ -172,8 +172,8 @@ function CallProvider({ children }: any) {
           callUpdates.initialCallTime = 0
         }
         callUpdates.state = 'ONGOING'
-      } else if (fcmState.notification.title === 'Call Ended') {
-        const duration = parseFloat(fcmState.data.duration)
+      } else if (pushNotification?.notification.title === 'Call Ended') {
+        const duration = parseFloat(pushNotification?.data?.duration)
         const formattedDuration = new Date(duration * 1000)
           .toISOString()
           .substr(11, 8)
@@ -185,20 +185,20 @@ function CallProvider({ children }: any) {
         } else {
           callUpdates.state = 'MEMBERMISSED'
         }
-      } else if (fcmState.notification.title === 'Participant Left') {
+      } else if (pushNotification?.notification.title === 'Participant Left') {
         if (!isStaff) {
           callUpdates.state = 'MEMBERLEFT'
         }
       }
-      if (fcmState.data.conference) {
-        conferenceName = fcmState.data.conference
+      if (pushNotification?.data?.conference) {
+        conferenceName = pushNotification?.data?.conference
       }
-      if (fcmState.data.caller_phone) {
-        callerNum = fcmState.data.caller_phone
+      if (pushNotification?.data?.caller_phone) {
+        callerNum = pushNotification?.data?.caller_phone
       }
 
       if (Object.keys(callUpdates).length !== 0) {
-        getMemberOnCallfromAirtable(fcmState.data.member_airtable_id)
+        getMemberOnCallfromAirtable(pushNotification?.data?.member_airtable_id)
         setActiveCall({
           ...activeCall,
           ...callUpdates,
@@ -209,7 +209,7 @@ function CallProvider({ children }: any) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fcmState.notification.title])
+  }, [pushNotification?.notification.title])
 
   const numberType = (num: any, isKey: boolean): string => {
     let value = ''
@@ -254,7 +254,7 @@ function CallProvider({ children }: any) {
       },
     })
       .then((response) => {
-        if (response.data.transferCall.status === 200) {
+        if (response?.data?.transferCall.status === 200) {
           if (activeCall) {
             setActiveCall({
               ...activeCall,
@@ -291,7 +291,7 @@ function CallProvider({ children }: any) {
         },
       })
         .then((response) => {
-          if (response.data.placeCall.status === 200) {
+          if (response?.data?.placeCall.status === 200) {
             const call = {
               title: 'Outbound Call',
               type,
@@ -302,9 +302,9 @@ function CallProvider({ children }: any) {
             }
             setActiveCall({ ...activeCall, ...call })
             setActiveCallContact(callContact)
-            onCallInitiated(response.data)
+            onCallInitiated(response?.data)
           } else {
-            setcallError(response.data.placeCall.message)
+            setcallError(response?.data?.placeCall.message)
           }
         })
         .catch((e) => {

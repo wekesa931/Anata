@@ -3,19 +3,13 @@ import MessageChat from '../sms/message-chat/message-chat.component'
 
 type CallProps = {
   memberSpecific?: boolean
-  fcmState: {
-    notification: {
-      title: string
-      body: string
-    }
-  }
 }
 
-const Comms = ({ memberSpecific, fcmState }: CallProps) => {
+const Comms = ({ memberSpecific }: CallProps) => {
   return (
     <>
       <div style={{ height: '100%', overflowY: 'scroll' }}>
-        <MessageChat memberSpecific={memberSpecific} fcmState={fcmState} />
+        <MessageChat memberSpecific={memberSpecific} />
       </div>
     </>
   )

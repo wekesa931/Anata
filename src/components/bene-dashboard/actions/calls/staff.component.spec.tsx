@@ -23,17 +23,12 @@ jest.mock('react-toast-notifications', () => ({
   }),
 }))
 
-jest.mock('../../../../comms/fcm/fcm.hook', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      fcmState: {
-        notification: {
-          title: 'Call Ongoing',
-          body: '',
-        },
-      },
-    }
-  })
+jest.mock('firebase/app', () => {
+  return {
+    auth: jest.fn(),
+    messaging: jest.fn(),
+    initializeApp: jest.fn(),
+  }
 })
 const mockFn = jest.fn(() => null)
 const antaraStaff = {
