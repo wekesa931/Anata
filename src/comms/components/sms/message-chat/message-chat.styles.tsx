@@ -86,6 +86,13 @@ const DeliveredTextRight = styled.div`
   margin: 0 0 0 5px;
   padding: 4px 2.7px 4.7px 2.7px;
 }`
+const Attachment = styled.div`
+display: flex;
+flex-direction: column;
+align-content: center;
+align-items: center;
+max-width: '300px'
+}`
 
 export {
   GreyText,
@@ -95,4 +102,5 @@ export {
   DeliveredText,
   DeliveredTextRight,
   TextMessage,
+  Attachment,
 }

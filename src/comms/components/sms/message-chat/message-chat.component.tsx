@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import parse from 'html-react-parser'
-import { Check } from 'react-feather'
+import { Check, Paperclip } from 'react-feather'
+import { Document, Page, pdfjs } from 'react-pdf'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import MessageInput from './message-input.component'
@@ -12,6 +13,7 @@ import {
   GreyText,
   DeliveredText,
   DeliveredTextRight,
+  Attachment,
 } from './message-chat.styles'
 import TopBar from '../../topbar/topbar.component'
 import { useMember } from '../../../../context/member.context'
@@ -20,17 +22,22 @@ import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import Modal from '../../../../components/utils/modals/modal.component'
 import { useFcm } from '../../../../context/fcm/fcm.context'
 
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
+
 export type Message = {
   message: string
   direction: string
   status: string
   isInbound: boolean
+  attachments: { name: string; url: string }[]
 }
 
 const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
   const [modalOpen, setmodalOpen] = useState<boolean>(false)
   const [modalContent, setmodalContent] = useState<Element | null>(null)
   const [allMemberMessages, setallMemberMessages] = useState<Message[]>([])
+  const [numPages, setNumPages] = useState(null)
+  const attachmentUrl = useRef('')
   const messagesEndRef = useRef(null)
   const { member } = useMember()
   const { recId } = useParams()
@@ -43,11 +50,6 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
   const scrollToBottom = () => {
     // @ts-ignore
     messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  const openImage = (msg: string) => {
-    setmodalOpen(!modalOpen)
-    setmodalContent(parse(msg) as unknown as Element)
   }
 
   useEffect(() => {
@@ -94,23 +96,108 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
     return dayjs(date).format('hh:mm')
   }
 
-  const renderMessage = (msg: string) => {
-    if (msg.includes('</div>') || msg.includes('</p>')) {
-      if (msg.includes('<img')) {
+  const fileType = (url: string): string | undefined => url.split('.').pop()
+  const checkIsVideo = (ext: string): boolean =>
+    ['ogg', 'mp4', 'webm'].includes(ext)
+
+  const renderMessage = (msg: Message, index: number) => {
+    if (msg.message.includes('</div>') || msg.message.includes('</p>')) {
+      if (msg.message.includes('<img')) {
         return (
-          <button onClick={() => openImage(msg)}>
-            <span id="intercom-image">{parse(msg)}</span>
-          </button>
+          <div
+            onClick={() => {
+              setmodalOpen(!modalOpen)
+              setmodalContent(parse(msg.message) as unknown as Element)
+            }}
+            role="button"
+            tabIndex={index}
+            onKeyDown={() => {
+              setmodalOpen(!modalOpen)
+              setmodalContent(parse(msg.message) as unknown as Element)
+            }}
+          >
+            <span id="intercom-image">{parse(msg.message)}</span>
+          </div>
         )
       }
-      return parse(msg)
     }
-    return parse(msg)
+    if (msg.attachments && msg.attachments.length > 0) {
+      return (
+        <Attachment key={index}>
+          <span>
+            <Paperclip width="16" height="16" />
+          </span>
+          <div>
+            {msg.attachments.map((att) => {
+              const { url, name } = att
+              const fileExt = fileType(url)
+              const isVedio = fileExt && checkIsVideo(fileExt)
+              attachmentUrl.current = url
+
+              let showView = <div />
+              if (fileExt === 'pdf') {
+                const pdf_component = (
+                  <>
+                    <Document
+                      file={url}
+                      onLoadSuccess={({ numPage }) => setNumPages(numPage)}
+                    >
+                      {Array(numPages)
+                        .fill(null)
+                        .map((_, i) => i + 1)
+                        .map((page, ind) => (
+                          <Page pageNumber={page} key={ind} />
+                        ))}
+                    </Document>
+                  </>
+                )
+                showView = (
+                  <button
+                    onClick={() => {
+                      setmodalOpen(!modalOpen)
+                      setmodalContent(pdf_component as unknown as Element)
+                    }}
+                    key={index}
+                    className="btn-icon"
+                  >
+                    <span id="intercom-image">{parse(name)}</span>
+                  </button>
+                )
+              }
+              if (isVedio) {
+                const attch_video = `<video src={url} controls width='100%' height= '100%'>
+          Your browser does not support the video tag.
+         </video>`
+                showView = (
+                  <button
+                    onClick={() => {
+                      setmodalOpen(!modalOpen)
+                      setmodalContent(parse(attch_video) as unknown as Element)
+                    }}
+                    key={index}
+                    className="btn-icon"
+                  >
+                    <span id="intercom-image">{parse(name)}</span>
+                  </button>
+                )
+              }
+              return showView
+            })}
+          </div>
+        </Attachment>
+      )
+    }
+    return parse(msg.message)
   }
 
   return member ? (
     <div>
-      <Modal open={modalOpen} setModalOpen={setmodalOpen} heading={null}>
+      <Modal
+        open={modalOpen}
+        setModalOpen={setmodalOpen}
+        heading={null}
+        attachmentUrl={attachmentUrl.current}
+      >
         <span id="modal-image">{modalContent}</span>
       </Modal>
       <TopBar
@@ -138,8 +225,8 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
           >
             {message.isInbound ? (
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <SenderDiv>
-                  {renderMessage(message.message)}
+                <SenderDiv key={index}>
+                  {renderMessage(message, index)}
                   <GreyText>
                     <div className="chat-delivery">{getTime(new Date())}</div>
                     <>
@@ -156,7 +243,7 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <RecipientDiv>
-                  {renderMessage(message.message)}
+                  {renderMessage(message, index)}
                   <OrangeText>
                     <div className="chat-delivery">{getTime(new Date())}</div>
                     <>

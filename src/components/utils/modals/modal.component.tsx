@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Minimize, Maximize } from 'react-feather'
 import { Dialog } from '@airtable/blocks/ui'
 import CloseIcon from '../../../assets/img/icons/close_16.svg'
 
@@ -7,15 +8,17 @@ const Modal = ({
   setModalOpen,
   heading,
   height = '560px',
+  attachmentUrl,
   children,
 }: any) => {
+  const [maximize, setMaximize] = useState(false)
   return (
     <div data-testid="modal">
       {open && (
         <Dialog
           onClose={() => setModalOpen(false)}
-          width="480px"
-          height={height}
+          width={maximize ? '100%' : '480px'}
+          height={maximize ? '100%' : height}
         >
           <div className="d-flex flex-align-center">
             <div className="full-width">{heading}</div>
@@ -28,6 +31,29 @@ const Modal = ({
             >
               <CloseIcon />
             </button>
+            {attachmentUrl && (
+              <>
+                <button
+                  className="btn-icon"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setMaximize(!maximize)
+                  }}
+                >
+                  {!maximize ? <Maximize /> : <Minimize />}
+                </button>
+
+                <button className="btn-icon">
+                  <a
+                    href={attachmentUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Download
+                  </a>
+                </button>
+              </>
+            )}
           </div>
           <>{children}</>
         </Dialog>
