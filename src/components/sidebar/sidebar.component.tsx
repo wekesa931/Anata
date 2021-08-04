@@ -20,18 +20,40 @@ const Sidebar = () => {
   const [showDropDownTodo, setDropDownTodo] = useState(false)
   const [showDropDownPopulation, setDropDownPopulation] = useState(false)
   const [subItem, setSublist] = useState('')
-  const getMeetingsView = () => {
+  const customizedView = (name: any) => {
     if (user && iframes[user.email]) {
-      return iframes[user.email].meetings
+      return iframes[user.email][name]
     }
-    return iframes.default.meetings
+    return iframes.default[name]
   }
   let items: any = []
   if (path === '/') {
-    items = SidebarMenuItems.slice(0, 8)
-    items[3].rootUrl = `https://airtable.com/embed/${getMeetingsView()}?viewControls=on`
+    items = SidebarMenuItems.slice(0, 10)
+    items.map((item: any) => {
+      if (item.name !== 'Tasks') {
+        // eslint-disable-next-line no-param-reassign
+        item.rootUrl = `https://airtable.com/embed/${customizedView(
+          item.name
+        )}?viewControls=on`
+      } else {
+        // eslint-disable-next-line no-shadow
+        item.subItems.map((item: any) => {
+          // eslint-disable-next-line no-param-reassign
+          if (item.name !== 'Callbacks') {
+            // eslint-disable-next-line no-param-reassign
+            item.rootUrl = `https://airtable.com/embed/${customizedView(
+              item.name
+            )}?viewControls=on`
+          }
+
+          return item
+        })
+      }
+
+      return item
+    })
   } else if (path.includes('member')) {
-    items = SidebarMenuItems.slice(0, 8)
+    items = SidebarMenuItems.slice(0, 10)
   }
   const subList = (
     item: {

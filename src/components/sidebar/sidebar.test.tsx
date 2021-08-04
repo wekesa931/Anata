@@ -4,7 +4,6 @@ import renderWithRouter from '../../../__mocks__/custom-render.mock'
 import {
   screen,
   fireEvent,
-  act,
   cleanup,
   waitFor,
 } from '@testing-library/react'
@@ -24,7 +23,7 @@ describe('<Sidebar />', () => {
 
   it('displays sidebar links', async () => {
     const sidebarLinksContainer = await screen.getByTestId('sidebar-links')
-    expect(sidebarLinksContainer.children.length).toBe(8)
+    expect(sidebarLinksContainer.children.length).toBe(10)
     screen.getByText(/Members/)
   })
 

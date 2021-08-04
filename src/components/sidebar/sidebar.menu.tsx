@@ -11,6 +11,8 @@ import {
   Users,
   Phone,
   TrendingUp,
+  Key,
+  Heart,
 } from 'react-feather'
 import config from '../../config/config'
 import FlagForReview from './flag-for-review/flag-for-review.component'
@@ -90,6 +92,22 @@ const SidebarMenuItems = [
   },
   {
     name: 'Interventions',
+    icon: <Key />,
+    rootUrl:
+      'https://airtable.com/embed/shr0y89LFGiiT4oHz?backgroundColor=green&viewControls=on',
+    url_sandbox:
+      'https://airtable.com/embed/shriAhSRYFESlmIiP?backgroundColor=pink&viewControls=on',
+  },
+  {
+    name: 'Vitals',
+    icon: <Heart />,
+    rootUrl:
+      'https://airtable.com/embed/shr0y89LFGiiT4oHz?backgroundColor=green&viewControls=on',
+    url_sandbox:
+      'https://airtable.com/embed/shriAhSRYFESlmIiP?backgroundColor=pink&viewControls=on',
+  },
+  {
+    name: 'Interventions Data Tracking',
     icon: <Activity />,
     rootUrl:
       'https://airtable.com/embed/shr0y89LFGiiT4oHz?backgroundColor=green&viewControls=on',
