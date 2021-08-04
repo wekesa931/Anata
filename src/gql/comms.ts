@@ -22,11 +22,13 @@ const TRANSFER_CALL = gql`
     $phoneNumber: String!
     $session: String!
     $staffEmail: String!
+    $onTransferAction: String!
   ) {
     transferCall(
       phoneNumber: $phoneNumber
       session: $session
       staffEmail: $staffEmail
+      onTransferAction: $onTransferAction
     ) {
       status
       message

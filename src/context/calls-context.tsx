@@ -62,11 +62,17 @@ type ContextType = {
     phone: string
     email: string
     fullName: string
+    transferAction: string
   }) => void
   setCounterValue: () => void
   setHistoryRecordId: (id: string) => void
 }
 
+export const participantCallAction = {
+  HOLD: 'HOLD',
+  MUTE: 'MUTE',
+  NONE: 'NONE',
+}
 const CallContext = React.createContext<ContextType>({
   initiateCall: () => null,
   initiateTransfer: () => null,
@@ -238,10 +244,12 @@ function CallProvider({ children }: any) {
     phone,
     email,
     fullName,
+    transferAction,
   }: {
     phone: string
     email: string
     fullName: string
+    transferAction: string
   }) => {
     if (activeCall) {
       setActiveCall({ ...activeCall, forwardTo: fullName })
@@ -251,6 +259,7 @@ function CallProvider({ children }: any) {
         phoneNumber: phone,
         staffEmail: email,
         session: activeCall?.session,
+        onTransferAction: transferAction,
       },
     })
       .then((response) => {

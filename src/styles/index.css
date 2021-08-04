@@ -1482,7 +1482,7 @@ a {
   color: #182c4c;
 }
 
-.dropdown-button{
+.dropdown-button {
   color: var(--greyscale-6);
   border: none;
 }
@@ -1687,4 +1687,18 @@ a {
   justify-content: center;
   align-items: center;
   width: 90%;
+}
+
+.hold-option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Rubik;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.28px;
+  text-align: left;
 }
