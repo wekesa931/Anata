@@ -9,6 +9,7 @@ import EditIcon from '../../../assets/img/icons/edit.svg'
 import AirtableField from '../../../types/airtable-field'
 import FormField from '../form-field/form-field.component'
 import Toasts from '../../../helpers/toast'
+import styles from './list.component.css'
 
 type ListModalProps = {
   modalOpen: boolean
@@ -203,6 +204,7 @@ const ListModal = (props: ListModalProps) => {
                       backgroundColor="whitesmoke"
                       padding="8px"
                       borderRadius="4px"
+                      className={styles.modalPara}
                     >
                       {format(openItem.data[info])}
                     </Text>

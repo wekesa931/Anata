@@ -95,7 +95,7 @@ const PafuView = ({ data }: any) => {
                   <div key={key} onClick={(e) => e.stopPropagation()}>
                     <label htmlFor={key}>
                       {key}
-                      <input
+                      <textarea
                         className="form-control"
                         disabled
                         value={`${pafu[key]}`}

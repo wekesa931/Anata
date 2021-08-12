@@ -56,3 +56,7 @@
 .justify-start {
   justify-content: start;
 }
+
+.modalPara {
+  overflow-wrap: break-word;
+}

@@ -561,6 +561,7 @@ textarea.form-control {
   box-sizing: border-box;
   margin: 8px 0px;
   font-family: Karla, sans-serif;
+  resize: none;
 }
 
 input.form-control.small,
