@@ -14,7 +14,7 @@
       "Prescription": "shrja1CawK9iOK0mt",
       "Vitals": "shrrzFXhnuOv2bsy4",
       "HMP": "shrAWc0eKC2MuNcxv",
-      "Condition": "shry9Zj2Y7WD1dqBc",
+      "Conditions": "shry9Zj2Y7WD1dqBc",
       "Clinical Consultation": "shrnP9UqMZ373QDTS",
       "Clinical Rounds": "shrv6soznFKyQsO5m"
     },
@@ -32,7 +32,7 @@
       "Prescription": "shrxqBvmMmA5Yr4eW",
       "Vitals": "shrka5V1cVcTZ1ARH",
       "HMP": "shr1dWHcTRCERtzrm",
-      "Condition": "shrGlu0qr3UorhERb"
+      "Conditions": "shrGlu0qr3UorhERb"
     },
     "sharlene@antaraheath.com": {
       "hntasks": {
@@ -48,7 +48,7 @@
       "Prescription": "shrIin3aj71lry766",
       "Vitals": "shroMox4S9C09XIy",
       "HMP": "shrO6V4iPDCNfviLY",
-      "Condition": "shrFb4bPlNakvp5gN"
+      "Conditions": "shrFb4bPlNakvp5gN"
     },
     "rebecca@antarahealth.com": {
       "hntasks": {
@@ -64,7 +64,7 @@
       "Prescription": "shrhcLXffvxQ0cfFI",
       "Vitals": "shrDafLV0oo8ewWDu",
       "HMP": "shrk0j1skKGSWjYRY",
-      "Condition": "shryvUaZUARf6Wkph",
+      "Conditions": "shryvUaZUARf6Wkph",
       "Clinical Consultation": "shrbKYPvQxJc1voW0",
       "Clinical Rounds": "shr9zTj7BOuwoX1pg"
     },
@@ -82,7 +82,7 @@
       "Prescription": "shrfPM117hIonrYF9",
       "Vitals": "shrxzZIc8AFKUhf9F",
       "HMP": "shrQ9rtFUE4lI8PPR",
-      "Condition": "shrfv9BlSDJvESPsz",
+      "Conditions": "shrfv9BlSDJvESPsz",
       "Clinical Consultation": "shrbKYPvQxJc1voW0",
       "Clinical Rounds": "shr9zTj7BOuwoX1pg"
     },
@@ -100,7 +100,7 @@
       "Prescription": "shrVSdsTEzvrBSEMr",
       "Vitals": "shrgdY81hoI52GpuZ",
       "HMP": "shrz7KKKXPuRJf4Xu",
-      "Condition": "shrgF8N4r6BXQ3GOH",
+      "Conditions": "shrgF8N4r6BXQ3GOH",
       "Clinical Consultation": "shryrWHdpBAxSeiEv",
       "Clinical Rounds": "shrk76snI2uZaYfjl"
     },
@@ -118,7 +118,7 @@
       "Prescription": "shroeR37IqTzYUNZh",
       "Vitals": "shrh5JYJLGozMWqSY",
       "HMP": "shrD99HasOfn9R6lO",
-      "Condition": "shrrRy0xknsvE03un"
+      "Conditions": "shrrRy0xknsvE03un"
     },
     "eunice@antarahealth.com": {
       "hntasks": {
@@ -134,7 +134,7 @@
       "Prescription": "shr2NPeEAsbypmwSe",
       "Vitals": "shr85Fbi7IYQCUsOx",
       "HMP": "shrHWnJ2Ul1mecurv",
-      "Condition": "shrJiqIYoC15uxych"
+      "Conditions": "shrJiqIYoC15uxych"
     },
     "robert@antarahealth.com": {
       "hntasks": {
@@ -150,7 +150,7 @@
       "Prescription": "shrkWKVIYOfX93VDM",
       "Vitals": "shrliYDe1NLCuLGKN",
       "HMP": "shr2q8ahExV6ghq5H",
-      "Condition": "shrrXAmEYnUJ2CvD"
+      "Conditions": "shrrXAmEYnUJ2CvD"
     },
     "sheila@antarahealth.com": {
       "hntasks": {
@@ -166,7 +166,7 @@
       "Prescription": "shr5nQhRHmwrAXdgC",
       "Vitals": "shrOwttL8hLHv7mg1",
       "HMP": "shruSUIL8VtdEzT4B",
-      "Condition": "shrOCLUaPrgIkGEAz"
+      "Conditions": "shrOCLUaPrgIkGEAz"
     }
   }
 }
