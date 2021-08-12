@@ -1,6 +1,6 @@
 {
   "name": "scribe2",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "description": "Dashboard for day-to-day HN tasks",
   "main": "index.js",
   "engines": {
