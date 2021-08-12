@@ -67,7 +67,7 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
     }
   }, [
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    pushNotification?.notification.body,
+    pushNotification?.data?.event,
     pushNotification,
     recId,
     refetch,

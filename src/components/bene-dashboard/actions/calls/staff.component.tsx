@@ -74,7 +74,10 @@ const HNAndCSList = ({
     if (data) {
       const staffData: IAntaraStaff[] = data.antaraStaff.edges.map(
         (allStaff: { node: IAntaraStaff | any }) => {
-          return { ...allStaff.node, email: allStaff.node.historyUserIdField }
+          return {
+            ...allStaff.node,
+            email: `${allStaff.node.emailUsername}@antarahealth.com`,
+          }
         }
       )
       setantaraStaffData(staffData)

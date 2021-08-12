@@ -1,12 +1,7 @@
 import React from 'react'
 import Sidebar from './sidebar.component'
 import renderWithRouter from '../../../__mocks__/custom-render.mock'
-import {
-  screen,
-  fireEvent,
-  cleanup,
-  waitFor,
-} from '@testing-library/react'
+import { screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
 
 jest.mock('../../helpers/analytics', () => {
   return jest.fn(() => {})

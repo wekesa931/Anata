@@ -10,6 +10,7 @@ import HNAndCSList from './staff.component'
 import CallbackHistory, { HistoryLogs } from './callbackHistory.component'
 import SearchInput from '../../../search/search.component'
 import SaveContactView from './updateBeneContactView'
+import ActiveCallParticipants from './ActiveCallParticipants'
 
 const CallFloatingBox = () => {
   const { member } = useMember()
@@ -36,7 +37,8 @@ const CallFloatingBox = () => {
       participantLeft ||
       isTransfered ||
       staffBusy)
-
+  const displayCloseButton =
+    isFulfilled || participantBusy || staffBusy || isTransfered
   const subTitle = () => {
     let subtitle = `Calling  ${activeCall?.member}...`
     if (participantBusy) {
@@ -52,7 +54,10 @@ const CallFloatingBox = () => {
   }
   const displayHistoryLogs = isCallBack && subTitle().includes('Calling')
   const displayActionButtons =
-    !activeCall?.forwardTo && !isTransfered && !subTitle().includes('Calling')
+    !activeCall?.forwardTo &&
+    !isTransfered &&
+    !subTitle().includes('Calling') &&
+    !isFulfilled
 
   const callColorCodes = {
     CALLENDED: '#182c4c',
@@ -127,7 +132,7 @@ const CallFloatingBox = () => {
             />
           )}
         </div>
-        {isFulfilled || participantBusy || staffBusy || isTransfered ? (
+        {displayCloseButton ? (
           <span
             className="pointer white-text"
             role="button"
@@ -182,6 +187,7 @@ const CallFloatingBox = () => {
           </div>
         </div>
       )}
+      {!isFulfilled && <ActiveCallParticipants />}
       {(participantBusy || staffBusy) && (
         <div className="no-answer">
           <div className="d-flex flex-center align-center phone-off">

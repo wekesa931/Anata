@@ -1127,9 +1127,6 @@ a {
   padding: 0px !important;
 }
 
-.communication-icons {
-}
-
 .communication-icons button {
   height: 37px !important;
   padding: 8px !important;
@@ -1428,7 +1425,7 @@ a {
 }
 
 .task-form {
-  height: 65%;
+  height: 55%;
 }
 
 .task-form-list {
@@ -1702,4 +1699,33 @@ a {
   line-height: 1.25;
   letter-spacing: -0.28px;
   text-align: left;
+}
+
+.hold-container {
+  padding: 10px 10px 10px 40px;
+  font-family: Rubik;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.28px;
+}
+
+.hold-btns {
+  background-color: red;
+  cursor: pointer;
+}
+.unhold-btns {
+  background-color: #64cc64;
+  cursor: pointer;
+}
+.call-actions button {
+  /* margin-right: 20px; */
+  /* background: red; */
+  color: white;
+  border: none;
+  padding: 3px 8px;
+  border-radius: 5px;
+  width: 60px;
 }

@@ -52,12 +52,7 @@ const ContactList = ({
     e.stopPropagation()
     setisRinging(!isRinging)
     try {
-      initiateCall(
-        relevantContact,
-        onCallInitiated,
-        member['Antara ID'],
-        tasksType
-      )
+      initiateCall(relevantContact, onCallInitiated, member, tasksType)
     } catch (error) {
       setnotificationError(error.message)
       setTimeout(() => {

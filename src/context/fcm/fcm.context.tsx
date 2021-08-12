@@ -11,7 +11,7 @@ type PushNotification = {
     body: string
   }
   data: {
-    [key: string]: string
+    [key: string]: any
   }
 }
 
@@ -47,11 +47,11 @@ function FcmProvider({ children }: any) {
       !location.pathname.includes(memberPushAtId) &&
       notificationData
     if (isEligible) {
-      if (notificationData?.event?.toLowerCase().includes('call')) {
+      if (notificationData?.category?.toLowerCase().includes('call')) {
         setLocalPushCategory('CALL')
       }
 
-      if (notificationData?.event?.toLowerCase().includes('message')) {
+      if (notificationData?.category?.toLowerCase().includes('message')) {
         setLocalPushCategory('MESSAGE')
       }
 
@@ -63,7 +63,7 @@ function FcmProvider({ children }: any) {
   }, [
     incomingPushNotification,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    incomingPushNotification?.notification.body,
+    incomingPushNotification?.data.event,
     location.pathname,
   ])
 
@@ -93,7 +93,11 @@ function FcmProvider({ children }: any) {
       if (document.visibilityState === 'visible') {
         fetchAllAndClear().then((re) => {
           if (re.length > 0) {
-            setIncomingPushNotification(re[0])
+            const notify = re.pop()
+            setIncomingPushNotification({
+              data: notify?.data,
+              notification: notify?.notification,
+            })
           }
         })
       }
@@ -114,7 +118,7 @@ function FcmProvider({ children }: any) {
         setPushNotification: setPushNotificationFromOutside,
       }}
     >
-      {localPushNotification && localPushNotification?.notification?.title && (
+      {localPushNotification && localPushNotification?.data?.event && (
         <div
           className={styles.inboundNotification}
           test-id="push-notification-wrap"
@@ -134,7 +138,7 @@ function FcmProvider({ children }: any) {
                     onKeyDown={handleNotification}
                     onClick={handleNotification}
                   >
-                    {localPushNotification?.notification?.title}
+                    {localPushNotification?.data?.event}
                   </button>
                 </div>
               </>
@@ -142,7 +146,7 @@ function FcmProvider({ children }: any) {
               <>
                 <XCircle className={styles.error} width="36px" height="36px" />
                 <p className={styles.error}>
-                  {localPushNotification?.notification?.title}
+                  {localPushNotification?.data?.event}
                 </p>
               </>
             )}

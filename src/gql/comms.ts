@@ -91,6 +91,44 @@ const GET_CALL_LOG = gql`
     }
   }
 `
+
+const GET_SESSION_PARTICIPANTS = gql`
+  query callSessions($conferenceRoom: String!) {
+    callSessions(conferenceRoom: $conferenceRoom) {
+      edges {
+        node {
+          isOnHold
+          participantId
+          isStaff
+          isMember
+          phoneNumber
+          callerEmail
+          conferenceRoom
+          participantName
+        }
+      }
+    }
+  }
+`
+
+const HOLD_PARTICIPANT = gql`
+  mutation holdParticipant($session: String!, $participantId: String!) {
+    holdParticipant(session: $session, participantId: $participantId) {
+      status
+      message
+    }
+  }
+`
+
+const UNHOLD_PARTICIPANT = gql`
+  mutation unholdParticipant($session: String!, $participantId: String!) {
+    unholdParticipant(session: $session, participantId: $participantId) {
+      status
+      message
+    }
+  }
+`
+
 const UPDATE_CONTACT = gql`
   mutation updateBeneficiaryContacts($input: BeneficiaryContactInput!) {
     updateBeneficiaryContacts(input: $input) {
@@ -104,6 +142,60 @@ const UPDATE_CONTACT = gql`
     }
   }
 `
+
+const GET_ACTIVE_CALL = gql`
+  query activeCall {
+    activeCall {
+      edges {
+        node {
+          session {
+            origin
+            callDirection
+            createdAt
+            endedAt
+            startedAt
+            deadline
+            activeParticipants
+            totalParticipants
+            roomName
+            agentPhone
+            agentEmail
+            memberPhone
+            sessionStarted
+            sessionEnded
+            allPresent
+            inCallDuration
+          }
+          participants {
+            sessionId
+            antaraId
+            callerEmail
+            phoneNumber
+            status
+            sessionEnded
+            answered
+            conferenceRoom
+            callDirection
+            duration
+            endedAt
+            calledAt
+            receivedAt
+            joinedAt
+            leftAt
+            recordingUrl
+            cost
+            hangupCause
+            participantName
+            userId
+            isMember
+            isOnHold
+            participantId
+          }
+        }
+      }
+    }
+  }
+`
 // eslint-disable-next-line import/prefer-default-export
 export {
   MAKE_CALL,
@@ -112,4 +204,8 @@ export {
   GET_CALL_LOG,
   TRANSFER_CALL,
   UPDATE_CONTACT,
+  GET_SESSION_PARTICIPANTS,
+  HOLD_PARTICIPANT,
+  UNHOLD_PARTICIPANT,
+  GET_ACTIVE_CALL,
 }
