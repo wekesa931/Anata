@@ -13,9 +13,12 @@ const GET_MEMBER_CHATS = gql`
     memberMessages(antaraId: $antaraId) {
       edges {
         node {
+          id
           message
           direction
           status
+          createdAt
+          updatedAt
         }
       }
     }

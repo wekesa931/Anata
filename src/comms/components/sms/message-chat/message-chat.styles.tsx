@@ -7,6 +7,7 @@ const SenderDiv = styled.div`
   align-items: stretch;
   gap: 4px;
   padding: 8px;
+  width: 240px;
   border-radius: 12px;
   background-color: #f9fafc;
 `
@@ -28,7 +29,7 @@ const TextMessage = styled.p`
 const RecipientDiv = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 300px;
+  width: 240px;
   justify-content: flex-start;
   align-items: flex-start;
   gap: 4px;
@@ -54,8 +55,8 @@ const GreyText = styled.div`
 `
 const OrangeText = styled.div`
   display: flex;
+  width: 100%;
   justify-content: flex-end;
-  margin: 0 4px 0 142px;
   font-family: Rubik;
   font-size: 10px;
   font-weight: 500;

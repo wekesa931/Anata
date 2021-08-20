@@ -15,6 +15,7 @@ import {
 import { useUser } from '../../../../context/user-context'
 import { useMember } from '../../../../context/member.context'
 import analytics from '../../../../helpers/segment'
+import logError from '../../../../components/utils/Bugsnag/Bugsnag'
 
 type MessageInputProps = {
   messages: any[]
@@ -26,7 +27,7 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
   const messageTemplate = (member && member.messageTemplate) || ''
   const [message, setMessage] = useState<string>(messageTemplate)
   const [charCount, setCharCount] = useState<number>(0)
-  const [channel, setChannel] = useState<string>('app')
+  const [channel, setChannel] = useState<string>('sms')
   const [sendingSMS, setSendingSMS] = useState<boolean>(false)
   const { addToast } = useToasts()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -60,7 +61,12 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
   }
 
   const sendMessage = () => {
-    const sms = { message }
+    const sms = {
+      id: (Math.random() + Math.random()).toString(),
+      message,
+      direction: 'OUTBOUND',
+      createdAt: new Date().toDateString(),
+    }
     if (sms && member) {
       sendSms({
         variables: {
@@ -83,7 +89,7 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
               appearance: 'success',
               autoDismiss: true,
             })
-            setMessages([...messages, sms])
+            setMessages([...messages, { ...sms, status: 'sent' }])
             setCharCount(0)
             setSendingSMS(false)
             setMessage('')
@@ -97,6 +103,7 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
           setCharCount(0)
           setSendingSMS(false)
           setMessage('')
+          logError(error.message)
         })
       setSendingSMS(false)
     }

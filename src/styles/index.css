@@ -1504,7 +1504,6 @@ a {
   transform: translate(80%);
 }
 .chat-delivery {
-  transform: translate(80%);
   white-space: nowrap;
 }
 
@@ -1728,4 +1727,7 @@ a {
   padding: 3px 8px;
   border-radius: 5px;
   width: 60px;
+}
+.msg-status-icon {
+  margin-right: 30px;
 }

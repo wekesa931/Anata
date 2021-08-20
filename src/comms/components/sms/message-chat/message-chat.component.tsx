@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import parse from 'html-react-parser'
-import { Check, Paperclip } from 'react-feather'
+import { Check, Paperclip, AlertTriangle } from 'react-feather'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
@@ -25,10 +25,12 @@ import { useFcm } from '../../../../context/fcm/fcm.context'
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
 export type Message = {
+  id: string
   message: string
   direction: string
   status: string
-  isInbound: boolean
+  createdAt: string
+  updatedAt: string
   attachments: { name: string; url: string }[]
 }
 
@@ -46,7 +48,13 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
   const { data, loading, refetch } = useQuery(GET_MEMBER_CHATS, {
     variables: { antaraId: member['Antara ID'] },
   })
-
+  const isSent = (status: string) => status.toLocaleLowerCase() === 'sent'
+  const isDelivered = (status: string) =>
+    status.toLocaleLowerCase() === 'delivered'
+  const isFailed = (status: string) =>
+    status.toLocaleLowerCase() === 'failed to send' ||
+    status.toLocaleLowerCase() === 'failed_to_send'
+  const isInbound = (direction: string) => direction === 'INBOUND'
   const scrollToBottom = () => {
     // @ts-ignore
     messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
@@ -76,13 +84,7 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
 
   useEffect(() => {
     const uncleanedData: { node: Message }[] = data?.memberMessages?.edges
-    const refinedChats = uncleanedData?.map((dat) => {
-      const isInbound = dat.node.direction === 'Inbound'
-      return {
-        ...dat.node,
-        isInbound,
-      }
-    })
+    const refinedChats = uncleanedData?.map((dat) => dat.node)
     setallMemberMessages(refinedChats)
   }, [data])
 
@@ -93,7 +95,7 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
   }, [allMemberMessages])
 
   const getTime = (date: string | Date) => {
-    return dayjs(date).format('hh:mm')
+    return dayjs(new Date(date)).format('DD-MMM-YY hh:mma')
   }
 
   const fileType = (url: string): string | undefined => url.split('.').pop()
@@ -223,20 +225,14 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
             }}
             key={index}
           >
-            {message.isInbound ? (
+            {isInbound(message.direction) ? (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <SenderDiv key={index}>
                   {renderMessage(message, index)}
                   <GreyText>
-                    <div className="chat-delivery">{getTime(new Date())}</div>
-                    <>
-                      <DeliveredText>
-                        <Check width="16px" height="16px" />
-                      </DeliveredText>
-                      <DeliveredTextRight>
-                        <Check width="16px" height="16px" />
-                      </DeliveredTextRight>
-                    </>
+                    <div className="chat-delivery">
+                      {getTime(message.updatedAt)}
+                    </div>
                   </GreyText>
                 </SenderDiv>
               </div>
@@ -245,15 +241,37 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
                 <RecipientDiv>
                   {renderMessage(message, index)}
                   <OrangeText>
-                    <div className="chat-delivery">{getTime(new Date())}</div>
-                    <>
-                      <DeliveredText>
-                        <Check width="16px" height="16px" />
-                      </DeliveredText>
-                      <DeliveredTextRight>
-                        <Check width="16px" height="16px" />
-                      </DeliveredTextRight>
-                    </>
+                    <div className="chat-delivery">
+                      {getTime(message.createdAt)}
+                    </div>
+                    {isSent(message.status) && (
+                      <span className="msg-status-icon">
+                        <DeliveredText>
+                          <Check color="#ffcb80" width="16px" height="16px" />
+                        </DeliveredText>
+                      </span>
+                    )}
+                    {isDelivered(message.status) && (
+                      <>
+                        <DeliveredText>
+                          <Check color="#ffcb80" width="16px" height="16px" />
+                        </DeliveredText>
+                        <DeliveredTextRight>
+                          <Check color="#ffcb80" width="16px" height="16px" />
+                        </DeliveredTextRight>
+                      </>
+                    )}
+                    {isFailed(message.status) && (
+                      <span className="msg-status-icon">
+                        <DeliveredText>
+                          <AlertTriangle
+                            color="red"
+                            width="16px"
+                            height="16px"
+                          />
+                        </DeliveredText>
+                      </span>
+                    )}
                   </OrangeText>
                 </RecipientDiv>
               </div>
