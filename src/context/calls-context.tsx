@@ -151,7 +151,7 @@ function CallProvider({ children }: any) {
           }
         )
         const memberParticipant = allParticipants.find(
-          (participant) => participant.isMember
+          (participant) => !participant.isStaff
         )
         const correctRoomName = activeSession.roomName.replace(/-/g, '')
         const call = {
