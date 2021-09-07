@@ -117,8 +117,7 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
 
   const redirectToIntercom = (event: any) => {
     event.preventDefault()
-    const link =
-      'https://app.intercom.com/a/apps/diysybw8/users/6049949ae9d91e046ff83cc6/all-conversations'
+    const link = member['Intercom URL']
     window.open(link, 'blank_intercom')
   }
 
@@ -134,8 +133,8 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
               className="message-input"
               onChange={(e) => handleSelectedChannel(e)}
             >
-              <option value="app">App</option>
               <option value="sms">Sms</option>
+              <option value="app">App</option>
             </select>
           </InputOption>
           {channel === 'app' ? (
