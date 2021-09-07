@@ -10,7 +10,7 @@ const Communication = () => {
   const { member } = useMember()
 
   return (
-    <div className="margin-top-32">
+    <div>
       {user && member && (
         <>
           <div className={styles.communicationBlock}>

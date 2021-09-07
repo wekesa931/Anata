@@ -73,11 +73,13 @@ const Actions = () => {
             <Meetings />
           </ErrorBoundary>
         </div>
-        <div className={activeTab === 'Messages' ? '' : 'hidden'}>
-          <ErrorBoundary>
-            <Communication />
-          </ErrorBoundary>
-        </div>
+        {activeTab === 'Messages' && (
+          <div>
+            <ErrorBoundary>
+              <Communication />
+            </ErrorBoundary>
+          </div>
+        )}
       </div>
     </div>
   )

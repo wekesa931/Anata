@@ -17,6 +17,7 @@ const GET_MEMBER_CHATS = gql`
           message
           direction
           status
+          staffName
           createdAt
           updatedAt
         }

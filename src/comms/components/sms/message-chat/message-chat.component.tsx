@@ -1,7 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react'
-import dayjs from 'dayjs'
 import parse from 'html-react-parser'
-import { Check, Paperclip, AlertTriangle } from 'react-feather'
+import {
+  Check,
+  Paperclip,
+  AlertTriangle,
+  ChevronDown,
+  ChevronUp,
+} from 'react-feather'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
@@ -12,8 +17,24 @@ import {
   OrangeText,
   GreyText,
   DeliveredText,
-  DeliveredTextRight,
   Attachment,
+  MessageLoader,
+  SenderName,
+  DeliveryWrapper,
+  SentMessage,
+  TimeDevider,
+  BorderLine,
+  Selector,
+  OptionsContainer,
+  OptionsTitle,
+  OptionsContent,
+  OptionsContentText,
+  StickyTop,
+  ChatContainer,
+  Relative,
+  Title,
+  MessagesContainer,
+  MessagesWrapper,
 } from './message-chat.styles'
 import TopBar from '../../topbar/topbar.component'
 import { useMember } from '../../../../context/member.context'
@@ -21,6 +42,12 @@ import { GET_MEMBER_CHATS } from '../../../../gql/sms'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import Modal from '../../../../components/utils/modals/modal.component'
 import { useFcm } from '../../../../context/fcm/fcm.context'
+import {
+  checkDate,
+  isSameDay,
+  numDaysBetween,
+  onCurrentWeek,
+} from '../../../../components/utils/date-helpers/date-helpers'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
@@ -29,6 +56,7 @@ export type Message = {
   message: string
   direction: string
   status: string
+  staffName: string
   createdAt: string
   updatedAt: string
   attachments: { name: string; url: string }[]
@@ -37,7 +65,16 @@ export type Message = {
 const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
   const [modalOpen, setmodalOpen] = useState<boolean>(false)
   const [modalContent, setmodalContent] = useState<Element | null>(null)
-  const [allMemberMessages, setallMemberMessages] = useState<Message[]>([])
+  const [allPreviousMemberMessages, setAllPreviousMemberMessages] = useState<
+    Message[]
+  >([])
+  const [isTodayMessages, setIsTodayMessages] = useState<Message[]>([])
+  const [isYesterdayMessages, setIsYesterdayMessages] = useState<Message[]>([])
+  const [filterQuery, setFilterQuery] = useState('All')
+  const [isLastWeekMessages, setIsLastWeekMessages] = useState<Message[]>([])
+  const [isLastMonthMessages, setIsLastMonthMessages] = useState<Message[]>([])
+  const [showTimeOptions, setShowTimeOptions] = useState(false)
+  const [filterLoad, setFilterLoad] = useState(false)
   const [numPages, setNumPages] = useState(null)
   const attachmentUrl = useRef('')
   const messagesEndRef = useRef(null)
@@ -48,6 +85,7 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
   const { data, loading, refetch } = useQuery(GET_MEMBER_CHATS, {
     variables: { antaraId: member['Antara ID'] },
   })
+
   const isSent = (status: string) => status.toLocaleLowerCase() === 'sent'
   const isDelivered = (status: string) =>
     status.toLocaleLowerCase() === 'delivered'
@@ -85,17 +123,83 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
   useEffect(() => {
     const uncleanedData: { node: Message }[] = data?.memberMessages?.edges
     const refinedChats = uncleanedData?.map((dat) => dat.node)
-    setallMemberMessages(refinedChats)
+    if (refinedChats) {
+      setFilterLoad(true)
+      const todayMessages = refinedChats.filter((chat) =>
+        isSameDay(new Date(), new Date(chat.updatedAt))
+      )
+      const yesterdayMessages = refinedChats.filter((chat) =>
+        checkDate(chat.updatedAt).includes('Yesterday')
+      )
+      const lastWeekMessages = refinedChats.filter((chat) =>
+        onCurrentWeek(new Date(chat.updatedAt))
+      )
+      const lastMonthMessages = refinedChats.filter(
+        (chat) => numDaysBetween(new Date(), new Date(chat.updatedAt)) <= 30
+      )
+      const previousMessages = refinedChats.filter(
+        (chat) =>
+          !isSameDay(new Date(), new Date(chat.updatedAt)) &&
+          !checkDate(chat.updatedAt).includes('Yesterday')
+      )
+      setFilterLoad(false)
+      setAllPreviousMemberMessages(previousMessages)
+      setIsTodayMessages(todayMessages)
+      setIsYesterdayMessages(yesterdayMessages)
+      setIsLastMonthMessages(lastMonthMessages)
+      setIsLastWeekMessages(lastWeekMessages)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   useEffect(() => {
-    if (allMemberMessages?.length) {
+    if (allPreviousMemberMessages?.length) {
       scrollToBottom()
     }
-  }, [allMemberMessages])
+  }, [allPreviousMemberMessages])
 
-  const getTime = (date: string | Date) => {
-    return dayjs(new Date(date)).format('DD-MMM-YY hh:mma')
+  useEffect(() => {
+    scrollToBottom()
+  }, [filterQuery])
+
+  const separator = (time: string, isMainFilter = false) => (
+    <TimeDevider>
+      <BorderLine />
+      <Selector
+        onClick={() => {
+          isMainFilter && setShowTimeOptions(!showTimeOptions)
+        }}
+      >
+        <Title>{time}</Title>
+        {isMainFilter &&
+          (showTimeOptions ? (
+            <ChevronUp width={15} />
+          ) : (
+            <ChevronDown width={15} />
+          ))}
+      </Selector>
+      <BorderLine />
+    </TimeDevider>
+  )
+
+  const timeOptions = () => {
+    const period = ['All', 'Today', 'Yesterday', 'Last Week', 'Last Month']
+    return (
+      <OptionsContainer>
+        <OptionsTitle>Jump to…</OptionsTitle>
+        {period.map((timeDuration) => (
+          <OptionsContent
+            key={timeDuration}
+            onClick={() => {
+              setFilterQuery(timeDuration)
+              setShowTimeOptions(false)
+            }}
+          >
+            <OptionsContentText>{timeDuration}</OptionsContentText>
+          </OptionsContent>
+        ))}
+      </OptionsContainer>
+    )
   }
 
   const fileType = (url: string): string | undefined => url.split('.').pop()
@@ -192,6 +296,65 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
     return parse(msg.message)
   }
 
+  const messagesContainer = (message: Message, index: number) => (
+    <MessagesContainer key={index}>
+      {isInbound(message.direction) ? (
+        <MessagesWrapper>
+          <SenderDiv key={index}>
+            {renderMessage(message, index)}
+            <GreyText>
+              <div className="chat-delivery">
+                {checkDate(message.updatedAt)}
+              </div>
+            </GreyText>
+          </SenderDiv>
+        </MessagesWrapper>
+      ) : (
+        <MessagesWrapper>
+          <RecipientDiv>
+            {renderMessage(message, index)}
+            <OrangeText>
+              <SenderName>{message.staffName}</SenderName>
+              <DeliveryWrapper>
+                <div className="chat-delivery">
+                  {checkDate(message.createdAt)}
+                </div>
+                {isSent(message.status) && (
+                  <span>
+                    <SentMessage>
+                      <Check color="#ffcb80" width="16px" height="16px" />
+                    </SentMessage>
+                  </span>
+                )}
+                {isDelivered(message.status) && (
+                  <div className="relative">
+                    <SentMessage>
+                      <Check color="#ffcb80" width="16px" height="16px" />
+                    </SentMessage>
+                    <DeliveredText>
+                      <Check color="#ffcb80" width="16px" height="16px" />
+                    </DeliveredText>
+                  </div>
+                )}
+                {isFailed(message.status) && (
+                  <span>
+                    <SentMessage>
+                      <AlertTriangle color="red" width="16px" height="16px" />
+                    </SentMessage>
+                  </span>
+                )}
+              </DeliveryWrapper>
+            </OrangeText>
+          </RecipientDiv>
+        </MessagesWrapper>
+      )}
+    </MessagesContainer>
+  )
+  const messagesToRender = (messages: Message[]) => {
+    return messages.map((message: Message, index: number) =>
+      messagesContainer(message, index)
+    )
+  }
   return member ? (
     <div>
       <Modal
@@ -202,88 +365,43 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
       >
         <span id="modal-image">{modalContent}</span>
       </Modal>
-      <TopBar
-        title={`SMS Text ${member['Full Name']}`}
-        goBack={!memberSpecific ? '/sms' : null}
-      />
-      <div
-        style={{
-          overflowY: 'scroll',
-          clear: 'both',
-          paddingBottom: '250px',
-        }}
-        data-testid="thread"
-      >
-        {loading && <LoadingIcon />}
-        {allMemberMessages?.map((message: Message, index: number) => (
-          <div
-            style={{
-              display: 'flex',
-              margin: '8px',
-              flexDirection: 'column',
-              marginBottom: '1px',
-            }}
-            key={index}
-          >
-            {isInbound(message.direction) ? (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <SenderDiv key={index}>
-                  {renderMessage(message, index)}
-                  <GreyText>
-                    <div className="chat-delivery">
-                      {getTime(message.updatedAt)}
-                    </div>
-                  </GreyText>
-                </SenderDiv>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <RecipientDiv>
-                  {renderMessage(message, index)}
-                  <OrangeText>
-                    <div className="chat-delivery">
-                      {getTime(message.createdAt)}
-                    </div>
-                    {isSent(message.status) && (
-                      <span className="msg-status-icon">
-                        <DeliveredText>
-                          <Check color="#ffcb80" width="16px" height="16px" />
-                        </DeliveredText>
-                      </span>
-                    )}
-                    {isDelivered(message.status) && (
-                      <>
-                        <DeliveredText>
-                          <Check color="#ffcb80" width="16px" height="16px" />
-                        </DeliveredText>
-                        <DeliveredTextRight>
-                          <Check color="#ffcb80" width="16px" height="16px" />
-                        </DeliveredTextRight>
-                      </>
-                    )}
-                    {isFailed(message.status) && (
-                      <span className="msg-status-icon">
-                        <DeliveredText>
-                          <AlertTriangle
-                            color="red"
-                            width="16px"
-                            height="16px"
-                          />
-                        </DeliveredText>
-                      </span>
-                    )}
-                  </OrangeText>
-                </RecipientDiv>
-              </div>
-            )}
-          </div>
-        ))}
+      <StickyTop>
+        <TopBar
+          title={`SMS Text ${member['Full Name']}`}
+          goBack={!memberSpecific ? '/sms' : null}
+        />
+        <Relative>
+          {showTimeOptions && timeOptions()}
+          {separator(`${filterQuery} Messages`, true)}
+        </Relative>
+      </StickyTop>
+
+      <ChatContainer data-testid="thread">
+        {(loading || filterLoad) && (
+          <MessageLoader>
+            <LoadingIcon />
+          </MessageLoader>
+        )}
+        {filterQuery === 'All' && (
+          <>
+            {messagesToRender(allPreviousMemberMessages)}
+            {isYesterdayMessages.length > 0 && separator('Yesterday')}
+            {messagesToRender(isYesterdayMessages)}
+            {isTodayMessages.length > 0 && separator('Today')}
+            {messagesToRender(isTodayMessages)}
+          </>
+        )}
+        {filterQuery === 'Yesterday' && messagesToRender(isYesterdayMessages)}
+        {filterQuery === 'Today' && messagesToRender(isTodayMessages)}
+        {filterQuery === 'Last Week' && messagesToRender(isLastWeekMessages)}
+        {filterQuery === 'Last Month' && messagesToRender(isLastMonthMessages)}
+
         <div ref={messagesEndRef} />
         <MessageInput
-          messages={allMemberMessages}
-          setMessages={setallMemberMessages}
+          messages={allPreviousMemberMessages}
+          setMessages={setAllPreviousMemberMessages}
         />
-      </div>
+      </ChatContainer>
     </div>
   ) : null
 }
