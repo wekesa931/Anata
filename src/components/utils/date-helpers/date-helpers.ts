@@ -1,35 +1,44 @@
 import dayjs from 'dayjs'
+import isYesterday from 'dayjs/plugin/isYesterday'
+import isToday from 'dayjs/plugin/isToday'
+import isBetween from 'dayjs/plugin/isBetween'
 
-const isSameDay = (a: Date, b: Date) => {
-  return dayjs(new Date(a)).isSame(dayjs(b), 'day')
-}
+dayjs.extend(isBetween)
+dayjs.extend(isToday)
+dayjs.extend(isYesterday)
 
-const checkDate = (date: string | Date) => {
-  const today = new Date()
-  const yesterday = new Date(new Date().setDate(new Date().getDate() - 1))
-
-  if (isSameDay(today, new Date(date))) {
-    return dayjs(new Date(date)).format('hh:mma')
+const dateIsToday = (date: string | Date) => {
+  if (dayjs(date).isToday()) {
+    return dayjs(date).format('hh:mma')
   }
-  if (isSameDay(yesterday, new Date(date))) {
-    return `Yesterday ${dayjs(new Date(date)).format('hh:mma')}`
+  return false
+}
+
+const dateIsYesterday = (date: string | Date) => {
+  if (dayjs(date).isYesterday()) {
+    return `Yesterday ${dayjs(date).format('hh:mma')}`
   }
-  return dayjs(new Date(date)).format('DD-MMM-YY')
+  return false
 }
 
-const onCurrentWeek = (date: Date) => {
-  const lastMonday = new Date()
-  lastMonday.setDate(lastMonday.getDate() - (lastMonday.getDay() - 1))
-  lastMonday.setHours(0, 0, 0, 0)
-  const res =
-    lastMonday.getTime() <= date.getTime() &&
-    date.getTime() < lastMonday.getTime() + 604800000
-  return res
+const dateInPastWeek = (date: string | Date) => {
+  const firstDay = dayjs().subtract(7, 'day')
+  return dayjs(date).isBetween(firstDay, dayjs())
 }
 
-const numDaysBetween = (d1: Date, d2: Date) => {
-  const diff = Math.abs(d1.getTime() - d2.getTime())
-  return diff / (1000 * 60 * 60 * 24)
+const dateInPastMonth = (date: string | Date) => {
+  const firstDay = dayjs().subtract(30, 'day')
+  return dayjs(date).isBetween(firstDay, dayjs())
 }
 
-export { isSameDay, checkDate, onCurrentWeek, numDaysBetween }
+const formattedDate = (date: string | Date) => {
+  return dayjs(date).format('DD-MMM-YY')
+}
+
+export {
+  dateIsToday,
+  dateIsYesterday,
+  dateInPastWeek,
+  dateInPastMonth,
+  formattedDate,
+}

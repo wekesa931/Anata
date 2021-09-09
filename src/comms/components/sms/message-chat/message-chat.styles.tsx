@@ -124,7 +124,7 @@ const Selector = styled.span`
 const ChatContainer = styled.div`
   overflow-y: scroll;
   clear: both;
-  padding-top: 68px;
+  padding-top: 30px;
   padding-bottom: 190px;
 `
 

@@ -1,12 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import parse from 'html-react-parser'
-import {
-  Check,
-  Paperclip,
-  AlertTriangle,
-  ChevronDown,
-  ChevronUp,
-} from 'react-feather'
+import { groupBy } from 'lodash'
+import { Check, Paperclip, AlertTriangle } from 'react-feather'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
@@ -25,31 +20,34 @@ import {
   TimeDevider,
   BorderLine,
   Selector,
-  OptionsContainer,
-  OptionsTitle,
-  OptionsContent,
-  OptionsContentText,
-  StickyTop,
   ChatContainer,
   Relative,
   Title,
   MessagesContainer,
   MessagesWrapper,
 } from './message-chat.styles'
-import TopBar from '../../topbar/topbar.component'
 import { useMember } from '../../../../context/member.context'
 import { GET_MEMBER_CHATS } from '../../../../gql/sms'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import Modal from '../../../../components/utils/modals/modal.component'
 import { useFcm } from '../../../../context/fcm/fcm.context'
 import {
-  checkDate,
-  isSameDay,
-  numDaysBetween,
-  onCurrentWeek,
+  dateInPastMonth,
+  dateInPastWeek,
+  dateIsToday,
+  dateIsYesterday,
+  formattedDate,
 } from '../../../../components/utils/date-helpers/date-helpers'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
+
+enum DateCategory {
+  YESTERDAY = 'YESTERDAY',
+  TODAY = 'TODAY',
+  LAST_WEEK = 'LAST WEEK',
+  LAST_MONTH = 'LAST MONTH',
+  PREVIOUS_MONTHS = 'PREVIOUS MONTHS',
+}
 
 export type Message = {
   id: string
@@ -62,18 +60,12 @@ export type Message = {
   attachments: { name: string; url: string }[]
 }
 
-const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
+type MemberMessages = Record<DateCategory, Message[]>
+
+const MessageChat = () => {
   const [modalOpen, setmodalOpen] = useState<boolean>(false)
   const [modalContent, setmodalContent] = useState<Element | null>(null)
-  const [allPreviousMemberMessages, setAllPreviousMemberMessages] = useState<
-    Message[]
-  >([])
-  const [isTodayMessages, setIsTodayMessages] = useState<Message[]>([])
-  const [isYesterdayMessages, setIsYesterdayMessages] = useState<Message[]>([])
-  const [filterQuery, setFilterQuery] = useState('All')
-  const [isLastWeekMessages, setIsLastWeekMessages] = useState<Message[]>([])
-  const [isLastMonthMessages, setIsLastMonthMessages] = useState<Message[]>([])
-  const [showTimeOptions, setShowTimeOptions] = useState(false)
+  const [memberMessages, setMemberMessages] = useState<MemberMessages>()
   const [filterLoad, setFilterLoad] = useState(false)
   const [numPages, setNumPages] = useState(null)
   const attachmentUrl = useRef('')
@@ -121,86 +113,53 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
   ])
 
   useEffect(() => {
+    if (memberMessages) {
+      scrollToBottom()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memberMessages, memberMessages?.TODAY])
+
+  const getRelativeDate = (date: string) => {
+    /* eslint no-else-return: ["error", {allowElseIf: true}] */
+    if (dateIsToday(date)) {
+      return DateCategory.TODAY
+    } else if (dateIsYesterday(date)) {
+      return DateCategory.YESTERDAY
+    } else if (dateInPastWeek(date)) {
+      return DateCategory.LAST_WEEK
+    } else if (dateInPastMonth(date)) {
+      return DateCategory.LAST_MONTH
+    }
+    return DateCategory.PREVIOUS_MONTHS
+  }
+
+  useEffect(() => {
     const uncleanedData: { node: Message }[] = data?.memberMessages?.edges
-    const refinedChats = uncleanedData?.map((dat) => dat.node)
-    if (refinedChats) {
+    if (uncleanedData?.length > 0) {
       setFilterLoad(true)
-      const todayMessages = refinedChats.filter((chat) =>
-        isSameDay(new Date(), new Date(chat.updatedAt))
-      )
-      const yesterdayMessages = refinedChats.filter((chat) =>
-        checkDate(chat.updatedAt).includes('Yesterday')
-      )
-      const lastWeekMessages = refinedChats.filter((chat) =>
-        onCurrentWeek(new Date(chat.updatedAt))
-      )
-      const lastMonthMessages = refinedChats.filter(
-        (chat) => numDaysBetween(new Date(), new Date(chat.updatedAt)) <= 30
-      )
-      const previousMessages = refinedChats.filter(
-        (chat) =>
-          !isSameDay(new Date(), new Date(chat.updatedAt)) &&
-          !checkDate(chat.updatedAt).includes('Yesterday')
-      )
+      const messagesWithGrouping = groupBy(
+        uncleanedData.map((chat) => ({
+          ...chat.node,
+          updatedAt: formattedDate(chat.node.updatedAt),
+          relativeDate: getRelativeDate(chat.node.updatedAt),
+        })),
+        'relativeDate'
+      ) as unknown as MemberMessages
+      setMemberMessages(messagesWithGrouping)
       setFilterLoad(false)
-      setAllPreviousMemberMessages(previousMessages)
-      setIsTodayMessages(todayMessages)
-      setIsYesterdayMessages(yesterdayMessages)
-      setIsLastMonthMessages(lastMonthMessages)
-      setIsLastWeekMessages(lastWeekMessages)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
-  useEffect(() => {
-    if (allPreviousMemberMessages?.length) {
-      scrollToBottom()
-    }
-  }, [allPreviousMemberMessages])
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [filterQuery])
-
-  const separator = (time: string, isMainFilter = false) => (
+  const separator = (time: string) => (
     <TimeDevider>
       <BorderLine />
-      <Selector
-        onClick={() => {
-          isMainFilter && setShowTimeOptions(!showTimeOptions)
-        }}
-      >
+      <Selector>
         <Title>{time}</Title>
-        {isMainFilter &&
-          (showTimeOptions ? (
-            <ChevronUp width={15} />
-          ) : (
-            <ChevronDown width={15} />
-          ))}
       </Selector>
       <BorderLine />
     </TimeDevider>
   )
-
-  const timeOptions = () => {
-    const period = ['All', 'Today', 'Yesterday', 'Last Week', 'Last Month']
-    return (
-      <OptionsContainer>
-        <OptionsTitle>Jump to…</OptionsTitle>
-        {period.map((timeDuration) => (
-          <OptionsContent
-            key={timeDuration}
-            onClick={() => {
-              setFilterQuery(timeDuration)
-              setShowTimeOptions(false)
-            }}
-          >
-            <OptionsContentText>{timeDuration}</OptionsContentText>
-          </OptionsContent>
-        ))}
-      </OptionsContainer>
-    )
-  }
 
   const fileType = (url: string): string | undefined => url.split('.').pop()
   const checkIsVideo = (ext: string): boolean =>
@@ -303,9 +262,7 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
           <SenderDiv key={index}>
             {renderMessage(message, index)}
             <GreyText>
-              <div className="chat-delivery">
-                {checkDate(message.updatedAt)}
-              </div>
+              <div className="chat-delivery">{message.updatedAt}</div>
             </GreyText>
           </SenderDiv>
         </MessagesWrapper>
@@ -316,9 +273,7 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
             <OrangeText>
               <SenderName>{message.staffName}</SenderName>
               <DeliveryWrapper>
-                <div className="chat-delivery">
-                  {checkDate(message.createdAt)}
-                </div>
+                <div className="chat-delivery">{message.updatedAt}</div>
                 {isSent(message.status) && (
                   <span>
                     <SentMessage>
@@ -350,11 +305,23 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
       )}
     </MessagesContainer>
   )
-  const messagesToRender = (messages: Message[]) => {
-    return messages.map((message: Message, index: number) =>
-      messagesContainer(message, index)
-    )
+
+  const renderMessages = () => {
+    if (memberMessages) {
+      return Object.keys(memberMessages).map((key, idx: number) => {
+        return (
+          <div key={idx}>
+            <Relative>{separator(`${key}`)}</Relative>
+            {memberMessages[key].map((message: Message, index: number) =>
+              messagesContainer(message, index)
+            )}
+          </div>
+        )
+      })
+    }
+    return null
   }
+
   return member ? (
     <div>
       <Modal
@@ -365,16 +332,6 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
       >
         <span id="modal-image">{modalContent}</span>
       </Modal>
-      <StickyTop>
-        <TopBar
-          title={`SMS Text ${member['Full Name']}`}
-          goBack={!memberSpecific ? '/sms' : null}
-        />
-        <Relative>
-          {showTimeOptions && timeOptions()}
-          {separator(`${filterQuery} Messages`, true)}
-        </Relative>
-      </StickyTop>
 
       <ChatContainer data-testid="thread">
         {(loading || filterLoad) && (
@@ -382,24 +339,11 @@ const MessageChat = ({ memberSpecific }: { memberSpecific?: boolean }) => {
             <LoadingIcon />
           </MessageLoader>
         )}
-        {filterQuery === 'All' && (
-          <>
-            {messagesToRender(allPreviousMemberMessages)}
-            {isYesterdayMessages.length > 0 && separator('Yesterday')}
-            {messagesToRender(isYesterdayMessages)}
-            {isTodayMessages.length > 0 && separator('Today')}
-            {messagesToRender(isTodayMessages)}
-          </>
-        )}
-        {filterQuery === 'Yesterday' && messagesToRender(isYesterdayMessages)}
-        {filterQuery === 'Today' && messagesToRender(isTodayMessages)}
-        {filterQuery === 'Last Week' && messagesToRender(isLastWeekMessages)}
-        {filterQuery === 'Last Month' && messagesToRender(isLastMonthMessages)}
-
+        {memberMessages && renderMessages()}
         <div ref={messagesEndRef} />
         <MessageInput
-          messages={allPreviousMemberMessages}
-          setMessages={setAllPreviousMemberMessages}
+          messages={memberMessages}
+          setMessages={setMemberMessages}
         />
       </ChatContainer>
     </div>

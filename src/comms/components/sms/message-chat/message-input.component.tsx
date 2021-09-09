@@ -18,7 +18,7 @@ import analytics from '../../../../helpers/segment'
 import logError from '../../../../components/utils/Bugsnag/Bugsnag'
 
 type MessageInputProps = {
-  messages: any[]
+  messages: any
   setMessages: any
 }
 
@@ -89,7 +89,15 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
               appearance: 'success',
               autoDismiss: true,
             })
-            setMessages([...messages, { ...sms, status: 'sent' }])
+            const newMessage = [
+              ...messages.TODAY,
+              {
+                ...sms,
+                status: 'sent',
+                updatedAt: 'now',
+              },
+            ]
+            setMessages({ ...messages, TODAY: newMessage })
             setCharCount(0)
             setSendingSMS(false)
             setMessage('')

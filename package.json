@@ -95,6 +95,7 @@
     "html-react-parser": "^1.2.7",
     "jwt-decode": "^3.0.0",
     "kremling": "^2.0.4",
+    "lodash": "^4.17.21",
     "mock-apollo-client": "^1.1.0",
     "node-fetch": "^2.6.1",
     "path": "^0.12.7",
