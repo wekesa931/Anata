@@ -3,7 +3,6 @@ import { Repeat, AlertTriangle, PhoneForwarded, Info } from 'react-feather'
 import Icon from '../../../utils/icon/icon.component'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import { useCall } from '../../../../context/calls-context'
-import { useMember } from '../../../../context/member.context'
 import Timer from '../../../../comms/components/calls/CountUp'
 import CallConsoleForms from './forms'
 import HNAndCSList from './staff.component'
@@ -13,7 +12,6 @@ import SaveContactView from './updateBeneContactView'
 import ActiveCallParticipants from './ActiveCallParticipants'
 
 const CallFloatingBox = () => {
-  const { member } = useMember()
   const [isOpen, setisOpen] = React.useState(true)
   const [memberInfo, setmemberInfo] = useState(null)
   const [displayHistory, setdisplayHistory] = useState(false)
@@ -193,7 +191,7 @@ const CallFloatingBox = () => {
           <div className="d-flex flex-center align-center phone-off">
             <Icon name="phone-missed" fill="white" width={30} height={30} />
           </div>
-          {participantBusy && <p>{member['Full Name']}</p>}
+          {participantBusy && <p>{activeCall?.memberName}</p>}
           <p style={{ marginTop: '0px' }}>
             {staffBusy && 'You'} didn&#39;t answer
           </p>

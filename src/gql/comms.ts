@@ -188,6 +188,7 @@ const GET_ACTIVE_CALL = gql`
             participantName
             userId
             isMember
+            isStaff
             isOnHold
             participantId
           }
