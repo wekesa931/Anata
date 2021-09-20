@@ -15,7 +15,7 @@ const CallFloatingBox = () => {
   const [isOpen, setisOpen] = React.useState(true)
   const [memberInfo, setmemberInfo] = useState(null)
   const [displayHistory, setdisplayHistory] = useState(false)
-  const { activeCall, completeCall } = useCall()
+  const { activeCall, conferenceParticipants, completeCall } = useCall()
   const [showTransferList, setshowTransferList] = useState(false)
 
   const isCallBack = activeCall?.type === 'CALLBACK'
@@ -27,6 +27,8 @@ const CallFloatingBox = () => {
   const isTransfered = activeCall?.state === 'TRANSFERED'
   const participantLeft = activeCall?.state === 'MEMBERLEFT'
   const isKnownMember = activeCall?.memberName !== 'Unknown Caller'
+  const isTransferring = activeCall?.forwardTo && !isTransfered
+  const isHalfHeight = conferenceParticipants?.length === 3
   const shouldDisplayForms =
     isKnownMember &&
     (isActive ||
@@ -172,7 +174,7 @@ const CallFloatingBox = () => {
           </span>
         )}
       </div>
-      {activeCall.forwardTo && !isTransfered && (
+      {isTransferring && (
         <div className="forward-to flex-between">
           <div className="d-flex mt-ten">
             <span>
@@ -232,7 +234,11 @@ const CallFloatingBox = () => {
             <SearchInput unknownMemberSearch memberInfo={setmemberInfo} />
           </div>
         ))}
-      {shouldDisplayForms && <CallConsoleForms />}
+      {shouldDisplayForms && (
+        <CallConsoleForms
+          height={isHalfHeight ? 'task-form-low' : 'task-form'}
+        />
+      )}
       {displayActionButtons && (
         <div className="full-width d-flex flex-end transfer-container">
           <button className="d-flex emergency-btn" onClick={() => null}>

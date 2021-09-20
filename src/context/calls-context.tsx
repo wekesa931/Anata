@@ -188,17 +188,22 @@ function CallProvider({ children }: any) {
           pushNotification?.data?.participant
         )
         const parsedSession = JSON.parse(pushNotification?.data?.session)
-        setConferenceParticipants([
-          ...conferenceParticipants,
-          {
-            participantName: parsedParticipant?.participant_name,
-            isOnHold: parsedParticipant?.is_on_hold,
-            participantId: parsedParticipant?.participant_id,
-            session: parsedSession?.room_name,
-            conferenceRoom: parsedParticipant?.conference_room,
-            isMember: parsedParticipant?.is_member,
-          },
-        ])
+        const participantExists = conferenceParticipants.find(
+          (participant) =>
+            participant.participantId === parsedParticipant?.participant_id
+        )
+        !participantExists &&
+          setConferenceParticipants([
+            ...conferenceParticipants,
+            {
+              participantName: parsedParticipant?.participant_name,
+              isOnHold: parsedParticipant?.is_on_hold,
+              participantId: parsedParticipant?.participant_id,
+              session: parsedSession?.room_name,
+              conferenceRoom: parsedParticipant?.conference_room,
+              isMember: parsedParticipant?.is_member,
+            },
+          ])
         if (activeCall?.forwardTo) {
           setActiveCall({ ...activeCall, forwardTo: undefined })
         }
@@ -239,6 +244,7 @@ function CallProvider({ children }: any) {
           callUpdates.state = 'MEMBERLEFT'
         } else {
           callUpdates.state = 'FULFILLED'
+          setConferenceParticipants([])
         }
       }
       if (pushNotification?.data?.conference) {

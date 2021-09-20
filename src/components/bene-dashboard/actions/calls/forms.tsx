@@ -8,7 +8,7 @@ import FORMS from '../forms/forms'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import Notification from '../../../utils/notification/notification.component'
 
-const CallConsoleForms = () => {
+const CallConsoleForms = ({ height }: { height: string }) => {
   const { recId }: any = useParams()
   const match = useRouteMatch()
   const { member } = useMember()
@@ -57,7 +57,7 @@ const CallConsoleForms = () => {
   }
 
   return (
-    <div className="task-form">
+    <div className={height}>
       <div
         style={{ borderBottom: focused ? '2px solid #e8eaed' : 'none' }}
         className="d-flex flex-between align-center call-forms"
