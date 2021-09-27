@@ -117,6 +117,21 @@ const FORMS = [
     url_sandbox: '',
     url: 'shrFefBCXsPCUxo2o',
   },
+  {
+    name: 'Clinical consultation',
+    url_sandbox: '',
+    url: 'shrPWg4S3LYxHbgmv',
+  },
+  {
+    name: 'VC request',
+    url_sandbox: '',
+    url: 'shr7c1HzMJsLv6PzW',
+  },
+  {
+    name: 'VC prescription',
+    url_sandbox: '',
+    url: 'shrY7UhjHNpZxNfNK',
+  },
 ]
 
 const sorted = FORMS.sort((a, b) => {
