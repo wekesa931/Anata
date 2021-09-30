@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import dayjs from 'dayjs'
 import * as Yup from 'yup'
 
@@ -21,7 +22,7 @@ const InteractionLogsValidationSchema = Yup.object().shape({
   healthNavigator: Yup.string().required('HN is required'),
   interactorType: Yup.string().required('Type is required'),
   interactionSummaryNotes: Yup.string().required('Summary notes is required'),
-  flagForReview: Yup.string().required('Flag for review is required'),
+  outcome: Yup.string().required('Select the next steps'),
   interactorName: Yup.string().when('interactorType', {
     is: (type) => type !== 'Beneficiary',
     then: Yup.string().required(
@@ -75,6 +76,30 @@ const InteractionLogsValidationSchema = Yup.object().shape({
       'Required when outbound interaction category is other'
     ),
     otherwise: Yup.string(),
+  }),
+  flagForReview: Yup.string().when('outcome', {
+    is: 'Flag for Review',
+    then: Yup.string().required('Flag for review is required'),
+  }),
+  outcomeMetadata: Yup.object({
+    typeOfVcRequest: Yup.string().when('outcome', {
+      is: 'Virtual Consultation Required',
+      then: Yup.string().required('Indicate the type of request'),
+    }),
+    levelOfEmergency: Yup.string().when('outcome', {
+      is: 'Virtual Consultation Required',
+      then: Yup.string().required('Indicate the level of emergency'),
+    }),
+    reasonForConsultation: Yup.string().when('outcome', {
+      is: 'Virtual Consultation Required',
+      then: Yup.string().required(
+        'Describe the reason(s) why you are requesting a Virtual Consultation'
+      ),
+    }),
+    status: Yup.string().when('outcome', {
+      is: 'Virtual Consultation Required',
+      then: Yup.string().required('Indicate the status of the request'),
+    }),
   }),
 })
 

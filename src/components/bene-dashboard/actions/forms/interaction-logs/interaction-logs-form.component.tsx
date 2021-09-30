@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React, { useState } from 'react'
 import { ErrorMessage, Formik, FormikHelpers } from 'formik'
 import { useMutation } from '@apollo/client'
@@ -23,7 +24,13 @@ const InteractionLogsForm = () => {
   const { member, user } = JSON.parse(data)
   const fields = useInteractionFormFields()
   const [createInteraction] = useMutation(CREATE_INTERACTION)
-
+  const initialValues = {
+    ...fields.reduce(
+      (acc, field) => ({ ...acc, [field.name]: field.value }),
+      {}
+    ),
+    outcomeMetadata: {},
+  }
   React.useEffect(() => {
     analytics.track('Interaction Log Form Opened', {
       member: member['Antara ID'],
@@ -35,6 +42,11 @@ const InteractionLogsForm = () => {
   }
 
   const onSubmit = (values: any, { setSubmitting }: FormikHelpers<any>) => {
+    Object.keys(values).forEach((key) => {
+      if (key.includes('[')) {
+        delete values[key]
+      }
+    })
     const input = {
       ...values,
       member: member['Antara ID'],
@@ -101,10 +113,7 @@ const InteractionLogsForm = () => {
     <div className={styles.formContainer}>
       <h2 className={styles.formName}>Interaction Logs Form</h2>
       <Formik
-        initialValues={fields.reduce(
-          (acc, field) => ({ ...acc, [field.name]: field.value }),
-          {}
-        )}
+        initialValues={initialValues}
         validationSchema={InteractionLogsValidationSchema}
         onSubmit={onSubmit}
       >

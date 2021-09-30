@@ -177,6 +177,18 @@ const useInteractionFormFields = () => {
       required: true,
     },
     {
+      label: 'Next Steps',
+      name: 'outcome',
+      type: 'single-select',
+      options: ['Virtual Consultation Required', 'Flag for Review', 'None'].map(
+        (option) => ({
+          label: option,
+          value: option,
+        })
+      ),
+      required: true,
+    },
+    {
       label: 'Flag for Review',
       name: 'flagForReview',
       type: 'single-select',
@@ -184,6 +196,54 @@ const useInteractionFormFields = () => {
         label: option,
         value: option,
       })),
+      condition: (values) =>
+        values.outcome && values.outcome === 'Flag for Review',
+      required: true,
+    },
+    {
+      label: 'Type of Request',
+      name: 'outcomeMetadata[typeOfVcRequest]',
+      type: 'single-select',
+      options: [
+        'General consultation',
+        'Chronic case consultation',
+        'General consultation - Follow Up',
+        'Chronic case consultation - Follow Up',
+      ].map((option) => ({ label: option, value: option })),
+      condition: (values) =>
+        values.outcome && values.outcome === 'Virtual Consultation Required',
+      required: true,
+    },
+    {
+      label: 'Level of emergency',
+      name: 'outcomeMetadata[levelOfEmergency]',
+      type: 'single-select',
+      options: ['Emergency', 'Urgent', 'Normal'].map((option) => ({
+        label: option,
+        value: option,
+      })),
+      condition: (values) =>
+        values.outcome && values.outcome === 'Virtual Consultation Required',
+      required: true,
+    },
+    {
+      label: 'Reasons for Consultation',
+      name: 'outcomeMetadata[reasonForConsultation]',
+      type: 'long-text',
+      condition: (values) =>
+        values.outcome && values.outcome === 'Virtual Consultation Required',
+      required: true,
+    },
+    {
+      label: 'Status',
+      name: 'outcomeMetadata[status]',
+      type: 'single-select',
+      options: ['Requested', 'Validated by HN'].map((option) => ({
+        label: option,
+        value: option,
+      })),
+      condition: (values) =>
+        values.outcome && values.outcome === 'Virtual Consultation Required',
       required: true,
     },
   ]

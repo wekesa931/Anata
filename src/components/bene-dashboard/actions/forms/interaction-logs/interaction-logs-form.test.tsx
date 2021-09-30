@@ -33,17 +33,13 @@ const mutation_variables = {
     interactionStartedAt: '2020-11-30T13:46:00.000Z',
     healthNavigator: 'fatma',
     interactorType: 'Beneficiary',
-    interactorName: undefined,
-    relationshipType: undefined,
     modeOfCommunication: 'SMS',
     interactionDirection: 'Outbound interaction',
-    inboundInteractionCategory: undefined,
-    otherCategoryInbound: undefined,
     outboundInteractionCategory: ['Education'],
-    otherCategoryOutbound: undefined,
     interactionSummaryNotes: 'Test Summary Notes',
-    flagForReview: 'Yes',
     historyUserIdField: 'fatma@antarahealth.com',
+    outcome: 'None',
+    outcomeMetadata: {},
   },
 }
 
@@ -68,7 +64,7 @@ describe('<InteractionLogsForm/>', () => {
     wrapper.getByLabelText(/Mode of Communication/)
     wrapper.getByLabelText(/Interaction Direction/)
     wrapper.getByLabelText(/Interactor Summary Notes/)
-    wrapper.getByLabelText(/Flag for Review/)
+    wrapper.getByLabelText(/Next Steps/)
   })
 
   test('should prefill values where needed', async () => {
@@ -174,7 +170,7 @@ describe('<InteractionLogsForm/>', () => {
       wrapper.getByText('Mode of communication is required')
       wrapper.getByText('Interaction type is required')
       wrapper.getByText('Summary notes is required')
-      wrapper.getByText('Flag for review is required')
+      wrapper.getByText('Select the next steps')
       wrapper.getByText('Interaction date should not be a future date')
     })
   })
@@ -197,14 +193,15 @@ describe('<InteractionLogsForm/>', () => {
     const modeOfCommField = wrapper.getByLabelText(/Mode of Communication/)
     const directionField = wrapper.getByLabelText(/Interaction Direction/)
     const notesField = wrapper.getByLabelText(/Interactor Summary Notes/)
-    const flagField = wrapper.getByLabelText(/Flag for Review/)
+    const outcome = wrapper.getByLabelText(/Next Steps/)
+
     const fields = [
       { field: interactorField, value: 'Beneficiary' },
       { field: modeOfCommField, value: 'SMS' },
       { field: directionField, value: 'Outbound interaction' },
       { field: notesField, value: 'Test Summary Notes' },
-      { field: flagField, value: 'Yes' },
       { field: interactionStartedAt, value: '2020-11-30T13:46' },
+      { field: outcome, value: 'None' },
     ]
     fields.forEach(({ field, value }) => {
       act(() => {
@@ -240,13 +237,14 @@ describe('<InteractionLogsForm/>', () => {
     const modeOfCommField = wrapper.getByLabelText(/Mode of Communication/)
     const directionField = wrapper.getByLabelText(/Interaction Direction/)
     const notesField = wrapper.getByLabelText(/Interactor Summary Notes/)
-    const flagField = wrapper.getByLabelText(/Flag for Review/)
+    const outcome = wrapper.getByLabelText(/Next Steps/)
+
     const fields = [
       { field: interactorField, value: 'Beneficiary' },
       { field: modeOfCommField, value: 'SMS' },
       { field: directionField, value: 'Outbound interaction' },
       { field: notesField, value: 'Test Summary Notes' },
-      { field: flagField, value: 'Yes' },
+      { field: outcome, value: 'None' },
       { field: interactionStartedAt, value: '2020-11-30T13:46' },
     ]
     fields.forEach(({ field, value }) => {
