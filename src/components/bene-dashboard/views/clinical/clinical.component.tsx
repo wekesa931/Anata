@@ -4,11 +4,13 @@ import Vitals from './vitals/vitals.component'
 import FilledForms from './filled-forms/filled-forms.component'
 import Appointments from './appointments/appointments.component'
 import Medications from './medications/medications.component'
+import Consultation from '../consultation/consultation'
 
 const Clinical = () => {
   return (
     <div style={{ display: 'flex' }}>
       <div style={{ flex: 1, marginRight: '48px', maxWidth: '336px' }}>
+        <Consultation />
         <Labs />
         <Vitals />
       </div>
