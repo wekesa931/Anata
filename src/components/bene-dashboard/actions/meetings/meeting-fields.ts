@@ -24,14 +24,9 @@ const MEETING_FIELDS: AirtableField[] = [
   {
     name: 'Status',
     type: 'single-select',
-    options: [
-      'Scheduled',
-      'Scheduled - 2nd',
-      'Scheduled - 3rd',
-      'Rescheduling',
-      'Done',
-      'Missed',
-    ].map((option) => ({ label: option, value: option })),
+    options: ['Scheduled', 'Done', 'Missed', 'Rescheduled by member'].map(
+      (option) => ({ label: option, value: option })
+    ),
   },
 ]
 
