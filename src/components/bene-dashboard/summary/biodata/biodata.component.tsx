@@ -41,12 +41,12 @@ const Hmp = () => {
 
         Object.keys(response).forEach((data: any) => {
           hmps.push({
-            hmpSendDate: response[data]['HMP Send Date'],
-            hmpNumber: response[data]['HMP #'],
-            hmpStatus: response[data]['HMP Status'],
-            hmpDay: response[data]['HMP Day'],
-            hmpLink: response[data]['HMP Link'],
-            hmpPhase: response[data]['HMP Phase'],
+            hmpSendDate: response[data]['HMP Send Date']?.toString(),
+            hmpNumber: response[data]['HMP #']?.toString(),
+            hmpStatus: response[data]['HMP Status']?.toString(),
+            hmpDay: response[data]['HMP Day']?.toString(),
+            hmpLink: response[data]['HMP Link']?.toString(),
+            hmpPhase: response[data]['HMP Phase']?.toString(),
           })
         })
         setHmpInfo(hmps)
