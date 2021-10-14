@@ -89,14 +89,26 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
               appearance: 'success',
               autoDismiss: true,
             })
-            const newMessage = [
-              ...messages.TODAY,
-              {
-                ...sms,
-                status: 'sent',
-                updatedAt: 'now',
-              },
-            ]
+            let newMessage: any
+            if (messages && messages.TODAY) {
+              newMessage = [
+                ...messages.TODAY,
+                {
+                  ...sms,
+                  status: 'sent',
+                  updatedAt: 'now',
+                },
+              ]
+            } else {
+              newMessage = [
+                {
+                  ...sms,
+                  status: 'sent',
+                  updatedAt: 'now',
+                },
+              ]
+            }
+
             setMessages({ ...messages, TODAY: newMessage })
             setCharCount(0)
             setSendingSMS(false)
