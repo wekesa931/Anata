@@ -237,10 +237,10 @@ const HifSummary = () => {
 
         if (record_id != null) {
           const allergiesArray = []
-          allergiesArray.push(response[record_id]['What are you allergic to?'])
+          allergiesArray.push(response[record_id]['Which food are you allergic to?'])
 
           allergiesArray.push(
-            response[record_id]['What are you allergic to? 2']
+            response[record_id]['Which medications are you allergic to?']
           )
 
           const memberBloodGroup =
