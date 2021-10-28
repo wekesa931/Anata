@@ -33,7 +33,12 @@ const Tab = ({ activeTab, label, onClick, orientation }: any) => {
   )
 }
 
-const Tabs = ({ children, currentTab = 0, orientation }: any) => {
+const Tabs = ({
+  children,
+  currentTab = 0,
+  orientation,
+  FilterComponent = null,
+}: any) => {
   const [activeTab, setActiveTab] = useState(children[currentTab].props.label)
   const isVertical = orientation === 'vertical'
   const onClickTabItem = (tab: string) => {
@@ -66,6 +71,7 @@ const Tabs = ({ children, currentTab = 0, orientation }: any) => {
             />
           )
         })}
+        {FilterComponent && <FilterComponent />}
       </div>
       <div
         className={

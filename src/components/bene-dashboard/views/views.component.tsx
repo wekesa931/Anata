@@ -30,51 +30,55 @@ const SortButton = ({ openSortDialog, setOpenSortDialog }: any) => {
   )
 }
 
-const Views = () => {
+const FilterComponent = () => {
   const [openSortDialog, setOpenSortDialog] = useState(false)
+  return (
+    <div
+      className="d-flex p-relative"
+      style={!openSortDialog ? { alignItems: 'center' } : {}}
+    >
+      <div
+        className="d-flex p-absolute flex-align-center"
+        style={{ left: '30px' }}
+        key={openSortDialog ? 1 : 0}
+      >
+        <div>
+          {!openSortDialog && (
+            <button
+              className="btn-icon active"
+              style={{ margin: '0 8px 0px 0', padding: 0 }}
+            >
+              <Icon
+                name="table"
+                width={40}
+                height={24}
+                fill="var(--blue-base)"
+              />
+            </button>
+          )}
+        </div>
+        {!openSortDialog ? (
+          <div className={styles.animatedDiv}>
+            <SortButton
+              setOpenSortDialog={setOpenSortDialog}
+              openSortDialog={openSortDialog}
+            />
+          </div>
+        ) : (
+          <div className={styles.animatedDiv}>
+            <SortDialog onClose={() => setOpenSortDialog(false)} />
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+const Views = () => {
   return (
     <SortFilterProvider>
       <div className="full-height">
-        <div
-          className="d-flex p-relative"
-          style={!openSortDialog ? { alignItems: 'center' } : {}}
-        >
-          <h2>Views</h2>
-          <div
-            className="d-flex p-absolute flex-align-center"
-            style={{ left: '80px' }}
-            key={openSortDialog ? 1 : 0}
-          >
-            <div>
-              {!openSortDialog && (
-                <button
-                  className="btn-icon active"
-                  style={{ margin: '0 8px 0px 0', padding: 0 }}
-                >
-                  <Icon
-                    name="table"
-                    width={40}
-                    height={24}
-                    fill="var(--blue-base)"
-                  />
-                </button>
-              )}
-            </div>
-            {!openSortDialog ? (
-              <div className={styles.animatedDiv}>
-                <SortButton
-                  setOpenSortDialog={setOpenSortDialog}
-                  openSortDialog={openSortDialog}
-                />
-              </div>
-            ) : (
-              <div className={styles.animatedDiv}>
-                <SortDialog onClose={() => setOpenSortDialog(false)} />
-              </div>
-            )}
-          </div>
-        </div>
-        <Tabs>
+        <Tabs FilterComponent={FilterComponent}>
           <div label="Clinical Summary">
             <ErrorBoundary>
               <Clinical />

@@ -45,12 +45,12 @@ const PatientDashboard = () => {
       {(response: any) => (
         <MemberProvider member={response}>
           <div className={styles.container}>
-            <div className="dashboard-content dashboard-raised-content padding-top-32">
+            <div className="dashboard-content dashboard-raised-content">
               <ErrorBoundary>
                 <BioData />
               </ErrorBoundary>
             </div>
-            <div className="dashboard-content padding-top-32 bene-views">
+            <div className="dashboard-content padding-top-16 bene-views">
               <Views />
             </div>
 

@@ -1,6 +1,5 @@
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft } from 'react-feather'
 import { hmp } from '../../../../types/user'
 import styles from './biodata.component.css'
 import airtableFetch from '../../../../resources/airtable-fetch'
@@ -365,16 +364,9 @@ const GeneralSummary = ({ member }: any) => {
 const BioData = () => {
   const { member } = useMember()
   const isMinor = (age: number) => age < 18
-  const history = useHistory()
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.container}>
-        <div className={styles.arrow}>
-          <ArrowLeft onClick={() => history.goBack()} />
-        </div>
-        <h2>Member dashboard</h2>
-      </div>
       {member && (
         <div className={styles.bioDataCard}>
           <div className={styles.beneNameContainer}>
