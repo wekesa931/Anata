@@ -152,6 +152,8 @@ const Tasks = () => {
   const [filteredTasks, setFilteredTasks] = useState<any[]>([])
   const [upnextTasks, setUpnextTasks] = useState<any[]>([])
 
+  const defaultTaskFilterStatus = 'Not Started'
+
   const status = [
     'Complete',
     'In Progress',
@@ -317,7 +319,8 @@ const Tasks = () => {
       setFilteredTasks(
         recordsToDisplay.filter((task) =>
           task.data.find(
-            ({ name, value }: any) => name === 'Status' && value !== 'Complete'
+            ({ name, value }: any) =>
+              name === 'Status' && value === defaultTaskFilterStatus
           )
         )
       )
@@ -441,7 +444,9 @@ const Tasks = () => {
               className="remove-border form-control"
               data-testid="status-filter"
             >
-              <option key="Not Started">Not Started</option>
+              <option key={defaultTaskFilterStatus}>
+                {defaultTaskFilterStatus}
+              </option>
               {status.map((stat) => (
                 <option key={stat}>{stat}</option>
               ))}

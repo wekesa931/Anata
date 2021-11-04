@@ -163,6 +163,7 @@ const Appointments = () => {
 
   const columns = [
     { name: 'Appt Date', format: 'dd/mmm/yy', key: 'start_date_time' },
+    { name: 'Type', format: '\n', key: 'Service' },
     { name: 'Status', format: '\n', key: 'Status' },
     {
       name: 'PAFU',
