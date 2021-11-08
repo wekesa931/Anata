@@ -11,10 +11,13 @@ interface IContacts {
   emergencyContactPhone1: string
   emergencyContactPhone2: string
   emergencyContactRelationship: string
-  dependents: IDependents[]
+  memberType: 'DEPENDENT' | 'Dependent' | 'PRIMARY' | 'Primary'
+  dependents: IBeneData[]
+  primary: IBeneData[]
 }
 
-interface IDependents {
+interface IBeneData {
+  airtableRecordId: string
   fullName: string
   status: string
   contactPhone1: string
@@ -30,7 +33,7 @@ export interface Member {
   messageTemplate?: string
 }
 
-const initialContacts = {
+const initialContacts: IContacts = {
   status: '',
   fullName: '',
   contactPhone1: '',
@@ -39,7 +42,9 @@ const initialContacts = {
   emergencyContactPhone1: '',
   emergencyContactPhone2: '',
   emergencyContactRelationship: '',
+  memberType: 'DEPENDENT',
   dependents: [],
+  primary: [],
 }
 
 type MemberContextType = {

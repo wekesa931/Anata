@@ -1,9 +1,10 @@
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { hmp } from '../../../../types/user'
 import styles from './biodata.component.css'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import { useMember } from '../../../../context/member.context'
+import analytics from '../../../../helpers/analytics'
 
 const getRiskFactors = (
   diabetes: string,
@@ -236,7 +237,9 @@ const HifSummary = () => {
 
         if (record_id != null) {
           const allergiesArray = []
-          allergiesArray.push(response[record_id]['Which food are you allergic to?'])
+          allergiesArray.push(
+            response[record_id]['Which food are you allergic to?']
+          )
 
           allergiesArray.push(
             response[record_id]['Which medications are you allergic to?']
@@ -362,8 +365,18 @@ const GeneralSummary = ({ member }: any) => {
 }
 
 const BioData = () => {
-  const { member } = useMember()
+  const { member, memberContact } = useMember()
+  const hasDependants = memberContact.dependents.length > 0
+  const hasPrimary = memberContact.primary && memberContact.primary.length > 0
   const isMinor = (age: number) => age < 18
+  const trackAccess = () =>
+    analytics.track(
+      `${
+        hasPrimary
+          ? "Dependant's dashboard accesed from primary member's"
+          : "Primary member's dashboard accesed from dependant's"
+      }`
+    )
 
   return (
     <div className={styles.wrapper}>
@@ -505,6 +518,66 @@ const BioData = () => {
             <HifSummary />
 
             <ConditionsSummary />
+            {hasDependants && (
+              <>
+                <hr className={styles.hrLine} />
+
+                <h4 className={styles.clinicalHeading}>Dependants</h4>
+                <table className={`text-normal ${styles.bioDataTable}`}>
+                  <tbody>
+                    {memberContact.dependents.map((dep) => (
+                      <tr key={dep.airtableRecordId}>
+                        <td
+                          className={`text-bold ${styles.bioDataTableColumn}`}
+                        >
+                          {dep.fullName}
+                        </td>
+                        <td className={`${styles.bioDataTableColumn}`}>
+                          <Link
+                            onClick={trackAccess}
+                            to={`/member/${dep.airtableRecordId}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Open Dashboard
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            )}
+            {hasPrimary && (
+              <>
+                <hr className={styles.hrLine} />
+
+                <h4 className={styles.clinicalHeading}>Primary Dependent</h4>
+                <table className={`text-normal ${styles.bioDataTable}`}>
+                  <tbody>
+                    {memberContact.primary.map((mem) => (
+                      <tr key={mem.airtableRecordId}>
+                        <td
+                          className={`text-bold ${styles.bioDataTableColumn}`}
+                        >
+                          {mem.fullName}
+                        </td>
+                        <td className={`${styles.bioDataTableColumn}`}>
+                          <Link
+                            onClick={trackAccess}
+                            to={`/member/${mem.airtableRecordId}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Open Dashboard
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            )}
           </div>
         </div>
       )}

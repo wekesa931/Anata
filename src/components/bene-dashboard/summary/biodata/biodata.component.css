@@ -96,8 +96,6 @@
 }
 
 .clinicalHeading {
-  width: 143px;
-  height: 20px;
   margin-left: 16px;
   color: var(--orange-base);
 }
@@ -198,18 +196,18 @@
 }
 
 .container {
-  display: flex; 
+  display: flex;
   align-items: center;
   flex-direction: row;
 }
 
 .arrow {
   width: 32px;
-   height: 32px;
-   border-radius: 10px;
-   background-color: lightgrey;
-   display: flex;
-   align-items:center;
-   justify-content: center;
-   margin-right: 10px
+  height: 32px;
+  border-radius: 10px;
+  background-color: lightgrey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
 }

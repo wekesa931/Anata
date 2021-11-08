@@ -49,7 +49,17 @@ const MEMBER_CONTACT_DETAILS = gql`
           emergencyContactPhone1
           emergencyContactPhone2
           emergencyContactRelationship
+          memberType
+          primary {
+            fullName
+            airtableRecordId
+            status
+            contactPhone1
+            contactPhone2
+            relationshipToPrimary
+          }
           dependents {
+            airtableRecordId
             fullName
             status
             contactPhone1
