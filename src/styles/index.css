@@ -1732,3 +1732,67 @@ a {
   border-radius: 5px;
   width: 60px;
 }
+.MuiAccordionSummary-contentGutters {
+  margin: 0px !important;
+}
+
+.pdf-dialog {
+  position: relative;
+}
+
+.pdf-dialog .MuiDialog-container .MuiPaper-root {
+  height: 90%;
+}
+
+.file-action-button-text {
+  flex-grow: 0;
+  font-family: Rubik !important;
+  font-size: 14px !important;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.29;
+  margin-left: 5px !important;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: #1084ee;
+}
+
+.file-close-btn {
+  width: 25px;
+  height: 25px;
+  color: #8b95a5;
+}
+
+.file-title {
+  flex-grow: 0;
+  font-family: Rubik !important;
+  font-size: 14px !important;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.29;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: #8b95a5;
+}
+
+.file-title-content {
+  flex-grow: 0;
+  font-family: Rubik !important;
+  font-size: 14px !important;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.29;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: #182c4c;
+  margin-bottom: 10px !important;
+}
+
+.file-action-btn {
+  width: 14px;
+  height: 14px;
+  color: #87c1f7;
+}

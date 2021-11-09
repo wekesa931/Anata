@@ -9,6 +9,7 @@ import {
 } from '../../../context/sort-filter-views.context'
 import InteractionLogs from './interaction-logs/interaction-logs.component'
 import Nutrition from './nutrition/nutrition.component'
+import Files from './files/files.component'
 import ErrorBoundary from '../../error-boundary/error-boundary.component'
 import SortDialog from './sort-and-filter.component/sort-and-filter.component'
 import Conditions from './conditions/conditions.component'
@@ -97,6 +98,12 @@ const Views = () => {
           <div label="Nutrition">
             <ErrorBoundary>
               <Nutrition />
+            </ErrorBoundary>
+          </div>
+
+          <div label="Files">
+            <ErrorBoundary>
+              <Files />
             </ErrorBoundary>
           </div>
         </Tabs>
