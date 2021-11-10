@@ -40,6 +40,9 @@ const Login = () => {
   }
 
   const successfulSignIn = async (response: any) => {
+    if (!response.code) {
+      return
+    }
     // pass one time code from google to node proxy to generate
     // access token and refresh token for authentication
     const authToken = await getRefreshTokenFromNodeProxy(response.code)
@@ -62,16 +65,10 @@ const Login = () => {
         )
       }
     }
-    if (
-      history &&
-      history.location &&
-      history.location.state &&
-      history.location.state.from &&
-      history.location.state.from.pathname !== '/login'
-    ) {
-      return history.push(history.location.state.from)
+    if (history?.location?.state?.from?.pathname !== '/login') {
+      history.push(history?.location?.state?.from)
     }
-    return history.push('/member')
+    history.push('/member')
   }
 
   React.useEffect(() => {
