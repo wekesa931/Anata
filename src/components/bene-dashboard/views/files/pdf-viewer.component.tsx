@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Document, Page, Outline } from 'react-pdf/dist/esm/entry.webpack'
+import ImageLoader from 'react-image-render'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
@@ -27,6 +28,7 @@ type IFiles = {
   otherMetadata: any
   storageKey: string
   updatedAt: Date
+  url: string
 }
 
 function FilePasswordEncrypt(props) {
@@ -98,6 +100,12 @@ export default function PdfViewer(props) {
 
   const [pageNumber, setPageNumber] = useState(1)
   const [generateAccessFileLink] = useMutation(GENERATE_FILE_LINK)
+  const isImage =
+    displayFile.url &&
+    (displayFile.url.includes('jpg') ||
+      displayFile.url.includes('jpeg') ||
+      displayFile.url.includes('png'))
+  const isDocument = displayFile.url && !isImage
 
   useEffect(() => {
     if (file.id) {
@@ -176,7 +184,9 @@ export default function PdfViewer(props) {
   const LoadingError = () => (
     <div className="d-flex flex-direction-column flex-align-center margin-top-32">
       <AlertTriangle />
-      <p className="text-heading-5">Failed to load PDF file.</p>
+      <p className="text-heading-5">
+        The file is no longer available for viewing
+      </p>
     </div>
   )
 
@@ -238,24 +248,41 @@ export default function PdfViewer(props) {
                 ref={descriptionElementRef}
                 tabIndex={-1}
               >
-                <Document
-                  file={displayFile.url}
-                  externalLinkTarget="_blank"
-                  renderMode="svg"
-                  onLoadSuccess={onDocumentLoadSuccess}
-                  loading={<Loader />}
-                  error={<LoadingError />}
-                  noData={<Loader />}
-                >
-                  <Outline onItemClick={onItemClick} />
-                  {Array.from(new Array(numPages), (el, index) => (
-                    <Page
-                      key={`page_${index + 1}`}
-                      pageNumber={pageNumber}
-                      width={900}
-                    />
-                  ))}
-                </Document>
+                {isDocument && (
+                  <Document
+                    file={displayFile.url}
+                    externalLinkTarget="_blank"
+                    renderMode="svg"
+                    onLoadSuccess={onDocumentLoadSuccess}
+                    loading={<Loader />}
+                    error={<LoadingError />}
+                    noData={<Loader />}
+                  >
+                    <Outline onItemClick={onItemClick} />
+                    {Array.from(new Array(numPages), (el, index) => (
+                      <Page
+                        key={`page_${index + 1}`}
+                        pageNumber={pageNumber}
+                        width={900}
+                      />
+                    ))}
+                  </Document>
+                )}
+                {isImage && (
+                  <ImageLoader src={displayFile.url}>
+                    {({ loaded, errored }: any) => {
+                      if (loaded) {
+                        return (
+                          <img src={displayFile.url} alt={displayFile.title} />
+                        )
+                      }
+                      if (errored) {
+                        return <LoadingError />
+                      }
+                      return <Loader />
+                    }}
+                  </ImageLoader>
+                )}
               </DialogContentText>
             </Grid>
             <Grid item xs={3} style={{ borderLeft: '1px solid #e8eaed' }}>

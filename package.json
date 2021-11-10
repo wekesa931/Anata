@@ -107,6 +107,7 @@
     "react-dom": "^16.13.1",
     "react-feather": "^2.0.9",
     "react-google-login": "^5.1.20",
+    "react-image-render": "^0.0.3",
     "react-loads": "^9.2.4",
     "react-pdf": "^5.4.0",
     "react-router-dom": "^5.2.0",
