@@ -34,7 +34,7 @@ const Login = () => {
         'Content-Type': 'application/json',
       },
       method: 'POST',
-      data: JSON.stringify({ code }),
+      data: { code },
     }).then(({ data }) => data)
     return tokens
   }
