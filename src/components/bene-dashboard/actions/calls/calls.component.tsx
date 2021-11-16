@@ -64,7 +64,8 @@ const CallsCallout = ({
         { 'Emergency 2': loadedContacts.emergencyContactPhone2 },
       ]
 
-      loadedContacts.dependents.forEach((dep, i) => {
+      // eslint-disable-next-line no-unused-expressions
+      loadedContacts?.dependents?.forEach((dep, i) => {
         allContacts.push({
           [`Dependant ${i + 1} Phone 1 (${nameSplitter(dep.fullName)})`]:
             dep.contactPhone1,

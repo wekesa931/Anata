@@ -525,7 +525,7 @@ const BioData = () => {
                 <h4 className={styles.clinicalHeading}>Dependants</h4>
                 <table className={`text-normal ${styles.bioDataTable}`}>
                   <tbody>
-                    {memberContact.dependents.map((dep) => (
+                    {memberContact?.dependents?.map((dep) => (
                       <tr key={dep.airtableRecordId}>
                         <td
                           className={`text-bold ${styles.bioDataTableColumn}`}
