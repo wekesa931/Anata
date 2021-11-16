@@ -21,7 +21,7 @@ const useInteractionFormFields = () => {
       label: 'Member',
       name: 'member',
       type: 'text',
-      value: member['Full Name'],
+      value: member?.['Full Name'],
       disabled: true,
     },
     {

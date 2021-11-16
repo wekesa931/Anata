@@ -106,7 +106,7 @@ const InteractionLogsForm = () => {
   }
 
   React.useEffect(() => {
-    document.title = `Scribe: ${member['Full Name']} Interaction Log Form`
+    document.title = `Scribe: ${member?.['Full Name']} Interaction Log Form`
   }, [member])
 
   return (
