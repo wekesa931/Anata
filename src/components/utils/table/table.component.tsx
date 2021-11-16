@@ -185,7 +185,7 @@ const Table = ({
                         className={`text-normal ${styles.td}`}
                         key={`${column.key}${idx}`}
                       >
-                        {format(row[column.key]) || '-'}
+                        {format(row[column.key])?.toString() || '-'}
                       </td>
                     )
                   })}

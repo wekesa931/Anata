@@ -45,7 +45,7 @@ describe('<InteractionLogsView/>', () => {
 
   test('should display list interaction logs correctly', async () => {
     const { queryByText } = render(mocks)
-    await new Promise((resolve) => setTimeout(resolve, 0))
+    await new Promise((resolve) => setTimeout(resolve, 200))
     expect(queryByText('Test Sumamary Notes')).not.toBeNull()
     expect(queryByText('Shes doing very well')).not.toBeNull()
     expect(queryByText(/20 Feb '20, 12:27 PM/)).not.toBeNull()

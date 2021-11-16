@@ -253,12 +253,16 @@ export default function PdfViewer(props) {
                     file={displayFile.url}
                     externalLinkTarget="_blank"
                     renderMode="svg"
-                    onLoadSuccess={onDocumentLoadSuccess}
+                    onLoadSuccess={(docNumPages: any) =>
+                      onDocumentLoadSuccess(docNumPages)
+                    }
                     loading={<Loader />}
                     error={<LoadingError />}
                     noData={<Loader />}
                   >
-                    <Outline onItemClick={onItemClick} />
+                    <Outline
+                      onItemClick={(pageNum: any) => onItemClick(pageNum)}
+                    />
                     {Array.from(new Array(numPages), (el, index) => (
                       <Page
                         key={`page_${index + 1}`}
