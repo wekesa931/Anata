@@ -58,7 +58,7 @@ const airtableFetch = async (table: string, method?: any, data = {}) => {
         'Content-Type': 'application/json',
       },
       method: method || 'GET',
-      data: method === 'GET' ? null : JSON.stringify(data),
+      data: method === 'GET' ? null : data,
     })
     return response.data
   } catch (e) {
