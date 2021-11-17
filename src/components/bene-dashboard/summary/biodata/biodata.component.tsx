@@ -366,8 +366,8 @@ const GeneralSummary = ({ member }: any) => {
 
 const BioData = () => {
   const { member, memberContact } = useMember()
-  const hasDependants = memberContact.dependents.length > 0
-  const hasPrimary = memberContact.primary && memberContact.primary.length > 0
+  const hasDependants = memberContact?.dependents.length > 0
+  const hasPrimary = memberContact?.primary && memberContact?.primary.length > 0
   const isMinor = (age: number) => age < 18
   const trackAccess = () =>
     analytics.track(
@@ -555,7 +555,7 @@ const BioData = () => {
                 <h4 className={styles.clinicalHeading}>Primary Dependent</h4>
                 <table className={`text-normal ${styles.bioDataTable}`}>
                   <tbody>
-                    {memberContact.primary.map((mem) => (
+                    {memberContact?.primary.map((mem) => (
                       <tr key={mem.airtableRecordId}>
                         <td
                           className={`text-bold ${styles.bioDataTableColumn}`}
