@@ -10,14 +10,17 @@ import CallbackHistory, { HistoryLogs } from './callbackHistory.component'
 import SearchInput from '../../../search/search.component'
 import SaveContactView from './updateBeneContactView'
 import ActiveCallParticipants from './ActiveCallParticipants'
+import AuthenticateMember from './AuthenticateMember'
+import { AuthButton } from './AuthenticateMember.styles'
 
 const CallFloatingBox = () => {
   const [isOpen, setisOpen] = React.useState(true)
   const [memberInfo, setmemberInfo] = useState(null)
+  const [bioVerified, setBioVerified] = useState(false)
+  const [shouldAuthenticate, setShouldAuthenticate] = useState(false)
   const [displayHistory, setdisplayHistory] = useState(false)
   const { activeCall, conferenceParticipants, completeCall } = useCall()
   const [showTransferList, setshowTransferList] = useState(false)
-
   const isCallBack = activeCall?.type === 'CALLBACK'
   const isRinging = activeCall?.state === 'RINGING'
   const participantBusy = activeCall?.state === 'MEMBERMISSED'
@@ -27,9 +30,27 @@ const CallFloatingBox = () => {
   const isTransfered = activeCall?.state === 'TRANSFERED'
   const participantLeft = activeCall?.state === 'MEMBERLEFT'
   const isKnownMember = activeCall?.memberName !== 'Unknown Caller'
+  const showActiveParticipants = !isFulfilled && !shouldAuthenticate
+  const memberInCall = conferenceParticipants?.find(
+    (part) => !part.isStaff && part.isMember
+  )
+  const showAuthButton =
+    !bioVerified &&
+    memberInCall &&
+    !memberInCall.biodataValidated &&
+    !shouldAuthenticate &&
+    !isRinging &&
+    !participantBusy &&
+    !staffBusy &&
+    !isTransfered &&
+    !participantLeft &&
+    !isFulfilled &&
+    activeCall?.memberAntaraId
+
   const isTransferring = activeCall?.forwardTo && !isTransfered
   const isHalfHeight = conferenceParticipants?.length === 3
   const shouldDisplayForms =
+    !shouldAuthenticate &&
     isKnownMember &&
     (isActive ||
       isFulfilled ||
@@ -52,8 +73,10 @@ const CallFloatingBox = () => {
     }
     return subtitle
   }
-  const displayHistoryLogs = isCallBack && subTitle().includes('Calling')
+  const displayHistoryLogs =
+    isCallBack && subTitle().includes('Calling') && !shouldAuthenticate
   const displayActionButtons =
+    !shouldAuthenticate &&
     !activeCall?.forwardTo &&
     !isTransfered &&
     !subTitle().includes('Calling') &&
@@ -71,6 +94,11 @@ const CallFloatingBox = () => {
     FULFILLED: '#f9fafc',
     TRANSFERED: '#f9fafc',
     RINGING: '#f9fafc',
+  }
+
+  const successfulValidation = () => {
+    setShouldAuthenticate(false)
+    setBioVerified(true)
   }
 
   const consoleColor = () => {
@@ -163,10 +191,17 @@ const CallFloatingBox = () => {
         style={{ backgroundColor }}
         className="connecting-text d-flex flex-between"
       >
-        <div className="d-flex">
-          {isActive && <Timer initialTime={activeCall.initialCallTime} />}
-          <p>{subTitle()}</p>
-          {isFulfilled && <p className="duration">{activeCall?.duration}</p>}
+        <div className="d-flex flex-between full-width align-start">
+          <div className="d-flex">
+            {isActive && <Timer initialTime={activeCall.initialCallTime} />}
+            {isFulfilled && <p className="duration">{activeCall?.duration}</p>}
+            <p>{subTitle()}</p>
+          </div>
+          {showAuthButton && (
+            <AuthButton onClick={() => setShouldAuthenticate(true)}>
+              Validate Member
+            </AuthButton>
+          )}
         </div>
         {isRinging && (
           <span>
@@ -187,7 +222,7 @@ const CallFloatingBox = () => {
           </div>
         </div>
       )}
-      {!isFulfilled && <ActiveCallParticipants />}
+      {showActiveParticipants && <ActiveCallParticipants />}
       {(participantBusy || staffBusy) && (
         <div className="no-answer">
           <div className="d-flex flex-center align-center phone-off">
@@ -234,6 +269,15 @@ const CallFloatingBox = () => {
             <SearchInput unknownMemberSearch memberInfo={setmemberInfo} />
           </div>
         ))}
+      {shouldAuthenticate && (
+        <AuthenticateMember
+          sessionId={memberInCall?.sessionId}
+          sessionName={memberInCall?.session}
+          antaraId={activeCall.memberAntaraId}
+          isValidationFailed={setShouldAuthenticate}
+          isValidationSuccess={successfulValidation}
+        />
+      )}
       {shouldDisplayForms && (
         <CallConsoleForms
           height={isHalfHeight ? 'task-form-low' : 'task-form'}

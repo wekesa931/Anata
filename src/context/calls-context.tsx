@@ -20,12 +20,15 @@ export type ILogs = {
 }
 
 export type IParticipantSession = {
+  sessionId: string
   isOnHold: boolean
   participantId: string
   participantName: string
   session: string
   conferenceRoom: string
-  isMember?: boolean
+  biodataValidated: boolean
+  isMember: boolean
+  isStaff: boolean
 }
 
 type CallContact = {
@@ -53,6 +56,7 @@ type Call = {
   duration?: string
   initialCallTime: number
   member: string
+  memberAntaraId: string
   memberName: string
   forwardTo?: string
   session?: string
@@ -145,8 +149,11 @@ function CallProvider({ children }: any) {
               isOnHold: log.isOnHold,
               participantId: log.participantId,
               participantName: log.participantName,
-              session: log.conferenceRoom,
+              session: activeSession.roomName,
+              sessionId: log.sessionId,
+              biodataValidated: log.biodataValidated,
               isMember: log.isMember,
+              isStaff: log.isStaff,
             }
           }
         )
@@ -161,6 +168,7 @@ function CallProvider({ children }: any) {
           assigned: activeSession.callDirection,
           member: activeSession.memberPhone,
           memberName: memberParticipant.participantName,
+          memberAntaraId: memberParticipant.antaraId,
           initialCallTime:
             (new Date().getMinutes() -
               new Date(activeSession.startedAt).getMinutes()) *
@@ -196,12 +204,15 @@ function CallProvider({ children }: any) {
           setConferenceParticipants([
             ...conferenceParticipants,
             {
+              sessionId: parsedParticipant?.session_id,
               participantName: parsedParticipant?.participant_name,
               isOnHold: parsedParticipant?.is_on_hold,
               participantId: parsedParticipant?.participant_id,
+              biodataValidated: parsedParticipant?.biodata_validated,
               session: parsedSession?.room_name,
-              conferenceRoom: parsedParticipant?.conference_room,
               isMember: parsedParticipant?.is_member,
+              conferenceRoom: parsedParticipant?.conference_room,
+              isStaff: parsedParticipant?.is_staff,
             },
           ])
         if (activeCall?.forwardTo) {
@@ -215,12 +226,13 @@ function CallProvider({ children }: any) {
       const isStaff = pushNotification?.data?.is_staff === 'true'
       if (
         (pushNotification?.data?.event === 'Participant Joined' &&
-          pushNotification?.data?.is_member === 'true') ||
+          pushNotification?.data?.member_id) ||
         pushNotification?.data?.event === 'Incoming Call'
       ) {
         if (!activeCall) {
           callUpdates.title = 'Inbound Call'
           callUpdates.type = 'INBOUND'
+          callUpdates.memberAntaraId = pushNotification?.data?.member_id
           callUpdates.assigned = user ? user.email : ''
           callUpdates.initialCallTime = 0
         }
@@ -257,7 +269,9 @@ function CallProvider({ children }: any) {
         callerNum = pushNotification?.data?.caller_phone
         callerName = pushNotification?.data?.caller_name
       }
-
+      if (pushNotification?.data?.member_id) {
+        callUpdates.memberAntaraId = pushNotification?.data?.member_id
+      }
       if (Object.keys(callUpdates).length !== 0) {
         setActiveCall({
           ...activeCall,

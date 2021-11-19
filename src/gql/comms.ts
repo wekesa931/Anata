@@ -66,6 +66,8 @@ const MEMBER_CONTACT_DETAILS = gql`
             contactPhone2
             relationshipToPrimary
           }
+          kenyaNationalId
+          employerName
         }
       }
     }
@@ -117,6 +119,21 @@ const GET_SESSION_PARTICIPANTS = gql`
           participantName
         }
       }
+    }
+  }
+`
+
+const VALIDATE_BIODATA = gql`
+  mutation validateBiodata(
+    $sessionName: String!
+    $participantSessionId: String!
+  ) {
+    validateBiodata(
+      sessionName: $sessionName
+      participantSessionId: $participantSessionId
+    ) {
+      status
+      message
     }
   }
 `
@@ -182,6 +199,7 @@ const GET_ACTIVE_CALL = gql`
             callerEmail
             phoneNumber
             status
+            biodataValidated
             sessionEnded
             answered
             conferenceRoom
@@ -209,6 +227,7 @@ const GET_ACTIVE_CALL = gql`
 `
 // eslint-disable-next-line import/prefer-default-export
 export {
+  VALIDATE_BIODATA,
   MAKE_CALL,
   SAVE_FCM_TOKEN,
   MEMBER_CONTACT_DETAILS,

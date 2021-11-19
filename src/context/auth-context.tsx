@@ -47,3 +47,4 @@ function AuthProvider({ user, children }: any) {
 const useAuth = () => React.useContext(AuthContext)
 
 export { AuthProvider, useAuth }
+// @adams132021bf
