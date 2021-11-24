@@ -12,12 +12,17 @@
   --orange-base: #ff9800;
   --orange-dark: #955b05;
   --orange-light: #ffeccf;
+  --orange-50: #ffcb80;
   --blue-base: #608eb6;
   --blue-light: #1084ee;
+  --blue-light-70: #4688f1;
   --blue-dark: #205284;
   --blue-light: #c6dfeb;
   --blue-light-50: #58a9f3;
   --blue-bg: #ebeff3;
+  --dark-blue-100: #182c4c;
+  --dark-blue-50: #8b95a5;
+  --blue-100: #1084ee;
   --greyscale-1: #222222;
   --greyscale-2: #777777;
   --greyscale-3: #cccccc;
@@ -30,6 +35,9 @@
   --neutral-darker: #e8e8e8;
   --neutral-light: #fafafa;
   --white: #ffffff;
+  --white-bg: #f9fafc;
+  --white-50: #d1d5db;
+  --white-transparent: #ffffff05;
   --border-regular: rgb(204, 204, 204);
   --border-light: #eeeeee;
   --turquoise-base: #42bcda;
@@ -45,9 +53,15 @@
   --red-base: #d56261;
   --red-light: #f9e6e5;
   --red-dark: #972323;
+  --red-dark-70: #e7453c;
+  --red-50: #ff9d97;
   --green-base: #8ab98e;
   --green-dark: #39703e;
   --green-light: #deefe0;
+  --green-100: #32d74b;
+  --green-light-70: #1e9c5a;
+  --dark-blue-70: #5d6b82;
+  --blue-70: #58a9f3;
 }
 
 ::-webkit-scrollbar {
@@ -326,7 +340,7 @@ h6,
 }
 
 .mt-twenty {
-  margin-top: 20px;
+  margin-top: 20px !important;
 }
 
 /** flex **/
@@ -348,6 +362,14 @@ h6,
 
 .max-height {
   height: 100%;
+}
+
+.mr-twenty {
+  margin-right: 20px;
+}
+
+.ml-ten {
+  margin-left: 10px;
 }
 
 .align-start {
@@ -388,6 +410,10 @@ h6,
 
 .flex-one {
   flex: 1;
+}
+
+.border-none {
+  border: none !important;
 }
 
 .tippy-popper .tippy-tooltip.tooltip-theme * {
@@ -958,7 +984,7 @@ a {
 
   height: 37px;
   padding: 8px 16px 0px 16px;
-  /* background-color: #f9fafc; */
+  /* background-color: --white-bg; */
 }
 
 .assigned-hn p {
@@ -1006,7 +1032,7 @@ a {
   /* margin: 3px 18px 0 16px; */
   border-radius: 12px;
   border: solid 1px #e8eaed;
-  background-color: #f9fafc;
+  background-color: --white-bg;
 }
 
 .count-up-timer {
@@ -1150,7 +1176,7 @@ a {
 
 .transfer-container button {
   cursor: pointer;
-  color: #32d74b;
+  color: var(--green-100);
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -1160,7 +1186,7 @@ a {
   margin: 4px 16px 0 4px;
   padding: 8px 12px;
   border-radius: 12px;
-  background-color: #f9fafc;
+  background-color: --white-bg;
 }
 
 .transfer-container .emergency-btn:hover {
@@ -1216,7 +1242,7 @@ a {
 
 .transfer-btn:hover {
   background-color: #ebfbed;
-  color: #32d74b;
+  color: var(--green-100);
 }
 
 .staff-list {
@@ -1442,7 +1468,7 @@ a {
   justify-content: space-between;
   align-items: center;
   margin: 8px;
-  background-color: #f9fafc;
+  background-color: --white-bg;
   height: 56px;
   width: 307px;
   padding: 8px;
@@ -1575,7 +1601,7 @@ a {
   margin: 0 0px 0 0;
   padding: 0px 0px 0px 12px;
   border-radius: 12px;
-  background-color: #58a9f3;
+  background-color: var(--blue-70);
   border: none;
   color: white;
 }
@@ -1743,6 +1769,136 @@ a {
   margin: 0px !important;
 }
 
+.form-fields {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-fields div label {
+  font-family: Rubik;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: #8b95a5;
+}
+
+.form-fields div div input {
+  font-family: Rubik;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: var(--dark-blue-100);
+}
+
+.form-title {
+  font-family: Rubik;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: #8b95a5;
+}
+
+.doc-form-input {
+  border: none;
+  flex-grow: 0;
+  height: 30px;
+  font-family: Rubik;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: var(--dark-blue-100);
+}
+
+.doc-select {
+  height: 30px;
+  border: none;
+  border-bottom: 1px solid #e8eaed;
+  margin-top: 7px;
+}
+
+.doc-type-list ul {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+.doc-type-list ul li div {
+  padding: 0px !important;
+}
+
+.doc-type-list ul li div div span {
+  font-family: Rubik;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.57;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: var(--dark-blue-70);
+}
+
+.doc-type-list ul li div div span:hover {
+  font-weight: 500;
+  color: var(--dark-blue-100);
+}
+
+.doc-upload-button {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 10px;
+}
+
+.upload-fields {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.upload-fields div label {
+  font-family: Rubik;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: #8b95a5;
+}
+
+.upload-fields div div input {
+  font-family: Rubik;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: var(--dark-blue-100);
+}
+
+.upload-form-drawer .MuiPaper-root {
+  width: 350px !important;
+}
 .pdf-dialog {
   position: relative;
 }
@@ -1762,7 +1918,7 @@ a {
   margin-left: 5px !important;
   letter-spacing: -0.28px;
   text-align: left;
-  color: #1084ee;
+  color: var(--blue-100);
 }
 
 .file-close-btn {
@@ -1794,7 +1950,7 @@ a {
   line-height: 1.29;
   letter-spacing: -0.28px;
   text-align: left;
-  color: #182c4c;
+  color: var(--dark-blue-100);
   margin-bottom: 10px !important;
 }
 
@@ -1802,6 +1958,54 @@ a {
   width: 14px;
   height: 14px;
   color: #87c1f7;
+}
+
+.auto-complete-input {
+  margin-bottom: 10px;
+}
+
+.auto-complete-input div div fieldset {
+  border: none;
+  border-bottom: 1px solid #949494;
+  border-radius: 0;
+}
+
+.auto-complete-input div div input {
+  margin-left: 10px;
+  font-family: Rubik;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: var(--dark-blue-100);
+}
+
+.input-search {
+  position: absolute;
+  top: 20px;
+  left: 0;
+}
+
+.form-label {
+  margin-top: 10px;
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: var(--dark-blue-50);
+}
+
+.search-input-label {
+  position: absolute;
+  top: -18px;
 }
 
 .message-image-container {

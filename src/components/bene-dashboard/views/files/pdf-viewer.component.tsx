@@ -9,7 +9,7 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import { useMutation } from '@apollo/client'
-import { AlertTriangle, Download, Edit, Lock, X } from 'react-feather'
+import { AlertTriangle, Download, Edit, Info, Lock, X } from 'react-feather'
 import { Grid, Typography } from '@mui/material'
 import dayjs from 'dayjs'
 import { ENCRYPT_FILE, GENERATE_FILE_LINK } from './files.gql'
@@ -97,15 +97,22 @@ export default function PdfViewer(props) {
   const [numPages, setNumPages] = useState(null)
   const [displayFile, setDisplayFile] = useState<IFiles>(file)
   const [isEncypting, setIsEncypting] = useState(false)
-
+  const [fileMessage, setFileMessage] = useState('')
   const [pageNumber, setPageNumber] = useState(1)
   const [generateAccessFileLink] = useMutation(GENERATE_FILE_LINK)
   const isImage =
     displayFile.url &&
     (displayFile.url.includes('jpg') ||
       displayFile.url.includes('jpeg') ||
+      displayFile.url.includes('gif') ||
       displayFile.url.includes('png'))
-  const isDocument = displayFile.url && !isImage
+  const isDocument =
+    displayFile.url &&
+    (displayFile.url.includes('doc') ||
+      displayFile.url.includes('docx') ||
+      displayFile.url.includes('txt') ||
+      displayFile.url.includes('csv') ||
+      displayFile.url.includes('pdf'))
 
   useEffect(() => {
     if (file.id) {
@@ -117,7 +124,24 @@ export default function PdfViewer(props) {
       }).then((res) => {
         if (!res.errors) {
           const { link: url } = res?.data?.generateLink
-          setDisplayFile({ ...file, url })
+          const fileExtension = file.storageKey.split('.').pop()
+          const handledExtensions = [
+            'jpg',
+            'jpeg',
+            'png',
+            'doc',
+            'docx',
+            'txt',
+            'csv',
+            'gif',
+            'pdf',
+          ]
+          if (handledExtensions.includes(fileExtension)) {
+            setDisplayFile({ ...file, url })
+          } else {
+            setFileMessage('File has been downloaded or opened in the next tab')
+            window.open(url, '_blank').focus()
+          }
         }
       })
     }
@@ -130,6 +154,7 @@ export default function PdfViewer(props) {
   const handleClose = () => {
     onFileClosed()
     setOpen(false)
+    setFileMessage('')
   }
 
   const handleEncyptFile = () => {
@@ -187,6 +212,7 @@ export default function PdfViewer(props) {
       <p className="text-heading-5">
         The file is no longer available for viewing
       </p>
+      {fileMessage && <p className="text-heading-5">{fileMessage}</p>}
     </div>
   )
 
@@ -248,6 +274,12 @@ export default function PdfViewer(props) {
                 ref={descriptionElementRef}
                 tabIndex={-1}
               >
+                {fileMessage && (
+                  <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+                    <Info />
+                    <p className="text-heading-5">{fileMessage}</p>
+                  </div>
+                )}
                 {isDocument && (
                   <Document
                     file={displayFile.url}

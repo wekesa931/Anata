@@ -14,6 +14,25 @@ module.exports = {
     'no-restricted-globals': 'off',
     'react/no-array-index-key': 'off',
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
-    'no-unused-expressions': ["error", { "allowShortCircuit": true, "allowTernary": true  }],
-  }
+    'no-unused-expressions': [
+      'error',
+      { allowShortCircuit: true, allowTernary: true },
+    ],
+    'react/jsx-no-bind': [
+      'error',
+      {
+        allowFunctions: true,
+        allowBind: true,
+        allowArrowFunctions: true,
+      },
+    ],
+    'jsx-a11y/label-has-associated-control': [
+      'error',
+      {
+        required: {
+          some: ['nesting', 'id'],
+        },
+      },
+    ],
+  },
 }

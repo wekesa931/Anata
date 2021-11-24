@@ -45,4 +45,34 @@ const GENERATE_FILE_LINK = gql`
   }
 `
 
-export { GET_FILES, ENCRYPT_FILE, GENERATE_FILE_LINK }
+const UPLOAD_LINK = gql`
+  mutation generateUploadLink(
+    $storageKey: String!
+    $duration: Int!
+    $forceReplace: Boolean!
+  ) {
+    generateUploadLink(
+      storageKey: $storageKey
+      duration: $duration
+      forceReplace: $forceReplace
+    ) {
+      status
+      message
+      errors
+      link
+    }
+  }
+`
+
+const SAVE_FILE = gql`
+  mutation saveFile($input: FileInput!) {
+    saveFile(input: $input) {
+      message
+      status
+      data
+      errors
+    }
+  }
+`
+
+export { GET_FILES, ENCRYPT_FILE, GENERATE_FILE_LINK, UPLOAD_LINK, SAVE_FILE }

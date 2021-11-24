@@ -1,111 +1,72 @@
-.title { 
-    font-size: 15px;
-    flex-grow: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 0;
-}
-
-.nameTitle {
-    flex-grow: 0;
-    font-family: Rubik;
-    font-size: 13px;
-    font-weight: 500;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.29;
-    letter-spacing: -0.28px;
-    text-align: left;
-    color: #8b95a5;
+.title {
+  font-size: 15px;
+  flex-grow: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 0;
 }
 
 .fileRows {
-    display: flex;
-    justify-content: space-between;
-    padding: 3px 10px 3px 3px;
-}
-
-.doc {
-    font-family: Rubik;
-    font-size: 8px;
-    font-weight: 500;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 2.5;
-    letter-spacing: -0.16px;
-    text-align: left;
-    color: #fff;
-}
-
-.docTitle {
-    flex-grow: 0;
-    font-family: Rubik;
-    font-size: 12px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.29;
-    letter-spacing: -0.28px;
-    text-align: left;
-    color: #5d6b82;
-    margin-left: 3px;
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 10px 3px 3px;
 }
 
 .padNil {
-    padding: 0px !important;
+  padding: 0px !important;
 }
 
 .red {
-    color: #e7453c;
+  color: var(--red-dark-70);
 }
 
 .blue {
-    color: #4688f1;
+  color: var(--blue-light-70);
 }
 
 .green {
-    color: #1e9c5a;
+  color: var(--green-light-70);
 }
 
 .padThirty {
-    min-width: 30px;
+  min-width: 30px;
 }
 
 .accTitle {
-    min-height: 30px !important;
+  min-height: 30px !important;
 }
 
 .date {
-    flex-grow: 0;
-    font-family: Rubik;
-    font-size: 12px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.29;
-    letter-spacing: -0.28px;
-    text-align: left;
-    color: #5d6b82;
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 10px
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.29;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: var(--dark-blue-70);
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 10px;
 }
 
 .empty {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .noContent {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .noDocs {
-    flex-grow: 0;
+  flex-grow: 0;
   font-family: Rubik;
   font-size: 16px;
   font-weight: 500;
@@ -114,23 +75,23 @@
   line-height: 1.25;
   letter-spacing: -0.32px;
   text-align: left;
-  color: #5d6b82;
+  color: var(--dark-blue-70);
   margin-top: 10px;
 }
 .uploadDoc {
-    flex-grow: 0;
-    font-family: Rubik;
-    font-size: 16px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.25;
-    letter-spacing: -0.32px;
-    text-align: left;
-    color: #5d6b82;
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: var(--dark-blue-70);
 }
 .uploadBtn {
-    flex-grow: 0;
+  flex-grow: 0;
   font-family: Rubik;
   font-size: 12px !important;
   font-weight: 500;
@@ -139,8 +100,8 @@
   line-height: 1.29;
   letter-spacing: -0.28px;
   text-align: left;
-  color: #fff;
-margin-top: 10px !important;
+  color: var(--white);
+  margin-top: 10px !important;
   flex-grow: 0;
   display: flex;
   flex-direction: row;
@@ -149,22 +110,35 @@ margin-top: 10px !important;
   gap: 8px;
   padding: 7px 12px;
   border-radius: 12px !important;
-  background-color: #58a9f3;
+  background-color: var(--blue-70);
 }
 
+.commonUpload {
+  width: 100px !important;
+  padding: 6px 50px !important;
+  background-color: var(--white) !important;
+  color: var(--blue-100) !important;
+  box-shadow: none !important;
+  margin-bottom: 10px !important;
+}
+
+.commonUpload span {
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+}
 .container {
-    flex: 1;
-    flex-direction: column;
-    display: flex;
-    flex-wrap: wrap;
-  }
+  flex: 1;
+  flex-direction: column;
+  display: flex;
+  flex-wrap: wrap;
+}
 
 .hmpContent {
-    flex: 1;
-    flex-direction: column;
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
+  flex: 1;
+  flex-direction: column;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
 .list {
@@ -175,25 +149,207 @@ margin-top: 10px !important;
 }
 
 .accordionView {
-    background-color: #ffffff05 !important;
-    box-shadow: none !important;
+  background-color: var(--white-transparent) !important;
+  box-shadow: none !important;
 }
 
 .pdf {
-    padding: 0 2px;
-    border-radius: 2px;
-    background-color: #e7453c;
-    font-family: Rubik;
-    font-size: 8px;
-    font-weight: 500;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 2.5;
-    letter-spacing: normal;
-    text-align: left;
-    color: #fff;
+  padding: 0 2px;
+  border-radius: 2px;
+  background-color: var(--red-dark-70);
+  font-family: Rubik;
+  font-size: 8px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 2.5;
+  letter-spacing: normal;
+  text-align: left;
+  color: var(--white);
+}
+
+.uploadFloatingBox {
+  position: absolute;
+  height: 100%;
+  z-index: 4000;
+  top: 0 px;
+  background-color: var(--white);
+  width: 400px;
+  right: 0px;
+  -webkit-box-shadow: 0 3px 7px rgb(0 0 0 / 30%);
+  -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 20px 800px rgb(0 0 0 / 30%);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding-box;
+  background-clip: padding-box;
+}
+
+.upload {
+  width: 100%;
+  padding: 16px 0 0;
+  background-color: var(--white);
+}
+
+.uploadHeader {
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 24px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.17;
+  letter-spacing: -0.48px;
+  text-align: left;
+  color: var(--dark-blue-100);
+  border-bottom: 1px solid;
+  padding: 10px 10px;
+  border-color: var(--greyscale-7);
+}
+
+.fileName {
+  margin-left: 8px;
+  font-family: Rubik;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.29;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: var(--dark-blue-70);
+}
+
+.marginDiff {
+  margin-left: 8px;
+}
+
+.formContainer {
+  padding: 0 10px;
+  margin-top: 30px;
+}
+
+.formContainer form div select,
+.formContainer form div input {
+  border: none;
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: var(--dark-blue-100);
+}
+
+.uploadFormDrawer .MuiPaper-root {
+  width: 350px !important;
+}
+
+.uploadCancel {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.uploadMessage {
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 14px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.29;
+  letter-spacing: -0.28px;
+  text-align: center;
+  color: var(--dark-blue-70);
+}
+
+.uploadCompleted {
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.29;
+  letter-spacing: -0.28px;
+  text-align: center;
+  color: var(--dark-blue-70);
+}
+
+.successMessage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.cancel {
+  font-size: 10px !important;
+  border: none !important;
+  background: var(--white-bg) !important;
+  color: var(--dark-blue-70) !important;
+}
+
+.tryAgain {
+  font-size: 10px !important;
 }
 
 .modal {
-    height: 90%;
+  height: 90%;
+}
+
+.replaceButtons {
+  width: 60%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.elippsisText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.elippsisText p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.uploadCancelBtn {
+  text-transform: capitalize !important;
+  margin: 16px 10px 0 0 !important;
+  font-family: Rubik !important;
+  font-size: 14px;
+  font-weight: 500 !important;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.29;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: var(--blue-70);
+}
+
+.successUpload {
+  color: var(--green-100);
+}
+
+.fileIcon {
+  color: var(--white-50);
+}
+
+.alert {
+  color: var(--orange-50);
+}
+
+.failIcon {
+  color: var(--red-50);
+}
+
+.fileDetail {
+  padding: 0px 10px;
 }
