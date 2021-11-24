@@ -16,6 +16,7 @@ const GET_MEMBER_CHATS = gql`
           id
           message
           direction
+          attachments
           status
           staffName
           createdAt

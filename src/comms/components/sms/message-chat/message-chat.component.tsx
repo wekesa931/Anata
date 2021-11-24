@@ -164,6 +164,10 @@ const MessageChat = () => {
   const fileType = (url: string): string | undefined => url.split('.').pop()
   const checkIsVideo = (ext: string): boolean =>
     ['ogg', 'mp4', 'webm'].includes(ext)
+  const checkIsImage = (ext: string): boolean =>
+    ['jpeg', 'jpg', 'gif', 'png'].includes(ext)
+  const checkIsDoc = (ext: string): boolean =>
+    ['doc', 'docx', 'txt', 'csv', 'pdf'].includes(ext)
 
   const renderMessage = (msg: Message, index: number) => {
     if (msg.message.includes('</div>') || msg.message.includes('</p>')) {
@@ -181,7 +185,7 @@ const MessageChat = () => {
               setmodalContent(parse(msg.message) as unknown as Element)
             }}
           >
-            <span id="intercom-image">{parse(msg.message)}</span>
+            <span className="intercom-image">{parse(msg.message)}</span>
           </div>
         )
       }
@@ -189,64 +193,98 @@ const MessageChat = () => {
     if (msg.attachments && msg.attachments.length > 0) {
       return (
         <Attachment key={index}>
-          <span>
-            <Paperclip width="16" height="16" />
-          </span>
           <div>
             {msg.attachments.map((att) => {
-              const { url, name } = att
-              const fileExt = fileType(url)
-              const isVedio = fileExt && checkIsVideo(fileExt)
-              attachmentUrl.current = url
+              if (att.name && att.url) {
+                const { url, name } = att
+                const fileExt = fileType(url)
+                const isVedio = fileExt && checkIsVideo(fileExt)
+                const isImage = fileExt && checkIsImage(fileExt)
+                const isDocument = fileExt && checkIsDoc(fileExt)
+                attachmentUrl.current = url
 
-              let showView = <div />
-              if (fileExt === 'pdf') {
-                const pdf_component = (
-                  <>
-                    <Document
-                      file={url}
-                      onLoadSuccess={({ numPage }) => setNumPages(numPage)}
+                let showView = <div key={att.url} />
+                if (isDocument) {
+                  const pdf_component = (
+                    <>
+                      <Document
+                        file={url}
+                        onLoadSuccess={({ numPage }) => setNumPages(numPage)}
+                      >
+                        {Array(numPages)
+                          .fill(null)
+                          .map((_, i) => i + 1)
+                          .map((page, ind) => (
+                            <Page pageNumber={page} key={ind} />
+                          ))}
+                      </Document>
+                    </>
+                  )
+                  showView = (
+                    <>
+                      <span>{parse(msg.message)}</span>
+                      <button
+                        key={att.url}
+                        onClick={() => {
+                          setmodalOpen(!modalOpen)
+                          setmodalContent(pdf_component as unknown as Element)
+                        }}
+                        className="btn-icon"
+                      >
+                        <span className="d-flex">
+                          <Paperclip width="12" height="12" />
+                          <span className="intercom-image">{parse(name)}</span>
+                        </span>
+                      </button>
+                    </>
+                  )
+                }
+                if (isVedio) {
+                  const attch_video = `<video src={url} controls width='100%' height= '100%'>
+                Your browser does not support the video tag.
+              </video>`
+                  showView = (
+                    <button
+                      key={att.url}
+                      onClick={() => {
+                        setmodalOpen(!modalOpen)
+                        setmodalContent(
+                          parse(attch_video) as unknown as Element
+                        )
+                      }}
+                      className="btn-icon"
                     >
-                      {Array(numPages)
-                        .fill(null)
-                        .map((_, i) => i + 1)
-                        .map((page, ind) => (
-                          <Page pageNumber={page} key={ind} />
-                        ))}
-                    </Document>
-                  </>
-                )
-                showView = (
-                  <button
-                    onClick={() => {
-                      setmodalOpen(!modalOpen)
-                      setmodalContent(pdf_component as unknown as Element)
-                    }}
-                    key={index}
-                    className="btn-icon"
-                  >
-                    <span id="intercom-image">{parse(name)}</span>
-                  </button>
-                )
+                      <span className="intercom-image">{parse(name)}</span>
+                    </button>
+                  )
+                }
+                if (isImage) {
+                  const imageRender = `<div><img src="${url}" alt="file" />`
+                  showView = (
+                    <button
+                      className="message-image-container"
+                      onClick={() => {
+                        setmodalOpen(!modalOpen)
+                        setmodalContent(
+                          parse(imageRender) as unknown as Element
+                        )
+                      }}
+                    >
+                      <span>{parse(msg.message)}</span>
+                      <img
+                        key={att.url}
+                        src={url}
+                        width={50}
+                        height={50}
+                        alt="file"
+                      />
+                    </button>
+                  )
+                }
+                return showView
               }
-              if (isVedio) {
-                const attch_video = `<video src={url} controls width='100%' height= '100%'>
-          Your browser does not support the video tag.
-         </video>`
-                showView = (
-                  <button
-                    onClick={() => {
-                      setmodalOpen(!modalOpen)
-                      setmodalContent(parse(attch_video) as unknown as Element)
-                    }}
-                    key={index}
-                    className="btn-icon"
-                  >
-                    <span id="intercom-image">{parse(name)}</span>
-                  </button>
-                )
-              }
-              return showView
+
+              return <div key={index} />
             })}
           </div>
         </Attachment>

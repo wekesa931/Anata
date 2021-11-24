@@ -16,6 +16,7 @@
   --blue-light: #1084ee;
   --blue-dark: #205284;
   --blue-light: #c6dfeb;
+  --blue-light-50: #58a9f3;
   --blue-bg: #ebeff3;
   --greyscale-1: #222222;
   --greyscale-2: #777777;
@@ -1493,6 +1494,12 @@ a {
   cursor: pointer;
 }
 
+.intercom-image {
+  cursor: pointer;
+  color: var(--blue-light-50);
+  text-decoration: underline;
+}
+
 #modal-image .intercom-container {
   display: flex;
   justify-content: center;
@@ -1795,4 +1802,15 @@ a {
   width: 14px;
   height: 14px;
   color: #87c1f7;
+}
+
+.message-image-container {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.message-image-container img {
+  border: none;
+  background: none;
 }
