@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useToasts } from 'react-toast-notifications'
 import { ConfirmationDialog } from '@airtable/blocks/ui'
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { SEND_SMS } from '../../../../gql/sms'
 import {
   Input,
@@ -16,6 +16,7 @@ import { useUser } from '../../../../context/user-context'
 import { useMember } from '../../../../context/member.context'
 import analytics from '../../../../helpers/segment'
 import logError from '../../../../components/utils/Bugsnag/Bugsnag'
+import { MEMBERDB_PROFILE_QUERY } from '../../../../gql/comms'
 
 type MessageInputProps = {
   messages: any
@@ -34,6 +35,10 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
   const user = useUser()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [sendSms] = useMutation(SEND_SMS)
+  const { data: memberDbProfile } = useQuery(MEMBERDB_PROFILE_QUERY, {
+    variables: { antaraId: member['Antara ID'] },
+  })
+  const [intercomUri, setIntercomUrl] = useState<string>('')
 
   useEffect(() => {
     if (textAreaRef && textAreaRef.current) {
@@ -48,8 +53,13 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
   }, [message, textAreaRef])
 
   useEffect(() => {
+    if (memberDbProfile) {
+      const { intercomUrl } =
+        memberDbProfile.getProfileData.edges[0].node.profile
+      setIntercomUrl(intercomUrl)
+    }
     setMessage(messageTemplate)
-  }, [messageTemplate])
+  }, [messageTemplate, memberDbProfile])
 
   const handleChange = ($event: any) => {
     setMessage($event.target.value)
@@ -137,7 +147,7 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
 
   const redirectToIntercom = (event: any) => {
     event.preventDefault()
-    const link = member['Intercom URL']
+    const link = intercomUri
     window.open(link, 'blank_intercom')
   }
 
