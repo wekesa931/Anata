@@ -95,10 +95,7 @@ const GlucoseMonitoring = () => {
       name: 'HBA1C',
       format: '%',
       key: 'HbA1c',
-      info: `Normal:  <5.7%,
-             Pre-diabetes: 5.7-6.4%,
-             Diabetic: >6.5%,
-             Target Level for Diabetics: <7.5%`,
+      info: `normal<5.7%, prediabetes 5.7-6.4%, diabetes>6.5%. Targets: diabetics <65 years → <7%, diabetics >65 years → >8%`,
     },
   ]
 
