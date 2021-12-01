@@ -16,7 +16,7 @@ import { useUser } from '../../../../context/user-context'
 import { useMember } from '../../../../context/member.context'
 import analytics from '../../../../helpers/segment'
 import logError from '../../../../components/utils/Bugsnag/Bugsnag'
-import { MEMBERDB_PROFILE_QUERY } from '../../../../gql/comms'
+import { MEMBER_CONTACT_DETAILS } from '../../../../gql/comms'
 
 type MessageInputProps = {
   messages: any
@@ -35,7 +35,7 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
   const user = useUser()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [sendSms] = useMutation(SEND_SMS)
-  const { data: memberDbProfile } = useQuery(MEMBERDB_PROFILE_QUERY, {
+  const { data: memberDbProfile } = useQuery(MEMBER_CONTACT_DETAILS, {
     variables: { antaraId: member['Antara ID'] },
   })
   const [intercomUri, setIntercomUrl] = useState<string>('')
@@ -54,8 +54,7 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
 
   useEffect(() => {
     if (memberDbProfile) {
-      const { intercomUrl } =
-        memberDbProfile.getProfileData.edges[0].node.profile
+      const { intercomUrl } = memberDbProfile.beneficiary.edges[0].node
       setIntercomUrl(intercomUrl)
     }
     setMessage(messageTemplate)

@@ -68,6 +68,7 @@ const MEMBER_CONTACT_DETAILS = gql`
           }
           kenyaNationalId
           employerName
+          intercomUrl
         }
       }
     }
@@ -225,21 +226,6 @@ const GET_ACTIVE_CALL = gql`
     }
   }
 `
-const MEMBERDB_PROFILE_QUERY = gql`
-  query getProfileData($antaraId: String!) {
-    getProfileData(antaraId: $antaraId) {
-      edges {
-        node {
-          status
-          error
-          profile {
-            intercomUrl
-          }
-        }
-      }
-    }
-  }
-`
 // eslint-disable-next-line import/prefer-default-export
 export {
   VALIDATE_BIODATA,
@@ -253,5 +239,4 @@ export {
   HOLD_PARTICIPANT,
   UNHOLD_PARTICIPANT,
   GET_ACTIVE_CALL,
-  MEMBERDB_PROFILE_QUERY,
 }
