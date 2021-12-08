@@ -17,6 +17,7 @@ import CallsCallout from '../calls/calls.component'
 
 import { GET_MEMBER_TASKS } from '../../../../gql/hn_tasks'
 import { useMember } from '../../../../context/member.context'
+import logError from '../../../utils/Bugsnag/Bugsnag'
 
 type RecordWithId = { data: any; id: string }
 
@@ -385,14 +386,19 @@ const Tasks = () => {
     return null
   }
   const updateTask = async (task: { id: string; fields: any }) => {
-    await airtableFetch('hntasks', 'post', {
-      id: task.id,
-      fields: { ...task.fields, Assignee: [task.fields.Assignee] },
-    })
-    analytics.track(`Tasks Updated`, {
-      bene: recId,
-    })
-    return refetchTasks()
+    try {
+      await airtableFetch('hntasks', 'post', {
+        id: task.id,
+        fields: { ...task.fields, Assignee: [task.fields.Assignee] },
+      })
+      analytics.track(`Tasks Updated`, {
+        bene: recId,
+      })
+      return refetchTasks()
+    } catch (error) {
+      logError(error)
+      return refetchTasks()
+    }
   }
 
   const filterByStatus = (val: string) => {
