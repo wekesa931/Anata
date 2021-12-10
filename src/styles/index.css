@@ -2018,3 +2018,7 @@ a {
   border: none;
   background: none;
 }
+
+.react-pdf__Page {
+  border-bottom: 4px solid;
+}

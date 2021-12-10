@@ -94,7 +94,7 @@ function FilePasswordEncrypt(props) {
 
 export default function PdfViewer(props) {
   const { file, onFileClosed } = props
-  const [numPages, setNumPages] = useState(null)
+  const [numOfPages, setNumOfPages] = useState(null)
   const [displayFile, setDisplayFile] = useState<IFiles>(file)
   const [isEncypting, setIsEncypting] = useState(false)
   const [fileMessage, setFileMessage] = useState('')
@@ -147,8 +147,8 @@ export default function PdfViewer(props) {
     }
   }, [file, generateAccessFileLink])
 
-  function onDocumentLoadSuccess({ docNumPages }) {
-    setNumPages(docNumPages)
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumOfPages(numPages)
   }
   const [open, setOpen] = React.useState(true)
   const handleClose = () => {
@@ -285,9 +285,7 @@ export default function PdfViewer(props) {
                     file={displayFile.url}
                     externalLinkTarget="_blank"
                     renderMode="svg"
-                    onLoadSuccess={(docNumPages: any) =>
-                      onDocumentLoadSuccess(docNumPages)
-                    }
+                    onLoadSuccess={onDocumentLoadSuccess}
                     loading={<Loader />}
                     error={<LoadingError />}
                     noData={<Loader />}
@@ -295,7 +293,7 @@ export default function PdfViewer(props) {
                     <Outline
                       onItemClick={(pageNum: any) => onItemClick(pageNum)}
                     />
-                    {Array.from(new Array(numPages), (el, index) => (
+                    {Array.from(new Array(numOfPages), (el, index) => (
                       <Page
                         key={`page_${index + 1}`}
                         pageNumber={pageNumber}
