@@ -93,11 +93,6 @@ const FORMS = [
     url: 'shrFmDt0AU4XjbsAr',
   },
   {
-    name: 'Activity Tracker Form',
-    url_sandbox: 'shryp35hGHjJlEvBn',
-    url: 'shr4hoEpz1xoTY9w5',
-  },
-  {
     name: 'Intervention Intake Form',
     url_sandbox: 'shr3GSksJc08eDxB6',
     url: 'shrwlizJiy4xcAR2Y',
@@ -121,11 +116,6 @@ const FORMS = [
     name: 'Clinical consultation',
     url_sandbox: '',
     url: 'shrPWg4S3LYxHbgmv',
-  },
-  {
-    name: 'VC request',
-    url_sandbox: '',
-    url: 'shr7c1HzMJsLv6PzW',
   },
   {
     name: 'VC prescription',

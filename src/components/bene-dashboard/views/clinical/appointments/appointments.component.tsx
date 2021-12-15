@@ -7,6 +7,7 @@ import airtableFetch from '../../../../../resources/airtable-fetch'
 import Icon from '../../../../utils/icon/icon.component'
 import Modal from '../../../../utils/modals/modal.component'
 import Table from '../../../../utils/table/table.component'
+import TextArea from '../../../../../helpers/textarea.component'
 
 const PafuView = ({ data }: any) => {
   const [showPafu, setShowPafu] = useState(false)
@@ -95,12 +96,7 @@ const PafuView = ({ data }: any) => {
                   <div key={key} onClick={(e) => e.stopPropagation()}>
                     <label htmlFor={key}>
                       {key}
-                      <textarea
-                        className="form-control"
-                        disabled
-                        value={`${pafu[key]}`}
-                        id={key}
-                      />
+                      <TextArea disabled value={`${pafu[key]}`} />
                     </label>
                   </div>
                 )
