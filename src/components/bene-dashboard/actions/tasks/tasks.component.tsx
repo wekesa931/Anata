@@ -425,7 +425,7 @@ const Tasks = () => {
 
   return (
     <>
-      <div className="margin-top-16">
+      <div className="margin-top-0">
         {isReadytoShowTasks && (
           <>
             <p className="up-next">Up next</p>

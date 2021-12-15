@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, useRouteMatch } from 'react-router-dom'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import { useAuth } from '../../../../context/auth-context'
 import FORMS from './forms'
-import { useMember } from '../../../../context/member.context'
-import openForm from '../../../../helpers/form-opener'
+import FormPortal from './forms-portal.component'
 
 const Forms = () => {
-  const { recId } = useParams()
   const [hn, setHN] = useState<any>({})
+  const [openedForms, setOpenedForms] = useState<any>([])
   const { user } = useAuth()
-  const { member } = useMember()
-  const match = useRouteMatch()
+
+  const addOpenForm = (form) => {
+    setOpenedForms([...openedForms, form])
+    // openForm(form, recId, match.url, member, user, hn)
+  }
 
   useEffect(() => {
     if (user && user.email) {
@@ -28,11 +29,12 @@ const Forms = () => {
 
   return (
     <div className="d-flex flex-direction-column">
-      <h3>Forms</h3>
-      <div className="margin-top-16 flex-1">
+      <FormPortal openedForms={openedForms} hn={hn} />
+
+      <div className="margin-top-0 flex-1">
         {FORMS.map((form) => (
           <button
-            onClick={() => openForm(form, recId, match.url, member, user, hn)}
+            onClick={() => addOpenForm(form)}
             className="full-width btn btn-secondary form-btns"
             key={form.name}
           >

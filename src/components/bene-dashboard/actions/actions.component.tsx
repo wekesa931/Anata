@@ -1,4 +1,9 @@
 import React, { useEffect } from 'react'
+import TabContext from '@mui/lab/TabContext'
+import TabList from '@mui/lab/TabList'
+import TabPanel from '@mui/lab/TabPanel'
+import Box from '@mui/material/Box'
+import Tab from '../../utils/tabs/mui-tabs.component'
 import Communication from './communication/communication.component'
 import Forms from './forms/forms.component'
 import Meetings from './meetings/meetings.component'
@@ -9,11 +14,7 @@ import { useCall } from '../../../context/calls-context'
 import ErrorBoundary from '../../error-boundary/error-boundary.component'
 
 const Actions = () => {
-  const tabs = ['Actions', 'Forms', 'Meetings']
-  const [activeTab, setActiveTab] = React.useState<string>(tabs[0])
-  const tabAction = (tab: string) => {
-    setActiveTab(tab)
-  }
+  const [activeTab, setActiveTab] = React.useState<string>('tasks')
   const { setCounterValue } = useCall()
 
   useEffect(() => {
@@ -21,67 +22,65 @@ const Actions = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const handleChange = (event: any, newValue: React.SetStateAction<string>) => {
+    setActiveTab(newValue)
+  }
+
   return (
-    <div className="full-height d-flex flex-column flex-1">
-      <div className="d-flex flex-between">
-        <div className="d-flex flex-between text-blue-base relative">
-          {tabs.map((tab) => (
-            <button
-              className={`tab-btn btn ${
-                activeTab === tab ? 'action-btn text-bold' : 'btn-unstyled'
-              }`}
-              onClick={() => tabAction(tab)}
-              key={tab}
-            >
-              <p
-                className={`btn-text ${
-                  activeTab === tab ? 'btn-active-text' : 'btn-passive-text'
-                }`}
-              >
-                {tab}
-              </p>
-            </button>
-          ))}
-        </div>
+    <TabContext value={activeTab}>
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: 'divider',
+          display: 'flex',
+          background: 'var(--white-bg)',
+        }}
+      >
+        <TabList onChange={handleChange} value={activeTab}>
+          <Tab label="Tasks" value="tasks" />
+          <Tab label="Forms" value="forms" />
+          <Tab label="Meetings" value="meetings" />
+        </TabList>
         <div className="d-flex flex-between communication-icons">
           <button
             className="btn"
             style={{
-              color: activeTab === 'Messages' ? '#58a9f3' : '#af9090',
-              backgroundColor: activeTab === 'Messages' ? '#e7f3fd' : '#e8eaed',
+              color: activeTab === 'messages' ? '#58a9f3' : '#af9090',
+              backgroundColor: activeTab === 'messages' ? '#e7f3fd' : '#e8eaed',
             }}
-            onClick={() => tabAction('Messages')}
+            onClick={() => setActiveTab('messages')}
           >
             <Icon name="message-circle" fill="#efefef" width={16} height={16} />
           </button>
           <CallsCallout />
         </div>
-      </div>
-      <div className="flex-scroll">
-        <div className={activeTab === tabs[0] ? '' : 'hidden'}>
+      </Box>
+      <div
+        className="full-height d-flex flex-column flex-1"
+        style={{ overflowY: 'auto' }}
+      >
+        <TabPanel value="tasks">
           <ErrorBoundary>
             <Tasks />
           </ErrorBoundary>
-        </div>
-        <div className={activeTab === tabs[1] ? '' : 'hidden'}>
+        </TabPanel>
+        <TabPanel value="forms">
           <ErrorBoundary>
             <Forms />
           </ErrorBoundary>
-        </div>
-        <div className={activeTab === tabs[2] ? '' : 'hidden'}>
+        </TabPanel>
+        <TabPanel value="meetings">
           <ErrorBoundary>
             <Meetings />
           </ErrorBoundary>
-        </div>
-        {activeTab === 'Messages' && (
-          <div>
-            <ErrorBoundary>
-              <Communication />
-            </ErrorBoundary>
-          </div>
-        )}
+        </TabPanel>
+        <TabPanel value="messages">
+          <ErrorBoundary>
+            <Communication />
+          </ErrorBoundary>
+        </TabPanel>
       </div>
-    </div>
+    </TabContext>
   )
 }
 

@@ -1,5 +1,5 @@
 /* global css */
-@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700&family=Rubik:wght@400;500&family=Source+Sans+Pro:wght@300;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&family=Rubik:wght@400;500&family=Source+Sans+Pro:wght@300;600&display=swap');
 
 * {
   margin: 0;
@@ -9,6 +9,33 @@
 
 :root {
   /* colors */
+  --dark-blue-70: #5d6b82;
+  --dark-blue-50: #8b95a5;
+  --dark-blue-20: #d1d5db;
+  --dark-blue-10: #e8eaed;
+  --blue-100: #1084ee;
+  --blue-50: #87c1f7;
+  --orange-10: #fff5e5;
+  --orange-100: #ff9800;
+  --white-bg: #f9fafc;
+  --orange-70: #ffb74d;
+  --orange-50: #ffcb80;
+  --orange-20: #ffeacc;
+  --blue-70: #58a9f3;
+  --blue-20: #cfe6fc;
+  --blue-10: #e7f3fd;
+  --green-100: #32d74b;
+  --green-70: #70e381;
+  --green-50: #98eba5;
+  --green-20: #d6f7db;
+  --green-10: #ebfbed;
+  --red-100: #ff3b30;
+  --red-70: #ff766e;
+  --red-50: #ff9d97;
+  --red-20: #ffd8d6;
+  --red-10: #ffebea;
+  --white-100: #fff;
+
   --orange-base: #ff9800;
   --orange-dark: #955b05;
   --orange-light: #ffeccf;
@@ -87,12 +114,11 @@ body,
   background: var(--white);
   flex: 1;
   height: calc(100% - 64px);
-  overflow: scroll;
 }
 
 .bene-views {
   flex: 1;
-  border-right: 1px solid var(--blue-light);
+  border-right: 1px solid var(--white);
 }
 
 .dashboard-content {
@@ -122,10 +148,11 @@ body,
   background-color: #ffffff;
 }
 
-.dashboard-raised-content {
+.right-pane {
   background: var(--white);
-  border-right: 1px solid var(--blue-light);
-  box-shadow: 0px 2px 4px 0px rgba(96, 142, 182, 0.1);
+  border-left: 1px solid var(--dark-blue-10);
+  max-width: 340px;
+  padding-bottom: 30px;
 }
 .right-sidebar-container {
   justify-content: space-between;
@@ -207,28 +234,28 @@ h6,
 }
 
 .heading-caption {
-  font-family: 'Karla';
+  font-family: 'Rubik';
   font-size: 14px;
   line-height: 18px;
   font-weight: 400;
 }
 
 .text-normal {
-  font-family: 'Karla';
+  font-family: 'Rubik';
   font-size: 14px;
   line-height: 18px;
   font-weight: 400;
 }
 
 .text-small {
-  font-family: 'Karla';
+  font-family: 'Rubik';
   font-size: 12px;
   line-height: 16px;
   font-weight: 400;
 }
 
 .text-tiny {
-  font-family: Karla;
+  font-family: Rubik;
   font-style: normal;
   font-weight: normal;
   font-size: 10px;
@@ -587,7 +614,7 @@ textarea.form-control {
   padding: 8px;
   box-sizing: border-box;
   margin: 8px 0px;
-  font-family: Karla, sans-serif;
+  font-family: Rubik, sans-serif;
   resize: none;
 }
 
@@ -652,7 +679,7 @@ li {
 }
 
 .list-item-description {
-  font-family: 'Karla', serif;
+  font-family: 'Rubik', serif;
   font-style: normal;
   font-weight: normal;
   font-size: 13px;
@@ -1499,7 +1526,7 @@ a {
 .up-next {
   width: 50px;
   height: 14px;
-  margin: 32px 16px 8px 0;
+  margin: 0px 16px 8px 0;
   font-family: Rubik;
   font-size: 14px;
   font-weight: 500;
@@ -2017,6 +2044,54 @@ a {
 .message-image-container img {
   border: none;
   background: none;
+}
+
+.form-modal-title {
+  font-family: 'Rubik', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  padding-left: 16px;
+  color: var(--dark-blue-100);
+}
+
+.drag-container {
+  height: 0px;
+}
+
+.draggable {
+  height: 80vh;
+  overflow: scroll;
+}
+
+.draggable-disabled {
+  height: 8vh;
+  overflow: hidden;
+}
+
+.drag-actions {
+  position: absolute;
+  right: 10px;
+  color: var(--red-100);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.drag-actions-size {
+  position: absolute;
+  right: 35px;
+  color: var(--blue-100);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.drag-actions-size svg,
+.drag-actions svg {
+  width: 23px;
+  height: 23px;
 }
 
 .react-pdf__Page {

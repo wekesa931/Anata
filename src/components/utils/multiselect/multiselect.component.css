@@ -12,7 +12,7 @@
 .listItem {
   padding: 4px;
   border-bottom: 1px solid var(--blue-light);
-  font-family: 'Karla';
+  font-family: 'Rubik';
   font-size: 14px;
   display: flex;
   justify-content: space-between;
@@ -26,7 +26,7 @@
   background: var(--blue-base);
   padding: 2px;
   border-radius: 4px;
-  font-family: 'Karla';
+  font-family: 'Rubik';
   font-size: 14px;
   color: white;
   margin-right: 2px;

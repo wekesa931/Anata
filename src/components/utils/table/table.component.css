@@ -30,7 +30,7 @@
 
 .tableBtn {
   color: var(--blue-base);
-  font-family: 'Karla';
+  font-family: 'Rubik';
   font-weight: bold;
   margin: 0px 4px;
   background: var(--neutral-light) !important;
@@ -43,7 +43,7 @@
 .titleContainer {
   border-left: 4px solid var(--turquoise-base);
   background-color: white;
-  font-family: 'Karla';
+  font-family: 'Rubik';
 }
 
 .title {

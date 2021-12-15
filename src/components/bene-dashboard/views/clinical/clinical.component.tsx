@@ -9,7 +9,7 @@ import Consultation from '../consultation/consultation'
 const Clinical = () => {
   return (
     <div style={{ display: 'flex' }}>
-      <div style={{ flex: 1, marginRight: '48px', maxWidth: '336px' }}>
+      <div style={{ flex: 1, marginRight: '24px' }}>
         <Consultation />
         <Labs />
         <Vitals />
@@ -17,12 +17,8 @@ const Clinical = () => {
       <div style={{ flex: 1 }}>
         <div className="margin-bottom-16">
           <FilledForms />
-        </div>
-        <div className="margin-bottom-16">
-          <Appointments />
-        </div>
-        <div className="margin-bottom-16">
           <Medications />
+          <Appointments />
         </div>
       </div>
     </div>

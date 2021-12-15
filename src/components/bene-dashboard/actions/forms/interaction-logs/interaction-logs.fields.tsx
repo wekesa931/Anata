@@ -1,6 +1,4 @@
 import dayjs from 'dayjs'
-import qs from 'query-string'
-import { useLocation } from 'react-router-dom'
 import AirtableField from '../../../../../types/airtable-field'
 
 type Field = AirtableField & {
@@ -10,12 +8,7 @@ type Field = AirtableField & {
   condition?: (values: any) => boolean
 }
 
-const useInteractionFormFields = () => {
-  const { search } = useLocation()
-  const { data } = qs.parse(search)
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const { member, user } = JSON.parse(data)
+const useInteractionFormFields = (member: any, user: any) => {
   const fields: Field[] = [
     {
       label: 'Member',

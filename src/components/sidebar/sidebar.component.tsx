@@ -1,16 +1,79 @@
-import React, { useState } from 'react'
+// import React, { useState } from 'react'
 import { toggle } from 'kremling'
-import { Link, useRouteMatch, useHistory } from 'react-router-dom'
+
 import { ArrowRight, ArrowDown } from 'react-feather'
+
+import React, { useState } from 'react'
+import { styled } from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import MuiDrawer from '@mui/material/Drawer'
+import CssBaseline from '@mui/material/CssBaseline'
+import Divider from '@mui/material/Divider'
+import { Link, useRouteMatch, useHistory } from 'react-router-dom'
+import config from '../../config/config'
+import analytics from '../../helpers/segment'
+import { useSidebar } from '../../context/sidebar-context'
+import { useUser } from '../../context/user-context'
+import SidebarMenuItems from './sidebar.menu'
 import styles from './sidebar.component.css'
 import FlatLogo from '../../assets/img/logo/Antara Logo@1x.png'
-import SidebarMenuItems from './sidebar.menu'
-import { useUser } from '../../context/user-context'
-import { useSidebar } from '../../context/sidebar-context'
-import analytics from '../../helpers/segment'
-import config from '../../config/config'
 
-const Sidebar = () => {
+const drawerWidth = 240
+
+const openedMixin = (theme: any) => ({
+  width: drawerWidth,
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: 'hidden',
+})
+
+const closedMixin = (theme: any) => ({
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: 'hidden',
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  [theme.breakpoints.up('sm')]: {
+    width: `calc(${theme.spacing(9)} + 1px)`,
+  },
+})
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+}))
+
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  ...(open && {
+    ...openedMixin(theme),
+    '& .MuiDrawer-paper': openedMixin(theme),
+  }),
+  ...(!open && {
+    ...closedMixin(theme),
+    '& .MuiDrawer-paper': closedMixin(theme),
+  }),
+}))
+
+export default function MiniDrawer() {
+  const [open, setOpen] = React.useState(false)
+
+  const toggleDrawer = () => {
+    setOpen(!open)
+  }
+
   const history = useHistory()
   const user = useUser()
   const { iframes } = config
@@ -55,6 +118,7 @@ const Sidebar = () => {
   } else if (path.includes('member')) {
     items = SidebarMenuItems.slice(0, 10)
   }
+
   const subList = (
     item: {
       name: string
@@ -184,19 +248,29 @@ const Sidebar = () => {
       </li>
     )
   }
+
   return (
-    <div className={styles.sidebar}>
-      <div className={styles.logoContainer}>
-        <Link to="/">
-          <img
-            src={FlatLogo}
-            width="32px"
-            height="32px"
-            alt="antara small logo"
-          />
-        </Link>
-      </div>
-      <div className="sidebar" data-testid="sidebar-links">
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <Drawer
+        variant="permanent"
+        open={open}
+        onMouseEnter={toggleDrawer}
+        onMouseLeave={toggleDrawer}
+      >
+        <DrawerHeader>
+          <Link to="/">
+            <img
+              src={FlatLogo}
+              width="32px"
+              height="32px"
+              alt="antara small logo"
+            />
+          </Link>
+        </DrawerHeader>
+
+        <Divider />
+
         {items.map((item: any, index: any) => {
           const { subItems } = item
           return (
@@ -225,9 +299,7 @@ const Sidebar = () => {
             </div>
           )
         })}
-      </div>
-    </div>
+      </Drawer>
+    </Box>
   )
 }
-
-export default Sidebar

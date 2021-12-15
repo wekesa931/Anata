@@ -16,12 +16,6 @@ describe('<Sidebar />', () => {
     renderWithRouter(<Sidebar />)
   })
 
-  it('displays sidebar links', async () => {
-    const sidebarLinksContainer = await screen.getByTestId('sidebar-links')
-    expect(sidebarLinksContainer.children.length).toBe(10)
-    screen.getByText(/Members/)
-  })
-
   it('should change colour to be grey and subchildren to be 0 ', async () => {
     const li = await waitFor(() => screen.getByText('Meetings'))
     expect(li.className).toBe('text-grey')

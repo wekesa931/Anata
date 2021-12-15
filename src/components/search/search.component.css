@@ -26,7 +26,7 @@
 }
 
 .resultItem a {
-  font-family: 'Karla';
+  font-family: 'Rubik';
   font-size: 16px;
   font-weight: normal;
   font-stretch: normal;
@@ -56,7 +56,7 @@
   font-weight: normal;
   font-stretch: normal;
   font-style: normal;
-  font-family: 'Karla';
+  font-family: 'Rubik';
   line-height: 1.25;
   letter-spacing: normal;
   color: #8b95a5;
@@ -74,7 +74,7 @@
 .noResultWrap {
   padding: 12px;
   color: var(--greyscale-3);
-  font-family: 'Karla';
+  font-family: 'Rubik';
 }
 
 .noResultMsg {

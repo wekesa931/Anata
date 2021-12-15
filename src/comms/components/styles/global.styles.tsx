@@ -5,9 +5,9 @@ const Fonts = () => {
   return (
     <Global
       styles={css`
-        @import url('https://fonts.googleapis.com/css2?family=Karla&family=Rubik&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Rubik&family=Rubik&display=swap');
         * {
-          font-family: 'Karla', sans-serif;
+          font-family: 'Rubik', sans-serif;
           box-sizing: border-box;
         }
         a {

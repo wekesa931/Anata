@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
-import Tabs from '../../utils/tabs/tabs.component'
-import Clinical from './clinical/clinical.component'
-import Icon from '../../utils/icon/icon.component'
-import styles from './views.component.css'
+import TabContext from '@mui/lab/TabContext'
+import TabList from '@mui/lab/TabList'
+import TabPanel from '@mui/lab/TabPanel'
+import Box from '@mui/material/Box'
+import Tab from '../../utils/tabs/mui-tabs.component'
 import {
   SortFilterProvider,
   useSortFilter,
 } from '../../../context/sort-filter-views.context'
+import styles from './views.component.css'
+import Icon from '../../utils/icon/icon.component'
+import Clinical from './clinical/clinical.component'
 import InteractionLogs from './interaction-logs/interaction-logs.component'
 import Nutrition from './nutrition/nutrition.component'
 import Files from './files/files.component'
@@ -76,38 +80,67 @@ const FilterComponent = () => {
 }
 
 const Views = () => {
+  const [value, setValue] = React.useState('1')
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue)
+  }
+
   return (
     <SortFilterProvider>
-      <div className="full-height">
-        <Tabs FilterComponent={FilterComponent}>
-          <div label="Clinical Summary">
+      <TabContext value={value}>
+        <Box
+          sx={{
+            background: 'var(--white-bg)',
+            borderBottom: 1,
+            borderColor: 'divider',
+            paddingLeft: '8px',
+            display: 'flex',
+          }}
+        >
+          <TabList onChange={handleChange} aria-label="Clinical Tabs">
+            <Tab
+              label="Clinical Summary"
+              value="1"
+              classes={{ root: styles.MuiTabRoot }}
+            />
+            <Tab label="Conditions" value="2" />
+            <Tab label="Interactions" value="3" />
+            <Tab label="Nutrition" value="4" />
+            <Tab label="Files" value="5" />
+          </TabList>
+          <FilterComponent />
+        </Box>
+        <div
+          style={{ overflowY: 'auto', height: '100%', paddingBottom: '36px' }}
+        >
+          <TabPanel value="1">
             <ErrorBoundary>
               <Clinical />
             </ErrorBoundary>
-          </div>
-          <div label="Conditions">
+          </TabPanel>
+          <TabPanel value="2">
             <ErrorBoundary>
               <Conditions />
             </ErrorBoundary>
-          </div>
-          <div label="Interactions">
+          </TabPanel>
+          <TabPanel value="3">
             <ErrorBoundary>
               <InteractionLogs />
             </ErrorBoundary>
-          </div>
-          <div label="Nutrition">
+          </TabPanel>
+          <TabPanel value="4">
             <ErrorBoundary>
               <Nutrition />
             </ErrorBoundary>
-          </div>
-
-          <div label="Files">
+          </TabPanel>
+          <TabPanel value="5">
             <ErrorBoundary>
               <Files />
             </ErrorBoundary>
-          </div>
-        </Tabs>
-      </div>
+          </TabPanel>
+        </div>
+      </TabContext>
     </SortFilterProvider>
   )
 }

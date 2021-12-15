@@ -5,10 +5,9 @@
 }
 
 .bioDataCard {
-  margin-top: 16px;
-  background: var(--nav-bg);
-  border: 1px solid #205284;
-  border-radius: 24px 24px 0px 0px;
+  background: var(--white-100);
+  border-left: 1px solid var(--dark-blue-10);
+  border-right: 1px solid var(--dark-blue-10);
   flex: 1;
   overflow-y: auto;
   display: flex;
@@ -17,6 +16,11 @@
 
 .beneNameContainer {
   padding: 8px 0;
+  background: var(--white-bg);
+  border-bottom: 1px solid var(--dark-blue-10);
+  min-height: 48px;
+  display: flex;
+  align-items: center;
 }
 
 .summariesContainer {
@@ -26,22 +30,20 @@
 }
 
 .beneNameAgeGender {
-  margin-top: 16px;
-  margin-left: 16px;
-  width: 272px;
   font-family: 'Rubik', sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 20px;
   line-height: 24px;
-  color: var(--orange-base);
+  padding-left: 16px;
+  color: var(--dark-blue-100);
 }
 
 .bioDataTable {
   margin-left: 16px;
   margin-top: 20px;
   width: 304px;
-  color: var(--white);
+  color: var(--dark-blue-50);
 }
 
 .bioDataTableColumn {
@@ -51,16 +53,18 @@
 
 .bioDataKey {
   width: 96px;
+  color: var(--dark-blue-50);
 }
 
 .bioDataValue {
   padding-left: 16px;
+  color: var(--dark-blue-100);
 }
 
 .topSummaryColumns {
   float: left;
   width: 75px;
-  color: var(--white);
+  color: var(--dark-blue-50);
 }
 
 /* Clear floats after the columns */
@@ -116,7 +120,7 @@
 .clinicalTopColumns {
   float: left;
   width: 100px;
-  color: var(--white);
+  color: var(--dark-blue-50);
 }
 
 .clinicalTopColumnHeadings {
@@ -134,7 +138,7 @@
   border-bottom: 1px solid #ff9800;
   line-height: 16px;
   width: 84px;
-  color: var(--white);
+  color: var(--dark-blue-50);
   margin-left: 16px;
   margin-top: 12px;
 }
@@ -142,14 +146,14 @@
 .conditionsContent {
   line-height: 16px;
   width: 304px;
-  color: var(--white);
+  color: var(--dark-blue-100);
   margin-left: 16px;
 }
 
 .dateHelperText {
   line-height: 12px;
   margin-top: 4px;
-  color: var(--white);
+  color: var(--dark-blue-50);
 }
 
 .dateHelperText2 {
@@ -171,7 +175,7 @@
 .clinicalBottomColumns {
   float: left;
   width: 150px;
-  color: var(--white);
+  color: var(--dark-blue-50);
   padding-right: 8px;
 }
 

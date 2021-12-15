@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useRouteMatch } from 'react-router-dom'
-import { ArrowRightCircle, ArrowLeftCircle } from 'react-feather'
 import BioData from './summary/biodata/biodata.component'
 import styles from './bene-dashboard.component.css'
 import Views from './views/views.component'
@@ -13,7 +12,6 @@ import { MemberProvider } from '../../context/member.context'
 const PatientDashboard = () => {
   const [recId, setRecId] = useState<string>()
   const { params } = useRouteMatch<any>()
-  const [rightSidebarOpen, setRightSidebarOpen] = useState<boolean>(true)
 
   if (params.recId && recId !== params.recId) {
     setRecId(params.recId)
@@ -31,10 +29,6 @@ const PatientDashboard = () => {
     return `Scribe: ${member['Full Name'] ? member['Full Name'] : 'Loading'}`
   }
 
-  const toggleRightSideBar = () => {
-    setRightSidebarOpen(!rightSidebarOpen)
-  }
-
   return (
     <Fetcher
       url={`members/${recId}`}
@@ -45,40 +39,15 @@ const PatientDashboard = () => {
       {(response: any) => (
         <MemberProvider member={response}>
           <div className={styles.container}>
-            <div className="dashboard-content dashboard-raised-content">
-              <ErrorBoundary>
-                <BioData />
-              </ErrorBoundary>
-            </div>
-            <div className="dashboard-content padding-top-16 bene-views">
+            <ErrorBoundary>
+              <BioData />
+            </ErrorBoundary>
+            <div className="bene-views">
               <Views />
             </div>
 
-            <div className="dashboard-content dashboard-raised-content">
-              <div className="right-sidebar">
-                {rightSidebarOpen ? (
-                  <>
-                    <button className="hide-show" onClick={toggleRightSideBar}>
-                      <ArrowRightCircle />
-                    </button>
-                    <div
-                      style={{
-                        display: 'flex',
-                        overflowY: 'scroll',
-                      }}
-                    >
-                      <Actions />
-                    </div>
-                  </>
-                ) : (
-                  <button
-                    className="hide-show-right"
-                    onClick={toggleRightSideBar}
-                  >
-                    <ArrowLeftCircle />
-                  </button>
-                )}
-              </div>
+            <div className="right-pane">
+              <Actions />
             </div>
           </div>
         </MemberProvider>

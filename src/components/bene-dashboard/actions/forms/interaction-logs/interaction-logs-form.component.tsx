@@ -2,10 +2,10 @@
 import React, { useState } from 'react'
 import { ErrorMessage, Formik, FormikHelpers } from 'formik'
 import { useMutation } from '@apollo/client'
-import { useLocation } from 'react-router-dom'
-import qs from 'query-string'
 import dayjs from 'dayjs'
 import Bugsnag from '@bugsnag/js'
+import { useMember } from '../../../../../context/member.context'
+import { useUser } from '../../../../../context/user-context'
 import FormField from '../../../../utils/form-field/form-field.component'
 import Toasts from '../../../../../helpers/toast'
 import InteractionLogsValidationSchema from './interaction-logs-validation-schema'
@@ -16,13 +16,10 @@ import analytics from '../../../../../helpers/segment'
 import logError from '../../../../utils/Bugsnag/Bugsnag'
 
 const InteractionLogsForm = () => {
-  const { search } = useLocation()
-  const { data } = qs.parse(search)
+  const { member } = useMember()
+  const user = useUser()
   const [startTime, setStartTime] = useState(dayjs())
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const { member, user } = JSON.parse(data)
-  const fields = useInteractionFormFields()
+  const fields = useInteractionFormFields(member, user)
   const [createInteraction] = useMutation(CREATE_INTERACTION)
   const initialValues = {
     ...fields.reduce(

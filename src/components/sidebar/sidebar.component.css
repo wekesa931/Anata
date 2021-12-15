@@ -10,9 +10,14 @@
   cursor: pointer;
 }
 
+.active {
+  background: var(--orange-10);
+}
+
 .active .menuLink {
   color: var(--orange-base);
 }
+
 .menuLink > h5{
   font-weight: 100;
   font-size: 16px;
@@ -21,11 +26,10 @@
   margin-right: 8px;
 }
 
-.menuItem:hover {
-  background-color: var(--greyscale-7);
+.menuItem::hover {
+  background-color: var(--dark-blue-10);
   cursor: pointer;
 }
-
 
 .menuLink {
   align-items: center;
