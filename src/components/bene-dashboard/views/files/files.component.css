@@ -58,6 +58,7 @@
 .empty {
   display: flex;
   justify-content: center;
+  position: relative;
 }
 
 .noContent {
@@ -352,4 +353,81 @@
 
 .fileDetail {
   padding: 0px 10px;
+}
+
+.fileUploadOptions {
+  position: absolute;
+  border: 1px solid #f3ecec;
+  border-radius: 12px;
+  overflow: hidden;
+  left: 0;
+  top: 50px;
+  z-index: 1000;
+  box-shadow: 0 2.8px 2.2px 0 rgb(0 0 0 / 2%), 0 6.7px 5.3px 0 rgb(0 0 0 / 3%),
+    0 12.5px 10px 0 rgb(0 0 0 / 4%), 0 22.3px 17.9px 0 rgb(0 0 0 / 4%),
+    0 41.8px 33.4px 0 rgb(0 0 0 / 5%), 0 100px 80px 0 rgb(0 0 0 / 7%);
+}
+
+.uploadText {
+  flex-direction: column;
+  align-items: self-start;
+  margin-left: 10px;
+  text-transform: none;
+}
+
+.upText {
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.29;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: var(--dark-blue-100);
+}
+
+.upTextSummary {
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.29;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: var(--dark-blue-50);
+}
+
+.input {
+  width: 300px;
+  margin: 8px;
+  padding: 4px;
+  border: 1px solid #f5f1f1;
+  border-radius: 3px;
+}
+
+.paste {
+  width: 318px;
+  padding: 10px;
+}
+
+.upBtn {
+  text-transform: none !important;
+}
+
+.urlError {
+  flex-grow: 0;
+  margin-left: 5px;
+  font-family: Rubik;
+  font-size: 10px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.29;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: var(--red-dark-70);
 }

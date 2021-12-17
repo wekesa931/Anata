@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Document, Page, Outline } from 'react-pdf/dist/esm/entry.webpack'
+import { Document, Page } from 'react-pdf/dist/esm/entry.webpack'
 import ImageLoader from 'react-image-render'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -9,7 +9,7 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import { useMutation } from '@apollo/client'
-import { AlertTriangle, Download, Edit, Info, Lock, X } from 'react-feather'
+import { AlertTriangle, Download, Info, Lock, X } from 'react-feather'
 import { Grid, Typography } from '@mui/material'
 import dayjs from 'dayjs'
 import { ENCRYPT_FILE, GENERATE_FILE_LINK } from './files.gql'
@@ -98,24 +98,35 @@ export default function PdfViewer(props) {
   const [displayFile, setDisplayFile] = useState<IFiles>(file)
   const [isEncypting, setIsEncypting] = useState(false)
   const [fileMessage, setFileMessage] = useState('')
-  const [pageNumber, setPageNumber] = useState(1)
+  const [open, setOpen] = React.useState(true)
   const [generateAccessFileLink] = useMutation(GENERATE_FILE_LINK)
+  const handledExtensions = [
+    'jpg',
+    'jpeg',
+    'png',
+    'doc',
+    'docx',
+    'txt',
+    'gif',
+    'pdf',
+  ]
   const isImage =
-    displayFile.url &&
-    (displayFile.url.includes('jpg') ||
-      displayFile.url.includes('jpeg') ||
-      displayFile.url.includes('gif') ||
-      displayFile.url.includes('png'))
+    !displayFile.driveUrl &&
+    displayFile.mimeType &&
+    (displayFile.mimeType.includes('jpg') ||
+      displayFile.mimeType.includes('jpeg') ||
+      displayFile.mimeType.includes('gif') ||
+      displayFile.mimeType.includes('png'))
   const isDocument =
-    displayFile.url &&
-    (displayFile.url.includes('doc') ||
-      displayFile.url.includes('docx') ||
-      displayFile.url.includes('txt') ||
-      displayFile.url.includes('csv') ||
-      displayFile.url.includes('pdf'))
+    !displayFile.driveUrl &&
+    displayFile.mimeType &&
+    (displayFile.mimeType.includes('doc') ||
+      displayFile.mimeType.includes('docx') ||
+      displayFile.mimeType.includes('txt') ||
+      displayFile.mimeType.includes('pdf'))
 
   useEffect(() => {
-    if (file.id) {
+    if (file.id && !file.driveUrl) {
       generateAccessFileLink({
         variables: {
           duration: 5000,
@@ -125,17 +136,6 @@ export default function PdfViewer(props) {
         if (!res.errors) {
           const { link: url } = res?.data?.generateLink
           const fileExtension = file.storageKey.split('.').pop()
-          const handledExtensions = [
-            'jpg',
-            'jpeg',
-            'png',
-            'doc',
-            'docx',
-            'txt',
-            'csv',
-            'gif',
-            'pdf',
-          ]
           if (handledExtensions.includes(fileExtension)) {
             setDisplayFile({ ...file, url })
           } else {
@@ -144,13 +144,16 @@ export default function PdfViewer(props) {
           }
         }
       })
+    } else {
+      setFileMessage('File has been downloaded or opened in the next tab')
+      window.open(file.driveUrl, '_blank').focus()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file, generateAccessFileLink])
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumOfPages(numPages)
   }
-  const [open, setOpen] = React.useState(true)
   const handleClose = () => {
     onFileClosed()
     setOpen(false)
@@ -169,19 +172,6 @@ export default function PdfViewer(props) {
       'noopener,noreferrer'
     )
     if (newWindow) newWindow.opener = null
-  }
-
-  const editFile = () => {
-    const newWindow = window.open(
-      file.driveUrl,
-      '_blank',
-      'noopener,noreferrer'
-    )
-    if (newWindow) newWindow.opener = null
-  }
-
-  function onItemClick({ pageNumber: itemPageNumber }) {
-    setPageNumber(itemPageNumber)
   }
 
   const descriptionElementRef = React.useRef(null)
@@ -215,7 +205,6 @@ export default function PdfViewer(props) {
       {fileMessage && <p className="text-heading-5">{fileMessage}</p>}
     </div>
   )
-
   return (
     <>
       {isEncypting && (
@@ -246,14 +235,6 @@ export default function PdfViewer(props) {
                 Encrypt
               </Typography>
             </Button>
-            {displayFile.driveUrl && (
-              <Button autoFocus onClick={editFile}>
-                <Edit className="file-action-btn" />
-                <Typography className="file-action-button-text">
-                  Edit
-                </Typography>
-              </Button>
-            )}
             <Button autoFocus onClick={downloadFile}>
               <Download className="file-action-btn" />
               <Typography className="file-action-button-text">
@@ -290,16 +271,15 @@ export default function PdfViewer(props) {
                     error={<LoadingError />}
                     noData={<Loader />}
                   >
-                    <Outline
-                      onItemClick={(pageNum: any) => onItemClick(pageNum)}
-                    />
-                    {Array.from(new Array(numOfPages), (el, index) => (
-                      <Page
-                        key={`page_${index + 1}`}
-                        pageNumber={pageNumber}
-                        width={900}
-                      />
-                    ))}
+                    {Array.from(new Array(numOfPages), (el, index) => {
+                      return (
+                        <Page
+                          key={`page_${index + 1}`}
+                          pageNumber={index + 1}
+                          width={900}
+                        />
+                      )
+                    })}
                   </Document>
                 )}
                 {isImage && (

@@ -107,7 +107,7 @@ const Views = () => {
             <Tab label="Conditions" value="2" />
             <Tab label="Interactions" value="3" />
             <Tab label="Nutrition" value="4" />
-            <Tab label="Files" value="5" />
+            <Tab label="Docs" value="5" />
           </TabList>
           <FilterComponent />
         </Box>

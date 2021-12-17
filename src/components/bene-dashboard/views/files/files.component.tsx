@@ -19,6 +19,8 @@ import {
   File,
   FileText,
   Image,
+  Link2,
+  Monitor,
   Upload,
   X,
   XCircle,
@@ -43,6 +45,7 @@ import { useMember } from '../../../../context/member.context'
 import { useUser } from '../../../../context/user-context'
 import RefinedFileMetaForm from './form'
 import logError from '../../../utils/Bugsnag/Bugsnag'
+import DropDownComponent from '../../../../helpers/dropdown-helper'
 
 // eslint-disable-next-line
 const mime = require('mime-types')
@@ -99,6 +102,10 @@ function getComparator(order: any, orderBy: any) {
 }
 
 const Files = () => {
+  const [open, setOpen] = React.useState(false)
+  const [openLinkInput, setOpenLinkInput] = useState(false)
+  const [docLink, setdocLink] = useState(undefined)
+  const [confirmUpload, setConfirmUpload] = useState(false)
   const [order, setOrder] = React.useState('asc')
   const [orderBy, setOrderBy] = React.useState('updatedAt')
   const [page, setPage] = React.useState(0)
@@ -138,6 +145,23 @@ const Files = () => {
   const isDrawerOpen = fileLoaded || gettingFile || gettingUploadLink
   const isFileUploading = gettingFile || gettingUploadLink
   const isFormVisible = displayForm && !gettingFile && !gettingUploadLink
+  const isValidURL = (url: string) => {
+    // esli
+    const res = url.match(
+      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g //eslint-disable-line
+    )
+    return res !== null
+  }
+  const uploadDisabled = () => {
+    if (!docLink) {
+      return true
+    }
+    if (!isValidURL(docLink)) {
+      return true
+    }
+    return false
+  }
+
   const headCells = [
     {
       id: 'title',
@@ -152,6 +176,100 @@ const Files = () => {
       label: 'Date Created',
     },
   ]
+  const handleUploadClick = () => {
+    setOpen(true)
+  }
+
+  const uploadOptions = () => (
+    <DropDownComponent isVisible={open} setvisibility={setOpen}>
+      <div className={styles.fileUploadOptions}>
+        <Box
+          sx={{
+            borderBottom: '1px solid #e8eaed',
+            bgcolor: 'background.paper',
+          }}
+        >
+          {openLinkInput ? (
+            <p className={`${styles.upText} ${styles.paste}`}>Paste Link URL</p>
+          ) : (
+            <Button
+              onClick={() => {
+                setOpenLinkInput(true)
+              }}
+            >
+              <Link2 />
+              <div className={`d-flex ${styles.uploadText}`}>
+                <p className={styles.upText}>Upload via Link</p>
+                <p className={styles.upTextSummary}>Google Drive, Dropbox</p>
+              </div>
+            </Button>
+          )}
+        </Box>
+        <Box
+          sx={{
+            borderBottom: '1px solid #e8eaed',
+            bgcolor: 'background.paper',
+          }}
+        >
+          {openLinkInput ? (
+            <>
+              <input
+                className={styles.input}
+                type="text"
+                placeholder="https://drive.google.com/file/d/"
+                value={docLink}
+                onChange={(e) => setdocLink(e.target.value)}
+              />
+              {docLink && uploadDisabled() && (
+                <p className={styles.urlError}>Not a valid url</p>
+              )}
+            </>
+          ) : (
+            <Button
+              onClick={() => {
+                openFileSelector()
+                setOpen(false)
+                setdocLink(undefined)
+              }}
+            >
+              <Monitor />
+              <div className={`d-flex ${styles.uploadText}`}>
+                <p className={styles.upText}>Upload from your computer</p>
+                <p className={styles.upTextSummary}>PDF, DOC, XLS</p>
+              </div>
+            </Button>
+          )}
+        </Box>
+        {openLinkInput && (
+          <Box className="d-flex flex-end" sx={{ bgcolor: 'background.paper' }}>
+            <Button
+              disabled={uploadDisabled()}
+              className={styles.upBtn}
+              onClick={() => {
+                setConfirmUpload(true)
+                setOpen(false)
+                setOpenLinkInput(false)
+              }}
+            >
+              Upload
+            </Button>
+            <Button
+              className={styles.upBtn}
+              color="error"
+              onClick={() => {
+                setOpen(false)
+                setdocLink(undefined)
+                setOpenLinkInput(false)
+              }}
+            >
+              Cancel
+            </Button>
+          </Box>
+        )}
+      </div>
+    </DropDownComponent>
+  )
+
   const getMimeIcon = (name: string) => {
     if (name.includes('pdf')) {
       return <PictureAsPdfOutlinedIcon className={styles.red} />
@@ -161,25 +279,35 @@ const Files = () => {
     }
     return <FileText className={styles.green} />
   }
+
   useEffect(() => {
-    if (filesContent.length > 0) {
+    if (filesContent.length > 0 || confirmUpload) {
+      let key = ''
+      if (filesContent && filesContent.length > 0) {
+        key = filesContent[0].name
+      } else {
+        key = docLink
+      }
       getUploadLink({
         variables: {
           duration: 50000,
-          storageKey: filesContent[0].name,
+          storageKey: key,
           forceReplace: shouldReplaceFile,
         },
       })
         .then((res) => {
           if (res.data.generateUploadLink.errors) {
             setFileError(res.data.generateUploadLink.message)
+            setShouldReplaceFile(false)
           } else {
             setS3UploadLink(res.data.generateUploadLink)
+            setConfirmUpload(false)
+            setShouldReplaceFile(false)
           }
         })
         .catch((e) => logError(e))
     }
-  }, [filesContent, shouldReplaceFile, getUploadLink])
+  }, [filesContent, shouldReplaceFile, docLink, confirmUpload, getUploadLink])
 
   useEffect(() => {
     if (data) {
@@ -228,52 +356,93 @@ const Files = () => {
     })
     return stabilizedThis.map((el) => el[0])
   }
+  const persistData = (
+    docMeta: DocMeta,
+    storeKey: string,
+    mimeVal: any,
+    fileSize: number,
+    driveLink: any,
+    fileName: any
+  ) => {
+    saveFile({
+      variables: {
+        input: {
+          description: docMeta.description,
+          antaraId: member['Antara ID'],
+          storageKey: storeKey,
+          addedBy: user?.email,
+          mimeType: mimeVal,
+          fileSize,
+          category: docMeta.docType,
+          driveUrl: driveLink,
+          title: docMeta.title,
+          recordId: member.recID,
+          fileName,
+        },
+      },
+    }).then((res) => {
+      if (res.data.saveFile.status !== 200) {
+        setUploadStart(false)
+        setProgress(100)
+        setUploadFailed(true)
+      } else {
+        setUploadStart(false)
+        setProgress(100)
+        setUploadSuccessful(true)
+        refetch()
+      }
+    })
+  }
   const uploadDocument = (docMeta: DocMeta) => {
     setUploadStart(true)
-    const fileName = filesContent[0].name.split('.')
-    fileName.pop()
+    let fileName: any = null
+    let storeKey: any = ''
+    let fileSize = 0
+    let driveLink: any = null
+    let mimeVal: any = null
     const formData = new FormData()
     Object.keys(s3UploadLink.link.fields).forEach((key) => {
       formData.append(key, s3UploadLink.link.fields[key])
     })
-    formData.append('file', plainFiles[0])
-    axios
-      .post(s3UploadLink.link.url, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Accept: 'application/json',
-        },
-      })
-      .then(() => {
-        saveFile({
-          variables: {
-            input: {
-              description: docMeta.description,
-              antaraId: member['Antara ID'],
-              storageKey: filesContent[0].name,
-              addedBy: user?.email,
-              mimeType: mime.lookup(filesContent[0].name),
-              fileSize: plainFiles[0].size,
-              category: docMeta.docType,
-              driveUrl: null,
-              title: docMeta.title,
-              recordId: member.recID,
-              fileName: fileName.join('.'),
-            },
+    if (filesContent.length > 0 && !docLink) {
+      fileName = filesContent[0].name.split('.')
+      fileName.pop()
+      fileName = fileName.join('.')
+      formData.append('file', plainFiles[0])
+      storeKey = filesContent[0].name
+      mimeVal = mime.lookup(filesContent[0].name)
+      fileSize = plainFiles[0].size
+      axios
+        .post(s3UploadLink.link.url, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Accept: 'application/json',
           },
-        }).then(() => {
+        })
+        .then(() => {
+          persistData(docMeta, storeKey, mimeVal, fileSize, driveLink, fileName)
+        })
+        .catch((response) => {
           setUploadStart(false)
           setProgress(100)
-          setUploadSuccessful(true)
-          refetch()
+          setUploadFailed(true)
+          logError(response.message)
         })
-      })
-      .catch((response) => {
+    } else {
+      storeKey = docLink
+      driveLink = docLink
+      fileSize = 0
+      mimeVal = 'doc'
+      fileName = docLink
+      try {
+        persistData(docMeta, storeKey, mimeVal, fileSize, driveLink, fileName)
+      } catch (e) {
         setUploadStart(false)
         setProgress(100)
         setUploadFailed(true)
-        logError(response.message)
-      })
+        logError(e.message)
+      }
+    }
   }
 
   const handleClick = (_event: any, file: any) => {
@@ -295,6 +464,8 @@ const Files = () => {
     setFileError('')
     setUploadSuccessful(false)
     setUploadFailed(false)
+    setdocLink(undefined)
+    setConfirmUpload(false)
   }
   const progressColor = (): 'error' | 'primary' | 'success' => {
     let color: 'error' | 'primary' | 'success' = 'primary'
@@ -319,7 +490,11 @@ const Files = () => {
         <Grid className={`${styles.upload} d-flex align-center`} item xs={8}>
           {filesContent.length > 0 && getMimeIcon(filesContent[0].name)}
           <span className={styles.elippsisText}>
-            <p className={styles.fileName}>{filesContent[0].name}</p>
+            <p className={styles.fileName}>
+              {filesContent.length > 0
+                ? filesContent[0].name
+                : 'Upload document link'}
+            </p>
           </span>
         </Grid>
         <Grid item xs={4} className="d-flex flex-end">
@@ -399,23 +574,26 @@ const Files = () => {
               className={styles.uploadBtn}
               variant="contained"
               startIcon={<Upload />}
-              onClick={() => openFileSelector()}
+              onClick={handleUploadClick}
             >
               Upload
             </Button>
+            {open && uploadOptions()}
           </div>
         </div>
       )}
       {memberHasFiles && (
-        <div className="d-flex ml-ten">
+        <div className="d-flex ml-ten p-relative">
           <Button
+            sx={{ border: '1px solid #0000ff' }}
             className={`${styles.uploadBtn} ${styles.commonUpload}`}
             variant="contained"
             startIcon={<Upload />}
-            onClick={() => openFileSelector()}
+            onClick={handleUploadClick}
           >
             Upload
           </Button>
+          {open && uploadOptions()}
         </div>
       )}
       {uploadErrored && (
@@ -556,7 +734,7 @@ const Files = () => {
                         <Paper sx={{ width: '100%', mb: 2 }}>
                           <TableContainer>
                             <Table
-                              sx={{ minWidth: 750 }}
+                              sx={{ minWidth: 150 }}
                               aria-labelledby="tableTitle"
                               size="medium"
                             >
@@ -616,7 +794,7 @@ const Files = () => {
                               </TableBody>
                             </Table>
                           </TableContainer>
-                          {serverFiles[key].length > 10 && (
+                          {serverFiles[key].length > 5 && (
                             <TablePagination
                               rowsPerPageOptions={[5, 10, 25]}
                               component="div"
