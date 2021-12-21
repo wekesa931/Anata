@@ -1,14 +1,24 @@
 import { gql } from '@apollo/client'
 
 const GET_FILES = gql`
-  query ($antaraId: String!) {
-    files(antaraId: $antaraId) {
+  query files(
+    $antaraId: String!
+    $category: String
+    $updatedAt: DateTime
+    $search: String
+    $mimeType: String
+  ) {
+    files(
+      antaraId: $antaraId
+      category: $category
+      updatedAt: $updatedAt
+      search: $search
+      mimeType: $mimeType
+    ) {
       edges {
         node {
           id
           driveUrl
-          title
-          updatedAt
           category
           storageKey
           antaraId
@@ -17,6 +27,10 @@ const GET_FILES = gql`
           mimeType
           fileSize
           otherMetadata
+          storageKey
+          recordId
+          updatedAt
+          title
         }
       }
     }

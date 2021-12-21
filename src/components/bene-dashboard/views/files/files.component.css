@@ -62,6 +62,7 @@
 }
 
 .noContent {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -354,15 +355,97 @@
 .fileDetail {
   padding: 0px 10px;
 }
+.searchContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.search {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
 
-.fileUploadOptions {
+.searchInput {
+  width: 75% !important;
+}
+.viewIcons {
+  position: relative;
+  justify-content: space-evenly;
+  display: flex;
+  align-items: center;
+}
+.typeSelection {
+  display: flex;
+  margin-top: 35px;
+  margin-bottom: 25px;
+}
+
+.outlinedTypeSelect {
+  min-width: 230px !important;
+}
+
+#outlinedSelectType {
+  padding: 8px !important;
+  font-size: 12px !important;
+  min-width: 100px !important;
+  margin-right: 8px;
+}
+
+#outlinedSelectDate {
+  padding: 11px !important;
+  font-size: 12px !important;
+}
+.dateSelection {
+  margin-left: 5px;
+}
+
+.outlinedTypeSelect label {
+  top: -2px !important;
+  font-size: 13px !important;
+}
+
+.mimeSelection div label {
+  top: -2px !important;
+  font-size: 13px !important;
+}
+
+.dateSelection div label {
+  top: -2px !important;
+  font-size: 13px !important;
+}
+.mimeSelection {
+  border-color: grey;
+  flex: 0.1;
+  background: transparent;
+  height: 30px;
+  border-radius: 8px;
+}
+
+.loadedFileUploadOptions {
   position: absolute;
   border: 1px solid #f3ecec;
   border-radius: 12px;
   overflow: hidden;
-  left: 0;
-  top: 50px;
-  z-index: 1000;
+  width: 300px;
+  left: -162px;
+  top: 33px;
+  z-index: 10001;
+  box-shadow: 0 2.8px 2.2px 0 rgb(0 0 0 / 2%), 0 6.7px 5.3px 0 rgb(0 0 0 / 3%),
+    0 12.5px 10px 0 rgb(0 0 0 / 4%), 0 22.3px 17.9px 0 rgb(0 0 0 / 4%),
+    0 41.8px 33.4px 0 rgb(0 0 0 / 5%), 0 100px 80px 0 rgb(0 0 0 / 7%);
+}
+
+.emptyFileUploadOptions {
+  position: absolute;
+  border: 1px solid #f3ecec;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 300px;
+  top: 185px;
+  z-index: 10001;
   box-shadow: 0 2.8px 2.2px 0 rgb(0 0 0 / 2%), 0 6.7px 5.3px 0 rgb(0 0 0 / 3%),
     0 12.5px 10px 0 rgb(0 0 0 / 4%), 0 22.3px 17.9px 0 rgb(0 0 0 / 4%),
     0 41.8px 33.4px 0 rgb(0 0 0 / 5%), 0 100px 80px 0 rgb(0 0 0 / 7%);
@@ -430,4 +513,97 @@
   letter-spacing: -0.28px;
   text-align: left;
   color: var(--red-dark-70);
+}
+
+.scopedUpload {
+  padding: 1px 9px !important;
+  border-radius: 8px !important;
+  border-color: #1976d2 !important;
+  margin-right: 5px !important;
+  font: 12px !important;
+}
+
+.listIcon {
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.gridIcon {
+  width: 20px;
+  height: 20;
+  cursor: pointer;
+}
+
+.titleName {
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 16px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: var(--dark-blue-100);
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.fileMime {
+  display: flex;
+  justify-content: center;
+}
+
+.docPad {
+  padding: 3px;
+}
+
+.gridComponent {
+  width: 150px;
+  margin: 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  border: solid 1px var(--dark-blue-10);
+  background-color: var(--white-100);
+}
+
+.docTitle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: Rubik;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  margin-left: 3px;
+  line-height: 1.29;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: var(--dark-blue-100);
+}
+
+.docDate {
+  font-family: Rubik;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.29;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: var(--dark-blue-50);
+}
+
+.fileRenderIcon {
+  color: #cfe6fc;
+}
+
+.fileRenderIcon:hover {
+  color: #1084ee;
 }

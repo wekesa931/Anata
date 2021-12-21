@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useMutation, useQuery } from '@apollo/client'
+import { useMutation, useQuery, useLazyQuery } from '@apollo/client'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import Typography from '@mui/material/Typography'
@@ -10,10 +10,12 @@ import TableRow from '@mui/material/TableRow'
 import TablePagination from '@mui/material/TablePagination'
 import TableCell from '@mui/material/TableCell'
 import TableSortLabel from '@mui/material/TableSortLabel'
+import { throttle } from 'throttle-debounce'
 import dayjs from 'dayjs'
 import Button from '@mui/material/Button'
 import { useFilePicker } from 'use-file-picker'
 import {
+  Search,
   AlertCircle,
   CheckCircle,
   File,
@@ -24,7 +26,12 @@ import {
   Upload,
   X,
   XCircle,
+  Grid as FeatherGrid,
+  List,
 } from 'react-feather'
+import MenuItem from '@mui/material/MenuItem'
+import InputAdornment from '@mui/material/InputAdornment'
+import TextField from '@mui/material/TextField'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import TableHead from '@mui/material/TableHead'
@@ -37,6 +44,9 @@ import Drawer from '@mui/material/Drawer'
 import LinearProgress from '@mui/material/LinearProgress'
 import axios from 'axios'
 import Grid from '@mui/material/Grid'
+import MobileDatePicker from '@mui/lab/MobileDatePicker'
+import AdapterDateFns from '@mui/lab/AdapterDayjs'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import styles from './files.component.css'
 import PdfViewer from './pdf-viewer.component'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
@@ -85,6 +95,16 @@ type IGRoupedFiles = {
   [key: string]: IFiles[]
 }
 
+type IUploadOptions = {
+  open: boolean
+  setOpen: (isOpen: boolean) => void
+  docLink: string
+  setdocLink: (docLink: string | undefined) => void
+  setConfirmUpload: (confirm: boolean) => void
+  uploadDisabled: () => boolean
+  openFileSelector: () => void
+}
+
 function descendingComparator(a: any, b: any, orderBy: any) {
   if (b[orderBy] < a[orderBy]) {
     return -1
@@ -101,86 +121,18 @@ function getComparator(order: any, orderBy: any) {
     : (a: any, b: any) => -descendingComparator(a, b, orderBy)
 }
 
-const Files = () => {
-  const [open, setOpen] = React.useState(false)
+const UploadOptions = ({
+  open,
+  setOpen,
+  docLink,
+  setdocLink,
+  setConfirmUpload,
+  uploadDisabled,
+  openFileSelector,
+}: IUploadOptions) => {
   const [openLinkInput, setOpenLinkInput] = useState(false)
-  const [docLink, setdocLink] = useState(undefined)
-  const [confirmUpload, setConfirmUpload] = useState(false)
-  const [order, setOrder] = React.useState('asc')
-  const [orderBy, setOrderBy] = React.useState('updatedAt')
-  const [page, setPage] = React.useState(0)
-  const [fileError, setFileError] = useState('')
-  const [activeOpenFile, seActiveOpenFile] = useState(null)
-  const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [shouldReplaceFile, setShouldReplaceFile] = useState(false)
-  const [s3UploadLink, setS3UploadLink] = useState<S3UploadMeta>(null)
-  const [progress, setProgress] = React.useState(10)
-  const [uploadStart, setUploadStart] = useState(false)
-  const [uploadSuccessful, setUploadSuccessful] = useState(false)
-  const [uploadFailed, setUploadFailed] = useState(false)
-  const { member } = useMember()
-  const displayForm = !uploadSuccessful && !uploadFailed
-  const user = useUser()
-  const [serverFiles, setServerFiles] = useState<IGRoupedFiles>(
-    {} as IGRoupedFiles
-  )
-  const [
-    openFileSelector,
-    { filesContent, plainFiles, loading: gettingFile, clear },
-  ] = useFilePicker({
-    accept: '*',
-    readAs: 'BinaryString',
-  })
-  const { loading, error, data, refetch } = useQuery(GET_FILES, {
-    variables: { antaraId: member['Antara ID'] },
-  })
-  const [getUploadLink, { loading: gettingUploadLink }] =
-    useMutation(UPLOAD_LINK)
-  const [saveFile] = useMutation(SAVE_FILE)
-  const uploadErrored = fileError && fileError.length > 0
-  const fileLoaded = !every(s3UploadLink, isEmpty)
-  const noFilesForMember = !loading && every(serverFiles, isEmpty)
-  const memberHasFiles = !noFilesForMember
-  const displayDrawer = s3UploadLink || gettingFile || gettingUploadLink
-  const isDrawerOpen = fileLoaded || gettingFile || gettingUploadLink
-  const isFileUploading = gettingFile || gettingUploadLink
-  const isFormVisible = displayForm && !gettingFile && !gettingUploadLink
-  const isValidURL = (url: string) => {
-    // esli
-    const res = url.match(
-      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g //eslint-disable-line
-    )
-    return res !== null
-  }
-  const uploadDisabled = () => {
-    if (!docLink) {
-      return true
-    }
-    if (!isValidURL(docLink)) {
-      return true
-    }
-    return false
-  }
 
-  const headCells = [
-    {
-      id: 'title',
-      numeric: false,
-      disablePadding: true,
-      label: 'Name',
-    },
-    {
-      id: 'updatedAt',
-      numeric: true,
-      disablePadding: false,
-      label: 'Date Created',
-    },
-  ]
-  const handleUploadClick = () => {
-    setOpen(true)
-  }
-
-  const uploadOptions = () => (
+  return (
     <DropDownComponent isVisible={open} setvisibility={setOpen}>
       <div className={styles.fileUploadOptions}>
         <Box
@@ -269,6 +221,318 @@ const Files = () => {
       </div>
     </DropDownComponent>
   )
+}
+
+const FilterComponent = ({
+  open,
+  setisOPen,
+  docLink,
+  setdocLink,
+  setConfirmUpload,
+  uploadDisabled,
+  handleUploadClick,
+  openFileSelector,
+  listView,
+  setfiltering,
+  filtered,
+  noFilesForMember,
+  setListView,
+}: any) => {
+  const [fileCategory, setFileCategory] = useState(undefined)
+  const [fileMime, setfileMime] = useState<string | undefined>(undefined)
+  const [filterDate, setFilterDate] = useState<Date | null>(null)
+  const [docTitle, setDocTitle] = useState<string | undefined>(undefined)
+  const { member } = useMember()
+  const fileTypes = [
+    'HMP',
+    'Prescription',
+    'X-ray',
+    'Others',
+    'Radiology Reports',
+    'Symptom Assessment Images',
+    'Avenue Progress Reports',
+    'Penda Progress Reports',
+    'Data Collection Results',
+    'Data Collection Images',
+    'Data Collection Summary Reports',
+    'Asthma Assessment Score Results',
+    'Meal Plans',
+    'Food Diaries',
+    'Receipt of Passport Photo',
+    'Identification Card Copy',
+    'NHIF Copy',
+    'Life Cover Documentation',
+    'Medical Card Copy',
+    'Medical Card Registration',
+  ]
+  const mimeTypes = [
+    'jpg',
+    'image/jpeg',
+    'image/jpg',
+    'application/pdf',
+    'image/png',
+    'text/csv',
+    'gif',
+    'png',
+    'doc',
+    'docx',
+    'txt',
+    'csv',
+    'pdf',
+  ]
+
+  const [applyFilters, { data, loading }] = useLazyQuery(GET_FILES, {
+    variables: {
+      antaraId: member['Antara ID'],
+      search: docTitle || '',
+      mimeType: fileMime || '',
+      category: fileCategory || '',
+      updatedAt: filterDate,
+    },
+  })
+
+  const removeFilters = () => {
+    setFileCategory(undefined)
+    setfileMime(undefined)
+    setFilterDate(null)
+    setDocTitle(undefined)
+  }
+  useEffect(() => {
+    if (fileCategory || fileMime || filterDate || docTitle) {
+      const throttleFunc = throttle(
+        1000,
+        true,
+        () => {
+          applyFilters()
+        },
+        true
+      )
+
+      return throttleFunc()
+    }
+    return undefined
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fileCategory, fileMime, filterDate, docTitle])
+
+  useEffect(() => {
+    setfiltering(loading)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading])
+
+  useEffect(() => {
+    if (data) {
+      const rawFiles = data.files.edges.map((ed: { node: IFiles }) => ed.node)
+      const categorizedFiles = groupBy(rawFiles, 'category')
+      filtered(categorizedFiles)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
+  return (
+    <div className="filters">
+      <div className={styles.searchContainer}>
+        <div className={styles.search}>
+          <TextField
+            sx={{ fontSize: '13px' }}
+            className={styles.searchInput}
+            id="input-with-icon-textfield"
+            placeholder="Search files"
+            value={docTitle || ''}
+            onChange={(e) => setDocTitle(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search width={18} height={18} />
+                </InputAdornment>
+              ),
+            }}
+            variant="standard"
+          />
+        </div>
+        <div className={styles.viewIcons}>
+          {!noFilesForMember && (
+            <>
+              <Button
+                sx={{ textTransform: 'none', border: '1px solid #0000ff' }}
+                className={styles.scopedUpload}
+                variant="outlined"
+                startIcon={<Upload width={15} height={15} />}
+                onClick={handleUploadClick}
+              >
+                Upload
+              </Button>
+              {open && (
+                <div className={styles.loadedFileUploadOptions}>
+                  <UploadOptions
+                    open={open}
+                    setOpen={setisOPen}
+                    docLink={docLink}
+                    setdocLink={setdocLink}
+                    setConfirmUpload={setConfirmUpload}
+                    uploadDisabled={uploadDisabled}
+                    openFileSelector={openFileSelector}
+                  />
+                </div>
+              )}{' '}
+            </>
+          )}
+          <List
+            color={listView ? '#1084ee' : '#5d6b82'}
+            className={styles.listIcon}
+            onClick={() => {
+              setListView(true)
+            }}
+          />
+          <FeatherGrid
+            color={listView ? '#5d6b82' : '#1084ee'}
+            className={styles.gridIcon}
+            onClick={() => {
+              setListView(false)
+            }}
+          />
+        </div>
+      </div>
+      <div className={styles.typeSelection}>
+        <div>
+          <TextField
+            id={styles.outlinedSelectType}
+            className={styles.outlinedTypeSelect}
+            select
+            label="Category"
+            value={fileCategory || ''}
+            onChange={(e) => setFileCategory(e.target.value)}
+            // helperText="Please select your currency"
+          >
+            {fileTypes.map((file) => (
+              <MenuItem key={file} value={file}>
+                {file}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <div className={styles.dateSelection}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <MobileDatePicker
+              label="Date Uploaded"
+              inputFormat="DD/MM/YYYY"
+              toolbarPlaceholder="DD/MM/YYYY"
+              value={filterDate}
+              onChange={(date: Date | null) => setFilterDate(date)}
+              renderInput={(params) => (
+                <TextField id={styles.outlinedSelectDate} {...params} />
+              )}
+            />
+          </LocalizationProvider>
+        </div>
+
+        <div className={`${styles.mimeSelection} ${styles.dateSelection}`}>
+          <TextField
+            id={styles.outlinedSelectType}
+            select
+            label="File type"
+            value={fileMime || ''}
+            onChange={(e) => setfileMime(e.target.value)}
+          >
+            {mimeTypes.map((mimeType) => (
+              <MenuItem key={mimeType} value={mimeType}>
+                {mimeType}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <Button
+          className={styles.upBtn}
+          sx={{ marginLeft: '5px' }}
+          color="error"
+          variant="contained"
+          value={fileMime}
+          onClick={() => removeFilters()}
+        >
+          Clear Filters
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+const Files = () => {
+  const [open, setOpen] = useState(false)
+  const [filtering, setfiltering] = useState(false)
+  const [docLink, setdocLink] = useState(undefined)
+  const [confirmUpload, setConfirmUpload] = useState(false)
+  const [order, setOrder] = React.useState('asc')
+  const [orderBy, setOrderBy] = React.useState('updatedAt')
+  const [page, setPage] = React.useState(0)
+  const [fileError, setFileError] = useState('')
+  const [activeOpenFile, seActiveOpenFile] = useState(null)
+  const [rowsPerPage, setRowsPerPage] = React.useState(5)
+  const [shouldReplaceFile, setShouldReplaceFile] = useState(false)
+  const [s3UploadLink, setS3UploadLink] = useState<S3UploadMeta>(null)
+  const [progress, setProgress] = React.useState(10)
+  const [uploadStart, setUploadStart] = useState(false)
+  const [uploadSuccessful, setUploadSuccessful] = useState(false)
+  const [uploadFailed, setUploadFailed] = useState(false)
+  const { member } = useMember()
+  const displayForm = !uploadSuccessful && !uploadFailed
+  const user = useUser()
+  const [filteredFiles, setFilteredFiles] = useState<IGRoupedFiles>(
+    {} as IGRoupedFiles
+  )
+  const [listView, setListView] = useState(true)
+  const [
+    openFileSelector,
+    { filesContent, plainFiles, loading: gettingFile, clear },
+  ] = useFilePicker({
+    accept: '*',
+    readAs: 'BinaryString',
+  })
+  const { loading, error, data, refetch } = useQuery(GET_FILES, {
+    variables: { antaraId: member['Antara ID'] },
+  })
+  const [getUploadLink, { loading: gettingUploadLink }] =
+    useMutation(UPLOAD_LINK)
+  const [saveFile] = useMutation(SAVE_FILE)
+  const uploadErrored = fileError && fileError.length > 0
+  const fileLoaded = !every(s3UploadLink, isEmpty)
+  const noFilesForMember = !loading && every(filteredFiles, isEmpty)
+  const displayDrawer = s3UploadLink || gettingFile || gettingUploadLink
+  const isDrawerOpen = fileLoaded || gettingFile || gettingUploadLink
+  const isFileUploading = gettingFile || gettingUploadLink
+  const isFormVisible = displayForm && !gettingFile && !gettingUploadLink
+  const isValidURL = (url: string) => {
+    // esli
+    const res = url.match(
+      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g //eslint-disable-line
+    )
+    return res !== null
+  }
+  const uploadDisabled = () => {
+    if (!docLink) {
+      return true
+    }
+    if (!isValidURL(docLink)) {
+      return true
+    }
+    return false
+  }
+
+  const headCells = [
+    {
+      id: 'title',
+      numeric: false,
+      disablePadding: true,
+      label: <p className={styles.titleName}>Name</p>,
+    },
+    {
+      id: 'updatedAt',
+      numeric: true,
+      disablePadding: false,
+      label: <p className={styles.titleName}>Date Uploaded</p>,
+    },
+  ]
+  const handleUploadClick = () => {
+    setOpen(true)
+  }
 
   const getMimeIcon = (name: string) => {
     if (name.includes('pdf')) {
@@ -313,7 +577,7 @@ const Files = () => {
     if (data) {
       const rawFiles = data.files.edges.map((ed: { node: IFiles }) => ed.node)
       const categorizedFiles = groupBy(rawFiles, 'category')
-      setServerFiles(categorizedFiles)
+      setFilteredFiles(categorizedFiles)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
@@ -558,12 +822,28 @@ const Files = () => {
       </div>
     )
   }
-
   return (
     <div
       className="d-flex flex-direction-column"
       style={{ paddingLeft: '16px' }}
     >
+      {!uploadErrored && (
+        <FilterComponent
+          open={open}
+          docLink={docLink}
+          setdocLink={setdocLink}
+          setConfirmUpload={setConfirmUpload}
+          uploadDisabled={uploadDisabled}
+          openFileSelector={openFileSelector}
+          listView={listView}
+          setfiltering={setfiltering}
+          filtered={setFilteredFiles}
+          setListView={setListView}
+          handleUploadClick={handleUploadClick}
+          setisOPen={setOpen}
+          noFilesForMember={noFilesForMember}
+        />
+      )}
       {noFilesForMember && (
         <div className={styles.empty}>
           <div className={styles.noContent}>
@@ -578,22 +858,20 @@ const Files = () => {
             >
               Upload
             </Button>
-            {open && uploadOptions()}
+            {open && (
+              <div className={styles.emptyFileUploadOptions}>
+                <UploadOptions
+                  open={open}
+                  setOpen={setOpen}
+                  docLink={docLink}
+                  setdocLink={setdocLink}
+                  setConfirmUpload={setConfirmUpload}
+                  uploadDisabled={uploadDisabled}
+                  openFileSelector={openFileSelector}
+                />
+              </div>
+            )}
           </div>
-        </div>
-      )}
-      {memberHasFiles && (
-        <div className="d-flex ml-ten p-relative">
-          <Button
-            sx={{ border: '1px solid #0000ff' }}
-            className={`${styles.uploadBtn} ${styles.commonUpload}`}
-            variant="contained"
-            startIcon={<Upload />}
-            onClick={handleUploadClick}
-          >
-            Upload
-          </Button>
-          {open && uploadOptions()}
         </div>
       )}
       {uploadErrored && (
@@ -709,12 +987,18 @@ const Files = () => {
       {activeOpenFile && (
         <PdfViewer file={activeOpenFile} onFileClosed={onFileClosed} />
       )}
+      {filtering && (
+        <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+          <LoadingIcon />
+          <p className="text-small">Loading Filters</p>
+        </div>
+      )}
 
-      {serverFiles && !loading && (
+      {filteredFiles && !loading && !filtering && (
         <div className="interactions">
           <div className={styles.notes}>
             <div className={styles.container}>
-              {Object.keys(serverFiles).map((key) => {
+              {Object.keys(filteredFiles).map((key) => {
                 return (
                   <Accordion
                     defaultExpanded
@@ -727,83 +1011,121 @@ const Files = () => {
                       aria-controls="panel1a-content"
                       id="panel1a-header"
                     >
-                      <Typography className={styles.title}>{key}S</Typography>
+                      <Typography className={styles.title}>{key}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                       <Box sx={{ width: '100%' }}>
                         <Paper sx={{ width: '100%', mb: 2 }}>
-                          <TableContainer>
-                            <Table
-                              sx={{ minWidth: 150 }}
-                              aria-labelledby="tableTitle"
-                              size="medium"
-                            >
-                              <EnhancedTableHead
-                                order={order}
-                                orderBy={orderBy}
-                                onRequestSort={handleRequestSort}
-                                rowCount={serverFiles[key].length}
-                              />
-                              <TableBody>
-                                {stableSort(
-                                  serverFiles[key],
-                                  getComparator(order, orderBy)
-                                )
-                                  .slice(
-                                    page * rowsPerPage,
-                                    page * rowsPerPage + rowsPerPage
-                                  )
-                                  .map((row, index) => {
-                                    const labelId = `enhanced-table-checkbox-${index}`
-
-                                    return (
-                                      <TableRow
-                                        hover
-                                        onClick={(event) =>
-                                          handleClick(event, row)
-                                        }
-                                        role="checkbox"
-                                        tabIndex={-1}
-                                        key={row.id}
-                                        sx={{ cursor: 'pointer' }}
-                                      >
-                                        <TableCell padding="checkbox">
-                                          {getMimeIcon(
-                                            row.mimeType.toLowerCase()
-                                          )}
-                                        </TableCell>
-                                        <TableCell
-                                          component="th"
-                                          id={labelId}
-                                          scope="row"
-                                          padding="none"
-                                        >
-                                          {row.title}
-                                        </TableCell>
-                                        <TableCell
-                                          sx={{ padding: '5px' }}
-                                          align="right"
-                                        >
-                                          {dayjs(row.updatedAt).format(
-                                            'DD MMMM YYYY'
-                                          )}
-                                        </TableCell>
-                                      </TableRow>
+                          {listView ? (
+                            <>
+                              <TableContainer>
+                                <Table
+                                  sx={{ minWidth: 150 }}
+                                  aria-labelledby="tableTitle"
+                                  size="medium"
+                                >
+                                  <EnhancedTableHead
+                                    order={order}
+                                    orderBy={orderBy}
+                                    onRequestSort={handleRequestSort}
+                                    rowCount={filteredFiles[key].length}
+                                  />
+                                  <TableBody>
+                                    {stableSort(
+                                      filteredFiles[key],
+                                      getComparator(order, orderBy)
                                     )
-                                  })}
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                          {serverFiles[key].length > 5 && (
-                            <TablePagination
-                              rowsPerPageOptions={[5, 10, 25]}
-                              component="div"
-                              count={serverFiles[key].length}
-                              rowsPerPage={rowsPerPage}
-                              page={page}
-                              onPageChange={handleChangePage}
-                              onRowsPerPageChange={handleChangeRowsPerPage}
-                            />
+                                      .slice(
+                                        page * rowsPerPage,
+                                        page * rowsPerPage + rowsPerPage
+                                      )
+                                      .map((row, index) => {
+                                        const labelId = `enhanced-table-checkbox-${index}`
+
+                                        return (
+                                          <TableRow
+                                            hover
+                                            onClick={(event) =>
+                                              handleClick(event, row)
+                                            }
+                                            role="checkbox"
+                                            tabIndex={-1}
+                                            key={row.id}
+                                            sx={{ cursor: 'pointer' }}
+                                          >
+                                            <TableCell padding="checkbox">
+                                              {getMimeIcon(
+                                                row.mimeType.toLowerCase()
+                                              )}
+                                            </TableCell>
+                                            <TableCell
+                                              component="th"
+                                              id={labelId}
+                                              scope="row"
+                                              padding="none"
+                                            >
+                                              {row.title}
+                                            </TableCell>
+                                            <TableCell
+                                              sx={{ padding: '5px' }}
+                                              align="right"
+                                            >
+                                              {dayjs(row.updatedAt).format(
+                                                'DD MMMM YYYY'
+                                              )}
+                                            </TableCell>
+                                          </TableRow>
+                                        )
+                                      })}
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>
+                              {filteredFiles[key].length > 5 && (
+                                <TablePagination
+                                  rowsPerPageOptions={[5, 10, 25]}
+                                  component="div"
+                                  count={filteredFiles[key].length}
+                                  rowsPerPage={rowsPerPage}
+                                  page={page}
+                                  onPageChange={handleChangePage}
+                                  onRowsPerPageChange={handleChangeRowsPerPage}
+                                />
+                              )}
+                            </>
+                          ) : (
+                            <div className={styles.grid}>
+                              {filteredFiles[key].map((val) => (
+                                <div
+                                  key={val.id}
+                                  role="button"
+                                  tabIndex={0}
+                                  className={styles.gridComponent}
+                                  onKeyDown={(event) => handleClick(event, val)}
+                                  onClick={(event) => handleClick(event, val)}
+                                >
+                                  <div className={styles.fileMime}>
+                                    <File
+                                      className={styles.fileRenderIcon}
+                                      width={120}
+                                      height={120}
+                                    />
+                                  </div>
+                                  <div
+                                    className={`d-flex align-center ${styles.docPad}`}
+                                  >
+                                    {getMimeIcon(val.mimeType.toLowerCase())}
+                                    <div className={styles.docTitle}>
+                                      {val.title}
+                                    </div>
+                                  </div>
+                                  <div className={styles.docDate}>
+                                    {dayjs(val.updatedAt).format(
+                                      'DD MMMM YYYY'
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
                           )}
                         </Paper>
                       </Box>
@@ -815,7 +1137,6 @@ const Files = () => {
           </div>
         </div>
       )}
-
       {error && (
         <p className="text-danger">
           An error occurred while loading files, please refresh the page, if it
