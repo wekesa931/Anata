@@ -93,8 +93,12 @@ function useTransformedApiRecords(rawApiRecords: any) {
       return mappedResponse
     }
     if (rawApiRecords) {
+      let cleanedRecords = rawApiRecords.memberHnTasks.edges.filter(
+        (rec) => rec.node.status !== 'Not Started'
+      )
+      cleanedRecords = { memberHnTasks: { edges: cleanedRecords } }
       const transformed = transformApiRecords(
-        rawApiRecords,
+        cleanedRecords,
         apiToAirtableFieldMap
       )
       setApiRecords(transformed)
