@@ -152,7 +152,7 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
 
   return (
     <>
-      <form style={{ position: 'fixed', bottom: 0, width: '339px' }}>
+      <form>
         <InputArea>
           <InputOption>
             <InputSpan>Send</InputSpan>

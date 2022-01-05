@@ -122,10 +122,16 @@ const Selector = styled.span`
 `
 
 const ChatContainer = styled.div`
+  clear: both;
+  padding-top: 30px;
   overflow-y: scroll;
   clear: both;
   padding-top: 30px;
-  padding-bottom: 190px;
+  display: flex;
+  align-content: space-between;
+  flex: 1;
+  flex-direction: column;
+  overflow-x: hidden;
 `
 
 const DeliveryWrapper = styled.div`

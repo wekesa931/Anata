@@ -44,8 +44,8 @@ const InputArea = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   gap: 8px;
-  margin: 56px 0 0;
-  padding: 16px;
+  margin: 8px 0 0;
+  padding: 8px;
   background-color: #ffffff;
 `
 

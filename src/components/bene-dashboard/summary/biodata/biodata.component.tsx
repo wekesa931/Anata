@@ -38,7 +38,6 @@ const Hmp = () => {
     ).then((response) => {
       if (response) {
         const hmps: hmp[] = []
-
         Object.keys(response).forEach((data: any) => {
           hmps.push({
             hmpSendDate: response[data]['HMP Send Date']?.toString(),
@@ -62,16 +61,43 @@ const Hmp = () => {
       <div className={`text-small ${styles.conditionsContent}`}>
         {hmpInfo.map((info, index) => (
           <div key={index} className={styles.hmps}>
-            HMP {info.hmpNumber} {info.hmpStatus} {info.hmpPhase}
-            <div>
-              <span className={`text-tiny ${styles.dateHelperText}`}>
-                HMP Send Date: {info.hmpSendDate}
-              </span>
-              <span
-                className={`text-tiny ${styles.dateHelperText} ${styles.dateHelperText2}`}
-              >
-                Days in HMP: {info.hmpDay}
-              </span>
+            {/* HMP {info.hmpNumber} {info.hmpStatus} {info.hmpPhase} */}
+            <div className={`${styles.hmpValRow}`}>
+              <div>
+                <span className={`${styles.hmpValLabel}`}>HMP #: </span>
+                <span className={`${styles.hmpVal}`}>{info.hmpNumber}</span>
+              </div>
+              <div>
+                <span className={`${styles.hmpValLabel}`}>HMP Status: </span>
+                <span className={`${styles.hmpVal}`}>{info.hmpStatus}</span>
+              </div>
+            </div>
+            <div className={`${styles.hmpValRow}`}>
+              <div>
+                <span className={`${styles.hmpValLabel}`}>HMP Send Date: </span>
+                <span className={`${styles.hmpVal}`}>{info.hmpSendDate}</span>
+              </div>
+              <div>
+                <span className={`${styles.hmpValLabel}`}>Days in HMP: </span>
+                <span className={`${styles.hmpVal}`}>{info.hmpDay}</span>
+              </div>
+            </div>
+            <div className={`${styles.hmpValRow}`}>
+              <div>
+                <span className={`${styles.hmpValLabel}`}>HMP Phase: </span>
+                <span className={`${styles.hmpVal}`}>{info.hmpPhase}</span>
+              </div>
+              {info.hmpLink && (
+                <div>
+                  <a
+                    href={info.hmpLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Read
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -154,7 +180,9 @@ const ConditionsSummary = () => {
               style={{
                 borderBottom: '0.5px lightgrey solid',
                 paddingBottom: '2px',
-                marginBottom: '2px',
+                marginBottom: '5px',
+                color: 'var(--dark-blue-100)',
+                fontSize: '14px',
               }}
             >
               {index + 1}.{' '}
@@ -163,17 +191,27 @@ const ConditionsSummary = () => {
                 : `${condition.Condition}, `}
               {condition['Starting clinical status'] && (
                 <>
-                  <b>Starting Clinical Status: </b>
+                  <span style={{ color: 'var(--dark-blue-50)' }}>
+                    {' '}
+                    Starting Clinical Status:{' '}
+                  </span>
                   {condition['Starting clinical status']},
                 </>
               )}
               {condition['Current clinical status'] && (
                 <>
-                  <b>Current Clinical Status: </b>
+                  <span style={{ color: 'var(--dark-blue-50)' }}>
+                    {' '}
+                    Current Clinical Status:{' '}
+                  </span>
                   {condition['Current clinical status']},
                 </>
               )}
-              <b>Condition Status:</b> {condition['Condition Status']}
+              <span style={{ color: 'var(--dark-blue-50)' }}>
+                {' '}
+                Condition Status:{' '}
+              </span>{' '}
+              {condition['Condition Status']}
             </li>
           )
         })}

@@ -83,7 +83,7 @@ function ProtectedRoute({ children, ...rest }: any) {
                 flexDirection: 'column',
                 flex: 1,
                 overflow: 'hidden',
-                backgroundColor: 'var(--nav-bg)',
+                backgroundColor: 'var(--white)',
               }}
             >
               <NavBar />

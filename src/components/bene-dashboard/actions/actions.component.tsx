@@ -74,7 +74,7 @@ const Actions = () => {
             <Meetings />
           </ErrorBoundary>
         </TabPanel>
-        <TabPanel value="messages">
+        <TabPanel value="messages" className="full-height">
           <ErrorBoundary>
             <Communication />
           </ErrorBoundary>

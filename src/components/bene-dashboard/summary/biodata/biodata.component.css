@@ -49,6 +49,7 @@
 .bioDataTableColumn {
   padding-bottom: 8px;
   padding-top: 8px;
+  color: var(--dark-blue-100);
 }
 
 .bioDataKey {
@@ -81,9 +82,10 @@
 }
 
 .topSummaryColumnHeadings {
-  border-bottom: 1px solid #ff9800;
+  /* border-bottom: 1px solid #ff9800; */
   line-height: 16px;
   width: 64px;
+  color: var(--dark-blue-50);
 }
 
 .topSummaryRowContent {
@@ -94,14 +96,14 @@
 .hrLine {
   margin-left: 16px;
   margin-right: 16px;
-  border: 1px solid #608eb6;
+  border: 1px solid var(--dark-blue-10);
   margin-top: 8px;
   margin-bottom: 12px;
 }
 
 .clinicalHeading {
   margin-left: 16px;
-  color: var(--orange-base);
+  color: var(--dark-blue-70);
 }
 
 .clinicalTopRow:after {
@@ -124,7 +126,7 @@
 }
 
 .clinicalTopColumnHeadings {
-  border-bottom: 1px solid #ff9800;
+  /* border-bottom: 1px solid #ff9800; */
   line-height: 16px;
   width: 84px;
 }
@@ -132,10 +134,11 @@
 .clinicalTopRowContent {
   line-height: 16px;
   width: 64px;
+  color: var(--dark-blue-100);
 }
 
 .conditionsHeading {
-  border-bottom: 1px solid #ff9800;
+  /* border-bottom: 1px solid #ff9800; */
   line-height: 16px;
   width: 84px;
   color: var(--dark-blue-50);
@@ -153,11 +156,21 @@
 .dateHelperText {
   line-height: 12px;
   margin-top: 4px;
+  color: var(--dark-blue-100);
+}
+
+.hmpValLabel {
   color: var(--dark-blue-50);
 }
 
-.dateHelperText2 {
-  margin-left: 75px;
+.hmpValRow {
+  padding-right: 10px;
+  justify-content: space-between;
+  display: flex;
+}
+
+.hmpVal {
+  color: var(--dark-blue-100);
 }
 
 .clinicalBottomRow:after {
@@ -180,13 +193,15 @@
 }
 
 .clinicalBottomColumnHeadings {
-  border-bottom: 1px solid #ff9800;
+  /* border-bottom: 1px solid #ff9800; */
   line-height: 16px;
   width: 84px;
 }
 
 .clinicalBottomRowContent {
   line-height: 16px;
+  color: var(--dark-blue-100);
+  font-size: 14px;
 }
 
 .allergies {

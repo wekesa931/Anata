@@ -86,8 +86,14 @@ const MessageChat = () => {
     status.toLocaleLowerCase() === 'failed_to_send'
   const isInbound = (direction: string) => direction === 'INBOUND'
   const scrollToBottom = () => {
-    // @ts-ignore
-    messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    if (messagesEndRef.current) {
+      // eslint-disable-next-line no-unused-expressions
+      messagesEndRef?.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest',
+      })
+    }
   }
 
   useEffect(() => {
@@ -361,7 +367,7 @@ const MessageChat = () => {
   }
 
   return member ? (
-    <div>
+    <div className="full-height">
       <Modal
         open={modalOpen}
         setModalOpen={setmodalOpen}
@@ -371,14 +377,23 @@ const MessageChat = () => {
         <span id="modal-image">{modalContent}</span>
       </Modal>
 
-      <ChatContainer data-testid="thread">
+      <ChatContainer data-testid="thread" className="full-height">
         {(loading || filterLoad) && (
           <MessageLoader>
             <LoadingIcon />
           </MessageLoader>
         )}
-        {memberMessages && renderMessages()}
-        <div ref={messagesEndRef} />
+        <div
+          style={{
+            flex: 1,
+            overflowY: 'scroll',
+            overflowX: 'hidden',
+          }}
+        >
+          {memberMessages && renderMessages()}
+          <div ref={messagesEndRef} />
+        </div>
+
         <MessageInput
           messages={memberMessages}
           setMessages={setMemberMessages}
