@@ -78,11 +78,6 @@ const FORMS = [
     url: 'shrLf0JnXDQ7jNxOg',
   },
   {
-    name: 'Clinical Rounds Form',
-    url_sandbox: 'shrxwjwRlZCdxum7j',
-    url: 'shrTZLzrNZXMYPqcm',
-  },
-  {
     name: 'Monitoring Kit Form',
     url_sandbox: 'shroaE4sNCPaSGNWO',
     url: 'shrnOUMPNs7vVStMR',
