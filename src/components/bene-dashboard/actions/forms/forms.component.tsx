@@ -2,17 +2,13 @@ import React, { useEffect, useState } from 'react'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import { useAuth } from '../../../../context/auth-context'
 import FORMS from './forms'
-import FormPortal from './forms-portal.component'
+import { useForm } from '../../../../context/forms-context'
 
 const Forms = () => {
   const [hn, setHN] = useState<any>({})
-  const [openedForms, setOpenedForms] = useState<any>([])
   const { user } = useAuth()
 
-  const addOpenForm = (form) => {
-    setOpenedForms([...openedForms, form])
-    // openForm(form, recId, match.url, member, user, hn)
-  }
+  const { addOpenForm } = useForm()
 
   useEffect(() => {
     if (user && user.email) {
@@ -29,12 +25,10 @@ const Forms = () => {
 
   return (
     <div className="d-flex flex-direction-column">
-      <FormPortal openedForms={openedForms} hn={hn} />
-
       <div className="margin-top-0 flex-1">
         {FORMS.map((form) => (
           <button
-            onClick={() => addOpenForm(form)}
+            onClick={() => addOpenForm(form, hn)}
             className="full-width btn btn-secondary form-btns"
             key={form.name}
           >

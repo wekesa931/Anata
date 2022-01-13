@@ -393,7 +393,10 @@ const Tasks = () => {
     try {
       await airtableFetch('hntasks', 'post', {
         id: task.id,
-        fields: { ...task.fields, Assignee: task.fields.Assignee ? [task.fields.Assignee] : [] },
+        fields: {
+          ...task.fields,
+          Assignee: task.fields.Assignee ? [task.fields.Assignee] : [],
+        },
       })
       analytics.track(`Tasks Updated`, {
         bene: recId,
