@@ -146,6 +146,7 @@ const useInteractionFormFields = (member: any, user: any) => {
         'Confirmation of appointment',
         'Post appointment follow-up (provider)',
         'Medication follow-up',
+        'VC Follow up',
       ].map((option) => ({
         label: option,
         value: option,
