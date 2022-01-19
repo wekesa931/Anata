@@ -11,6 +11,7 @@ module.exports = {
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     camelcase: 'off',
+    radix: 'off',
     'no-restricted-globals': 'off',
     'react/no-array-index-key': 'off',
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
