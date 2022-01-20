@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useMutation, useQuery, useLazyQuery } from '@apollo/client'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
@@ -479,13 +479,11 @@ const Files = () => {
     {} as IGRoupedFiles
   )
   const [listView, setListView] = useState(true)
-  const [
-    openFileSelector,
-    { filesContent, plainFiles, loading: gettingFile, clear },
-  ] = useFilePicker({
-    accept: '*',
-    readAs: 'BinaryString',
-  })
+  const [openFileSelector, { filesContent, plainFiles, loading: gettingFile }] =
+    useFilePicker({
+      accept: '*',
+      readAs: 'BinaryString',
+    })
   const { loading, error, data, refetch } = useQuery(GET_FILES, {
     variables: { antaraId: member['Antara ID'] },
   })
@@ -499,6 +497,8 @@ const Files = () => {
   const isDrawerOpen = fileLoaded || gettingFile || gettingUploadLink
   const isFileUploading = gettingFile || gettingUploadLink
   const isFormVisible = displayForm && !gettingFile && !gettingUploadLink
+  const filesRef = useRef()
+  const [networkError, setNetworkError] = useState(false)
   const isValidURL = (url: string) => {
     // esli
     const res = url.match(
@@ -658,6 +658,7 @@ const Files = () => {
     })
   }
   const uploadDocument = (docMeta: DocMeta) => {
+    filesRef.current = docMeta
     setUploadStart(true)
     let fileName: any = null
     let storeKey: any = ''
@@ -687,6 +688,13 @@ const Files = () => {
           persistData(docMeta, storeKey, mimeVal, fileSize, driveLink, fileName)
         })
         .catch((response) => {
+          if (response.message === 'Network Error') {
+            setNetworkError(true)
+            setUploadStart(false)
+            setProgress(100)
+            setUploadFailed(true)
+            logError(e.message)
+          }
           setUploadStart(false)
           setProgress(100)
           setUploadFailed(true)
@@ -701,6 +709,13 @@ const Files = () => {
       try {
         persistData(docMeta, storeKey, mimeVal, fileSize, driveLink, fileName)
       } catch (e) {
+        if (e.name === 'Network Error') {
+          setNetworkError(true)
+          setUploadStart(false)
+          setProgress(100)
+          setUploadFailed(true)
+          logError(e.message)
+        }
         setUploadStart(false)
         setProgress(100)
         setUploadFailed(true)
@@ -951,7 +966,10 @@ const Files = () => {
               <XCircle className={styles.failIcon} width={50} height={50} />
               <p className={styles.uploadMessage}>Error</p>
               <p className={styles.uploadCompleted}>
-                Unfortunately, upload was not successful
+                Unfortunately, upload was not successful{' '}
+                {networkError &&
+                  `due to poor internet
+                connection`}
               </p>
               <Box className="d-flex mt-twenty">
                 <Button
@@ -965,8 +983,9 @@ const Files = () => {
                   className={`${styles.uploadMessage} ${styles.tryAgain}`}
                   variant="contained"
                   onClick={() => {
-                    clear()
-                    uploadDone()
+                    uploadDocument(filesRef.current)
+                    setUploadFailed(false)
+                    setNetworkError(false)
                   }}
                 >
                   Try again
