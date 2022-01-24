@@ -356,6 +356,25 @@ const HifSummary = () => {
 
 const GeneralSummary = ({ member }: any) => {
   const [frs, setFrs] = useState<number | null>()
+  const [riskScore, setRiskScore] = useState<number | string>(0)
+
+  const { recId } = useParams()
+
+  useEffect(() => {
+    airtableFetch(
+      `hif/list?filterByFormula=FIND("${recId}", {Member Record ID})`
+    ).then((response) => {
+      if (response) {
+        const record_id = Object.keys(response)[0]
+
+        if (record_id != null) {
+          const riskValue = response[record_id]['Risk score']
+
+          setRiskScore(riskValue)
+        }
+      }
+    })
+  }, [recId])
 
   useEffect(() => {
     airtableFetch(
@@ -372,10 +391,10 @@ const GeneralSummary = ({ member }: any) => {
     <div className={`text-normal ${styles.topSummaryRow}`}>
       <div className={styles.topSummaryColumns}>
         <h6 className={`text-bold  ${styles.topSummaryColumnHeadings}`}>
-          LifeScore
+          RiskScore
         </h6>
         <span className={`text-small ${styles.topSummaryRowContent}`}>
-          (TBD)
+          {riskScore && riskScore}
         </span>
       </div>
       <div className={styles.topSummaryColumns}>
