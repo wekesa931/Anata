@@ -155,8 +155,8 @@ const ConditionsSummary = () => {
             }
           })
 
-          if (condition.Interventions) {
-            memberInterventions.push(condition.Interventions)
+          if (condition.intervention_condition) {
+            memberInterventions.push(condition.intervention_condition)
           }
         })
 
