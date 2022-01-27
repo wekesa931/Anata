@@ -356,7 +356,7 @@ const HifSummary = () => {
 
 const GeneralSummary = ({ member }: any) => {
   const [frs, setFrs] = useState<number | null>()
-  const [riskScore, setRiskScore] = useState<number | string>(0)
+  const [riskScore, setRiskScore] = useState<number | string>('Not Available')
 
   const { recId } = useParams()
 
