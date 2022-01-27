@@ -63,6 +63,7 @@ const FilledForms = () => {
       'kits',
       'interventions',
       'interventions_tracking',
+      'mhc',
     ]
 
     const getFields = (fields: any) => {
@@ -127,6 +128,10 @@ const FilledForms = () => {
           {
             name: 'Intervention Tracking',
             data: response[forms.indexOf('interventions_tracking')],
+          },
+          {
+            name: 'MHC',
+            data: response[forms.indexOf('mhc')],
           },
         ]
         setFilledForms(formResponses)
