@@ -369,8 +369,12 @@ const GeneralSummary = ({ member }: any) => {
 
         if (record_id != null) {
           const riskValue = response[record_id]['Risk score']
-
-          setRiskScore(riskValue)
+          const percenRiskScore = riskValue
+            ? (parseFloat(riskValue) * 100).toFixed(2)
+            : null
+          setRiskScore(
+            percenRiskScore ? `${percenRiskScore}%` : 'Not Available'
+          )
         }
       }
     })
@@ -391,7 +395,7 @@ const GeneralSummary = ({ member }: any) => {
     <div className={`text-normal ${styles.topSummaryRow}`}>
       <div className={styles.topSummaryColumns}>
         <h6 className={`text-bold  ${styles.topSummaryColumnHeadings}`}>
-          RiskScore
+          Risk Score
         </h6>
         <span className={`text-small ${styles.topSummaryRowContent}`}>
           {riskScore && riskScore}
@@ -401,20 +405,6 @@ const GeneralSummary = ({ member }: any) => {
         <h6 className={`text-bold  ${styles.topSummaryColumnHeadings}`}>FRS</h6>
         <span className={`text-small ${styles.topSummaryRowContent}`}>
           {frs || 'Unavailable'}
-        </span>
-      </div>
-      <div className={styles.topSummaryColumns}>
-        <h6 className={`text-bold  ${styles.topSummaryColumnHeadings}`}>NPS</h6>
-        <span className={`text-small ${styles.topSummaryRowContent}`}>
-          (TBD)
-        </span>
-      </div>
-      <div className={styles.topSummaryColumns}>
-        <h6 className={`text-bold  ${styles.topSummaryColumnHeadings}`}>
-          Utilization
-        </h6>
-        <span className={`text-small ${styles.topSummaryRowContent}`}>
-          (TBD)
         </span>
       </div>
     </div>

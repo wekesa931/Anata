@@ -64,7 +64,7 @@
 
 .topSummaryColumns {
   float: left;
-  width: 75px;
+  width: 95px;
   color: var(--dark-blue-50);
 }
 
@@ -84,7 +84,7 @@
 .topSummaryColumnHeadings {
   /* border-bottom: 1px solid #ff9800; */
   line-height: 16px;
-  width: 64px;
+  width: 100%;
   color: var(--dark-blue-50);
 }
 
