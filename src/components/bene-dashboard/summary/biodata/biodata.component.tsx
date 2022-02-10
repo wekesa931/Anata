@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
+import { Chip } from '@mui/material'
 import { hmp } from '../../../../types/user'
 import styles from './biodata.component.css'
 import airtableFetch from '../../../../resources/airtable-fetch'
@@ -411,6 +412,41 @@ const GeneralSummary = ({ member }: any) => {
   )
 }
 
+const Tags = ({ member }: any) => {
+  const tagsColor: Record<string, string> = {
+    minor: 'pink',
+    Dependant: 'aqua',
+    VIP: 'green',
+    DNR: 'Red',
+    'HN champion': 'blue',
+    'Diagnosis confidential': 'purple',
+  }
+  const [tags, setTags] = useState<string[] | undefined>(
+    undefined && 'No tag set'
+  )
+  useEffect(() => {
+    if (member.Tags) {
+      setTags(member.Tags)
+    }
+  }, [member])
+
+  return (
+    <div style={styles.Tags}>
+      {tags &&
+        tags.map((tag, index) => {
+          return (
+            <Chip
+              key={index}
+              color="primary"
+              style={{ backgroundColor: tagsColor[tag.trim()] }}
+              label={tag}
+            />
+          )
+        })}
+    </div>
+  )
+}
+
 const BioData = () => {
   const { member, memberContact } = useMember()
   const hasDependants = memberContact?.dependents.length > 0
@@ -434,6 +470,9 @@ const BioData = () => {
               {member['Full Name']}, {member.Age}{' '}
               {member.Sex && member.Sex.charAt(0)}
             </h3>
+          </div>
+          <div>
+            <Tags member={member} />
           </div>
 
           <div className={styles.summariesContainer}>
