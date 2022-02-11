@@ -97,7 +97,7 @@ const Table = ({
       case 'number':
         return _dt % 1 === 0 ? _dt : _dt.toFixed(2)
       case 'string':
-        // 
+        //
         return isNaN(parseInt(_dt)) ? _dt : dateFormat(Date.parse(_dt))
       default:
         return _dt

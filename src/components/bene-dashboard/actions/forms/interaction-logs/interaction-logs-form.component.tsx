@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { ErrorMessage, Formik, FormikHelpers } from 'formik'
 import { useMutation } from '@apollo/client'
+import parse from 'html-react-parser'
 import dayjs from 'dayjs'
 import Bugsnag from '@bugsnag/js'
 import { useMember } from '../../../../../context/member.context'
@@ -15,8 +16,14 @@ import styles from './interaction-logs-form.component.css'
 import analytics from '../../../../../helpers/segment'
 import logError from '../../../../utils/Bugsnag/Bugsnag'
 
-const InteractionLogsForm = () => {
+type IProps = {
+  name: string,
+  onFormClose: (name: string) => void,
+}
+
+const InteractionLogsForm = ({ name, onFormClose }: IProps) => {
   const { member } = useMember()
+  const memberEmail = member['Email 1'] || 'navigation@antarahealth.com'
   const user = useUser()
   const [startTime, setStartTime] = useState(dayjs())
   const fields = useInteractionFormFields(member, user)
@@ -26,7 +33,9 @@ const InteractionLogsForm = () => {
       (acc, field) => ({ ...acc, [field.name]: field.value }),
       {}
     ),
-    outcomeMetadata: {},
+    outcomeMetadata: {
+      creator: user && user.email,
+    },
   }
   React.useEffect(() => {
     analytics.track('Interaction Log Form Opened', {
@@ -34,6 +43,47 @@ const InteractionLogsForm = () => {
     })
   }, [member])
 
+  const generateCalendlyLink = (label: string, values: any) => {
+    let urlString = ''
+    const urlName = member['Full Name'].replaceAll(' ', '%20')
+    if (label === 'Reasons for Consultation') {
+      if (values.outcomeMetadata.reasonForConsultation) {
+        const reasonUrl =
+          values.outcomeMetadata.reasonForConsultation.replaceAll(' ', '%20')
+        urlString = `https://calendly.com/antara-health/antara-virtual-doctor-consultation?name=${urlName}&email=${memberEmail}&a1=${member['Phone 1']}&a2=${reasonUrl}`
+        return (
+          <a
+            className={styles.helperText}
+            href={urlString}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Calendar Link
+          </a>
+        )
+      }
+    } else if (label === 'Notes for MHC') {
+      if (values.mhcReferralReasons) {
+        const reasonUrl = values.mhcReferralReasons.replaceAll(' ', '%20')
+        const mhcNotes =
+          values.mhcReferralNotes &&
+          values.mhcReferralNotes.replaceAll(' ', '%20')
+        urlString = `https://calendly.com/antara-health/mental-health-consultation?name=${urlName}&email=${memberEmail}&a1=${member['Phone 1']}&a2=${reasonUrl}&a3=${mhcNotes}`
+
+        return (
+          <a
+            className={styles.helperText}
+            href={urlString}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Calendar Link
+          </a>
+        )
+      }
+    }
+    return ''
+  }
   const extractUsername = (email: string) => {
     return email.replace(/@.*$/, '')
   }
@@ -79,17 +129,8 @@ const InteractionLogsForm = () => {
             timeTaken: dayjs().diff(startTime, 'minute'),
           })
           setStartTime(dayjs())
-          Toasts.showSuccessConfirmationDialog(
-            'Form saved successfully!',
-            'Submit another one?',
-            'Return to dashboard',
-            () => {
-              window.close()
-            },
-            () => {
-              window.location.reload()
-            }
-          )
+          Toasts.showSuccessNotification()
+          onFormClose(name)
         } else {
           Toasts.showErrorNotification()
           Bugsnag.notify(
@@ -123,6 +164,11 @@ const InteractionLogsForm = () => {
                     <label htmlFor={field.name} id={`${field.name}Label`}>
                       {field.label} <span className="text-danger">*</span>
                     </label>
+                    {field.helperText && (
+                      <div className={styles.helperText}>
+                        {parse(field.helperText)}
+                      </div>
+                    )}
                     <FormField
                       {...field}
                       disabled={field.disabled ? field.disabled : false}
@@ -130,6 +176,9 @@ const InteractionLogsForm = () => {
                     <p className="text-small text-danger">
                       <ErrorMessage name={field.name} />
                     </p>
+                    {(field.label === 'Notes for MHC' ||
+                      field.label === 'Reasons for Consultation') &&
+                      generateCalendlyLink(field.label, values)}
                   </div>
                 )
             )}

@@ -82,24 +82,20 @@ const InteractionLogsValidationSchema = Yup.object().shape({
     then: Yup.string().required('Flag for review is required'),
   }),
   outcomeMetadata: Yup.object({
-    typeOfVcRequest: Yup.string().when('outcome', {
-      is: 'Virtual Consultation Required',
-      then: Yup.string().required('Indicate the type of request'),
-    }),
-    levelOfEmergency: Yup.string().when('outcome', {
-      is: 'Virtual Consultation Required',
-      then: Yup.string().required('Indicate the level of emergency'),
-    }),
     reasonForConsultation: Yup.string().when('outcome', {
       is: 'Virtual Consultation Required',
       then: Yup.string().required(
         'Describe the reason(s) why you are requesting a Virtual Consultation'
       ),
     }),
-    status: Yup.string().when('outcome', {
-      is: 'Virtual Consultation Required',
-      then: Yup.string().required('Indicate the status of the request'),
-    }),
+  }),
+  mhcReferralNotes: Yup.string().when('outcome', {
+    is: 'MHC',
+    then: Yup.string().required('MHC notes is required'),
+  }),
+  mhcReferralReasons: Yup.string().when('outcome', {
+    is: 'MHC',
+    then: Yup.string().required('Describe the reason(s) for MHC referral'),
   }),
 })
 

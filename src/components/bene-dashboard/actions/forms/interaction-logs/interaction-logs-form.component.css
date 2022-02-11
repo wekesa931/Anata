@@ -15,3 +15,9 @@
   width: 480px;
   margin: auto;
 }
+
+.helperText {
+  color: #5d6c82;
+  font-size: 11px;
+  font-family: Rubik, sans-serif;
+}

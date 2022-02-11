@@ -25,6 +25,7 @@ const openForm = (
             member: {
               'Full Name': member['Full Name'],
               'Antara ID': member['Antara ID'],
+              Phone: member['Phone 1'],
             },
             user: {
               email: user && user.email,

@@ -5,6 +5,7 @@ type Field = AirtableField & {
   label: string
   disabled?: boolean
   required?: boolean
+  helperText?: any
   condition?: (values: any) => boolean
 }
 
@@ -80,6 +81,20 @@ const useInteractionFormFields = (member: any, user: any) => {
           value: option,
         })
       ),
+      required: true,
+    },
+    {
+      label: 'Answered',
+      name: 'phoneCallAnswered',
+      type: 'single-select',
+      options: ['Yes', 'No'].map((option) => ({
+        label: option,
+        value: option,
+      })),
+      condition: (values) =>
+        values.modeOfCommunication &&
+        values.modeOfCommunication === 'Phone call',
+
       required: true,
     },
     {
@@ -174,12 +189,15 @@ const useInteractionFormFields = (member: any, user: any) => {
       label: 'Next Steps',
       name: 'outcome',
       type: 'single-select',
-      options: ['Virtual Consultation Required', 'Flag for Review', 'None'].map(
-        (option) => ({
-          label: option,
-          value: option,
-        })
-      ),
+      options: [
+        'Virtual Consultation Required',
+        'Flag for Review',
+        'MHC',
+        'None',
+      ].map((option) => ({
+        label: option,
+        value: option,
+      })),
       required: true,
     },
     {
@@ -195,49 +213,27 @@ const useInteractionFormFields = (member: any, user: any) => {
       required: true,
     },
     {
-      label: 'Type of Request',
-      name: 'outcomeMetadata[typeOfVcRequest]',
-      type: 'single-select',
-      options: [
-        'General consultation',
-        'Chronic case consultation',
-        'General consultation - Follow Up',
-        'Chronic case consultation - Follow Up',
-      ].map((option) => ({ label: option, value: option })),
-      condition: (values) =>
-        values.outcome && values.outcome === 'Virtual Consultation Required',
-      required: true,
-    },
-    {
-      label: 'Level of emergency',
-      name: 'outcomeMetadata[levelOfEmergency]',
-      type: 'single-select',
-      options: ['Emergency', 'Urgent', 'Normal'].map((option) => ({
-        label: option,
-        value: option,
-      })),
-      condition: (values) =>
-        values.outcome && values.outcome === 'Virtual Consultation Required',
-      required: true,
-    },
-    {
       label: 'Reasons for Consultation',
       name: 'outcomeMetadata[reasonForConsultation]',
       type: 'long-text',
+      helperText: `<p>Please describe the reason(s) why you are requesting a Virtual</p> 
+      <p>Consultation with as much details as you can.</p>`,
       condition: (values) =>
         values.outcome && values.outcome === 'Virtual Consultation Required',
       required: true,
     },
     {
-      label: 'Status',
-      name: 'outcomeMetadata[status]',
-      type: 'single-select',
-      options: ['Requested', 'Validated by HN'].map((option) => ({
-        label: option,
-        value: option,
-      })),
-      condition: (values) =>
-        values.outcome && values.outcome === 'Virtual Consultation Required',
+      label: 'Reasons for Referral',
+      name: 'mhcReferralReasons',
+      type: 'long-text',
+      condition: (values) => values.outcome && values.outcome === 'MHC',
+      required: true,
+    },
+    {
+      label: 'Notes for MHC',
+      name: 'mhcReferralNotes',
+      type: 'long-text',
+      condition: (values) => values.outcome && values.outcome === 'MHC',
       required: true,
     },
   ]

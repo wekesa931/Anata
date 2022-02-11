@@ -6,7 +6,7 @@
   background-color: var(--white);
   font-size: 16px;
 }
-.sidebar:hover{
+.sidebar:hover {
   cursor: pointer;
 }
 
@@ -18,11 +18,11 @@
   color: var(--orange-base);
 }
 
-.menuLink > h5{
+.menuLink > h5 {
   font-weight: 100;
   font-size: 16px;
 }
-.menuItem > span{
+.menuItem > span {
   margin-right: 8px;
 }
 
@@ -35,7 +35,7 @@
   align-items: center;
   margin-left: 32px;
   padding: 8px;
-  color: #8b95a5
+  color: #8b95a5;
 }
 
 .menuItem.active {
@@ -53,11 +53,12 @@
 }
 
 .subList {
-  display:flex;
+  display: flex;
   margin-left: 45px;
   cursor: pointer;
 }
 
-.arrowRight, .arrowDown {
+.arrowRight,
+.arrowDown {
   margin-left: -25px;
 }

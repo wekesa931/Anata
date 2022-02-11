@@ -49,7 +49,7 @@ const FormPortal = ({ form, hn, onFormClose }: FormProps) => {
 
   const formRender = () => {
     if (form.airtableUrl === false) {
-      return <InteractionLogsForm />
+      return <InteractionLogsForm name={form.name} onFormClose={onFormClose} />
     }
     return (
       <div

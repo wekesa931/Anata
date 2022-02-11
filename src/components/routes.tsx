@@ -12,7 +12,6 @@ import Sidebar from './sidebar/sidebar.component'
 import Dashboard from './main-dashboard/main-dashboard'
 import BeneDashboard from './bene-dashboard/bene-dashboard.component'
 import history from '../constants/history'
-import InteractionLogsForm from './bene-dashboard/actions/forms/interaction-logs/interaction-logs-form.component'
 import { FcmProvider } from '../context/fcm/fcm.context'
 import { CallProvider } from '../context/calls-context'
 import CallFloatingBox from './bene-dashboard/actions/calls/callConsole.component'
@@ -55,9 +54,6 @@ const Routes = () => {
                 </ProtectedRoute>
                 <ProtectedRoute exact path="/member/:recId">
                   <BeneDashboard />
-                </ProtectedRoute>
-                <ProtectedRoute path="/member/:recId/interaction/create">
-                  <InteractionLogsForm />
                 </ProtectedRoute>
               </StyledEngineProvider>
             </ThemeProvider>
