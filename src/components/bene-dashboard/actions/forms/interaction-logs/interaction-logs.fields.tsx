@@ -94,7 +94,6 @@ const useInteractionFormFields = (member: any, user: any) => {
       condition: (values) =>
         values.modeOfCommunication &&
         values.modeOfCommunication === 'Phone call',
-
       required: true,
     },
     {

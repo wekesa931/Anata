@@ -17,6 +17,7 @@ import Files from './files/files.component'
 import ErrorBoundary from '../../error-boundary/error-boundary.component'
 import SortDialog from './sort-and-filter.component/sort-and-filter.component'
 import Conditions from './conditions/conditions.component'
+import MemberTask from './member_tasks/member-task.component'
 
 const SortButton = ({ openSortDialog, setOpenSortDialog }: any) => {
   const {
@@ -108,6 +109,7 @@ const Views = () => {
             <Tab label="Interactions" value="3" />
             <Tab label="Nutrition" value="4" />
             <Tab label="Docs" value="5" />
+            <Tab label="Member Tasks" value="6" />
           </TabList>
           <FilterComponent />
         </Box>
@@ -137,6 +139,11 @@ const Views = () => {
           <TabPanel value="5">
             <ErrorBoundary>
               <Files />
+            </ErrorBoundary>
+          </TabPanel>
+          <TabPanel value="6">
+            <ErrorBoundary>
+              <MemberTask />
             </ErrorBoundary>
           </TabPanel>
         </div>

@@ -155,6 +155,7 @@ function useMergedRecords(
 const Tasks = () => {
   const [allTasks, setAllTasks] = useState<any[]>([])
   const [filteredTasks, setFilteredTasks] = useState<any[]>([])
+
   const [upnextTasks, setUpnextTasks] = useState<any[]>([])
 
   const defaultTaskFilterStatus = 'Not Started'
