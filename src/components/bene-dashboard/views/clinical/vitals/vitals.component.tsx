@@ -97,7 +97,7 @@ const BloodPressure = () => {
       name: 'Sys',
       format: 'mmHg',
       key: 'Average Daily Systolic',
-      info: `Elevated BP: 120-130 mmHg,
+      info: `Elevated BP: 120-129 mmHg,
              Stage 1 Hypertension: 130-140 mmHg,
              Stage 2 Hypertension: >140 mmHg`,
     },
@@ -107,7 +107,7 @@ const BloodPressure = () => {
       key: 'Average Daily Diastolic',
       info: `Elevated BP: <80 mmHg,
              Stage 1 Hypertension: 80-89 mmHg,
-             Stage 2 Hypertension: >90 mmHg`,
+             Stage 2 Hypertension: >89 mmHg`,
     },
   ]
 

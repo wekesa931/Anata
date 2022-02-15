@@ -17,8 +17,8 @@ import analytics from '../../../../../helpers/segment'
 import logError from '../../../../utils/Bugsnag/Bugsnag'
 
 type IProps = {
-  name: string,
-  onFormClose: (name: string) => void,
+  name: string
+  onFormClose: (name: string) => void
 }
 
 const InteractionLogsForm = ({ name, onFormClose }: IProps) => {
