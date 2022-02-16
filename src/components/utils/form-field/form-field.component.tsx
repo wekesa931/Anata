@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Field, useFormikContext } from 'formik'
+import TextareaAutosize from '@mui/material/TextareaAutosize'
 import AirtableField from '../../../types/airtable-field'
 import RemoteSelect from '../remote-select/remote-select.component'
 import MultiSelect from '../multiselect/multiselect.component'
@@ -12,6 +13,7 @@ const FormField = (customField: CustomFieldProps) => {
   const {
     name,
     type,
+    value,
     disabled,
     options = [],
     lookupUrl,
@@ -19,7 +21,7 @@ const FormField = (customField: CustomFieldProps) => {
   } = customField
 
   const { setFieldValue, errors, touched } = useFormikContext<any>()
-
+  const [textAreaValue, setTextAreaValue] = useState(value)
   useEffect(() => {
     // if field is unmounted, delete its value (comes in handy in dynamic forms)
     return () => {
@@ -100,12 +102,16 @@ const FormField = (customField: CustomFieldProps) => {
       )
     case 'long-text':
       return (
-        <Field
-          as="textarea"
+        <TextareaAutosize
           name={name}
           id={name}
           className={fieldClassName}
           disabled={disabled}
+          value={textAreaValue}
+          onChange={(e) => {
+            setTextAreaValue(e.target.value)
+            setFieldValue(name, e.target.value, false)
+          }}
         />
       )
     case 'lookup':
