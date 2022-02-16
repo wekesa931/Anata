@@ -14,48 +14,6 @@ const PafuView = ({ data }: any) => {
   const [pafuRecordId, setPafuRecordId] = useState('')
   const [pafu, setPafu] = useState({})
   const [loading, setLoading] = useState(false)
-  const fields = [
-    'Received reminder',
-    'Know medication purpose',
-    'Received referral',
-    'Health management plan',
-    'Appointment Type',
-    'Received diagnosis',
-    'Received next appointment',
-    'Asked to make payment',
-    'Medication Information available',
-    'Received medication',
-    'Antara Facilities',
-    'Had imaging (Ray, CT Scan, Ultrasound or MRI)',
-    'Antara awareness',
-    'On a scale from 1-10, how likely are you to recommend Avenue services to your friends?',
-    'Had lab test',
-    'Attended appointment?',
-    'Specify Facility',
-    'Diagnosis',
-    'Know lab test purpose',
-    'Lab test purpose',
-    'Know imaging purpose',
-    'Imaging purpose',
-    'Referral Location',
-    'Referral Location(Other)',
-    'Referral Date',
-    'Other Referral',
-    'Specialty types',
-    'Reason for Referral',
-    'Referral Provider Name',
-    'Medication',
-    'Medication purpose',
-    'Medication Information available',
-    'Additional information',
-    'Next appointment date',
-    'Reason for Missed Appointments',
-    'Reason for admission',
-    'Date of Admission',
-    'Date of Discharge',
-    'Specialist',
-    'Health management plan description',
-  ]
 
   useEffect(() => {
     if (pafuRecordId) {
@@ -89,18 +47,16 @@ const PafuView = ({ data }: any) => {
           setModalOpen={setShowPafu}
         >
           {pafu &&
-            Object.keys(pafu)
-              .filter((key) => fields.includes(key))
-              .map((key) => {
-                return (
-                  <div key={key} onClick={(e) => e.stopPropagation()}>
-                    <label htmlFor={key}>
-                      {key}
-                      <TextArea disabled value={`${pafu[key]}`} />
-                    </label>
-                  </div>
-                )
-              })}
+            Object.keys(pafu).map((key) => {
+              return (
+                <div key={key} onClick={(e) => e.stopPropagation()}>
+                  <label htmlFor={key}>
+                    {key}
+                    <TextArea disabled value={`${pafu[key]}`} />
+                  </label>
+                </div>
+              )
+            })}
           {loading && (
             <div className="d-flex flex-direction-column flex-align-center">
               <Icon name="loading" />
