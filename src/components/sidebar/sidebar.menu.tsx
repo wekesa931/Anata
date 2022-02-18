@@ -23,7 +23,7 @@ const SidebarMenuItems = [
     name: 'Members',
     icon: <User />,
     rootUrl: `https://airtable.com/embed/${iframes.default.members}?viewControls=on`,
-    url_sandbox: 'https://airtable.com/embed/shrZAZDHnRGQy1Fuw',
+    url_sandbox: 'https://airtable.com/embed/shrK946uKbTWYhDSa',
   },
   {
     name: 'Interactions',
@@ -40,7 +40,7 @@ const SidebarMenuItems = [
         rootUrl:
           'https://airtable.com/embed/shrlDv3haSmnW2KXm?backgroundColor=green&viewControls=on',
         url_sandbox:
-          'https://airtable.com/embed/shrgqHM3zICH0Nzxr?backgroundColor=pink&viewControls=on',
+          'https://airtable.com/embed/shrBT8cqIRfMaixuq?backgroundColor=pink&viewControls=on',
       },
       {
         name: 'Callbacks',
@@ -48,7 +48,7 @@ const SidebarMenuItems = [
         rootUrl:
           'https://airtable.com/embed/shrWh9lzYTjGX7fDT?backgroundColor=green&viewControls=on',
         url_sandbox:
-          'https://airtable.com/embed/shrYHGNNigfYV0ewB?backgroundColor=pink&viewControls=on',
+          'https://airtable.com/embed/shrrDnejrjuSDnDAP?backgroundColor=pink&viewControls=on',
       },
       {
         name: 'Members Tasks',
@@ -56,14 +56,14 @@ const SidebarMenuItems = [
         rootUrl:
           'https://airtable.com/embed/shrz0HHYQVgNuca5v/tbljwCFIDT2vG65AH?backgroundColor=green&viewControls=on',
         url_sandbox:
-          'https://airtable.com/embed/shrRQv6wWFAxMJf4A?backgroundColor=pink&viewControls=on',
+          'https://airtable.com/embed/shrCpg6I7xco5Miov?backgroundColor=pink&viewControls=on',
       },
     ],
   },
   {
     name: 'Meetings',
     icon: <MapPin />,
-    url_sandbox: 'https://airtable.com/embed/shr3KzBGdO2VZqKvq',
+    url_sandbox: 'https://airtable.com/embed/shrggSbStR8fjDqKJ?backgroundColor=pink&viewControls=on',
   },
   // related to a single member
   {
@@ -72,7 +72,7 @@ const SidebarMenuItems = [
     rootUrl:
       'https://airtable.com/embed/shrJJPowmXuMD3lwD?backgroundColor=green&viewControls=on',
     url_sandbox:
-      'https://airtable.com/embed/shribeyiP3MeCBRhH?backgroundColor=pink&viewControls=on',
+      'https://airtable.com/embed/shr5DLzCIdn8p9iEQ?backgroundColor=pink&viewControls=on',
   },
   {
     name: 'HMP',
@@ -80,7 +80,7 @@ const SidebarMenuItems = [
     rootUrl:
       'https://airtable.com/embed/shrTQVb2Z78fziamV?backgroundColor=green&viewControls=on',
     url_sandbox:
-      'https://airtable.com/embed/shrWNJpP9NTiUKwjV?backgroundColor=pink&viewControls=on',
+      'https://airtable.com/embed/shrwGPaLmlMOohQFi?backgroundColor=pink&viewControls=on',
   },
   {
     name: 'Conditions',
@@ -88,7 +88,7 @@ const SidebarMenuItems = [
     rootUrl:
       'https://airtable.com/embed/shr1IJ9aQ9QhE8O9I?backgroundColor=green&viewControls=on',
     url_sandbox:
-      'https://airtable.com/embed/shraxVG3xU1zyzymx?backgroundColor=pink&viewControls=on',
+      'https://airtable.com/embed/shr3MFW4g3UU5WK9u?backgroundColor=pink&viewControls=on',
   },
   {
     name: 'Interventions',
@@ -96,7 +96,7 @@ const SidebarMenuItems = [
     rootUrl:
       'https://airtable.com/embed/shr0y89LFGiiT4oHz?backgroundColor=green&viewControls=on',
     url_sandbox:
-      'https://airtable.com/embed/shriAhSRYFESlmIiP?backgroundColor=pink&viewControls=on',
+      'https://airtable.com/embed/shr3MFW4g3UU5WK9u?backgroundColor=pink&viewControls=on',
   },
   {
     name: 'Vitals',
@@ -104,7 +104,7 @@ const SidebarMenuItems = [
     rootUrl:
       'https://airtable.com/embed/shr0y89LFGiiT4oHz?backgroundColor=green&viewControls=on',
     url_sandbox:
-      'https://airtable.com/embed/shriAhSRYFESlmIiP?backgroundColor=pink&viewControls=on',
+      'https://airtable.com/embed/shrAKlrx0jgaAayjX?backgroundColor=pink&viewControls=on',
   },
   {
     name: 'Interventions Data Tracking',
@@ -112,7 +112,7 @@ const SidebarMenuItems = [
     rootUrl:
       'https://airtable.com/embed/shr0y89LFGiiT4oHz?backgroundColor=green&viewControls=on',
     url_sandbox:
-      'https://airtable.com/embed/shriAhSRYFESlmIiP?backgroundColor=pink&viewControls=on',
+      'https://airtable.com/embed/shro1UUHqX6TBnC5z?backgroundColor=pink&viewControls=on',
   },
   {
     name: 'Population',
