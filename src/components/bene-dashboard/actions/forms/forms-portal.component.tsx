@@ -7,6 +7,11 @@ import DialogTitle from '@mui/material/DialogTitle'
 import { Maximize, Minimize, X } from 'react-feather'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
+import Button from '@mui/material/Button'
+import DialogActions from '@mui/material/DialogActions'
+import Dialog from '@mui/material/Dialog'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useTheme } from '@mui/material/styles'
 import InteractionLogsForm from './interaction-logs/interaction-logs-form.component'
 
 type FormProps = {
@@ -46,6 +51,71 @@ const FormPortal = ({ form, hn, onFormClose }: FormProps) => {
       setIsDisabled(true)
     }
   }, [dynamicPosition])
+
+  React.useEffect(() => {
+    const message = `Warning Navigating away from this page will delete your text if you have not already saved it`
+    window.addEventListener('beforeunload', (e) => {
+      e.returnValue = message
+    })
+    return () =>
+      window.removeEventListener('beforeunload', (e) => {
+        e.returnValue = message
+      })
+  })
+
+  const [open, setOpen] = React.useState(false)
+
+  const theme = useTheme()
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
+
+  const handleFormCloseEvent = () => {
+    setOpen(true)
+  }
+
+  const handleStay = () => {
+    setOpen(false)
+  }
+
+  const handleLeave = () => {
+    setOpen(false)
+    onFormClose(form.name)
+  }
+
+  const confirmClose = () => {
+    return (
+      <div>
+        <Dialog
+          open={open}
+          onClose={handleLeave}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          fullScreen={fullScreen}
+        >
+          <DialogTitle id="alert-dialog-title">
+            {`Are you sure you want to leave ${form.name}?`}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              You might lose any changes you have made on {form.name}.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button color="warning" variant="contained" onClick={handleStay}>
+              Stay
+            </Button>
+            <Button
+              color="error"
+              variant="contained"
+              onClick={handleLeave}
+              autoFocus
+            >
+              Leave
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    )
+  }
 
   const formRender = () => {
     if (form.airtableUrl === false) {
@@ -101,14 +171,17 @@ const FormPortal = ({ form, hn, onFormClose }: FormProps) => {
               </button>
               <button
                 className="drag-actions"
-                onClick={() => onFormClose(form.name)}
+                onClick={handleFormCloseEvent}
               >
                 <X />
               </button>
               <span className="form-modal-title">{form.name}</span>
             </DialogTitle>
             <DialogContent>
-              <DialogContentText>{formRender()}</DialogContentText>
+              <DialogContentText>
+               {formRender()}
+               {confirmClose()}
+              </DialogContentText>
             </DialogContent>
           </Paper>
         </Draggable>
