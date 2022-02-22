@@ -41,12 +41,12 @@ import TableBody from '@mui/material/TableBody'
 import { visuallyHidden } from '@mui/utils'
 import Accordion from '@mui/material/Accordion'
 import Drawer from '@mui/material/Drawer'
-import LinearProgress from '@mui/material/LinearProgress'
 import axios from 'axios'
 import Grid from '@mui/material/Grid'
 import MobileDatePicker from '@mui/lab/MobileDatePicker'
 import AdapterDateFns from '@mui/lab/AdapterDayjs'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import LinearProgress from '@mui/material/LinearProgress'
 import styles from './files.component.css'
 import PdfViewer from './pdf-viewer.component'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
@@ -468,7 +468,7 @@ const Files = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const [shouldReplaceFile, setShouldReplaceFile] = useState(false)
   const [s3UploadLink, setS3UploadLink] = useState<S3UploadMeta>(null)
-  const [progress, setProgress] = React.useState(10)
+  const [progress, setProgress] = React.useState(0)
   const [uploadStart, setUploadStart] = useState(false)
   const [uploadSuccessful, setUploadSuccessful] = useState(false)
   const [uploadFailed, setUploadFailed] = useState(false)
@@ -534,6 +534,13 @@ const Files = () => {
     setOpen(true)
   }
 
+  const handleUploadError = (response: any) => {
+    setUploadStart(false)
+    setProgress(0)
+    setUploadFailed(true)
+    logError(response.message)
+  }
+
   const getMimeIcon = (name: string) => {
     if (name.includes('pdf')) {
       return <PictureAsPdfOutlinedIcon className={styles.red} />
@@ -588,7 +595,7 @@ const Files = () => {
         setProgress((oldProgress) => {
           if (oldProgress < 100) {
             const diff = Math.random() * 10
-            return Math.min(oldProgress + diff, 97)
+            return Math.min(oldProgress + diff, 90)
           }
           return oldProgress
         })
@@ -645,13 +652,11 @@ const Files = () => {
         },
       },
     }).then((res) => {
+      setUploadStart(false)
+      setProgress(100)
       if (res.data.saveFile.status !== 200) {
-        setUploadStart(false)
-        setProgress(100)
         setUploadFailed(true)
       } else {
-        setUploadStart(false)
-        setProgress(100)
         setUploadSuccessful(true)
         refetch()
       }
@@ -677,12 +682,21 @@ const Files = () => {
       storeKey = filesContent[0].name
       mimeVal = mime.lookup(filesContent[0].name)
       fileSize = plainFiles[0].size
+      const config = {
+        onUploadProgress(progressEvent: any) {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          )
+          setProgress(percentCompleted - 10)
+        },
+      }
       axios
         .post(s3UploadLink.link.url, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Accept: 'application/json',
           },
+          ...config,
         })
         .then(() => {
           persistData(docMeta, storeKey, mimeVal, fileSize, driveLink, fileName)
@@ -690,15 +704,8 @@ const Files = () => {
         .catch((response) => {
           if (response.message === 'Network Error') {
             setNetworkError(true)
-            setUploadStart(false)
-            setProgress(100)
-            setUploadFailed(true)
-            logError(e.message)
           }
-          setUploadStart(false)
-          setProgress(100)
-          setUploadFailed(true)
-          logError(response.message)
+          handleUploadError(response)
         })
     } else {
       storeKey = docLink
@@ -708,18 +715,11 @@ const Files = () => {
       fileName = docLink
       try {
         persistData(docMeta, storeKey, mimeVal, fileSize, driveLink, fileName)
-      } catch (e) {
-        if (e.name === 'Network Error') {
+      } catch (response) {
+        if (response.name === 'Network Error') {
           setNetworkError(true)
-          setUploadStart(false)
-          setProgress(100)
-          setUploadFailed(true)
-          logError(e.message)
         }
-        setUploadStart(false)
-        setProgress(100)
-        setUploadFailed(true)
-        logError(e.message)
+        handleUploadError(response)
       }
     }
   }
@@ -739,7 +739,7 @@ const Files = () => {
 
   const uploadDone = () => {
     setS3UploadLink(null)
-    setProgress(10)
+    setProgress(0)
     setFileError('')
     setUploadSuccessful(false)
     setUploadFailed(false)
@@ -777,18 +777,22 @@ const Files = () => {
           </span>
         </Grid>
         <Grid item xs={4} className="d-flex flex-end">
-          <Button className={styles.uploadCancelBtn} onClick={uploadDone}>
-            cancel
-          </Button>
+          {!uploadSuccessful && (
+            <Button className={styles.uploadCancelBtn} onClick={uploadDone}>
+              cancel
+            </Button>
+          )}
         </Grid>
       </Grid>
-      <Box className={styles.upload}>
-        <LinearProgress
-          color={progressColor()}
-          variant="determinate"
-          value={progress}
-        />
-      </Box>
+      {(uploadStart || uploadSuccessful) && (
+        <Box className={styles.upload}>
+          <LinearProgress
+            color={progressColor()}
+            variant="determinate"
+            value={progress}
+          />
+        </Box>
+      )}
     </>
   )
 

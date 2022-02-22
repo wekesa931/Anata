@@ -45,24 +45,8 @@ const FilterComponent = () => {
     >
       <div
         className="d-flex p-absolute flex-align-center"
-        style={{ left: '30px' }}
         key={openSortDialog ? 1 : 0}
       >
-        <div>
-          {!openSortDialog && (
-            <button
-              className="btn-icon active"
-              style={{ margin: '0 8px 0px 0', padding: 0 }}
-            >
-              <Icon
-                name="table"
-                width={40}
-                height={24}
-                fill="var(--blue-base)"
-              />
-            </button>
-          )}
-        </div>
         {!openSortDialog ? (
           <div className={styles.animatedDiv}>
             <SortButton
