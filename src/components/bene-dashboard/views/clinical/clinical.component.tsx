@@ -8,7 +8,7 @@ import Consultation from '../consultation/consultation'
 
 const Clinical = () => {
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="flex-wrap">
       <div style={{ flex: 1, marginRight: '24px' }}>
         <Consultation />
         <Labs />

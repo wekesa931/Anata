@@ -38,13 +38,14 @@ const SortButton = ({ openSortDialog, setOpenSortDialog }: any) => {
 
 const FilterComponent = () => {
   const [openSortDialog, setOpenSortDialog] = useState(false)
+  const absolute = openSortDialog ? 'p-absolute' : ''
   return (
     <div
       className="d-flex p-relative"
       style={!openSortDialog ? { alignItems: 'center' } : {}}
     >
       <div
-        className="d-flex p-absolute flex-align-center"
+        className={`d-flex  flex-align-center ${absolute}`}
         key={openSortDialog ? 1 : 0}
       >
         {!openSortDialog ? (
@@ -83,7 +84,12 @@ const Views = () => {
             display: 'flex',
           }}
         >
-          <TabList onChange={handleChange} aria-label="Clinical Tabs">
+          <TabList
+            onChange={handleChange}
+            variant="scrollable"
+            scrollButtons="auto"
+            aria-label="Clinical Tabs"
+          >
             <Tab
               label="Clinical Summary"
               value="1"

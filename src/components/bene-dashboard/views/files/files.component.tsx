@@ -674,53 +674,54 @@ const Files = () => {
     Object.keys(s3UploadLink.link.fields).forEach((key) => {
       formData.append(key, s3UploadLink.link.fields[key])
     })
-    if (filesContent.length > 0 && !docLink) {
-      fileName = filesContent[0].name.split('.')
-      fileName.pop()
-      fileName = fileName.join('.')
-      formData.append('file', plainFiles[0])
-      storeKey = filesContent[0].name
-      mimeVal = mime.lookup(filesContent[0].name)
-      fileSize = plainFiles[0].size
-      const config = {
-        onUploadProgress(progressEvent: any) {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          )
-          setProgress(percentCompleted - 10)
-        },
-      }
-      axios
-        .post(s3UploadLink.link.url, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Accept: 'application/json',
+    try {
+      if (filesContent.length > 0 && !docLink) {
+        fileName = filesContent[0].name.split('.')
+        fileName.pop()
+        fileName = fileName.join('.')
+        formData.append('file', plainFiles[0])
+        storeKey = filesContent[0].name
+        mimeVal = mime.lookup(filesContent[0].name)
+        fileSize = plainFiles[0].size
+        const config = {
+          onUploadProgress(progressEvent: any) {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            )
+            setProgress(percentCompleted - 10)
           },
-          ...config,
-        })
-        .then(() => {
-          persistData(docMeta, storeKey, mimeVal, fileSize, driveLink, fileName)
-        })
-        .catch((response) => {
-          if (response.message === 'Network Error') {
-            setNetworkError(true)
-          }
-          handleUploadError(response)
-        })
-    } else {
-      storeKey = docLink
-      driveLink = docLink
-      fileSize = 0
-      mimeVal = 'doc'
-      fileName = docLink
-      try {
-        persistData(docMeta, storeKey, mimeVal, fileSize, driveLink, fileName)
-      } catch (response) {
-        if (response.name === 'Network Error') {
-          setNetworkError(true)
         }
-        handleUploadError(response)
+        axios
+          .post(s3UploadLink.link.url, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Accept: 'application/json',
+            },
+            ...config,
+          })
+          .then(() => {
+            persistData(
+              docMeta,
+              storeKey,
+              mimeVal,
+              fileSize,
+              driveLink,
+              fileName
+            )
+          })
+      } else {
+        storeKey = docLink
+        driveLink = docLink
+        fileSize = 0
+        mimeVal = 'doc'
+        fileName = docLink
+        persistData(docMeta, storeKey, mimeVal, fileSize, driveLink, fileName)
       }
+    } catch (err: any) {
+      if (err.name === 'Network Error') {
+        setNetworkError(true)
+      }
+      handleUploadError(err)
     }
   }
 

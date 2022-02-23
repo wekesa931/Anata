@@ -33,10 +33,16 @@ const Actions = () => {
           borderBottom: 1,
           borderColor: 'divider',
           display: 'flex',
+          justifyContent: 'space-between',
           background: 'var(--white-bg)',
         }}
       >
-        <TabList onChange={handleChange} value={activeTab}>
+        <TabList
+          onChange={handleChange}
+          value={activeTab}
+          variant="scrollable"
+          scrollButtons="auto"
+        >
           <Tab label="Tasks" value="tasks" />
           <Tab label="Forms" value="forms" />
           <Tab label="Meetings" value="meetings" />

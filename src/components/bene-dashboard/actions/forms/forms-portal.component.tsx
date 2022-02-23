@@ -169,18 +169,15 @@ const FormPortal = ({ form, hn, onFormClose }: FormProps) => {
               >
                 {isDisabled ? <Maximize /> : <Minimize />}
               </button>
-              <button
-                className="drag-actions"
-                onClick={handleFormCloseEvent}
-              >
+              <button className="drag-actions" onClick={handleFormCloseEvent}>
                 <X />
               </button>
               <span className="form-modal-title">{form.name}</span>
             </DialogTitle>
             <DialogContent>
               <DialogContentText>
-               {formRender()}
-               {confirmClose()}
+                {formRender()}
+                {confirmClose()}
               </DialogContentText>
             </DialogContent>
           </Paper>

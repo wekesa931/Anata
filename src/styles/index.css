@@ -117,6 +117,7 @@ body,
 }
 
 .bene-views {
+  width: 50%;
   flex: 1;
   border-right: 1px solid var(--white);
 }
@@ -151,7 +152,7 @@ body,
 .right-pane {
   background: var(--white);
   border-left: 1px solid var(--dark-blue-10);
-  max-width: 340px;
+  width: 25%;
   padding-bottom: 30px;
 }
 .right-sidebar-container {
@@ -324,6 +325,11 @@ h6,
 .flex-scroll {
   overflow-y: scroll;
   flex: 1;
+}
+
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .text-danger {
@@ -1179,6 +1185,10 @@ a {
 .tab-btn {
   height: 37px;
   padding: 0px !important;
+}
+
+.communication-icons {
+  margin-top: 5px;
 }
 
 .communication-icons button {
