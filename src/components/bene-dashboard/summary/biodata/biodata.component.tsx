@@ -460,7 +460,7 @@ const TsCs = ({ member, contact }: any) => {
   }, [bnname])
 
   useEffect(() => {
-    if (contact.lastConsentReminder) {
+    if (contact?.lastConsentReminder) {
       setShowBasedOnTime(lastSentBeforeDay(contact?.lastConsentReminder))
     }
     if (messageSent) {

@@ -10,6 +10,7 @@
   border-left: 1px solid var(--dark-blue-10);
   border-right: 1px solid var(--dark-blue-10);
   flex: 1;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
