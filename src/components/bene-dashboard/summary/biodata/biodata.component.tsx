@@ -1,11 +1,18 @@
 import { Link, useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
-import { Chip } from '@mui/material'
+import { Info } from 'react-feather'
+import { Button, CardContent, Typography, Chip } from '@mui/material'
+import { useQuery, useMutation } from '@apollo/client'
+import { useToasts } from 'react-toast-notifications'
+import dayjs from 'dayjs'
 import { hmp } from '../../../../types/user'
 import styles from './biodata.component.css'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import { useMember } from '../../../../context/member.context'
 import analytics from '../../../../helpers/analytics'
+import { GET_TERMS_CONDITIONS } from '../../../../gql/ts_cs'
+import { SEND_SMS } from '../../../../gql/sms'
+import logError from '../../../utils/Bugsnag/Bugsnag'
 
 const getRiskFactors = (
   diabetes: string,
@@ -412,15 +419,142 @@ const GeneralSummary = ({ member }: any) => {
   )
 }
 
-const Tags = ({ member }: any) => {
-  const tagsColor: Record<string, string> = {
-    minor: 'pink',
-    Dependant: 'aqua',
-    VIP: 'green',
-    DNR: 'Red',
-    'HN champion': 'blue',
-    'Diagnosis confidential': 'purple',
+const lastSentBeforeDay = (date: string): boolean => {
+  const lastSent = dayjs(date)
+  const dateToday = dayjs()
+  const hours = dateToday.diff(lastSent, 'hours')
+  return hours > 24
+}
+
+const TsCs = ({ member, contact }: any) => {
+  const [showTerms, setTerms] = useState<boolean>(false)
+  const [message, setMessage] = useState<string>('')
+  const [messageSent, setMessageSent] = useState(false)
+  const {
+    data: tscs,
+    loading: tscsLoading,
+    error: tscsError,
+  } = useQuery(GET_TERMS_CONDITIONS, {
+    variables: { antaraId: member['Antara ID'] },
+  })
+
+  const bnname = member['Bene First Name']
+  const [showBasedOnTime, setShowBasedOnTime] = useState<boolean>(false)
+  const [sendSms, { loading }] = useMutation(SEND_SMS)
+  const [showCard, setShowCard] = useState<boolean>(true)
+  const { addToast } = useToasts()
+  const showCardNoMsg = showTerms && !showBasedOnTime && showCard
+  const showCardWithMsg = showTerms && showBasedOnTime && showCard
+  useEffect(() => {
+    airtableFetch(
+      `msgTemplates/list?filterByFormula=FIND("Consent reminder", {Title})`
+    )
+      .then((res) => {
+        const { Message } = Object.keys(res).map((key) => res[key])[0]
+        const msg = Message.replace('<bnname>', bnname)
+        setMessage(msg)
+      })
+      .catch((error) => {
+        logError(error.message)
+      })
+  }, [bnname])
+
+  useEffect(() => {
+    if (contact.lastConsentReminder) {
+      setShowBasedOnTime(lastSentBeforeDay(contact?.lastConsentReminder))
+    }
+    if (messageSent) {
+      setShowBasedOnTime(lastSentBeforeDay(contact?.lastConsentReminder))
+    }
+  }, [messageSent, contact])
+
+  useEffect(() => {
+    if (tscs) {
+      const terms = tscs.termsAndConditions.edges
+      const newTermAvailable = terms.every(
+        (term) => term.node.accepted === false
+      )
+      setTerms(newTermAvailable)
+    }
+  }, [member, tscs])
+
+  const renderCard = () => {
+    return (
+      <CardContent className={styles.terms}>
+        <Typography
+          className={styles.termsText}
+          color="text.secondary"
+          gutterBottom
+        >
+          <Info width="16px" height="16px" style={{ marginRight: 10 }} />
+          This member has not given consent to our latest Terms and Conditions
+        </Typography>
+        <Typography variant="body2">
+          Send an SMS to encourage the member to give consent via App Download
+        </Typography>
+        <Button
+          size="small"
+          variant="contained"
+          className={styles.termsButton}
+          onClick={() =>
+            message &&
+            sendSms({
+              variables: {
+                message,
+                antaraId: member['Antara ID'],
+                type: 'Consent Reminder',
+              },
+            })
+              .then((res) => {
+                if (res?.data.sendSms.status === 200) {
+                  addToast(res?.data.sendSms.message, {
+                    appearance: 'success',
+                    autoDismiss: true,
+                  })
+
+                  setMessageSent(true)
+                  setShowCard(false)
+                  analytics.track(
+                    'Terms and Condition update message sent',
+                    member['Phone 1']
+                  )
+                } else {
+                  addToast(res?.data.sendSms.message, {
+                    appearance: 'error',
+                    autoDismiss: true,
+                  })
+                }
+              })
+              .catch((error) => {
+                addToast(error.message, {
+                  appearance: 'error',
+                  autoDismiss: true,
+                })
+                logError(error.message)
+              })
+          }
+        >
+          {loading ? 'Notifying member' : 'Notify member'}
+        </Button>
+      </CardContent>
+    )
   }
+
+  if (tscsError) {
+    return <div>Error Loading terms and conditions! ${tscsError.message}</div>
+  }
+  if (tscsLoading) {
+    return <div>Loading updated terms and conditions</div>
+  }
+
+  return (
+    <>
+      {showCardNoMsg && renderCard()}
+      {showCardWithMsg && renderCard()}
+    </>
+  )
+}
+const Tags = ({ member }: any) => {
   const [tags, setTags] = useState<string[] | undefined>(
     undefined && 'No tag set'
   )
@@ -434,14 +568,7 @@ const Tags = ({ member }: any) => {
     <div style={styles.Tags}>
       {tags &&
         tags.map((tag, index) => {
-          return (
-            <Chip
-              key={index}
-              color="primary"
-              style={{ backgroundColor: tagsColor[tag.trim()] }}
-              label={tag}
-            />
-          )
+          return <Chip key={index} className={styles.tags} label={tag} />
         })}
     </div>
   )
@@ -471,7 +598,8 @@ const BioData = () => {
               {member.Sex && member.Sex.charAt(0)}
             </h3>
           </div>
-          <div>
+          <TsCs member={member} contact={memberContact} />
+          <div className={styles.tagContainer}>
             <Tags member={member} />
           </div>
 

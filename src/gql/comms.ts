@@ -69,6 +69,7 @@ const MEMBER_CONTACT_DETAILS = gql`
           kenyaNationalId
           employerName
           intercomUrl
+          lastConsentReminder
         }
       }
     }

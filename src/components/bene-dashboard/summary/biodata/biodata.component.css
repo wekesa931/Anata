@@ -230,3 +230,60 @@
   justify-content: center;
   margin-right: 10px;
 }
+.terms {
+  font-size: 14px;
+  background-color: orange;
+  color: var(--white-100);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.termsSent {
+  font-size: 14px;
+  background-color: var(--white-100);
+  color: var(---dark-blue-10);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  white-space: nowrap;
+  padding: 3px !important;
+}
+.termsBox {
+  font-size: 14px;
+  background-color: var(--white-100);
+  color: var(---dark-blue-10);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  white-space: nowrap;
+}
+.termsText {
+  font-size: 14px !important;
+  color: var(--white-100) !important;
+}
+.termsButton {
+  color: var(--dark-blue-100) !important;
+  background-color: var(--white-100) !important;
+  text-transform: none !important;
+  margin-top: 2px !important;
+  width: fit-content;
+}
+.tags {
+  font-size: 10px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+  text-align: left;
+  color: var(--dark-blue-70);
+  margin-left: 2px;
+  margin-top: 2px;
+}
+.tags:hover {
+  background-color: var(--orange-20);
+}
+.tagContainer {
+  padding: 16px;
+}

@@ -14,6 +14,7 @@ interface IContacts {
   memberType: 'DEPENDENT' | 'Dependent' | 'PRIMARY' | 'Primary'
   dependents: IBeneData[]
   primary: IBeneData[]
+  lastConsentReminder?: string
 }
 
 interface IBeneData {

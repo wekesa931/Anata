@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 const SEND_SMS = gql`
-  mutation sendSms($message: String!, $antaraId: String!) {
-    sendSms(message: $message, antaraId: $antaraId) {
+  mutation sendSms($message: String!, $antaraId: String!, $type: String) {
+    sendSms(message: $message, antaraId: $antaraId, type: $type) {
       status
       message
     }
