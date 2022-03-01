@@ -136,7 +136,7 @@
       "HMP": "shrHWnJ2Ul1mecurv",
       "Conditions": "shrJiqIYoC15uxych"
     },
-    "robert@antarahealth.com": {
+    "ouko@antarahealth.com": {
       "hntasks": {
         "calendar": "shr9X5XXxg3sVTdpp",
         "grid": "shrj1HZ3RmGBZlWyy"
@@ -199,6 +199,22 @@
       "Vitals": "shrhXtXoLehJL4VNR",
       "HMP": "shrugmc1WJpW9mksE",
       "Conditions": "shr2Ja3OBpSzkOjQU"
+    },
+    "muma@antarahealth.com": {
+      "hntasks": {
+        "calendar": "shr9X5XXxg3sVTdpp",
+        "grid": "shrj1HZ3RmGBZlWyy"
+      },
+      "HN Meeting": "shrMiYgAB8QhZGXBr",
+      "Interventions": "shryV7FbwnexdtYzk",
+      "Interventions Data Tracking": "shrGZ2G1HlsKTb34O",
+      "Members Tasks": "shrSqtp9Z4V982UdH",
+      "Members": "shrDTZRbdP9jaGHY7",
+      "Prescription": "shrRygS73frVob7EE",
+      "Vitals": "shr7GtrT73MafBMDc",
+      "HMP": "shr0MPTyXNbXjbAwZ",
+      "Conditions": "shrjDRMN5taTzULbu",
+      "Task": "shrAzUwbRmK4K0Tgx"
     }
   }
 }
