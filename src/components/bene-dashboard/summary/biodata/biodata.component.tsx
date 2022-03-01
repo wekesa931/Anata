@@ -451,7 +451,7 @@ const TsCs = ({ member, contact }: any) => {
     )
       .then((res) => {
         const { Message } = Object.keys(res).map((key) => res[key])[0]
-        const msg = Message.replace('<bnname>', bnname)
+        const msg = Message.replace('{bnname}', bnname)
         setMessage(msg)
       })
       .catch((error) => {
