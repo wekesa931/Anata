@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client'
 import parse from 'html-react-parser'
 import dayjs from 'dayjs'
 import Bugsnag from '@bugsnag/js'
+import Button from '@mui/material/Button'
 import { useMember } from '../../../../../context/member.context'
 import { useUser } from '../../../../../context/user-context'
 import FormField from '../../../../utils/form-field/form-field.component'
@@ -43,46 +44,90 @@ const InteractionLogsForm = ({ name, onFormClose }: IProps) => {
     })
   }, [member])
 
+  const openCalendar = (link: string) => {
+    const newWindow = window.open(link, '_blank', 'noopener,noreferrer')
+    if (newWindow) newWindow.opener = null
+  }
+
   const generateCalendlyLink = (label: string, values: any) => {
     let urlString = ''
     const urlName = member['Full Name'].replaceAll(' ', '%20')
-    if (label === 'Reasons for Consultation') {
-      if (values.outcomeMetadata.reasonForConsultation) {
-        const reasonUrl =
-          values.outcomeMetadata.reasonForConsultation.replaceAll(' ', '%20')
-        urlString = `https://calendly.com/antara-health/antara-virtual-doctor-consultation?name=${urlName}&email=${memberEmail}&a1=${member['Phone 1']}&a2=${reasonUrl}`
-        return (
-          <a
-            className={styles.helperText}
-            href={urlString}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Calendar Link
-          </a>
-        )
-      }
-    } else if (label === 'Notes for MHC') {
-      if (values.mhcReferralReasons) {
-        const reasonUrl = values.mhcReferralReasons.replaceAll(' ', '%20')
-        const mhcNotes =
-          values.mhcReferralNotes &&
-          values.mhcReferralNotes.replaceAll(' ', '%20')
-        urlString = `https://calendly.com/antara-health/mental-health-consultation?name=${urlName}&email=${memberEmail}&a1=${member['Phone 1']}&a2=${reasonUrl}&a3=${mhcNotes}`
-
-        return (
-          <a
-            className={styles.helperText}
-            href={urlString}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Calendar Link
-          </a>
-        )
-      }
+    let calendlyComponent = null
+    switch (label) {
+      case 'Reasons for Consultation':
+        if (values.outcomeMetadata.reasonForConsultation) {
+          const reasonUrl =
+            values.outcomeMetadata.reasonForConsultation.replaceAll(' ', '%20')
+          urlString = `https://calendly.com/antara-health/antara-virtual-doctor-consultation?name=${urlName}&email=${memberEmail}&a1=${member['Phone 1']}&a2=${reasonUrl}`
+          calendlyComponent = (
+            <Button
+              variant="outlined"
+              className={styles.helperText}
+              onClick={() => openCalendar(urlString)}
+            >
+              Book VC appointment
+            </Button>
+          )
+        }
+        break
+      case 'Notes for MHC':
+        if (values.mhcReferralReasons) {
+          const reasonUrl = values.mhcReferralReasons.replaceAll(' ', '%20')
+          const mhcNotes =
+            values.mhcReferralNotes &&
+            values.mhcReferralNotes.replaceAll(' ', '%20')
+          urlString = `https://calendly.com/antara-health/mental-health-consultation?name=${urlName}&email=${memberEmail}&a1=${member['Phone 1']}&a2=${reasonUrl}&a3=${mhcNotes}`
+          calendlyComponent = (
+            <Button
+              variant="outlined"
+              className={styles.helperText}
+              onClick={() => openCalendar(urlString)}
+            >
+              Book MHC appointment
+            </Button>
+          )
+        }
+        break
+      case 'Notes for Nutritional Consultation':
+        if (values.ncReferralReasons) {
+          const reasonUrl = values.ncReferralReasons.replaceAll(' ', '%20')
+          const ncReferralNotes =
+            values.ncReferralNotes &&
+            values.ncReferralNotes.replaceAll(' ', '%20')
+          urlString = `https://calendly.com/antara-health/nutrition-consultation?name=${urlName}&email=${memberEmail}&a1=${member['Phone 1']}&a2=${reasonUrl}&a3=${ncReferralNotes}`
+          calendlyComponent = (
+            <Button
+              variant="outlined"
+              className={styles.helperText}
+              onClick={() => openCalendar(urlString)}
+            >
+              Book NC appointment
+            </Button>
+          )
+        }
+        break
+      case 'Notes for Physio Consultation':
+        if (values.pcReferralReasons) {
+          const reasonUrl = values.pcReferralReasons.replaceAll(' ', '%20')
+          const pcReferralNotes =
+            values.pcReferralNotes &&
+            values.pcReferralNotes.replaceAll(' ', '%20')
+          urlString = `https://calendly.com/antara-health/physiotherapy-consultation?name=${urlName}&email=${memberEmail}&a1=${member['Phone 1']}&a2=${reasonUrl}&a3=${pcReferralNotes}`
+          calendlyComponent = (
+            <Button
+              variant="outlined"
+              className={styles.helperText}
+              onClick={() => openCalendar(urlString)}
+            >
+              Book PC appointment
+            </Button>
+          )
+        }
+        break
+      default:
+        calendlyComponent = <></>
     }
-    return ''
+    return calendlyComponent
   }
   const extractUsername = (email: string) => {
     return email.replace(/@.*$/, '')
@@ -177,7 +222,9 @@ const InteractionLogsForm = ({ name, onFormClose }: IProps) => {
                       <ErrorMessage name={field.name} />
                     </p>
                     {(field.label === 'Notes for MHC' ||
-                      field.label === 'Reasons for Consultation') &&
+                      field.label === 'Reasons for Consultation' ||
+                      field.label === 'Notes for Physio Consultation' ||
+                      field.label === 'Notes for Nutritional Consultation') &&
                       generateCalendlyLink(field.label, values)}
                   </div>
                 )

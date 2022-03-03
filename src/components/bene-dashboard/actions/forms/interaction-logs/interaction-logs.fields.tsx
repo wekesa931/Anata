@@ -192,6 +192,8 @@ const useInteractionFormFields = (member: any, user: any) => {
         'Virtual Consultation Required',
         'Flag for Review',
         'MHC',
+        'Nutritional Consultation',
+        'Physio Consultation',
         'None',
       ].map((option) => ({
         label: option,
@@ -233,6 +235,38 @@ const useInteractionFormFields = (member: any, user: any) => {
       name: 'mhcReferralNotes',
       type: 'long-text',
       condition: (values) => values.outcome && values.outcome === 'MHC',
+      required: true,
+    },
+    {
+      label: 'Reasons for Referral',
+      name: 'ncReferralReasons',
+      type: 'long-text',
+      condition: (values) =>
+        values.outcome && values.outcome === 'Nutritional Consultation',
+      required: true,
+    },
+    {
+      label: 'Notes for Nutritional Consultation',
+      name: 'ncReferralNotes',
+      type: 'long-text',
+      condition: (values) =>
+        values.outcome && values.outcome === 'Nutritional Consultation',
+      required: true,
+    },
+    {
+      label: 'Reasons for Referral',
+      name: 'pcReferralReasons',
+      type: 'long-text',
+      condition: (values) =>
+        values.outcome && values.outcome === 'Physio Consultation',
+      required: true,
+    },
+    {
+      label: 'Notes for Physio Consultation',
+      name: 'pcReferralNotes',
+      type: 'long-text',
+      condition: (values) =>
+        values.outcome && values.outcome === 'Physio Consultation',
       required: true,
     },
   ]
