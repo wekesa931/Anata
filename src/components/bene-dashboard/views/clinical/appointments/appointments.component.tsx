@@ -8,6 +8,7 @@ import Icon from '../../../../utils/icon/icon.component'
 import Modal from '../../../../utils/modals/modal.component'
 import Table from '../../../../utils/table/table.component'
 import TextArea from '../../../../../helpers/textarea.component'
+import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 
 const PafuView = ({ data }: any) => {
   const [showPafu, setShowPafu] = useState(false)
@@ -73,6 +74,7 @@ const Appointments = () => {
   const { recId } = useParams()
   const [appointments, setAppointments] = useState<any[]>([])
   const [filteredAppointments, setFilteredAppointments] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   const {
     ops: {
       filters: { appointments: filters },
@@ -81,12 +83,14 @@ const Appointments = () => {
 
   useEffect(() => {
     let isCancelled = false
+
     airtableFetch(
       `appointments/list?filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((response) => {
       if (!isCancelled) {
         const apps = Object.keys(response).map((key) => response[key])
         setAppointments(apps)
+        setLoading(false)
       }
     })
     return () => {
@@ -125,6 +129,7 @@ const Appointments = () => {
       component: ({ data }: any) => <PafuView data={data} />,
     },
   ]
+  const isReadyToShow = filteredAppointments?.length >= 0 && !loading
   return (
     <div>
       <div className="d-flex flex-align-center">
@@ -138,12 +143,20 @@ const Appointments = () => {
           </span>
         )}
       </div>
-      <Table
-        title="Appointment"
-        columns={columns}
-        data={filteredAppointments}
-        dateColumnKey="start_date_time"
-      />
+      {isReadyToShow && (
+        <Table
+          title="Appointment"
+          columns={columns}
+          data={filteredAppointments}
+          dateColumnKey="start_date_time"
+        />
+      )}
+      {loading && (
+        <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+          <LoadingIcon />
+          <p className="text-small"> Loading Appointments </p>
+        </div>
+      )}
     </div>
   )
 }

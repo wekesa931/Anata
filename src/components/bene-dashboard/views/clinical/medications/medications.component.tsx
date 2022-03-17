@@ -5,12 +5,14 @@ import airtableFetch from '../../../../../resources/airtable-fetch'
 import List from '../../../../utils/list/list.component'
 import { useSortFilter } from '../../../../../context/sort-filter-views.context'
 import AirtableField from '../../../../../types/airtable-field'
+import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 
 const Medications = () => {
   const { recId } = useParams()
   const [medications, setMedications] = useState<any[]>([])
   const [editable, setEditable] = useState<boolean>(false)
   const [filteredMedications, setFilteredMedications] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   const {
     ops: {
       filters: { medications: filters },
@@ -66,6 +68,7 @@ const Medications = () => {
         }))
       if (!isCancelled) {
         setMedications(meds)
+        setLoading(false)
       }
     })
 
@@ -153,7 +156,7 @@ const Medications = () => {
       </>
     )
   }
-
+  const isReadyToShow = filteredMedications?.length >= 0 && !loading
   return (
     <div>
       <div className="d-flex flex-align-center">
@@ -162,19 +165,27 @@ const Medications = () => {
           <span className="badge badge-success">Status: {filters.status}</span>
         )}
       </div>
-      <List
-        list={filteredMedications}
-        emptyListText="No medications recorded"
-        getTopLeftText={renderStartDate}
-        getTopRightText={renderRefillText}
-        dateColumnKey="Start Date"
-        paginate
-        modalTitle="Medication"
-        editable={editable}
-        onEdit={updateMedication}
-        editableFields={editableFields()}
-        listItemActions={medicationListItemAction}
-      />
+      {isReadyToShow && (
+        <List
+          list={filteredMedications}
+          emptyListText="No medications recorded"
+          getTopLeftText={renderStartDate}
+          getTopRightText={renderRefillText}
+          dateColumnKey="Start Date"
+          paginate
+          modalTitle="Medication"
+          editable={editable}
+          onEdit={updateMedication}
+          editableFields={editableFields()}
+          listItemActions={medicationListItemAction}
+        />
+      )}
+      {loading && (
+        <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+          <LoadingIcon />
+          <p className="text-small"> Loading Medications </p>
+        </div>
+      )}
     </div>
   )
 }

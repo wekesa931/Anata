@@ -5,11 +5,13 @@ import Table from '../../../utils/table/table.component'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import { useMember } from '../../../../context/member.context'
 import logError from '../../../utils/Bugsnag/Bugsnag'
+import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 
 const Consultation = () => {
   const [consultationData, setconsultationData] = useState<any[]>([])
   const { member } = useMember()
   const antaraId = member['Antara ID']
+  const [loading, setLoading] = useState(true)
   const columns = [
     {
       name: 'Date',
@@ -18,7 +20,6 @@ const Consultation = () => {
     },
     { name: 'Primary Diagnosis', format: '', key: 'Primary Diagnosis' },
   ]
-
   useEffect(() => {
     analytics.track('Clinical Consultation Opened')
     const getConsultation = async () => {
@@ -38,22 +39,33 @@ const Consultation = () => {
           return parent
         })
         setconsultationData(mappedResponses)
+        setLoading(false)
       } catch (e) {
         logError(e)
       }
     }
     getConsultation()
   }, [antaraId])
+  const isReadyToShow = consultationData?.length >= 0 && !loading
 
   return (
     <div className="mb-ten">
       <h4>Clinical Consultation</h4>
-      <Table
-        title="Consultation Details"
-        columns={columns}
-        data={consultationData}
-        dateColumnKey="Date of appointment"
-      />
+      {isReadyToShow && (
+        <Table
+          title="Consultation Details"
+          columns={columns}
+          data={consultationData}
+          dateColumnKey="Date of appointment"
+        />
+      )}
+
+      {loading && (
+        <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+          <LoadingIcon />
+          <p className="text-small"> Loading Clinical Consultation </p>
+        </div>
+      )}
     </div>
   )
 }

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import airtableFetch from '../../../../../resources/airtable-fetch'
 import Table from '../../../../utils/table/table.component'
+import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 
 const Lipids = () => {
   const { recId } = useParams()
   const [lipids, setLipids] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
   const columns = [
     { name: 'Date', format: 'dd/mmm/yy', key: 'Test Date' },
@@ -60,24 +62,34 @@ const Lipids = () => {
     ).then((response) => {
       const labResults = Object.keys(response).map((key) => response[key])
       setLipids(labResults)
+      setLoading(false)
     })
   }, [recId])
-
+  const isReadyToShow = lipids?.length >= 0 && !loading
   return (
-    lipids && (
-      <Table
-        title="Lipids"
-        columns={columns}
-        data={lipids}
-        dateColumnKey="Test Date"
-      />
-    )
+    <div>
+      {isReadyToShow && lipids && (
+        <Table
+          title="Lipids"
+          columns={columns}
+          data={lipids}
+          dateColumnKey="Test Date"
+        />
+      )}
+      {loading && (
+        <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+          <LoadingIcon />
+          <p className="text-small"> Loading Lipids </p>
+        </div>
+      )}
+    </div>
   )
 }
 
 const GlucoseMonitoring = () => {
   const { recId } = useParams()
   const [glucose, setGlucose] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
   const columns = [
     { name: 'Date', format: 'dd/mmm/yy', key: 'Test Date' },
@@ -105,18 +117,27 @@ const GlucoseMonitoring = () => {
     ).then((response) => {
       const labResults = Object.keys(response).map((key) => response[key])
       setGlucose(labResults)
+      setLoading(false)
     })
   }, [recId])
-
+  const isReadyToShow = glucose?.length >= 0 && !loading
   return (
-    glucose && (
-      <Table
-        title="Glucose Monitoring"
-        columns={columns}
-        data={glucose}
-        dateColumnKey="Test Date"
-      />
-    )
+    <div>
+      {isReadyToShow && glucose && (
+        <Table
+          title="Glucose Monitoring"
+          columns={columns}
+          data={glucose}
+          dateColumnKey="Test Date"
+        />
+      )}
+      {loading && (
+        <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+          <LoadingIcon />
+          <p className="text-small"> Loading Glucose Monitoring </p>
+        </div>
+      )}
+    </div>
   )
 }
 

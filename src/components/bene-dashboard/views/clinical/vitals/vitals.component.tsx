@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import airtableFetch from '../../../../../resources/airtable-fetch'
 import Table from '../../../../utils/table/table.component'
+import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 
 type BMIInfoProps = {
   Height: number
@@ -110,7 +111,6 @@ const BloodPressure = () => {
              Stage 2 Hypertension: >89 mmHg`,
     },
   ]
-
   return (
     bp && (
       <Table
@@ -130,6 +130,7 @@ const BloodPressure = () => {
 const Vitals = () => {
   const { recId } = useParams()
   const [vitals, setVitals] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     airtableFetch(
@@ -137,22 +138,35 @@ const Vitals = () => {
     ).then((response) => {
       const labResults = Object.keys(response).map((key) => response[key])
       setVitals(labResults)
+      setLoading(false)
     })
   }, [recId])
+  const isReadyToShow = vitals?.length >= 0 && !loading
+
   return (
     <div className="margin-bottom-16">
       <h4>Vitals</h4>
-      <Bmi
-        bmiInfo={vitals.filter(
-          ({ Height, Weight, BMI }) => Height || Weight || BMI
-        )}
-      />
-      <BloodPressure />
-      <OtherVitals
-        otherVitals={vitals.filter(
-          ({ Temperature, SPO2, ECG, RR }) => Temperature || SPO2 || ECG || RR
-        )}
-      />
+      {isReadyToShow && (
+        <Bmi
+          bmiInfo={vitals.filter(
+            ({ Height, Weight, BMI }) => Height || Weight || BMI
+          )}
+        />
+      )}
+      {isReadyToShow && <BloodPressure />}
+      {isReadyToShow && (
+        <OtherVitals
+          otherVitals={vitals.filter(
+            ({ Temperature, SPO2, ECG, RR }) => Temperature || SPO2 || ECG || RR
+          )}
+        />
+      )}
+      {loading && (
+        <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+          <LoadingIcon />
+          <p className="text-small"> Loading Vitals </p>
+        </div>
+      )}
     </div>
   )
 }

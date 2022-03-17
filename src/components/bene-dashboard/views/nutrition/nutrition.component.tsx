@@ -58,7 +58,7 @@ const Nutrition = () => {
     'Deep Fried',
     'Fast Food',
     'Cold Cuts',
-    'Daily estimated cholesterol intake', 
+    'Daily estimated cholesterol intake',
     'Summary',
     'Weekly Sodium - Canned Foods',
     'Weekly Sodium - Meats',
