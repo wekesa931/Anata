@@ -56,11 +56,13 @@ const FORMS = [
     name: 'Baseline Form',
     url_sandbox: 'shrWdIHgT7sOUEiMP',
     url: 'shrPou8GMbw9pKWpZ',
+    hnField: 'Health Navigator',
   },
   {
     name: 'Condition Diagnosis Form',
     url_sandbox: 'shrjHJjzwiX1I4y12',
     url: 'shreJWFrTNVXs6RKW',
+    hnField: 'Health Navigator',
   },
   {
     name: 'HIF',
@@ -81,6 +83,7 @@ const FORMS = [
     name: 'Monitoring Kit Form',
     url_sandbox: 'shrM2jCCYt8QVtmue',
     url: 'shrnOUMPNs7vVStMR',
+    hnField: 'Health Navigator',
   },
   {
     name: 'Nutritional Consultation Form',
@@ -101,6 +104,7 @@ const FORMS = [
     name: 'Logistics Task',
     url_sandbox: 'shrlnUGgWFhDMuix1',
     url: 'shruHjY6gGmXxdags',
+    hnField: 'Creator',
   },
   {
     name: 'Conditions data tracking',
@@ -116,6 +120,7 @@ const FORMS = [
     name: 'VC prescription request',
     url_sandbox: 'shrjRIzQkMCrbVX7z',
     url: 'shrY7UhjHNpZxNfNK',
+    hnField: 'Creator',
   },
   {
     name: 'MHC intake form',
