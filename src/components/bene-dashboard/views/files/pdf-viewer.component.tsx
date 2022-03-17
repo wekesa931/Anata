@@ -265,7 +265,7 @@ export default function PdfViewer(props) {
                   <Document
                     file={displayFile.url}
                     externalLinkTarget="_blank"
-                    renderMode="svg"
+                    renderMode="canvas"
                     onLoadSuccess={onDocumentLoadSuccess}
                     loading={<Loader />}
                     error={<LoadingError />}
