@@ -36,7 +36,7 @@ const TaskMenu = () => {
   useEffect(() => {
     if (email && dueDate) {
       setUrl(
-        `hntasks/list/0?
+        `hntasks/list?
          &sort=[{"field":"Due Date","direction":"asc"}]
          &filterByFormula=AND(FIND('${email}', {HN email}), IS_SAME('${dueDate}', {Due Date}, 'days'))`
       )
@@ -52,6 +52,7 @@ const TaskMenu = () => {
           name: `${task['Member Name Lookup']} - ${task.Type}`,
           data: task,
         }))
+
       setTasks(mappedResponse)
     }
   }, [data])
