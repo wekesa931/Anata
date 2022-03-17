@@ -47,6 +47,7 @@ import MobileDatePicker from '@mui/lab/MobileDatePicker'
 import AdapterDateFns from '@mui/lab/AdapterDayjs'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import LinearProgress from '@mui/material/LinearProgress'
+import Tooltip from '../../../utils/tooltip/tooltip.component'
 import styles from './files.component.css'
 import PdfViewer from './pdf-viewer.component'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
@@ -376,20 +377,26 @@ const FilterComponent = ({
               )}{' '}
             </>
           )}
-          <List
-            color={listView ? '#1084ee' : '#5d6b82'}
-            className={styles.listIcon}
-            onClick={() => {
-              setListView(true)
-            }}
-          />
-          <FeatherGrid
-            color={listView ? '#5d6b82' : '#1084ee'}
-            className={styles.gridIcon}
-            onClick={() => {
-              setListView(false)
-            }}
-          />
+
+          <Tooltip title="List View">
+            <List
+              color={listView ? '#1084ee' : '#5d6b82'}
+              className={styles.listIcon}
+              onClick={() => {
+                setListView(true)
+              }}
+            />
+          </Tooltip>
+
+          <Tooltip title="Grid View">
+            <FeatherGrid
+              color={listView ? '#5d6b82' : '#1084ee'}
+              className={styles.gridIcon}
+              onClick={() => {
+                setListView(false)
+              }}
+            />
+          </Tooltip>
         </div>
       </div>
       <div className={styles.typeSelection}>
