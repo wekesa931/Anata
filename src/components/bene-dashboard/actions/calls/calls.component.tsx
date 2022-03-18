@@ -1,5 +1,6 @@
 /* eslint jsx-a11y/anchor-is-valid: 0 */
 import React, { useEffect, useState } from 'react'
+import { X } from 'react-feather'
 import Icon from '../../../utils/icon/icon.component'
 import ContactList from './contacts.component'
 import Notification from '../../../utils/notification/notification.component'
@@ -33,7 +34,7 @@ const CallsCallout = ({
   const [memberContacts, setmemberContacts] = React.useState(Contacts)
   const { memberContact: loadedContacts } = useMember()
   const [isPhoneChooserOpen, setIsPhoneChooserOpen] = useState<boolean>(false)
-  const { callError, setHistoryRecordId } = useCall()
+  const { callError, setHistoryRecordId, setcallError } = useCall()
 
   const checkProperties = (obj: any) => {
     // eslint-disable-next-line
@@ -103,8 +104,20 @@ const CallsCallout = ({
         >
           <div data-testid="phone-list" className="phone-number-callout">
             {callError && (
-              <div>
-                <Notification title="Error" message={callError ?? ''} />
+              <div className="p-relative">
+                <X
+                  className="calls-error"
+                  color="var(--red-100)"
+                  width={18}
+                  height={18}
+                  onClick={() => setcallError(null)}
+                />
+                <Notification
+                  title="Error"
+                  message={callError ?? ''}
+                  buttonMargin="0"
+                  buttonPadding="15px 8px"
+                />
               </div>
             )}
             {memberContacts.length > 0 ? (

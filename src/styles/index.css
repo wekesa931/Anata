@@ -1195,6 +1195,11 @@ a {
   height: 37px !important;
   padding: 8px !important;
 }
+.calls-error {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+}
 
 .call-btn {
   height: 37px !important;

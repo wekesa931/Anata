@@ -5,9 +5,16 @@ import styles from './notification.component.css'
 export interface IProps {
   title: 'Warning' | 'Error' | 'Info'
   message: string
+  buttonMargin?: string
+  buttonPadding?: string
 }
 
-const Notification = ({ message, title }: IProps) => {
+const Notification = ({
+  message,
+  title,
+  buttonMargin,
+  buttonPadding,
+}: IProps) => {
   const backgroundColor = {
     Error: '#ffebea',
     Warning: '#fff5e5',
@@ -18,11 +25,14 @@ const Notification = ({ message, title }: IProps) => {
     Error: '#ff3b30',
     Info: '#ff9800',
   }
+
   return (
     <div
       className={styles.notificationBlock}
       style={{
         background: backgroundColor[title],
+        margin: `${buttonMargin || '0px 16px 0px 16px'}`,
+        padding: `${buttonPadding || '8px'}`,
       }}
     >
       <div className="d-flex max-width">

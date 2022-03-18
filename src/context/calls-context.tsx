@@ -85,6 +85,7 @@ type ContextType = {
   updateParticipantHoldState: (part: IParticipantSession[]) => void
   setCounterValue: () => void
   setHistoryRecordId: (id: string) => void
+  setcallError: (error: string | null) => void
 }
 
 export const participantCallAction = {
@@ -97,6 +98,7 @@ const CallContext = React.createContext<ContextType>({
   initiateCall: () => null,
   initiateTransfer: () => null,
   setCallerName: () => null,
+  setcallError: () => null,
   completeCall: () => null,
   setCounterValue: () => null,
   setHistoryRecordId: () => null,
@@ -426,6 +428,7 @@ function CallProvider({ children }: any) {
         conferenceParticipants,
         updateParticipantHoldState,
         setCallerName,
+        setcallError,
         completeCall,
         initiateCall,
         initiateTransfer,

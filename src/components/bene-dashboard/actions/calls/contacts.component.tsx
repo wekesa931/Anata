@@ -48,16 +48,18 @@ const ContactList = ({
     iconColor: '#d1d5db',
     textColor: '#5d6b82',
   })
+
   const calloutChange = async (e) => {
     e.stopPropagation()
     setisRinging(!isRinging)
+
     try {
       initiateCall(relevantContact, onCallInitiated, member, tasksType)
     } catch (error) {
       setnotificationError(error.message)
       setTimeout(() => {
         setnotificationError(null)
-      }, 4000)
+      }, 3000)
     } finally {
       setTimeout(() => {
         setisRinging(false)
@@ -65,6 +67,7 @@ const ContactList = ({
     }
   }
   const displayError = notificationError
+
   return (
     <>
       <div
@@ -109,7 +112,7 @@ const ContactList = ({
       </div>
       {displayError && (
         <div>
-          <Notification title="Error" message={notificationError ?? ''} />
+          <Notification title="Info" message={notificationError ?? ''} />
         </div>
       )}
     </>
