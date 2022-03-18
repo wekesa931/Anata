@@ -1,16 +1,15 @@
 .animatedDiv {
-    animation: fadeIn 0.2s;
-    height: auto;
-    z-index: 1;
+  animation: fadeIn 0.2s;
+  height: auto;
+}
+
+@keyframes fadeIn {
+  from {
+    margin-top: -10px;
+    opacity: 0.5;
   }
-  
-  @keyframes fadeIn {
-    from {
-      margin-top: -10px;
-      opacity: 0.5;
-    }
-    to {
-      margin-top: 0;
-      opacity: 1;
-    }
+  to {
+    margin-top: 0;
+    opacity: 1;
   }
+}

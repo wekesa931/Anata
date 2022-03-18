@@ -347,6 +347,9 @@ h6,
 .text-disabled {
   color: var(--greyscale-3);
 }
+.filter-text {
+  margin-top: 10px;
+}
 
 .text-primary {
   color: var(--orange-base);

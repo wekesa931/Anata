@@ -109,7 +109,7 @@ const SortDialog = ({ onClose }: SortDialogProps) => {
           ))}
         </div>
         <div>
-          <h6 className="text-disabled">Filters</h6>
+          <h6 className="text-disabled filter-text">Filters</h6>
           <div className="d-flex">
             <Tabs orientation="vertical">
               <div label="Appointments">

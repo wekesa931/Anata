@@ -18,6 +18,7 @@ import ErrorBoundary from '../../error-boundary/error-boundary.component'
 import SortDialog from './sort-and-filter.component/sort-and-filter.component'
 import Conditions from './conditions/conditions.component'
 import MemberTask from './member_tasks/member-task.component'
+import Tooltip from '../../utils/tooltip/tooltip.component'
 
 const SortButton = ({ openSortDialog, setOpenSortDialog }: any) => {
   const {
@@ -50,10 +51,12 @@ const FilterComponent = () => {
       >
         {!openSortDialog ? (
           <div className={styles.animatedDiv}>
-            <SortButton
-              setOpenSortDialog={setOpenSortDialog}
-              openSortDialog={openSortDialog}
-            />
+            <Tooltip title="Sort And Filter">
+              <SortButton
+                setOpenSortDialog={setOpenSortDialog}
+                openSortDialog={openSortDialog}
+              />
+            </Tooltip>
           </div>
         ) : (
           <div className={styles.animatedDiv}>
