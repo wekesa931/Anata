@@ -21,7 +21,10 @@
   flex-direction: column;
   justify-content: center;
 }
-
+.th:nth-child(3),
+.td:nth-child(3) {
+  width: 300%;
+}
 .pagination {
   display: flex;
   justify-content: center;
@@ -68,6 +71,7 @@
   border-right: 1px solid var(--blue-light);
   font-weight: bold;
   font-size: 12px;
+  width: 10px;
 }
 
 .th.info:hover {
