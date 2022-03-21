@@ -47,7 +47,6 @@ const FilledForms = () => {
     const forms = [
       'baseline',
       'hif',
-      'nif',
       'ncf',
       'activity',
       'minorhif',
@@ -66,6 +65,7 @@ const FilledForms = () => {
       'interventions',
       'interventions_tracking',
       'mhc',
+      'physio',
     ]
 
     const getFields = (fields: any) => {
@@ -85,7 +85,6 @@ const FilledForms = () => {
         return result ? getFields(result) : result
       })
     }
-
     const promises = forms.map((form) => getForm(form))
     Promise.all(promises).then((response) => {
       if (response.every((form) => form === undefined)) {
@@ -94,7 +93,6 @@ const FilledForms = () => {
         const formResponses = [
           { name: 'Baseline', data: response[forms.indexOf('baseline')] },
           { name: 'HIF', data: response[forms.indexOf('hif')] },
-          { name: 'NIF', data: response[forms.indexOf('nif')] },
           {
             name: 'Nutritional Consultation',
             data: response[forms.indexOf('ncf')],
@@ -134,6 +132,10 @@ const FilledForms = () => {
           {
             name: 'MHC',
             data: response[forms.indexOf('mhc')],
+          },
+          {
+            name: 'Physiotherapy Consultation',
+            data: response[forms.indexOf('physio')],
           },
         ]
         setFilledForms(formResponses)
