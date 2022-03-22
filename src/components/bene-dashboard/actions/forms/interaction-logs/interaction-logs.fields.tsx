@@ -84,19 +84,6 @@ const useInteractionFormFields = (member: any, user: any) => {
       required: true,
     },
     {
-      label: 'Answered',
-      name: 'phoneCallAnswered',
-      type: 'single-select',
-      options: ['Yes', 'No'].map((option) => ({
-        label: option,
-        value: option,
-      })),
-      condition: (values) =>
-        values.modeOfCommunication &&
-        values.modeOfCommunication === 'Phone call',
-      required: true,
-    },
-    {
       label: 'Interaction Direction',
       name: 'interactionDirection',
       type: 'single-select',
