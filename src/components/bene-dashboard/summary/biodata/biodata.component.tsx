@@ -5,6 +5,7 @@ import { Button, CardContent, Typography, Chip } from '@mui/material'
 import { useQuery, useMutation } from '@apollo/client'
 import { useToasts } from 'react-toast-notifications'
 import dayjs from 'dayjs'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { hmp } from '../../../../types/user'
 import styles from './biodata.component.css'
 import airtableFetch from '../../../../resources/airtable-fetch'
@@ -588,6 +589,9 @@ const BioData = () => {
       }`
     )
 
+  const gaInsuranceLink = 'https://health.gakenya.com/app'
+  const mixPanelLink = `https://mixpanel.com/project/2141047/view/293995/app/profile#distinct_id=${member['Antara ID']}`
+
   return (
     <div className={styles.wrapper}>
       {member && (
@@ -638,12 +642,48 @@ const BioData = () => {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
                   >
-                    AHC Number:
+                    Insurance ID:
                   </td>
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                    {member['AHC Number']}
+                    {member['Insurance ID']}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    Corporate ID:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    {member['Corporate ID']}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    Start Date:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    {member['Antara Start Date']}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    Smart ID:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    {member['SMART ID']}
                   </td>
                 </tr>
                 <tr>
@@ -662,14 +702,54 @@ const BioData = () => {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
                   >
-                    Coverage:
+                    Insurance Plan:
                   </td>
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                    {member['Avenue Plan']}
+                    {member['Insurance Plan']}
                   </td>
                 </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    Insurance Dashboard:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    <CopyToClipboard text={`${member['Insurance ID']}`}>
+                      <a
+                        href={`${gaInsuranceLink}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Open Dashboard
+                      </a>
+                    </CopyToClipboard>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    MixPanel Dashboard:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                      <a
+                        href={`${mixPanelLink}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Open Dashboard
+                      </a>
+                  </td>
+                </tr>
+
                 <tr>
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
@@ -686,7 +766,7 @@ const BioData = () => {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
                   >
-                    Employer:
+                    Status:
                   </td>
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
