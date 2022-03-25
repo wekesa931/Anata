@@ -94,7 +94,7 @@ const TASK_FIELDS: AirtableField[] = [
     calculated: true,
   },
   {
-    name: 'Assigned HN Name',
+    name: 'Assignee Name',
     type: 'lookup',
     calculated: true,
   },

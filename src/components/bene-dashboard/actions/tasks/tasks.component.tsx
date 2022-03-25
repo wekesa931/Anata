@@ -35,7 +35,7 @@ function useTransformedApiRecords(rawApiRecords: any) {
       taskPriority: 'Task Priority',
       measurementsToTake: 'Collect Condition Data',
       assignee: {
-        fullName: 'Assigned HN Name',
+        fullName: 'Assignee Name',
       },
       lastStatusChangedAt: 'Last Status changed at',
       formUrl: 'Open URL',
@@ -176,7 +176,7 @@ const Tasks = () => {
     'Task Priority',
     'Collect Condition Data',
     'Assignee',
-    'Assigned HN Name',
+    'Assignee Name',
     'Last Status changed at',
     'Open URL',
     'Prescription Drug Names',
@@ -231,7 +231,7 @@ const Tasks = () => {
   }
 
   useEffect(() => {
-    function getAssignedHnName(assigned: string | { fullName: string }) {
+    function getAssigneeName(assigned: string | { fullName: string }) {
       return typeof assigned === 'string' ? assigned : assigned?.fullName || ''
     }
     // Display the mergedRecords
@@ -242,16 +242,16 @@ const Tasks = () => {
             <div className={styles.taskDiv}>
               <div className={styles.taskNameWrap}>
                 <span>{hnTask.Type}</span>
-                {hnTask['Assigned HN Name'] && (
+                {hnTask['Assignee Name'] && (
                   <div className={styles.taskAssignee}>
                     <User width={14} height={14} />
-                    {Array.isArray(hnTask['Assigned HN Name']) &&
-                      hnTask['Assigned HN Name'].map(
+                    {Array.isArray(hnTask['Assignee Name']) &&
+                      hnTask['Assignee Name'].map(
                         (
                           assigned: string | { fullName: string },
                           index: number
                         ) => (
-                          <span key={index}>{getAssignedHnName(assigned)}</span>
+                          <span key={index}>{getAssigneeName(assigned)}</span>
                         )
                       )}
                   </div>

@@ -21,14 +21,12 @@ const tasks_mock_response = {
     'Antara ID': ['antara_id'],
     'Send SMS': {
       label: 'Send SMS',
-      url:
-        'https://airtable.com/table_id/reckDDIH5ccKXJIVQ?blocks=blisrVqe2tDu2aEra',
+      url: 'https://airtable.com/table_id/reckDDIH5ccKXJIVQ?blocks=blisrVqe2tDu2aEra',
     },
     recordid: 'reckDDIH5ccKXJIVQ',
     'Open URL': {
       label: 'Open URL',
-      url:
-        'https://airtable.com/tbl3iBWzYVWEpdLje/viwZ1H1vBNJVMmpBJ?blocks=hide',
+      url: 'https://airtable.com/tbl3iBWzYVWEpdLje/viwZ1H1vBNJVMmpBJ?blocks=hide',
     },
     member_record_id: ['member_record_id'],
     'Dashboard URL': {
@@ -37,7 +35,7 @@ const tasks_mock_response = {
     },
     'Days overdue': 20,
     'Member Record ID': ['member_record_id'],
-    'Assigned HN Name': ["Anne Esang'ire"],
+    'Assignee Name': ["Anne Esang'ire"],
     member_status: ['Active'],
   },
   recuvlfaovtO75aRV: {
@@ -62,14 +60,12 @@ const tasks_mock_response = {
     'Antara ID': ['antara_id'],
     'Send SMS': {
       label: 'Send SMS',
-      url:
-        'https://airtable.com/table_id/recuvlfaovtO75aRV?blocks=blisrVqe2tDu2aEra',
+      url: 'https://airtable.com/table_id/recuvlfaovtO75aRV?blocks=blisrVqe2tDu2aEra',
     },
     recordid: 'recuvlfaovtO75aRV',
     'Open URL': {
       label: 'Open URL',
-      url:
-        'https://airtable.com/shrKQ5efAEh9z3618?prefill_Member=member_record_id&prefill_Health Navigator=assigned_hn',
+      url: 'https://airtable.com/shrKQ5efAEh9z3618?prefill_Member=member_record_id&prefill_Health Navigator=assigned_hn',
     },
     member_record_id: ['member_record_id'],
     'Dashboard URL': {
@@ -78,7 +74,7 @@ const tasks_mock_response = {
     },
     'Days overdue': 22,
     'Member Record ID': ['member_record_id'],
-    'Assigned HN Name': ["Anne Esang'ire"],
+    'Assignee Name': ["Anne Esang'ire"],
     member_status: ['Active'],
   },
   recXQFem8QcXgldWk: {
@@ -101,8 +97,7 @@ const tasks_mock_response = {
     'Antara ID': ['antara_id'],
     'Send SMS': {
       label: 'Send SMS',
-      url:
-        'https://airtable.com/table_id/recXQFem8QcXgldWk?blocks=blisrVqe2tDu2aEra',
+      url: 'https://airtable.com/table_id/recXQFem8QcXgldWk?blocks=blisrVqe2tDu2aEra',
     },
     recordid: 'recXQFem8QcXgldWk',
     'Open URL': { label: 'Open URL', url: '' },
@@ -113,7 +108,7 @@ const tasks_mock_response = {
     },
     'Days overdue': 44,
     'Member Record ID': ['member_record_id'],
-    'Assigned HN Name': ["Anne Esang'ire"],
+    'Assignee Name': ["Anne Esang'ire"],
     member_status: ['Active'],
   },
   recAaomkOYGAHzyEA: {
@@ -135,8 +130,7 @@ const tasks_mock_response = {
     'Antara ID': ['antara_id'],
     'Send SMS': {
       label: 'Send SMS',
-      url:
-        'https://airtable.com/table_id/recAaomkOYGAHzyEA?blocks=blisrVqe2tDu2aEra',
+      url: 'https://airtable.com/table_id/recAaomkOYGAHzyEA?blocks=blisrVqe2tDu2aEra',
     },
     recordid: 'recAaomkOYGAHzyEA',
     'Open URL': { label: 'Open URL', url: '' },
@@ -147,7 +141,7 @@ const tasks_mock_response = {
     },
     'Days overdue': 48,
     'Member Record ID': ['member_record_id'],
-    'Assigned HN Name': ["Anne Esang'ire"],
+    'Assignee Name': ["Anne Esang'ire"],
     member_status: ['Active'],
   },
   recdGIIIGbrdd08z5: {
@@ -169,8 +163,7 @@ const tasks_mock_response = {
     'Antara ID': ['antara_id'],
     'Send SMS': {
       label: 'Send SMS',
-      url:
-        'https://airtable.com/table_id/recdGIIIGbrdd08z5?blocks=blisrVqe2tDu2aEra',
+      url: 'https://airtable.com/table_id/recdGIIIGbrdd08z5?blocks=blisrVqe2tDu2aEra',
     },
     recordid: 'recdGIIIGbrdd08z5',
     'Open URL': { label: 'Open URL', url: '' },
@@ -181,7 +174,7 @@ const tasks_mock_response = {
     },
     'Days overdue': 50,
     'Member Record ID': ['member_record_id'],
-    'Assigned HN Name': ["Anne Esang'ire"],
+    'Assignee Name': ["Anne Esang'ire"],
     member_status: ['Active'],
   },
   recXB09w92oOPaEe2: {
@@ -202,8 +195,7 @@ const tasks_mock_response = {
     'Antara ID': ['antara_id'],
     'Send SMS': {
       label: 'Send SMS',
-      url:
-        'https://airtable.com/table_id/recXB09w92oOPaEe2?blocks=blisrVqe2tDu2aEra',
+      url: 'https://airtable.com/table_id/recXB09w92oOPaEe2?blocks=blisrVqe2tDu2aEra',
     },
     recordid: 'recXB09w92oOPaEe2',
     'Open URL': { label: 'Open URL', url: '' },
@@ -214,7 +206,7 @@ const tasks_mock_response = {
     },
     'Days overdue': 57,
     'Member Record ID': ['member_record_id'],
-    'Assigned HN Name': ["Anne Esang'ire"],
+    'Assignee Name': ["Anne Esang'ire"],
     member_status: ['Active'],
   },
   recNP6CNEmfGoM5Ei: {
@@ -235,8 +227,7 @@ const tasks_mock_response = {
     'Antara ID': ['antara_id'],
     'Send SMS': {
       label: 'Send SMS',
-      url:
-        'https://airtable.com/table_id/recNP6CNEmfGoM5Ei?blocks=blisrVqe2tDu2aEra',
+      url: 'https://airtable.com/table_id/recNP6CNEmfGoM5Ei?blocks=blisrVqe2tDu2aEra',
     },
     recordid: 'recNP6CNEmfGoM5Ei',
     'Open URL': { label: 'Open URL', url: '' },
@@ -247,7 +238,7 @@ const tasks_mock_response = {
     },
     'Days overdue': 84,
     'Member Record ID': ['member_record_id'],
-    'Assigned HN Name': ['Rebecca Nyakundi'],
+    'Assignee Name': ['Rebecca Nyakundi'],
     member_status: ['Active'],
   },
   recRxRwuISMa7AOnK: {
@@ -267,8 +258,7 @@ const tasks_mock_response = {
     'Antara ID': ['antara_id'],
     'Send SMS': {
       label: 'Send SMS',
-      url:
-        'https://airtable.com/table_id/recRxRwuISMa7AOnK?blocks=blisrVqe2tDu2aEra',
+      url: 'https://airtable.com/table_id/recRxRwuISMa7AOnK?blocks=blisrVqe2tDu2aEra',
     },
     recordid: 'recRxRwuISMa7AOnK',
     'Open URL': { label: 'Open URL', url: '' },
@@ -279,7 +269,7 @@ const tasks_mock_response = {
     },
     'Days overdue': 117,
     'Member Record ID': ['member_record_id'],
-    'Assigned HN Name': ["Anne Esang'ire"],
+    'Assignee Name': ["Anne Esang'ire"],
     member_status: ['Active'],
   },
 }
