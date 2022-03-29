@@ -6,7 +6,7 @@ import Box from '@mui/material/Box'
 import Tab from '../../utils/tabs/mui-tabs.component'
 import Communication from './communication/communication.component'
 import Forms from './forms/forms.component'
-import Meetings from './meetings/meetings.component'
+import Appointments from './appointments/appointments.component'
 import Tasks from './tasks/tasks.component'
 import Icon from '../../utils/icon/icon.component'
 import CallsCallout from './calls/calls.component'
@@ -45,7 +45,7 @@ const Actions = () => {
         >
           <Tab label="Tasks" value="tasks" />
           <Tab label="Forms" value="forms" />
-          <Tab label="Meetings" value="meetings" />
+          <Tab label="Appointments" value="appointments" />
         </TabList>
         <div className="d-flex flex-between communication-icons">
           <button
@@ -75,9 +75,9 @@ const Actions = () => {
             <Forms />
           </ErrorBoundary>
         </TabPanel>
-        <TabPanel value="meetings">
+        <TabPanel value="appointments">
           <ErrorBoundary>
-            <Meetings />
+            <Appointments />
           </ErrorBoundary>
         </TabPanel>
         <TabPanel value="messages" className="full-height">
