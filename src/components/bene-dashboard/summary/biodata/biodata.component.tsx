@@ -444,8 +444,16 @@ const TsCs = ({ member, contact }: any) => {
   const [sendSms, { loading }] = useMutation(SEND_SMS)
   const [showCard, setShowCard] = useState<boolean>(true)
   const { addToast } = useToasts()
-  const showCardNoMsg = showTerms && !showBasedOnTime && showCard && member['Onboard Stage'] === 'Onboarded'
-  const showCardWithMsg = showTerms && showBasedOnTime && showCard && member['Onboard Stage'] === 'Onboarded'
+  const showCardNoMsg =
+    showTerms &&
+    !showBasedOnTime &&
+    showCard &&
+    member['Onboard Stage'] === 'Onboarded'
+  const showCardWithMsg =
+    showTerms &&
+    showBasedOnTime &&
+    showCard &&
+    member['Onboard Stage'] === 'Onboarded'
   useEffect(() => {
     airtableFetch(
       `msgTemplates/list?filterByFormula=FIND("Consent reminder", {Title})`
@@ -740,13 +748,13 @@ const BioData = () => {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                      <a
-                        href={`${mixPanelLink}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Open Dashboard
-                      </a>
+                    <a
+                      href={`${mixPanelLink}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Open Dashboard
+                    </a>
                   </td>
                 </tr>
 

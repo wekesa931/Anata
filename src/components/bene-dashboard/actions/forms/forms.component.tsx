@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import InputAdornment from '@mui/material/InputAdornment'
+import TextField from '@mui/material/TextField'
+import { Search } from 'react-feather'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import { useAuth } from '../../../../context/auth-context'
 import FORMS from './forms'
@@ -9,6 +12,8 @@ const Forms = () => {
   const { user } = useAuth()
 
   const { addOpenForm } = useForm()
+
+  const [searchForm, setSearchForm] = useState<any[]>(FORMS)
 
   useEffect(() => {
     if (user && user.email) {
@@ -26,7 +31,38 @@ const Forms = () => {
   return (
     <div className="d-flex flex-direction-column">
       <div className="margin-top-0 flex-1">
-        {FORMS.map((form) => (
+        <div>
+          <TextField
+            sx={{ fontSize: '13px' }}
+            id="input-with-icon-textfield"
+            className="full-width"
+            placeholder="Search forms"
+            onChange={(e) => {
+              const { value } = e.target
+              let formMeta = FORMS
+              if (value) {
+                formMeta = FORMS.filter((form) =>
+                  form.name.toLowerCase().includes(value.toLowerCase())
+                )
+                setSearchForm(formMeta)
+              } else {
+                setSearchForm(formMeta)
+              }
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search width={18} height={18} />
+                </InputAdornment>
+              ),
+              style: {
+                marginBottom: 10,
+              },
+            }}
+            variant="standard"
+          />
+        </div>
+        {searchForm.map((form) => (
           <button
             onClick={() => addOpenForm(form, hn)}
             className="full-width btn btn-secondary form-btns"
