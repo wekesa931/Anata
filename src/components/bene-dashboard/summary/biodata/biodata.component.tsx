@@ -124,10 +124,23 @@ const ConditionsSummary = () => {
 
   useEffect(() => {
     airtableFetch(
+      `interventions/list?filterByFormula=FIND("${recId}", {Member Record ID})`
+    ).then((intervention_response) => {
+      if (intervention_response) {
+        const memberInterventions: any[] = []
+
+        Object.keys(intervention_response).forEach((key) => {
+          if (intervention_response[key].Status === 'Active')
+            memberInterventions.push(intervention_response[key].Intervention)
+        })
+        setInterventions(Array.from(new Set(memberInterventions.flat())))
+      }
+    })
+
+    airtableFetch(
       `conditions/list?filterByFormula=FIND("${recId}", {Member Record ID})`
     ).then((response) => {
       if (response) {
-        const memberInterventions: any[] = []
         const memberConditions: any[] = []
         const uniqueConditions = new Set()
         const memberMilestones: any[] = []
@@ -163,13 +176,8 @@ const ConditionsSummary = () => {
               memberMilestones.push(condition[milestoneType])
             }
           })
-
-          if (condition.intervention_condition) {
-            memberInterventions.push(condition.intervention_condition)
-          }
         })
 
-        setInterventions(Array.from(new Set(memberInterventions.flat())))
         setConditions(memberConditions)
         setMilestones(memberMilestones)
       }
