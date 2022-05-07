@@ -8,6 +8,8 @@ import Icon from '../../../utils/icon/icon.component'
 import Tooltip from '../../../utils/tooltip/tooltip.component'
 import analytics from '../../../../helpers/segment'
 import airtableFetch from '../../../../resources/airtable-fetch'
+import styles from './appointments.component.css'
+import { useMember } from '../../../../context/member.context'
 
 const Appointments = () => {
   const [appointments, setAppointments] = React.useState<any[]>([])
@@ -112,6 +114,16 @@ const Appointments = () => {
       ].map((type) => ({ label: type, value: type })),
     },
   ]
+  const { member } = useMember()
+  const memberEmail = member['Email 1'] || 'navigation@antarahealth.com'
+
+  const openCalendar = (link: string) => {
+    const newWindow = window.open(link, '_blank', 'noopener,noreferrer')
+    if (newWindow) newWindow.opener = null
+  }
+  let urlString = ''
+  const urlName = member['Full Name'].replaceAll(' ', '%20')
+  urlString = `https://calendly.com/antara-health?name=${urlName}&email=${memberEmail}&a1=${member['Phone 1']}`
 
   const updateAppointment = async (appointment: {
     id: string
@@ -242,11 +254,18 @@ const Appointments = () => {
 
   return (
     <div>
+      <button
+        className={styles.appointment}
+        onClick={() => openCalendar(urlString)}
+      >
+        Book Appointment
+      </button>
       <div
         className="d-flex flex-align-center"
         style={{ justifyContent: 'space-between' }}
       >
         <h4>Appointments</h4>
+
         <div>
           <select
             value={selected}
