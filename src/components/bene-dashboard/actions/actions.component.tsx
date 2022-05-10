@@ -12,6 +12,7 @@ import Icon from '../../utils/icon/icon.component'
 import CallsCallout from './calls/calls.component'
 import { useCall } from '../../../context/calls-context'
 import ErrorBoundary from '../../error-boundary/error-boundary.component'
+import GuidedWorkflows from './workflows/guided-workflows.component'
 
 const Actions = () => {
   const [activeTab, setActiveTab] = React.useState<string>('tasks')
@@ -43,8 +44,9 @@ const Actions = () => {
           variant="scrollable"
           scrollButtons="auto"
         >
-          <Tab label="Tasks" value="tasks" />
-          <Tab label="Forms" value="forms" />
+          <Tab className="tab-view" label="Tasks" value="tasks" />
+          <Tab className="tab-view" label="Forms" value="forms" />
+          <Tab className="tab-view" label="Workflows" value="workflows" />
           <Tab label="Appointments" value="appointments" />
         </TabList>
         <div className="d-flex flex-between communication-icons">
@@ -73,6 +75,11 @@ const Actions = () => {
         <TabPanel value="forms">
           <ErrorBoundary>
             <Forms />
+          </ErrorBoundary>
+        </TabPanel>
+        <TabPanel value="workflows">
+          <ErrorBoundary>
+            <GuidedWorkflows />
           </ErrorBoundary>
         </TabPanel>
         <TabPanel value="appointments">

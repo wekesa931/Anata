@@ -5,13 +5,13 @@ import { Search } from 'react-feather'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import { useAuth } from '../../../../context/auth-context'
 import FORMS from './forms'
-import { useForm } from '../../../../context/forms-context'
+import { useFormPortal } from '../../../../context/forms-context'
 
 const Forms = () => {
   const [hn, setHN] = useState<any>({})
   const { user } = useAuth()
 
-  const { addOpenForm } = useForm()
+  const { addOpenForm, openedForms } = useFormPortal()
 
   const [searchForm, setSearchForm] = useState<any[]>(FORMS)
 
@@ -64,7 +64,7 @@ const Forms = () => {
         </div>
         {searchForm.map((form) => (
           <button
-            onClick={() => addOpenForm(form, hn)}
+            onClick={() => addOpenForm([...openedForms, form], hn)}
             className="full-width btn btn-secondary form-btns"
             key={form.name}
           >

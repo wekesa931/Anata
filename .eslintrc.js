@@ -19,6 +19,7 @@ module.exports = {
       'error',
       { allowShortCircuit: true, allowTernary: true },
     ],
+    'react/prop-types': 0,
     'react/jsx-no-bind': [
       'error',
       {
@@ -26,6 +27,12 @@ module.exports = {
         allowBind: true,
         allowArrowFunctions: true,
       },
+    ],
+    'no-restricted-syntax': [
+      'error',
+      'FunctionExpression',
+      'WithStatement',
+      "BinaryExpression[operator='of']",
     ],
     'jsx-a11y/label-has-associated-control': [
       'error',

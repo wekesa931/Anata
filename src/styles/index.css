@@ -756,6 +756,10 @@ li {
   position: sticky;
 }
 
+.p-8 {
+  padding: 8px;
+}
+
 .padding-top-16 {
   padding-top: 16px;
 }
@@ -852,6 +856,10 @@ a {
   50% {
     opacity: 1;
   }
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }
 
 .hidden {
@@ -2080,7 +2088,7 @@ a {
 
 .draggable {
   height: 80vh;
-  overflow: scroll;
+  /* overflow: scroll; */
 }
 
 .draggable-disabled {
@@ -2091,7 +2099,7 @@ a {
 .drag-actions {
   position: absolute;
   right: 10px;
-  color: var(--red-100);
+  color: var(--orange-20);
   cursor: pointer;
   background: none;
   border: none;
@@ -2100,7 +2108,7 @@ a {
 .drag-actions-size {
   position: absolute;
   right: 35px;
-  color: var(--blue-100);
+  color: var(--white-100);
   cursor: pointer;
   background: none;
   border: none;
@@ -2114,4 +2122,14 @@ a {
 
 .react-pdf__Page {
   border-bottom: 4px solid;
+}
+
+.tab-view {
+  min-width: 50px !important;
+  padding: 0 !important;
+  margin-right: 5px !important;
+}
+
+.none-transform {
+  text-transform: none;
 }

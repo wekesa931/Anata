@@ -195,7 +195,6 @@ const InteractionLogsForm = ({ name, onFormClose }: IProps) => {
 
   return (
     <div className={styles.formContainer}>
-      <h2 className={styles.formName}>Interaction Logs Form</h2>
       <Formik
         initialValues={initialValues}
         validationSchema={InteractionLogsValidationSchema}

@@ -3,9 +3,9 @@ import { useMutation, useQuery, useLazyQuery } from '@apollo/client'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import Typography from '@mui/material/Typography'
+import { groupBy, every, isEmpty } from 'lodash'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined'
-import { groupBy, every, isEmpty } from 'lodash'
 import TableRow from '@mui/material/TableRow'
 import TablePagination from '@mui/material/TablePagination'
 import TableCell from '@mui/material/TableCell'
@@ -691,7 +691,7 @@ const Files = () => {
         mimeVal = mime.lookup(filesContent[0].name)
         fileSize = plainFiles[0].size
         const config = {
-          onUploadProgress(progressEvent: any) {
+          onUploadProgress: (progressEvent: any) => {
             const percentCompleted = Math.round(
               (progressEvent.loaded * 100) / progressEvent.total
             )

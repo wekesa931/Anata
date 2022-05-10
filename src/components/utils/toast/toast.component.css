@@ -1,0 +1,23 @@
+.toastBar div div {
+    border-radius: 7px !important;
+    background-color: var(--dark-blue-100) !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-width: 340px !important;
+}
+
+.toastBar div {
+    border-radius: 7px !important;
+}
+
+.saveButton {
+    text-transform: capitalize !important;
+    font-family: Rubik !important;
+    font-size: 14px !important;
+}
+
+.marginR {
+    margin-right: 10px !important;
+}
