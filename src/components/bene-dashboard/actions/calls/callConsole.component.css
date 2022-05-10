@@ -1,0 +1,17 @@
+.cancel {
+  background-color: #e01f11;
+  border: none;
+  margin-bottom: 6px;
+  color: white;
+  padding: 5px 9px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.loadingContainer {
+  display: flex;
+  align-items: center;
+}

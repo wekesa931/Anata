@@ -12,6 +12,7 @@ import SaveContactView from './updateBeneContactView'
 import ActiveCallParticipants from './ActiveCallParticipants'
 import AuthenticateMember from './AuthenticateMember'
 import { AuthButton } from './AuthenticateMember.styles'
+import styles from './callConsole.component.css'
 
 const CallFloatingBox = () => {
   const [isOpen, setisOpen] = React.useState(true)
@@ -19,7 +20,8 @@ const CallFloatingBox = () => {
   const [bioVerified, setBioVerified] = useState(false)
   const [shouldAuthenticate, setShouldAuthenticate] = useState(false)
   const [displayHistory, setdisplayHistory] = useState(false)
-  const { activeCall, conferenceParticipants, completeCall } = useCall()
+  const { activeCall, conferenceParticipants, completeCall, handleEndCall } =
+    useCall()
   const [showTransferList, setshowTransferList] = useState(false)
   const isCallBack = activeCall?.type === 'CALLBACK'
   const isRinging = activeCall?.state === 'RINGING'
@@ -114,6 +116,7 @@ const CallFloatingBox = () => {
     }
     return '#1084ee'
   }
+
   const backgroundColor = activeCall
     ? callColorCodes[activeCall?.state]
     : '#1084ee'
@@ -203,11 +206,21 @@ const CallFloatingBox = () => {
             </AuthButton>
           )}
         </div>
-        {isRinging && (
-          <span>
+        {isRinging ? (
+          <span className={styles.loadingContainer}>
             <LoadingIcon />
+
+            <div>
+              <button
+                className={styles.cancel}
+                onKeyDown={() => handleEndCall()}
+                onClick={() => handleEndCall()}
+              >
+                Cancel
+              </button>
+            </div>
           </span>
-        )}
+        ) : null}
       </div>
       {isTransferring && (
         <div className="forward-to flex-between">

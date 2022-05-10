@@ -5,6 +5,7 @@ const MAKE_CALL = gql`
     placeCall(recipient: $recipient, antaraId: $antaraId) {
       status
       message
+      session
     }
   }
 `
@@ -227,6 +228,15 @@ const GET_ACTIVE_CALL = gql`
     }
   }
 `
+
+const END_CALL = gql`
+  mutation endCall($session: String!) {
+    endCall(session: $session) {
+      status
+      message
+    }
+  }
+`
 // eslint-disable-next-line import/prefer-default-export
 export {
   VALIDATE_BIODATA,
@@ -240,4 +250,5 @@ export {
   HOLD_PARTICIPANT,
   UNHOLD_PARTICIPANT,
   GET_ACTIVE_CALL,
+  END_CALL,
 }

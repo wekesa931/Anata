@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
+import { Call } from '@mui/icons-material'
 import { useUser } from './user-context'
-import { MAKE_CALL, TRANSFER_CALL, GET_ACTIVE_CALL } from '../gql/comms'
+import {
+  MAKE_CALL,
+  TRANSFER_CALL,
+  GET_ACTIVE_CALL,
+  END_CALL,
+} from '../gql/comms'
 import { useFcm } from './fcm/fcm.context'
 import logError from '../components/utils/Bugsnag/Bugsnag'
 
@@ -86,6 +92,7 @@ type ContextType = {
   setCounterValue: () => void
   setHistoryRecordId: (id: string) => void
   setcallError: (error: string | null) => void
+  handleEndCall: () => void
 }
 
 export const participantCallAction = {
@@ -102,6 +109,7 @@ const CallContext = React.createContext<ContextType>({
   completeCall: () => null,
   setCounterValue: () => null,
   setHistoryRecordId: () => null,
+  endCalls: () => null,
 })
 
 function CallProvider({ children }: any) {
@@ -120,6 +128,7 @@ function CallProvider({ children }: any) {
   const { pushNotification } = useFcm()
   const [initiateConferenceCall] = useMutation(MAKE_CALL)
   const [initiateCallTransfer] = useMutation(TRANSFER_CALL)
+  const [endCall] = useMutation(END_CALL)
   const user = useUser()
   const { data } = useQuery(GET_ACTIVE_CALL)
   const participantBusy =
@@ -311,6 +320,24 @@ function CallProvider({ children }: any) {
     return null
   }
 
+  const handleEndCall = () => {
+    endCall({
+      variables: {
+        session: activeCall?.session,
+      },
+    })
+      .then((res) => {
+        if (res.data.endCall.status === 200) {
+          setcallError(null)
+        } else {
+          setcallError(res.data.endCall.message)
+        }
+      })
+      .catch((e) => {
+        logError(e.message)
+      })
+  }
+
   const initiateTransfer = ({
     phone,
     email,
@@ -382,6 +409,7 @@ function CallProvider({ children }: any) {
               member: phoneNum,
               initialCallTime: 0,
               memberName: memberDetails['Full Name'],
+              session: response?.data?.placeCall.session,
             }
             setActiveCall({ ...activeCall, ...call })
             setActiveCallContact(callContact)
@@ -434,6 +462,7 @@ function CallProvider({ children }: any) {
         initiateTransfer,
         setCounterValue,
         setHistoryRecordId,
+        handleEndCall,
       }}
     >
       {children}
