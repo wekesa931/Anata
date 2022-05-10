@@ -22,7 +22,7 @@ const InteractionLogsValidationSchema = Yup.object().shape({
   healthNavigator: Yup.string().required('HN is required'),
   interactorType: Yup.string().required('Type is required'),
   interactionSummaryNotes: Yup.string().required('Summary notes is required'),
-  outcome: Yup.string().required('Select the next steps'),
+  outcome: Yup.array().required('Select the next steps'),
   interactorName: Yup.string().when('interactorType', {
     is: (type) => type !== 'Beneficiary',
     then: Yup.string().required(
@@ -78,23 +78,24 @@ const InteractionLogsValidationSchema = Yup.object().shape({
     otherwise: Yup.string(),
   }),
   flagForReview: Yup.string().when('outcome', {
-    is: 'Flag for Review',
+    is: (outcome) => outcome && outcome.includes('Flag for Review'),
     then: Yup.string().required('Flag for review is required'),
   }),
   outcomeMetadata: Yup.object({
     reasonForConsultation: Yup.string().when('outcome', {
-      is: 'Virtual Consultation Required',
+      is: (outcome) =>
+        outcome && outcome.includes('Virtual Consultation Required'),
       then: Yup.string().required(
         'Describe the reason(s) why you are requesting a Virtual Consultation'
       ),
     }),
   }),
   mhcReferralNotes: Yup.string().when('outcome', {
-    is: 'MHC',
+    is: (outcome) => outcome && outcome.includes('MHC'),
     then: Yup.string().required('MHC notes is required'),
   }),
   mhcReferralReasons: Yup.string().when('outcome', {
-    is: 'MHC',
+    is: (outcome) => outcome && outcome.includes('MHC'),
     then: Yup.string().required('Describe the reason(s) for MHC referral'),
   }),
 })

@@ -179,7 +179,7 @@ const useInteractionFormFields = (member: any, user: any) => {
     {
       label: 'Next Steps',
       name: 'outcome',
-      type: 'single-select',
+      type: 'multi-select',
       options: [
         'Virtual Consultation Required',
         'Flag for Review',
@@ -202,7 +202,7 @@ const useInteractionFormFields = (member: any, user: any) => {
         value: option,
       })),
       condition: (values) =>
-        values.outcome && values.outcome === 'Flag for Review',
+        values.outcome && values.outcome.includes('Flag for Review'),
       required: true,
     },
     {
@@ -212,21 +212,22 @@ const useInteractionFormFields = (member: any, user: any) => {
       helperText: `<p>Please describe the reason(s) why you are requesting a Virtual</p> 
       <p>Consultation with as much details as you can.</p>`,
       condition: (values) =>
-        values.outcome && values.outcome === 'Virtual Consultation Required',
+        values.outcome &&
+        values.outcome.includes('Virtual Consultation Required'),
       required: true,
     },
     {
       label: 'Reasons for Referral',
       name: 'mhcReferralReasons',
       type: 'long-text',
-      condition: (values) => values.outcome && values.outcome === 'MHC',
+      condition: (values) => values.outcome && values.outcome.includes('MHC'),
       required: true,
     },
     {
       label: 'Notes for MHC',
       name: 'mhcReferralNotes',
       type: 'long-text',
-      condition: (values) => values.outcome && values.outcome === 'MHC',
+      condition: (values) => values.outcome && values.outcome.includes('MHC'),
       required: true,
     },
     {
@@ -234,7 +235,7 @@ const useInteractionFormFields = (member: any, user: any) => {
       name: 'ncReferralReasons',
       type: 'long-text',
       condition: (values) =>
-        values.outcome && values.outcome === 'Nutritional Consultation',
+        values.outcome && values.outcome.includes('Nutritional Consultation'),
       required: true,
     },
     {
@@ -242,7 +243,7 @@ const useInteractionFormFields = (member: any, user: any) => {
       name: 'ncReferralNotes',
       type: 'long-text',
       condition: (values) =>
-        values.outcome && values.outcome === 'Nutritional Consultation',
+        values.outcome && values.outcome.includes('Nutritional Consultation'),
       required: true,
     },
     {
@@ -250,7 +251,7 @@ const useInteractionFormFields = (member: any, user: any) => {
       name: 'pcReferralReasons',
       type: 'long-text',
       condition: (values) =>
-        values.outcome && values.outcome === 'Physio Consultation',
+        values.outcome && values.outcome.includes('Physio Consultation'),
       required: true,
     },
     {
@@ -258,7 +259,7 @@ const useInteractionFormFields = (member: any, user: any) => {
       name: 'pcReferralNotes',
       type: 'long-text',
       condition: (values) =>
-        values.outcome && values.outcome === 'Physio Consultation',
+        values.outcome && values.outcome.includes('Physio Consultation'),
       required: true,
     },
   ]

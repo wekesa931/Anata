@@ -14,6 +14,7 @@ const GET_MEMBER_INTERACTIONS = gql`
           outboundInteractionCategory
           otherCategoryOutbound
           otherCategoryInbound
+          outcome
           flagForReview
           healthNavigator {
             fullName
@@ -62,6 +63,7 @@ const GET_ALL_FLAGGED_INTERACTIONS = gql`
           interactionSummaryNotes
           otherCategoryOutbound
           otherCategoryInbound
+          outcome
           relationshipType
           interactorName
         }
@@ -99,6 +101,7 @@ const GET_ALL_INTERACTIONS = gql`
           interactionSummaryNotes
           otherCategoryOutbound
           otherCategoryInbound
+          outcome
           relationshipType
           interactorName
         }

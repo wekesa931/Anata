@@ -141,6 +141,7 @@ const InteractionLogsForm = ({ name, onFormClose }: IProps) => {
     })
     const input = {
       ...values,
+      outcome: JSON.stringify(values.outcome),
       member: member['Antara ID'],
       interactionStartedAt: dayjs(values.interactionStartedAt).toISOString(),
       historyUserIdField: user && user.email,

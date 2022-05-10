@@ -212,6 +212,13 @@ describe('<InteractionLogsForm/>', () => {
     if (comboBox) {
       fireEvent.click(comboBox)
     }
+    fireEvent.change(wrapper.getByLabelText(/Next Steps/), {
+      target: { value: ['None'] },
+    })
+    const outCome = wrapper.getByText('None')
+    if (outCome) {
+      fireEvent.click(outCome)
+    }
     const submitButton = wrapper.getByText('Submit')
     fireEvent.click(submitButton)
     wrapper.getByText('Submitting...')
@@ -255,6 +262,13 @@ describe('<InteractionLogsForm/>', () => {
     const comboBox = wrapper.getByText('Education')
     if (comboBox) {
       fireEvent.click(comboBox)
+    }
+    fireEvent.change(wrapper.getByLabelText(/Next Steps/), {
+      target: { value: ['None'] },
+    })
+    const outCome = wrapper.getByText('None')
+    if (outCome) {
+      fireEvent.click(outCome)
     }
     const submitButton = wrapper.getByText('Submit')
     fireEvent.click(submitButton)
