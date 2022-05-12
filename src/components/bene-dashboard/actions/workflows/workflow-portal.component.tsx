@@ -5,8 +5,10 @@ import {
   AccordionSummary,
   Button,
   Typography,
+  TextField,
+  InputAdornment,
 } from '@mui/material'
-import { AlertTriangle, Check, Plus, Trash2, X } from 'react-feather'
+import { AlertTriangle, Check, Plus, Search, Trash2, X } from 'react-feather'
 import Grid from '@mui/material/Grid'
 import Tooltip from '@mui/material/Tooltip'
 import { Add } from '@mui/icons-material'
@@ -78,7 +80,6 @@ const ConfirmButton = ({ onConfirm }: ConfirmButtonProps) => {
     </div>
   )
 }
-
 const WorkflowPortal = ({
   workflow: openedWorkflow,
   isFormEdited,
@@ -292,6 +293,37 @@ const WorkflowPortal = ({
   const moduleOptions = () => {
     return (
       <>
+        <div id="search-wrap">
+          <div id="search-input-wrap" className={styles.searchInputWrap}>
+            <TextField
+              id="input-with-icon-textfield"
+              className="full-width"
+              placeholder="Search forms..."
+              onChange={(e) => {
+                const { value } = e.target
+                let form = TABLES.map((mod) => mod.name)
+                if (value) {
+                  form = allModules.filter(
+                    (table) =>
+                      table && table.toLowerCase().includes(value.toLowerCase())
+                  )
+                }
+                setAllModules(form)
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search width={18} height={18} />
+                  </InputAdornment>
+                ),
+                style: {
+                  marginBottom: 10,
+                },
+              }}
+              variant="standard"
+            />
+          </div>
+        </div>
         {allModules.map((mod: string) => {
           let isDisabled = false
           const isAvailable = listOfTables.find((tb) => tb.name === mod)
@@ -456,7 +488,6 @@ const WorkflowPortal = ({
   }
 
   useEffect(() => {
-    // console.log(finalPayload)
     if (finalPayload.length > 0 && finalPayload.length === formPayload.length) {
       if (hasDuplicates(finalPayload)) {
         setShouldSaveModule(false)

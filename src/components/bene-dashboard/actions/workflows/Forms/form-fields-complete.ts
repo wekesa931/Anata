@@ -4600,11 +4600,6 @@ export default [
               name: 'Cyst of ovary, follicular',
             },
             {
-              id: 'sel0EkIQzJK78TugM',
-              name: 'Cystocele/rectocele/prolapse',
-            },
-            {
-              id: 'sel1pbx14IbwwmCiF',
               name: 'Decreased fetal movements',
             },
             {

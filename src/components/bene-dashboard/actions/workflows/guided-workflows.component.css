@@ -603,3 +603,13 @@ input::-webkit-outer-spin-button {
   font-weight: bold;
   border-radius: 5px;
 }
+.searchInputWrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 2;
+  border-radius: 12px;
+  padding: 0px 12px;
+  border: solid 1px #d1d5db;
+  background-color: #f9fafc;
+}
