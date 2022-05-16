@@ -153,6 +153,7 @@ const useInteractionFormFields = (member: any, user: any) => {
         'Post appointment follow-up (provider)',
         'Medication follow-up',
         'VC Follow up',
+        'Chronic consent collection',
       ].map((option) => ({
         label: option,
         value: option,
