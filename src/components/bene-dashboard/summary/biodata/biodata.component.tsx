@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { Info } from 'react-feather'
-import { Button, CardContent, Typography, Chip } from '@mui/material'
+import { Button, CardContent, Typography, Chip, Checkbox } from '@mui/material'
 import { useQuery, useMutation } from '@apollo/client'
 import { useToasts } from 'react-toast-notifications'
 import dayjs from 'dayjs'
@@ -765,6 +765,36 @@ const BioData = () => {
                     </a>
                   </td>
                 </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    Chronic Care Consent:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    <Checkbox
+                      disabled
+                      color="primary"
+                      checked={member['Chronic Care Consent']}
+                    />
+                  </td>
+                </tr>
+                {member['Chronic Care Consent'] ? (
+                  <tr>
+                    <td
+                      className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                    >
+                      Chronic Care Consent Date:
+                    </td>
+                    <td
+                      className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                    >
+                      {member['Chronic Care Consent Date']}
+                    </td>
+                  </tr>
+                ) : null}
 
                 <tr>
                   <td
