@@ -24,6 +24,8 @@ interface IBeneData {
   contactPhone1: string
   contactPhone2: string
   relationshipToPrimary: string
+  birthDate: string
+  sex: string
 }
 
 export interface Member {

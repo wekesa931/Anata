@@ -291,3 +291,14 @@
 .tagContainer {
   padding: 16px;
 }
+
+.dependentLength {
+  margin-left: 16px;
+  font-size: 14px;
+  color: #182c4c;
+}
+
+.dependentsDiv {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

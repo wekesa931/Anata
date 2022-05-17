@@ -1,0 +1,53 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #e8eaed;
+  border-radius: 8px;
+  margin: 16px;
+  width: auto;
+  padding: 4px 4px 4px 6px;
+  font-size: 12px;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.active {
+  color: #34c759;
+  background-color: #ebfbed;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 4px;
+}
+
+.scheduled {
+  color: #ff9500;
+  background-color: #fff5e5;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 4px;
+}
+
+.unscheduled {
+  color: #ff3b30;
+  background-color: #ffebea;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 4px;
+}
+
+.biodataSpan {
+  color: #1084ee;
+}
+
+.relationshipSpan {
+  color: #8b95a5;
+}
+
+.biodataBox {
+  display: flex;
+  flex-direction: column;
+}

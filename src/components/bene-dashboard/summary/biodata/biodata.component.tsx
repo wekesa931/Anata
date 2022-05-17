@@ -14,6 +14,7 @@ import analytics from '../../../../helpers/analytics'
 import { GET_TERMS_CONDITIONS } from '../../../../gql/ts_cs'
 import { SEND_SMS } from '../../../../gql/sms'
 import logError from '../../../utils/Bugsnag/Bugsnag'
+import DependentCard from '../dependents/dependent-card.component'
 
 const getRiskFactors = (
   diabetes: string,
@@ -594,6 +595,19 @@ const Tags = ({ member }: any) => {
 const BioData = () => {
   const { member, memberContact } = useMember()
   const hasDependants = memberContact?.dependents.length > 0
+  const minorDependents = []
+  const majorDependents = []
+
+  if (hasDependants) {
+    for (const dep of memberContact.dependents) {
+      const today = new Date()
+      if (today.getFullYear() - new Date(dep.birthDate).getFullYear() > 18) {
+        majorDependents.push(dep)
+      } else {
+        minorDependents.push(dep)
+      }
+    }
+  }
   const hasPrimary = memberContact?.primary && memberContact?.primary.length > 0
   const isMinor = (age: number) => age < 18
   const trackAccess = () =>
@@ -862,30 +876,35 @@ const BioData = () => {
               <>
                 <hr className={styles.hrLine} />
 
-                <h4 className={styles.clinicalHeading}>Dependants</h4>
-                <table className={`text-normal ${styles.bioDataTable}`}>
-                  <tbody>
-                    {memberContact?.dependents?.map((dep) => (
-                      <tr key={dep.airtableRecordId}>
-                        <td
-                          className={`text-bold ${styles.bioDataTableColumn}`}
-                        >
-                          {dep.fullName}
-                        </td>
-                        <td className={`${styles.bioDataTableColumn}`}>
-                          <Link
-                            onClick={trackAccess}
-                            to={`/member/${dep.airtableRecordId}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Open Dashboard
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <h4 className={styles.clinicalHeading}>Dependents</h4>
+
+                <div className={styles.dependentsDiv}>
+                  {majorDependents.length > 0 && (
+                    <span
+                      className={styles.dependentLength}
+                    >{`Major ${majorDependents.length}`}</span>
+                  )}
+
+                  {majorDependents.map((dep) => (
+                    <React.Fragment key={dep.airtableRecordId}>
+                      <DependentCard dependent={dep} />
+                    </React.Fragment>
+                  ))}
+                </div>
+
+                <div className={styles.dependentsDiv}>
+                  {minorDependents.length > 0 && (
+                    <span
+                      className={styles.dependentLength}
+                    >{`Minor ${minorDependents.length}`}</span>
+                  )}
+
+                  {minorDependents.map((dep) => (
+                    <React.Fragment key={dep.airtableRecordId}>
+                      <DependentCard dependent={dep} />
+                    </React.Fragment>
+                  ))}
+                </div>
               </>
             )}
             {hasPrimary && (
