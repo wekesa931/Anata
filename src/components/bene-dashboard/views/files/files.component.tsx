@@ -101,9 +101,10 @@ type IUploadOptions = {
   setOpen: (isOpen: boolean) => void
   docLink: string
   setdocLink: (docLink: string | undefined) => void
-  setConfirmUpload: (confirm: boolean) => void
   uploadDisabled: () => boolean
   openFileSelector: () => void
+  setConfirmationDrawerHelper: (confirmationDrawerHelper: boolean) => void
+  clear: () => void
 }
 
 function descendingComparator(a: any, b: any, orderBy: any) {
@@ -127,9 +128,10 @@ const UploadOptions = ({
   setOpen,
   docLink,
   setdocLink,
-  setConfirmUpload,
   uploadDisabled,
   openFileSelector,
+  setConfirmationDrawerHelper,
+  clear,
 }: IUploadOptions) => {
   const [openLinkInput, setOpenLinkInput] = useState(false)
 
@@ -199,7 +201,9 @@ const UploadOptions = ({
               disabled={uploadDisabled()}
               className={styles.upBtn}
               onClick={() => {
-                setConfirmUpload(true)
+                // this is important since the file is not cleared by default after choosing a file, even if they did not upload it
+                clear()
+                setConfirmationDrawerHelper(true)
                 setOpen(false)
                 setOpenLinkInput(false)
               }}
@@ -229,7 +233,6 @@ const FilterComponent = ({
   setisOPen,
   docLink,
   setdocLink,
-  setConfirmUpload,
   uploadDisabled,
   handleUploadClick,
   openFileSelector,
@@ -238,6 +241,8 @@ const FilterComponent = ({
   filtered,
   noFilesForMember,
   setListView,
+  setConfirmationDrawerHelper,
+  clear,
 }: any) => {
   const [fileCategory, setFileCategory] = useState(undefined)
   const [fileMime, setfileMime] = useState<string | undefined>(undefined)
@@ -369,9 +374,10 @@ const FilterComponent = ({
                     setOpen={setisOPen}
                     docLink={docLink}
                     setdocLink={setdocLink}
-                    setConfirmUpload={setConfirmUpload}
                     uploadDisabled={uploadDisabled}
                     openFileSelector={openFileSelector}
+                    setConfirmationDrawerHelper={setConfirmationDrawerHelper}
+                    clear={clear}
                   />
                 </div>
               )}{' '}
@@ -408,7 +414,6 @@ const FilterComponent = ({
             label="Category"
             value={fileCategory || ''}
             onChange={(e) => setFileCategory(e.target.value)}
-            // helperText="Please select your currency"
           >
             {fileTypes.map((file) => (
               <MenuItem key={file} value={file}>
@@ -466,7 +471,6 @@ const Files = () => {
   const [open, setOpen] = useState(false)
   const [filtering, setfiltering] = useState(false)
   const [docLink, setdocLink] = useState(undefined)
-  const [confirmUpload, setConfirmUpload] = useState(false)
   const [order, setOrder] = React.useState('asc')
   const [orderBy, setOrderBy] = React.useState('updatedAt')
   const [page, setPage] = React.useState(0)
@@ -474,7 +478,6 @@ const Files = () => {
   const [activeOpenFile, seActiveOpenFile] = useState(null)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const [shouldReplaceFile, setShouldReplaceFile] = useState(false)
-  const [s3UploadLink, setS3UploadLink] = useState<S3UploadMeta>(null)
   const [progress, setProgress] = React.useState(0)
   const [uploadStart, setUploadStart] = useState(false)
   const [uploadSuccessful, setUploadSuccessful] = useState(false)
@@ -486,11 +489,13 @@ const Files = () => {
     {} as IGRoupedFiles
   )
   const [listView, setListView] = useState(true)
-  const [openFileSelector, { filesContent, plainFiles, loading: gettingFile }] =
-    useFilePicker({
-      accept: '*',
-      readAs: 'BinaryString',
-    })
+  const [
+    openFileSelector,
+    { filesContent, plainFiles, loading: gettingFile, clear },
+  ] = useFilePicker({
+    accept: '*',
+    readAs: 'BinaryString',
+  })
   const { loading, error, data, refetch } = useQuery(GET_FILES, {
     variables: { antaraId: member['Antara ID'] },
   })
@@ -498,16 +503,15 @@ const Files = () => {
     useMutation(UPLOAD_LINK)
   const [saveFile] = useMutation(SAVE_FILE)
   const uploadErrored = fileError && fileError.length > 0
-  const fileLoaded = !every(s3UploadLink, isEmpty)
   const noFilesForMember = !loading && every(filteredFiles, isEmpty)
-  const displayDrawer = s3UploadLink || gettingFile || gettingUploadLink
-  const isDrawerOpen = fileLoaded || gettingFile || gettingUploadLink
+  const [confirmationDrawerHelper, setConfirmationDrawerHelper] =
+    useState(false)
+  const displayDrawer = confirmationDrawerHelper && !gettingFile
   const isFileUploading = gettingFile || gettingUploadLink
   const isFormVisible = displayForm && !gettingFile && !gettingUploadLink
   const filesRef = useRef()
   const [networkError, setNetworkError] = useState(false)
   const isValidURL = (url: string) => {
-    // esli
     const res = url.match(
       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g //eslint-disable-line
     )
@@ -522,6 +526,12 @@ const Files = () => {
     }
     return false
   }
+
+  useEffect(() => {
+    if (gettingFile) {
+      setConfirmationDrawerHelper(true)
+    }
+  }, [gettingFile])
 
   const headCells = [
     {
@@ -557,35 +567,6 @@ const Files = () => {
     }
     return <FileText className={styles.green} />
   }
-
-  useEffect(() => {
-    if (filesContent.length > 0 || confirmUpload) {
-      let key = ''
-      if (filesContent && filesContent.length > 0) {
-        key = filesContent[0].name
-      } else {
-        key = docLink
-      }
-      getUploadLink({
-        variables: {
-          duration: 50000,
-          storageKey: key,
-          forceReplace: shouldReplaceFile,
-        },
-      })
-        .then((res) => {
-          if (res.data.generateUploadLink.errors) {
-            setFileError(res.data.generateUploadLink.message)
-            setShouldReplaceFile(false)
-          } else {
-            setS3UploadLink(res.data.generateUploadLink)
-            setConfirmUpload(false)
-            setShouldReplaceFile(false)
-          }
-        })
-        .catch((e) => logError(e))
-    }
-  }, [filesContent, shouldReplaceFile, docLink, confirmUpload, getUploadLink])
 
   useEffect(() => {
     if (data) {
@@ -673,63 +654,98 @@ const Files = () => {
     filesRef.current = docMeta
     setUploadStart(true)
     let fileName: any = null
-    let storeKey: any = ''
+    let storeKey =
+      filesContent.length > 0
+        ? `${member['Antara ID']}/${docMeta.docType}/${filesContent[0].name}`
+        : docLink
     let fileSize = 0
     let driveLink: any = null
     let mimeVal: any = null
     const formData = new FormData()
-    Object.keys(s3UploadLink.link.fields).forEach((key) => {
-      formData.append(key, s3UploadLink.link.fields[key])
-    })
-    try {
-      if (filesContent.length > 0 && !docLink) {
-        fileName = filesContent[0].name.split('.')
-        fileName.pop()
-        fileName = fileName.join('.')
-        formData.append('file', plainFiles[0])
-        storeKey = filesContent[0].name
-        mimeVal = mime.lookup(filesContent[0].name)
-        fileSize = plainFiles[0].size
-        const config = {
-          onUploadProgress: (progressEvent: any) => {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            )
-            setProgress(percentCompleted - 10)
-          },
-        }
-        axios
-          .post(s3UploadLink.link.url, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Accept: 'application/json',
-            },
-            ...config,
-          })
-          .then(() => {
-            persistData(
-              docMeta,
-              storeKey,
-              mimeVal,
-              fileSize,
-              driveLink,
-              fileName
-            )
-          })
-      } else {
-        storeKey = docLink
+
+    if (filesContent.length === 0) {
+      try {
         driveLink = docLink
         fileSize = 0
         mimeVal = 'doc'
         fileName = docLink
         persistData(docMeta, storeKey, mimeVal, fileSize, driveLink, fileName)
+      } catch (err: any) {
+        if (err.name === 'Network Error') {
+          setNetworkError(true)
+        }
+        handleUploadError(err)
+      } finally {
+        // no need to proceed if the doc was uploaded via link
+        // eslint-disable-next-line no-unsafe-finally
+        return
       }
-    } catch (err: any) {
-      if (err.name === 'Network Error') {
-        setNetworkError(true)
-      }
-      handleUploadError(err)
     }
+    getUploadLink({
+      variables: {
+        duration: 50000,
+        storageKey: storeKey,
+        forceReplace: shouldReplaceFile,
+      },
+    })
+      .then((res) => {
+        if (res.data.generateUploadLink.errors) {
+          setFileError(res.data.generateUploadLink.message)
+          setShouldReplaceFile(false)
+          throw new Error(res.data.generateUploadLink.message)
+        } else {
+          setShouldReplaceFile(false)
+          return res.data.generateUploadLink
+        }
+      })
+      .then((res) => {
+        Object.keys(res.link.fields).forEach((key) => {
+          formData.append(key, res.link.fields[key])
+        })
+        try {
+          if (filesContent.length > 0 && !docLink) {
+            fileName = filesContent[0].name.split('.')
+            fileName.pop()
+            fileName = fileName.join('.')
+            formData.append('file', plainFiles[0])
+            storeKey = `${member['Antara ID']}/${docMeta.docType}/${filesContent[0].name}`
+            mimeVal = mime.lookup(filesContent[0].name)
+            fileSize = plainFiles[0].size
+            const config = {
+              onUploadProgress: (progressEvent: any) => {
+                const percentCompleted = Math.round(
+                  (progressEvent.loaded * 100) / progressEvent.total
+                )
+                setProgress(percentCompleted - 10)
+              },
+            }
+            axios
+              .post(`${res.link.url}`, formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                  Accept: 'application/json',
+                },
+                ...config,
+              })
+              .then(() => {
+                persistData(
+                  docMeta,
+                  storeKey,
+                  mimeVal,
+                  fileSize,
+                  driveLink,
+                  fileName
+                )
+              })
+          }
+        } catch (err: any) {
+          if (err.name === 'Network Error') {
+            setNetworkError(true)
+          }
+          handleUploadError(err)
+        }
+      })
+      .catch((e) => logError(e))
   }
 
   const handleClick = (_event: any, file: any) => {
@@ -746,13 +762,12 @@ const Files = () => {
   }
 
   const uploadDone = () => {
-    setS3UploadLink(null)
     setProgress(0)
     setFileError('')
     setUploadSuccessful(false)
     setUploadFailed(false)
     setdocLink(undefined)
-    setConfirmUpload(false)
+    setConfirmationDrawerHelper(false)
   }
   const progressColor = (): 'error' | 'primary' | 'success' => {
     let color: 'error' | 'primary' | 'success' = 'primary'
@@ -859,7 +874,6 @@ const Files = () => {
           open={open}
           docLink={docLink}
           setdocLink={setdocLink}
-          setConfirmUpload={setConfirmUpload}
           uploadDisabled={uploadDisabled}
           openFileSelector={openFileSelector}
           listView={listView}
@@ -869,6 +883,8 @@ const Files = () => {
           handleUploadClick={handleUploadClick}
           setisOPen={setOpen}
           noFilesForMember={noFilesForMember}
+          setConfirmationDrawerHelper={setConfirmationDrawerHelper}
+          clear={clear}
         />
       )}
       {noFilesForMember && (
@@ -892,9 +908,10 @@ const Files = () => {
                   setOpen={setOpen}
                   docLink={docLink}
                   setdocLink={setdocLink}
-                  setConfirmUpload={setConfirmUpload}
                   uploadDisabled={uploadDisabled}
                   openFileSelector={openFileSelector}
+                  setConfirmationDrawerHelper={setConfirmationDrawerHelper}
+                  clear={clear}
                 />
               </div>
             )}
@@ -940,7 +957,7 @@ const Files = () => {
           className="upload-form-drawer"
           sx={{ width: '320px' }}
           anchor="right"
-          open={isDrawerOpen}
+          open
         >
           {isFileUploading ? (
             <div className="d-flex flex-direction-column flex-align-center margin-top-32 mb-ten">
