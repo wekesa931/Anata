@@ -19,7 +19,7 @@ const FormSection = ({
   activeModule,
   activeModuleName,
   isToastOpen,
-  // finalPayload,
+  template,
   setfinalPayload,
   resetActiveModule,
   setFormPayload,
@@ -33,8 +33,21 @@ const FormSection = ({
     let schema = {}
     formMeta.fields &&
       formMeta.fields.forEach((fl: any) => {
+        const isWorkflowForm =
+          fl.name !== 'Case ID' && fl.name !== 'Member' && template.workflowId
+        const isNormalForm = fl.name !== 'Member' && !template.workflowId
         const fieldName = fl.name
         switch (fl.type) {
+          case 'foreignKey':
+            if (isWorkflowForm || isNormalForm) {
+              if (fl.required) {
+                schema = {
+                  ...schema,
+                  [fieldName]: Yup.mixed().required(),
+                }
+              }
+            }
+            break
           case 'multiSelect':
           case 'multipleSelects':
             if (fl.parentKey) {
@@ -346,7 +359,6 @@ const FormSection = ({
     setFormError(allErrors)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formPayload, Object.keys(errors).length])
-  // console.log(errors)
   const renderFormState = () => {
     return (
       <div className={styles.formFieldsContainer}>

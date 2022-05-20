@@ -231,12 +231,12 @@ const WorkflowPortal = ({
   }
 
   useEffect(() => {
-    const loadedModules = TABLES.map((mod) => mod.name)
-    setAllModules(loadedModules)
-  }, [])
-
-  useEffect(() => {
+    if (allModules.length === 0) {
+      const loadedModules = TABLES.map((mod) => mod.name)
+      setAllModules(loadedModules)
+    }
     setTemplate(openedWorkflow)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openedWorkflow])
 
   useEffect(() => {

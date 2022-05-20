@@ -77,7 +77,7 @@ describe('<SearchComponent/>', () => {
     act(() => {
       fireEvent.click(firstResult)
     })
-    expect(airtableFetch).toBeCalledTimes(2)
+    expect(airtableFetch).toBeCalledTimes(4)
     await act(airtableFetch)
     await waitFor(() => {
       expect(screen.queryByTestId('bene-list')).toBeNull()

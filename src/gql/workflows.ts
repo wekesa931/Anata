@@ -163,6 +163,24 @@ const REMOVE_MODULE = gql`
   }
 `
 
+const GET_LINKED_RECORD = gql`
+  query globalSearch(
+    $table: String!
+    $field: String!
+    $searchParam: String!
+    $antaraIdKey: String!
+    $antaraIdValue: String!
+  ) {
+    globalSearch(
+      table: $table
+      field: $field
+      searchParam: $searchParam
+      antaraIdKey: $antaraIdKey
+      antaraIdValue: $antaraIdValue
+    )
+  }
+`
+
 const SAVE_WORKFLOW = gql`
   mutation updateWorkflow(
     $workflowId: String!
@@ -206,4 +224,5 @@ export {
   GET_WORKFLOWS,
   REMOVE_MODULE,
   SAVE_WORKFLOW,
+  GET_LINKED_RECORD,
 }

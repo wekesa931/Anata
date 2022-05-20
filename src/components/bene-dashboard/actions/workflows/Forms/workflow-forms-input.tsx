@@ -24,8 +24,12 @@ import { CheckSquare, Square } from 'react-feather'
 import FormHelperText from '@mui/material/FormHelperText'
 import { InputLabel } from '@mui/material'
 import DateTimePicker from '@mui/lab/DateTimePicker'
+import { useLazyQuery } from '@apollo/client'
+import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 import styles from '../guided-workflows.component.css'
+import { useMember } from '../../../../../context/member.context'
 import { Form } from '../workflow-types'
+import { GET_LINKED_RECORD } from '../../../../../gql/workflows'
 
 const icon = <Square width={18} height={18} />
 const checkedIcon = <CheckSquare width={18} height={18} />
@@ -45,6 +49,23 @@ const WorkflowFormsInput = ({
   saveInput,
 }: Form) => {
   switch (field.type) {
+    case 'foreignKey':
+      if (field.name !== 'Case ID' && field.name !== 'Member') {
+        return (
+          <LinkRecordInput
+            value={value}
+            fieldName={fieldName}
+            disabled={disabled}
+            helperText={helperText}
+            field={field}
+            saveInput={saveInput}
+            control={control}
+            error={error}
+          />
+        )
+      }
+      return <></>
+
     case 'select':
     case 'singleSelect':
       return (
@@ -424,7 +445,6 @@ const MultiSelectMultipleInput = ({
             onChange={(event: SyntheticEvent<Element, Event>, value: any[]) => {
               onChange(value)
               handleChange(value)
-              setSelectedChoices(value)
             }}
             renderOption={(props, option, { selected }) => (
               <li {...props}>
@@ -588,6 +608,206 @@ const TextInputField = ({
         )}
       />
     </Box>
+  )
+}
+
+const LinkRecordInput = ({
+  value: linkedValue,
+  field,
+  helperText,
+  saveInput,
+  fieldName,
+  disabled,
+  control,
+  error,
+}: Form) => {
+  const [selectedChoices, setSelectedChoices] = useState<any>(() => {
+    if (field.relationship === 'many') {
+      return []
+    }
+    return null
+  })
+  const [linkedRecords, setLinkedRecords] = useState<any[]>([])
+  const { member, airtableMeta } = useMember()
+  const [getLinkedRecords, { data, loading: gettingLinkedRecords }] =
+    useLazyQuery(GET_LINKED_RECORD)
+  const settingLinkedData = gettingLinkedRecords || !airtableMeta
+  useEffect(() => {
+    if (data) {
+      const response = data.globalSearch.data
+      const displayFields: any[] = []
+      response.forEach((fl) => {
+        const loadedValue =
+          fl.fields[airtableMeta[field.foreignTableId].fields[0].name] &&
+          typeof fl.fields[
+            airtableMeta[field.foreignTableId].fields[0].name
+          ] === 'string'
+        if (loadedValue) {
+          displayFields.push({
+            id: fl.id,
+            name: fl.fields[
+              airtableMeta[field.foreignTableId].fields[0].name
+            ]?.toLocaleString(),
+          })
+        }
+      })
+      setLinkedRecords(displayFields)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
+  const checkAntaraIdKey = () => {
+    const validKeys = [
+      'Antara ID (from member)',
+      'Antara ID (from Members)',
+      'antara_id',
+      'Antara ID',
+      'antara_member_id',
+      'Antara Member ID',
+    ]
+    let presentKey = ''
+    airtableMeta[field.foreignTableId].fields.forEach((ky) => {
+      validKeys.forEach((vl) => {
+        if (ky.name === vl) {
+          presentKey = vl
+        }
+      })
+    })
+    return presentKey
+  }
+  useEffect(() => {
+    if (airtableMeta) {
+      getLinkedRecords({
+        variables: {
+          table: field.foreignTableId,
+          field: airtableMeta[field.foreignTableId].fields[0].name,
+          searchParam: '',
+          antaraIdKey: checkAntaraIdKey(),
+          antaraIdValue: checkAntaraIdKey() ? member['Antara ID'] : '',
+        },
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [airtableMeta])
+
+  useEffect(() => {
+    if (linkedValue && linkedRecords.length > 0) {
+      let recordValue = linkedRecords.filter((rec: any) =>
+        linkedValue.some((val) => rec.id === val)
+      )
+      recordValue = recordValue.map((rec) => rec.name)
+      if (field.relationship === 'many') {
+        setSelectedChoices(recordValue)
+      } else {
+        setSelectedChoices(recordValue[0])
+      }
+    } else if (field.relationship === 'many') {
+      setSelectedChoices([])
+    } else {
+      setSelectedChoices(null)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [linkedValue, linkedRecords])
+
+  const handleChange = (onChange: (val: any) => any, value: any) => {
+    if (Array.isArray(value)) {
+      let recordValue = linkedRecords.filter((rec: any) =>
+        value.some((val) => rec.name === val)
+      )
+      recordValue = recordValue.map((rec) => rec.id)
+      onChange(recordValue)
+      setSelectedChoices(recordValue)
+      saveInput(field.name, recordValue)
+    } else {
+      const recordValue = linkedRecords.find((rec: any) => rec.name === value)
+      onChange([recordValue.id])
+      setSelectedChoices([recordValue.id])
+      saveInput(field.name, [recordValue.id])
+    }
+  }
+
+  return (
+    <Controller
+      name={fieldName}
+      defaultValue={linkedValue}
+      control={control}
+      rules={{ required: true }}
+      render={({ field: { onChange } }) => (
+        <>
+          {helperText && (
+            <InputLabel>
+              <div>
+                <p
+                  className={
+                    error?.message
+                      ? `${styles.fieldNameError}`
+                      : `${styles.fieldLabel}`
+                  }
+                >
+                  {field.name}
+                  {field.required && <Pointer />}
+                </p>
+                <p className={styles.helperText}>{parse(helperText)}</p>
+              </div>
+            </InputLabel>
+          )}
+          {settingLinkedData && <LoadingIcon />}
+          {!settingLinkedData && (
+            <Autocomplete
+              multiple={field.relationship === 'many'}
+              disablePortal
+              disabled={disabled}
+              id="combo-box-demo"
+              options={linkedRecords.map((opt) => opt.name)}
+              value={selectedChoices}
+              disableCloseOnSelect={field.relationship === 'many'}
+              sx={{ marginBottom: 2 }}
+              onChange={(event: SyntheticEvent<Element, Event>, value: any) =>
+                handleChange(onChange, value)
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={
+                    <p
+                      className={
+                        error?.message
+                          ? `${styles.fieldNameError}`
+                          : `${
+                              helperText
+                                ? styles.fieldLabelBlurred
+                                : styles.fieldLabel
+                            }`
+                      }
+                    >
+                      {field.name}
+                      {field.required && <Pointer />}
+                    </p>
+                  }
+                />
+              )}
+              renderOption={(props, option, { selected }) => {
+                return (
+                  <li {...props}>
+                    <Checkbox
+                      icon={icon}
+                      checkedIcon={checkedIcon}
+                      style={{ marginRight: 8 }}
+                      checked={selected}
+                    />
+                    {option}
+                  </li>
+                )
+              }}
+            />
+          )}
+          {error && (
+            <FormHelperText className={styles.fieldLabelError}>
+              This field is required
+            </FormHelperText>
+          )}
+        </>
+      )}
+    />
   )
 }
 

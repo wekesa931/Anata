@@ -64,6 +64,10 @@ export type Form = {
     name: string
     id: string
     options?: { choices: any[] }
+    symmetricColumnId: string
+    unreversed: boolean
+    relationship: string
+    foreignTableId: string
   }
   helperText: string
   type?: string
