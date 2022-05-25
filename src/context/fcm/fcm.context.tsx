@@ -16,11 +16,13 @@ type PushNotification = {
 }
 
 type ContextType = {
+  recID: any
   pushNotification?: PushNotification | null
   setPushNotification: (notification: PushNotification) => any
 }
 
 const FcmContext = React.createContext<ContextType>({
+  recID: null,
   setPushNotification: (notification: PushNotification) => notification,
 })
 
@@ -31,6 +33,7 @@ function FcmProvider({ children }: any) {
     useState<PushNotification | null>(null)
   const [externalPushNotification, setExternalPushNotification] =
     useState<PushNotification | null>(null)
+  const [recID, setRecID] = useState(null)
   const [memberId, setMemberId] = useState<string | undefined>('')
   const [localPushCategory, setLocalPushCategory] = useState<
     'CALL' | 'MESSAGE'
@@ -59,6 +62,9 @@ function FcmProvider({ children }: any) {
       setLocalPushNotification(incomingPushNotification)
     } else {
       setExternalPushNotification(incomingPushNotification)
+    }
+    if (memberPushAtId) {
+      setRecID(memberPushAtId)
     }
   }, [
     incomingPushNotification,
@@ -114,6 +120,7 @@ function FcmProvider({ children }: any) {
   return (
     <FcmContext.Provider
       value={{
+        recID,
         pushNotification: externalPushNotification,
         setPushNotification: setPushNotificationFromOutside,
       }}

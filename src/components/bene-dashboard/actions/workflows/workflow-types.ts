@@ -1,5 +1,6 @@
 export type IWorkflow = {
   id: string
+  name?: string
   workflowId: string
   airtableId: string
   completed: boolean
@@ -7,6 +8,8 @@ export type IWorkflow = {
     id: string
     name: string
   }
+  memberId?: string
+  antaraId?: string
   modules: { name: string }[]
   currentModules: string[]
   moduleData: any
@@ -58,6 +61,7 @@ export type ConfirmButtonProps = {
 export type Form = {
   value: any
   fieldName: string
+  template?: any
   field: {
     required: boolean
     type: string

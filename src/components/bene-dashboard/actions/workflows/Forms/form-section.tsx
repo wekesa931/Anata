@@ -20,6 +20,7 @@ const FormSection = ({
   activeModuleName,
   isToastOpen,
   template,
+  airtableMeta,
   setfinalPayload,
   resetActiveModule,
   setFormPayload,
@@ -34,16 +35,52 @@ const FormSection = ({
     formMeta.fields &&
       formMeta.fields.forEach((fl: any) => {
         const isWorkflowForm =
-          fl.name !== 'Case ID' && fl.name !== 'Member' && template.workflowId
-        const isNormalForm = fl.name !== 'Member' && !template.workflowId
+          fl.name !== 'Case ID' && fl.name !== 'Member' && template?.workflowId
+        const isNormalForm = fl.name !== 'Member' && !template?.workflowId
         const fieldName = fl.name
         switch (fl.type) {
           case 'foreignKey':
             if (isWorkflowForm || isNormalForm) {
-              if (fl.required) {
+              if (fl.parentKey) {
+                if (fl.required) {
+                  schema = {
+                    ...schema,
+                    [fieldName]: Yup.mixed().when(`${fl.parentKey}`, {
+                      is: (val) => {
+                        if (fl?.conditionType === '!') {
+                          return !fl.parentValues.includes(val)
+                        }
+                        return fl.parentValues.includes(val)
+                      },
+                      then: Yup.mixed().required(),
+                      otherwise: Yup.mixed().nullable().notRequired(),
+                    }),
+                  }
+                } else {
+                  schema = {
+                    ...schema,
+                    [fieldName]: Yup.mixed()
+                      .when(`${fl.parentKey}`, {
+                        is: (val) => {
+                          if (fl?.conditionType === '!') {
+                            return !fl.parentValues.includes(val)
+                          }
+                          return fl.parentValues.includes(val)
+                        },
+                        then: Yup.mixed().nullable().notRequired(),
+                      })
+                      .nullable(),
+                  }
+                }
+              } else if (fl.required) {
                 schema = {
                   ...schema,
                   [fieldName]: Yup.mixed().required(),
+                }
+              } else {
+                schema = {
+                  ...schema,
+                  [fieldName]: Yup.mixed().nullable().notRequired(),
                 }
               }
             }
@@ -92,51 +129,6 @@ const FormSection = ({
               schema = {
                 ...schema,
                 [fieldName]: Yup.array().nullable(),
-              }
-            }
-            break
-          case 'select':
-          case 'singleSelect':
-            if (fl.parentKey) {
-              if (fl.required) {
-                schema = {
-                  ...schema,
-                  [fieldName]: Yup.string().when(`${fl.parentKey}`, {
-                    is: (val) => {
-                      if (fl?.conditionType === '!') {
-                        return !fl.parentValues.includes(val)
-                      }
-                      return fl.parentValues.includes(val)
-                    },
-                    then: Yup.string().required(),
-                    otherwise: Yup.string().nullable().notRequired(),
-                  }),
-                }
-              } else {
-                schema = {
-                  ...schema,
-                  [fieldName]: Yup.string()
-                    .when(`${fl.parentKey}`, {
-                      is: (val) => {
-                        if (fl?.conditionType === '!') {
-                          return !fl.parentValues.includes(val)
-                        }
-                        return fl.parentValues.includes(val)
-                      },
-                      then: Yup.string().nullable().notRequired(),
-                    })
-                    .nullable(),
-                }
-              }
-            } else if (fl.required) {
-              schema = {
-                ...schema,
-                [fieldName]: Yup.string().required(),
-              }
-            } else {
-              schema = {
-                ...schema,
-                [fieldName]: Yup.string().nullable().notRequired(),
               }
             }
             break
@@ -236,6 +228,8 @@ const FormSection = ({
               }
             }
             break
+          case 'select':
+          case 'singleSelect':
           case 'url':
           case 'text':
           case 'multilineText':
@@ -247,13 +241,14 @@ const FormSection = ({
                   ...schema,
                   [fieldName]: Yup.string().when(`${fl.parentKey}`, {
                     is: (val) => {
+                      let res = fl.parentValues.includes(val)
                       if (fl?.conditionType === '!') {
-                        return !fl.parentValues.includes(val)
+                        res = !fl.parentValues.includes(val)
                       }
-                      return fl.parentValues.includes(val)
+                      return res
                     },
                     then: Yup.string().required(),
-                    otherwise: Yup.string().notRequired(),
+                    otherwise: Yup.string().nullable().notRequired(),
                   }),
                 }
               } else {
@@ -319,33 +314,37 @@ const FormSection = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeModuleName])
   useEffect(() => {
-    if (shouldSaveModule) {
-      // eslint-disable-next-line
-      handleSubmit((data: any, e?: any) => {
-        if (data) {
-          let formattedPayload = formPayload[index]
-          numberFields.forEach((mt) => {
-            if (formattedPayload[`${mt.name}`]) {
-              if (mt.isPercent) {
-                formattedPayload = {
-                  ...formattedPayload,
-                  [`${mt.name}`]:
-                    parseFloat(formattedPayload[`${mt.name}`]) / 100,
-                }
-              } else {
-                formattedPayload = {
-                  ...formattedPayload,
-                  [`${mt.name}`]: parseFloat(formattedPayload[`${mt.name}`]),
+    if (canSubmit) {
+      if (shouldSaveModule) {
+        // eslint-disable-next-line
+        handleSubmit((data: any, e?: any) => {
+          if (data) {
+            let formattedPayload = formPayload[index]
+            numberFields.forEach((mt) => {
+              if (formattedPayload[`${mt.name}`]) {
+                if (mt.isPercent) {
+                  formattedPayload = {
+                    ...formattedPayload,
+                    [`${mt.name}`]:
+                      parseFloat(formattedPayload[`${mt.name}`]) / 100,
+                  }
+                } else {
+                  formattedPayload = {
+                    ...formattedPayload,
+                    [`${mt.name}`]: parseFloat(formattedPayload[`${mt.name}`]),
+                  }
                 }
               }
-            }
-          })
-          setfinalPayload((dat) => [...dat, formattedPayload])
-        } else {
-          setfinalPayload([])
-          setShouldSaveModule(false)
-        }
-      })()
+            })
+            setfinalPayload((dat) => [...dat, formattedPayload])
+          } else {
+            setfinalPayload([])
+            setShouldSaveModule(false)
+          }
+        })()
+      }
+    } else {
+      setShouldSaveModule(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldSaveModule])
@@ -380,9 +379,11 @@ const FormSection = ({
                   value={fieldValue}
                   helperText={field.helper}
                   field={field}
+                  template={template}
+                  airtableMeta={airtableMeta}
                   fieldName={fieldName}
                   saveInput={(name: string, value: any) => {
-                    setIsFormEdited(true)
+                    template?.workflowId && setIsFormEdited(true)
                     const newPayload = {
                       ...formPayload[index],
                       [name]: value,

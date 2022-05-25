@@ -15,6 +15,7 @@ import history from '../constants/history'
 import { FcmProvider } from '../context/fcm/fcm.context'
 import { CallProvider } from '../context/calls-context'
 import CallFloatingBox from './bene-dashboard/actions/calls/callConsole.component'
+import { FormProvider } from '../context/forms-context'
 // https://mui.com/guides/interoperability/#global-css
 
 const theme = createTheme({
@@ -41,23 +42,25 @@ const Routes = () => {
     <Router history={history}>
       <Switch>
         <FcmProvider>
-          <CallProvider>
-            <ThemeProvider theme={theme}>
-              <StyledEngineProvider injectFirst>
-                <CallFloatingBox />
-                <Route exact path="/login" component={Login} />
-                <ProtectedRoute exact path="/">
-                  <Dashboard />
-                </ProtectedRoute>
-                <ProtectedRoute exact path="/member">
-                  <Dashboard />
-                </ProtectedRoute>
-                <ProtectedRoute exact path="/member/:recId">
-                  <BeneDashboard />
-                </ProtectedRoute>
-              </StyledEngineProvider>
-            </ThemeProvider>
-          </CallProvider>
+          <FormProvider>
+            <CallProvider>
+              <ThemeProvider theme={theme}>
+                <StyledEngineProvider injectFirst>
+                  <CallFloatingBox />
+                  <Route exact path="/login" component={Login} />
+                  <ProtectedRoute exact path="/">
+                    <Dashboard />
+                  </ProtectedRoute>
+                  <ProtectedRoute exact path="/member">
+                    <Dashboard />
+                  </ProtectedRoute>
+                  <ProtectedRoute exact path="/member/:recId">
+                    <BeneDashboard />
+                  </ProtectedRoute>
+                </StyledEngineProvider>
+              </ThemeProvider>
+            </CallProvider>
+          </FormProvider>
         </FcmProvider>
       </Switch>
     </Router>

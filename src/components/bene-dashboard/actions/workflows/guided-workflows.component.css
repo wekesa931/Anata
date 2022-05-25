@@ -123,7 +123,7 @@
 }
 
 .workflowDialogueContentGrid {
-  height: -webkit-fill-available;
+  height: 100%;
   border-bottom: 1px solid var(--dark-blue-10);
   overflow: hidden;
   position: relative;
@@ -148,19 +148,18 @@
 
 .componentGrid {
   overflow: scroll;
-  height: -webkit-fill-available;
-  padding: 8px;
+  height: 100%;
+  /* padding: 8px; */
   overflow-x: hidden;
   /* position: relative */
 }
 
 .componentGridForm {
   overflow: scroll;
-  height: -webkit-fill-available;
+  height: 100%;
   /* padding: 8px; */
   overflow-x: hidden;
   position: relative;
-  padding: 0 8px !important;
 }
 
 .workflowTablesActive {
@@ -608,8 +607,10 @@ input::-webkit-outer-spin-button {
   flex-direction: row;
   align-items: center;
   flex: 2;
-  border-radius: 12px;
-  padding: 0px 12px;
-  border: solid 1px #d1d5db;
-  background-color: #f9fafc;
+  padding: 0px 3px;
+}
+
+.recordLoader {
+  display: flex;
+  font-size: 12px;
 }

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Portal from '@mui/material/Portal'
-import { useParams } from 'react-router-dom'
 import Draggable from 'react-draggable'
 import Paper from '@mui/material/Paper'
 import DialogTitle from '@mui/material/DialogTitle'
-import { Maximize, Minimize, X } from 'react-feather'
+import { ArrowRight, Maximize, Minimize, X } from 'react-feather'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import Button from '@mui/material/Button'
@@ -39,15 +38,14 @@ type FormProps = {
 
 const FormPortal = ({
   form,
-  hn,
   isFormEdited,
   openedForms,
+  airtableMeta,
   closeForm,
   setIsFormEdited,
   onFormClose,
   onRefetch,
 }: FormProps) => {
-  const { recId } = useParams()
   const [position, setPosition] = useState({ x: 311, y: -700 })
   const [isHighlighting, setIsHighlighting] = useState(true)
   const [dynamicPosition, setDynamicPosition] = useState(undefined)
@@ -169,39 +167,19 @@ const FormPortal = ({
   }
 
   const formRender = () => {
-    if (form.workflowId) {
-      return (
-        <WorkflowPortal
-          isFormEdited={isFormEdited}
-          setIsFormEdited={setIsFormEdited}
-          openedForms={openedForms}
-          workflow={form}
-          onRefetch={onRefetch}
-          closeForm={closeForm}
-        />
-      )
-    }
-    if (form.airtableUrl === false) {
+    if (form.name === 'Interaction Log form') {
       return <InteractionLogsForm name={form.name} onFormClose={onFormClose} />
     }
+
     return (
-      <div
-        // eslint-disable-next-line
-        dangerouslySetInnerHTML={{
-          __html: `<iframe
-              className="airtable-embed"
-              scrolling="yes"
-              src="https://airtable.com/embed/${
-                process.env.PROD ? form.url : form.url
-              }?prefill_${form.hnField}=${
-            hn['Record ID']
-          }&prefill_Member=${recId}"
-              frameBorder="0"
-              width="100%"
-              height="533"
-              style="background: url(../../../../../src/assets/img/icons/loading.svg); background-repeat: no-repeat; background-position: center; border: 1px solid #ccc;"
-            />`,
-        }}
+      <WorkflowPortal
+        isFormEdited={isFormEdited}
+        setIsFormEdited={setIsFormEdited}
+        openedForms={openedForms}
+        workflow={form}
+        airtableMeta={airtableMeta}
+        onRefetch={onRefetch}
+        closeForm={closeForm}
       />
     )
   }
@@ -249,7 +227,15 @@ const FormPortal = ({
               <X />
             </button>
             <span className={styles.formTitle}>
-              {isWorkflow ? `Workflow -{'>'} ${form.workflowId}` : form.name}
+              {isWorkflow ? (
+                <span className="d-flex align-center">
+                  <span>Workflow</span>
+                  <ArrowRight width={15} height={15} />
+                  <span>{form.workflowId}</span>
+                </span>
+              ) : (
+                form.name
+              )}
             </span>
           </DialogTitle>
           <DialogContent sx={{ padding: 0, height: '100%' }}>

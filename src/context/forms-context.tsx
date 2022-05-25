@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState } from 'react'
+import airtableFetch from '../resources/airtable-fetch'
 import FormPortal from '../components/bene-dashboard/actions/forms/forms-portal.component'
+import logError from '../components/utils/Bugsnag/Bugsnag'
 
 type Form = {
   name: string
@@ -16,6 +18,7 @@ export type HN = {
 type FormContextType = {
   shouldRefetch: boolean
   isFormEdited: boolean
+  airtableMeta: any
   openedForms: Form[]
   setIsFormEdited: (edited: boolean) => void
   onRefetch: (refetch: boolean) => void
@@ -26,12 +29,14 @@ const FormContext = createContext<FormContextType>({
   shouldRefetch: false,
   openedForms: [],
   isFormEdited: false,
+  airtableMeta: null,
   addOpenForm: () => null,
   setIsFormEdited: () => null,
   onRefetch: () => null,
 })
 
 const FormProvider = ({ children }: any) => {
+  const [airtableMeta, setAirtableMeta] = useState<any>(null)
   const [isFormEdited, setIsFormEdited] = useState(false)
   const [shouldRefetch, setshouldRefetch] = useState(false)
   const [openedForms, setOpenedForms] = useState<Form[]>([])
@@ -53,9 +58,28 @@ const FormProvider = ({ children }: any) => {
     setOpenedForms(validForms)
   }
 
+  React.useEffect(() => {
+    if (airtableMeta === null) {
+      airtableFetch('tables')
+        .then((res) => {
+          let tableMap: any = {}
+          res.tables.forEach((tb) => {
+            tableMap = {
+              ...tableMap,
+              [tb.id]: tb,
+            }
+          })
+          setAirtableMeta(tableMap)
+        })
+        .catch((e) => logError(e))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <FormContext.Provider
       value={{
+        airtableMeta,
         openedForms,
         isFormEdited,
         shouldRefetch,
@@ -69,6 +93,7 @@ const FormProvider = ({ children }: any) => {
           <FormPortal
             form={fm}
             hn={hNavigator}
+            airtableMeta={airtableMeta}
             isFormEdited={isFormEdited}
             openedForms={openedForms}
             closeForm={addOpenForm}

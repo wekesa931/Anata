@@ -27,7 +27,6 @@ import DateTimePicker from '@mui/lab/DateTimePicker'
 import { useLazyQuery } from '@apollo/client'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 import styles from '../guided-workflows.component.css'
-import { useMember } from '../../../../../context/member.context'
 import { Form } from '../workflow-types'
 import { GET_LINKED_RECORD } from '../../../../../gql/workflows'
 
@@ -46,18 +45,25 @@ const WorkflowFormsInput = ({
   control,
   helperText,
   error,
+  template,
+  airtableMeta,
   saveInput,
 }: Form) => {
+  const isWorkflowForm =
+    field.name !== 'Case ID' && field.name !== 'Member' && template?.workflowId
+  const isNormalForm = field.name !== 'Member' && !template?.workflowId
   switch (field.type) {
     case 'foreignKey':
-      if (field.name !== 'Case ID' && field.name !== 'Member') {
+      if (isWorkflowForm || isNormalForm) {
         return (
           <LinkRecordInput
             value={value}
+            template={template}
             fieldName={fieldName}
             disabled={disabled}
             helperText={helperText}
             field={field}
+            airtableMeta={airtableMeta}
             saveInput={saveInput}
             control={control}
             error={error}
@@ -616,6 +622,8 @@ const LinkRecordInput = ({
   field,
   helperText,
   saveInput,
+  template,
+  airtableMeta,
   fieldName,
   disabled,
   control,
@@ -628,7 +636,6 @@ const LinkRecordInput = ({
     return null
   })
   const [linkedRecords, setLinkedRecords] = useState<any[]>([])
-  const { member, airtableMeta } = useMember()
   const [getLinkedRecords, { data, loading: gettingLinkedRecords }] =
     useLazyQuery(GET_LINKED_RECORD)
   const settingLinkedData = gettingLinkedRecords || !airtableMeta
@@ -682,7 +689,7 @@ const LinkRecordInput = ({
           field: airtableMeta[field.foreignTableId].fields[0].name,
           searchParam: '',
           antaraIdKey: checkAntaraIdKey(),
-          antaraIdValue: checkAntaraIdKey() ? member['Antara ID'] : '',
+          antaraIdValue: checkAntaraIdKey() ? template?.antaraId || '' : '',
         },
       })
     }
@@ -691,10 +698,9 @@ const LinkRecordInput = ({
 
   useEffect(() => {
     if (linkedValue && linkedRecords.length > 0) {
-      let recordValue = linkedRecords.filter((rec: any) =>
+      const recordValue = linkedRecords.filter((rec: any) =>
         linkedValue.some((val) => rec.id === val)
       )
-      recordValue = recordValue.map((rec) => rec.name)
       if (field.relationship === 'many') {
         setSelectedChoices(recordValue)
       } else {
@@ -710,18 +716,14 @@ const LinkRecordInput = ({
 
   const handleChange = (onChange: (val: any) => any, value: any) => {
     if (Array.isArray(value)) {
-      let recordValue = linkedRecords.filter((rec: any) =>
-        value.some((val) => rec.name === val)
-      )
-      recordValue = recordValue.map((rec) => rec.id)
+      const recordValue = value.map((rec) => rec.id)
       onChange(recordValue)
-      setSelectedChoices(recordValue)
+      setSelectedChoices(value)
       saveInput(field.name, recordValue)
     } else {
-      const recordValue = linkedRecords.find((rec: any) => rec.name === value)
-      onChange([recordValue.id])
-      setSelectedChoices([recordValue.id])
-      saveInput(field.name, [recordValue.id])
+      onChange([value.id])
+      setSelectedChoices(value)
+      saveInput(field.name, [value.id])
     }
   }
 
@@ -750,56 +752,60 @@ const LinkRecordInput = ({
               </div>
             </InputLabel>
           )}
-          {settingLinkedData && <LoadingIcon />}
-          {!settingLinkedData && (
-            <Autocomplete
-              multiple={field.relationship === 'many'}
-              disablePortal
-              disabled={disabled}
-              id="combo-box-demo"
-              options={linkedRecords.map((opt) => opt.name)}
-              value={selectedChoices}
-              disableCloseOnSelect={field.relationship === 'many'}
-              sx={{ marginBottom: 2 }}
-              onChange={(event: SyntheticEvent<Element, Event>, value: any) =>
-                handleChange(onChange, value)
-              }
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={
-                    <p
-                      className={
-                        error?.message
-                          ? `${styles.fieldNameError}`
-                          : `${
-                              helperText
-                                ? styles.fieldLabelBlurred
-                                : styles.fieldLabel
-                            }`
-                      }
-                    >
-                      {field.name}
-                      {field.required && <Pointer />}
-                    </p>
-                  }
-                />
-              )}
-              renderOption={(props, option, { selected }) => {
-                return (
-                  <li {...props}>
-                    <Checkbox
-                      icon={icon}
-                      checkedIcon={checkedIcon}
-                      style={{ marginRight: 8 }}
-                      checked={selected}
-                    />
-                    {option}
-                  </li>
-                )
-              }}
-            />
-          )}
+          <Autocomplete
+            multiple={field.relationship === 'many'}
+            disablePortal
+            disabled={disabled}
+            loading={settingLinkedData}
+            loadingText={
+              <div className={styles.recordLoader}>
+                <LoadingIcon /> Loading {field.name} records
+              </div>
+            }
+            id="combo-box-demo"
+            options={linkedRecords}
+            value={selectedChoices}
+            disableCloseOnSelect={field.relationship === 'many'}
+            sx={{ marginBottom: 2 }}
+            onChange={(event: SyntheticEvent<Element, Event>, value: any) =>
+              handleChange(onChange, value)
+            }
+            getOptionLabel={(option) => option?.name || ''}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={
+                  <p
+                    className={
+                      error?.message
+                        ? `${styles.fieldNameError}`
+                        : `${
+                            helperText
+                              ? styles.fieldLabelBlurred
+                              : styles.fieldLabel
+                          }`
+                    }
+                  >
+                    {field.name}
+                    {field.required && <Pointer />}
+                  </p>
+                }
+              />
+            )}
+            renderOption={(props, option, { selected }) => {
+              return (
+                <li {...props}>
+                  <Checkbox
+                    icon={icon}
+                    checkedIcon={checkedIcon}
+                    style={{ marginRight: 8 }}
+                    checked={selected}
+                  />
+                  {option.name}
+                </li>
+              )
+            }}
+          />
           {error && (
             <FormHelperText className={styles.fieldLabelError}>
               This field is required

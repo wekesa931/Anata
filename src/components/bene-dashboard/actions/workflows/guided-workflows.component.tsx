@@ -71,7 +71,13 @@ const GuidedWorkflows = () => {
   )
   const viewWorkflow = (payload: any) => {
     const formsOpen = openedForms.filter((fm: any) => !fm.workflowId)
-    addOpenForm([...formsOpen, payload], {} as HN)
+    addOpenForm(
+      [
+        ...formsOpen,
+        { ...payload, memberId: recId, antaraId: member['Antara ID'] },
+      ],
+      {} as HN
+    )
     setTemplateName(null)
   }
   const closeToast = () => {

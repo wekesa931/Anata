@@ -44,6 +44,7 @@ type CallContact = {
 type MemberDetails = {
   name: string
   number: string
+  antaraId: string
 }
 
 type Call = {
@@ -74,6 +75,7 @@ type ContextType = {
   activeCallContact?: CallContact | null
   callError?: string | null
   conferenceParticipants?: IParticipantSession[]
+  memberData: MemberDetails
   completeCall: () => void
   setCallerName: (name: string) => void
   initiateCall: (
@@ -119,9 +121,10 @@ function CallProvider({ children }: any) {
   const [activeCallContact, setActiveCallContact] =
     useState<CallContact | null>()
   const [counter, setcounter] = useState(0)
-  const [memberNameAndNo, setmemberNameAndNo] = useState<MemberDetails>({
+  const [memberData, setMemberData] = useState<MemberDetails>({
     name: '',
     number: '',
+    antaraId: '',
   })
   const [activeCall, setActiveCall] = useState<Call | null>()
   const [callError, setcallError] = useState<string | null>(null)
@@ -231,8 +234,8 @@ function CallProvider({ children }: any) {
         }
       }
       let conferenceName = ''
-      let callerNum = memberNameAndNo.number
-      let callerName = memberNameAndNo.name
+      let callerNum = memberData.number
+      let callerName = memberData.name
       const callUpdates: Call = {} as Call
       const isStaff = pushNotification?.data?.is_staff === 'true'
       if (
@@ -414,9 +417,10 @@ function CallProvider({ children }: any) {
             setActiveCall({ ...activeCall, ...call })
             setActiveCallContact(callContact)
             onCallInitiated(response?.data)
-            setmemberNameAndNo({
+            setMemberData({
               name: memberDetails['Full Name'],
               number: phoneNum,
+              antaraId: memberDetails['Antara ID'],
             })
           } else {
             setcallError(response?.data?.placeCall.message)
@@ -454,6 +458,7 @@ function CallProvider({ children }: any) {
         activeCall,
         callError,
         conferenceParticipants,
+        memberData,
         updateParticipantHoldState,
         setCallerName,
         setcallError,

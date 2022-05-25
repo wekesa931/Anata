@@ -1,17 +1,17 @@
 import * as React from 'react'
-import { useParams, useRouteMatch } from 'react-router-dom'
 import Icon from '../../../utils/icon/icon.component'
-import { useMember } from '../../../../context/member.context'
 import { useAuth } from '../../../../context/auth-context'
-import openForm from '../../../../helpers/form-opener'
 import FORMS from '../forms/forms'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import Notification from '../../../utils/notification/notification.component'
+import { useFormPortal } from '../../../../context/forms-context'
+import { useFcm } from '../../../../context/fcm/fcm.context'
+import { useCall } from '../../../../context/calls-context'
 
 const CallConsoleForms = ({ height }: { height: string }) => {
-  const { recId }: any = useParams()
-  const match = useRouteMatch()
-  const { member } = useMember()
+  const { recID } = useFcm()
+  const { memberData } = useCall()
+  const { addOpenForm, openedForms } = useFormPortal()
   const [hn, setHN] = React.useState<any>({})
   const { user } = useAuth()
   const [filteredForms, setfilteredForms] = React.useState(FORMS)
@@ -95,7 +95,15 @@ const CallConsoleForms = ({ height }: { height: string }) => {
           {filteredForms.map((form) => (
             <button
               // @ts-ignore
-              onClick={() => openForm(form, recId, match.url, member, user, hn)}
+              onClick={() =>
+                addOpenForm(
+                  [
+                    ...openedForms,
+                    { ...form, memberId: recID, antaraId: memberData.antaraId },
+                  ],
+                  hn
+                )
+              }
               key={form.name}
             >
               {!formName && (

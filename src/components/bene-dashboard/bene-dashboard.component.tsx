@@ -8,7 +8,6 @@ import Fetcher from '../utils/fetcher/fetcher'
 import ErrorBoundary from '../error-boundary/error-boundary.component'
 import analytics from '../../helpers/segment'
 import { MemberProvider } from '../../context/member.context'
-import { FormProvider } from '../../context/forms-context'
 
 const PatientDashboard = () => {
   const [recId, setRecId] = useState<string>()
@@ -39,20 +38,18 @@ const PatientDashboard = () => {
     >
       {(response: any) => (
         <MemberProvider member={response}>
-          <FormProvider>
-            <div className={styles.container}>
-              <ErrorBoundary>
-                <BioData />
-              </ErrorBoundary>
-              <div className="bene-views">
-                <Views />
-              </div>
-
-              <div className="right-pane">
-                <Actions />
-              </div>
+          <div className={styles.container}>
+            <ErrorBoundary>
+              <BioData />
+            </ErrorBoundary>
+            <div className="bene-views">
+              <Views />
             </div>
-          </FormProvider>
+
+            <div className="right-pane">
+              <Actions />
+            </div>
+          </div>
         </MemberProvider>
       )}
     </Fetcher>
