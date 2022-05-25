@@ -95,9 +95,9 @@ const RemoteSelect = ({
                   .filter((item) => {
                     return (
                       !inputValue ||
-                      item.label
-                        .toLowerCase()
-                        .includes(inputValue.toLowerCase())
+                      item?.label
+                          ?.toLowerCase()
+                          .includes(inputValue.toLowerCase())
                     )
                   })
                   .map((item, index) => (
