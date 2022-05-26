@@ -380,35 +380,44 @@ const WorkflowPortal = ({
             data: draftData || formPayload,
             draft: isDraft,
           },
-        }).then((res) => {
-          const response = res.data.saveModuleData.workflow
-          setFormPayload(response.moduleData[activeModuleName].filled_values)
-          updateModuleList(response)
-          setTemplate({ ...response, antaraId: memberAntaraId })
-          onRefetch(true)
-          analytics.track(`Guided Workflow`, {
-            event: 'Module draft saved',
-            beneId: recId,
-            staff: user ? user.email : '',
-            moduleName: activeModuleName,
-            moduleData: draftData || formPayload,
-            workflow: response,
-          })
-          if (incomingIndex !== null) {
-            setUpdatingActiveModule(true)
-            setActiveModule(incomingIndex)
-          }
-          setToastMessage({
-            ...toastMessage,
-            type: 'GENERAL',
-            message: `${
-              addingDuplicate
-                ? 'Duplicate form added'
-                : 'Details saved successfully'
-            }`,
-          })
-          setSavingDraft(false)
         })
+          .then((res) => {
+            const response = res.data.saveModuleData.workflow
+            setFormPayload(response.moduleData[activeModuleName].filled_values)
+            updateModuleList(response)
+            setTemplate({ ...response, antaraId: memberAntaraId })
+            onRefetch(true)
+            analytics.track(`Guided Workflow`, {
+              event: 'Module draft saved',
+              beneId: recId,
+              staff: user ? user.email : '',
+              moduleName: activeModuleName,
+              moduleData: draftData || formPayload,
+              workflow: response,
+            })
+            if (incomingIndex !== null) {
+              setUpdatingActiveModule(true)
+              setActiveModule(incomingIndex)
+            }
+            setToastMessage({
+              ...toastMessage,
+              type: 'GENERAL',
+              message: `${
+                addingDuplicate
+                  ? 'Duplicate form added'
+                  : 'Details saved successfully'
+              }`,
+            })
+            setSavingDraft(false)
+          })
+          .catch((e) => {
+            setSavingDraft(false)
+            setToastMessage({
+              ...toastMessage,
+              message: 'Something went wrong. Changes have not been saved',
+            })
+            logError(e)
+          })
       } else {
         setSavingFinal(true)
         const tableTosave = TABLES.find((tbl) => tbl.name === formMeta.name)
@@ -455,6 +464,13 @@ const WorkflowPortal = ({
               'post',
               finalAirtablePayload
             ).then((resp) => {
+              if (resp === 'Network Error') {
+                setToastMessage({
+                  ...toastMessage,
+                  message: 'Network Error. Changes have not been updated',
+                })
+                throw new Error()
+              }
               if (Array.isArray(resp)) {
                 analytics.track(`Guided Workflow`, {
                   event: 'Form saved to airtable failed',
@@ -527,9 +543,13 @@ const WorkflowPortal = ({
     } catch (err) {
       setSavingFinal(false)
       setSavingDraft(false)
-      setToastMessage({ ...toastMessage, message: 'Failed to save' })
+      setToastMessage({
+        ...toastMessage,
+        message: `Failed to save ${err.message}`,
+      })
       logError(err)
     } finally {
+      setSavingFinal(false)
       setfinalPayload([])
       setAddingDuplicate(false)
       setValidatedData([])

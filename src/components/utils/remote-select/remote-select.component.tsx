@@ -96,8 +96,8 @@ const RemoteSelect = ({
                     return (
                       !inputValue ||
                       item?.label
-                          ?.toLowerCase()
-                          .includes(inputValue.toLowerCase())
+                        ?.toLowerCase()
+                        .includes(inputValue.toLowerCase())
                     )
                   })
                   .map((item, index) => (
