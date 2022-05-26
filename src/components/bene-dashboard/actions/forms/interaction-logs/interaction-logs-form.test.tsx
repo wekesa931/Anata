@@ -42,9 +42,20 @@ const mutation_variables = {
 }
 
 const render = (mocks: any[] = []) => {
+  const props = {
+    form: {
+      name: 'Interaction Logs Form',
+      member: {
+        'Email 1': 'test@test.com',
+        'Antara ID': 'wxyz',
+        'Full Name': 'Test Fatma Ali',
+      },
+    },
+    onFormClose: jest.fn(),
+  }
   return renderWithRouter(
     <MockedProvider mocks={mocks} addTypename={false}>
-      <InteractionLogsForm />
+      <InteractionLogsForm {...props} />
     </MockedProvider>
   )
 }

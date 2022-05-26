@@ -168,7 +168,7 @@ const FormPortal = ({
 
   const formRender = () => {
     if (form.name === 'Interaction Log form') {
-      return <InteractionLogsForm name={form.name} onFormClose={onFormClose} />
+      return <InteractionLogsForm form={form} onFormClose={onFormClose} />
     }
 
     return (

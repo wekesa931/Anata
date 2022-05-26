@@ -6,7 +6,6 @@ import parse from 'html-react-parser'
 import dayjs from 'dayjs'
 import Bugsnag from '@bugsnag/js'
 import Button from '@mui/material/Button'
-import { useMember } from '../../../../../context/member.context'
 import { useUser } from '../../../../../context/user-context'
 import FormField from '../../../../utils/form-field/form-field.component'
 import Toasts from '../../../../../helpers/toast'
@@ -18,12 +17,12 @@ import analytics from '../../../../../helpers/segment'
 import logError from '../../../../utils/Bugsnag/Bugsnag'
 
 type IProps = {
-  name: string
+  form: any
   onFormClose: (name: string) => void
 }
 
-const InteractionLogsForm = ({ name, onFormClose }: IProps) => {
-  const { member } = useMember()
+const InteractionLogsForm = ({ form, onFormClose }: IProps) => {
+  const { member, name } = form
   const memberEmail = member['Email 1'] || 'navigation@antarahealth.com'
   const user = useUser()
   const [startTime, setStartTime] = useState(dayjs())

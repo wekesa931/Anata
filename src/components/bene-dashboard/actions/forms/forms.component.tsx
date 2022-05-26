@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import { Search } from 'react-feather'
-import { useParams } from 'react-router-dom'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import { useAuth } from '../../../../context/auth-context'
 import FORMS from './forms'
@@ -12,7 +11,6 @@ import { useMember } from '../../../../context/member.context'
 const Forms = () => {
   const [hn, setHN] = useState<any>({})
   const { user } = useAuth()
-  const { recId } = useParams()
   const { member } = useMember()
   const { addOpenForm, openedForms } = useFormPortal()
 
@@ -68,13 +66,7 @@ const Forms = () => {
         {searchForm.map((form) => (
           <button
             onClick={() =>
-              addOpenForm(
-                [
-                  ...openedForms,
-                  { ...form, memberId: recId, antaraId: member['Antara ID'] },
-                ],
-                hn
-              )
+              addOpenForm([...openedForms, { ...form, member }], hn)
             }
             className="full-width btn btn-secondary form-btns"
             key={form.name}

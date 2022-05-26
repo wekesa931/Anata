@@ -85,8 +85,8 @@ const WorkflowPortal = ({
   setIsFormEdited,
   onRefetch,
 }: IProps) => {
-  const recId = openedWorkflow?.memberId
-  const memberAntaraId = openedWorkflow?.antaraId
+  const recId = openedWorkflow?.member['recID']
+  const memberAntaraId = openedWorkflow?.member['Antara ID']
   const [toastMessage, setToastMessage] =
     useState<ToastMessage>(defaultToastMessage)
   const [template, setTemplate] = useState<IWorkflow>(null)
@@ -469,6 +469,7 @@ const WorkflowPortal = ({
                   ...toastMessage,
                   message: 'Network Error. Changes have not been updated',
                 })
+                setSavingFinal(false)
                 throw new Error()
               }
               if (Array.isArray(resp)) {
@@ -549,7 +550,6 @@ const WorkflowPortal = ({
       })
       logError(err)
     } finally {
-      setSavingFinal(false)
       setfinalPayload([])
       setAddingDuplicate(false)
       setValidatedData([])

@@ -8,8 +8,7 @@ export type IWorkflow = {
     id: string
     name: string
   }
-  memberId?: string
-  antaraId?: string
+  member: any
   modules: { name: string }[]
   currentModules: string[]
   moduleData: any

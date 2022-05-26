@@ -75,7 +75,7 @@ type ContextType = {
   activeCallContact?: CallContact | null
   callError?: string | null
   conferenceParticipants?: IParticipantSession[]
-  memberData: MemberDetails
+  memberData: any
   completeCall: () => void
   setCallerName: (name: string) => void
   initiateCall: (
@@ -121,11 +121,7 @@ function CallProvider({ children }: any) {
   const [activeCallContact, setActiveCallContact] =
     useState<CallContact | null>()
   const [counter, setcounter] = useState(0)
-  const [memberData, setMemberData] = useState<MemberDetails>({
-    name: '',
-    number: '',
-    antaraId: '',
-  })
+  const [memberData, setMemberData] = useState<any>({})
   const [activeCall, setActiveCall] = useState<Call | null>()
   const [callError, setcallError] = useState<string | null>(null)
   const { pushNotification } = useFcm()
@@ -234,8 +230,8 @@ function CallProvider({ children }: any) {
         }
       }
       let conferenceName = ''
-      let callerNum = memberData.number
-      let callerName = memberData.name
+      let callerNum = memberData.number || ''
+      let callerName = memberData['Full Name'] || ''
       const callUpdates: Call = {} as Call
       const isStaff = pushNotification?.data?.is_staff === 'true'
       if (
@@ -417,11 +413,7 @@ function CallProvider({ children }: any) {
             setActiveCall({ ...activeCall, ...call })
             setActiveCallContact(callContact)
             onCallInitiated(response?.data)
-            setMemberData({
-              name: memberDetails['Full Name'],
-              number: phoneNum,
-              antaraId: memberDetails['Antara ID'],
-            })
+            setMemberData({ ...memberDetails, number: phoneNum })
           } else {
             setcallError(response?.data?.placeCall.message)
           }

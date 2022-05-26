@@ -5,11 +5,9 @@ import FORMS from '../forms/forms'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import Notification from '../../../utils/notification/notification.component'
 import { useFormPortal } from '../../../../context/forms-context'
-import { useFcm } from '../../../../context/fcm/fcm.context'
 import { useCall } from '../../../../context/calls-context'
 
 const CallConsoleForms = ({ height }: { height: string }) => {
-  const { recID } = useFcm()
   const { memberData } = useCall()
   const { addOpenForm, openedForms } = useFormPortal()
   const [hn, setHN] = React.useState<any>({})
@@ -97,10 +95,7 @@ const CallConsoleForms = ({ height }: { height: string }) => {
               // @ts-ignore
               onClick={() =>
                 addOpenForm(
-                  [
-                    ...openedForms,
-                    { ...form, memberId: recID, antaraId: memberData.antaraId },
-                  ],
+                  [...openedForms, { ...form, member: memberData }],
                   hn
                 )
               }
