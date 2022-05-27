@@ -3,7 +3,14 @@ import Portal from '@mui/material/Portal'
 import Draggable from 'react-draggable'
 import Paper from '@mui/material/Paper'
 import DialogTitle from '@mui/material/DialogTitle'
-import { ArrowRight, Maximize, Minimize, X } from 'react-feather'
+import {
+  ArrowRight,
+  Maximize,
+  Maximize2,
+  Minimize,
+  Minimize2,
+  X,
+} from 'react-feather'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import Button from '@mui/material/Button'
@@ -11,6 +18,7 @@ import DialogActions from '@mui/material/DialogActions'
 import Dialog from '@mui/material/Dialog'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
+import Tooltip from '@mui/material/Tooltip'
 import styles from './form.component.css'
 import InteractionLogsForm from './interaction-logs/interaction-logs-form.component'
 import WorkflowPortal from '../workflows/workflow-portal.component'
@@ -41,17 +49,22 @@ const FormPortal = ({
   isFormEdited,
   openedForms,
   airtableMeta,
+  formNum,
   closeForm,
   setIsFormEdited,
   onFormClose,
   onRefetch,
 }: FormProps) => {
-  const [position, setPosition] = useState({ x: 311, y: -700 })
+  const [calloutHeight, setcalloutHeight] = useState(546)
+  const [isIncreasing, setIsIncreasing] = useState(true)
+  const [calloutWidth, setCalloutWidth] = useState(50)
+  // const [position, setPosition] = useState({ x: 211, y: -700 })
   const [isHighlighting, setIsHighlighting] = useState(true)
   const [dynamicPosition, setDynamicPosition] = useState(undefined)
   const [isDisabled, setIsDisabled] = useState(false)
   const dragClass = isDisabled ? 'draggable-disabled' : 'draggable'
-  const containerWidth = isDisabled ? '450px' : '650px'
+  const containerWidth = isDisabled ? '450px' : `${calloutWidth}%`
+  const containerHeight = `${calloutHeight}px`
   const isWorkflow = form.workflowId
 
   const handleDragActive = (e: MouseEvent) => {
@@ -67,28 +80,24 @@ const FormPortal = ({
     }
   }
 
+  const resizeDialog = () => {
+    if (!isDisabled) {
+      setcalloutHeight(60)
+      setIsDisabled(true)
+      setDynamicPosition({ x: formNum * 70, y: 0 })
+    } else {
+      setIsDisabled(false)
+      setcalloutHeight(546)
+      setDynamicPosition(undefined)
+    }
+  }
+
   useEffect(() => {
     document.addEventListener('mouseenter', handleDragActive, true)
     return () => {
       document.removeEventListener('mouseenter', handleDragActive, true)
     }
   })
-
-  useEffect(() => {
-    if (isDisabled) {
-      setPosition({ x: 74, y: -55 })
-    } else {
-      setDynamicPosition({ x: 311, y: -700 })
-    }
-  }, [isDisabled])
-
-  useEffect(() => {
-    if (dynamicPosition !== undefined && dynamicPosition.x === 311) {
-      setDynamicPosition(undefined)
-    } else if (dynamicPosition !== undefined) {
-      setIsDisabled(true)
-    }
-  }, [dynamicPosition])
 
   React.useEffect(() => {
     const message = `Warning Navigating away from this page will delete your text if you have not already saved it`
@@ -105,7 +114,21 @@ const FormPortal = ({
 
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
-
+  const changeCalloutSize = () => {
+    if (isIncreasing) {
+      setCalloutWidth((width) => width + 10)
+      setcalloutHeight((height) => height + 50)
+    } else {
+      setCalloutWidth((width) => width - 10)
+      setcalloutHeight((height) => height - 50)
+    }
+    if (calloutWidth === 70) {
+      setIsIncreasing(false)
+    }
+    if (calloutWidth === 60) {
+      setIsIncreasing(true)
+    }
+  }
   const handleFormCloseEvent = () => {
     if (form.workflowId && !isFormEdited) {
       setIsFormEdited(false)
@@ -187,46 +210,19 @@ const FormPortal = ({
   return (
     <Portal>
       <Draggable
+        bounds="parent"
         enableUserSelectHack
         disabled={isDisabled || isHighlighting}
         defaultClassName={dragClass}
-        defaultPosition={position}
         position={dynamicPosition}
       >
         <Paper
           className={styles.formContainer}
-          sx={{ width: containerWidth }}
+          sx={{ width: containerWidth, height: containerHeight }}
           elevation={5}
         >
           <DialogTitle className={styles.formTitle} id="draggable-dialog-title">
-            <button
-              className="drag-actions-size"
-              onClick={() => {
-                if (!isDisabled) {
-                  setDynamicPosition({ x: 74, y: -55 })
-                } else {
-                  setIsDisabled(false)
-                }
-              }}
-            >
-              {isDisabled ? <Maximize /> : <Minimize />}
-            </button>
-            <button
-              className="drag-actions-size"
-              onClick={() => {
-                if (!isDisabled) {
-                  setDynamicPosition({ x: 74, y: -55 })
-                } else {
-                  setIsDisabled(false)
-                }
-              }}
-            >
-              {isDisabled ? <Maximize /> : <Minimize />}
-            </button>
-            <button className="drag-actions" onClick={handleFormCloseEvent}>
-              <X />
-            </button>
-            <span className={styles.formTitle}>
+            <div className={styles.formTitle}>
               {isWorkflow ? (
                 <span className="d-flex align-center">
                   <span>Workflow</span>
@@ -236,7 +232,29 @@ const FormPortal = ({
               ) : (
                 form.name
               )}
-            </span>
+            </div>
+            <div>
+              {!isDisabled && (
+                <Tooltip title={isIncreasing ? 'Maximize' : 'Minimize'}>
+                  <button
+                    className="drag-actions-size"
+                    onClick={changeCalloutSize}
+                  >
+                    {isIncreasing ? <Maximize /> : <Minimize />}
+                  </button>
+                </Tooltip>
+              )}
+              <Tooltip title={isDisabled ? 'Expand' : 'Collapse'}>
+                <button className="drag-actions-size" onClick={resizeDialog}>
+                  {isDisabled ? <Maximize2 /> : <Minimize2 />}
+                </button>
+              </Tooltip>
+              <Tooltip title="Close">
+                <button className="drag-actions" onClick={handleFormCloseEvent}>
+                  <X />
+                </button>
+              </Tooltip>
+            </div>
           </DialogTitle>
           <DialogContent sx={{ padding: 0, height: '100%' }}>
             {formRender()}

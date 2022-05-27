@@ -1,11 +1,25 @@
 .formContainer {
-  height: 546px;
+  position: absolute;
+  bottom: 0px;
+  left: 5%;
   border-radius: 12px !important;
   box-shadow: 0 2.8px 2.2px 0 rgba(0, 0, 0, 0.02),
     0 6.7px 5.3px 0 rgba(0, 0, 0, 0.03), 0 12.5px 10px 0 rgba(0, 0, 0, 0.04),
     0 22.3px 17.9px 0 rgba(0, 0, 0, 0.04), 0 41.8px 33.4px 0 rgba(0, 0, 0, 0.05),
     0 100px 80px 0 rgba(0, 0, 0, 0.07) !important;
   background-color: var(--white-100) !important;
+}
+
+.formTag {
+  position: absolute;
+  top: -23px;
+  right: 0px;
+  border-radius: 3%;
+  padding: 3px;
+  background: #fb9800;
+  font-family: Rubik;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .formTitle {

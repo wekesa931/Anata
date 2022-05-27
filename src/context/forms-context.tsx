@@ -92,6 +92,7 @@ const FormProvider = ({ children }: any) => {
         <React.Fragment key={idx}>
           <FormPortal
             form={fm}
+            formNum={idx}
             hn={hNavigator}
             airtableMeta={airtableMeta}
             isFormEdited={isFormEdited}

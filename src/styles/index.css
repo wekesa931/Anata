@@ -2097,7 +2097,6 @@ a {
 }
 
 .drag-actions {
-  position: absolute;
   right: 10px;
   color: var(--orange-20);
   cursor: pointer;
@@ -2106,8 +2105,7 @@ a {
 }
 
 .drag-actions-size {
-  position: absolute;
-  right: 35px;
+  margin-right: 5px;
   color: var(--white-100);
   cursor: pointer;
   background: none;
@@ -2116,8 +2114,8 @@ a {
 
 .drag-actions-size svg,
 .drag-actions svg {
-  width: 23px;
-  height: 23px;
+  width: 19px;
+  height: 19px;
 }
 
 .react-pdf__Page {
