@@ -19,7 +19,7 @@ import dayjs from 'dayjs'
 import { Controller } from 'react-hook-form'
 import Checkbox from '@mui/material/Checkbox'
 import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import { CheckSquare, Square } from 'react-feather'
 import FormHelperText from '@mui/material/FormHelperText'
 import { InputLabel } from '@mui/material'
@@ -81,6 +81,7 @@ const WorkflowFormsInput = ({
           disabled={disabled}
           helperText={helperText}
           field={field}
+          airtableMeta={airtableMeta}
           saveInput={saveInput}
           control={control}
           error={error}
@@ -94,6 +95,7 @@ const WorkflowFormsInput = ({
           disabled={disabled}
           fieldName={fieldName}
           field={field}
+          airtableMeta={airtableMeta}
           helperText={helperText}
           saveInput={saveInput}
           control={control}
@@ -156,16 +158,22 @@ const SingleSelectOption = ({
   disabled,
   fieldName,
   helperText,
+  airtableMeta,
   saveInput,
   control,
   error,
 }: Form) => {
-  if (field.options?.choices.length > 2) {
+  if (
+    airtableMeta &&
+    airtableMeta[field.parentTableId].fields[field.id].options?.choices.length >
+      2
+  ) {
     return (
       <SingleSelectInput
         value={value}
         disabled={disabled}
         field={field}
+        airtableMeta={airtableMeta}
         fieldName={fieldName}
         helperText={helperText}
         saveInput={saveInput}
@@ -179,6 +187,7 @@ const SingleSelectOption = ({
       value={value}
       fieldName={fieldName}
       disabled={disabled}
+      airtableMeta={airtableMeta}
       field={field}
       helperText={helperText}
       saveInput={saveInput}
@@ -194,6 +203,7 @@ const SingleSelectInput = ({
   field,
   helperText,
   fieldName,
+  airtableMeta,
   saveInput,
   control,
   error,
@@ -211,6 +221,9 @@ const SingleSelectInput = ({
     setOption(newValue)
     saveInput(field.name, newValue)
   }
+  const optionsData = airtableMeta
+    ? airtableMeta[field.parentTableId].fields[field.id].options?.choices
+    : []
 
   return (
     <Controller
@@ -225,7 +238,7 @@ const SingleSelectInput = ({
           disablePortal
           value={option}
           id="combo-box-demo"
-          options={field.options?.choices.map((opt) => opt.name)}
+          options={optionsData.map((opt) => opt.name)}
           onChange={(event: any, newValue: string) => {
             handleChange(newValue)
             onChange(newValue)
@@ -285,6 +298,7 @@ const SingleSelectView = ({
   disabled,
   fieldName,
   helperText,
+  airtableMeta,
   saveInput,
   control,
   error,
@@ -298,7 +312,9 @@ const SingleSelectView = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
-
+  const optionsData = airtableMeta
+    ? airtableMeta[field.parentTableId].fields[field.id].options?.choices
+    : []
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
     setOption(event.target.value)
@@ -363,7 +379,7 @@ const SingleSelectView = ({
                 }}
                 name="radio-buttons-group"
               >
-                {field.options?.choices.map((choice) => (
+                {optionsData.map((choice) => (
                   <Fragment key={choice.name}>
                     <FormControlLabel
                       value={choice.name}
@@ -395,6 +411,7 @@ const MultiSelectMultipleInput = ({
   fieldName,
   helperText,
   saveInput,
+  airtableMeta,
   disabled,
   control,
   error,
@@ -409,7 +426,9 @@ const MultiSelectMultipleInput = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkedValues])
-
+  const optionsData = airtableMeta
+    ? airtableMeta[field.parentTableId].fields[field.id].options?.choices
+    : []
   const handleChange = (newValue: any) => {
     setSelectedChoices(newValue)
     saveInput(field.name, newValue)
@@ -445,7 +464,7 @@ const MultiSelectMultipleInput = ({
             id="checkboxes-tags-demo"
             value={selectedChoices}
             defaultValue={checkedValues}
-            options={field.options?.choices.map((opt) => opt.name)}
+            options={optionsData.map((opt) => opt.name)}
             disabled={disabled}
             disableCloseOnSelect
             onChange={(event: SyntheticEvent<Element, Event>, value: any[]) => {
@@ -636,6 +655,10 @@ const LinkRecordInput = ({
     return null
   })
   const [linkedRecords, setLinkedRecords] = useState<any[]>([])
+  const filterOptions = createFilterOptions({
+    matchFrom: 'any',
+    limit: 50,
+  })
   const [getLinkedRecords, { data, loading: gettingLinkedRecords }] =
     useLazyQuery(GET_LINKED_RECORD)
   const settingLinkedData = gettingLinkedRecords || !airtableMeta
@@ -644,17 +667,13 @@ const LinkRecordInput = ({
       const response = data.globalSearch.data
       const displayFields: any[] = []
       response.forEach((fl) => {
-        const loadedValue =
-          fl.fields[airtableMeta[field.foreignTableId].fields[0].name] &&
-          typeof fl.fields[
-            airtableMeta[field.foreignTableId].fields[0].name
-          ] === 'string'
+        const loadedMeta =
+          fl.fields[airtableMeta[field.foreignTableId].fields.primaryFieldName]
+        const loadedValue = loadedMeta && typeof loadedMeta === 'string'
         if (loadedValue) {
           displayFields.push({
             id: fl.id,
-            name: fl.fields[
-              airtableMeta[field.foreignTableId].fields[0].name
-            ]?.toLocaleString(),
+            name: loadedMeta?.toLocaleString(),
           })
         }
       })
@@ -672,9 +691,10 @@ const LinkRecordInput = ({
       'Antara Member ID',
     ]
     let presentKey = ''
-    airtableMeta[field.foreignTableId].fields.forEach((ky) => {
+    const metaFields = airtableMeta[field.foreignTableId].fields
+    Object.keys(metaFields).forEach((ky) => {
       validKeys.forEach((vl) => {
-        if (ky.name === vl) {
+        if (metaFields[ky].name === vl) {
           presentKey = vl
         }
       })
@@ -686,7 +706,7 @@ const LinkRecordInput = ({
       getLinkedRecords({
         variables: {
           table: field.foreignTableId,
-          field: airtableMeta[field.foreignTableId].fields[0].name,
+          field: airtableMeta[field.foreignTableId].fields.primaryFieldName,
           searchParam: '',
           antaraIdKey: checkAntaraIdKey(),
           antaraIdValue: checkAntaraIdKey() ? template?.antaraId || '' : '',
@@ -755,6 +775,7 @@ const LinkRecordInput = ({
           <Autocomplete
             multiple={field.relationship === 'many'}
             disablePortal
+            filterOptions={filterOptions}
             disabled={disabled}
             loading={settingLinkedData}
             loadingText={
@@ -796,6 +817,7 @@ const LinkRecordInput = ({
               return (
                 <li {...props}>
                   <Checkbox
+                    key={option.id}
                     icon={icon}
                     checkedIcon={checkedIcon}
                     style={{ marginRight: 8 }}

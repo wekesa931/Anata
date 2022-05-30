@@ -64,9 +64,20 @@ const FormProvider = ({ children }: any) => {
         .then((res) => {
           let tableMap: any = {}
           res.tables.forEach((tb) => {
+            let fields: any = {}
+            tb.fields.forEach((fl) => {
+              fields = {
+                ...fields,
+                primaryFieldName: tb.fields[0].name,
+                [fl.id]: fl,
+              }
+            })
             tableMap = {
               ...tableMap,
-              [tb.id]: tb,
+              [tb.id]: {
+                ...tb,
+                fields,
+              },
             }
           })
           setAirtableMeta(tableMap)

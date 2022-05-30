@@ -62,6 +62,7 @@ export type Form = {
   fieldName: string
   template?: any
   field: {
+    parentTableId?: string
     required: boolean
     type: string
     name: string
@@ -72,6 +73,7 @@ export type Form = {
     relationship: string
     foreignTableId: string
   }
+  airtableMeta?: any
   helperText: string
   type?: string
   disabled: boolean
