@@ -141,6 +141,7 @@ const WorkflowPortal = ({
   const canAddModule =
     !gettingTableMeta && !template?.completed && isWorkflowTemplate
   const canAddDuplicate = !addingDuplicate && isWorkflowTemplate
+  const hasDuplicateForm = formPayload.length > 1
   const setModuleNames = () => {
     const loadedModules = TABLES.map((mod) => mod.name)
     setAllModules(loadedModules)
@@ -312,6 +313,8 @@ const WorkflowPortal = ({
     const activeMod = listOfTables.find((tb) => tb.name === name)
     return activeMod?.isDraft
   }
+  const displayModDelete =
+    moduleIsDraft(activeModuleName) && isWorkflowTemplate && !hasDuplicateForm
 
   const moduleOptions = () => {
     return (
@@ -503,43 +506,43 @@ const WorkflowPortal = ({
                   ...toastMessage,
                   message: `${template?.name} form saved successfully`,
                 })
+              } else {
+                const updatedFormPayload = finalPayload.map((pl) => ({
+                  ...pl,
+                  isDraft: false,
+                }))
+                saveModuleData({
+                  variables: {
+                    moduleName: activeModuleName,
+                    workflowId: template?.workflowId,
+                    data: updatedFormPayload,
+                    draft: false,
+                  },
+                }).then((res) => {
+                  updateModuleList(res.data.saveModuleData.workflow)
+                  setTemplate({
+                    ...res.data.saveModuleData.workflow,
+                    antaraId: memberAntaraId,
+                  })
+                  onRefetch(true)
+                  analytics.track(`Guided Workflow`, {
+                    event: 'Form saved to airtable successful',
+                    beneId: recId,
+                    staff: user ? user.email : '',
+                    moduleName: activeModuleName,
+                    moduleData: finalPayload,
+                    workflow: res.data.saveModuleData.workflow,
+                  })
+                  setToastMessage({
+                    ...toastMessage,
+                    message: 'Workflow form saved successfully',
+                  })
+                  setSavingFinal(false)
+                })
               }
             })
           }
         })
-        const updatedFormPayload = finalPayload.map((pl) => ({
-          ...pl,
-          isDraft: false,
-        }))
-        isWorkflowTemplate &&
-          saveModuleData({
-            variables: {
-              moduleName: activeModuleName,
-              workflowId: template?.workflowId,
-              data: updatedFormPayload,
-              draft: false,
-            },
-          }).then((res) => {
-            updateModuleList(res.data.saveModuleData.workflow)
-            setTemplate({
-              ...res.data.saveModuleData.workflow,
-              antaraId: memberAntaraId,
-            })
-            onRefetch(true)
-            analytics.track(`Guided Workflow`, {
-              event: 'Form saved to airtable successful',
-              beneId: recId,
-              staff: user ? user.email : '',
-              moduleName: activeModuleName,
-              moduleData: finalPayload,
-              workflow: res.data.saveModuleData.workflow,
-            })
-            setToastMessage({
-              ...toastMessage,
-              message: 'Workflow form saved successfully',
-            })
-            setSavingFinal(false)
-          })
       }
     } catch (err) {
       setSavingFinal(false)
@@ -680,11 +683,13 @@ const WorkflowPortal = ({
         />
       )
     }
-    if (formPayload.length > 1) {
+    if (hasDuplicateForm) {
       return (
         <div className={styles.forms}>
           {formPayload.map((mod: any, idx: number) => {
             const submitStatus = formPayload[idx]
+            const displayModuleDeleteBtn =
+              hasDuplicateForm && submitStatus.isDraft
             const moduleTitle = mod[DUPLICATE_DEFAULTS[activeModuleName]] || '-'
             return (
               <Accordion
@@ -707,7 +712,7 @@ const WorkflowPortal = ({
                         }}
                       >
                         <span className="d-flex">
-                          {submitStatus.isDraft && (
+                          {displayModuleDeleteBtn && (
                             <span style={{ margin: '3px 8px 0 0' }}>
                               <ConfirmButton
                                 onConfirm={() => {
@@ -900,7 +905,7 @@ const WorkflowPortal = ({
                         }}
                       />
                     )}
-                  {moduleIsDraft(activeModuleName) && isWorkflowTemplate && (
+                  {displayModDelete && (
                     <ConfirmButton
                       onConfirm={() =>
                         deleteModule(activeModuleName, template?.workflowId)

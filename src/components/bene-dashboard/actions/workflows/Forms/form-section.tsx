@@ -228,6 +228,12 @@ const FormSection = ({
               }
             }
             break
+          case 'checkbox':
+            schema = {
+              ...schema,
+              [fieldName]: Yup.boolean(),
+            }
+            break
           case 'select':
           case 'singleSelect':
           case 'url':
@@ -319,7 +325,7 @@ const FormSection = ({
         // eslint-disable-next-line
         handleSubmit((data: any, e?: any) => {
           if (data) {
-            let formattedPayload = formPayload[index]
+            let formattedPayload = data
             numberFields.forEach((mt) => {
               if (formattedPayload[`${mt.name}`]) {
                 if (mt.isPercent) {
@@ -334,6 +340,12 @@ const FormSection = ({
                     [`${mt.name}`]: parseFloat(formattedPayload[`${mt.name}`]),
                   }
                 }
+              }
+            })
+            dateFields.forEach((dt) => {
+              formattedPayload = {
+                ...formattedPayload,
+                [dt]: formPayload[index][dt],
               }
             })
             setfinalPayload((dat) => [...dat, formattedPayload])

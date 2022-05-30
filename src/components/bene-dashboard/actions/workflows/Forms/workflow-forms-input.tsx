@@ -73,6 +73,7 @@ const WorkflowFormsInput = ({
       return <></>
 
     case 'select':
+    case 'checkbox':
     case 'singleSelect':
       return (
         <SingleSelectOption
@@ -312,9 +313,25 @@ const SingleSelectView = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
-  const optionsData = airtableMeta
-    ? airtableMeta[field.parentTableId].fields[field.id].options?.choices
-    : []
+  const optionsData = () => {
+    let fieldOptions = []
+    if (field.type === 'checkbox') {
+      fieldOptions = [
+        {
+          name: true,
+        },
+        {
+          name: false,
+        },
+      ]
+    } else {
+      fieldOptions = airtableMeta
+        ? airtableMeta[field.parentTableId].fields[field.id].options?.choices
+        : []
+    }
+    return fieldOptions
+  }
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
     setOption(event.target.value)
@@ -379,13 +396,13 @@ const SingleSelectView = ({
                 }}
                 name="radio-buttons-group"
               >
-                {optionsData.map((choice) => (
+                {optionsData().map((choice) => (
                   <Fragment key={choice.name}>
                     <FormControlLabel
                       value={choice.name}
                       disabled={disabled}
                       control={<Radio />}
-                      label={choice.name}
+                      label={choice.name.toString()}
                     />
                   </Fragment>
                 ))}
