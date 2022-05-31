@@ -127,9 +127,19 @@ const WorkflowPortal = ({
   const loadingFields = gettingTableMeta || updatingActiveModule
   const activeModuleName =
     listOfTables.length > 0 ? listOfTables[activeModule]?.name : ''
+  /**
+   * At all instances the form will have three properties
+   * 1. member id
+   * 2. Check whether form is draft or saved
+   * 3. unique id identifying the form
+   */
+  const formDataAdded =
+    formPayload.length > 0 && Object.keys(formPayload[0]).length === 3
   const isSubmitDisabled =
     savingFinal ||
     savingDraft ||
+    formDataAdded ||
+    !isFormEdited ||
     template?.completed ||
     template?.moduleData[activeModuleName]?.status === 'Saved'
   const isSubmitting = savingWorkflowStart || savingWorkflow
@@ -945,7 +955,7 @@ const WorkflowPortal = ({
         </Grid>
       </div>
       <div
-        className={`d-flex flex-between p-8 ${
+        className={`${styles.btnContainer} d-flex flex-between p-8 ${
           !isWorkflowTemplate && 'flex-end'
         }`}
       >

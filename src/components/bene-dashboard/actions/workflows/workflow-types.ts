@@ -47,7 +47,7 @@ export type FormSectionInput = {
   disabled: boolean
   activeModuleName: string
   isToastOpen: boolean
-  setIsFormEdited: (isEdited: true) => void
+  setIsFormEdited: (isEdited: boolean) => void
   resetActiveModule: () => void
   setFormPayload: (payload: any) => void
   saveModule: (isDraft: boolean) => void

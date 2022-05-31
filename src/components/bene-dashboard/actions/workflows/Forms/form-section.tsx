@@ -395,11 +395,14 @@ const FormSection = ({
                   airtableMeta={airtableMeta}
                   fieldName={fieldName}
                   saveInput={(name: string, value: any) => {
-                    template?.workflowId && setIsFormEdited(true)
+                    setIsFormEdited(true)
                     const newPayload = {
                       ...formPayload[index],
                       [name]: value,
                       isDraft: true,
+                    }
+                    if (!value || value?.length === 0) {
+                      delete newPayload[name]
                     }
                     const newFormPayload = [...formPayload]
                     newFormPayload.splice(index, 1, newPayload)

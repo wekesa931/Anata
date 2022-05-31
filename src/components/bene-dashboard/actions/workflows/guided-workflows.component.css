@@ -119,9 +119,12 @@
 }
 
 .workflowDialogueContent {
-  height: 78%;
+  height: 90%;
 }
 
+.btnContainer {
+  height: 10%;
+}
 .workflowDialogueContentGrid {
   height: 100%;
   border-bottom: 1px solid var(--dark-blue-10);

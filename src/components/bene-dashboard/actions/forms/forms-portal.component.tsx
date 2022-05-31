@@ -221,7 +221,10 @@ const FormPortal = ({
           sx={{ width: containerWidth, height: containerHeight }}
           elevation={5}
         >
-          <DialogTitle className={styles.formTitle} id="draggable-dialog-title">
+          <DialogTitle
+            className={styles.formTitleContainer}
+            id="draggable-dialog-title"
+          >
             <div className={styles.formTitle}>
               {isWorkflow ? (
                 <span className="d-flex align-center">
@@ -256,7 +259,7 @@ const FormPortal = ({
               </Tooltip>
             </div>
           </DialogTitle>
-          <DialogContent sx={{ padding: 0, height: '100%' }}>
+          <DialogContent sx={{ padding: 0, height: '90%' }}>
             {formRender()}
             {confirmClose()}
           </DialogContent>
