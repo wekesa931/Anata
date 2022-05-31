@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { Info } from 'react-feather'
 import { Button, CardContent, Typography, Chip, Checkbox } from '@mui/material'
@@ -887,7 +887,10 @@ const BioData = () => {
 
                   {majorDependents.map((dep) => (
                     <React.Fragment key={dep.airtableRecordId}>
-                      <DependentCard dependent={dep} />
+                      <DependentCard
+                        dependent={dep}
+                        trackAccess={trackAccess}
+                      />
                     </React.Fragment>
                   ))}
                 </div>
@@ -901,7 +904,10 @@ const BioData = () => {
 
                   {minorDependents.map((dep) => (
                     <React.Fragment key={dep.airtableRecordId}>
-                      <DependentCard dependent={dep} />
+                      <DependentCard
+                        dependent={dep}
+                        trackAccess={trackAccess}
+                      />
                     </React.Fragment>
                   ))}
                 </div>
@@ -912,29 +918,16 @@ const BioData = () => {
                 <hr className={styles.hrLine} />
 
                 <h4 className={styles.clinicalHeading}>Primary Dependent</h4>
-                <table className={`text-normal ${styles.bioDataTable}`}>
-                  <tbody>
-                    {memberContact?.primary.map((mem) => (
-                      <tr key={mem.airtableRecordId}>
-                        <td
-                          className={`text-bold ${styles.bioDataTableColumn}`}
-                        >
-                          {mem.fullName}
-                        </td>
-                        <td className={`${styles.bioDataTableColumn}`}>
-                          <Link
-                            onClick={trackAccess}
-                            to={`/member/${mem.airtableRecordId}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Open Dashboard
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <div className={styles.dependentsDiv}>
+                  {memberContact?.primary.map((mem) => (
+                    <React.Fragment key={mem.airtableRecordId}>
+                      <DependentCard
+                        dependent={mem}
+                        trackAccess={trackAccess}
+                      />
+                    </React.Fragment>
+                  ))}
+                </div>
               </>
             )}
           </div>

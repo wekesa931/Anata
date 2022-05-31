@@ -16,7 +16,13 @@ interface DependentProps {
   sex: string
 }
 
-const DependentCard = ({ dependent }: { dependent: DependentProps }) => {
+const DependentCard = ({
+  dependent,
+  trackAccess,
+}: {
+  dependent: DependentProps
+  trackAccess: () => void
+}) => {
   const {
     airtableRecordId,
     fullName: name,
@@ -36,6 +42,9 @@ const DependentCard = ({ dependent }: { dependent: DependentProps }) => {
       href={`/member/${airtableRecordId}`}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() => {
+        trackAccess()
+      }}
     >
       <Box className={styles.container}>
         <Box className={styles.biodataBox}>

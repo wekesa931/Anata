@@ -58,6 +58,8 @@ const MEMBER_CONTACT_DETAILS = gql`
             contactPhone1
             contactPhone2
             relationshipToPrimary
+            birthDate
+            sex
           }
           dependents {
             airtableRecordId
