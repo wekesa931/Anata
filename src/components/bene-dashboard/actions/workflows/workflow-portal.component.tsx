@@ -457,6 +457,10 @@ const WorkflowPortal = ({
               delete airtablePayload.Member
             }
 
+            if (activeModuleName === 'Intervention Data Tracking') {
+              delete airtablePayload.Member
+            }
+
             const tableName = TABLE_ROUTES[`${tableTosave?.name}`]
             let finalAirtablePayload = {
               fields: {
