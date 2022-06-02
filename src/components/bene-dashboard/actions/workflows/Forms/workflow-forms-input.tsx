@@ -726,7 +726,9 @@ const LinkRecordInput = ({
           field: airtableMeta[field.foreignTableId].fields.primaryFieldName,
           searchParam: '',
           antaraIdKey: checkAntaraIdKey(),
-          antaraIdValue: checkAntaraIdKey() ? template?.antaraId || '' : '',
+          antaraIdValue: checkAntaraIdKey()
+            ? template?.member['Antara ID'] || ''
+            : '',
         },
       })
     }

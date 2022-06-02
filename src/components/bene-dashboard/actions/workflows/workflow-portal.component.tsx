@@ -86,7 +86,7 @@ const WorkflowPortal = ({
   onRefetch,
 }: IProps) => {
   const recId = openedWorkflow?.member['recID']
-  const memberAntaraId = openedWorkflow?.member['Antara ID']
+  const member = openedWorkflow?.member
   const [toastMessage, setToastMessage] =
     useState<ToastMessage>(defaultToastMessage)
   const [template, setTemplate] = useState<IWorkflow>(null)
@@ -167,7 +167,7 @@ const WorkflowPortal = ({
         if (res.data.removeWorkflowModule.status === 200) {
           setTemplate({
             ...res.data.removeWorkflowModule.workflow,
-            antaraId: memberAntaraId,
+            member,
           })
           onRefetch(true)
           const updatedModules = listOfTables.filter((fm) => fm.name !== name)
@@ -304,7 +304,7 @@ const WorkflowPortal = ({
         updateModuleList(res.data.addWorkflowModule.workflow, true)
         setTemplate({
           ...res.data.addWorkflowModule.workflow,
-          antaraId: memberAntaraId,
+          member,
         })
         onRefetch(true)
         analytics.track(`Guided Workflow`, {
@@ -398,7 +398,10 @@ const WorkflowPortal = ({
             const response = res.data.saveModuleData.workflow
             setFormPayload(response.moduleData[activeModuleName].filled_values)
             updateModuleList(response)
-            setTemplate({ ...response, antaraId: memberAntaraId })
+            setTemplate({
+              ...response,
+              member,
+            })
             onRefetch(true)
             analytics.track(`Guided Workflow`, {
               event: 'Module draft saved',
@@ -536,7 +539,7 @@ const WorkflowPortal = ({
                   updateModuleList(res.data.saveModuleData.workflow)
                   setTemplate({
                     ...res.data.saveModuleData.workflow,
-                    antaraId: memberAntaraId,
+                    member,
                   })
                   onRefetch(true)
                   analytics.track(`Guided Workflow`, {
@@ -998,7 +1001,7 @@ const WorkflowPortal = ({
                       )
                       setTemplate({
                         ...res.data.updateWorkflow.workflow,
-                        antaraId: memberAntaraId,
+                        member,
                       })
                       setToastMessage({
                         ...toastMessage,
