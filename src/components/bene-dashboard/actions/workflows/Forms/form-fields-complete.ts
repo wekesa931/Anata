@@ -3543,7 +3543,7 @@ export default [
       },
       {
         id: 'fldsVuFtNCJi4ly9O',
-        name: "If you could work on one aspect of you child/dependent's health, what would it be?",
+        name: 'If you could work on one aspect of you child/dependent health, what would it be?',
         type: 'multilineText',
         format: '',
         isDateTime: false,
@@ -8969,7 +8969,7 @@ export default [
       },
       {
         id: 'fldPWBfz50yXLw6rT',
-        name: "Task's duration",
+        name: 'Task duration',
         type: 'number',
         format: 'integer',
         isDateTime: false,
