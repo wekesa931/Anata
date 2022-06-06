@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
@@ -118,6 +118,7 @@ const BloodPressure = () => {
       })
       .catch(() => setLoading(false))
   }
+
   const handleChange = (newDate) => {
     const minDate = dayjs(newDate[0]).format('YYYY-MM-DD')
     const maxDate = dayjs(newDate[1]).format('YYYY-MM-DD')
@@ -126,6 +127,13 @@ const BloodPressure = () => {
       filter('date-range', newDate)
     }
   }
+
+  useEffect(() => {
+    if (selectedValue && toggleButton) {
+      filter(toggleButton, selectedDate)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedValue, toggleButton])
 
   const CustomToolbar = () => {
     return (
@@ -200,10 +208,10 @@ const BloodPressure = () => {
           <div className={styles.calendar}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DateRangePicker
-                inputFormat="YYYY-DD-MM"
-                toolbarPlaceholder="YYYY-DD-MM"
+                inputFormat="DD-MM-YYYY"
+                toolbarPlaceholder="DD-MM-YYYY"
                 value={selectedDate}
-                mask="____-__-__"
+                mask="__-__-____"
                 onChange={handleChange}
                 renderInput={(startProps, endProps) => (
                   <>
