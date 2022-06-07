@@ -30,7 +30,7 @@ const BloodPressure = () => {
     setSelectedValue(value)
   }
 
-  const [toggleButton, setToggleButton] = useState('last-week')
+  const [toggleButton, setToggleButton] = useState('last-six-months')
   const [tabActive, setTabActive] = useState<boolean>(false)
   const handleClicked = (e) => {
     setToggleButton(e.target.value)
@@ -49,6 +49,12 @@ const BloodPressure = () => {
       field: 'Average BP',
       filterable: false,
       width: 140,
+      description: `
+      Stage 2 hypertension: Systolic >140 or Diastolic >=90
+      Stage 1 hypertension: Systolic 130-140 or Diastolic 80-89 
+      Elevated blood pressure : Systolic of 120-130 and Diastolic of  <80 
+      Normal blood pressure is <120/80
+      `,
     },
     {
       headerName: 'BP, morning',
