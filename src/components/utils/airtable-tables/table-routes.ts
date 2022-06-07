@@ -14,6 +14,7 @@ const TABLE_ROUTES = {
   NIF: 'nif',
   'Clinical Consultation': 'clinicalconsultation',
   Prescriptions: 'medications',
+  'Prescriptions VC': 'medications',
   Appointments: 'appointments',
   Interactions: 'interactions',
   'HN Tasks': 'hntasks',

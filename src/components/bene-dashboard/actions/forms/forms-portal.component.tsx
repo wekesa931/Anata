@@ -22,6 +22,7 @@ import Tooltip from '@mui/material/Tooltip'
 import styles from './form.component.css'
 import InteractionLogsForm from './interaction-logs/interaction-logs-form.component'
 import WorkflowPortal from '../workflows/workflow-portal.component'
+import { formNames } from '../workflows/Forms/form-fields'
 
 type IForm = {
   name: string
@@ -164,7 +165,7 @@ const FormPortal = ({
           fullScreen={fullScreen}
         >
           <DialogTitle id="alert-dialog-title">
-            {`Are you sure you want to leave ${formName}?`}
+            {`Are you sure you want to leave ${formNames[formName]}?`}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
@@ -233,7 +234,7 @@ const FormPortal = ({
                   <span>{form.workflowId}</span>
                 </span>
               ) : (
-                form.name
+                formNames[form.name]
               )}
             </div>
             <div>

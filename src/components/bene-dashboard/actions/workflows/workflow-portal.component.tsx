@@ -37,7 +37,7 @@ import FormSection from './Forms/form-section'
 import TABLE_ROUTES from '../../../utils/airtable-tables/table-routes'
 import TABLES from './Forms/form-fields-complete'
 import { ConfirmButtonProps, FormMeta, IWorkflow } from './workflow-types'
-import { DUPLICATE_DEFAULTS, duplicates } from './Forms/form-fields'
+import { DUPLICATE_DEFAULTS, duplicates, formNames } from './Forms/form-fields'
 
 type IProps = {
   workflow: IWorkflow
@@ -374,7 +374,7 @@ const WorkflowPortal = ({
               variant="text"
               onClick={() => setSelectedModule(mod)}
             >
-              {mod}
+              {formNames[mod]}
             </Button>
           )
         })}
@@ -521,7 +521,9 @@ const WorkflowPortal = ({
                 setSavingFinal(false)
                 setToastMessage({
                   ...toastMessage,
-                  message: `${template?.name} form saved successfully`,
+                  message: `${
+                    formNames[template?.name]
+                  } form saved successfully`,
                 })
               } else {
                 const updatedFormPayload = finalPayload.map((pl) => ({
@@ -830,7 +832,7 @@ const WorkflowPortal = ({
                       key={idx}
                       onClick={() => setIncomingIndex(idx)}
                     >
-                      <span>{tbl.name}</span>
+                      <span>{formNames[tbl.name]}</span>
                       {!tbl.isDraft && (
                         <Check
                           color="var(--green-100)"
@@ -906,7 +908,9 @@ const WorkflowPortal = ({
           >
             {canRenderFields && !isDuplicate && (
               <div className={`d-flex flex-between ${styles.stickyHeader}`}>
-                <p className={styles.moduleName}>{activeModuleName}</p>
+                <p className={styles.moduleName}>
+                  {formNames[activeModuleName]}
+                </p>
                 <div className="d-flex">
                   {addingDuplicate && (
                     <div>
