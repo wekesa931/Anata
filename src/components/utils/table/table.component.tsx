@@ -244,8 +244,13 @@ const Table = ({
                     padding="8px"
                     borderRadius="4px"
                   >
+                    
                     {typeof clickedRow[info] === 'object'
-                      ? JSON.stringify(clickedRow[info])
+                    /* eslint-disable no-useless-escape */
+                      ? JSON.stringify(clickedRow[info]).replace(
+                          /[\[\]'{} "]+/g,
+                          ''
+                        )
                       : clickedRow[info]}
                   </Text>
                 </div>
