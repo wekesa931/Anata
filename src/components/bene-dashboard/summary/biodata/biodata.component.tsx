@@ -184,11 +184,10 @@ const ConditionsSummary = () => {
       }
     })
   }, [recId])
-
   return (
     <div>
       <div className={styles.conditionsHeading}>
-        <h6 className="text-bold">Conditions</h6>
+        <h6 className="text-bold">Active Conditions</h6>
       </div>
       <div className={`text-small ${styles.conditionsContent}`}>
         {conditions.map((condition: any, index: number) => {
@@ -207,29 +206,23 @@ const ConditionsSummary = () => {
               {condition.Condition === 'Other'
                 ? condition['Other, specify']
                 : `${condition.Condition}, `}
-              {condition['Starting clinical status'] && (
+              {condition['Current stage'] && (
                 <>
-                  <span style={{ color: 'var(--dark-blue-50)' }}>
-                    {' '}
-                    Starting Clinical Status:{' '}
-                  </span>
-                  {condition['Starting clinical status']},
+                  {condition['Current stage'] === 'At risk' ? (
+                    <span style={{ color: 'var(--red-base)' }}>
+                      <span style={{ color: 'var(--dark-blue-50)' }}>
+                        Current stage:
+                      </span>
+                      {condition['Current stage']}
+                    </span>
+                  ) : (
+                    <span style={{ color: 'var(--dark-blue-50)' }}>
+                      Current stage:
+                      {condition['Current stage']}
+                    </span>
+                  )}
                 </>
               )}
-              {condition['Current clinical status'] && (
-                <>
-                  <span style={{ color: 'var(--dark-blue-50)' }}>
-                    {' '}
-                    Current Clinical Status:{' '}
-                  </span>
-                  {condition['Current clinical status']},
-                </>
-              )}
-              <span style={{ color: 'var(--dark-blue-50)' }}>
-                {' '}
-                Condition Status:{' '}
-              </span>{' '}
-              {condition['Condition Status']}
             </li>
           )
         })}

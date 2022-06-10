@@ -4,17 +4,10 @@ import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import List from '../../../utils/list/list.component'
 import filterFields from '../../../../helpers/filter-fields'
-import { useSortFilter } from '../../../../context/sort-filter-views.context'
 
 const Conditions = () => {
   const { recId } = useParams()
-  const [conditions, setConditions] = useState<any[]>([])
   const [filteredConditions, setFilteredConditions] = useState<any[]>([])
-  const {
-    ops: {
-      filters: { conditions: filters },
-    },
-  } = useSortFilter()
   const allowedFields = [
     'Calculated Date of Diagnosis',
     'Calculated Key Goal',
@@ -50,23 +43,9 @@ const Conditions = () => {
         data: data[key],
         name: data[key].Summary,
       }))
-      setConditions(mappedData)
       setFilteredConditions(mappedData)
     }
   }, [data])
-
-  React.useEffect(() => {
-    let filteredCons = conditions
-    if (filters) {
-      if (filters.status) {
-        filteredCons = filteredCons.filter(
-          (condition: any) =>
-            condition.data['Condition Status'] === filters.status
-        )
-      }
-    }
-    setFilteredConditions(filteredCons)
-  }, [conditions, filters])
 
   const getDiagnosisDate = (condition: any) =>
     `Diagnosed ${condition['Date of Diagnosis/Condition']}`
@@ -75,7 +54,6 @@ const Conditions = () => {
     <div className="full-width">
       <div className="d-flex flex-align-center">
         <h4 className="margin-left-8">Conditions</h4>
-        <span className="badge badge-warning">{filters.status}</span>
       </div>
       {isLoading && (
         <div className="d-flex flex-direction-column flex-align-center margin-top-32">
@@ -83,6 +61,7 @@ const Conditions = () => {
           <p className="text-small">Loading Conditions</p>
         </div>
       )}
+
       {filteredConditions.length > 0 && (
         <List
           list={filteredConditions}

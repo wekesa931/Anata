@@ -173,14 +173,6 @@ const List = ({
                               {item.data['Starting clinical status']},
                             </>
                           )}
-                          {item.data['Current clinical status'] && (
-                            <>
-                              <b>Current Clinical Status: </b>
-                              {item.data['Current clinical status']},
-                            </>
-                          )}
-                          <b>Condition Status:</b>{' '}
-                          {item.data['Condition Status']}
                         </div>
                       )}
                     </div>
