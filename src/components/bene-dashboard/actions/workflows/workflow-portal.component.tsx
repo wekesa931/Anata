@@ -503,7 +503,7 @@ const WorkflowPortal = ({
                 })
                 setToastMessage({
                   ...toastMessage,
-                  message: 'Form has not been saved on airtable successfully',
+                  message: `Error: ${resp[0].message}`,
                 })
                 setSavingFinal(false)
                 // eslint-disable-next-line

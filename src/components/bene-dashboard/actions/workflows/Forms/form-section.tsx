@@ -83,9 +83,11 @@ const FormSection = ({
               }
             })
             dateFields.forEach((dt) => {
-              formattedPayload = {
-                ...formattedPayload,
-                [dt]: formPayload[index][dt],
+              if (formPayload[index][dt] !== 'Invalid Date') {
+                formattedPayload = {
+                  ...formattedPayload,
+                  [dt]: formPayload[index][dt],
+                }
               }
             })
             setfinalPayload((dat) => [...dat, formattedPayload])

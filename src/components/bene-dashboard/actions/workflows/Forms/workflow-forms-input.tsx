@@ -433,21 +433,10 @@ const MultiSelectMultipleInput = ({
   control,
   error,
 }: Form) => {
-  const [selectedChoices, setSelectedChoices] = useState<any[]>([])
-
-  useEffect(() => {
-    if (checkedValues) {
-      setSelectedChoices(checkedValues)
-    } else {
-      setSelectedChoices([])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [checkedValues])
   const optionsData = airtableMeta
     ? airtableMeta[field.parentTableId].fields[field.id].options?.choices
     : []
   const handleChange = (newValue: any) => {
-    setSelectedChoices(newValue)
     saveInput(field.name, newValue)
   }
   return (
@@ -456,7 +445,7 @@ const MultiSelectMultipleInput = ({
       control={control}
       defaultValue={checkedValues}
       rules={{ required: true }}
-      render={({ field: { onChange } }) => (
+      render={({ field: { onChange, value: val } }) => (
         <>
           {helperText && (
             <InputLabel>
@@ -479,7 +468,7 @@ const MultiSelectMultipleInput = ({
             multiple
             className={`${styles.radioBtn} ${styles.autoComplete}`}
             id="checkboxes-tags-demo"
-            value={selectedChoices}
+            value={val}
             defaultValue={checkedValues}
             options={optionsData.map((opt) => opt.name)}
             disabled={disabled}
@@ -543,21 +532,11 @@ const TextInputField = ({
   control,
   error,
 }: Form) => {
-  const [inputValue, setinputValue] = useState<number | string | null>(null)
   const [shouldShrink, setShouldShrink] = useState(false)
   const [numError, setNumError] = useState(false)
-  useEffect(() => {
-    if (value) {
-      setinputValue(value)
-    } else {
-      setinputValue(null)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value])
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     saveInput(field.name, event.target.value)
-    setinputValue(event.target.value)
   }
 
   return (
@@ -572,7 +551,7 @@ const TextInputField = ({
         control={control}
         defaultValue={value}
         rules={{ required: true }}
-        render={({ field: { onChange } }) => (
+        render={({ field: { onChange, value: val } }) => (
           <>
             {helperText && (
               <InputLabel>
@@ -598,11 +577,11 @@ const TextInputField = ({
               id="outlined-basic"
               defaultValue={value}
               disabled={disabled}
-              value={inputValue}
+              value={val}
               onBlur={() => setShouldShrink(false)}
               onFocus={() => setShouldShrink(true)}
               InputLabelProps={{
-                shrink: inputValue || shouldShrink,
+                shrink: value || shouldShrink,
               }}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 if (type === 'number') {

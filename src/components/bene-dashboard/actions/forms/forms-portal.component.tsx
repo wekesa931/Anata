@@ -149,6 +149,7 @@ const FormPortal = ({
       setIsFormEdited(false)
       onFormClose(form.workflowId, true)
     } else {
+      setIsFormEdited(false)
       onFormClose(form.name, false)
     }
   }
