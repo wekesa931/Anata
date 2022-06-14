@@ -468,7 +468,7 @@ const MultiSelectMultipleInput = ({
             multiple
             className={`${styles.radioBtn} ${styles.autoComplete}`}
             id="checkboxes-tags-demo"
-            value={val}
+            value={val || []}
             defaultValue={checkedValues}
             options={optionsData.map((opt) => opt.name)}
             disabled={disabled}
