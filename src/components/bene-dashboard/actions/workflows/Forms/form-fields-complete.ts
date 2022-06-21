@@ -12474,7 +12474,7 @@ export default [
         relationship: 'many',
         foreignTableId: 'tblsixUe3jfbOUMQP',
         required: false,
-        helper: 'Fill in the Facility not found in the provider base',
+        helper: '',
       },
       {
         id: 'fldDdb8Tcyb6bFS4G',
