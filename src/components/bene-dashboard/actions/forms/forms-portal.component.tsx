@@ -47,19 +47,17 @@ type FormProps = {
 
 const FormPortal = ({
   form,
-  isFormEdited,
   openedForms,
   airtableMeta,
   formNum,
   closeForm,
-  setIsFormEdited,
   onFormClose,
   onRefetch,
 }: FormProps) => {
   const [calloutHeight, setcalloutHeight] = useState(546)
   const [isIncreasing, setIsIncreasing] = useState(true)
   const [calloutWidth, setCalloutWidth] = useState(50)
-  // const [position, setPosition] = useState({ x: 211, y: -700 })
+  const [isFormEdited, setIsFormEdited] = useState(false)
   const [isHighlighting, setIsHighlighting] = useState(true)
   const [dynamicPosition, setDynamicPosition] = useState(undefined)
   const [isDisabled, setIsDisabled] = useState(false)
@@ -131,11 +129,15 @@ const FormPortal = ({
     }
   }
   const handleFormCloseEvent = () => {
-    if (form.workflowId && !isFormEdited) {
-      setIsFormEdited(false)
-      onFormClose(form.workflowId, true)
-    } else {
+    if (isFormEdited) {
       setOpen(true)
+    } else {
+      setIsFormEdited(false)
+      if (isWorkflow) {
+        onFormClose(form.workflowId, true)
+      } else {
+        onFormClose(form.name, false)
+      }
     }
   }
 
@@ -153,7 +155,6 @@ const FormPortal = ({
       onFormClose(form.name, false)
     }
   }
-
   const confirmClose = () => {
     const formName = form.workflowId ? '' : form.name
     return (
@@ -174,11 +175,11 @@ const FormPortal = ({
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button color="warning" variant="contained" onClick={handleStay}>
+            <Button color="inherit" variant="contained" onClick={handleStay}>
               Stay
             </Button>
             <Button
-              color="error"
+              color="info"
               variant="contained"
               onClick={handleLeave}
               autoFocus
@@ -204,6 +205,7 @@ const FormPortal = ({
         workflow={form}
         airtableMeta={airtableMeta}
         onRefetch={onRefetch}
+        onFormClose={onFormClose}
         closeForm={closeForm}
       />
     )

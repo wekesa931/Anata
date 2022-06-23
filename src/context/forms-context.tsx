@@ -17,10 +17,8 @@ export type HN = {
 
 type FormContextType = {
   shouldRefetch: boolean
-  isFormEdited: boolean
   airtableMeta: any
   openedForms: Form[]
-  setIsFormEdited: (edited: boolean) => void
   onRefetch: (refetch: boolean) => void
   addOpenForm: (openForm: Form[], healthNavigator: HN) => void
 }
@@ -28,16 +26,13 @@ type FormContextType = {
 const FormContext = createContext<FormContextType>({
   shouldRefetch: false,
   openedForms: [],
-  isFormEdited: false,
   airtableMeta: null,
   addOpenForm: () => null,
-  setIsFormEdited: () => null,
   onRefetch: () => null,
 })
 
 const FormProvider = ({ children }: any) => {
   const [airtableMeta, setAirtableMeta] = useState<any>(null)
-  const [isFormEdited, setIsFormEdited] = useState(false)
   const [shouldRefetch, setshouldRefetch] = useState(false)
   const [openedForms, setOpenedForms] = useState<Form[]>([])
   const [hNavigator, setHNavigator] = useState<HN | null>(null)
@@ -92,9 +87,7 @@ const FormProvider = ({ children }: any) => {
       value={{
         airtableMeta,
         openedForms,
-        isFormEdited,
         shouldRefetch,
-        setIsFormEdited,
         onRefetch,
         addOpenForm,
       }}
@@ -106,12 +99,10 @@ const FormProvider = ({ children }: any) => {
             formNum={idx}
             hn={hNavigator}
             airtableMeta={airtableMeta}
-            isFormEdited={isFormEdited}
             openedForms={openedForms}
             closeForm={addOpenForm}
             onFormClose={onFormClose}
             onRefetch={onRefetch}
-            setIsFormEdited={setIsFormEdited}
           />
         </React.Fragment>
       ))}

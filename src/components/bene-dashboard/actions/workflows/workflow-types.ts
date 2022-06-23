@@ -52,6 +52,7 @@ export type FormSectionInput = {
   setFormPayload: (payload: any) => void
   saveModule: (isDraft: boolean) => void
   setShouldSaveModule: (save: boolean) => void
+  setOpen: (open: boolean) => void
 }
 
 export type ConfirmButtonProps = {

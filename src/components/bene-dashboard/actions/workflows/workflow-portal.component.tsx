@@ -8,6 +8,10 @@ import {
   TextField,
   InputAdornment,
 } from '@mui/material'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import DialogTitle from '@mui/material/DialogTitle'
 import { AlertTriangle, Check, Plus, Search, Trash2, X } from 'react-feather'
 import Grid from '@mui/material/Grid'
 import Tooltip from '@mui/material/Tooltip'
@@ -44,6 +48,7 @@ type IProps = {
   isFormEdited: boolean
   openedForms: any[]
   closeForm: (openForm: any[], healthNavigator: any) => void
+  onFormClose: (pointer: any, isWorkflow: boolean) => void
   setIsFormEdited: (touched: boolean) => void
   onRefetch: (onRefetch: boolean) => void
 }
@@ -82,6 +87,7 @@ const WorkflowPortal = ({
   workflow: openedWorkflow,
   isFormEdited,
   airtableMeta,
+  onFormClose,
   setIsFormEdited,
   onRefetch,
 }: IProps) => {
@@ -109,6 +115,7 @@ const WorkflowPortal = ({
   const [gettingTableMeta, setGettingTableMeta] = useState(true)
   const [savingDraft, setSavingDraft] = useState(false)
   const [savingFinal, setSavingFinal] = useState(false)
+  const [open, setOpen] = useState(false)
   const [formMeta, setFormMeta] = useState<FormMeta>(null)
   const [listOfTables, setlistOfTables] = useState<
     { name: string; isDraft: boolean }[]
@@ -509,6 +516,7 @@ const WorkflowPortal = ({
                 // eslint-disable-next-line
                 throw { message: `${resp[0].error}` }
               } else if (!isWorkflowTemplate) {
+                setOpen(true)
                 setTemplate({
                   ...template,
                   completed: true,
@@ -566,6 +574,7 @@ const WorkflowPortal = ({
     } catch (err) {
       setSavingFinal(false)
       setSavingDraft(false)
+      setOpen(false)
       setToastMessage({
         ...toastMessage,
         message: `Failed to save ${err.message}`,
@@ -585,10 +594,11 @@ const WorkflowPortal = ({
     if (finalPayload.length > 0 && finalPayload.length === formPayload.length) {
       if (hasDuplicates(finalPayload)) {
         setShouldSaveModule(false)
+        setOpen(false)
         setfinalPayload([])
         setToastMessage({
           ...toastMessage,
-          message: 'Confirm the forms do not errors before submission',
+          message: 'Confirm the forms do not have errors before submission',
         })
       } else {
         saveModule(false)
@@ -781,6 +791,48 @@ const WorkflowPortal = ({
     return (
       <div className={styles.forms}>
         {moduleForm(formPayload[0].moduleId, 0)}
+      </div>
+    )
+  }
+  const handleStay = () => {
+    setOpen(false)
+    setTemplate(openedWorkflow)
+  }
+
+  const handleLeave = () => {
+    setOpen(false)
+    onFormClose(openedWorkflow.name, false)
+  }
+  const confirmSubmit = () => {
+    return (
+      <div>
+        <Dialog
+          open={open}
+          onClose={handleLeave}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            Data saved successfully.
+          </DialogTitle>
+          <Typography sx={{ padding: '0 50px 0 20px' }}>
+            Would you like to submit another response?
+          </Typography>
+
+          <DialogActions>
+            <Button color="inherit" variant="contained" onClick={handleStay}>
+              Yes
+            </Button>
+            <Button
+              color="info"
+              variant="contained"
+              onClick={handleLeave}
+              autoFocus
+            >
+              No
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     )
   }
@@ -1069,9 +1121,7 @@ const WorkflowPortal = ({
           <Button
             disabled={isSubmitDisabled}
             className={styles.submitModuleBtn}
-            onClick={() => {
-              setShouldSaveModule(true)
-            }}
+            onClick={() => setShouldSaveModule(true)}
           >
             {savingFinal || shouldSaveModule ? (
               <div className="d-flex">
@@ -1081,6 +1131,9 @@ const WorkflowPortal = ({
               'Submit form'
             )}
           </Button>
+          <DialogContent sx={{ padding: 0, height: '90%' }}>
+            {confirmSubmit()}
+          </DialogContent>
         </div>
       </div>
     </>
