@@ -38,6 +38,7 @@ const mutation_variables = {
     historyUserIdField: 'fatma@antarahealth.com',
     outcome: 'None',
     outcomeMetadata: {},
+    feedback: 'Yes',
   },
 }
 
@@ -74,6 +75,7 @@ describe('<InteractionLogsForm/>', () => {
     wrapper.getByLabelText(/Interaction Direction/)
     wrapper.getByLabelText(/Interactor Summary Notes/)
     wrapper.getByLabelText(/Next Steps/)
+    wrapper.getByLabelText(/Did the member provide any feedback/)
   })
 
   test('should prefill values where needed', async () => {
@@ -160,6 +162,20 @@ describe('<InteractionLogsForm/>', () => {
       expect(wrapper.getByLabelText(/Other Category (Outbound)/)).not.toBeNull()
     }
   })
+  test('should display Yes/No depending on feedback', () => {
+    const wrapper = render()
+    const feedback = wrapper.getByLabelText(
+      /Did the member provide any feedback/
+    )
+    expect(wrapper.queryByLabelText(/Type of feedback/)).toBeNull()
+    expect(
+      wrapper.queryByLabelText(/What did the member provide feedback for?/)
+    ).toBeNull()
+    expect(wrapper.queryByLabelText(/Feedback/)).toBeNull()
+    fireEvent.change(feedback, {
+      target: { value: 'Yes' },
+    })
+  })
 
   test('should display validation errors', async () => {
     const wrapper = render()
@@ -200,6 +216,9 @@ describe('<InteractionLogsForm/>', () => {
     const outcome = wrapper.getByLabelText(/Next Steps/)
     const memberName = wrapper.getByLabelText(/Member/)
     const userName = wrapper.getByLabelText(/Health Navigator/)
+    const feedback = wrapper.getByLabelText(
+      /Did the member provide any feedback/
+    )
 
     const fields = [
       { field: interactorField, value: 'Beneficiary' },
@@ -210,6 +229,7 @@ describe('<InteractionLogsForm/>', () => {
       { field: outcome, value: 'None' },
       { field: memberName, value: 'Fatma' },
       { field: userName, value: 'Bill' },
+      { field: feedback, value: true },
     ]
     fields.forEach(({ field, value }) => {
       act(() => {
@@ -229,6 +249,19 @@ describe('<InteractionLogsForm/>', () => {
     const outCome = wrapper.getByText('None')
     if (outCome) {
       fireEvent.click(outCome)
+    }
+    fireEvent.change(
+      wrapper.getByLabelText(/Did the member provide any feedback/),
+      {
+        target: { value: ['Yes'] },
+      }
+    )
+    fireEvent.change(wrapper.getByLabelText(/Type of feedback/), {
+      target: { value: ['Positive'] },
+    })
+    const feedBack = wrapper.getByText('Positive')
+    if (feedBack) {
+      fireEvent.click(feedBack)
     }
     const submitButton = wrapper.getByText('Submit')
     fireEvent.click(submitButton)
@@ -253,6 +286,9 @@ describe('<InteractionLogsForm/>', () => {
     const directionField = wrapper.getByLabelText(/Interaction Direction/)
     const notesField = wrapper.getByLabelText(/Interactor Summary Notes/)
     const outcome = wrapper.getByLabelText(/Next Steps/)
+    const feedback = wrapper.getByLabelText(
+      /Did the member provide any feedback/
+    )
 
     const fields = [
       { field: interactorField, value: 'Beneficiary' },
@@ -261,6 +297,7 @@ describe('<InteractionLogsForm/>', () => {
       { field: notesField, value: 'Test Summary Notes' },
       { field: outcome, value: 'None' },
       { field: interactionStartedAt, value: '2020-11-30T13:46' },
+      { field: feedback, value: 'Yes' },
     ]
     fields.forEach(({ field, value }) => {
       act(() => {
@@ -280,6 +317,19 @@ describe('<InteractionLogsForm/>', () => {
     const outCome = wrapper.getByText('None')
     if (outCome) {
       fireEvent.click(outCome)
+    }
+    fireEvent.change(
+      wrapper.getByLabelText(/Did the member provide any feedback/),
+      {
+        target: { value: ['Yes'] },
+      }
+    )
+    fireEvent.change(wrapper.getByLabelText(/Type of feedback/), {
+      target: { value: ['Positive'] },
+    })
+    const feedBack = wrapper.getByText('Positive')
+    if (feedBack) {
+      fireEvent.click(feedBack)
     }
     const submitButton = wrapper.getByText('Submit')
     fireEvent.click(submitButton)

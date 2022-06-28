@@ -16,6 +16,10 @@ const GET_MEMBER_INTERACTIONS = gql`
           otherCategoryInbound
           outcome
           flagForReview
+          feedback
+          typeOfFeedback
+          reasonForFeedback
+          feedbackFromMember
           healthNavigator {
             fullName
           }
@@ -66,6 +70,10 @@ const GET_ALL_FLAGGED_INTERACTIONS = gql`
           outcome
           relationshipType
           interactorName
+          feedback
+          typeOfFeedback
+          reasonForFeedback
+          feedbackFromMember
         }
       }
     }
@@ -104,6 +112,10 @@ const GET_ALL_INTERACTIONS = gql`
           outcome
           relationshipType
           interactorName
+          feedback
+          typeOfFeedback
+          reasonForFeedback
+          feedbackFromMember
         }
       }
     }

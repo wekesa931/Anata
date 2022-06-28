@@ -263,6 +263,50 @@ const useInteractionFormFields = (member: any, user: any) => {
         values.outcome && values.outcome.includes('Physio Consultation'),
       required: true,
     },
+    {
+      label: 'Did the member provide any feedback?',
+      name: 'feedback',
+      type: 'single-select',
+      options: ['Yes', 'No'].map((option) => ({
+        label: option,
+        value: option,
+      })),
+      required: false,
+    },
+    {
+      label: 'Type of feedback',
+      name: 'typeOfFeedback',
+      type: 'multi-select',
+      options: ['Positive', 'negative'].map((option) => ({
+        label: option,
+        value: option,
+      })),
+      condition: (values) => values.feedback && values.feedback.includes('Yes'),
+    },
+    {
+      label: 'What did the member provide feedback for?',
+      name: 'reasonForFeedback',
+      type: 'multi-select',
+      options: [
+        'Provider',
+        'Mobile App',
+        'Query on Antara Services',
+        'Appointment scheduling/rescheduling',
+        'Communication","Antara Services (Health Navigation/Specialists/Delivery)',
+        'Antara Staff (Health Navigator/Specialists/Delivery)',
+        'Antara Values (Timeliness, Responsiveness, Accuracy)',
+      ].map((option) => ({
+        label: option,
+        value: option,
+      })),
+      condition: (values) => values.feedback && values.feedback.includes('Yes'),
+    },
+    {
+      label: 'Feedback',
+      name: 'feedbackFromMember',
+      type: 'long-text',
+      condition: (values) => values.feedback && values.feedback.includes('Yes'),
+    },
   ]
   return fields
 }

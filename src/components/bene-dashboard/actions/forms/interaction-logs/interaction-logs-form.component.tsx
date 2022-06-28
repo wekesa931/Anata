@@ -138,8 +138,10 @@ const InteractionLogsForm = ({ form, onFormClose }: IProps) => {
         delete values[key]
       }
     })
+    const feedback = values.feedback && values.feedback === 'Yes'
     const input = {
       ...values,
+      feedback,
       outcome: JSON.stringify(values.outcome),
       member: member['Antara ID'],
       interactionStartedAt: dayjs(values.interactionStartedAt).toISOString(),
@@ -206,7 +208,8 @@ const InteractionLogsForm = ({ form, onFormClose }: IProps) => {
                 (!field.condition || field.condition(values)) && (
                   <div className="margin-bottom-16" key={field.name}>
                     <label htmlFor={field.name} id={`${field.name}Label`}>
-                      {field.label} <span className="text-danger">*</span>
+                      {field.label}{' '}
+                      {field.required && <span className="text-danger">*</span>}
                     </label>
                     {field.helperText && (
                       <div className={styles.helperText}>

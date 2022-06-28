@@ -146,7 +146,6 @@ const WorkflowPortal = ({
     savingFinal ||
     savingDraft ||
     formDataAdded ||
-    !isFormEdited ||
     template?.completed ||
     template?.moduleData[activeModuleName]?.status === 'Saved'
   const isSubmitting = savingWorkflowStart || savingWorkflow

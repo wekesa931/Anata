@@ -2516,6 +2516,95 @@ export default [
         required: false,
         helper: '',
       },
+      {
+        id: 'fldXbcmhzFPF09G3F',
+        name: 'Did the member provide any feedback',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldGp7FlQjpQHN0z5',
+        name: 'Type of feedback',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
+        id: 'fldhiX15qn918jhvn',
+        name: 'What did the member provide feedback for',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
+        id: 'fldzMvdS4fMQy6kjm',
+        name: 'Feedback',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
     ],
   },
   {
@@ -6603,6 +6692,95 @@ export default [
           'Click here to book the consultation on Calendly: <a href="https://calendly.com/antara-health/nutrition-consultation" target="_blank">https://calendly.com/antara-health/nutrition-consultation</a> ',
       },
       {
+        id: 'fld04NxGr5I2lLZWp',
+        name: 'Did the member provide any feedback',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldw39SaE9cHEkRwZ',
+        name: 'Type of feedback',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
+        id: 'fldeGrfDCDxRRRCOk',
+        name: 'What did the member provide feedback for',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
+        id: 'fldzzeCra3jTMAQWX',
+        name: 'Feedback',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
         id: 'fldDt5sfuzRfkev7Q',
         name: 'Put anything else you want to share here!',
         type: 'richText',
@@ -9817,6 +9995,95 @@ export default [
           'Please enter the date of the next appointment. If you want to book the appointment now, please use the button in scribe dashboard',
       },
       {
+        id: 'fldA5NN02OiYKW1Rh',
+        name: 'Did the member provide any feedback',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'flduVomIICMdB9i3f',
+        name: 'Type of feedback',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
+        id: 'fldXwGXb69DvJn61u',
+        name: 'What did the member provide feedback for',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
+        id: 'fldJTvYNB5iD0hYdZ',
+        name: 'Feedack',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
         id: 'fldZhpOo75n9kc8oY',
         name: 'Notes',
         type: 'multilineText',
@@ -10259,6 +10526,95 @@ export default [
         foreignTableId: null,
         required: false,
         helper: '',
+      },
+      {
+        id: 'fldmBOeE5dUb4UqCX',
+        name: 'Did the member provide any feedback',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldvzIn7TfEBMVeaM',
+        name: 'Type of feedback',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
+        id: 'fldEzYvpaaP4mlK6R',
+        name: 'What did the member provide feedback for',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
+        id: 'fldzKk9IOL3P8ZQen',
+        name: 'Feedback',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
       },
     ],
   },
@@ -12085,6 +12441,95 @@ export default [
           return ['GA insurance'].includes(values['Insurance Provider'])
         },
       },
+      {
+        id: 'fld26w0mmyxb8gDe8',
+        name: 'Did the member provide any feedback',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldNpRBf9YJHwNBrv',
+        name: 'Type of feedback',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
+        id: 'fld1EQKVz5FONmq9k',
+        name: 'What did the member provide feedback for',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
+        id: 'fldNU3bjJaTgRitq5',
+        name: 'Feedback',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
     ],
   },
   {
@@ -13319,6 +13764,95 @@ export default [
         required: false,
         helper: '',
       },
+      {
+        id: 'fldGAI9OffEPF1b04',
+        name: 'Did the member provide any feedback',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldPrqD2SgUiUj73k',
+        name: 'Type of feedback',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
+        id: 'fldDEEcXQ3r2HNVuB',
+        name: 'What did the member provide feedback for',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
+        id: 'fldPPKT8galll9xi3',
+        name: 'Feedback from the member',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
     ],
   },
   {
@@ -13584,6 +14118,95 @@ export default [
         required: false,
         helper:
           'Any additional notes - especially list of medications when the task is medication pick up or delivery\n\nPlease meke sure to give all information about the due time for the task is the member requested something specific',
+      },
+      {
+        id: 'fldEdaQD900vsrNnI',
+        name: 'Did the member provide any feedback',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldb38MeePBlvREhy',
+        name: 'Type of feedback',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
+        id: 'fldYCH22li96FyqEq',
+        name: 'What did the member provide feedback for',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
+      },
+      {
+        id: 'fldaRNLf2v6wfKJ5V',
+        name: 'Feedback',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Did the member provide any feedback'])
+        },
       },
       {
         id: 'fldjg8jmie5T4sj0H',
