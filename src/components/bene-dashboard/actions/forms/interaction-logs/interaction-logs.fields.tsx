@@ -292,7 +292,8 @@ const useInteractionFormFields = (member: any, user: any) => {
         'Mobile App',
         'Query on Antara Services',
         'Appointment scheduling/rescheduling',
-        'Communication","Antara Services (Health Navigation/Specialists/Delivery)',
+        'Communication',
+        'Antara Services (Health Navigation/Specialists/Delivery)',
         'Antara Staff (Health Navigator/Specialists/Delivery)',
         'Antara Values (Timeliness, Responsiveness, Accuracy)',
       ].map((option) => ({
