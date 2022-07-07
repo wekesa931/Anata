@@ -175,6 +175,20 @@ describe('<InteractionLogsForm/>', () => {
     fireEvent.change(feedback, {
       target: { value: 'Yes' },
     })
+    expect(
+      wrapper.getByLabelText(/What did the member provide feedback for?/)
+    ).not.toBeNull()
+    fireEvent.change(
+      wrapper.getByLabelText(/What did the member provide feedback for?/),
+      {
+        target: { value: 'Other' },
+      }
+    )
+    let feedbackOption = wrapper.container.querySelector('#downshift-1-item-0')
+    if (feedbackOption) {
+      fireEvent.click(feedbackOption)
+      expect(wrapper.getByLabelText(/Other/)).not.toBeNull()
+    }
   })
 
   test('should display validation errors', async () => {

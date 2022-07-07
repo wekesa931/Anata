@@ -296,11 +296,20 @@ const useInteractionFormFields = (member: any, user: any) => {
         'Antara Services (Health Navigation/Specialists/Delivery)',
         'Antara Staff (Health Navigator/Specialists/Delivery)',
         'Antara Values (Timeliness, Responsiveness, Accuracy)',
+        'Others',
       ].map((option) => ({
         label: option,
         value: option,
       })),
       condition: (values) => values.feedback && values.feedback.includes('Yes'),
+    },
+    {
+      label: 'Other',
+      name: 'otherFeedback',
+      type: 'long-text',
+      helperText: 'Please enter the area member provided the feedback for',
+      condition: (values) =>
+        values.reasonForFeedback && values.reasonForFeedback.includes('Others'),
     },
     {
       label: 'Feedback',
