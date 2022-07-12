@@ -277,7 +277,7 @@ const useInteractionFormFields = (member: any, user: any) => {
       label: 'Type of feedback',
       name: 'typeOfFeedback',
       type: 'multi-select',
-      options: ['Positive', 'negative'].map((option) => ({
+      options: ['Positive', 'Negative'].map((option) => ({
         label: option,
         value: option,
       })),
