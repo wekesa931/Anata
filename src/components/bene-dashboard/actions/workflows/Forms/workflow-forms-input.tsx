@@ -731,17 +731,21 @@ const LinkRecordInput = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [linkedValue, linkedRecords])
-
+  const dataSave = (onChange: (val: any) => any, nameId: any, name: any) => {
+    onChange(nameId)
+    setSelectedChoices(name)
+    saveInput(field.name, nameId)
+  }
   const handleChange = (onChange: (val: any) => any, value: any) => {
-    if (Array.isArray(value)) {
-      const recordValue = value.map((rec) => rec.id)
-      onChange(recordValue)
-      setSelectedChoices(value)
-      saveInput(field.name, recordValue)
+    if (value) {
+      if (Array.isArray(value)) {
+        const recordId = value.map((rec) => rec.id)
+        dataSave(onChange, recordId, value)
+      } else {
+        dataSave(onChange, [value.id], value)
+      }
     } else {
-      onChange([value.id])
-      setSelectedChoices(value)
-      saveInput(field.name, [value.id])
+      dataSave(onChange, value, value)
     }
   }
 

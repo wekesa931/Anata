@@ -2381,6 +2381,45 @@ export default [
         },
       },
       {
+        id: 'fldvuTrj7cPT8p5i0',
+        name: 'Primary Doctor',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldJqYmPM2sVpnVT6',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblsixUe3jfbOUMQP',
+        required: false,
+        helper: "Fill in member's primary/preferred doctor",
+      },
+      {
+        id: 'fldONtdtp66wBVzVU',
+        name: 'Others',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Fill in the Primary doctor not found',
+        conditionType: '',
+        parentKey: 'Primary Doctor',
+        parentValues: ['rec0n79m4zKaXuZJD'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Primary Doctor'])) {
+            return ['rec0n79m4zKaXuZJD'].some((r) =>
+              values['Primary Doctor'].includes(r)
+            )
+          }
+          return ['rec0n79m4zKaXuZJD'].includes(values['Primary Doctor'])
+        },
+      },
+      {
         id: 'fldZEBgf4Yzb6UbfN',
         name: 'Does the beneficiary require Ancillary services?',
         type: 'select',
@@ -5235,6 +5274,45 @@ export default [
         helper:
           'Please enter any additional information related to the above condition that is relevant',
       },
+      {
+        id: 'fldQD92uu8w68NQja',
+        name: 'Primary Doctor',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldxoNoRdmsiqbtvw',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblsixUe3jfbOUMQP',
+        required: false,
+        helper: "Fill in member's primary/preferred doctor",
+      },
+      {
+        id: 'fldGtNxCqOor6GrAT',
+        name: 'Others',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Fill in the Primary doctor not found',
+        conditionType: '',
+        parentKey: 'Primary Doctor',
+        parentValues: ['rec0n79m4zKaXuZJD'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Primary Doctor'])) {
+            return ['rec0n79m4zKaXuZJD'].some((r) =>
+              values['Primary Doctor'].includes(r)
+            )
+          }
+          return ['rec0n79m4zKaXuZJD'].includes(values['Primary Doctor'])
+        },
+      },
     ],
   },
   {
@@ -5334,7 +5412,7 @@ export default [
         options: [],
         symmetricColumnId: 'fld2wYDYU8o85Brjp',
         unreversed: true,
-        relationship: 'many',
+        relationship: 'one',
         foreignTableId: 'tbltmQuqyuKPc4Ffo',
         required: false,
         helper: '',
@@ -5352,6 +5430,18 @@ export default [
         foreignTableId: null,
         required: false,
         helper: 'Fill in the Facility not found in the provider base',
+        parentKey: 'Facilities from Provider base',
+        parentValues: ['recfQYLarLZAkH6QM'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Facilities from Provider base'])) {
+            return ['recfQYLarLZAkH6QM'].some((r) =>
+              values['Facilities from Provider base'].includes(r)
+            )
+          }
+          return ['recfQYLarLZAkH6QM'].includes(
+            values['Facilities from Provider base']
+          )
+        },
       },
       {
         id: 'fld09egAdhTkoNNwW',
@@ -5362,7 +5452,7 @@ export default [
         options: [],
         symmetricColumnId: 'fldbLq7pGDhffE6CV',
         unreversed: true,
-        relationship: 'many',
+        relationship: 'one',
         foreignTableId: 'tblsixUe3jfbOUMQP',
         required: false,
         helper: '',
@@ -5380,6 +5470,18 @@ export default [
         foreignTableId: null,
         required: false,
         helper: 'Fill in the Specialist not found in the provider base',
+        parentKey: 'Specialists from Provider Base',
+        parentValues: ['rec0n79m4zKaXuZJD'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Specialists from Provider Base'])) {
+            return ['rec0n79m4zKaXuZJD'].some((r) =>
+              values['Specialists from Provider Base'].includes(r)
+            )
+          }
+          return ['rec0n79m4zKaXuZJD'].includes(
+            values['Specialists from Provider Base']
+          )
+        },
       },
       {
         id: 'fldersOYzP3Kjx8on',
@@ -8826,6 +8928,18 @@ export default [
         foreignTableId: null,
         required: false,
         helper: '',
+        parentKey: 'Prescribing facility (Providers)',
+        parentValues: ['recE0m2e4jKISKlRM'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Prescribing facility (Providers)'])) {
+            return ['recE0m2e4jKISKlRM'].some((r) =>
+              values['Prescribing facility (Providers)'].includes(r)
+            )
+          }
+          return ['recE0m2e4jKISKlRM'].includes(
+            values['Prescribing facility (Providers)']
+          )
+        },
       },
       {
         id: 'fldW9ZGlBPaVXDaPf',
@@ -8854,6 +8968,18 @@ export default [
         foreignTableId: null,
         required: false,
         helper: '',
+        parentKey: 'Refill facility (providers)',
+        parentValues: ['recE0m2e4jKISKlRM'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Refill facility (providers)'])) {
+            return ['recE0m2e4jKISKlRM'].some((r) =>
+              values['Refill facility (providers)'].includes(r)
+            )
+          }
+          return ['recE0m2e4jKISKlRM'].includes(
+            values['Refill facility (providers)']
+          )
+        },
       },
       {
         id: 'fldsHV3Kh5t0QshVK',
@@ -10572,7 +10698,7 @@ export default [
         options: [],
         symmetricColumnId: 'fldw0qdFv2DtYbvX1',
         unreversed: true,
-        relationship: 'many',
+        relationship: 'one',
         foreignTableId: 'tblOnZn7Vo8N9wznR',
         required: true,
         helper: '',
@@ -12342,7 +12468,7 @@ export default [
         options: [],
         symmetricColumnId: 'fld0dw0mF5TfKgGrp',
         unreversed: true,
-        relationship: 'many',
+        relationship: 'one',
         foreignTableId: 'tbltmQuqyuKPc4Ffo',
         required: false,
         helper: '',
@@ -12360,6 +12486,17 @@ export default [
         foreignTableId: null,
         required: false,
         helper: 'Fill in the Facility not found in the provider base',
+        conditionType: '',
+        parentKey: 'Facilities',
+        parentValues: ['recfQYLarLZAkH6QM'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Facilities)) {
+            return ['recfQYLarLZAkH6QM'].some((r) =>
+              values.Facilities.includes(r)
+            )
+          }
+          return ['recfQYLarLZAkH6QM'].includes(values.Facilities)
+        },
       },
       {
         id: 'flddYAMFOOByDFwno',
@@ -12370,7 +12507,7 @@ export default [
         options: [],
         symmetricColumnId: 'fldrEEdZzxI2WanXI',
         unreversed: true,
-        relationship: 'many',
+        relationship: 'one',
         foreignTableId: 'tblsixUe3jfbOUMQP',
         required: false,
         helper: '',
@@ -12388,6 +12525,16 @@ export default [
         foreignTableId: null,
         required: false,
         helper: 'Fill in the Specialist not found in the provider base',
+        parentKey: 'Specialists',
+        parentValues: ['rec0n79m4zKaXuZJD'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Specialists)) {
+            return ['rec0n79m4zKaXuZJD'].some((r) =>
+              values.Specialists.includes(r)
+            )
+          }
+          return ['rec0n79m4zKaXuZJD'].includes(values.Specialists)
+        },
       },
       {
         id: 'fldgb3pmJRmhwoYa8',
@@ -12977,7 +13124,7 @@ export default [
         options: [],
         symmetricColumnId: 'fldOsOBfMzPbDNSGi',
         unreversed: true,
-        relationship: 'many',
+        relationship: 'one',
         foreignTableId: 'tbltmQuqyuKPc4Ffo',
         required: false,
         helper: '',
@@ -12995,6 +13142,16 @@ export default [
         foreignTableId: null,
         required: false,
         helper: 'Fill in the Facility not found in the provider base',
+        parentKey: 'Facilities',
+        parentValues: ['recfQYLarLZAkH6QM'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Facilities)) {
+            return ['recfQYLarLZAkH6QM'].some((r) =>
+              values.Facilities.includes(r)
+            )
+          }
+          return ['recfQYLarLZAkH6QM'].includes(values.Facilities)
+        },
       },
       {
         id: 'fldm1j94N45O3Sjzv',
@@ -13005,7 +13162,7 @@ export default [
         options: [],
         symmetricColumnId: 'fldc9uoRNXlbGtK7V',
         unreversed: true,
-        relationship: 'many',
+        relationship: 'one',
         foreignTableId: 'tbltmQuqyuKPc4Ffo',
         required: false,
         helper: '',
@@ -13023,6 +13180,16 @@ export default [
         foreignTableId: null,
         required: false,
         helper: 'Fill in the Facility Referred not found in the provider base',
+        parentKey: 'Facility referred',
+        parentValues: ['recfQYLarLZAkH6QM'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Facility referred'])) {
+            return ['recfQYLarLZAkH6QM'].some((r) =>
+              values['Facility referred'].includes(r)
+            )
+          }
+          return ['recfQYLarLZAkH6QM'].includes(values['Facility referred'])
+        },
       },
       {
         id: 'fldP9UxdCfKvgAE8u',
@@ -13033,7 +13200,7 @@ export default [
         options: [],
         symmetricColumnId: 'flduZYLsmRuWQZc3C',
         unreversed: true,
-        relationship: 'many',
+        relationship: 'one',
         foreignTableId: 'tblsixUe3jfbOUMQP',
         required: false,
         helper: '',
@@ -13051,6 +13218,16 @@ export default [
         foreignTableId: null,
         required: false,
         helper: 'Fill in the Specialist not found in the provider base',
+        parentKey: 'Specialists',
+        parentValues: ['rec0n79m4zKaXuZJD'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Specialists)) {
+            return ['rec0n79m4zKaXuZJD'].some((r) =>
+              values.Specialists.includes(r)
+            )
+          }
+          return ['rec0n79m4zKaXuZJD'].includes(values.Specialists)
+        },
       },
       {
         id: 'fldFyWLKY34jdfElN',
@@ -13061,7 +13238,7 @@ export default [
         options: [],
         symmetricColumnId: 'fldqdnAoI0EaNkhs4',
         unreversed: true,
-        relationship: 'many',
+        relationship: 'one',
         foreignTableId: 'tblsixUe3jfbOUMQP',
         required: false,
         helper: '',
@@ -13080,6 +13257,16 @@ export default [
         required: false,
         helper:
           'Fill in the Specialist Referred not found in the provider base',
+        parentKey: 'Specialist referred',
+        parentValues: ['rec0n79m4zKaXuZJD'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Specialist referred'])) {
+            return ['rec0n79m4zKaXuZJD'].some((r) =>
+              values['Specialist referred'].includes(r)
+            )
+          }
+          return ['rec0n79m4zKaXuZJD'].includes(values['Specialist referred'])
+        },
       },
       {
         id: 'fld7bh8tSoQEvygHA',
@@ -13352,7 +13539,7 @@ export default [
         options: [],
         symmetricColumnId: 'fldkoxiSLYTqZFB7R',
         unreversed: true,
-        relationship: 'many',
+        relationship: 'one',
         foreignTableId: 'tblOnZn7Vo8N9wznR',
         required: false,
         helper: 'Which provider has been referred to the member?',
@@ -13380,6 +13567,16 @@ export default [
         required: false,
         helper:
           'Please describre the referral and inform CS that they need to add the provider in our blue base',
+        parentKey: 'Provider referred',
+        parentValues: ['recE0m2e4jKISKlRM'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Provider referred'])) {
+            return ['recE0m2e4jKISKlRM'].some((r) =>
+              values['Provider referred'].includes(r)
+            )
+          }
+          return ['recE0m2e4jKISKlRM'].includes(values['Provider referred'])
+        },
       },
       {
         id: 'fldyDZpY0yspXyZhV',
@@ -16243,6 +16440,20 @@ export default [
         required: false,
         helper:
           'Fill in the Prescribing Facility not found in the provider base',
+        parentKey: 'Prescribing facility from Provider base',
+        parentValues: ['recfQYLarLZAkH6QM'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(values['Prescribing facility from Provider base'])
+          ) {
+            return ['recfQYLarLZAkH6QM'].some((r) =>
+              values['Prescribing facility from Provider base'].includes(r)
+            )
+          }
+          return ['recfQYLarLZAkH6QM'].includes(
+            values['Prescribing facility from Provider base']
+          )
+        },
       },
       {
         id: 'fldq8XrNhO2xTdUdH',
@@ -16271,6 +16482,18 @@ export default [
         foreignTableId: null,
         required: false,
         helper: 'Fill in the Refill Facility not found in the provider base',
+        parentKey: 'Refill facility from Provider base',
+        parentValues: ['recfQYLarLZAkH6QM'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Refill facility from Provider base'])) {
+            return ['recfQYLarLZAkH6QM'].some((r) =>
+              values['Refill facility from Provider base'].includes(r)
+            )
+          }
+          return ['recfQYLarLZAkH6QM'].includes(
+            values['Refill facility from Provider base']
+          )
+        },
       },
       {
         id: 'fldkJyzyyI2lqNPDS',
