@@ -61,10 +61,12 @@ const SidebarMenuItems = [
     ],
   },
   {
-    name: 'Meetings',
+    name: 'Appointments',
     icon: <MapPin />,
+    rootUrl:
+      'https://airtable.com/embed/shrFbonDRzDmoAqfI?backgroundColor=green&viewControls=on',
     url_sandbox:
-      'https://airtable.com/embed/shrggSbStR8fjDqKJ?backgroundColor=pink&viewControls=on',
+      'https://airtable.com/embed/shrtj9Hmpz6omqpxj?backgroundColor=pink&viewControls=on',
   },
   // related to a single member
   {

@@ -17,7 +17,7 @@ describe('<Sidebar />', () => {
   })
 
   it('should change colour to be grey and subchildren to be 0 ', async () => {
-    const li = await waitFor(() => screen.getByText('Meetings'))
+    const li = await waitFor(() => screen.getByText('Appointments'))
     expect(li.className).toBe('text-grey')
     expect(li.children.length).toEqual(0)
   })
