@@ -694,7 +694,7 @@ const BioData = () => {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                    {member['Antara Start Date']}
+                    {member.created_at}
                   </td>
                 </tr>
                 <tr>
