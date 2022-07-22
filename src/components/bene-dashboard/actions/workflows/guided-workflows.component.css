@@ -617,3 +617,19 @@ input::-webkit-outer-spin-button {
   display: flex;
   font-size: 12px;
 }
+
+.wrapperClassName {
+  border: 1px solid var(--greyscale-3) !important;
+  border-radius: 4px;
+}
+
+.editorClassName {
+  padding: 5px;
+}
+
+.richTextField {
+  border: 1px solid var(--greyscale-3);
+  padding: 10px;
+  border-radius: 4px;
+  min-height: 50px;
+}

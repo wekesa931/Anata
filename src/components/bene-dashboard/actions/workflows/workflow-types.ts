@@ -69,6 +69,7 @@ export type Form = {
     name: string
     id: string
     options?: { choices: any[] }
+    isDateTime: boolean
     symmetricColumnId: string
     unreversed: boolean
     relationship: string

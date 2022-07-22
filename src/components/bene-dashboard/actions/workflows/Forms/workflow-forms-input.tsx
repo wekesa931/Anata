@@ -25,6 +25,10 @@ import FormHelperText from '@mui/material/FormHelperText'
 import { InputLabel } from '@mui/material'
 import DateTimePicker from '@mui/lab/DateTimePicker'
 import { useLazyQuery } from '@apollo/client'
+import { Editor } from 'react-draft-wysiwyg'
+import draftToHtml from 'draftjs-to-html'
+import htmlToDraft from 'html-to-draftjs'
+import { ContentState, convertToRaw, EditorState } from 'draft-js'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 import styles from '../guided-workflows.component.css'
 import { Form } from '../workflow-types'
@@ -123,7 +127,7 @@ const WorkflowFormsInput = ({
     case 'singleLineText':
     case 'richText':
       return (
-        <TextInputField
+        <RichTextInputField
           type="text"
           value={value}
           disabled={disabled}
@@ -632,6 +636,102 @@ const TextInputField = ({
   )
 }
 
+const RichTextInputField = ({
+  value,
+  field,
+  disabled,
+  helperText,
+  fieldName,
+  saveInput,
+  control,
+  error,
+}: Form) => {
+  const [open, setOpen] = useState(false)
+  const [editorState, setEditorState] = useState(() => {
+    if (value) {
+      const blocksFromHtml = htmlToDraft(value)
+      const { contentBlocks, entityMap } = blocksFromHtml
+      const contentState = ContentState.createFromBlockArray(
+        contentBlocks,
+        entityMap
+      )
+      return EditorState.createWithContent(contentState)
+    }
+    return EditorState.createEmpty()
+  })
+  const onEditorStateChange = (
+    onChange: (val: Element) => void,
+    currentState: EditorState
+  ) => {
+    setEditorState(currentState)
+    const changeValue = draftToHtml(
+      convertToRaw(currentState.getCurrentContent())
+    )
+    onChange(changeValue)
+    saveInput(field.name, changeValue)
+  }
+
+  const displayToolbar = () => setOpen(true)
+  const hideToolbar = () => setOpen(false)
+
+  return (
+    <Box
+      className={styles.fieldMargin}
+      component="form"
+      noValidate
+      autoComplete="off"
+    >
+      <Controller
+        name={fieldName}
+        control={control}
+        defaultValue={value}
+        rules={{ required: true }}
+        render={({ field: { onChange } }) => (
+          <>
+            <InputLabel>
+              <div>
+                <p
+                  style={{ whiteSpace: 'initial' }}
+                  className={
+                    error?.message
+                      ? `${styles.fieldNameError}`
+                      : `${styles.fieldLabel}`
+                  }
+                >
+                  {field.name} {field.required && <Pointer />}
+                </p>
+                <p className={styles.helperText}>{parse(helperText)}</p>
+              </div>
+            </InputLabel>
+            {!disabled && (
+              <Editor
+                editorState={editorState}
+                toolbarHidden={!open}
+                onFocus={displayToolbar}
+                onBlur={hideToolbar}
+                onEditorStateChange={(inputValue: EditorState) =>
+                  onEditorStateChange(onChange, inputValue)
+                }
+                wrapperClassName={`${styles.textField} ${
+                  error?.message
+                    ? `${styles.textfieldError}`
+                    : `${styles.wrapperClassName}`
+                } `}
+                editorClassName={styles.editorClassName}
+              />
+            )}
+            {disabled && (
+              <div className={styles.richTextField}>
+                {value && parse(`${value}`)}
+              </div>
+            )}
+          </>
+        )}
+      />
+    </Box>
+  )
+}
+
 const LinkRecordInput = ({
   value: linkedValue,
   field,
@@ -662,7 +762,7 @@ const LinkRecordInput = ({
     if (data) {
       const response = data.globalSearch.data
       const displayFields: any[] = []
-      response.forEach((fl) => {
+      response.forEach((fl: any) => {
         const loadedMeta =
           fl.fields[airtableMeta[field.foreignTableId].fields.primaryFieldName]
         const loadedValue = loadedMeta && typeof loadedMeta === 'string'
@@ -717,7 +817,7 @@ const LinkRecordInput = ({
   useEffect(() => {
     if (linkedValue && linkedRecords.length > 0) {
       const recordValue = linkedRecords.filter((rec: any) =>
-        linkedValue.some((val) => rec.id === val)
+        linkedValue.some((val: any) => rec.id === val)
       )
       if (field.relationship === 'many') {
         setSelectedChoices(recordValue)
