@@ -23,6 +23,7 @@ import styles from './form.component.css'
 import InteractionLogsForm from './interaction-logs/interaction-logs-form.component'
 import WorkflowPortal from '../workflows/workflow-portal.component'
 import { formNames } from '../workflows/Forms/form-fields'
+import MemberDetailsUpdateForm from '../../summary/biodata/biodata-update/member-details-update.component'
 
 type IForm = {
   name: string
@@ -30,19 +31,23 @@ type IForm = {
   url_sandbox?: string
   airtableUrl?: boolean
   hnField?: string
+  workflowId?: string
 }
+
 type HN = {
   'Record ID': string
 }
+
 type FormProps = {
   openedForms: IForm[]
   form: IForm
-  isFormEdited: boolean
-  hn: HN | null
+  hn?: HN
   closeForm: (openForm: IForm[], healthNavigator: HN) => void
   onFormClose: (pointer: any, isWorkflow: boolean) => void
   onRefetch: (refetch: boolean) => void
-  setIsFormEdited: (touched: boolean) => void
+  airtableMeta: any
+  formNum: number
+  memberDetails: any
 }
 
 const FormPortal = ({
@@ -53,6 +58,7 @@ const FormPortal = ({
   closeForm,
   onFormClose,
   onRefetch,
+  memberDetails,
 }: FormProps) => {
   const [calloutHeight, setcalloutHeight] = useState(546)
   const [isIncreasing, setIsIncreasing] = useState(true)
@@ -64,7 +70,7 @@ const FormPortal = ({
   const dragClass = isDisabled ? 'draggable-disabled' : 'draggable'
   const containerWidth = isDisabled ? '450px' : `${calloutWidth}%`
   const containerHeight = `${calloutHeight}px`
-  const isWorkflow = form.workflowId
+  const isWorkflow = !!form.workflowId
 
   const handleDragActive = (e: MouseEvent) => {
     try {
@@ -197,6 +203,16 @@ const FormPortal = ({
       return <InteractionLogsForm form={form} onFormClose={onFormClose} />
     }
 
+    if (form.name === 'Member Details Update Form') {
+      return (
+        <MemberDetailsUpdateForm
+          setIsFormEdited={setIsFormEdited}
+          memberDetails={memberDetails}
+          isEdited={isFormEdited}
+        />
+      )
+    }
+
     return (
       <WorkflowPortal
         isFormEdited={isFormEdited}
@@ -237,7 +253,7 @@ const FormPortal = ({
                   <span>{form.workflowId}</span>
                 </span>
               ) : (
-                formNames[form.name]
+                formNames[form.name] || form.name
               )}
             </div>
             <div>

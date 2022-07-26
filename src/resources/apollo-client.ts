@@ -34,11 +34,17 @@ const authMiddleWare = () =>
     return forward(operation)
   })
 
-const httpLink = new HttpLink({
-  uri: process.env.ANTARA_HNOS_BACKEND,
-  credentials: 'same-origin',
-  fetch,
-})
+const createHttpLink = (newVersion = false) => {
+  const uri = newVersion
+    ? process.env.ANTARA_V2_GRAPHQL
+    : process.env.ANTARA_HNOS_BACKEND
+
+  return new HttpLink({
+    uri,
+    credentials: 'same-origin',
+    fetch,
+  })
+}
 
 const handleErrors = onError(
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -76,11 +82,17 @@ const handleErrors = onError(
   }
 )
 
-const apolloClient = new ApolloClient({
-  link: ApolloLink.from([handleErrors, authMiddleWare().concat(httpLink)]),
-  cache: new InMemoryCache({
-    addTypename: false,
-  }),
-})
+/** Build a dynamic client based on the version */
 
-export default apolloClient
+const createApolloClient = (newVersion = false) =>
+  new ApolloClient({
+    link: ApolloLink.from([
+      handleErrors,
+      authMiddleWare().concat(createHttpLink(newVersion)),
+    ]),
+    cache: new InMemoryCache({
+      addTypename: false,
+    }),
+  })
+
+export default createApolloClient

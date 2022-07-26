@@ -76,6 +76,7 @@ function MemberProvider({ member, children }: any) {
     if (rawApiRecords) {
       setmemberContactDetails(rawApiRecords?.beneficiary.edges[0]?.node)
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rawApiRecords])
 

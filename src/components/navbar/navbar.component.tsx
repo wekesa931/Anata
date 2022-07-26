@@ -20,6 +20,10 @@ const UserMenu = () => {
     analytics.track('User LoggedOut')
     history.push('/login')
   }
+
+  const hasName = (userDetails: { given_name: string; family_name: string }) =>
+    !!userDetails.given_name && !!userDetails.family_name
+
   return (
     user && (
       <div className={styles.userMenuContainer}>
@@ -30,7 +34,9 @@ const UserMenu = () => {
               className={styles.userImage}
               alt="user"
             />
-            <h4>{`${user.given_name} ${user.family_name}`}</h4>
+            {hasName(user) && (
+              <h4>{`${user.given_name} ${user.family_name}`}</h4>
+            )}
             <h5 className={styles.userEmail}>{`${user.email}`}</h5>
           </div>
           <button className="btn btn-secondary" onClick={logout}>

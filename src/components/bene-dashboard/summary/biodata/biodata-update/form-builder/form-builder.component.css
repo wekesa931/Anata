@@ -1,0 +1,74 @@
+.formInputsRow {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.formInputsRow > div {
+  margin-right: 10px;
+}
+
+.modalFormTitle {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+}
+
+.formInputSpaced {
+  margin-top: 1rem;
+}
+
+.formTitle {
+  font-family: 'Rubik', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: var(--dark-blue-100);
+}
+
+.formErrors {
+  font-family: 'Rubik', sans-serif;
+  font-style: normal;
+  color: var(--red-100);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.form {
+  margin-top: 2rem;
+}
+
+.actionBtnSection {
+  margin-top: 3rem;
+  width: 100%;
+}
+
+.actionBtn {
+  width: 100%;
+  text-align: center;
+}
+
+.dynamicGroup {
+  display: flex;
+  justify-content: start;
+  margin-top: 1rem;
+}
+
+.dynamicControlBtns {
+  display: flex;
+  justify-content: space-evenly;
+  margin-left: 1rem;
+}
+
+.iconBtn {
+  padding: 0.25rem;
+  margin: 0 0.25rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

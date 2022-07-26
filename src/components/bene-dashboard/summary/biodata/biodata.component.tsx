@@ -1,7 +1,15 @@
 import { useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { Info } from 'react-feather'
-import { Button, CardContent, Typography, Chip, Checkbox } from '@mui/material'
+import {
+  Button,
+  CardContent,
+  Typography,
+  Chip,
+  Checkbox,
+  Snackbar,
+  Alert,
+} from '@mui/material'
 import { useQuery, useMutation } from '@apollo/client'
 import { useToasts } from 'react-toast-notifications'
 import dayjs from 'dayjs'
@@ -15,6 +23,9 @@ import { GET_TERMS_CONDITIONS } from '../../../../gql/ts_cs'
 import { SEND_SMS } from '../../../../gql/sms'
 import logError from '../../../utils/Bugsnag/Bugsnag'
 import DependentCard from '../dependents/dependent-card.component'
+import Icon from '../../../utils/icon/icon.component'
+import { useFormPortal } from '../../../../context/forms-context'
+import useMemberDetails from './biodata-update/useMemberDetails'
 
 const getRiskFactors = (
   diabetes: string,
@@ -456,6 +467,7 @@ const TsCs = ({ member, contact }: any) => {
     showBasedOnTime &&
     showCard &&
     member['Onboard Stage'] === 'Onboarded'
+
   useEffect(() => {
     airtableFetch(
       `msgTemplates/list?filterByFormula=FIND("Consent reminder", {Title})`
@@ -585,7 +597,15 @@ const Tags = ({ member }: any) => {
   )
 }
 
+type SnackBarData = {
+  level: 'error' | 'success'
+  message: string
+}
+
 const BioData = () => {
+  const [snackbarData, setSnackbarData] = useState<SnackBarData | null>(null)
+  const { openedForms, addOpenForm, onFormClose } = useFormPortal()
+
   const { member, memberContact } = useMember()
   const hasDependants = memberContact?.dependents.length > 0
   const minorDependents = []
@@ -601,6 +621,7 @@ const BioData = () => {
       }
     }
   }
+
   const hasPrimary = memberContact?.primary && memberContact?.primary.length > 0
   const isMinor = (age: number) => age < 18
   const trackAccess = () =>
@@ -615,16 +636,70 @@ const BioData = () => {
   const gaInsuranceLink = 'https://health.gakenya.com/app'
   const mixPanelLink = `https://mixpanel.com/project/2141047/view/293995/app/profile#distinct_id=${member['Antara ID']}`
 
+  // form member details update form
+  const formTitle = 'Member Details Update Form'
+
+  // close the member form, if any erros, initiate an error snackbar
+  const closeMemberDetailsForm = (error?: string) => {
+    if (error) {
+      setSnackbarData({
+        level: 'error',
+        message: error,
+      })
+    } else {
+      setSnackbarData({
+        level: 'success',
+        message: 'Member details have been updated successfuly',
+      })
+      onFormClose(formTitle, false)
+    }
+  }
+  const memberDetails = useMemberDetails(member, closeMemberDetailsForm)
+
+  const closeSnackbar = () => setSnackbarData(null)
+
+  // update form toggles
+  const openUpdateMemberForm = () => {
+    // clear snackbar error
+    closeSnackbar()
+    addOpenForm(
+      [...openedForms, { name: formTitle }],
+      { 'Record ID': '' },
+      memberDetails
+    )
+  }
+
+  const getBioDataTitle = () =>
+    `${member['Full Name']}, ${member.Age} ${
+      member.Sex && member.Sex.charAt(0)
+    }`
+
   return (
     <div className={styles.wrapper}>
       {member && (
         <div className={styles.bioDataCard}>
           <div className={styles.beneNameContainer}>
-            <h3 className={styles.beneNameAgeGender}>
-              {member['Full Name']}, {member.Age}{' '}
-              {member.Sex && member.Sex.charAt(0)}
-            </h3>
+            <h3 className={styles.beneNameAgeGender}>{getBioDataTitle()}</h3>
+            {memberDetails && (
+              <button
+                className="btn-icon"
+                onClick={openUpdateMemberForm}
+                title="Edit member details"
+              >
+                <Icon name="edit" />
+              </button>
+            )}
           </div>
+          <Snackbar
+            open={!!snackbarData}
+            autoHideDuration={6000}
+            onClose={closeSnackbar}
+          >
+            <Alert onClose={closeSnackbar} severity={snackbarData?.level}>
+              {snackbarData?.message}{' '}
+            </Alert>
+          </Snackbar>
+
           <TsCs member={member} contact={memberContact} />
           <div className={styles.tagContainer}>
             <Tags member={member} />

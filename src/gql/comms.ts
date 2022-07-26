@@ -81,6 +81,114 @@ const MEMBER_CONTACT_DETAILS = gql`
   }
 `
 
+const MEMBER_DETAILS_QUERY = gql`
+  query members($antaraId: String) {
+    members(antaraId: $antaraId) {
+      edges {
+        node {
+          antaraId
+          birthDate
+          details {
+            firstName
+            middleName
+            lastName
+            sex {
+              sex
+            }
+            maritalStatus {
+              maritalStatus
+            }
+            relationshipToPrimary
+          }
+          phones {
+            phone
+            phoneType {
+              phoneType
+            }
+          }
+          status {
+            startDate
+            onboardStage {
+              onboardStage
+            }
+            employer {
+              name
+            }
+            assignedHn
+            onboardStage {
+              onboardStage
+            }
+            readyForCompanyOnboarding
+            readyForIndividualOnboarding
+          }
+          contact {
+            email
+            constituency
+            residentialAddress
+            residentialCountry
+            residentialCounty
+            residentialTown
+            emergencyContactName
+            emergencyContactPhone
+            emergencyContactRelationship
+            deliveryInstructions
+            poBoxNumber
+            postCode
+          }
+          insuranceDetails {
+            corporateId
+            insuranceId
+          }
+        }
+      }
+    }
+  }
+`
+
+const MUTATE_MEMBER_DETAILS = gql`
+  mutation updateMemberProfile($input: UpdateMemberProfileInput!) {
+    profileData(input: $input) {
+      error
+      status
+      profile {
+        antaraId
+        firstName
+        middleName
+        lastName
+        sex
+        birthDate
+        birthDateEstimated
+        email
+        contactPhone1
+        phoneType1
+        contactPhone2
+        phoneType2
+        residentialAddress
+        deliveryInstructions
+        residentialTown
+        residentialCounty
+        residentialCountry
+        emergencyContactName
+        emergencyContactPhone
+        emergencyContactRelationship
+        poBoxNumber
+        postCode
+        insuranceId
+        corporateId
+        onboardStage
+        memberStatus
+        employer {
+          name
+        }
+        maritalStatus
+        verificationStatus
+        hasConsentedToTermsAndOurPrivacy
+        appInstalled
+      }
+    }
+  }
+`
+
 const GET_CALL_LOG = gql`
   query conferenceSessions {
     conferenceSessions {
@@ -241,6 +349,18 @@ const END_CALL = gql`
     }
   }
 `
+
+const GET_COMPANIES = gql`
+  query {
+    getCompanies {
+      edges {
+        node {
+          name
+        }
+      }
+    }
+  }
+`
 // eslint-disable-next-line import/prefer-default-export
 export {
   VALIDATE_BIODATA,
@@ -255,4 +375,7 @@ export {
   UNHOLD_PARTICIPANT,
   GET_ACTIVE_CALL,
   END_CALL,
+  MEMBER_DETAILS_QUERY,
+  MUTATE_MEMBER_DETAILS,
+  GET_COMPANIES,
 }

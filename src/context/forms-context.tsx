@@ -15,12 +15,26 @@ export type HN = {
   'Record ID': string
 }
 
+export type MemberDetails = {
+  v2Member: any
+  isDataLoading: boolean
+  companies: Array<any>
+  submitting: boolean
+  formErrors: any
+  handleSubmit: (values: any) => void
+}
+
 type FormContextType = {
   shouldRefetch: boolean
   airtableMeta: any
   openedForms: Form[]
   onRefetch: (refetch: boolean) => void
-  addOpenForm: (openForm: Form[], healthNavigator: HN) => void
+  addOpenForm: (
+    openForm: Form[],
+    healthNavigator: HN,
+    memberDetails?: any
+  ) => void
+  onFormClose: (pointer: any, isWorkflow: boolean) => void
 }
 
 const FormContext = createContext<FormContextType>({
@@ -29,19 +43,27 @@ const FormContext = createContext<FormContextType>({
   airtableMeta: null,
   addOpenForm: () => null,
   onRefetch: () => null,
+  onFormClose: () => null,
 })
 
 const FormProvider = ({ children }: any) => {
   const [airtableMeta, setAirtableMeta] = useState<any>(null)
   const [shouldRefetch, setshouldRefetch] = useState(false)
   const [openedForms, setOpenedForms] = useState<Form[]>([])
-  const [hNavigator, setHNavigator] = useState<HN | null>(null)
+  const [hNavigator, setHNavigator] = useState<HN | null>()
+  const [memberDetails, setMemberDetails] = useState<any | null>(null)
+
   const onRefetch = (refetch: boolean) => {
     setshouldRefetch(refetch)
   }
-  const addOpenForm = (openForm: Form[], healthNavigator: HN) => {
+
+  const addOpenForm = (openForm: Form[], healthNavigator: HN, member?: any) => {
     setOpenedForms(openForm)
     setHNavigator(healthNavigator)
+
+    if (member) {
+      setMemberDetails(member)
+    }
   }
   const onFormClose = (pointer: any, isWorkflow: boolean) => {
     let validForms: any[] = []
@@ -90,6 +112,7 @@ const FormProvider = ({ children }: any) => {
         shouldRefetch,
         onRefetch,
         addOpenForm,
+        onFormClose,
       }}
     >
       {openedForms.map((fm: Form, idx: number) => (
@@ -103,6 +126,7 @@ const FormProvider = ({ children }: any) => {
             closeForm={addOpenForm}
             onFormClose={onFormClose}
             onRefetch={onRefetch}
+            memberDetails={memberDetails}
           />
         </React.Fragment>
       ))}
