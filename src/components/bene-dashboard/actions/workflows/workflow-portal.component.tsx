@@ -458,7 +458,10 @@ const WorkflowPortal = ({
               }
               delete airtablePayload.Member
             }
-            if (activeModuleName === 'Logistics Tasks') {
+            if (
+              activeModuleName === 'Logistics Tasks' ||
+              activeModuleName === 'Incident reports'
+            ) {
               airtablePayload = {
                 ...airtablePayload,
                 Members: airtablePayload.Member,

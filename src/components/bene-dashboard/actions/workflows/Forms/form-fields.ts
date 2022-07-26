@@ -50,4 +50,5 @@ export const formNames = {
   PAFU: 'PAFU',
   'Interaction Log form': 'Interaction Log form',
   'Logistics Tasks': 'Logistics Tasks',
+  'Incident reports': 'Incident reports',
 }
