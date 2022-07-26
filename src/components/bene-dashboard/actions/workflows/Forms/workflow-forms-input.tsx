@@ -125,6 +125,19 @@ const WorkflowFormsInput = ({
     case 'text':
     case 'multilineText':
     case 'singleLineText':
+      return (
+        <TextInputField
+          type="text"
+          value={value}
+          disabled={disabled}
+          field={field}
+          fieldName={fieldName}
+          helperText={helperText}
+          saveInput={saveInput}
+          control={control}
+          error={error}
+        />
+      )
     case 'richText':
       return (
         <RichTextInputField
@@ -797,13 +810,24 @@ const LinkRecordInput = ({
     })
     return presentKey
   }
+
   useEffect(() => {
     if (airtableMeta) {
+      let airtableField =
+        airtableMeta[field.foreignTableId].fields.primaryFieldName
+      let searchParam = ''
+      if (
+        field.foreignTableId === 'tblHs6JxFnMGAjNNC' &&
+        field.name === 'Consulting Clinician'
+      ) {
+        airtableField = 'Team'
+        searchParam = 'Doctor'
+      }
       getLinkedRecords({
         variables: {
           table: field.foreignTableId,
-          field: airtableMeta[field.foreignTableId].fields.primaryFieldName,
-          searchParam: '',
+          field: airtableField,
+          searchParam,
           antaraIdKey: checkAntaraIdKey(),
           antaraIdValue: checkAntaraIdKey()
             ? template?.member['Antara ID'] || ''
