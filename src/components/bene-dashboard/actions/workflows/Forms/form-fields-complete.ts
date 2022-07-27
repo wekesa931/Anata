@@ -10472,7 +10472,7 @@ export default [
       {
         id: 'fldhsMxOF6jOwSSAV',
         name: 'Psychiatric history',
-        type: 'multilineText',
+        type: 'richText',
         format: '',
         isDateTime: false,
         options: [],
@@ -10522,7 +10522,7 @@ export default [
       {
         id: 'fldB9JTWXlo1DEgwY',
         name: 'Which medication?',
-        type: 'multilineText',
+        type: 'richText',
         format: '',
         isDateTime: false,
         options: [],
@@ -10570,7 +10570,7 @@ export default [
       {
         id: 'fldqbTncYbSSz8OHc',
         name: 'Which tool?',
-        type: 'text',
+        type: 'richText',
         format: '',
         isDateTime: false,
         options: [],
@@ -10599,7 +10599,7 @@ export default [
       {
         id: 'fldhKJfL0mPzGy9T7',
         name: 'Mental status examination',
-        type: 'multilineText',
+        type: 'richText',
         format: '',
         isDateTime: false,
         options: [],
@@ -10628,7 +10628,7 @@ export default [
       {
         id: 'fldSNGlqqbbCRAh4M',
         name: 'Provisional Diagnosis',
-        type: 'multilineText',
+        type: 'richText',
         format: '',
         isDateTime: false,
         options: [],
@@ -10653,7 +10653,7 @@ export default [
       {
         id: 'fldeQCHV5HlDcesVM',
         name: 'Confirmed Diagnosis using DSM-5 criteria',
-        type: 'multilineText',
+        type: 'richText',
         format: '',
         isDateTime: false,
         options: [],
@@ -10729,7 +10729,7 @@ export default [
       {
         id: 'fldRzlWo9idLzYGIy',
         name: 'Notes',
-        type: 'multilineText',
+        type: 'richText',
         format: '',
         isDateTime: false,
         options: [],
