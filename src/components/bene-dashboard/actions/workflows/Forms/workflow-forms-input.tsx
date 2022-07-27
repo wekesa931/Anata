@@ -26,9 +26,8 @@ import { InputLabel } from '@mui/material'
 import DateTimePicker from '@mui/lab/DateTimePicker'
 import { useLazyQuery } from '@apollo/client'
 import { Editor } from 'react-draft-wysiwyg'
-import draftToHtml from 'draftjs-to-html'
-import htmlToDraft from 'html-to-draftjs'
-import { ContentState, convertToRaw, EditorState } from 'draft-js'
+import { markdownToDraft, draftToMarkdown } from 'markdown-draft-js'
+import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 import styles from '../guided-workflows.component.css'
 import { Form } from '../workflow-types'
@@ -662,12 +661,8 @@ const RichTextInputField = ({
   const [open, setOpen] = useState(false)
   const [editorState, setEditorState] = useState(() => {
     if (value) {
-      const blocksFromHtml = htmlToDraft(value)
-      const { contentBlocks, entityMap } = blocksFromHtml
-      const contentState = ContentState.createFromBlockArray(
-        contentBlocks,
-        entityMap
-      )
+      const rawData = markdownToDraft(value)
+      const contentState = convertFromRaw(rawData)
       return EditorState.createWithContent(contentState)
     }
     return EditorState.createEmpty()
@@ -677,7 +672,7 @@ const RichTextInputField = ({
     currentState: EditorState
   ) => {
     setEditorState(currentState)
-    const changeValue = draftToHtml(
+    const changeValue = draftToMarkdown(
       convertToRaw(currentState.getCurrentContent())
     )
     onChange(changeValue)
