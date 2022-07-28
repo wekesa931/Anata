@@ -136,37 +136,41 @@ const DataTable = ({ data, loading }: DataTableProps) => {
               {dayjs(row.dataDate, 'MM/YY').format('MMMM, YYYY')}
             </Typography>
           </TableRow>
-          {row.data.map((item, i) => (
-            <React.Fragment key={i}>
-              <StyledTableRow>
-                <StyledTableCell component="th" scope="row">
-                  {callIcons(item)}
-                  <span style={{ paddingLeft: 5 }}>{item.memberPhone}</span>
-                </StyledTableCell>
-                <StyledTableCell>
-                  {formatDuration(item.inCallDuration)}
-                </StyledTableCell>
-                <StyledTableCell>
-                  {dayjs(item.createdAt).format('MMMM, D h:mm')}
-                </StyledTableCell>
-                <StyledTableCell>
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      setOpen(true)
-                      setCallData(item)
-                    }}
-                  >
-                    Show
-                  </Button>
-                </StyledTableCell>
-              </StyledTableRow>
-            </React.Fragment>
-          ))}
+          {row.data
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .map((item, i) => (
+              <React.Fragment key={i}>
+                <StyledTableRow>
+                  <StyledTableCell component="th" scope="row">
+                    {callIcons(item)}
+                    <span style={{ paddingLeft: 5 }}>{item.memberPhone}</span>
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {formatDuration(item.inCallDuration)}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {dayjs(item.createdAt).format('MMMM, D h:mm')}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        setOpen(true)
+                        setCallData(item)
+                      }}
+                    >
+                      Show
+                    </Button>
+                  </StyledTableCell>
+                </StyledTableRow>
+              </React.Fragment>
+            ))}
         </>
       ))
     ) : (
-      <span>No logs </span>
+      <StyledTableCell colSpan={4}>
+        <span className={`${styles.ongoingContainer}`}>No Call Logs</span>
+      </StyledTableCell>
     )
   }
 

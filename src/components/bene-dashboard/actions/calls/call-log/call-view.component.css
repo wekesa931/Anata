@@ -89,3 +89,14 @@
   -ms-flex-align: center;
   margin-top: 10%;
 }
+
+.ongoingContainer {
+  padding: 5px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  background-color: var(--white-bg);
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}

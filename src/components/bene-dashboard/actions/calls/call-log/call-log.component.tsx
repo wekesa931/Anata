@@ -64,16 +64,14 @@ const CallLog = () => {
 
   const missedCallsInB = (missInData: any) =>
     missInData.callDirection === 'INBOUND' && !missInData.agentAnswered
-  
+
   const inBoundDataCalls = (inData: any) =>
     inData.callDirection === 'INBOUND' && inData.agentAnswered
 
   const parseCallLogs = (logs: Array<any> = []) => {
     const outboundCalls = logs.filter((call: any) => outBoundCalls(call))
     const outboundStats = generateStats(outboundCalls, periods, 'OUTBOUND')
-    const inboundCalls = logs.filter(
-      (call: any) => inBoundDataCalls(call)
-    )
+    const inboundCalls = logs.filter((call: any) => inBoundDataCalls(call))
     const inboundStats = generateStats(inboundCalls, periods, 'INBOUND')
 
     const missedInb = logs.filter((log: any) => missedCallsInB(log))
@@ -106,7 +104,7 @@ const CallLog = () => {
 
     setAllData(groupingDataCalls(logs))
   }
-  
+
   useEffect(() => {
     let logs = []
     if (data?.conferenceSessions?.edges.length > 0) {
@@ -140,7 +138,7 @@ const CallLog = () => {
     },
     {
       color: '#ff9d97',
-      cardTitle: 'Missed call',
+      cardTitle: 'Missed Inbound',
       stats: inBoundMissedData.stats,
       type: 'MISSED',
       callback: () =>
