@@ -1,0 +1,91 @@
+.viewContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.statsTitle {
+  /* width: 22px;
+    height: 24px; */
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 15px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: -0.4px;
+  text-align: left;
+  color: var(--dark-blue-100);
+}
+
+.statsSubTitle {
+  width: 36px;
+  height: 14px;
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 15px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.17;
+  letter-spacing: normal;
+  text-align: left;
+  color: var(--dark-blue-50);
+}
+
+.header {
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 20px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.17;
+  letter-spacing: -0.48px;
+  text-align: left;
+  color: var(--dark-blue-100);
+  margin-left: 15px;
+}
+
+.icon {
+  margin-right: -20;
+}
+
+.smallHeader {
+  /* width: 114px;
+  height: 28px; */
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 20px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.17;
+  letter-spacing: -0.48px;
+  text-align: left;
+  color: var(--dark-blue-50);
+  margin-left: -20;
+}
+
+.wrap {
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+}
+
+.outBoundCall {
+  border: solid 2px var(--green-50);
+}
+
+.inBoundCall {
+  border: solid 2px var(--blue-50);
+}
+
+.callLoading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  -ms-flex-align: center;
+  margin-top: 10%;
+}

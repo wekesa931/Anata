@@ -219,6 +219,38 @@ const GET_CALL_LOG = gql`
   }
 `
 
+const GET_CALL_LOGS = gql`
+  query conferenceSessions($antaraId: String) {
+    conferenceSessions(antaraId: $antaraId) {
+      edges {
+        node {
+          origin
+          callDirection
+          createdAt
+          endedAt
+          startedAt
+          deadline
+          activeParticipants
+          totalParticipants
+          roomName
+          agentPhone
+          agentEmail
+          memberPhone
+          sessionStarted
+          sessionEnded
+          allPresent
+          inCallDuration
+          memberAntaraId
+          memberAirtableId
+          callbackTaskId
+          memberAnswered
+          agentAnswered
+        }
+      }
+    }
+  }
+`
+
 const GET_SESSION_PARTICIPANTS = gql`
   query callSessions($conferenceRoom: String!) {
     callSessions(conferenceRoom: $conferenceRoom) {
@@ -375,6 +407,7 @@ export {
   UNHOLD_PARTICIPANT,
   GET_ACTIVE_CALL,
   END_CALL,
+  GET_CALL_LOGS,
   MEMBER_DETAILS_QUERY,
   MUTATE_MEMBER_DETAILS,
   GET_COMPANIES,

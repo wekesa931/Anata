@@ -1,0 +1,65 @@
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cardTitle {
+  width: 16px;
+}
+
+.statsSection {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.statsTitle {
+  width: 22px;
+  height: 24px;
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 18px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: -0.4px;
+  text-align: left;
+  color: var(--dark-blue-100);
+}
+
+.statsSubTitle {
+  width: 36px;
+  height: 14px;
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.17;
+  letter-spacing: normal;
+  text-align: left;
+  color: var(--dark-blue-50);
+}
+
+.statsActionSection {
+  margin-top: 0.2rem;
+  display: flex;
+  justify-content: start;
+}
+
+.statsActionBtn {
+  width: 36px;
+  height: 18px;
+  flex-grow: 0;
+  font-family: Rubik;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.29;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: var(--blue-100);
+}

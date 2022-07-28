@@ -19,6 +19,7 @@ import SortDialog from './sort-and-filter.component/sort-and-filter.component'
 import Conditions from './conditions/conditions.component'
 import MemberTask from './member_tasks/member-task.component'
 import Tooltip from '../../utils/tooltip/tooltip.component'
+import CallLog from '../actions/calls/call-log/call-log.component'
 
 const SortButton = ({ openSortDialog, setOpenSortDialog }: any) => {
   const {
@@ -100,9 +101,10 @@ const Views = () => {
             />
             <Tab label="Conditions" value="2" />
             <Tab label="Interactions" value="3" />
-            <Tab label="Nutrition" value="4" />
-            <Tab label="Docs" value="5" />
-            <Tab label="Member Tasks" value="6" />
+            <Tab label="Call Log" value="4" />
+            <Tab label="Nutrition" value="5" />
+            <Tab label="Docs" value="6" />
+            <Tab label="Member Tasks" value="7" />
           </TabList>
           <FilterComponent />
         </Box>
@@ -126,15 +128,20 @@ const Views = () => {
           </TabPanel>
           <TabPanel value="4">
             <ErrorBoundary>
-              <Nutrition />
+              <CallLog />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel value="5">
             <ErrorBoundary>
-              <Files />
+              <Nutrition />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel value="6">
+            <ErrorBoundary>
+              <Files />
+            </ErrorBoundary>
+          </TabPanel>
+          <TabPanel value="7">
             <ErrorBoundary>
               <MemberTask />
             </ErrorBoundary>
