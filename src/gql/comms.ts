@@ -135,10 +135,6 @@ const MEMBER_DETAILS_QUERY = gql`
             poBoxNumber
             postCode
           }
-          insuranceDetails {
-            corporateId
-            insuranceId
-          }
         }
       }
     }

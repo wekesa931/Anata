@@ -74,7 +74,7 @@ const parseV2MemberData = (memberData: any) => {
 
 const useMemberDetails = (
   member: any = {},
-  closeForm: (err?: string) => void
+  closeForm?: (err?: string) => void
 ) => {
   const [companies, setCompanies] = useState<Array<any>>([])
   const [v2Member, setV2Member] = useState<any | null>(null)
@@ -139,10 +139,10 @@ const useMemberDetails = (
         setIsSubmitting(false)
 
         if (error) {
-          closeForm(error)
+          closeForm && closeForm(error)
         } else {
           setV2Member(formValues)
-          closeForm()
+          closeForm && closeForm()
         }
       })
       .catch(() => {

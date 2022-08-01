@@ -10,6 +10,7 @@ import { useCall } from '../../../../context/calls-context'
 import DropDownComponent from '../../../../helpers/dropdown-helper'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import styles from './calls.component.css'
+import useMemberDetails from '../../summary/biodata/biodata-update/useMemberDetails'
 
 const nameSplitter = (name: string) => {
   const parts = name.split(' ', 2)
@@ -35,13 +36,13 @@ const CallsCallout = ({
   airtableId?: string
 }) => {
   const [memberContacts, setmemberContacts] = React.useState(Contacts)
-  const { memberContact: loadedContacts } = useMember()
+  const { member } = useMember()
+  const { v2Member: loadedContacts } = useMemberDetails(member)
   const [isPhoneChooserOpen, setIsPhoneChooserOpen] = useState<boolean>(false)
   const { callError, setHistoryRecordId, setcallError } = useCall()
   const [open, setOpen] = useState<boolean>(false)
   const [isRinging, setisRinging] = React.useState(false)
   const { initiateCall } = useCall()
-  const { member } = useMember()
   const [phoneNumber, setPhoneNumber] = useState<string>('')
   const [phoneError, setPhoneError] = useState<string | null>('')
   const [colorScheme, setcolorScheme] = React.useState({
@@ -107,12 +108,15 @@ const CallsCallout = ({
   useEffect(() => {
     if (loadedContacts) {
       const allContacts: any[] = [
-        { 'Phone 1': loadedContacts.contactPhone1 },
-        { 'Phone 2': loadedContacts.contactPhone2 },
-        { 'Emergency 1': loadedContacts.emergencyContactPhone1 },
-        { 'Emergency 2': loadedContacts.emergencyContactPhone2 },
+        { 'Phone 1': loadedContacts.phone },
+        { 'Phone 2': '' },
+        { 'Emergency 1': loadedContacts.emergencyContactPhone },
+        { 'Emergency 2': '' },
       ]
-
+      /**
+       * TODO
+       * Create a mutation having the dependents details configured
+       */
       // eslint-disable-next-line no-unused-expressions
       loadedContacts?.dependents?.forEach((dep, i) => {
         allContacts.push({
@@ -180,24 +184,26 @@ const CallsCallout = ({
                 />
               </div>
             )}
-            {memberContacts.length > 0 ? (
-              memberContacts.map((con, i) => (
-                <div className="mb-ten" key={i}>
-                  <ContactList
-                    tasksType={tasksType}
-                    relevantContact={con}
-                    onCallInitiated={onCallInitiated}
+            <div>
+              {memberContacts.length > 0 ? (
+                memberContacts.map((con, i) => (
+                  <div className="mb-ten" key={i}>
+                    <ContactList
+                      tasksType={tasksType}
+                      relevantContact={con}
+                      onCallInitiated={onCallInitiated}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div>
+                  <Notification
+                    title="Error"
+                    message="No contact found for member"
                   />
                 </div>
-              ))
-            ) : (
-              <div>
-                <Notification
-                  title="Error"
-                  message="No contact found for member"
-                />
-              </div>
-            )}
+              )}
+            </div>
 
             <button
               onClick={() => handleNewCalls()}
