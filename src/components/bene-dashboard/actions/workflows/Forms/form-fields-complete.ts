@@ -16675,6 +16675,21 @@ export default [
         },
       },
       {
+        id: 'fldrdlVaM0HyjBbN1',
+        name: 'Source name',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Please enter the name of the source (example: Jubilee, Dr John, Rebecca...)',
+      },
+      {
         id: 'fldi8Ilnmxay3ueCd',
         name: 'Responsible party',
         type: 'multiSelect',
