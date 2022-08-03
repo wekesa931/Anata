@@ -138,18 +138,6 @@ const MemberDetailsUpdateForm = ({
       ],
     },
     {
-      id: 'insuranceId',
-      label: 'Insurance ID',
-      dataIndex: 'insuranceId',
-      type: 'text',
-    },
-    {
-      id: 'corporateId',
-      label: 'Corporate ID',
-      dataIndex: 'corporateId',
-      type: 'text',
-    },
-    {
       id: 'constituency',
       type: 'text',
       dataIndex: 'constituency',

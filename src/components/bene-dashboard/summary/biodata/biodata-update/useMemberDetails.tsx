@@ -119,7 +119,7 @@ const useMemberDetails = (
     // only update new values + required items
     // parse the phone number if any
     if ('phone' in formValues) {
-      formValues.phoneNumberToUpdate = formValues.phone
+      formValues.phoneNumberToUpdate = v2Member.phone || formValues.phone
     }
 
     if ('poBoxNumber' in formValues) {
