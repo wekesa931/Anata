@@ -961,34 +961,37 @@ const WorkflowPortal = ({
             xs={isWorkflowTemplate ? 8 : 12}
           >
             {canRenderFields && !isDuplicate && (
-              <div className={`d-flex flex-between ${styles.stickyHeader}`}>
-                <p className={styles.moduleName}>
-                  {formNames[activeModuleName]}
-                </p>
-                <div className="d-flex">
-                  {addingDuplicate && (
-                    <div>
-                      <LoadingIcon />
-                    </div>
-                  )}
-                  {canAddDuplicate &&
-                    includes(duplicates, activeModuleName, 0) && (
-                      <Plus
-                        className={styles.addModuleIcon}
-                        onClick={() => {
-                          setAddingDuplicate(true)
-                        }}
+              <>
+                <div className={`d-flex flex-between ${styles.stickyHeader}`}>
+                  <p className={styles.moduleName}>
+                    {formNames[activeModuleName]}
+                  </p>
+                  <div className="d-flex">
+                    {addingDuplicate && (
+                      <div>
+                        <LoadingIcon />
+                      </div>
+                    )}
+                    {canAddDuplicate &&
+                      includes(duplicates, activeModuleName, 0) && (
+                        <Plus
+                          className={styles.addModuleIcon}
+                          onClick={() => {
+                            setAddingDuplicate(true)
+                          }}
+                        />
+                      )}
+                    {displayModDelete && (
+                      <ConfirmButton
+                        onConfirm={() =>
+                          deleteModule(activeModuleName, template?.workflowId)
+                        }
                       />
                     )}
-                  {displayModDelete && (
-                    <ConfirmButton
-                      onConfirm={() =>
-                        deleteModule(activeModuleName, template?.workflowId)
-                      }
-                    />
-                  )}
+                  </div>
                 </div>
-              </div>
+                <p className={styles.formHelperText}>{formMeta?.helper}</p>
+              </>
             )}
             {isDuplicate && (
               <div className={styles.fieldsLoader}>

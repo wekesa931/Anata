@@ -2678,6 +2678,8 @@ export default [
   {
     name: 'HIF',
     id: 'tblL7bahmNjC58rEc',
+    helper:
+      'Please use this to complete Beneficiary information for those Beneficiaries that were not able to complete their HIFs before the Baseline',
     fields: [
       {
         id: 'fldCFn05pBRhY3Y31',
@@ -5318,6 +5320,8 @@ export default [
   {
     name: 'Appointments',
     id: 'tblZB4YOpd7XH3cYt',
+    helper:
+      'Please remember that all internal appointments (NC,PC,MHC and VC) need to be booked using Calendly. You can use this form if you are recording an appointment with an external provider. In exceptional cases, you can use this form to record an internal appointment. Please refer to the supervisor in that case',
     fields: [
       {
         id: 'fldafLUdREtVz9706',
@@ -7786,6 +7790,8 @@ export default [
   {
     name: 'Interventions',
     id: 'tblTmMtBgwT76JrQN',
+    helper:
+      'Please use this form to enter in a new intervention for a beneficiary',
     fields: [
       {
         id: 'fldCgT1FPO8iK1SLi',
@@ -8568,6 +8574,7 @@ export default [
   {
     name: 'Prescriptions',
     id: 'tbl3iBWzYVWEpdLje',
+    helper: 'Only for usage of HN, Doctor should use the VC Prescription form',
     fields: [
       {
         id: 'fldiB18lEynAzpg0t',
@@ -12827,6 +12834,8 @@ export default [
   {
     name: 'HMP',
     id: 'tblMKwFctRYwBYHgt',
+    helper:
+      'HMP intake form should only be used for HMP2,3 and 4. For HMP1, the HMP record is created automatically',
     fields: [
       {
         id: 'flddquJOgORTpcHUT',
@@ -14628,6 +14637,8 @@ export default [
   {
     name: 'Intervention Data Tracking',
     id: 'tbljaKK4MXz7M990E',
+    helper:
+      'This form should be used to collect data about a bene intervention progress',
     fields: [
       {
         id: 'fld3HJ6VSpWRPUrXE',
@@ -16216,6 +16227,8 @@ export default [
   {
     name: 'Prescriptions VC',
     id: 'tbl3iBWzYVWEpdLje',
+    helper:
+      'Only for usage of Doctor, HN should use the Medication Prescription Form ',
     fields: [
       {
         id: 'fldiB18lEynAzpg0t',

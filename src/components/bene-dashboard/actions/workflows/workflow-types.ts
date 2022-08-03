@@ -19,6 +19,7 @@ export type IWorkflow = {
 export type FormMeta = {
   id: string
   name: string
+  helper: string
   fields: {
     type: string
     name: string
