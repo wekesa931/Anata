@@ -122,32 +122,36 @@ const CallLog = () => {
   const callCards = [
     {
       color: '#98eba5',
-      cardTitle: 'Outbound call',
+      cardTitle: 'Outbound',
+      subTitle: 'call to member',
       stats: outBoundData.stats,
       type: 'OUTBOUND',
-      callback: () => updateCurrentLogs(outBoundData, 'Outbound Calls'),
+      callback: () => updateCurrentLogs(outBoundData, 'Outbound call to member'),
       icon: <Icon name="icon_feather_phone-outgoing" fill="#ffffff" />,
     },
     {
       color: '#87c1f7',
-      cardTitle: 'Inbound call',
+      cardTitle: 'Inbound',
+      subTitle: 'call to Antara',
       stats: inBoundData.stats,
       type: 'INBOUND',
-      callback: () => updateCurrentLogs(inBoundData, 'Inbound Calls'),
+      callback: () => updateCurrentLogs(inBoundData, 'Inbound call to Antara'),
       icon: <Icon name="icon_feather_phone-incoming" fill="#ffffff" />,
     },
     {
       color: '#ff9d97',
-      cardTitle: 'Missed Inbound',
+      cardTitle: 'Missed',
+      subTitle: 'from member',
       stats: inBoundMissedData.stats,
       type: 'MISSED',
       callback: () =>
-        updateCurrentLogs(inBoundMissedData, 'Missed Inbound Calls'),
+        updateCurrentLogs(inBoundMissedData, 'Missed from member'),
       icon: <Icon name="icon_feather_phone-missed" fill="#ffffff" />,
     },
     {
       color: '#ff9d97',
-      cardTitle: 'Missed outbound',
+      cardTitle: 'Missed',
+      subTitle: 'outbound',
       stats: outBoundMissedData.stats,
       type: 'MISSED OUTBOUND',
       callback: () =>
@@ -159,6 +163,7 @@ const CallLog = () => {
   const cardStats = (
     color: string,
     cardTitle: string,
+    subTitle: string,
     stats: any,
     type: string,
     callback: () => void,
@@ -169,6 +174,7 @@ const CallLog = () => {
         stats={stats[type]}
         icon={icon}
         title={`${cardTitle}`}
+        subTitle={`${subTitle}`}
         color={`${color}`}
         callback={callback}
         size={140}
@@ -182,8 +188,8 @@ const CallLog = () => {
         loadingIcon('Loading Call Logs')
       ) : (
         <Box display="flex" flexWrap="wrap" m={-1} p={-1}>
-          {callCards.map(({ color, cardTitle, stats, type, callback, icon }) =>
-            cardStats(color, cardTitle, stats, type, callback, icon)
+          {callCards.map(({ color, cardTitle, subTitle, stats, type, callback, icon }) =>
+            cardStats(color, cardTitle, subTitle, stats,  type, callback, icon)
           )}
         </Box>
       )}

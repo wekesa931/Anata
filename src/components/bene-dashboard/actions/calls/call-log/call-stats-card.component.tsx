@@ -14,6 +14,8 @@ type CallCardProps = {
   callback: () => void
   icon: React.ReactElement
   title: string
+  subTitle: string
+
 }
 
 const createCardBoxSx = (size: number) => ({
@@ -37,6 +39,7 @@ const CallStatsCard = ({
   callback,
   icon,
   title,
+  subTitle
 }: CallCardProps) => {
   return (
     <Box sx={createCardBoxSx(size)}>
@@ -45,6 +48,7 @@ const CallStatsCard = ({
           <h3 className={styles.cardTitle}>{title}</h3>
           {icon}
         </div>
+        <h4 style={{ flexDirection: 'row'}}>{subTitle}</h4>
         <div className={styles.statsSection}>
           {stats &&
             stats.map(({ label, value }) => (
