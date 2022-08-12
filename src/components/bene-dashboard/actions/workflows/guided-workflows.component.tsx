@@ -59,6 +59,7 @@ const GuidedWorkflows = () => {
     {
       variables: {
         name: '',
+        status: 'Active'
       },
     }
   )

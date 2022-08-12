@@ -92,8 +92,8 @@ const ADD_MODULE_TO_WORKFLOW = gql`
 `
 
 const GET_ALL_TEMPLATES = gql`
-  query workflowTemplates($name: String!) {
-    workflowTemplates(name: $name) {
+  query workflowTemplates($name: String!, $status: String) {
+    workflowTemplates(name: $name, status: $status) {
       edges {
         node {
           id
