@@ -20,6 +20,7 @@ import Conditions from './conditions/conditions.component'
 import MemberTask from './member_tasks/member-task.component'
 import Tooltip from '../../utils/tooltip/tooltip.component'
 import CallLog from '../actions/calls/call-log/call-log.component'
+import EngagementDashboard from './engagement/engagement-dashboard.component'
 
 const SortButton = ({ openSortDialog, setOpenSortDialog }: any) => {
   const {
@@ -105,6 +106,7 @@ const Views = () => {
             <Tab label="Nutrition" value="5" />
             <Tab label="Docs" value="6" />
             <Tab label="Member Tasks" value="7" />
+            <Tab label="Member Engagement" value="8" />
           </TabList>
           <FilterComponent />
         </Box>
@@ -144,6 +146,11 @@ const Views = () => {
           <TabPanel value="7">
             <ErrorBoundary>
               <MemberTask />
+            </ErrorBoundary>
+          </TabPanel>
+          <TabPanel value="8">
+            <ErrorBoundary>
+              <EngagementDashboard />
             </ErrorBoundary>
           </TabPanel>
         </div>

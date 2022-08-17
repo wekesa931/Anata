@@ -135,6 +135,7 @@
     "secure-ls": "^1.2.6",
     "sweetalert2": "^10.3.5",
     "sweetalert2-react-content": "^3.2.0",
+    "tableau-react": "^2.2.0",
     "throttle-debounce": "^2.3.0",
     "use-file-picker": "^1.4.1",
     "watchpack-chokidar2": "^2.0.1",
