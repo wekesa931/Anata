@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import GoogleLogin from 'react-google-login'
 import Bugsnag from '@bugsnag/js'
@@ -14,9 +14,16 @@ import analytics from '../../helpers/segment'
 
 const Login = () => {
   const history = useHistory()
-  const { setCurrentUser } = useAuth()
+  const { setCurrentUser, isLoggedIn } = useAuth()
   const [error, setError] = React.useState<string>('')
   const [isLoggingIn, setLoggingIn] = React.useState<boolean>(false)
+
+  useEffect(() => {
+    if (isLoggedIn()) {
+      history.push('/member')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const failureSignIn = (message: any) => {
     setError(message.error)

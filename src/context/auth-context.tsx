@@ -11,6 +11,7 @@ type AuthContextType = {
   user: User
   setCurrentUser: (user: User) => void
   logout: () => void
+  isLoggedIn: () => boolean
 }
 
 const AuthContext = React.createContext<AuthContextType>({
@@ -19,6 +20,7 @@ const AuthContext = React.createContext<AuthContextType>({
     return user || null
   },
   logout: () => null,
+  isLoggedIn: () => false,
 })
 
 function AuthProvider({ user, children }: any) {
@@ -38,8 +40,12 @@ function AuthProvider({ user, children }: any) {
     signOut()
   }
 
+  const isLoggedIn = () => !!currentUser
+
   return (
-    <AuthContext.Provider value={{ user: currentUser, setCurrentUser, logout }}>
+    <AuthContext.Provider
+      value={{ user: currentUser, setCurrentUser, logout, isLoggedIn }}
+    >
       {children}
     </AuthContext.Provider>
   )
