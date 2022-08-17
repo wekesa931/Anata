@@ -126,7 +126,8 @@ const CallLog = () => {
       subTitle: 'call to member',
       stats: outBoundData.stats,
       type: 'OUTBOUND',
-      callback: () => updateCurrentLogs(outBoundData, 'Outbound call to member'),
+      callback: () =>
+        updateCurrentLogs(outBoundData, 'Outbound call to member'),
       icon: <Icon name="icon_feather_phone-outgoing" fill="#ffffff" />,
     },
     {
@@ -188,8 +189,9 @@ const CallLog = () => {
         loadingIcon('Loading Call Logs')
       ) : (
         <Box display="flex" flexWrap="wrap" m={-1} p={-1}>
-          {callCards.map(({ color, cardTitle, subTitle, stats, type, callback, icon }) =>
-            cardStats(color, cardTitle, subTitle, stats,  type, callback, icon)
+          {callCards.map(
+            ({ color, cardTitle, subTitle, stats, type, callback, icon }) =>
+              cardStats(color, cardTitle, subTitle, stats, type, callback, icon)
           )}
         </Box>
       )}

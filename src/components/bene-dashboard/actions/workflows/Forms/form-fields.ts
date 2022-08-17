@@ -27,7 +27,7 @@ export const duplicates = [
 export const formNames = {
   'HN Tasks': 'Health Navigator Task Form',
   'Member tasks': 'Member Task Form',
-  Prescriptions: 'Medication Prescription Form',
+  Prescriptions: 'HN Prescription Intake Form',
   Appointments: 'Appointment Form',
   Vitals: 'Vitals Intake Form',
   'BP Mon': 'BP Monitoring Intake',
@@ -51,4 +51,27 @@ export const formNames = {
   'Interaction Log form': 'Interaction Log form',
   'Logistics Tasks': 'Logistics Tasks',
   'Incident reports': 'Incident reports',
+}
+
+export const initialFormValues = (member: any) => {
+  return {
+    'BP Mon': {
+      Date: new Date(),
+    },
+    Baseline: {
+      'Health Navigator': member['Health Navigator Assignment Record ID'],
+    },
+    Vitals: {
+      Staff: member['Health Navigator Assignment Record ID'],
+    },
+    'CHL Mon': {
+      'Test Date': new Date(),
+    },
+    'DM Mon': {
+      'Test Date': new Date(),
+    },
+    Conditions: {
+      'Health Navigator': member['Health Navigator Assignment Record ID'],
+    },
+  }
 }

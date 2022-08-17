@@ -41,7 +41,12 @@ import FormSection from './Forms/form-section'
 import TABLE_ROUTES from '../../../utils/airtable-tables/table-routes'
 import TABLES from './Forms/form-fields-complete'
 import { ConfirmButtonProps, FormMeta, IWorkflow } from './workflow-types'
-import { DUPLICATE_DEFAULTS, duplicates, formNames } from './Forms/form-fields'
+import {
+  DUPLICATE_DEFAULTS,
+  duplicates,
+  formNames,
+  initialFormValues,
+} from './Forms/form-fields'
 
 type IProps = {
   workflow: IWorkflow
@@ -646,8 +651,16 @@ const WorkflowPortal = ({
     if (template?.moduleData[activeModuleName]) {
       setFormPayload(template?.moduleData[activeModuleName].filled_values)
     } else {
+      const formValues = initialFormValues(member)
+      let values = {}
+
+      if (formValues[activeModuleName]) {
+        values = formValues[activeModuleName]
+      }
+
       setFormPayload([
         {
+          ...values,
           moduleId: dayjs().toISOString(),
           Member: [recId],
           isDraft: true,
