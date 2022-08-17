@@ -708,7 +708,13 @@ const WorkflowPortal = ({
       setFormMeta({ ...form })
     }
     if (template?.moduleData[activeModuleName]) {
-      setFormPayload(template?.moduleData[activeModuleName].filled_values)
+      setFormPayload({
+        ...template?.moduleData[activeModuleName].filled_values,
+        updatedBy: {
+          email: user?.email,
+          name: user?.name,
+        },
+      })
     } else {
       const formValues = initialFormValues(member)
       let values = {}
@@ -723,6 +729,14 @@ const WorkflowPortal = ({
           moduleId: dayjs().toISOString(),
           Member: [recId],
           isDraft: true,
+          createdBy: {
+            email: user?.email,
+            name: user?.name,
+          },
+          updatedBy: {
+            email: user?.email,
+            name: user?.name,
+          },
         },
       ])
     }
