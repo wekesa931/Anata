@@ -7,6 +7,7 @@ import WorkflowFormsInput from './workflow-forms-input'
 import styles from '../guided-workflows.component.css'
 import { FormSectionInput } from '../workflow-types'
 import validationRules from './validation-schema'
+import CalendlyLink from './CalendlyLink'
 
 const FormSection = ({
   index,
@@ -20,6 +21,7 @@ const FormSection = ({
   activeModuleName,
   isToastOpen,
   template,
+  member,
   airtableMeta,
   setfinalPayload,
   resetActiveModule,
@@ -150,6 +152,11 @@ const FormSection = ({
                     newFormPayload.splice(index, 1, newPayload)
                     setFormPayload(newFormPayload)
                   }}
+                />
+                <CalendlyLink
+                  field={field}
+                  formPayload={formPayload}
+                  member={member}
                 />
               </Fragment>
             )

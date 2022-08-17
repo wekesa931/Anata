@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from 'react'
 import airtableFetch from '../resources/airtable-fetch'
 import FormPortal from '../components/bene-dashboard/actions/forms/forms-portal.component'
 import logError from '../components/utils/Bugsnag/Bugsnag'
+import { interactionlogform } from '../components/bene-dashboard/actions/workflows/Forms/form-fields'
 
 type Form = {
   name: string
@@ -97,7 +98,7 @@ const FormProvider = ({ children }: any) => {
               },
             }
           })
-          setAirtableMeta(tableMap)
+          setAirtableMeta({ ...tableMap, interactionlogform })
         })
         .catch((e) => logError(e))
     }

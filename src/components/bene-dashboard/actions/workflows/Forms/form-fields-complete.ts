@@ -2572,7 +2572,7 @@ export default [
       {
         id: 'fldGp7FlQjpQHN0z5',
         name: 'Type of feedback',
-        type: 'multiSelect',
+        type: 'select',
         format: '',
         isDateTime: false,
         options: [],
@@ -6885,7 +6885,7 @@ export default [
       {
         id: 'fldw39SaE9cHEkRwZ',
         name: 'Type of feedback',
-        type: 'multiSelect',
+        type: 'select',
         format: '',
         isDateTime: false,
         options: [],
@@ -10244,7 +10244,7 @@ export default [
       {
         id: 'flduVomIICMdB9i3f',
         name: 'Type of feedback',
-        type: 'multiSelect',
+        type: 'select',
         format: '',
         isDateTime: false,
         options: [],
@@ -10806,7 +10806,7 @@ export default [
       {
         id: 'fldvzIn7TfEBMVeaM',
         name: 'Type of feedback',
-        type: 'multiSelect',
+        type: 'select',
         format: '',
         isDateTime: false,
         options: [],
@@ -12770,7 +12770,7 @@ export default [
       {
         id: 'fldNpRBf9YJHwNBrv',
         name: 'Type of feedback',
-        type: 'multiSelect',
+        type: 'select',
         format: '',
         isDateTime: false,
         options: [],
@@ -14174,7 +14174,7 @@ export default [
       {
         id: 'fldPrqD2SgUiUj73k',
         name: 'Type of feedback',
-        type: 'multiSelect',
+        type: 'select',
         format: '',
         isDateTime: false,
         options: [],
@@ -14558,7 +14558,7 @@ export default [
       {
         id: 'fldb38MeePBlvREhy',
         name: 'Type of feedback',
-        type: 'multiSelect',
+        type: 'select',
         format: '',
         isDateTime: false,
         options: [],
@@ -16992,6 +16992,674 @@ export default [
         foreignTableId: null,
         required: true,
         helper: '',
+      },
+    ],
+  },
+  {
+    name: 'Interaction log',
+    id: 'interactionlogform',
+    fields: [
+      {
+        id: 'interactionStartedAt',
+        name: 'Encounter Date',
+        type: 'date',
+        format: '',
+        isDateTime: true,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+      },
+      {
+        id: 'healthnavigator',
+        name: 'Health Navigator',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: '',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblHs6JxFnMGAjNNC',
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'interactorType',
+        name: 'Interactor Type',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [
+          'Beneficiary',
+          'Employer',
+          'Provider',
+          'Payor',
+          'Caregiver',
+          'Relative',
+          'Other',
+          'Pharmacy',
+        ],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'interactorName',
+        name: 'Interactor Name',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Interactor Type',
+        parentValues: ['Beneficiary'],
+        condition: (values: any) => {
+          if (values['Interactor Type']) {
+            if (Array.isArray(values['Interactor Type'])) {
+              return ['Beneficiary'].some(
+                (r) => !values['Interactor Type'].includes(r)
+              )
+            }
+            return !['Beneficiary'].includes(values['Interactor Type'])
+          }
+          return false
+        },
+      },
+      {
+        id: 'relationshipType',
+        name: 'Relationship Type',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: ['Parent', 'Other', 'Child', 'Spouse'],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        parentKey: 'Interactor Type',
+        parentValues: ['Payor', 'Caregiver', 'Relative'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Interactor Type'])) {
+            return ['Payor', 'Caregiver', 'Relative'].some((r) =>
+              values['Interactor Type'].includes(r)
+            )
+          }
+          return ['Payor', 'Caregiver', 'Relative'].includes(
+            values['Interactor Type']
+          )
+        },
+      },
+      {
+        id: 'modeOfCommunication',
+        name: 'Mode of Communication',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [
+          'SMS',
+          'Email',
+          'WhatsApp',
+          'In-person',
+          'Phone call',
+          'Chat(Intercom)',
+        ],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'interactionDirection',
+        name: 'Interaction Direction',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: ['Outbound interaction', 'Inbound interaction'],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'inboundInteractionCategory',
+        name: 'Inbound Interaction Category',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [
+          'Urgent care issue',
+          'Clinical question',
+          'Medication question',
+          'Scheduled interaction',
+          'Rescheduling request',
+          'Appointment request',
+          'Data input',
+          'HMP follow-up',
+          'Nutrition follow-up',
+          'Other',
+        ],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        parentKey: 'Interaction Direction',
+        parentValues: ['Inbound interaction'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Interaction Direction'])) {
+            return ['Inbound interaction'].some((r) =>
+              values['Interaction Direction'].includes(r)
+            )
+          }
+          return ['Inbound interaction'].includes(
+            values['Interaction Direction']
+          )
+        },
+      },
+      {
+        id: 'otherCategoryInbound',
+        name: 'Other Category (Inbound)',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Inbound Interaction Category',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Inbound Interaction Category'])) {
+            return ['Other'].some((r) =>
+              values['Inbound Interaction Category'].includes(r)
+            )
+          }
+          return ['Other'].includes(values['Inbound Interaction Category'])
+        },
+      },
+      {
+        id: 'outboundInteractionCategory',
+        name: 'Outbound Interaction Category',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [
+          'Appointment reminder',
+          'Data request',
+          'Education',
+          'HMP Follow-up',
+          'Pre-Appointment prep',
+          'Rescheduling call',
+          'Routine follow-up',
+          'Scheduled interaction',
+          'Send HMP',
+          'Other',
+          'Appointment booking',
+          'Request for clinical summary',
+          'Confirmation of appointment',
+          'Post appointment follow-up (provider)',
+          'Medication follow-up',
+          'VC Follow up',
+          'Chronic consent collection',
+        ],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        parentKey: 'Interaction Direction',
+        parentValues: ['Outbound interaction'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Interaction Direction'])) {
+            return ['Outbound interaction'].some((r) =>
+              values['Interaction Direction'].includes(r)
+            )
+          }
+          return ['Outbound interaction'].includes(
+            values['Interaction Direction']
+          )
+        },
+      },
+      {
+        id: 'otherCategoryOutbound',
+        name: 'Other Category (Outbound)',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Outbound Interaction Category',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Outbound Interaction Category'])) {
+            return ['Other'].some((r) =>
+              values['Outbound Interaction Category'].includes(r)
+            )
+          }
+          return ['Other'].includes(values['Outbound Interaction Category'])
+        },
+      },
+      {
+        id: 'interactionSummaryNotes',
+        name: 'Interactor Summary Notes',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+      },
+      {
+        id: 'outcome',
+        name: 'Next Steps',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [
+          'Virtual Consultation Required',
+          'Flag for Review',
+          'MHC',
+          'Nutritional Consultation',
+          'Physio Consultation',
+          'None',
+        ],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'flagForReview',
+        name: 'Flag for Review',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: ['Yes', 'No', 'Reviewed'],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        parentKey: 'Next Steps',
+        parentValues: ['Flag for Review'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Next Steps'])) {
+            return ['Flag for Review'].some((r) =>
+              values['Next Steps'].includes(r)
+            )
+          }
+          return ['Flag for Review'].includes(values['Next Steps'])
+        },
+      },
+      {
+        id: 'otherCategoryOutbound',
+        name: 'Other Category (Outbound)',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Outbound Interaction Category',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Outbound Interaction Category'])) {
+            return ['Other'].some((r) =>
+              values['Outbound Interaction Category'].includes(r)
+            )
+          }
+          return ['Other'].includes(values['Outbound Interaction Category'])
+        },
+      },
+      {
+        id: 'reasonForConsultation',
+        name: 'Reasons for Consultation',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Please describe the reason(s) why you are requesting a Virtual Consultation with as much details as you can.',
+        conditionType: '',
+        parentKey: 'Next Steps',
+        parentValues: ['Virtual Consultation Required'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Next Steps'])) {
+            return ['Virtual Consultation Required'].some((r) =>
+              values['Next Steps'].includes(r)
+            )
+          }
+          return ['Virtual Consultation Required'].includes(
+            values['Next Steps']
+          )
+        },
+      },
+      {
+        id: 'mhcReferralNotes',
+        name: 'Notes for MHC',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Next Steps',
+        parentValues: ['MHC'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Next Steps'])) {
+            return ['MHC'].some((r) => values['Next Steps'].includes(r))
+          }
+          return ['MHC'].includes(values['Next Steps'])
+        },
+      },
+      {
+        id: 'mhcReferralReasons',
+        name: 'MHC Reasons for Referral',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Next Steps',
+        parentValues: ['MHC'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Next Steps'])) {
+            return ['MHC'].some((r) => values['Next Steps'].includes(r))
+          }
+          return ['MHC'].includes(values['Next Steps'])
+        },
+      },
+      {
+        id: 'ncReferralNotes',
+        name: 'Notes for Nutritional Consultation',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Next Steps',
+        parentValues: ['Nutritional Consultation'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Next Steps'])) {
+            return ['Nutritional Consultation'].some((r) =>
+              values['Next Steps'].includes(r)
+            )
+          }
+          return ['Nutritional Consultation'].includes(values['Next Steps'])
+        },
+      },
+      {
+        id: 'ncReferralReasons',
+        name: 'NC Reasons for Referral',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Next Steps',
+        parentValues: ['Nutritional Consultation'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Next Steps'])) {
+            return ['Nutritional Consultation'].some((r) =>
+              values['Next Steps'].includes(r)
+            )
+          }
+          return ['Nutritional Consultation'].includes(values['Next Steps'])
+        },
+      },
+      {
+        id: 'pcReferralNotes',
+        name: 'Notes for Physio Consultation',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Next Steps',
+        parentValues: ['Physio Consultation'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Next Steps'])) {
+            return ['Physio Consultation'].some((r) =>
+              values['Next Steps'].includes(r)
+            )
+          }
+          return ['Physio Consultation'].includes(values['Next Steps'])
+        },
+      },
+      {
+        id: 'pcReferralReasons',
+        name: 'Reasons for Referral',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Next Steps',
+        parentValues: ['Physio Consultation'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Next Steps'])) {
+            return ['Physio Consultation'].some((r) =>
+              values['Next Steps'].includes(r)
+            )
+          }
+          return ['Physio Consultation'].includes(values['Next Steps'])
+        },
+      },
+      {
+        id: 'feedback',
+        name: 'Did the member provide any feedback?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: ['Yes', 'No'],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+      },
+      {
+        id: 'typeOfFeedback',
+        name: 'Type of feedback',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: ['Positive', 'Negative'],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        parentKey: 'Did the member provide any feedback?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback?'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback?'].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values['Did the member provide any feedback?']
+          )
+        },
+      },
+      {
+        id: 'reasonForFeedback',
+        name: 'What did the member provide feedback for?',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [
+          'Provider',
+          'Mobile App',
+          'Query on Antara Services',
+          'Appointment Scheduling/Rescheduling',
+          'Communication',
+          'Antara Services (Health Navigation/Specialists/Delivery)',
+          'Antara Staff (Health Navigator/Specialists/Delivery)',
+          'Antara Values (Timeliness, Responsiveness, Accuracy)',
+          'Others',
+        ],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        parentKey: 'Did the member provide any feedback?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback?'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback?'].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values['Did the member provide any feedback?']
+          )
+        },
+      },
+      {
+        id: 'otherFeedback',
+        name: 'Other',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the area member provided the feedback for',
+        conditionType: '',
+        parentKey: 'What did the member provide feedback for?',
+        parentValues: ['Others'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(values['What did the member provide feedback for?'])
+          ) {
+            return ['Others'].some((r) =>
+              values['What did the member provide feedback for?'].includes(r)
+            )
+          }
+          return ['Others'].includes(
+            values['What did the member provide feedback for?']
+          )
+        },
+      },
+      {
+        id: 'feedbackFromMember',
+        name: 'Feedback',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Did the member provide any feedback?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Did the member provide any feedback?'])) {
+            return ['Yes'].some((r) =>
+              values['Did the member provide any feedback?'].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values['Did the member provide any feedback?']
+          )
+        },
       },
     ],
   },

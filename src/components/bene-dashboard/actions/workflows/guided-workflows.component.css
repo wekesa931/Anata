@@ -40,7 +40,7 @@
 
 .workflowDropDownContainer {
   position: absolute;
-  width: 140px;
+  min-width: 200px;
   z-index: 2000;
 }
 
@@ -640,4 +640,9 @@ input::-webkit-outer-spin-button {
   padding: 10px;
   border-radius: 4px;
   min-height: 50px;
+}
+.calendarLinkBtn {
+  font-size: 11px !important;
+  text-transform: capitalize !important;
+  font-family: Rubik, sans-serif;
 }

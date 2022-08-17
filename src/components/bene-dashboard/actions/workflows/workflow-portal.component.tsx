@@ -46,7 +46,9 @@ import {
   duplicates,
   formNames,
   initialFormValues,
+  interactionLogPayload,
 } from './Forms/form-fields'
+import { CREATE_INTERACTION } from '../../../../gql/interactions'
 
 type IProps = {
   workflow: IWorkflow
@@ -130,6 +132,7 @@ const WorkflowPortal = ({
   const [addModuleToWorkflow, { loading: addingModule }] = useMutation(
     ADD_MODULE_TO_WORKFLOW
   )
+  const [createInteraction] = useMutation(CREATE_INTERACTION)
   const [deleteModuleData, { loading: deletingModule }] =
     useMutation(REMOVE_MODULE)
   const [saveWorkflow, { loading: savingWorkflow }] = useMutation(SAVE_WORKFLOW)
@@ -166,6 +169,9 @@ const WorkflowPortal = ({
   const setModuleNames = () => {
     const loadedModules = TABLES.map((mod) => mod.name)
     setAllModules(loadedModules)
+  }
+  const extractUsername = (email: string) => {
+    return email.replace(/@.*$/, '')
   }
   const deleteModule = (name: string, workflowId: string) => {
     if (name) {
@@ -312,19 +318,26 @@ const WorkflowPortal = ({
           moduleName: newModuleName,
         },
       }).then((res) => {
-        updateModuleList(res.data.addWorkflowModule.workflow, true)
-        setTemplate({
-          ...res.data.addWorkflowModule.workflow,
-          member,
-        })
-        onRefetch(true)
-        analytics.track(`Guided Workflow`, {
-          event: 'Form added',
-          beneId: recId,
-          staff: user ? user.email : '',
-          moduleName: newModuleName,
-          workflow: res.data.addWorkflowModule.workflow,
-        })
+        if (res.data.addWorkflowModule.status !== 200) {
+          setToastMessage({
+            ...toastMessage,
+            message: JSON.stringify(res.data.addWorkflowModule.errors),
+          })
+        } else {
+          updateModuleList(res.data.addWorkflowModule.workflow, true)
+          setTemplate({
+            ...res.data.addWorkflowModule.workflow,
+            member,
+          })
+          onRefetch(true)
+          analytics.track(`Guided Workflow`, {
+            event: 'Form added',
+            beneId: recId,
+            staff: user ? user.email : '',
+            moduleName: newModuleName,
+            workflow: res.data.addWorkflowModule.workflow,
+          })
+        }
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -393,7 +406,86 @@ const WorkflowPortal = ({
     )
   }
 
-  const saveModule = (isDraft: boolean, draftData?: any) => {
+  const persistData = async (formData: any) => {
+    try {
+      if (activeModuleName === 'Interaction log') {
+        const interactionData: any = interactionLogPayload(formData.fields)
+        const feedback: boolean =
+          interactionData.feedback && interactionData.feedback === 'Yes'
+        const outcomeMetadata: any = {
+          creator: user && user.email,
+        }
+        if (interactionData.reasonForConsultation) {
+          outcomeMetadata.reasonForConsultation =
+            interactionData.reasonForConsultation
+          delete interactionData.reasonForConsultation
+        }
+        const res = await createInteraction({
+          variables: {
+            input: {
+              ...interactionData,
+              feedback,
+              member: member['Antara ID'],
+              interactionStartedAt: dayjs(
+                interactionData.interactionStartedAt
+              ).toISOString(),
+              historyUserIdField: user && user.email,
+              healthNavigator: user && extractUsername(user.email),
+              outcomeMetadata,
+            },
+          },
+        })
+
+        if (res.data.createInteraction.status !== 200) {
+          setToastMessage({
+            ...toastMessage,
+            message: `Failed to save interaction log data`,
+          })
+          logError(res)
+          throw new Error()
+        }
+      } else {
+        const tableTosave = TABLES.find((tbl) => tbl.name === formMeta.name)
+        const tableName = TABLE_ROUTES[`${tableTosave?.name}`]
+        const res = await airtableFetch(`create/${tableName}`, 'post', formData)
+        if (res === 'Network Error') {
+          setToastMessage({
+            ...toastMessage,
+            message: 'Network Error. Changes have not been updated',
+          })
+          setSavingFinal(false)
+          throw new Error(res)
+        }
+        if (Array.isArray(res)) {
+          analytics.track(`Guided Workflow`, {
+            event: 'Form saved to airtable failed',
+            beneId: recId,
+            staff: user ? user.email : '',
+            moduleName: activeModuleName,
+            moduleData: finalPayload,
+            workflow: template,
+          })
+          setToastMessage({
+            ...toastMessage,
+            message: `Error: ${res[0].message}`,
+          })
+          setSavingFinal(false)
+          // eslint-disable-next-line
+          throw { message: `${res[0].error}` }
+        }
+      }
+    } catch (e) {
+      setSavingFinal(false)
+      setToastMessage({
+        ...toastMessage,
+        message: `Failed to save, ${e.message}`,
+      })
+      logError(e.message)
+      throw new Error(e.message)
+    }
+  }
+
+  const saveModule = async (isDraft: boolean, draftData?: any) => {
     try {
       if (isDraft) {
         if (!addingDuplicate) setSavingDraft(true)
@@ -447,8 +539,7 @@ const WorkflowPortal = ({
           })
       } else {
         setSavingFinal(true)
-        const tableTosave = TABLES.find((tbl) => tbl.name === formMeta.name)
-        finalPayload.forEach((payload) => {
+        finalPayload.forEach(async (payload) => {
           if (payload.isDraft) {
             let airtablePayload = { ...payload }
             if ('isDraft' in airtablePayload) delete airtablePayload.isDraft
@@ -478,7 +569,6 @@ const WorkflowPortal = ({
               delete airtablePayload.Member
             }
 
-            const tableName = TABLE_ROUTES[`${tableTosave?.name}`]
             let finalAirtablePayload = {
               fields: {
                 ...airtablePayload,
@@ -493,88 +583,57 @@ const WorkflowPortal = ({
                 },
               }
             }
-            airtableFetch(
-              `create/${tableName}`,
-              'post',
-              finalAirtablePayload
-            ).then((resp) => {
-              if (resp === 'Network Error') {
-                setToastMessage({
-                  ...toastMessage,
-                  message: 'Network Error. Changes have not been updated',
+            await persistData(finalAirtablePayload)
+            if (isWorkflowTemplate) {
+              const updatedFormPayload = finalPayload.map((pl) => ({
+                ...pl,
+                isDraft: false,
+              }))
+              saveModuleData({
+                variables: {
+                  moduleName: activeModuleName,
+                  workflowId: template?.workflowId,
+                  data: updatedFormPayload,
+                  draft: false,
+                },
+              }).then((res) => {
+                updateModuleList(res.data.saveModuleData.workflow)
+                setTemplate({
+                  ...res.data.saveModuleData.workflow,
+                  member,
                 })
-                setSavingFinal(false)
-                throw new Error()
-              }
-              if (Array.isArray(resp)) {
+                onRefetch(true)
                 analytics.track(`Guided Workflow`, {
-                  event: 'Form saved to airtable failed',
+                  event: 'Form saved to airtable successful',
                   beneId: recId,
                   staff: user ? user.email : '',
                   moduleName: activeModuleName,
                   moduleData: finalPayload,
-                  workflow: template,
+                  workflow: res.data.saveModuleData.workflow,
                 })
                 setToastMessage({
                   ...toastMessage,
-                  message: `Error: ${resp[0].message}`,
+                  message: 'Workflow form saved successfully',
                 })
                 setSavingFinal(false)
-                // eslint-disable-next-line
-                throw { message: `${resp[0].error}` }
-              } else if (!isWorkflowTemplate) {
-                setOpen(true)
-                setTemplate({
-                  ...template,
-                  completed: true,
-                  moduleData: {
-                    [`${template.name}`]: {
-                      filled_values: finalPayload,
-                    },
+              })
+            } else {
+              setOpen(true)
+              setTemplate({
+                ...template,
+                completed: true,
+                moduleData: {
+                  [`${template.name}`]: {
+                    filled_values: finalPayload,
                   },
-                })
-                setSavingFinal(false)
-                setToastMessage({
-                  ...toastMessage,
-                  message: `${
-                    formNames[template?.name]
-                  } form saved successfully`,
-                })
-              } else {
-                const updatedFormPayload = finalPayload.map((pl) => ({
-                  ...pl,
-                  isDraft: false,
-                }))
-                saveModuleData({
-                  variables: {
-                    moduleName: activeModuleName,
-                    workflowId: template?.workflowId,
-                    data: updatedFormPayload,
-                    draft: false,
-                  },
-                }).then((res) => {
-                  updateModuleList(res.data.saveModuleData.workflow)
-                  setTemplate({
-                    ...res.data.saveModuleData.workflow,
-                    member,
-                  })
-                  onRefetch(true)
-                  analytics.track(`Guided Workflow`, {
-                    event: 'Form saved to airtable successful',
-                    beneId: recId,
-                    staff: user ? user.email : '',
-                    moduleName: activeModuleName,
-                    moduleData: finalPayload,
-                    workflow: res.data.saveModuleData.workflow,
-                  })
-                  setToastMessage({
-                    ...toastMessage,
-                    message: 'Workflow form saved successfully',
-                  })
-                  setSavingFinal(false)
-                })
-              }
-            })
+                },
+              })
+              setSavingFinal(false)
+              setToastMessage({
+                ...toastMessage,
+                message: `${formNames[template?.name]} form saved successfully`,
+              })
+            }
           }
         })
       }
@@ -710,6 +769,7 @@ const WorkflowPortal = ({
           validatedData={validatedData}
           shouldSaveModule={shouldSaveModule}
           formMeta={formMeta}
+          member={member}
           finalPayload={finalPayload}
           setValidatedData={setValidatedData}
           setfinalPayload={setfinalPayload}

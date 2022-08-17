@@ -18,9 +18,6 @@ const updatedForms = () => {
       workflowId: null,
     })
   })
-  payload.push({
-    name: 'Interaction Log form',
-  })
   return payload
 }
 

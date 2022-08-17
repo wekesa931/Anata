@@ -20,7 +20,6 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
 import Tooltip from '@mui/material/Tooltip'
 import styles from './form.component.css'
-import InteractionLogsForm from './interaction-logs/interaction-logs-form.component'
 import WorkflowPortal from '../workflows/workflow-portal.component'
 import { formNames } from '../workflows/Forms/form-fields'
 import MemberDetailsUpdateForm from '../../summary/biodata/biodata-update/member-details-update.component'
@@ -199,10 +198,6 @@ const FormPortal = ({
   }
 
   const formRender = () => {
-    if (form.name === 'Interaction Log form') {
-      return <InteractionLogsForm form={form} onFormClose={onFormClose} />
-    }
-
     if (form.name === 'Member Details Update Form') {
       return (
         <MemberDetailsUpdateForm
