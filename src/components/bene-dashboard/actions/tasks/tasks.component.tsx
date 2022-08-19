@@ -166,6 +166,7 @@ const Tasks = () => {
     'Cancelled',
     'Not Applicable',
     'All Incomplete',
+    'On Hold',
   ]
   const { recId } = useParams()
   const fields = [
