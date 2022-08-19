@@ -13,8 +13,8 @@ const EngagementDashboard = () => {
 
   const dashboardURL =
     'https://dub01.online.tableau.com/t/kenyanairobi/views/Engagement-EmbedScribe/Story1?:showAppBanner=false&:display_count=n&:showVizHome=n&:origin=viz_share_link'
-  
-    return (
+
+  return (
     <TableauReport url={dashboardURL} filters={filters} options={options} />
   )
 }
