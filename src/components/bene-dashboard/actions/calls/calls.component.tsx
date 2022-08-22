@@ -95,7 +95,9 @@ const CallsCallout = ({
               .replace(/^(0|\+?254)/gi, '')}`,
           },
           onCallInitiated,
-          member
+          member,
+          'OUTBOUND',
+          true
         )
       } finally {
         setTimeout(() => {

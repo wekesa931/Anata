@@ -1,8 +1,16 @@
 import { gql } from '@apollo/client'
 
 const MAKE_CALL = gql`
-  mutation placeCall($recipient: String!, $antaraId: String) {
-    placeCall(recipient: $recipient, antaraId: $antaraId) {
+  mutation placeCall(
+    $recipient: String!
+    $antaraId: String
+    $dialPadUsed: Boolean
+  ) {
+    placeCall(
+      recipient: $recipient
+      antaraId: $antaraId
+      dialPadUsed: $dialPadUsed
+    ) {
       status
       message
       session

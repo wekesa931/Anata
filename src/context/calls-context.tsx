@@ -82,7 +82,8 @@ type ContextType = {
     callContact: CallContact,
     onCallInitiated: () => void,
     memberDetails: any,
-    type?: string
+    type?: string,
+    dialPadUsed?: boolean
   ) => void
   initiateTransfer: (staff: {
     phone: string
@@ -382,7 +383,8 @@ function CallProvider({ children }: any) {
     callContact: CallContact,
     onCallInitiated: (call: Call) => void,
     memberDetails: any,
-    type = 'OUTBOUND'
+    type = 'OUTBOUND',
+    dialPadUsed = false
   ) => {
     if (
       activeCall &&
@@ -396,6 +398,7 @@ function CallProvider({ children }: any) {
         variables: {
           antaraId: memberDetails['Antara ID'],
           recipient: phoneNum,
+          dialPadUsed,
         },
       })
         .then((response) => {
