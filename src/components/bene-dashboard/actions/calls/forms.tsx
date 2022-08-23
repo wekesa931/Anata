@@ -6,6 +6,7 @@ import airtableFetch from '../../../../resources/airtable-fetch'
 import Notification from '../../../utils/notification/notification.component'
 import { useFormPortal } from '../../../../context/forms-context'
 import { useCall } from '../../../../context/calls-context'
+import { formNames } from '../workflows/Forms/form-fields'
 
 const CallConsoleForms = ({ height }: { height: string }) => {
   const { memberData } = useCall()
@@ -106,7 +107,7 @@ const CallConsoleForms = ({ height }: { height: string }) => {
                   <Icon name="clock" fill="#ffffff" width={16} height={16} />
                 </span>
               )}
-              <p>{form.name}</p>
+              <p>{formNames[form.name]}</p>
             </button>
           ))}
         </div>

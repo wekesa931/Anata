@@ -24209,10 +24209,4 @@ const StagingSchema = [
     ],
   },
 ]
-const returnType =
-  process.env.ANTARA_HNOS_BACKEND ===
-  'https://memberdb-staging.herokuapp.com/scribe/graphql/'
-    ? StagingSchema
-    : ProductionSchema
-
-export default returnType
+export default process.env.PROD ? ProductionSchema : StagingSchema

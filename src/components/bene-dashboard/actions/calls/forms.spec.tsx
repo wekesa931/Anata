@@ -37,7 +37,7 @@ describe('<CallConsoleForms />', () => {
       </MockedProvider>
     )
     const interactorTypeField = wrapper.getByPlaceholderText('Search form...')
-    fireEvent.change(interactorTypeField, { target: { value: 'Baseline' } })
-    expect(wrapper.getAllByText('Baseline')).not.toBeNull()
+    fireEvent.change(interactorTypeField, { target: { value: 'Appointment' } })
+    expect(wrapper.getAllByText('Appointment Form')).not.toBeNull()
   })
 })
