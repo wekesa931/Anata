@@ -14,10 +14,13 @@ import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
 import analytics from '../../../../helpers/segment'
 import PrescriptionName from './PrescriptionNames'
 import CallsCallout from '../calls/calls.component'
+import FORMS from '../workflows/Forms/form-fields-complete'
 
 import { GET_MEMBER_TASKS } from '../../../../gql/hn_tasks'
 import { useMember } from '../../../../context/member.context'
 import logError from '../../../utils/Bugsnag/Bugsnag'
+import { useFormPortal } from '../../../../context/forms-context'
+import { WorkflowMeta } from '../workflows/workflow-types'
 
 type RecordWithId = { data: any; id: string }
 
@@ -155,6 +158,7 @@ function useMergedRecords(
 const Tasks = () => {
   const [allTasks, setAllTasks] = useState<any[]>([])
   const [filteredTasks, setFilteredTasks] = useState<any[]>([])
+  const { addOpenForm } = useFormPortal()
 
   const [upnextTasks, setUpnextTasks] = useState<any[]>([])
 
@@ -267,15 +271,31 @@ const Tasks = () => {
               )}
               {hnTask['Open URL'] && hnTask['Open URL'].url && (
                 <Tooltip title="Open URL">
-                  <a
-                    href={hnTask['Open URL'].url}
-                    target="__blank"
+                  <button
                     className="btn-unstyled"
                     data-testid="task-url-link"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      let url = hnTask['Open URL']?.url
+                      if (url) {
+                        url = url.split('/').pop().split('?')
+                        const formMeta = FORMS.find(
+                          (fm) => fm.formId === url[0]
+                        )
+                        formMeta &&
+                          addOpenForm({
+                            name: formMeta.name,
+                            member,
+                          } as WorkflowMeta)
+                      }
+                      e.stopPropagation()
+                    }}
                   >
-                    <ExternalLink width={16} height={16} />
-                  </a>
+                    <ExternalLink
+                      color="var(--blue-50)"
+                      width={16}
+                      height={16}
+                    />
+                  </button>
                 </Tooltip>
               )}
               {hnTask.Type && hnTask.Type.toLowerCase().includes('call') && (
@@ -343,7 +363,7 @@ const Tasks = () => {
           .slice(0, 2)
       )
     }
-  }, [mergedRecords])
+  }, [mergedRecords, member, addOpenForm])
 
   const getPriorityColor = (priority: string) => {
     switch (priority.toLowerCase()) {

@@ -1,11 +1,13 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { every, isEmpty } from 'lodash'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Snackbar from '@mui/material/Snackbar'
+import { Button } from '@mui/material'
 import WorkflowFormsInput from './workflow-forms-input'
 import styles from '../guided-workflows.component.css'
-import { FormSectionInput } from '../workflow-types'
+import FORMS from './form-fields-complete'
+import { FormSectionInput, WorkflowMeta } from '../workflow-types'
 import validationRules from './validation-schema'
 import CalendlyLink from './CalendlyLink'
 
@@ -21,8 +23,8 @@ const FormSection = ({
   activeModuleName,
   isToastOpen,
   template,
-  member,
   airtableMeta,
+  addOpenForm,
   setfinalPayload,
   resetActiveModule,
   setFormPayload,
@@ -114,11 +116,19 @@ const FormSection = ({
     setFormError(allErrors)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formPayload, Object.keys(errors).length])
+
   const renderFormState = () => {
     return (
       <div className={styles.formFieldsContainer}>
         {formMeta.fields.map((field) => {
-          const fieldName = field.name
+          const openForm = () => {
+            const formData = FORMS.find((fm) => fm.formId === field.formId)
+            formData &&
+              addOpenForm({
+                name: formData.name,
+                member: template?.member,
+              } as WorkflowMeta)
+          }
           if (!field.condition || field.condition(getValues())) {
             let fieldValue: any = null
             if (activeModule) {
@@ -127,17 +137,24 @@ const FormSection = ({
               resetActiveModule()
             }
             return (
-              <Fragment key={field.id}>
+              <span className={styles.fieldWrapper} key={field.id}>
+                {field.formId && (
+                  <Button
+                    variant="contained"
+                    className={`${styles.linkButton} mb-ten`}
+                    onClick={openForm}
+                  >
+                    {field.ctlabel}
+                  </Button>
+                )}
                 <WorkflowFormsInput
                   control={control}
-                  error={errors[fieldName]}
+                  error={errors[field.name]}
                   disabled={disabled || !activeModule?.isDraft}
                   value={fieldValue}
-                  helperText={field.helper}
                   field={{ ...field, parentTableId: formMeta.id }}
                   template={template}
                   airtableMeta={airtableMeta}
-                  fieldName={fieldName}
                   saveInput={(name: string, value: any) => {
                     setIsFormEdited(true)
                     const newPayload = {
@@ -156,9 +173,9 @@ const FormSection = ({
                 <CalendlyLink
                   field={field}
                   formPayload={formPayload}
-                  member={member}
+                  member={template?.member}
                 />
-              </Fragment>
+              </span>
             )
           }
           return null

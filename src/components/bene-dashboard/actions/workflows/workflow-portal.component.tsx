@@ -40,7 +40,12 @@ import ToastNotification, {
 import FormSection from './Forms/form-section'
 import TABLE_ROUTES from '../../../utils/airtable-tables/table-routes'
 import TABLES from './Forms/form-fields-complete'
-import { ConfirmButtonProps, FormMeta, IWorkflow } from './workflow-types'
+import {
+  ConfirmButtonProps,
+  FormMeta,
+  IWorkflow,
+  WorkflowMeta,
+} from './workflow-types'
 import {
   DUPLICATE_DEFAULTS,
   duplicates,
@@ -54,7 +59,8 @@ type IProps = {
   workflow: IWorkflow
   isFormEdited: boolean
   openedForms: any[]
-  closeForm: (openForm: any[], healthNavigator: any) => void
+  airtableMeta: any
+  addOpenForm: (openForm: WorkflowMeta) => void
   onFormClose: (pointer: any, isWorkflow: boolean) => void
   setIsFormEdited: (touched: boolean) => void
   onRefetch: (onRefetch: boolean) => void
@@ -94,6 +100,7 @@ const WorkflowPortal = ({
   workflow: openedWorkflow,
   isFormEdited,
   airtableMeta,
+  addOpenForm,
   onFormClose,
   setIsFormEdited,
   onRefetch,
@@ -701,20 +708,21 @@ const WorkflowPortal = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [template])
-
   useEffect(() => {
     const form = TABLES.find((frm) => frm.name === activeModuleName)
     if (form) {
       setFormMeta({ ...form })
     }
     if (template?.moduleData[activeModuleName]) {
-      setFormPayload({
-        ...template?.moduleData[activeModuleName].filled_values,
+      let newPayload = template?.moduleData[activeModuleName].filled_values
+      newPayload = newPayload.map((py) => ({
+        ...py,
         updatedBy: {
           email: user?.email,
           name: user?.name,
         },
-      })
+      }))
+      setFormPayload(newPayload)
     } else {
       const formValues = initialFormValues(member)
       let values = {}
@@ -783,7 +791,6 @@ const WorkflowPortal = ({
           validatedData={validatedData}
           shouldSaveModule={shouldSaveModule}
           formMeta={formMeta}
-          member={member}
           finalPayload={finalPayload}
           setValidatedData={setValidatedData}
           setfinalPayload={setfinalPayload}
@@ -791,6 +798,7 @@ const WorkflowPortal = ({
           setFormPayload={setFormPayload}
           setIsFormEdited={setIsFormEdited}
           saveModule={saveModule}
+          addOpenForm={addOpenForm}
           setShouldSaveModule={setShouldSaveModule}
           isToastOpen={isToastOpen}
           formPayload={formPayload}

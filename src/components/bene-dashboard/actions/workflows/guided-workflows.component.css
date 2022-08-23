@@ -646,3 +646,15 @@ input::-webkit-outer-spin-button {
   text-transform: capitalize !important;
   font-family: Rubik, sans-serif;
 }
+
+.fieldWrapper {
+  position: relative;
+}
+
+.linkButton {
+  position: absolute !important;
+  bottom: 60px;
+  font-size: 11px !important;
+  text-transform: capitalize !important;
+  font-family: Rubik, sans-serif;
+}

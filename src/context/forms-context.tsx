@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState } from 'react'
+import dayjs from 'dayjs'
+import { WorkflowMeta } from '../components/bene-dashboard/actions/workflows/workflow-types'
 import airtableFetch from '../resources/airtable-fetch'
 import FormPortal from '../components/bene-dashboard/actions/forms/forms-portal.component'
 import logError from '../components/utils/Bugsnag/Bugsnag'
@@ -30,11 +32,7 @@ type FormContextType = {
   airtableMeta: any
   openedForms: Form[]
   onRefetch: (refetch: boolean) => void
-  addOpenForm: (
-    openForm: Form[],
-    healthNavigator: HN,
-    memberDetails?: any
-  ) => void
+  addOpenForm: (openForm: WorkflowMeta) => void
   onFormClose: (pointer: any, isWorkflow: boolean) => void
 }
 
@@ -51,20 +49,37 @@ const FormProvider = ({ children }: any) => {
   const [airtableMeta, setAirtableMeta] = useState<any>(null)
   const [shouldRefetch, setshouldRefetch] = useState(false)
   const [openedForms, setOpenedForms] = useState<Form[]>([])
-  const [hNavigator, setHNavigator] = useState<HN | null>()
   const [memberDetails, setMemberDetails] = useState<any | null>(null)
 
   const onRefetch = (refetch: boolean) => {
     setshouldRefetch(refetch)
   }
 
-  const addOpenForm = (openForm: Form[], healthNavigator: HN, member?: any) => {
-    setOpenedForms(openForm)
-    setHNavigator(healthNavigator)
-
-    if (member) {
-      setMemberDetails(member)
+  const addOpenForm = (openForm: WorkflowMeta) => {
+    if (openForm.workflowId) {
+      setOpenedForms([...openedForms, openForm])
+    } else {
+      const isFormOpen = openedForms.find(
+        (fm: any) => fm.name === openForm.name
+      )
+      if (isFormOpen) return
+      const form = {
+        name: openForm?.name,
+        airtableId: null,
+        completed: false,
+        createdAt: dayjs().format(),
+        currentModules: [openForm?.name],
+        id: dayjs().toISOString(),
+        member: openForm.member,
+        moduleData: {},
+        modules: [{ id: '1', name: openForm?.name }],
+        template: { id: '2', name: openForm?.name },
+        updatedAt: dayjs().format(),
+        workflowId: null,
+      }
+      setOpenedForms([...openedForms, form])
     }
+    setMemberDetails(openForm.member)
   }
   const onFormClose = (pointer: any, isWorkflow: boolean) => {
     let validForms: any[] = []
@@ -121,10 +136,9 @@ const FormProvider = ({ children }: any) => {
           <FormPortal
             form={fm}
             formNum={idx}
-            hn={hNavigator}
             airtableMeta={airtableMeta}
             openedForms={openedForms}
-            closeForm={addOpenForm}
+            addOpenForm={addOpenForm}
             onFormClose={onFormClose}
             onRefetch={onRefetch}
             memberDetails={memberDetails}

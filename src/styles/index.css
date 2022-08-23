@@ -302,7 +302,7 @@ h6,
 }
 
 .mb-ten {
-  margin-bottom: 10px;
+  margin-bottom: 10px !important;
 }
 
 .text-blue-light {

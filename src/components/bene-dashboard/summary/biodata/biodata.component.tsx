@@ -604,7 +604,7 @@ type SnackBarData = {
 
 const BioData = () => {
   const [snackbarData, setSnackbarData] = useState<SnackBarData | null>(null)
-  const { openedForms, addOpenForm, onFormClose } = useFormPortal()
+  const { addOpenForm, onFormClose } = useFormPortal()
 
   const { member, memberContact } = useMember()
   const hasDependants = memberContact?.dependents.length > 0
@@ -662,11 +662,7 @@ const BioData = () => {
   const openUpdateMemberForm = () => {
     // clear snackbar error
     closeSnackbar()
-    addOpenForm(
-      [...openedForms, { name: formTitle }],
-      { 'Record ID': '' },
-      memberDetails
-    )
+    addOpenForm({ name: formTitle, member: memberDetails })
   }
 
   const getBioDataTitle = () =>

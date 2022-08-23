@@ -22,7 +22,7 @@ import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import logError from '../../../utils/Bugsnag/Bugsnag'
 import analytics from '../../../../helpers/segment'
 import { useUser } from '../../../../context/user-context'
-import { HN, useFormPortal } from '../../../../context/forms-context'
+import { useFormPortal } from '../../../../context/forms-context'
 import { IWorkflow } from './workflow-types'
 import airtableFetch from '../../../../resources/airtable-fetch'
 
@@ -39,8 +39,7 @@ const GuidedWorkflows = () => {
   const [loadedTemplate, setloadedTemplate] = useState<any>(null)
   const [workflowOptions, setWorkflowOptions] = useState<string[]>([])
   const [templateName, setTemplateName] = useState<string | null>(null)
-  const { addOpenForm, onRefetch, openedForms, shouldRefetch, isFormEdited } =
-    useFormPortal()
+  const { addOpenForm, onRefetch, shouldRefetch, openedForms } = useFormPortal()
   const {
     data: loadedWorkflows,
     loading: gettingWorkflows,
@@ -71,8 +70,11 @@ const GuidedWorkflows = () => {
     </div>
   )
   const viewWorkflow = (payload: any) => {
-    const formsOpen = openedForms.filter((fm: any) => !fm.workflowId)
-    addOpenForm([...formsOpen, { ...payload, member }], {} as HN)
+    const isWorkflowOpen = openedForms.find(
+      (fm: any) => fm.workflowId === payload.workflowId
+    )
+    if (isWorkflowOpen) return
+    addOpenForm({ ...payload, member })
     setTemplateName(null)
   }
   const closeToast = () => {
@@ -273,18 +275,7 @@ const GuidedWorkflows = () => {
                     <Button
                       className={styles.workflowBtn}
                       variant="contained"
-                      onClick={() => {
-                        if (isFormEdited) {
-                          setToastMessage({
-                            time: 5000,
-                            type: 'GENERAL',
-                            message:
-                              'Save or close the current open workflow to continue',
-                          })
-                        } else {
-                          viewWorkflow(workflow)
-                        }
-                      }}
+                      onClick={() => viewWorkflow(workflow)}
                     >
                       {workflow.completed ? 'View' : 'Resume'}
                     </Button>
@@ -324,17 +315,7 @@ const GuidedWorkflows = () => {
         <Button
           id={styles.newWorkflowBtn}
           variant="text"
-          onClick={() => {
-            if (isFormEdited) {
-              setToastMessage({
-                time: 5000,
-                type: 'GENERAL',
-                message: 'Save or close the current open workflow to continue',
-              })
-            } else {
-              setWorflowOptionsOpen(true)
-            }
-          }}
+          onClick={() => setWorflowOptionsOpen(true)}
         >
           Create new workflow
         </Button>

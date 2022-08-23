@@ -23,6 +23,7 @@ import styles from './form.component.css'
 import WorkflowPortal from '../workflows/workflow-portal.component'
 import { formNames } from '../workflows/Forms/form-fields'
 import MemberDetailsUpdateForm from '../../summary/biodata/biodata-update/member-details-update.component'
+import { WorkflowMeta } from '../workflows/workflow-types'
 
 type IForm = {
   name: string
@@ -41,9 +42,9 @@ type FormProps = {
   openedForms: IForm[]
   form: IForm
   hn?: HN
-  closeForm: (openForm: IForm[], healthNavigator: HN) => void
   onFormClose: (pointer: any, isWorkflow: boolean) => void
   onRefetch: (refetch: boolean) => void
+  addOpenForm: (openForm: WorkflowMeta) => void
   airtableMeta: any
   formNum: number
   memberDetails: any
@@ -54,7 +55,7 @@ const FormPortal = ({
   openedForms,
   airtableMeta,
   formNum,
-  closeForm,
+  addOpenForm,
   onFormClose,
   onRefetch,
   memberDetails,
@@ -214,10 +215,10 @@ const FormPortal = ({
         setIsFormEdited={setIsFormEdited}
         openedForms={openedForms}
         workflow={form}
+        addOpenForm={addOpenForm}
         airtableMeta={airtableMeta}
         onRefetch={onRefetch}
         onFormClose={onFormClose}
-        closeForm={closeForm}
       />
     )
   }

@@ -30,11 +30,27 @@ export type FormMeta = {
   }[]
 }
 
+export type WorkflowMeta = {
+  name: string
+  airtableId: string
+  completed: boolean
+  createdAt: string
+  currentModules: any[]
+  id: string
+  member: any
+  moduleData: any
+  modules: any[]
+  template: any
+  updatedAt: string
+  workflowId: string
+}
+
 export type FormSectionInput = {
   index: number
   setFormError: (data: any) => void
   setValidatedData: (data: any[]) => void
   setfinalPayload: (data: any[]) => void
+  addOpenForm: (openForm: WorkflowMeta) => void
   modId: any
   finalPayload: any
   formError: any
@@ -59,25 +75,30 @@ export type FormSectionInput = {
 export type ConfirmButtonProps = {
   onConfirm: () => void
 }
+
+export type FormSchema = {
+  parentTableId?: string
+  required: boolean
+  type: string
+  name: string
+  id: string
+  helper?: string
+  options?: { choices: any[] }
+  isDateTime: boolean
+  symmetricColumnId: string
+  unreversed: boolean
+  relationship: string
+  formId?: string
+  ctlabel?: string
+  foreignTableId: string
+}
+
 export type Form = {
   value: any
-  fieldName: string
   template?: any
-  field: {
-    parentTableId?: string
-    required: boolean
-    type: string
-    name: string
-    id: string
-    options?: { choices: any[] }
-    isDateTime: boolean
-    symmetricColumnId: string
-    unreversed: boolean
-    relationship: string
-    foreignTableId: string
-  }
+  field: FormSchema
   airtableMeta?: any
-  helperText: string
+  parentTableId?: string
   type?: string
   disabled: boolean
   control: any

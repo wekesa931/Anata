@@ -1,34 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import { Search } from 'react-feather'
-import airtableFetch from '../../../../resources/airtable-fetch'
-import { useAuth } from '../../../../context/auth-context'
 import FORMS from './forms'
 import { useFormPortal } from '../../../../context/forms-context'
 import { useMember } from '../../../../context/member.context'
 import { formNames } from '../workflows/Forms/form-fields'
 
 const Forms = () => {
-  const [hn, setHN] = useState<any>({})
-  const { user } = useAuth()
   const { member } = useMember()
-  const { addOpenForm, openedForms } = useFormPortal()
+  const { addOpenForm } = useFormPortal()
 
   const [searchForm, setSearchForm] = useState<any[]>(FORMS)
-
-  useEffect(() => {
-    if (user && user.email) {
-      airtableFetch(
-        `team/list?filterByFormula=FIND("${user.email}", {Email})`
-      ).then((res) => {
-        const currentHN = Object.keys(res).map((key: any) => res[key])
-        if (currentHN.length) {
-          setHN(currentHN[0])
-        }
-      })
-    }
-  }, [user])
 
   return (
     <div className="d-flex flex-direction-column">
@@ -66,9 +49,7 @@ const Forms = () => {
         </div>
         {searchForm.map((form) => (
           <button
-            onClick={() =>
-              addOpenForm([...openedForms, { ...form, member }], hn)
-            }
+            onClick={() => addOpenForm({ ...form, member })}
             className="full-width btn btn-secondary form-btns"
             key={form.name}
           >

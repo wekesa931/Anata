@@ -40,13 +40,46 @@ const Pointer = () => (
   <span style={{ color: 'var(--dark-blue-70)' }}>&nbsp;*</span>
 )
 
+const HelperText = ({ error, field }: any) => {
+  return (
+    <div>
+      <p
+        style={{ whiteSpace: 'initial' }}
+        className={
+          error?.message ? `${styles.fieldNameError}` : `${styles.fieldLabel}`
+        }
+      >
+        {field.name}
+        {field.required && <Pointer />}
+      </p>
+      <p
+        style={{ marginBottom: field.formId ? '60px' : '' }}
+        className={styles.helperText}
+      >
+        {parse(field.helper)}
+      </p>
+    </div>
+  )
+}
+const Label = ({ error, field }: any) => {
+  return (
+    <p
+      className={
+        error?.message
+          ? `${styles.fieldNameError}`
+          : `${field.helper ? styles.fieldLabelBlurred : styles.fieldLabel}`
+      }
+    >
+      {field.name}
+      {field.required && <Pointer />}
+    </p>
+  )
+}
 const WorkflowFormsInput = ({
   value,
   field,
-  fieldName,
   disabled,
   control,
-  helperText,
   error,
   template,
   airtableMeta,
@@ -62,9 +95,7 @@ const WorkflowFormsInput = ({
           <LinkRecordInput
             value={value}
             template={template}
-            fieldName={fieldName}
             disabled={disabled}
-            helperText={helperText}
             field={field}
             airtableMeta={airtableMeta}
             saveInput={saveInput}
@@ -81,9 +112,7 @@ const WorkflowFormsInput = ({
       return (
         <SingleSelectOption
           value={value}
-          fieldName={fieldName}
           disabled={disabled}
-          helperText={helperText}
           field={field}
           airtableMeta={airtableMeta}
           saveInput={saveInput}
@@ -97,10 +126,8 @@ const WorkflowFormsInput = ({
         <MultiSelectMultipleInput
           value={value}
           disabled={disabled}
-          fieldName={fieldName}
           field={field}
           airtableMeta={airtableMeta}
-          helperText={helperText}
           saveInput={saveInput}
           control={control}
           error={error}
@@ -113,8 +140,6 @@ const WorkflowFormsInput = ({
           value={value}
           disabled={disabled}
           field={field}
-          fieldName={fieldName}
-          helperText={helperText}
           saveInput={saveInput}
           control={control}
           error={error}
@@ -130,8 +155,6 @@ const WorkflowFormsInput = ({
           value={value}
           disabled={disabled}
           field={field}
-          fieldName={fieldName}
-          helperText={helperText}
           saveInput={saveInput}
           control={control}
           error={error}
@@ -144,8 +167,6 @@ const WorkflowFormsInput = ({
           value={value}
           disabled={disabled}
           field={field}
-          fieldName={fieldName}
-          helperText={helperText}
           saveInput={saveInput}
           control={control}
           error={error}
@@ -157,8 +178,6 @@ const WorkflowFormsInput = ({
           value={value}
           disabled={disabled}
           field={field}
-          fieldName={fieldName}
-          helperText={helperText}
           saveInput={saveInput}
           control={control}
           error={error}
@@ -173,8 +192,6 @@ const SingleSelectOption = ({
   value,
   field,
   disabled,
-  fieldName,
-  helperText,
   airtableMeta,
   saveInput,
   control,
@@ -191,8 +208,6 @@ const SingleSelectOption = ({
         disabled={disabled}
         field={field}
         airtableMeta={airtableMeta}
-        fieldName={fieldName}
-        helperText={helperText}
         saveInput={saveInput}
         control={control}
         error={error}
@@ -202,11 +217,9 @@ const SingleSelectOption = ({
   return (
     <SingleSelectView
       value={value}
-      fieldName={fieldName}
       disabled={disabled}
       airtableMeta={airtableMeta}
       field={field}
-      helperText={helperText}
       saveInput={saveInput}
       control={control}
       error={error}
@@ -218,8 +231,6 @@ const SingleSelectInput = ({
   value,
   disabled,
   field,
-  helperText,
-  fieldName,
   airtableMeta,
   saveInput,
   control,
@@ -244,7 +255,7 @@ const SingleSelectInput = ({
 
   return (
     <Controller
-      name={fieldName}
+      name={field.name}
       defaultValue={value}
       control={control}
       rules={{ required: true }}
@@ -262,39 +273,10 @@ const SingleSelectInput = ({
           }}
           renderInput={(params) => (
             <>
-              {helperText && (
-                <div>
-                  <p
-                    className={
-                      error?.message
-                        ? `${styles.fieldNameError}`
-                        : `${styles.fieldLabel}`
-                    }
-                  >
-                    {field.name}
-                    {field.required && <Pointer />}
-                  </p>
-                  <p className={styles.helperText}>{parse(helperText)}</p>
-                </div>
-              )}
+              {field.helper && <HelperText field={field} error={error} />}
               <TextField
                 {...params}
-                label={
-                  <p
-                    className={
-                      error?.message
-                        ? `${styles.fieldNameError}`
-                        : `${
-                            helperText
-                              ? styles.fieldLabelBlurred
-                              : styles.fieldLabel
-                          }`
-                    }
-                  >
-                    {field.name}
-                    {field.required && <Pointer />}
-                  </p>
-                }
+                label={<Label field={field} error={error} />}
               />
               {error && (
                 <FormHelperText className={styles.fieldLabelError}>
@@ -313,8 +295,6 @@ const SingleSelectView = ({
   value,
   field,
   disabled,
-  fieldName,
-  helperText,
   airtableMeta,
   saveInput,
   control,
@@ -356,50 +336,21 @@ const SingleSelectView = ({
 
   return (
     <Controller
-      name={fieldName}
+      name={field.name}
       defaultValue={value}
       control={control}
       rules={{ required: true }}
       render={({ field: { onChange } }) => {
         return (
           <>
-            {helperText && (
-              <div>
-                <p
-                  className={
-                    error?.message
-                      ? `${styles.fieldNameError}`
-                      : `${styles.fieldLabel}`
-                  }
-                >
-                  {field.name}
-                  {field.required && <Pointer />}
-                </p>
-                <p>
-                  <p className={styles.helperText}>{parse(helperText)}</p>
-                </p>
-              </div>
-            )}
+            {field.helper && <HelperText field={field} error={error} />}
             <FormControl
               className={`${styles.singleSelectView}`}
               component="fieldset"
             >
-              {!helperText && (
+              {!field.helper && (
                 <FormLabel component="legend">
-                  <p
-                    className={
-                      error?.message
-                        ? `${styles.fieldNameError}`
-                        : `${
-                            helperText
-                              ? styles.fieldLabelBlurred
-                              : styles.fieldLabel
-                          }`
-                    }
-                  >
-                    {field.name}
-                    {field.required && <Pointer />}
-                  </p>
+                  <Label field={field} error={error} />
                 </FormLabel>
               )}
               <RadioGroup
@@ -441,8 +392,6 @@ const SingleSelectView = ({
 const MultiSelectMultipleInput = ({
   value: checkedValues,
   field,
-  fieldName,
-  helperText,
   saveInput,
   airtableMeta,
   disabled,
@@ -457,27 +406,15 @@ const MultiSelectMultipleInput = ({
   }
   return (
     <Controller
-      name={fieldName}
+      name={field.name}
       control={control}
       defaultValue={checkedValues}
       rules={{ required: true }}
       render={({ field: { onChange, value: val } }) => (
         <>
-          {helperText && (
+          {field.helper && (
             <InputLabel>
-              <div>
-                <p
-                  className={
-                    error?.message
-                      ? `${styles.fieldNameError}`
-                      : `${styles.fieldLabel}`
-                  }
-                >
-                  {field.name}
-                  {field.required && <Pointer />}
-                </p>
-                <p className={styles.helperText}>{parse(helperText)}</p>
-              </div>
+              <HelperText field={field} error={error} />
             </InputLabel>
           )}
           <Autocomplete
@@ -507,22 +444,7 @@ const MultiSelectMultipleInput = ({
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={
-                  <p
-                    className={
-                      error?.message
-                        ? `${styles.fieldNameError}`
-                        : `${
-                            helperText
-                              ? styles.fieldLabelBlurred
-                              : styles.fieldLabel
-                          }`
-                    }
-                  >
-                    {field.name}
-                    {field.required && <Pointer />}
-                  </p>
-                }
+                label={<Label field={field} error={error} />}
               />
             )}
           />
@@ -542,15 +464,12 @@ const TextInputField = ({
   field,
   disabled,
   type,
-  helperText,
-  fieldName,
   saveInput,
   control,
   error,
 }: Form) => {
   const [shouldShrink, setShouldShrink] = useState(false)
   const [numError, setNumError] = useState(false)
-
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     saveInput(field.name, event.target.value)
   }
@@ -563,27 +482,15 @@ const TextInputField = ({
       autoComplete="off"
     >
       <Controller
-        name={fieldName}
+        name={field.name}
         control={control}
         defaultValue={value}
         rules={{ required: true }}
         render={({ field: { onChange, value: val } }) => (
           <>
-            {helperText && (
+            {field.helper && (
               <InputLabel>
-                <div>
-                  <p
-                    style={{ whiteSpace: 'initial' }}
-                    className={
-                      error?.message
-                        ? `${styles.fieldNameError}`
-                        : `${styles.fieldLabel}`
-                    }
-                  >
-                    {field.name} {field.required && <Pointer />}
-                  </p>
-                  <p className={styles.helperText}>{parse(helperText)}</p>
-                </div>
+                <HelperText field={field} error={error} />
               </InputLabel>
             )}
             <TextField
@@ -614,21 +521,7 @@ const TextInputField = ({
                   onChange(e)
                 }
               }}
-              label={
-                <p
-                  className={
-                    error?.message
-                      ? `${styles.fieldNameError}`
-                      : `${
-                          helperText
-                            ? styles.fieldLabelBlurred
-                            : styles.fieldLabel
-                        }`
-                  }
-                >
-                  {field.name} {field.required && <Pointer />}
-                </p>
-              }
+              label={<Label field={field} error={error} />}
               variant="outlined"
             />
             {numError && (
@@ -652,8 +545,6 @@ const RichTextInputField = ({
   value,
   field,
   disabled,
-  helperText,
-  fieldName,
   saveInput,
   control,
   error,
@@ -690,27 +581,17 @@ const RichTextInputField = ({
       autoComplete="off"
     >
       <Controller
-        name={fieldName}
+        name={field.name}
         control={control}
         defaultValue={value}
         rules={{ required: true }}
         render={({ field: { onChange } }) => (
           <>
-            <InputLabel>
-              <div>
-                <p
-                  style={{ whiteSpace: 'initial' }}
-                  className={
-                    error?.message
-                      ? `${styles.fieldNameError}`
-                      : `${styles.fieldLabel}`
-                  }
-                >
-                  {field.name} {field.required && <Pointer />}
-                </p>
-                <p className={styles.helperText}>{parse(helperText)}</p>
-              </div>
-            </InputLabel>
+            {field.helper && (
+              <InputLabel>
+                <HelperText field={field} error={error} />
+              </InputLabel>
+            )}
             {!disabled && (
               <Editor
                 editorState={editorState}
@@ -743,11 +624,9 @@ const RichTextInputField = ({
 const LinkRecordInput = ({
   value: linkedValue,
   field,
-  helperText,
   saveInput,
-  template,
   airtableMeta,
-  fieldName,
+  template,
   disabled,
   control,
   error,
@@ -870,27 +749,15 @@ const LinkRecordInput = ({
 
   return (
     <Controller
-      name={fieldName}
+      name={field.name}
       defaultValue={linkedValue}
       control={control}
       rules={{ required: true }}
       render={({ field: { onChange } }) => (
         <>
-          {helperText && (
+          {field.helper && (
             <InputLabel>
-              <div>
-                <p
-                  className={
-                    error?.message
-                      ? `${styles.fieldNameError}`
-                      : `${styles.fieldLabel}`
-                  }
-                >
-                  {field.name}
-                  {field.required && <Pointer />}
-                </p>
-                <p className={styles.helperText}>{parse(helperText)}</p>
-              </div>
+              <HelperText field={field} error={error} />
             </InputLabel>
           )}
           <Autocomplete
@@ -916,22 +783,7 @@ const LinkRecordInput = ({
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={
-                  <p
-                    className={
-                      error?.message
-                        ? `${styles.fieldNameError}`
-                        : `${
-                            helperText
-                              ? styles.fieldLabelBlurred
-                              : styles.fieldLabel
-                          }`
-                    }
-                  >
-                    {field.name}
-                    {field.required && <Pointer />}
-                  </p>
-                }
+                label={<Label field={field} error={error} />}
               />
             )}
             renderOption={(props, option, { selected }) => {
@@ -963,9 +815,7 @@ const LinkRecordInput = ({
 const DateInputField = ({
   value: dateValue,
   field,
-  helperText,
   saveInput,
-  fieldName,
   disabled,
   control,
   error,
@@ -999,45 +849,18 @@ const DateInputField = ({
       autoComplete="off"
     >
       <Controller
-        name={fieldName}
+        name={field.name}
         control={control}
         defaultValue={dateValue}
         rules={{ required: true }}
         render={({ field: { onChange } }) => (
           <>
-            {helperText && (
-              <div>
-                <p
-                  className={
-                    error?.message
-                      ? `${styles.fieldNameError}`
-                      : `${styles.fieldLabel}`
-                  }
-                >
-                  {field.name} {field.required && <Pointer />}
-                </p>
-                <p className={styles.helperText}>{parse(helperText)}</p>
-              </div>
-            )}
+            {field.helper && <HelperText field={field} error={error} />}
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               {field.isDateTime ? (
                 <DateTimePicker
                   renderInput={(props) => <TextField {...props} />}
-                  label={
-                    <p
-                      className={
-                        error?.message
-                          ? `${styles.fieldNameError}`
-                          : `${
-                              helperText
-                                ? styles.fieldLabelBlurred
-                                : styles.fieldLabel
-                            }`
-                      }
-                    >
-                      {field.name} {field.required && <Pointer />}
-                    </p>
-                  }
+                  label={<Label field={field} error={error} />}
                   disabled={disabled}
                   value={value}
                   onChange={(newValue: Date | null) => {
@@ -1047,21 +870,7 @@ const DateInputField = ({
                 />
               ) : (
                 <MobileDatePicker
-                  label={
-                    <p
-                      className={
-                        error?.message
-                          ? `${styles.fieldNameError}`
-                          : `${
-                              helperText
-                                ? styles.fieldLabelBlurred
-                                : styles.fieldLabel
-                            }`
-                      }
-                    >
-                      {field.name} {field.required && <Pointer />}
-                    </p>
-                  }
+                  label={<Label field={field} error={error} />}
                   inputFormat="dd/MM/yyyy"
                   disabled={disabled}
                   value={value}

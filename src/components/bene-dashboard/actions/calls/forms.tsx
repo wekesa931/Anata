@@ -1,8 +1,6 @@
 import * as React from 'react'
 import Icon from '../../../utils/icon/icon.component'
-import { useAuth } from '../../../../context/auth-context'
 import FORMS from '../forms/forms'
-import airtableFetch from '../../../../resources/airtable-fetch'
 import Notification from '../../../utils/notification/notification.component'
 import { useFormPortal } from '../../../../context/forms-context'
 import { useCall } from '../../../../context/calls-context'
@@ -10,26 +8,11 @@ import { formNames } from '../workflows/Forms/form-fields'
 
 const CallConsoleForms = ({ height }: { height: string }) => {
   const { memberData } = useCall()
-  const { addOpenForm, openedForms } = useFormPortal()
-  const [hn, setHN] = React.useState<any>({})
-  const { user } = useAuth()
+  const { addOpenForm } = useFormPortal()
   const [filteredForms, setfilteredForms] = React.useState(FORMS)
   const [showError, setshowError] = React.useState(false)
   const [focused, setFocused] = React.useState(false)
   const [formName, setformName] = React.useState('')
-
-  React.useEffect(() => {
-    if (user && user.email) {
-      airtableFetch(
-        `team/list?filterByFormula=FIND("${user.email}", {Email})`
-      ).then((res) => {
-        const currentHN = Object.keys(res).map((key: any) => res[key])
-        if (currentHN.length) {
-          setHN(currentHN[0])
-        }
-      })
-    }
-  }, [user])
 
   React.useEffect(() => {
     if (formName) {
@@ -94,12 +77,7 @@ const CallConsoleForms = ({ height }: { height: string }) => {
           {filteredForms.map((form) => (
             <button
               // @ts-ignore
-              onClick={() =>
-                addOpenForm(
-                  [...openedForms, { ...form, member: memberData }],
-                  hn
-                )
-              }
+              onClick={() => addOpenForm({ ...form, member: memberData })}
               key={form.name}
             >
               {!formName && (

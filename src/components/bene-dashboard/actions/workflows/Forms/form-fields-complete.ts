@@ -1,6 +1,7 @@
 const ProductionSchema = [
   {
     name: 'Baseline',
+    formId: 'shrPou8GMbw9pKWpZ',
     id: 'tblyEGCkIMjscYtYj',
     fields: [
       {
@@ -317,8 +318,10 @@ const ProductionSchema = [
         relationship: null,
         foreignTableId: null,
         required: false,
+        formId: 'shr0VkCzeprnRSIhA',
+        ctlabel: 'Enter Vitals',
         helper:
-          '"Do you know how tall you are? Even if you have a vague memory of your height in Meters, let us know."\n\n(m) examples: 1.5 or 1.8 or 1.55\n(If member has already given this information during screening or PSPB or HIF phase and if you can see it on Vitals section on Scribe, please skip this step)\n\nYou need to enter vitals? go here: <a href="https://airtable.com/shr0VkCzeprnRSIhA" target="_blank">https://airtable.com/shr0VkCzeprnRSIhA</a>',
+          '"Do you know how tall you are? Even if you have a vague memory of your height in Meters, let us know."\n\n(m) examples: 1.5 or 1.8 or 1.55\n(If member has already given this information during screening or PSPB or HIF phase and if you can see it on Vitals section on Scribe, please skip this step)\n\nYou need to enter vitals? Click the button',
       },
       {
         id: 'fldAeTRV1wNUXYLkj',
@@ -347,8 +350,10 @@ const ProductionSchema = [
         relationship: null,
         foreignTableId: null,
         required: false,
+        formId: 'shrJo1OLcSNVTTA0w',
+        ctlabel: 'Create BP Intake',
         helper:
-          '"Have you ever taken or had someone else take your Blood Pressure? If so, do you remember the last BP reading you had"\n\n(mm/Hg)\nBetter to create a BP intake here: <a href="https://airtable.com/shrJo1OLcSNVTTA0w" target="_blank">https://airtable.com/shrJo1OLcSNVTTA0w</a>',
+          '"Have you ever taken or had someone else take your Blood Pressure? If so, do you remember the last BP reading you had"\n\n(mm/Hg)\nBetter to create a BP intake.',
       },
       {
         id: 'fldMBunVl8Fvmy8JB',
@@ -362,8 +367,9 @@ const ProductionSchema = [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper:
-          '(mm/Hg)\nBetter to create a BP intake here: <a href="https://airtable.com/shrJo1OLcSNVTTA0w" target="_blank">https://airtable.com/shrJo1OLcSNVTTA0w</a>',
+        formId: 'shrJo1OLcSNVTTA0w',
+        ctlabel: 'Create BP Intake',
+        helper: '(mm/Hg)\nBetter to create a BP intake.',
       },
       {
         id: 'fld3GQgj3l991L0sp',
@@ -619,8 +625,9 @@ const ProductionSchema = [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper:
-          'Please click here to enter the medications: <a href="https://airtable.com/shrH0jDDogdH2ySWr" target="_blank">https://airtable.com/shrH0jDDogdH2ySWr</a> ',
+        formId: 'shrH0jDDogdH2ySWr',
+        ctlabel: 'Enter the medications',
+        helper: 'Please click the button to enter the medications.',
         conditionType: '',
         parentKey: 'Is this a serious CARDIOVASCULAR condition',
         parentValues: [
@@ -2204,8 +2211,10 @@ const ProductionSchema = [
         relationship: null,
         foreignTableId: null,
         required: true,
+        formId: 'shreJWFrTNVXs6RKW',
+        ctlabel: 'Enter the medications',
         helper:
-          '"Do you currently have, or have you ever been told you have, a chronic condition? That is any condition that has been present for more than 3 months. \n\nExamples of chronic conditions are: high blood pressure, diabetes, arthritis, asthma or high cholesterol."\n\nIf you identify condition(s) please enter them here: <a href="https://airtable.com/shreJWFrTNVXs6RKW" target="_blank">https://airtable.com/shreJWFrTNVXs6RKW</a>',
+          '"Do you currently have, or have you ever been told you have, a chronic condition? That is any condition that has been present for more than 3 months. \n\nExamples of chronic conditions are: high blood pressure, diabetes, arthritis, asthma or high cholesterol."\n\nIf you identify condition(s) please click the button and enter them.',
       },
       {
         id: 'fldCruVXj9uiYeelJ',
@@ -2270,8 +2279,10 @@ const ProductionSchema = [
         relationship: null,
         foreignTableId: null,
         required: false,
+        formId: 'shreJWFrTNVXs6RKW',
+        ctlabel: 'The member at risk?',
         helper:
-          'Risk factors include a family history, prior abnormal readings, smoking, eating habits etc.\n\nIf the response is yes, click here: \n<a href="https://airtable.com/shreJWFrTNVXs6RKW" target="_blank">https://airtable.com/shreJWFrTNVXs6RKW</a> ',
+          'Risk factors include a family history, prior abnormal readings, smoking, eating habits etc.\n\nIf the response is yes, click the button.',
       },
       {
         id: 'fldOMzmpG7FAjST25',
@@ -2677,6 +2688,7 @@ const ProductionSchema = [
   },
   {
     name: 'HIF',
+    formId: 'shrQlDyAynyeYDxT0',
     id: 'tblL7bahmNjC58rEc',
     helper:
       'Please use this to complete Beneficiary information for those Beneficiaries that were not able to complete their HIFs before the Baseline',
@@ -3182,6 +3194,7 @@ const ProductionSchema = [
   },
   {
     name: 'HIF Minor',
+    formId: 'shrGMz8GeHIly7FWy',
     id: 'tblcQxKM1jPnH9s9d',
     fields: [
       {
@@ -3719,6 +3732,7 @@ const ProductionSchema = [
   {
     name: 'Conditions',
     id: 'tblYSNrfZJnzdSwmx',
+    formId: 'shreJWFrTNVXs6RKW',
     fields: [
       {
         id: 'fld3OPeFGLFkNGL9c',
@@ -5320,6 +5334,7 @@ const ProductionSchema = [
   {
     name: 'Appointments',
     id: 'tblZB4YOpd7XH3cYt',
+    formId: 'shrZWjIcj1g2zMA5S',
     helper:
       'Please remember that all internal appointments (NC,PC,MHC and VC) need to be booked using Calendly. You can use this form if you are recording an appointment with an external provider. In exceptional cases, you can use this form to record an internal appointment. Please refer to the supervisor in that case',
     fields: [
@@ -5534,6 +5549,7 @@ const ProductionSchema = [
   {
     name: 'Nutritional Consultation',
     id: 'tblJoayRD7xQ33qpR',
+    formId: 'shrFmDt0AU4XjbsAr',
     fields: [
       {
         id: 'fld97KWfGQMlZeAT3',
@@ -7005,6 +7021,7 @@ const ProductionSchema = [
   {
     name: 'Vitals',
     id: 'tblNC7CZy3MqYRs6j',
+    formId: 'shr0VkCzeprnRSIhA',
     fields: [
       {
         id: 'fldbWJ9BNCnQjsBF9',
@@ -7209,6 +7226,7 @@ const ProductionSchema = [
   {
     name: 'BP Mon',
     id: 'tblNNpLhOgVYAOQvU',
+    formId: 'shrJo1OLcSNVTTA0w',
     fields: [
       {
         id: 'fldY2oAahzsrtK3ye',
@@ -7292,8 +7310,10 @@ const ProductionSchema = [
         relationship: 'many',
         foreignTableId: 'tblMKwFctRYwBYHgt',
         required: true,
+        formId: 'shrLf0JnXDQ7jNxOg',
+        ctlabel: 'Create HMP',
         helper:
-          'If the HMP record doesn\'t exist please create it first. \nUse this <a href="https://airtable.com/shrLf0JnXDQ7jNxOg" target="_blank">https://airtable.com/shrLf0JnXDQ7jNxOg</a> form to enter the HMP. Once done refresh this form to get the record.',
+          "If the HMP record doesn't exist please create it first. Once done refresh this form to get the record.",
         conditionType: '',
         parentKey: 'BP Reading Type',
         parentValues: ['Data collection for HMP'],
@@ -7395,6 +7415,7 @@ const ProductionSchema = [
   {
     name: 'CHL Mon',
     id: 'tblfxocXbfPnj9l2e',
+    formId: 'shreiiEvt7m7qg6az',
     fields: [
       {
         id: 'fld7jptb7F7xE7SH6',
@@ -7531,6 +7552,7 @@ const ProductionSchema = [
   {
     name: 'DM Mon',
     id: 'tblT5m8xaMTefircT',
+    formId: 'shrbn21wPY6Vj0Ufv',
     fields: [
       {
         id: 'fld2zAEadgjEC682h',
@@ -7832,6 +7854,7 @@ const ProductionSchema = [
   {
     name: 'Interventions',
     id: 'tblTmMtBgwT76JrQN',
+    formId: 'shrwlizJiy4xcAR2Y',
     helper:
       'Please use this form to enter in a new intervention for a beneficiary',
     fields: [
@@ -8616,6 +8639,7 @@ const ProductionSchema = [
   {
     name: 'Prescriptions',
     id: 'tbl3iBWzYVWEpdLje',
+    formId: 'shrH0jDDogdH2ySWr',
     helper: 'Only for usage of HN, Doctor should use the VC Prescription form',
     fields: [
       {
@@ -9050,6 +9074,7 @@ const ProductionSchema = [
   {
     name: 'HN Tasks',
     id: 'tblfH6lD7Cd1cGgSR',
+    formId: 'shrSPv5zEGvh1nm22',
     fields: [
       {
         id: 'fldlW5gNb9Pgl0CkX',
@@ -9352,6 +9377,7 @@ const ProductionSchema = [
   {
     name: 'Member tasks',
     id: 'tbljwCFIDT2vG65AH',
+    formId: 'shr1nZ8X0K7jPo3oq',
     fields: [
       {
         id: 'fldkv6teX0vK710bJ',
@@ -9501,6 +9527,7 @@ const ProductionSchema = [
   {
     name: 'Physiotherapy Consultation',
     id: 'tblwa1zmfOng2aNA1',
+    formId: 'shrIUxxcayh5fueyK',
     fields: [
       {
         id: 'fldNk3FbUqzGHSR0T',
@@ -10357,14 +10384,17 @@ const ProductionSchema = [
         relationship: null,
         foreignTableId: null,
         required: false,
+        formId: 'shrSPv5zEGvh1nm22',
+        ctlabel: 'Create HN Task',
         helper:
-          'Please enter any additional comments or observation you think are important\n\nYou need to create a HN task? <a href="https://airtable.com/shrSPv5zEGvh1nm22" target="_blank">https://airtable.com/shrSPv5zEGvh1nm22</a>\n\nYou need to create a condition? \n<a href="https://airtable.com/shreJWFrTNVXs6RKW" target="_blank">https://airtable.com/shreJWFrTNVXs6RKW</a>',
+          'Please enter any additional comments or observation you think are important\n\nYou need to create a HN task? Click the button',
       },
     ],
   },
   {
     name: 'Mental Health Consultation',
     id: 'tblQb2OzaAh2weE2Q',
+    formId: 'shrhYNq5OIeTDCUYy',
     fields: [
       {
         id: 'fldyXLrbRtzpI1Tub',
@@ -10912,6 +10942,7 @@ const ProductionSchema = [
   {
     name: 'Kits',
     id: 'tbl6PAXT80XyT7mAN',
+    formId: 'shrnOUMPNs7vVStMR',
     fields: [
       {
         id: 'fldw9UPlRjp4mJ5XQ',
@@ -11072,6 +11103,7 @@ const ProductionSchema = [
   {
     name: 'Clinical Consultation',
     id: 'tblLhL72JyizQ4ycc',
+    formId: 'shrPWg4S3LYxHbgmv',
     fields: [
       {
         id: 'fldoOlTXfHynyqhfe',
@@ -12128,8 +12160,9 @@ const ProductionSchema = [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper:
-          'If you identify a new condition: <a href="https://airtable.com/shrduoUdDObJnDFTj" target="_blank">https://airtable.com/shrduoUdDObJnDFTj</a>',
+        formId: 'shrduoUdDObJnDFTj',
+        ctlabel: 'New Condition',
+        helper: 'If you identify a new condition, click the',
       },
       {
         id: 'fldQ4GtalrF5Kumkb',
@@ -12480,8 +12513,9 @@ const ProductionSchema = [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper:
-          'Please click here to write a medication prescription: <a href="https://airtable.com/shrY7UhjHNpZxNfNK" target="_blank">https://airtable.com/shrY7UhjHNpZxNfNK</a>',
+        formId: 'shrY7UhjHNpZxNfNK',
+        ctlabel: 'Medical Prescription',
+        helper: 'Please click the button to write a medication prescription',
         conditionType: '',
         parentKey: 'Plan',
         parentValues: ['Prescribe Medications'],
@@ -12612,8 +12646,10 @@ const ProductionSchema = [
         relationship: null,
         foreignTableId: null,
         required: false,
+        formId: 'shrSPv5zEGvh1nm22',
+        ctlabel: 'Create HN Task',
         helper:
-          'This is the place you can write anything you want to document about the patient\n\nNeed to create a task for the HN team? <a href="https://airtable.com/shrSPv5zEGvh1nm22" target="_blank">https://airtable.com/shrSPv5zEGvh1nm22</a>',
+          'This is the place you can write anything you want to document about the patient\n\nNeed to create a task for the HN team? Click the button',
       },
       {
         id: 'fldPDOnQ4PpfE46WY',
@@ -12876,6 +12912,7 @@ const ProductionSchema = [
   {
     name: 'HMP',
     id: 'tblMKwFctRYwBYHgt',
+    formId: 'shrLf0JnXDQ7jNxOg',
     helper:
       'HMP intake form should only be used for HMP2,3 and 4. For HMP1, the HMP record is created automatically',
     fields: [
@@ -12982,6 +13019,7 @@ const ProductionSchema = [
   {
     name: 'PAFU',
     id: 'tblxLXrtmAgf3D3x9',
+    formId: 'shrCRi52uE0oDSpme',
     fields: [
       {
         id: 'fld2x7JNi1J2WcXyD',
@@ -13150,8 +13188,10 @@ const ProductionSchema = [
         relationship: null,
         foreignTableId: null,
         required: true,
+        formId: 'shrZWjIcj1g2zMA5S',
+        ctlabel: 'Fill appointment form',
         helper:
-          'If the appointment has been missed, you can fill a new appointment form here: <a href="https://airtable.com/shrZWjIcj1g2zMA5S" target="_blank">https://airtable.com/shrZWjIcj1g2zMA5S</a>',
+          'If the appointment has been missed, you can fill a new appointment form by clicking the button',
         conditionType: '',
         parentKey: 'Appointment Type',
         parentValues: ['Outpatient', 'Virtual Consultation'],
@@ -13397,8 +13437,9 @@ const ProductionSchema = [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper:
-          'To enter a new condition diagnosed, please click here: <a href="https://airtable.com/shreJWFrTNVXs6RKW" target="_blank">https://airtable.com/shreJWFrTNVXs6RKW</a> ',
+        formId: 'shreJWFrTNVXs6RKW',
+        ctlabel: 'Enter condition',
+        helper: 'To enter a new condition diagnosed, please click the button',
         conditionType: '',
         parentKey: 'Received diagnosis',
         parentValues: ['True'],
@@ -13778,8 +13819,9 @@ const ProductionSchema = [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper:
-          'Use this link to fill in the medication <a href="https://airtable.com/shrH0jDDogdH2ySWr" target="_blank">https://airtable.com/shrH0jDDogdH2ySWr</a>',
+        formId: 'shrH0jDDogdH2ySWr',
+        ctlabel: 'Fill in medication',
+        helper: 'Click the button to fill in the medication.',
         conditionType: '',
         parentKey: 'Received medication',
         parentValues: ['True'],
@@ -14280,6 +14322,7 @@ const ProductionSchema = [
   {
     name: 'Logistics Tasks',
     id: 'tblJmoQGSS2vl8u9g',
+    formId: 'shruHjY6gGmXxdags',
     fields: [
       {
         id: 'fldTJ6nR54ydrQSYR',
@@ -14679,6 +14722,7 @@ const ProductionSchema = [
   {
     name: 'Intervention Data Tracking',
     id: 'tbljaKK4MXz7M990E',
+    formId: 'shrU6coJtTURljj15',
     helper:
       'This form should be used to collect data about a bene intervention progress',
     fields: [
@@ -15206,8 +15250,10 @@ const ProductionSchema = [
         relationship: null,
         foreignTableId: null,
         required: true,
+        formId: 'shrFefBCXsPCUxo2o',
+        ctlabel: 'Fill in condition',
         helper:
-          'Is the patient exceeding, on track, off track, or regressing on their goal?\n\nExceeding: the beneficiary has already reach the target level and will likely reach another level before the target date\n\nOn track: the beneficiary is not yet there but will likely succeed into reaching the target milestone\n\nOff track: the beneficiary is not yet there and will unlikely succeed into reaching the target milestone\n\nRegressing: the beneficiary is struggling with the milestone and we will likely have to refine another milestone or approach\n\nThe current progress of the intervention leads to a required update of the condition (new stage or new status)? click here: <a href="https://airtable.com/shrFefBCXsPCUxo2o" target="_blank">https://airtable.com/shrFefBCXsPCUxo2o</a>',
+          'Is the patient exceeding, on track, off track, or regressing on their goal?\n\nExceeding: the beneficiary has already reach the target level and will likely reach another level before the target date\n\nOn track: the beneficiary is not yet there but will likely succeed into reaching the target milestone\n\nOff track: the beneficiary is not yet there and will unlikely succeed into reaching the target milestone\n\nRegressing: the beneficiary is struggling with the milestone and we will likely have to refine another milestone or approach\n\nThe current progress of the intervention leads to a required update of the condition (new stage or new status)? click the button.',
       },
       {
         id: 'flds05B74ZBhtCTUV',
@@ -15644,6 +15690,7 @@ const ProductionSchema = [
   {
     name: 'Conditions Data tracking',
     id: 'tblBqZ9SArUq2qVKM',
+    formId: 'shrFefBCXsPCUxo2o',
     fields: [
       {
         id: 'fldI77iqzFEkN7BSq',
@@ -16269,6 +16316,7 @@ const ProductionSchema = [
   {
     name: 'Prescriptions VC',
     id: 'tbl3iBWzYVWEpdLje',
+    formId: 'shrY7UhjHNpZxNfNK',
     helper:
       'Only for usage of Doctor, HN should use the Medication Prescription Form ',
     fields: [
@@ -16639,6 +16687,7 @@ const ProductionSchema = [
   {
     name: 'Incident reports',
     id: 'tblwEw59kdphWgewi',
+    formId: 'shrG0hIdvQ626V9GN',
     fields: [
       {
         id: 'fldSgWWdVMxopl0VS',
