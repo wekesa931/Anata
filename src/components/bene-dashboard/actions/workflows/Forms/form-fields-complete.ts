@@ -15337,32 +15337,8 @@ const ProductionSchema = [
         helper: '',
       },
       {
-        id: 'fldJzBP5nV0opdWJk',
-        name: 'Inactive Status Cause',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          "If intervention has been completely successful or should stop for any reason and we do not need the member to continue it, please change the status below. \n\n(By entering a new status below, the Intervention status will be automatically changed in Airtable)\n\n`Paused` means Antara and/or bene temporarily stop an intervention\n'Stopped' means Antara decided to stop the intervention\n'Opted out' means beneficiary decided to stop the intervention",
-        conditionType: '',
-        parentKey: 'Status update',
-        parentValues: ['Inactive'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Status update'])) {
-            return ['Inactive'].some((r) => values['Status update'].includes(r))
-          }
-          return ['Inactive'].includes(values['Status update'])
-        },
-      },
-      {
-        id: 'fldU3IQdGEUN5MuaB',
-        name: 'Active Status Cause',
+        id: 'fldqAL8R4DCw2IKsL',
+        name: 'Status Cause',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -15373,16 +15349,7 @@ const ProductionSchema = [
         foreignTableId: null,
         required: false,
         helper:
-          'If intervention has been completely successful or should stop for any reason and we do not need the member to continue it, please change the status below. \n\n(By entering a new status below, the Intervention status will be automatically changed in Airtable)',
-        conditionType: '',
-        parentKey: 'Status update',
-        parentValues: ['Active'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Status update'])) {
-            return ['Active'].some((r) => values['Status update'].includes(r))
-          }
-          return ['Active'].includes(values['Status update'])
-        },
+          "If intervention has been completely successful or should stop for any reason and we do not need the member to continue it, please change the status below. \n\n(By entering a new status below, the Intervention status will be automatically changed in Airtable)\n\n`Paused` means Antara and/or bene temporarily stop an intervention\n'Stopped' means Antara decided to stop the intervention\n'Opted out' means beneficiary decided to stop the intervention",
       },
       {
         id: 'fld8oWfNzH0zQwcVX',
@@ -15398,15 +15365,15 @@ const ProductionSchema = [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: 'Inactive Status Cause',
-        parentValues: ['Stopped'],
+        parentKey: 'Status Cause',
+        parentValues: ['Stopped', 'Paused'],
         condition: (values: any) => {
-          if (Array.isArray(values['Inactive Status Cause'])) {
-            return ['Stopped'].some((r) =>
-              values['Inactive Status Cause'].includes(r)
+          if (Array.isArray(values['Status Cause'])) {
+            return ['Stopped', 'Paused'].some((r) =>
+              values['Status Cause'].includes(r)
             )
           }
-          return ['Stopped'].includes(values['Inactive Status Cause'])
+          return ['Stopped', 'Paused'].includes(values['Status Cause'])
         },
       },
       {

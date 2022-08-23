@@ -41,7 +41,7 @@ export const formNames = {
   Kits: 'Monitoring Kit Form',
   'Nutritional Consultation': 'Nutritional Consultation Form',
   Interventions: 'Intervention Intake Form',
-  'Intervention Data Tracking': 'Intervention Data Collection Form',
+  'Intervention Data Tracking': 'Intervention Data Tracking',
   'Conditions Data tracking': 'Conditions data tracking',
   'Clinical Consultation': 'Clinical consultation',
   'Prescriptions VC': 'VC prescription form',
