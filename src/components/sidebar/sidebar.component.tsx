@@ -91,7 +91,7 @@ export default function MiniDrawer() {
   }
   let items: any = []
   if (path === '/') {
-    items = SidebarMenuItems.slice(0, 10)
+    items = SidebarMenuItems.slice(0, 11)
     items.map((item: any) => {
       if (item.name !== 'Tasks') {
         // eslint-disable-next-line no-param-reassign
@@ -116,7 +116,7 @@ export default function MiniDrawer() {
       return item
     })
   } else if (path.includes('member')) {
-    items = SidebarMenuItems.slice(0, 10)
+    items = SidebarMenuItems.slice(0, 11)
   }
 
   const subList = (

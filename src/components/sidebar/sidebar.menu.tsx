@@ -13,6 +13,7 @@ import {
   TrendingUp,
   Key,
   Heart,
+  AlertCircle,
 } from 'react-feather'
 import config from '../../config/config'
 import FlagForReview from './flag-for-review/flag-for-review.component'
@@ -116,6 +117,14 @@ const SidebarMenuItems = [
       'https://airtable.com/embed/shr0y89LFGiiT4oHz?backgroundColor=green&viewControls=on',
     url_sandbox:
       'https://airtable.com/embed/shro1UUHqX6TBnC5z?backgroundColor=pink&viewControls=on',
+  },
+  {
+    name: 'Risk Rank View',
+    icon: <AlertCircle />,
+    rootUrl:
+      'https://airtable.com/embed/shrnlJrWFGy2w13rI?backgroundColor=green&viewControls=on',
+    url_sandbox:
+      'https://airtable.com/embed/shrjwZVQWX9XuUN0K?backgroundColor=pink&viewControls=on',
   },
   {
     name: 'Population',
