@@ -122,17 +122,21 @@ const WorkflowFormsInput = ({
       )
     case 'multiSelect':
     case 'multipleSelects':
-      return (
-        <MultiSelectMultipleInput
-          value={value}
-          disabled={disabled}
-          field={field}
-          airtableMeta={airtableMeta}
-          saveInput={saveInput}
-          control={control}
-          error={error}
-        />
-      )
+      if (airtableMeta) {
+        return (
+          <MultiSelectMultipleInput
+            value={value}
+            disabled={disabled}
+            field={field}
+            airtableMeta={airtableMeta}
+            saveInput={saveInput}
+            control={control}
+            error={error}
+          />
+        )
+      }
+      return <LoaderOption field={field} airtableMeta={airtableMeta} />
+
     case 'number':
       return (
         <TextInputField
@@ -197,34 +201,36 @@ const SingleSelectOption = ({
   control,
   error,
 }: Form) => {
-  if (
-    airtableMeta &&
-    airtableMeta[field.parentTableId].fields[field.id].options?.choices.length >
-      2
-  ) {
+  if (airtableMeta) {
+    if (
+      airtableMeta[field.parentTableId].fields[field.id].options?.choices
+        .length > 2
+    ) {
+      return (
+        <SingleSelectInput
+          value={value}
+          disabled={disabled}
+          field={field}
+          airtableMeta={airtableMeta}
+          saveInput={saveInput}
+          control={control}
+          error={error}
+        />
+      )
+    }
     return (
-      <SingleSelectInput
+      <SingleSelectView
         value={value}
         disabled={disabled}
-        field={field}
         airtableMeta={airtableMeta}
+        field={field}
         saveInput={saveInput}
         control={control}
         error={error}
       />
     )
   }
-  return (
-    <SingleSelectView
-      value={value}
-      disabled={disabled}
-      airtableMeta={airtableMeta}
-      field={field}
-      saveInput={saveInput}
-      control={control}
-      error={error}
-    />
-  )
+  return <LoaderOption field={field} airtableMeta={airtableMeta} />
 }
 
 const SingleSelectInput = ({
@@ -572,7 +578,6 @@ const RichTextInputField = ({
 
   const displayToolbar = () => setOpen(true)
   const hideToolbar = () => setOpen(false)
-
   return (
     <Box
       className={styles.fieldMargin}
@@ -587,6 +592,7 @@ const RichTextInputField = ({
         rules={{ required: true }}
         render={({ field: { onChange } }) => (
           <>
+            {!field.helper && <Label field={field} error={error} />}
             {field.helper && (
               <InputLabel>
                 <HelperText field={field} error={error} />
@@ -674,7 +680,7 @@ const LinkRecordInput = ({
       'Antara Member ID',
     ]
     let presentKey = ''
-    const metaFields = airtableMeta[field.foreignTableId].fields
+    const metaFields = airtableMeta[field.foreignTableId]?.fields
     Object.keys(metaFields).forEach((ky) => {
       validKeys.forEach((vl) => {
         if (metaFields[ky].name === vl) {
@@ -688,7 +694,7 @@ const LinkRecordInput = ({
   useEffect(() => {
     if (airtableMeta) {
       let airtableField =
-        airtableMeta[field.foreignTableId].fields.primaryFieldName
+        airtableMeta[field.foreignTableId]?.fields?.primaryFieldName
       let searchParam = ''
       if (
         field.foreignTableId === 'tblHs6JxFnMGAjNNC' &&
@@ -891,6 +897,25 @@ const DateInputField = ({
         )}
       />
     </Box>
+  )
+}
+
+const LoaderOption = ({ field, airtableMeta }: any) => {
+  return (
+    <Autocomplete
+      id="combo-box-demo"
+      options={[]}
+      sx={{ marginBottom: 2 }}
+      renderInput={(params) => (
+        <TextField {...params} label={<Label field={field} />} />
+      )}
+      loading={!airtableMeta}
+      loadingText={
+        <div className={styles.recordLoader}>
+          <LoadingIcon /> Loading options
+        </div>
+      }
+    />
   )
 }
 

@@ -94,7 +94,7 @@ export type FormSchema = {
 }
 
 export type Form = {
-  value: any
+  value?: any
   template?: any
   field: FormSchema
   airtableMeta?: any

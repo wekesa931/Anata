@@ -7,6 +7,7 @@ import {
   Typography,
   TextField,
   InputAdornment,
+  CircularProgress,
 } from '@mui/material'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
@@ -18,12 +19,11 @@ import Tooltip from '@mui/material/Tooltip'
 import { Add } from '@mui/icons-material'
 import { useMutation } from '@apollo/client'
 import dayjs from 'dayjs'
-import { every, isEmpty, includes } from 'lodash'
+import { includes } from 'lodash'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import styles from './guided-workflows.component.css'
-import Toasts from '../../../../helpers/toast'
 import logError from '../../../utils/Bugsnag/Bugsnag'
 import {
   SAVE_MODULE_DATA,
@@ -39,7 +39,7 @@ import ToastNotification, {
 } from '../../../utils/toast/toast-notification'
 import FormSection from './Forms/form-section'
 import TABLE_ROUTES from '../../../utils/airtable-tables/table-routes'
-import TABLES from './Forms/form-fields-complete'
+import TABLES from './Forms/FormSchema/form-fields-complete'
 import {
   ConfirmButtonProps,
   FormMeta,
@@ -52,8 +52,17 @@ import {
   formNames,
   initialFormValues,
   interactionLogPayload,
+  airtableFormNames,
+  feedbackPayload,
 } from './Forms/form-fields'
-import { CREATE_INTERACTION } from '../../../../gql/interactions'
+import {
+  CREATE_INTERACTION,
+  CREATE_MEMBER_FEEDBACK,
+} from '../../../../gql/interactions'
+import createApolloClient from '../../../../resources/apollo-client'
+
+// v2 schema apollo client
+const apolloClient = createApolloClient(true)
 
 type IProps = {
   workflow: IWorkflow
@@ -96,6 +105,7 @@ const ConfirmButton = ({ onConfirm }: ConfirmButtonProps) => {
     </div>
   )
 }
+
 const WorkflowPortal = ({
   workflow: openedWorkflow,
   isFormEdited,
@@ -105,800 +115,161 @@ const WorkflowPortal = ({
   setIsFormEdited,
   onRefetch,
 }: IProps) => {
-  const recId = openedWorkflow?.member['recID']
-  const member = openedWorkflow?.member
+  const recId = openedWorkflow.member.recID
+  const { member } = openedWorkflow
+  const user = useUser()
   const [toastMessage, setToastMessage] =
     useState<ToastMessage>(defaultToastMessage)
-  const [template, setTemplate] = useState<IWorkflow>(null)
-  const [expanded, setExpanded] = React.useState<string | false>(false)
-  const [saveWorkflowError, setSaveWorkflowError] = useState(false)
-  const [isToastOpen, setIsToastOpen] = useState(false)
-  const [incomingIndex, setIncomingIndex] = useState(null)
-  const [savingWorkflowStart, setsavingWorkflowStart] = useState(false)
-  const [activeModule, setActiveModule] = useState(0)
-  const [isDuplicate, setIsDuplicate] = useState(false)
-  const [addingDuplicate, setAddingDuplicate] = useState(false)
-  const [formError, setFormError] = useState<any>(null)
   const [shouldSaveModule, setShouldSaveModule] = useState(false)
-  const [newModuleName, setNewModuleName] = useState('')
-  const [updatingActiveModule, setUpdatingActiveModule] = useState(false)
-  const [shouldDisplayModules, setShouldDisplayModules] = useState(false)
-  const [allModules, setAllModules] = useState<string[]>([])
-  const [validatedData, setValidatedData] = useState<any[]>([])
-  const [finalPayload, setfinalPayload] = useState<any[]>([])
-  const [gettingTableMeta, setGettingTableMeta] = useState(true)
-  const [savingDraft, setSavingDraft] = useState(false)
-  const [savingFinal, setSavingFinal] = useState(false)
   const [open, setOpen] = useState(false)
+  const [expanded, setExpanded] = React.useState<string | false>(false)
+  const [activeForm, setActiveForm] = useState<string>(null)
+  const [displayForms, setDisplayForms] = useState(false)
+  const [allForms, setAllForms] = useState(airtableFormNames)
   const [formMeta, setFormMeta] = useState<FormMeta>(null)
-  const [listOfTables, setlistOfTables] = useState<
-    { name: string; isDraft: boolean }[]
-  >([])
+  const [listOfTables, setlistOfTables] = useState([])
+  const [showIncompleteForms, setShowIncompleteForms] = useState(false)
+  const [currentWorkflow, setCurrentWorkflow] = useState<IWorkflow>(null)
   const [formPayload, setFormPayload] = useState<any[]>([])
-  const [saveModuleData] = useMutation(SAVE_MODULE_DATA)
+  const [displayLoader, setDisplayLoader] = useState(false)
+  const [incomingForm, setIncomingForm] = useState<string | null>(null)
+  const [saveModuleData, { loading: savingModule }] =
+    useMutation(SAVE_MODULE_DATA)
+  const [createMemberFeedback, { loading: updatingMemberFeedback }] =
+    useMutation(CREATE_MEMBER_FEEDBACK, {
+      client: apolloClient,
+    })
+  const [createInteraction, { loading: creatingInteraction }] =
+    useMutation(CREATE_INTERACTION)
   const [addModuleToWorkflow, { loading: addingModule }] = useMutation(
     ADD_MODULE_TO_WORKFLOW
   )
-  const [createInteraction] = useMutation(CREATE_INTERACTION)
+  const [saveWorkflow, { loading: savingWorkflow }] = useMutation(SAVE_WORKFLOW)
   const [deleteModuleData, { loading: deletingModule }] =
     useMutation(REMOVE_MODULE)
-  const [saveWorkflow, { loading: savingWorkflow }] = useMutation(SAVE_WORKFLOW)
-  const user = useUser()
-  const canRenderFields =
-    formMeta && !gettingTableMeta && !updatingActiveModule && !deletingModule
-  const loadingFields = gettingTableMeta || updatingActiveModule
-  const activeModuleName =
-    listOfTables.length > 0 ? listOfTables[activeModule]?.name : ''
-  /**
-   * At all instances the form will have three properties
-   * 1. member id
-   * 2. Check whether form is draft or saved
-   * 3. unique id identifying the form
-   */
-  const formDataAdded =
-    formPayload.length > 0 && Object.keys(formPayload[0]).length === 3
-  const isSubmitDisabled =
-    savingFinal ||
-    savingDraft ||
-    formDataAdded ||
-    template?.completed ||
-    template?.moduleData[activeModuleName]?.status === 'Saved'
-  const isSubmitting = savingWorkflowStart || savingWorkflow
-  const isCompleteButtonDisabled =
-    savingWorkflowStart || savingWorkflow || template?.completed
-  const canRenderForm = canRenderFields && !isDuplicate && formPayload
-  const isMissingModule = template && template?.modules.length === 0
-  const isWorkflowTemplate = template?.workflowId
-  const canAddModule =
-    !gettingTableMeta && !template?.completed && isWorkflowTemplate
-  const canAddDuplicate = !addingDuplicate && isWorkflowTemplate
-  const hasDuplicateForm = formPayload.length > 1
-  const setModuleNames = () => {
-    const loadedModules = TABLES.map((mod) => mod.name)
-    setAllModules(loadedModules)
-  }
+  const isWorkflowTemplate = openedWorkflow.workflowId
+  const currentIndex = formPayload?.findIndex((fm) => fm.moduleId === expanded)
+  const buttonMessage =
+    formPayload.length > 1 && currentIndex === -1
+      ? 'Select a form to submit'
+      : ''
   const extractUsername = (email: string) => {
     return email.replace(/@.*$/, '')
   }
-  const deleteModule = (name: string, workflowId: string) => {
-    if (name) {
-      deleteModuleData({
-        variables: {
-          moduleName: name,
-          workflowId,
-        },
-      }).then((res) => {
-        if (res.data.removeWorkflowModule.status === 200) {
-          setTemplate({
-            ...res.data.removeWorkflowModule.workflow,
-            member,
-          })
-          onRefetch(true)
-          const updatedModules = listOfTables.filter((fm) => fm.name !== name)
-          if (updatedModules.length === 0) {
-            setFormMeta(null)
-          }
-          setActiveModule(0)
-          setlistOfTables(updatedModules)
-          analytics.track(`Guided Workflow`, {
-            event: 'Form deleted',
-            beneId: recId,
-            staff: user ? user.email : '',
-            moduleName: name,
-            workflow: res.data.removeWorkflowModule.workflow,
-          })
-        }
-        setIsFormEdited(false)
-      })
-    }
-  }
-  const hasDuplicates = (values: any) => {
-    const valueArr = values.map((item: any) => {
-      return item.moduleId
-    })
-    const isDuplicated = valueArr.some((item: any, idx: number) => {
-      return valueArr.indexOf(item) !== idx
-    })
-    return isDuplicated
-  }
   const closeToast = () => {
-    setIncomingIndex(null)
     setToastMessage(defaultToastMessage)
   }
-  const isModuleErrored = (id: string) => {
-    let isErrored = false
-    if (formError) {
-      if (!every(formError[`${id}`], isEmpty)) {
-        isErrored = true
-      }
-    }
-    return isErrored
-  }
-
-  const setSelectedModule = (mod: string) => {
-    setNewModuleName(mod)
-    setShouldDisplayModules(false)
-    setModuleNames()
-  }
-  const displayModuleOptions = () => {
-    setShouldDisplayModules(false)
-    setModuleNames()
-  }
-  const updateModuleList = (response: IWorkflow, isNewModule = false) => {
-    const filledData = response.moduleData
-    let filledModules = {}
-    Object.keys(filledData).forEach((key) => {
-      filledModules = {
-        ...filledModules,
-        [`${key}`]: {
-          name: key,
-          isDraft: !(filledData[`${key}`].status === 'Saved'),
-        },
-      }
-    })
-    const mappedTables = response.currentModules.map((mod: string) => {
-      if (filledModules[`${mod}`]) {
-        return filledModules[`${mod}`]
+  const workflowForms = (fm: IWorkflow) => {
+    const modules = fm?.currentModules.map((mod) => {
+      if (fm?.moduleData[mod]) {
+        return {
+          name: mod,
+          isDraft: fm?.moduleData[mod].status === 'Draft',
+        }
       }
       return {
         name: mod,
         isDraft: true,
       }
     })
-    if (isNewModule && listOfTables.length > 0) {
-      const modIdx = listOfTables.findIndex(
-        (mod) => mod.name === activeModuleName
-      )
-      const moduleToReIndex = mappedTables.find(
-        (mod) => mod.name === activeModuleName
-      )
-      const filteredModules = mappedTables.filter(
-        (mod) => mod.name !== activeModuleName
-      )
-      if (modIdx && moduleToReIndex) {
-        filteredModules.splice(modIdx, 0, moduleToReIndex)
-        setlistOfTables(filteredModules)
-      } else {
-        setlistOfTables(mappedTables)
-      }
-    } else {
-      setlistOfTables(mappedTables)
-    }
+    return modules
   }
 
-  useEffect(() => {
-    if (allModules.length === 0) {
-      setModuleNames()
+  const loaderDisplayed =
+    displayLoader ||
+    savingModule ||
+    creatingInteraction ||
+    addingModule ||
+    savingWorkflow ||
+    deletingModule ||
+    shouldSaveModule ||
+    updatingMemberFeedback
+  const initialFormMeta = () => {
+    const formValues = initialFormValues(member)
+    let values = {}
+    if (formValues[activeForm]) {
+      values = formValues[activeForm]
     }
-    setTemplate(openedWorkflow)
+    return {
+      ...values,
+      moduleId: dayjs().toISOString(),
+      Member: [recId],
+      isDraft: true,
+      createdBy: {
+        email: user?.email,
+        name: user?.name,
+      },
+      updatedBy: {
+        email: user?.email,
+        name: user?.name,
+      },
+    }
+  }
+  const notify = (text: string) => {
+    setToastMessage({
+      ...toastMessage,
+      message: text,
+    })
+  }
+  useEffect(() => {
+    if (incomingForm) {
+      setToastMessage({
+        type: 'CONFIRM',
+        message: 'You may have unsaved changes',
+        time: 10000,
+      })
+    }
+  }, [incomingForm])
+  useEffect(() => {
+    setlistOfTables(workflowForms(openedWorkflow))
+    setCurrentWorkflow(openedWorkflow)
+    setActiveForm(openedWorkflow.currentModules[0])
+    let form = null
+    if (openedWorkflow.currentModules[0]) {
+      form = TABLES.find((frm) => frm.name === openedWorkflow.currentModules[0])
+    }
+    setFormMeta(form)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openedWorkflow])
-
   useEffect(() => {
-    if (incomingIndex !== null && incomingIndex !== activeModule) {
-      if (isFormEdited) {
-        setToastMessage({
-          type: 'CONFIRM',
-          message: 'You may have unsaved changes',
-          time: 10000,
-        })
-      } else {
-        setUpdatingActiveModule(true)
-        setActiveModule(incomingIndex)
-        setIsFormEdited(false)
-        setShouldSaveModule(false)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [incomingIndex])
-
-  useEffect(() => {
-    setIncomingIndex(null)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canRenderFields, activeModule])
-
-  useEffect(() => {
-    if (newModuleName) {
-      addModuleToWorkflow({
-        variables: {
-          workflowId: template?.workflowId,
-          moduleName: newModuleName,
-        },
-      }).then((res) => {
-        if (res.data.addWorkflowModule.status !== 200) {
-          setToastMessage({
-            ...toastMessage,
-            message: JSON.stringify(res.data.addWorkflowModule.errors),
-          })
-        } else {
-          updateModuleList(res.data.addWorkflowModule.workflow, true)
-          setTemplate({
-            ...res.data.addWorkflowModule.workflow,
-            member,
-          })
-          onRefetch(true)
-          analytics.track(`Guided Workflow`, {
-            event: 'Form added',
-            beneId: recId,
-            staff: user ? user.email : '',
-            moduleName: newModuleName,
-            workflow: res.data.addWorkflowModule.workflow,
-          })
-        }
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newModuleName])
-
-  const moduleIsDraft = (name: string) => {
-    const activeMod = listOfTables.find((tb) => tb.name === name)
-    return activeMod?.isDraft
-  }
-  const displayModDelete =
-    moduleIsDraft(activeModuleName) && isWorkflowTemplate && !hasDuplicateForm
-
-  const moduleOptions = () => {
-    return (
-      <>
-        <div id="search-wrap">
-          <div id="search-input-wrap" className={styles.searchInputWrap}>
-            <TextField
-              id="input-with-icon-textfield"
-              className="full-width"
-              placeholder="Search forms..."
-              onChange={(e) => {
-                const { value } = e.target
-                let form = TABLES.map((mod) => mod.name)
-                if (value) {
-                  form = form.filter(
-                    (table) =>
-                      table && table.toLowerCase().includes(value.toLowerCase())
-                  )
-                }
-                setAllModules(form)
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search width={18} height={18} />
-                  </InputAdornment>
-                ),
-                style: {
-                  marginBottom: 10,
-                },
-              }}
-              variant="standard"
-            />
-          </div>
-        </div>
-        {allModules.map((mod: string) => {
-          let isDisabled = false
-          const isAvailable = listOfTables.find((tb) => tb.name === mod)
-          if (isAvailable) {
-            isDisabled = true
-          }
-          return (
-            <Button
-              key={mod}
-              disabled={isDisabled}
-              className={styles.workflowOptions}
-              variant="text"
-              onClick={() => setSelectedModule(mod)}
-            >
-              {formNames[mod]}
-            </Button>
-          )
-        })}
-      </>
-    )
-  }
-
-  const persistData = async (formData: any) => {
-    try {
-      if (activeModuleName === 'Interaction log') {
-        const interactionData: any = interactionLogPayload(formData.fields)
-        const feedback: boolean =
-          interactionData.feedback && interactionData.feedback === 'Yes'
-        const outcomeMetadata: any = {
-          creator: user && user.email,
-        }
-        if (interactionData.reasonForConsultation) {
-          outcomeMetadata.reasonForConsultation =
-            interactionData.reasonForConsultation
-          delete interactionData.reasonForConsultation
-        }
-        const res = await createInteraction({
-          variables: {
-            input: {
-              ...interactionData,
-              feedback,
-              member: member['Antara ID'],
-              interactionStartedAt: dayjs(
-                interactionData.interactionStartedAt
-              ).toISOString(),
-              historyUserIdField: user && user.email,
-              healthNavigator: user && extractUsername(user.email),
-              outcomeMetadata,
-            },
-          },
-        })
-
-        if (res.data.createInteraction.status !== 200) {
-          setToastMessage({
-            ...toastMessage,
-            message: `Failed to save interaction log data`,
-          })
-          logError(res)
-          throw new Error()
-        }
-      } else {
-        const tableTosave = TABLES.find((tbl) => tbl.name === formMeta.name)
-        const tableName = TABLE_ROUTES[`${tableTosave?.name}`]
-        const res = await airtableFetch(`create/${tableName}`, 'post', formData)
-        if (res === 'Network Error') {
-          setToastMessage({
-            ...toastMessage,
-            message: 'Network Error. Changes have not been updated',
-          })
-          setSavingFinal(false)
-          throw new Error(res)
-        }
-        if (Array.isArray(res)) {
-          analytics.track(`Guided Workflow`, {
-            event: 'Form saved to airtable failed',
-            beneId: recId,
-            staff: user ? user.email : '',
-            moduleName: activeModuleName,
-            moduleData: finalPayload,
-            workflow: template,
-          })
-          setToastMessage({
-            ...toastMessage,
-            message: `Error: ${res[0].message}`,
-          })
-          setSavingFinal(false)
-          // eslint-disable-next-line
-          throw { message: `${res[0].error}` }
-        }
-      }
-    } catch (e) {
-      setSavingFinal(false)
-      setToastMessage({
-        ...toastMessage,
-        message: `Failed to save, ${e.message}`,
-      })
-      logError(e.message)
-      throw new Error(e.message)
-    }
-  }
-
-  const saveModule = async (isDraft: boolean, draftData?: any) => {
-    try {
-      if (isDraft) {
-        if (!addingDuplicate) setSavingDraft(true)
-        saveModuleData({
-          variables: {
-            moduleName: activeModuleName,
-            workflowId: template?.workflowId,
-            data: draftData || formPayload,
-            draft: isDraft,
-          },
-        })
-          .then((res) => {
-            const response = res.data.saveModuleData.workflow
-            setFormPayload(response.moduleData[activeModuleName].filled_values)
-            updateModuleList(response)
-            setTemplate({
-              ...response,
-              member,
-            })
-            onRefetch(true)
-            analytics.track(`Guided Workflow`, {
-              event: 'Module draft saved',
-              beneId: recId,
-              staff: user ? user.email : '',
-              moduleName: activeModuleName,
-              moduleData: draftData || formPayload,
-              workflow: response,
-            })
-            if (incomingIndex !== null) {
-              setUpdatingActiveModule(true)
-              setActiveModule(incomingIndex)
-            }
-            setToastMessage({
-              ...toastMessage,
-              type: 'GENERAL',
-              message: `${
-                addingDuplicate
-                  ? 'Duplicate form added'
-                  : 'Details saved successfully'
-              }`,
-            })
-            setSavingDraft(false)
-          })
-          .catch((e) => {
-            setSavingDraft(false)
-            setToastMessage({
-              ...toastMessage,
-              message: 'Something went wrong. Changes have not been saved',
-            })
-            logError(e)
-          })
-      } else {
-        setSavingFinal(true)
-        finalPayload.forEach(async (payload) => {
-          if (payload.isDraft) {
-            let airtablePayload = { ...payload }
-            if ('isDraft' in airtablePayload) delete airtablePayload.isDraft
-            if ('moduleId' in airtablePayload) delete airtablePayload.moduleId
-            if (activeModuleName === 'HIF Minor') {
-              delete airtablePayload.Member
-            }
-            if (activeModuleName === 'Physiotherapy Consultation') {
-              airtablePayload = {
-                ...airtablePayload,
-                member: airtablePayload.Member,
-              }
-              delete airtablePayload.Member
-            }
-            if (
-              activeModuleName === 'Logistics Tasks' ||
-              activeModuleName === 'Incident reports'
-            ) {
-              airtablePayload = {
-                ...airtablePayload,
-                Members: airtablePayload.Member,
-              }
-              delete airtablePayload.Member
-            }
-
-            if (activeModuleName === 'Intervention Data Tracking') {
-              delete airtablePayload.Member
-            }
-
-            let finalAirtablePayload = {
-              fields: {
-                ...airtablePayload,
-              },
-            }
-
-            if (isWorkflowTemplate) {
-              finalAirtablePayload = {
-                fields: {
-                  ...airtablePayload,
-                  'Case ID': [`${template.airtableId}`],
-                },
-              }
-            }
-            await persistData(finalAirtablePayload)
-            if (isWorkflowTemplate) {
-              const updatedFormPayload = finalPayload.map((pl) => ({
-                ...pl,
-                isDraft: false,
-              }))
-              saveModuleData({
-                variables: {
-                  moduleName: activeModuleName,
-                  workflowId: template?.workflowId,
-                  data: updatedFormPayload,
-                  draft: false,
-                },
-              }).then((res) => {
-                updateModuleList(res.data.saveModuleData.workflow)
-                setTemplate({
-                  ...res.data.saveModuleData.workflow,
-                  member,
-                })
-                onRefetch(true)
-                analytics.track(`Guided Workflow`, {
-                  event: 'Form saved to airtable successful',
-                  beneId: recId,
-                  staff: user ? user.email : '',
-                  moduleName: activeModuleName,
-                  moduleData: finalPayload,
-                  workflow: res.data.saveModuleData.workflow,
-                })
-                setToastMessage({
-                  ...toastMessage,
-                  message: 'Workflow form saved successfully',
-                })
-                setSavingFinal(false)
-              })
-            } else {
-              setOpen(true)
-              setTemplate({
-                ...template,
-                completed: true,
-                moduleData: {
-                  [`${template.name}`]: {
-                    filled_values: finalPayload,
-                  },
-                },
-              })
-              setSavingFinal(false)
-              setToastMessage({
-                ...toastMessage,
-                message: `${formNames[template?.name]} form saved successfully`,
-              })
-            }
-          }
-        })
-      }
-    } catch (err) {
-      setSavingFinal(false)
-      setSavingDraft(false)
-      setOpen(false)
-      setToastMessage({
-        ...toastMessage,
-        message: `Failed to save ${err.message}`,
-      })
-      logError(err)
-    } finally {
-      setfinalPayload([])
-      setAddingDuplicate(false)
-      setValidatedData([])
-      setShouldSaveModule(false)
-      setIsDuplicate(false)
-      setIsFormEdited(false)
-    }
-  }
-
-  useEffect(() => {
-    if (finalPayload.length > 0 && finalPayload.length === formPayload.length) {
-      if (hasDuplicates(finalPayload)) {
-        setShouldSaveModule(false)
-        setOpen(false)
-        setfinalPayload([])
-        setToastMessage({
-          ...toastMessage,
-          message: 'Confirm the forms do not have errors before submission',
-        })
-      } else {
-        saveModule(false)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [finalPayload])
-
-  useEffect(() => {
-    if (addingDuplicate) {
-      saveModule(true)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formPayload])
-  useEffect(() => {
-    if (addingDuplicate) {
-      setFormPayload((pl) => [
-        ...pl,
-        {
-          moduleId: dayjs().toISOString(),
-          Member: [recId],
-          isDraft: true,
-        },
-      ])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addingDuplicate])
-
-  useEffect(() => {
-    if (template && template.modules.length > 0) {
-      updateModuleList(template, true)
-    } else {
-      setGettingTableMeta(false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [template])
-  useEffect(() => {
-    const form = TABLES.find((frm) => frm.name === activeModuleName)
-    if (form) {
-      setFormMeta({ ...form })
-    }
-    if (template?.moduleData[activeModuleName]) {
-      let newPayload = template?.moduleData[activeModuleName].filled_values
-      newPayload = newPayload.map((py) => ({
-        ...py,
-        updatedBy: {
-          email: user?.email,
-          name: user?.name,
-        },
-      }))
-      setFormPayload(newPayload)
-    } else {
-      const formValues = initialFormValues(member)
-      let values = {}
-
-      if (formValues[activeModuleName]) {
-        values = formValues[activeModuleName]
-      }
-
-      setFormPayload([
-        {
-          ...values,
-          moduleId: dayjs().toISOString(),
-          Member: [recId],
-          isDraft: true,
-          createdBy: {
-            email: user?.email,
-            name: user?.name,
-          },
+    if (activeForm) {
+      let formData = []
+      if (currentWorkflow?.moduleData[activeForm]) {
+        const newPayload = currentWorkflow?.moduleData[activeForm].filled_values
+        formData = newPayload.map((py) => ({
+          ...py,
           updatedBy: {
             email: user?.email,
             name: user?.name,
           },
-        },
-      ])
-    }
-    setUpdatingActiveModule(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    activeModule,
-    listOfTables,
-    activeModuleName,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    template?.workflowId,
-  ])
-
-  useEffect(() => {
-    if (formMeta) {
-      setActiveModule(null)
+        }))
+      } else {
+        formData = [initialFormMeta()]
+      }
+      setFormPayload(formData)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [template?.workflowId])
-
-  useEffect(() => {
-    if (toastMessage.message) {
-      setIsToastOpen(true)
-    } else {
-      setIsToastOpen(false)
-    }
-  }, [toastMessage.message])
-
-  const handleChange =
-    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-      setExpanded(isExpanded ? panel : false)
-    }
-
-  const renderForm = () => {
-    const moduleForm = (id: any, index: number) => {
-      const disableForm = template?.completed || !formPayload[index]?.isDraft
-      return (
-        <FormSection
-          modId={id}
-          index={index}
-          setFormError={setFormError}
-          formError={formError}
-          airtableMeta={airtableMeta}
-          validatedData={validatedData}
-          shouldSaveModule={shouldSaveModule}
-          formMeta={formMeta}
-          finalPayload={finalPayload}
-          setValidatedData={setValidatedData}
-          setfinalPayload={setfinalPayload}
-          disabled={disableForm}
-          setFormPayload={setFormPayload}
-          setIsFormEdited={setIsFormEdited}
-          saveModule={saveModule}
-          addOpenForm={addOpenForm}
-          setShouldSaveModule={setShouldSaveModule}
-          isToastOpen={isToastOpen}
-          formPayload={formPayload}
-          activeModule={listOfTables[activeModule]}
-          activeModuleName={activeModuleName}
-          template={template}
-          resetActiveModule={() => setActiveModule(0)}
-        />
-      )
-    }
-    if (hasDuplicateForm) {
-      return (
-        <div className={styles.forms}>
-          {formPayload.map((mod: any, idx: number) => {
-            const submitStatus = formPayload[idx]
-            const displayModuleDeleteBtn =
-              hasDuplicateForm && submitStatus.isDraft
-            const moduleTitle = mod[DUPLICATE_DEFAULTS[activeModuleName]] || '-'
-            return (
-              <Accordion
-                key={idx}
-                expanded={expanded === mod.moduleId}
-                onChange={handleChange(mod.moduleId)}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography>
-                    <div>
-                      <span
-                        style={{
-                          color: isModuleErrored(mod.moduleId)
-                            ? 'var(--red-100)'
-                            : '',
-                        }}
-                      >
-                        <span className="d-flex">
-                          {displayModuleDeleteBtn && (
-                            <span style={{ margin: '3px 8px 0 0' }}>
-                              <ConfirmButton
-                                onConfirm={() => {
-                                  const newData = formPayload.filter(
-                                    (dat) => dat.moduleId !== mod.moduleId
-                                  )
-                                  saveModule(true, newData)
-                                }}
-                              />
-                            </span>
-                          )}
-                          <span>{moduleTitle}</span>
-                        </span>
-
-                        <span style={{ marginLeft: '10px', fontSize: '10px' }}>
-                          {isModuleErrored(mod.moduleId) && (
-                            <>
-                              Errors on this section!
-                              <AlertTriangle
-                                color="var(--red-100)"
-                                width={12}
-                                height={12}
-                              />
-                            </>
-                          )}
-                        </span>
-                      </span>
-                      <span>
-                        {submitStatus.isDraft ? (
-                          <p className={styles.statusText}>Pending</p>
-                        ) : (
-                          <p className={styles.statusText}>Submitted</p>
-                        )}
-                      </span>
-                    </div>
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {moduleForm(mod.moduleId, idx)}
-                </AccordionDetails>
-              </Accordion>
-            )
-          })}
-        </div>
-      )
-    }
-    return (
-      <div className={styles.forms}>
-        {moduleForm(formPayload[0].moduleId, 0)}
-      </div>
-    )
-  }
-  const handleStay = () => {
-    setOpen(false)
-    setTemplate(openedWorkflow)
-  }
-
+  }, [activeForm, currentWorkflow])
   const handleLeave = () => {
     setOpen(false)
     onFormClose(openedWorkflow.name, false)
+  }
+  const handleStay = () => {
+    setOpen(false)
+    setCurrentWorkflow(openedWorkflow)
+  }
+  const closeFormOptions = () => {
+    setAllForms(airtableFormNames)
+    setDisplayForms(false)
+  }
+  const checkModuleStatus = (payload: any[]) => {
+    let isDraft = false
+    payload.forEach((py) => {
+      if (py.isDraft === true) {
+        isDraft = true
+      }
+    })
+    return isDraft
   }
   const confirmSubmit = () => {
     return (
@@ -933,26 +304,452 @@ const WorkflowPortal = ({
       </div>
     )
   }
+  const moduleIsDraft = () => {
+    const activeMod = listOfTables.find((tb) => tb.name === activeForm)
+    return activeMod?.isDraft
+  }
+  const selectForm = (fm: string, isNewForm: boolean) => {
+    const newMeta = TABLES.find((frm) => frm.name === fm)
+    if (isNewForm) {
+      addModuleToWorkflow({
+        variables: {
+          workflowId: currentWorkflow?.workflowId,
+          moduleName: fm,
+        },
+      }).then((res) => {
+        if (res.data.addWorkflowModule.status !== 200) {
+          notify(JSON.stringify(res.data.addWorkflowModule.errors))
+        } else {
+          const response = res.data.addWorkflowModule.workflow
+          setlistOfTables(workflowForms(response))
+          setCurrentWorkflow(response)
+          onRefetch(true)
+          setFormMeta(newMeta)
+          setActiveForm(fm)
+          setDisplayForms(false)
+          setAllForms(airtableFormNames)
+          analytics.track(`Guided Workflow`, {
+            event: 'Form added',
+            beneId: recId,
+            staff: user ? user.email : '',
+            moduleName: activeForm,
+            workflow: response,
+          })
+        }
+      })
+    } else {
+      setFormMeta(newMeta)
+      setActiveForm(fm)
+      setDisplayForms(false)
+      setIncomingForm(null)
+      setIsFormEdited(false)
+    }
+  }
+  const deleteModule = () => {
+    deleteModuleData({
+      variables: {
+        moduleName: activeForm,
+        workflowId: openedWorkflow.workflowId,
+      },
+    })
+      .then((res) => {
+        if (res.data.removeWorkflowModule.status === 200) {
+          const response = res.data.removeWorkflowModule.workflow
+          analytics.track(`Guided Workflow`, {
+            event: 'Form deleted',
+            beneId: recId,
+            staff: user ? user.email : '',
+            moduleName: activeForm,
+            workflow: response,
+          })
+          setCurrentWorkflow(response)
+          onRefetch(true)
+          setlistOfTables(workflowForms(response))
+          setActiveForm(openedWorkflow.currentModules[0])
+        } else {
+          notify(JSON.stringify(res.data.removeWorkflowModule.errors))
+        }
+        setIsFormEdited(false)
+      })
+      .catch((e) => {
+        notify(e.message)
+        logError(e.message)
+      })
+  }
+  const saveModule = async (isDraft: boolean, draftData?: any) => {
+    try {
+      if (isDraft) {
+        const formData = draftData || formPayload
+        saveModuleData({
+          variables: {
+            moduleName: activeForm,
+            workflowId: currentWorkflow?.workflowId,
+            data: formData,
+            draft: checkModuleStatus(formData),
+          },
+        })
+          .then((res) => {
+            const response = res.data.saveModuleData.workflow
+            setFormPayload(response.moduleData[activeForm].filled_values)
+            setCurrentWorkflow(response)
+            setlistOfTables(workflowForms(response))
+            onRefetch(true)
+            analytics.track(`Guided Workflow`, {
+              event: 'Module draft saved',
+              beneId: recId,
+              staff: user ? user.email : '',
+              moduleName: activeForm,
+              moduleData: formPayload,
+              workflow: response,
+            })
+            setToastMessage({
+              ...toastMessage,
+              type: 'GENERAL',
+              message: 'Successful',
+            })
+            if (incomingForm) {
+              selectForm(incomingForm, false)
+            }
+          })
+          .catch((e) => {
+            notify('Something went wrong. Changes have not been saved')
+            logError(e)
+          })
+      } else {
+        let airtablePayload = { ...draftData }
+        if ('isDraft' in airtablePayload) delete airtablePayload.isDraft
+        if ('moduleId' in airtablePayload) delete airtablePayload.moduleId
+        if (activeForm === 'HIF Minor') {
+          delete airtablePayload.Member
+        }
+        if (activeForm === 'Physiotherapy Consultation') {
+          airtablePayload = {
+            ...airtablePayload,
+            member: airtablePayload.Member,
+          }
+          delete airtablePayload.Member
+        }
+        if (
+          activeForm === 'Logistics Tasks' ||
+          activeForm === 'Incident reports'
+        ) {
+          airtablePayload = {
+            ...airtablePayload,
+            Members: airtablePayload.Member,
+          }
+          delete airtablePayload.Member
+        }
+
+        if (activeForm === 'Intervention Data Tracking') {
+          delete airtablePayload.Member
+        }
+
+        airtablePayload = {
+          fields: {
+            ...airtablePayload,
+          },
+        }
+
+        if (activeForm === 'Interaction log') {
+          const interactionData: any = interactionLogPayload(
+            airtablePayload.fields
+          )
+          const feedback: boolean =
+            interactionData.feedback && interactionData.feedback === 'Yes'
+          const outcomeMetadata: any = {
+            creator: user && user.email,
+          }
+          if (interactionData.reasonForConsultation) {
+            outcomeMetadata.reasonForConsultation =
+              interactionData.reasonForConsultation
+            delete interactionData.reasonForConsultation
+          }
+          const res = await createInteraction({
+            variables: {
+              input: {
+                ...interactionData,
+                feedback,
+                member: member['Antara ID'],
+                interactionStartedAt: dayjs(
+                  interactionData.interactionStartedAt
+                ).toISOString(),
+                historyUserIdField: user && user.email,
+                healthNavigator: user && extractUsername(user.email),
+                outcomeMetadata,
+              },
+            },
+          })
+
+          if (res.data.createInteraction.status !== 200) {
+            notify('Failed to save interaction log data')
+            logError(res)
+            throw new Error()
+          }
+        } else {
+          if (activeForm === 'Member Feedback') {
+            const feedbackData = feedbackPayload(airtablePayload.fields)
+            const feedback =
+              feedbackData.feedback && feedbackData.feedback === 'Yes'
+            const createdBy = user && user.email
+            const res = await createMemberFeedback({
+              variables: {
+                input: {
+                  ...feedbackData,
+                  feedback,
+                  createdBy,
+                  source: feedbackData.source[0],
+                  memberAntaraId: member['Antara ID'],
+                },
+              },
+            })
+            if (res.data.memberFeedback.status !== 200) {
+              setToastMessage({
+                ...toastMessage,
+                message: `Failed to save member feedback data`,
+              })
+              logError(res)
+              throw new Error()
+            }
+          }
+          if (isWorkflowTemplate) {
+            airtablePayload = {
+              fields: {
+                ...airtablePayload.fields,
+                'Case ID': [`${openedWorkflow.airtableId}`],
+              },
+            }
+          }
+
+          const tableName = TABLE_ROUTES[activeForm]
+          const res = await airtableFetch(
+            `create/${tableName}`,
+            'post',
+            airtablePayload
+          )
+          if (res === 'Network Error') {
+            notify('Network Error. Changes have not been updated')
+            throw new Error(res)
+          }
+          if (Array.isArray(res)) {
+            analytics.track(`Guided Workflow`, {
+              event: 'Form saved to airtable failed',
+              beneId: recId,
+              staff: user ? user.email : '',
+              moduleName: activeForm,
+              moduleData: airtablePayload,
+              workflow: currentWorkflow,
+            })
+            notify(`Error: ${res[0].message}`)
+            // eslint-disable-next-line
+            throw { message: `${res[0].error}` }
+          }
+        }
+        if (isWorkflowTemplate) {
+          let updatedFormPayload = [...formPayload]
+          if (currentIndex !== -1) {
+            const sectionFormData = {
+              ...formPayload[currentIndex],
+              isDraft: false,
+            }
+            updatedFormPayload[currentIndex] = sectionFormData
+          }
+          if (formPayload.length === 1) {
+            updatedFormPayload = [{ ...formPayload[0], isDraft: false }]
+          }
+          saveModuleData({
+            variables: {
+              moduleName: activeForm,
+              workflowId: openedWorkflow.workflowId,
+              data: updatedFormPayload,
+              draft: checkModuleStatus(updatedFormPayload),
+            },
+          }).then((res) => {
+            const response = res.data.saveModuleData.workflow
+            setlistOfTables(workflowForms(response))
+            setFormPayload(response.moduleData[activeForm].filled_values)
+            setCurrentWorkflow(response)
+            onRefetch(true)
+            analytics.track(`Guided Workflow`, {
+              event: 'Form saved to airtable successful',
+              beneId: recId,
+              staff: user ? user.email : '',
+              moduleName: activeForm,
+              moduleData: updatedFormPayload,
+              workflow: response,
+            })
+            notify('Workflow form saved successfully')
+          })
+        } else {
+          setOpen(true)
+          setCurrentWorkflow({
+            ...currentWorkflow,
+            completed: true,
+            moduleData: {
+              [`${activeForm}`]: {
+                filled_values: formPayload,
+              },
+            },
+          })
+          notify(`${formNames[activeForm]} form saved successfully`)
+        }
+      }
+    } catch (err) {
+      notify(`Failed to save ${err.message}`)
+      logError(err)
+    } finally {
+      setShouldSaveModule(false)
+      setIsFormEdited(false)
+      setDisplayLoader(false)
+    }
+  }
+  const moduleOptions = () => {
+    return (
+      <>
+        <div id="search-wrap">
+          <div id="search-input-wrap" className={styles.searchInputWrap}>
+            <TextField
+              id="input-with-icon-textfield"
+              className="full-width"
+              placeholder="Search forms..."
+              onChange={(e) => {
+                const { value } = e.target
+                let form = airtableFormNames
+                if (value) {
+                  form = form.filter(
+                    (table) =>
+                      table && table.toLowerCase().includes(value.toLowerCase())
+                  )
+                }
+                setAllForms(form)
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search width={18} height={18} />
+                  </InputAdornment>
+                ),
+                style: {
+                  marginBottom: 10,
+                },
+              }}
+              variant="standard"
+            />
+          </div>
+        </div>
+        {allForms.map((mod: string) => {
+          const isAvailable = listOfTables.find((tb) => tb.name === mod)
+          return (
+            <Button
+              key={mod}
+              disabled={!!isAvailable}
+              className={styles.workflowOptions}
+              variant="text"
+              onClick={selectForm.bind(null, mod, true)}
+            >
+              {formNames[mod]}
+            </Button>
+          )
+        })}
+      </>
+    )
+  }
+  const renderForm = () => {
+    const formSection = (id: string) => (
+      <FormSection
+        id={id}
+        activeForm={activeForm}
+        setShouldSaveModule={setShouldSaveModule}
+        saveModule={saveModule}
+        setDisplayLoader={setDisplayLoader}
+        setFormPayload={setFormPayload}
+        setIsFormEdited={setIsFormEdited}
+        moduleId={expanded || formPayload[0].moduleId}
+        airtableMeta={airtableMeta}
+        formMeta={formMeta}
+        shouldSaveModule={shouldSaveModule}
+        formPayload={formPayload}
+        addOpenForm={addOpenForm}
+        template={openedWorkflow}
+      />
+    )
+    const handleChange =
+      (panel: string) =>
+      (event: React.SyntheticEvent, newExpanded: boolean) => {
+        setExpanded(newExpanded ? panel : false)
+      }
+    if (formPayload.length > 1) {
+      return (
+        <>
+          {formPayload.map((fm) => {
+            const moduleTitle = fm[DUPLICATE_DEFAULTS[activeForm]] || '-'
+            return (
+              <Accordion
+                expanded={expanded === fm.moduleId}
+                onChange={handleChange(fm.moduleId)}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1d-content"
+                  id="panel1d-header"
+                >
+                  <Typography>
+                    <div>
+                      <span>
+                        <div className={styles.subModuleHeader}>
+                          <span>{moduleTitle}</span>
+                          {fm.isDraft && (
+                            <div className={styles.deleteSubModule}>
+                              <Tooltip title="Delete Module">
+                                <ConfirmButton
+                                  onConfirm={() => {
+                                    const newData = formPayload.filter(
+                                      (dat) => dat.moduleId !== fm.moduleId
+                                    )
+                                    saveModule(true, newData)
+                                  }}
+                                />
+                              </Tooltip>
+                            </div>
+                          )}
+                        </div>
+                      </span>
+                      {fm.isDraft ? (
+                        <div className={styles.statusText}>Pending</div>
+                      ) : (
+                        <div className={styles.statusTextSubmitted}>
+                          Submitted
+                        </div>
+                      )}
+                    </div>
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>{formSection(fm.moduleId)}</AccordionDetails>
+              </Accordion>
+            )
+          })}
+        </>
+      )
+    }
+    return (
+      <div className={styles.forms}>{formSection(formPayload[0].moduleId)}</div>
+    )
+  }
   return (
     <>
       {toastMessage.type === 'GENERAL' && (
         <ToastNotification
           message={toastMessage}
-          isOpen={isToastOpen}
+          isOpen={!!toastMessage.message}
           handleToastClose={closeToast}
         />
       )}
       {toastMessage.type === 'CONFIRM' && (
         <ToastNotification
           message={toastMessage}
-          isOpen={isToastOpen}
+          isOpen={!!toastMessage.message}
           handleToastClose={closeToast}
-          onReject={() => {
-            setUpdatingActiveModule(true)
-            setActiveModule(incomingIndex)
-            setShouldSaveModule(false)
-          }}
-          onAccept={() => saveModule(true)}
+          onReject={selectForm.bind(null, incomingForm, false)}
+          onAccept={saveModule.bind(null, true)}
         />
       )}
       <div className={styles.workflowDialogueContent}>
@@ -969,17 +766,24 @@ const WorkflowPortal = ({
               xs={4}
             >
               {!addingModule &&
-                listOfTables.map((tbl, idx) => {
+                listOfTables.map((tbl) => {
                   return (
                     <Button
+                      disabled={loaderDisplayed}
                       className={`${styles.tblList} ${
-                        activeModule === idx
+                        activeForm === tbl.name
                           ? styles.workflowTablesActive
                           : styles.workflowTables
                       }`}
                       variant="text"
-                      key={idx}
-                      onClick={() => setIncomingIndex(idx)}
+                      key={tbl.name}
+                      onClick={() => {
+                        if (isFormEdited) {
+                          setIncomingForm(tbl.name)
+                        } else {
+                          selectForm(tbl.name, false)
+                        }
+                      }}
                     >
                       <span>{formNames[tbl.name]}</span>
                       {!tbl.isDraft && (
@@ -989,7 +793,7 @@ const WorkflowPortal = ({
                           height={18}
                         />
                       )}
-                      {tbl.isDraft && saveWorkflowError && (
+                      {tbl.isDraft && showIncompleteForms && (
                         <AlertTriangle
                           color="var(--red-100)"
                           width={12}
@@ -1005,18 +809,17 @@ const WorkflowPortal = ({
                   <p className="text-small">Adding Form</p>
                 </div>
               )}
-              {canAddModule && (
+              {!currentWorkflow?.completed && (
                 <Button
+                  disabled={loaderDisplayed}
                   className={styles.addModule}
                   onClick={() => {
                     if (isFormEdited) {
-                      setToastMessage({
-                        ...toastMessage,
-                        message:
-                          'Save the current form before creating another one',
-                      })
+                      notify(
+                        'Save the current form before creating another one'
+                      )
                     } else {
-                      setShouldDisplayModules(true)
+                      setDisplayForms(true)
                     }
                   }}
                   variant="text"
@@ -1026,7 +829,7 @@ const WorkflowPortal = ({
                 </Button>
               )}
 
-              {shouldDisplayModules && (
+              {displayForms && (
                 <div className={styles.modulesList}>
                   <div
                     className={`d-flex flex-between p-8 ${styles.selectModule}`}
@@ -1037,7 +840,7 @@ const WorkflowPortal = ({
                       color="var(--white)"
                       width={15}
                       height={15}
-                      onClick={displayModuleOptions}
+                      onClick={closeFormOptions}
                     />
                   </div>
                   <div
@@ -1055,115 +858,84 @@ const WorkflowPortal = ({
             item
             xs={isWorkflowTemplate ? 8 : 12}
           >
-            {canRenderFields && !isDuplicate && (
+            {loaderDisplayed && (
+              <div className={styles.universalLoader}>
+                <span className={styles.backdropText}>
+                  <CircularProgress color="inherit" />
+                </span>
+              </div>
+            )}
+            {isWorkflowTemplate && (
               <>
                 <div className={`d-flex flex-between ${styles.stickyHeader}`}>
-                  <p className={styles.moduleName}>
-                    {formNames[activeModuleName]}
-                  </p>
+                  <p className={styles.moduleName}>{formNames[activeForm]}</p>
                   <div className="d-flex">
-                    {addingDuplicate && (
-                      <div>
-                        <LoadingIcon />
-                      </div>
-                    )}
-                    {canAddDuplicate &&
-                      includes(duplicates, activeModuleName, 0) && (
-                        <Plus
-                          className={styles.addModuleIcon}
-                          onClick={() => {
-                            setAddingDuplicate(true)
-                          }}
-                        />
-                      )}
-                    {displayModDelete && (
-                      <ConfirmButton
-                        onConfirm={() =>
-                          deleteModule(activeModuleName, template?.workflowId)
-                        }
+                    {includes(duplicates, activeForm, 0) && (
+                      <Plus
+                        className={styles.addModuleIcon}
+                        onClick={saveModule.bind(null, true, [
+                          ...formPayload,
+                          initialFormMeta(),
+                        ])}
                       />
                     )}
+                    {moduleIsDraft() &&
+                      formPayload.length === 1 &&
+                      listOfTables.length > 1 && (
+                        <ConfirmButton onConfirm={deleteModule} />
+                      )}
                   </div>
                 </div>
-                <p className={styles.formHelperText}>{formMeta?.helper}</p>
               </>
             )}
-            {isDuplicate && (
-              <div className={styles.fieldsLoader}>
-                <LoadingIcon />
-                <p className="text-small">Adding duplicate module</p>
-              </div>
-            )}
-            {deletingModule && (
-              <div className={styles.fieldsLoader}>
-                <LoadingIcon />
-                <p className="text-small">Removing Module</p>
-              </div>
-            )}
-            {loadingFields && (
-              <div className={styles.fieldsLoader}>
-                <LoadingIcon />
-                <p className="text-small">Loading Fields</p>
-              </div>
-            )}
-            {isMissingModule && (
+            <p className={styles.formHelperText}>{formMeta?.helper}</p>
+            {currentWorkflow?.modules.length === 0 && (
               <div className={styles.fieldsLoader}>
                 <p className="text-small">
                   This workflow does not have a module
                 </p>
               </div>
             )}
-            {canRenderForm && renderForm()}
+            {formPayload.length > 0 && renderForm()}
           </Grid>
         </Grid>
       </div>
       <div
         className={`${styles.btnContainer} d-flex flex-between p-8 ${
-          !isWorkflowTemplate && 'flex-end'
+          !currentWorkflow?.workflowId && 'flex-end'
         }`}
       >
-        {template?.workflowId && (
+        {currentWorkflow?.workflowId && (
           <Button
             className={styles.completeWorkflow}
-            disabled={isCompleteButtonDisabled}
+            disabled={loaderDisplayed || currentWorkflow.completed}
             onClick={() => {
-              setsavingWorkflowStart(true)
               let canComplete = true
               for (const tbl of listOfTables) {
                 if (tbl.isDraft) {
                   canComplete = false
-                  break
                 }
               }
               if (canComplete) {
                 saveWorkflow({
                   variables: {
-                    workflowId: template?.workflowId,
+                    workflowId: openedWorkflow.workflowId,
                     completed: true,
-                    airtableId: template?.airtableId,
+                    airtableId: currentWorkflow?.airtableId,
                   },
                 })
                   .then((res) => {
                     if (res.data.updateWorkflow.status === 200) {
                       airtableFetch('caseId', 'post', {
-                        id: template?.airtableId,
+                        id: openedWorkflow?.airtableId,
                         fields: {
                           Status: 'Resolved',
                         },
                       }).then(() =>
-                        Toasts.showSuccessNotification(
-                          'Workflow status successfully updated'
-                        )
+                        notify('Workflow status successfully updated')
                       )
-                      setTemplate({
-                        ...res.data.updateWorkflow.workflow,
-                        member,
-                      })
-                      setToastMessage({
-                        ...toastMessage,
-                        message: 'Workflow submitted successfully',
-                      })
-                      // setCurrentFormDisabled(true)
+                      setCurrentWorkflow(res.data.updateWorkflow.workflow)
+                      notify('Workflow submitted successfully')
                       setIsFormEdited(false)
                       onRefetch(true)
                       analytics.track(`Guided Workflow`, {
@@ -1173,64 +945,45 @@ const WorkflowPortal = ({
                         workflow: res.data.updateWorkflow.workflow,
                       })
                     } else {
-                      setToastMessage({
-                        ...toastMessage,
-                        message: 'The changes have not been saved successfully',
-                      })
+                      notify('The changes have not been saved successfully')
                     }
                   })
                   .catch((err) => logError(`saveWorkflow: ${err.message}`))
               } else {
-                setSaveWorkflowError(true)
-                setToastMessage({
-                  ...toastMessage,
-                  message:
-                    'You have to submit all forms to complete the workflow',
-                })
+                setShowIncompleteForms(true)
+                notify('You have to submit all forms to complete the workflow')
               }
-
-              setsavingWorkflowStart(false)
             }}
           >
-            {isSubmitting ? (
-              <div className="d-flex">
-                <p className={styles.submitting}>Submitting</p> <LoadingIcon />{' '}
-              </div>
-            ) : (
-              'Complete Workflow'
-            )}
+            Complete Workflow
           </Button>
         )}
         <div className="d-flex flex-end">
-          {isWorkflowTemplate && (
+          {currentWorkflow?.workflowId && (
             <Button
-              disabled={isSubmitDisabled}
+              disabled={loaderDisplayed || !checkModuleStatus(formPayload)}
               className={styles.saveDraftBtn}
               onClick={() => saveModule(true)}
             >
-              {savingDraft ? (
-                <div className="d-flex">
-                  <p className={styles.submitting}>Submitting</p>{' '}
-                  <LoadingIcon />{' '}
-                </div>
-              ) : (
-                'Save Draft'
-              )}
+              Save Draft
             </Button>
           )}
-          <Button
-            disabled={isSubmitDisabled}
-            className={styles.submitModuleBtn}
-            onClick={() => setShouldSaveModule(true)}
-          >
-            {savingFinal || shouldSaveModule ? (
-              <div className="d-flex">
-                <p className={styles.submitting}>Saving</p> <LoadingIcon />{' '}
-              </div>
-            ) : (
-              'Submit form'
-            )}
-          </Button>
+          <Tooltip title={buttonMessage}>
+            <Button
+              disabled={loaderDisplayed || !checkModuleStatus(formPayload)}
+              className={styles.submitModuleBtn}
+              onClick={() => {
+                if (buttonMessage) {
+                  notify('Select a form to submit')
+                } else {
+                  setShouldSaveModule(true)
+                  setDisplayLoader(true)
+                }
+              }}
+            >
+              Submit form
+            </Button>
+          </Tooltip>
           <DialogContent sx={{ padding: 0, height: '90%' }}>
             {confirmSubmit()}
           </DialogContent>
@@ -1239,5 +992,4 @@ const WorkflowPortal = ({
     </>
   )
 }
-
 export default WorkflowPortal

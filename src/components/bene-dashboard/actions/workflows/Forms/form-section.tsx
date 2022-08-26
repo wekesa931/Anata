@@ -6,32 +6,28 @@ import Snackbar from '@mui/material/Snackbar'
 import { Button } from '@mui/material'
 import WorkflowFormsInput from './workflow-forms-input'
 import styles from '../guided-workflows.component.css'
-import FORMS from './form-fields-complete'
-import { FormSectionInput, WorkflowMeta } from '../workflow-types'
+import FORMS from './FormSchema/form-fields-complete'
+import { WorkflowMeta } from '../workflow-types'
 import validationRules from './validation-schema'
 import CalendlyLink from './CalendlyLink'
 
 const FormSection = ({
-  index,
-  modId,
-  shouldSaveModule,
+  id,
   formPayload,
+  moduleId,
   formMeta,
-  disabled,
-  formError,
-  activeModule,
-  activeModuleName,
-  isToastOpen,
   template,
-  airtableMeta,
+  activeForm,
   addOpenForm,
-  setfinalPayload,
-  resetActiveModule,
-  setFormPayload,
+  airtableMeta,
   setIsFormEdited,
-  setFormError,
+  setFormPayload,
+  shouldSaveModule,
+  saveModule,
+  setDisplayLoader,
   setShouldSaveModule,
-}: FormSectionInput) => {
+}: any) => {
+  const currentIndex = formPayload.findIndex((fm) => fm.moduleId === id)
   const { validationObject, dateFields, numberFields } = validationRules(
     formMeta,
     template
@@ -43,26 +39,24 @@ const FormSection = ({
     getValues,
     reset,
   } = useForm({
-    defaultValues: formPayload,
     resolver: yupResolver(validationObject),
   })
   const canSubmit = every(errors, isEmpty)
   useEffect(() => {
+    reset(formPayload[currentIndex])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeForm, formPayload])
+  const cancelSave = () => {
+    setDisplayLoader(false)
+    setShouldSaveModule(false)
+  }
+  useEffect(() => {
     if (!canSubmit) {
-      setShouldSaveModule(false)
-      setfinalPayload([])
+      cancelSave()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSubmit])
-  useEffect(() => {
-    if (formPayload && formPayload.length > 0) {
-      const currentData = formPayload[index]
-      reset(currentData)
-    } else {
-      reset({})
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeModuleName])
   useEffect(() => {
     if (canSubmit) {
       if (shouldSaveModule) {
@@ -87,39 +81,25 @@ const FormSection = ({
               }
             })
             dateFields.forEach((dt) => {
-              if (formPayload[index][dt] !== 'Invalid Date') {
+              if (formPayload[currentIndex][dt] !== 'Invalid Date') {
                 formattedPayload = {
                   ...formattedPayload,
-                  [dt]: formPayload[index][dt],
+                  [dt]: formPayload[currentIndex][dt],
                 }
               }
             })
-            setfinalPayload((dat) => [...dat, formattedPayload])
-          } else {
-            setfinalPayload([])
-            setShouldSaveModule(false)
+            if (moduleId === id) saveModule(false, formattedPayload)
           }
         })()
       }
-    } else {
-      setShouldSaveModule(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldSaveModule])
-  useEffect(() => {
-    const allErrors = {
-      ...formError,
-      [`${modId}`]: {
-        ...errors,
-      },
-    }
-    setFormError(allErrors)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formPayload, Object.keys(errors).length])
 
   const renderFormState = () => {
     return (
       <div className={styles.formFieldsContainer}>
+        {/* {formMeta.helper && <p className={styles.formHelper}>{formMeta.helper}</p>} */}
         {formMeta.fields.map((field) => {
           const openForm = () => {
             const formData = FORMS.find((fm) => fm.formId === field.formId)
@@ -131,13 +111,13 @@ const FormSection = ({
           }
           if (!field.condition || field.condition(getValues())) {
             let fieldValue: any = null
-            if (activeModule) {
-              fieldValue = formPayload[index][`${field.name}`] || null
-            } else {
-              resetActiveModule()
+            let disabled = true
+            if (formPayload[currentIndex]) {
+              fieldValue = formPayload[currentIndex][`${field.name}`] || null
+              disabled = formPayload[currentIndex].isDraft
             }
             return (
-              <span className={styles.fieldWrapper} key={field.id}>
+              <div className={styles.fieldWrapper} key={field.id}>
                 {field.formId && (
                   <Button
                     variant="contained"
@@ -150,7 +130,7 @@ const FormSection = ({
                 <WorkflowFormsInput
                   control={control}
                   error={errors[field.name]}
-                  disabled={disabled || !activeModule?.isDraft}
+                  disabled={!disabled}
                   value={fieldValue}
                   field={{ ...field, parentTableId: formMeta.id }}
                   template={template}
@@ -158,15 +138,14 @@ const FormSection = ({
                   saveInput={(name: string, value: any) => {
                     setIsFormEdited(true)
                     const newPayload = {
-                      ...formPayload[index],
+                      ...formPayload[currentIndex],
                       [name]: value,
-                      isDraft: true,
                     }
                     if (!value || value?.length === 0) {
                       delete newPayload[name]
                     }
                     const newFormPayload = [...formPayload]
-                    newFormPayload.splice(index, 1, newPayload)
+                    newFormPayload[currentIndex] = newPayload
                     setFormPayload(newFormPayload)
                   }}
                 />
@@ -175,7 +154,7 @@ const FormSection = ({
                   formPayload={formPayload}
                   member={template?.member}
                 />
-              </span>
+              </div>
             )
           }
           return null
@@ -183,15 +162,14 @@ const FormSection = ({
       </div>
     )
   }
-
   return (
     <>
-      {formMeta.fields && <form>{renderFormState()}</form>}
+      {formMeta?.fields && <form>{renderFormState()}</form>}
       <Snackbar
         className={styles.errorAnchor}
         sx={{ width: 150 }}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        open={!every(errors, isEmpty) && !isToastOpen}
+        open={!every(errors, isEmpty)}
         autoHideDuration={5000}
         message="The form contains errors"
         key="bottomcenter"

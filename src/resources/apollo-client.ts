@@ -38,7 +38,6 @@ const createHttpLink = (newVersion = false) => {
   const uri = newVersion
     ? process.env.ANTARA_V2_GRAPHQL
     : process.env.ANTARA_HNOS_BACKEND
-
   return new HttpLink({
     uri,
     credentials: 'same-origin',

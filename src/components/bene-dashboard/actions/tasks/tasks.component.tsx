@@ -14,7 +14,7 @@ import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
 import analytics from '../../../../helpers/segment'
 import PrescriptionName from './PrescriptionNames'
 import CallsCallout from '../calls/calls.component'
-import FORMS from '../workflows/Forms/form-fields-complete'
+import FORMS from '../workflows/Forms/FormSchema/form-fields-complete'
 
 import { GET_MEMBER_TASKS } from '../../../../gql/hn_tasks'
 import { useMember } from '../../../../context/member.context'

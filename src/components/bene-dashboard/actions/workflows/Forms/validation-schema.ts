@@ -4,7 +4,7 @@ const validationRules = (formMeta: any, template: any) => {
   let dateFields: string[] = []
   let numberFields: any[] = []
   let schema = {}
-  formMeta.fields &&
+  formMeta?.fields &&
     formMeta.fields.forEach((fl: any) => {
       const isWorkflowForm =
         fl.name !== 'Case ID' && fl.name !== 'Member' && template?.workflowId

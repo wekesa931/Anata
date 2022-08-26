@@ -52,6 +52,7 @@ const TABLE_ROUTES = {
   'Mental Health Consultation': 'mhc',
   'Physiotherapy Consultation': 'physio',
   'Incident reports': 'incident',
+  'Member Feedback': 'member_feedback',
 }
 
 export default TABLE_ROUTES

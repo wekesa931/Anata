@@ -121,10 +121,21 @@ const GET_ALL_INTERACTIONS = gql`
     }
   }
 `
-
+const CREATE_MEMBER_FEEDBACK = gql`
+  mutation createMemberFeedback($input: MemberFeedbackInput!) {
+    memberFeedback(input: $input) {
+      message
+      status
+      data {
+        feedback
+      }
+    }
+  }
+`
 export {
   GET_MEMBER_INTERACTIONS,
   CREATE_INTERACTION,
   GET_ALL_FLAGGED_INTERACTIONS,
   GET_ALL_INTERACTIONS,
+  CREATE_MEMBER_FEEDBACK,
 }

@@ -1,3 +1,6 @@
+import dayjs from 'dayjs'
+import TABLES from './FormSchema/form-fields-complete'
+
 export const DUPLICATE_DEFAULTS = {
   Conditions: 'Condition',
   Prescriptions: 'Drug Name',
@@ -52,6 +55,7 @@ export const formNames = {
   'Logistics Tasks': 'Logistics Tasks',
   'Incident reports': 'Incident reports form',
   'Interaction log': 'Interaction log form',
+  'Member Feedback': 'Member Feedback',
 }
 
 export const interactionlogform = {
@@ -234,10 +238,28 @@ export const interactionLogPayload = (raw: any) => {
   return finalPayload
 }
 
+const feedbackMap: any = {
+  'Did the member provide any feedback?': 'feedback',
+  'Type of feedback': 'typeOfFeedback',
+  'What did the member provide feedback for?': 'reasonForFeedback',
+  Other: 'otherFeedback',
+  Feedback: 'feedbackFromMember',
+  Member: 'memberAntaraId',
+  Source: 'source',
+}
+
+export const feedbackPayload = (raw: any) => {
+  const finalPayload: any = {}
+  Object.keys(raw).forEach((key) => {
+    if (feedbackMap[key]) finalPayload[`${feedbackMap[key]}`] = raw[key]
+  })
+  return finalPayload
+}
+
 export const initialFormValues = (member: any) => {
   return {
     'BP Mon': {
-      Date: new Date(),
+      Date: dayjs().format('YYYY-MM-DD'),
     },
     Baseline: {
       'Health Navigator': member['Health Navigator Assignment Record ID'],
@@ -246,13 +268,15 @@ export const initialFormValues = (member: any) => {
       Staff: member['Health Navigator Assignment Record ID'],
     },
     'CHL Mon': {
-      'Test Date': new Date(),
+      'Test Date': dayjs().format('YYYY-MM-DD'),
     },
     'DM Mon': {
-      'Test Date': new Date(),
+      'Test Date': dayjs().format('YYYY-MM-DD'),
     },
     Conditions: {
       'Health Navigator': member['Health Navigator Assignment Record ID'],
     },
   }
 }
+
+export const airtableFormNames = TABLES.map((fm) => fm.name)

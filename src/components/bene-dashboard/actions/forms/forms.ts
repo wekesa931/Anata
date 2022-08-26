@@ -1,4 +1,4 @@
-import FORM_PAYLOAD from '../workflows/Forms/form-fields-complete'
+import FORM_PAYLOAD from '../workflows/Forms/FormSchema/form-fields-complete'
 
 const updatedForms = () => {
   const payload: any[] = []

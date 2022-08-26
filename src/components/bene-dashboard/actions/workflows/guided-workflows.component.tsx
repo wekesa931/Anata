@@ -70,10 +70,12 @@ const GuidedWorkflows = () => {
     </div>
   )
   const viewWorkflow = (payload: any) => {
-    const isWorkflowOpen = openedForms.find(
-      (fm: any) => fm.workflowId === payload.workflowId
-    )
-    if (isWorkflowOpen) return
+    const isWorkflowOpen = openedForms.find((fm: any) => fm.workflowId)
+    if (isWorkflowOpen)
+      setToastMessage({
+        ...toastMessage,
+        message: 'Close the current workflow before resuming another',
+      })
     addOpenForm({ ...payload, member })
     setTemplateName(null)
   }
