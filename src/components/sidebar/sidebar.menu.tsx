@@ -122,9 +122,9 @@ const SidebarMenuItems = [
     name: 'Risk Rank View',
     icon: <AlertCircle />,
     rootUrl:
-      'https://airtable.com/embed/shrnlJrWFGy2w13rI?backgroundColor=green&viewControls=on',
+      'https://airtable.com/embed/shrbUlLVm043wUSJg?backgroundColor=green&viewControls=on',
     url_sandbox:
-      'https://airtable.com/embed/shrjwZVQWX9XuUN0K?backgroundColor=pink&viewControls=on',
+      'https://airtable.com/embed/shrsdYjJBIZt35Sup?backgroundColor=pink&viewControls=on',
   },
   {
     name: 'Population',
