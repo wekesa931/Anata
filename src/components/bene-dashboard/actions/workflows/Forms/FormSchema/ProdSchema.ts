@@ -12636,7 +12636,7 @@ export default [
       },
       {
         id: 'fldriphoZRDX96JyD',
-        name: 'Please write in any additional comments or observation you think are important.',
+        name: 'Please write in any additional comments or observation you think are important',
         type: 'richText',
         format: '',
         isDateTime: false,
