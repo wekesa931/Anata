@@ -221,7 +221,7 @@ const Appointments = () => {
       appointment.reduce(
         (obj, { name, value }) => ({ ...obj, [name]: value }),
         {}
-      ).Date
+      ).start_date_time
     ).format("DD MMM 'YY HH:mmA")
   }
 
