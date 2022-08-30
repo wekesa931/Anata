@@ -21,6 +21,7 @@ import MemberTask from './member_tasks/member-task.component'
 import Tooltip from '../../utils/tooltip/tooltip.component'
 import CallLog from '../actions/calls/call-log/call-log.component'
 import EngagementDashboard from './engagement/engagement-dashboard.component'
+import Longitudinal from './longitudinal/longitudinal.components'
 
 const SortButton = ({ openSortDialog, setOpenSortDialog }: any) => {
   const {
@@ -101,12 +102,13 @@ const Views = () => {
               classes={{ root: styles.MuiTabRoot }}
             />
             <Tab label="Conditions" value="2" />
-            <Tab label="Interactions" value="3" />
-            <Tab label="Call Log" value="4" />
-            <Tab label="Nutrition" value="5" />
-            <Tab label="Docs" value="6" />
-            <Tab label="Member Tasks" value="7" />
-            <Tab label="Member Engagement" value="8" />
+            <Tab label="Longitudinal" value="3" />
+            <Tab label="Interactions" value="4" />
+            <Tab label="Call Log" value="5" />
+            <Tab label="Nutrition" value="6" />
+            <Tab label="Docs" value="7" />
+            <Tab label="Member Tasks" value="8" />
+            <Tab label="Member Engagement" value="9" />
           </TabList>
           <FilterComponent />
         </Box>
@@ -123,32 +125,37 @@ const Views = () => {
               <Conditions />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel value="3">
+          <TabPanel value="3" className={styles.longitud}>
             <ErrorBoundary>
-              <InteractionLogs />
+              <Longitudinal />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel value="4">
             <ErrorBoundary>
-              <CallLog />
+              <InteractionLogs />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel value="5">
             <ErrorBoundary>
-              <Nutrition />
+              <CallLog />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel value="6">
             <ErrorBoundary>
-              <Files />
+              <Nutrition />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel value="7">
             <ErrorBoundary>
-              <MemberTask />
+              <Files />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel value="8">
+            <ErrorBoundary>
+              <MemberTask />
+            </ErrorBoundary>
+          </TabPanel>
+          <TabPanel value="9">
             <ErrorBoundary>
               <EngagementDashboard />
             </ErrorBoundary>
