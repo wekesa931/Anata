@@ -20,7 +20,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isLoggedIn()) {
-      history.push('/member')
+      history.goBack()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -35,7 +35,7 @@ const Login = () => {
 
   const getRefreshTokenFromNodeProxy = async (code: string) => {
     const tokens = await axios({
-      url: `${process.env.NODE_PROXY_URL}/auth`,
+      url: `${process.env.NODE_PROXY_URL}/api/auth`,
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'Content-Type': 'application/json',
