@@ -274,9 +274,9 @@ const Appointments = () => {
             data-testid="status-filter"
           >
             <option key="all">{selected}</option>
-            {selected === 'All'
+            {status.includes(selected)
               ? status
-                  .slice(1)
+                  .filter((el) => el !== selected)
                   .map((stat) => <option key={stat}>{stat}</option>)
               : status.map((stat) => <option key={stat}>{stat}</option>)}
           </select>
