@@ -36,8 +36,8 @@ const authMiddleWare = () =>
 
 const createHttpLink = (newVersion = false) => {
   const uri = newVersion
-    ? `${process.env.API_URL}/v2/graphql`
-    : `${process.env.API_URL}/graphql`
+    ? `${process.env.API_URL}/scribe/v2/graphql/`
+    : `${process.env.API_URL}/scribe/graphql/`
   return new HttpLink({
     uri,
     credentials: 'same-origin',
