@@ -35,7 +35,7 @@ const Login = () => {
 
   const getRefreshTokenFromNodeProxy = async (code: string) => {
     const tokens = await axios({
-      url: `${process.env.NODE_PROXY_URL}/api/auth`,
+      url: `${process.env.API_URL}/airtable/auth`,
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'Content-Type': 'application/json',
@@ -60,6 +60,7 @@ const Login = () => {
 
     if (authToken && authToken.id_token) {
       const userObj = jwt_decode(authToken.id_token)
+      // @ts-ignore
       setCurrentUser(userObj)
       storage.set(keys.USER, JSON.stringify({ ...authToken, ...userObj }))
       if (userObj) {

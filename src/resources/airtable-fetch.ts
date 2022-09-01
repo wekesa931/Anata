@@ -5,7 +5,7 @@ import constants from '../constants/storage'
 import storage from '../helpers/secure-storage'
 import refreshToken from './refresh-google-auth-token'
 
-const baseUrl = `${process.env.NODE_PROXY_URL}/api`
+const baseUrl = `${process.env.API_URL}/airtable`
 
 const getTokenFromLocalStorage = () => {
   const user = storage.get(constants.USER)

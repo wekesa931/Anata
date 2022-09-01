@@ -36,8 +36,8 @@ const authMiddleWare = () =>
 
 const createHttpLink = (newVersion = false) => {
   const uri = newVersion
-    ? process.env.ANTARA_V2_GRAPHQL
-    : process.env.ANTARA_HNOS_BACKEND
+    ? `${process.env.API_URL}/v2/graphql`
+    : `${process.env.API_URL}/graphql`
   return new HttpLink({
     uri,
     credentials: 'same-origin',
