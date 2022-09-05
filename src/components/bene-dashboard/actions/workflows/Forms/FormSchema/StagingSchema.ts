@@ -7099,7 +7099,7 @@ export default [
       {
         id: 'typeOfFeedback',
         name: 'Type of feedback',
-        type: 'select',
+        type: 'multiSelect',
         format: '',
         isDateTime: false,
         options: ['Positive', 'Negative'],

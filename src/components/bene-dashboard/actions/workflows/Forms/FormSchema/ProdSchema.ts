@@ -2590,7 +2590,7 @@ export default [
       {
         id: 'fldGp7FlQjpQHN0z5',
         name: 'Type of feedback',
-        type: 'select',
+        type: 'multiSelect',
         format: '',
         isDateTime: false,
         options: [],
@@ -6851,7 +6851,7 @@ export default [
       {
         id: 'fldw39SaE9cHEkRwZ',
         name: 'Type of feedback',
-        type: 'select',
+        type: 'multiSelect',
         format: '',
         isDateTime: false,
         options: [],
@@ -10221,7 +10221,7 @@ export default [
       {
         id: 'flduVomIICMdB9i3f',
         name: 'Type of feedback',
-        type: 'select',
+        type: 'multiSelect',
         format: '',
         isDateTime: false,
         options: [],
@@ -10786,7 +10786,7 @@ export default [
       {
         id: 'fldvzIn7TfEBMVeaM',
         name: 'Type of feedback',
-        type: 'select',
+        type: 'multiSelect',
         format: '',
         isDateTime: false,
         options: [],
@@ -12756,7 +12756,7 @@ export default [
       {
         id: 'fldNpRBf9YJHwNBrv',
         name: 'Type of feedback',
-        type: 'select',
+        type: 'multiSelect',
         format: '',
         isDateTime: false,
         options: [],
@@ -14166,7 +14166,7 @@ export default [
       {
         id: 'fldPrqD2SgUiUj73k',
         name: 'Type of feedback',
-        type: 'select',
+        type: 'multiSelect',
         format: '',
         isDateTime: false,
         options: [],
@@ -14551,7 +14551,7 @@ export default [
       {
         id: 'fldb38MeePBlvREhy',
         name: 'Type of feedback',
-        type: 'select',
+        type: 'multiSelect',
         format: '',
         isDateTime: false,
         options: [],
@@ -17512,7 +17512,7 @@ export default [
       {
         id: 'typeOfFeedback',
         name: 'Type of feedback',
-        type: 'select',
+        type: 'multiSelect',
         format: '',
         isDateTime: false,
         options: ['Positive', 'Negative'],
