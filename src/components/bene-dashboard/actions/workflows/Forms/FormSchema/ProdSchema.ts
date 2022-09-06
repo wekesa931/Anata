@@ -1359,7 +1359,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper:
+          'At Antara we provide counseling services for our members, are you interested in doing a consultation with our counselor? if the answer is yes, please check with member if you can go ahead and book the consultation or if the member wants to do it at their convenience (in that case, create a member task for them to do it in the app)',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
         parentValues: ['Mental Health'],
@@ -2058,6 +2059,227 @@ export default [
         },
       },
       {
+        id: 'fldYqSg6LyiDiQjAr',
+        name: 'On average how many hours of uninterrupted sleep do you get every night?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Please fill in the numbers of hours of sleep between 0 to 10. Quality of sleep is uninterrupted 7 - 9 hours of sleep where one wakes up feeling refreshed and rejuvenated (recommended 8 hours) if anyone is sleeping less than 5 hours of sleep, it is important to refer for MH Counseling',
+        conditionType: '',
+        parentKey: 'Please select the system(s) with a relevant finding',
+        parentValues: ['Mental Health'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Please select the system(s) with a relevant finding']
+            )
+          ) {
+            return ['Mental Health'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant finding'
+              ].includes(r)
+            )
+          }
+          return ['Mental Health'].includes(
+            values['Please select the system(s) with a relevant finding']
+          )
+        },
+      },
+      {
+        id: 'fld1sqQhQ4FaTO32o',
+        name: 'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'NOTE: A " yes " response to use of alcohol or substance  is a red flag that requires referral for MHC. \n',
+        conditionType: '',
+        parentKey: 'Please select the system(s) with a relevant finding',
+        parentValues: ['Mental Health'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Please select the system(s) with a relevant finding']
+            )
+          ) {
+            return ['Mental Health'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant finding'
+              ].includes(r)
+            )
+          }
+          return ['Mental Health'].includes(
+            values['Please select the system(s) with a relevant finding']
+          )
+        },
+      },
+      {
+        id: 'fldPRNSWPMlZv8k4A',
+        name: 'Medication',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'please enter the names of medications and the frequency',
+        conditionType: '',
+        parentKey:
+          'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?',
+        parentValues: ['Medication'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ]
+            )
+          ) {
+            return ['Medication'].some((r) =>
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ].includes(r)
+            )
+          }
+          return ['Medication'].includes(
+            values[
+              'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldUYKFRJfYPWxsR5',
+        name: 'Alcohol',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'please enter quantify of alcohol per day',
+        conditionType: '',
+        parentKey:
+          'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?',
+        parentValues: ['Alcohol'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ]
+            )
+          ) {
+            return ['Alcohol'].some((r) =>
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ].includes(r)
+            )
+          }
+          return ['Alcohol'].includes(
+            values[
+              'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldUDLKuoyJzNELNM',
+        name: 'Tobacco',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'please enter number of stick per day',
+        conditionType: '',
+        parentKey:
+          'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?',
+        parentValues: ['Smoke'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ]
+            )
+          ) {
+            return ['Smoke'].some((r) =>
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ].includes(r)
+            )
+          }
+          return ['Smoke'].includes(
+            values[
+              'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldNo7olDusR7yu5k',
+        name: 'Substances',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'please enter the substances that the member is taking like drugs or other and the frequency',
+        conditionType: '',
+        parentKey:
+          'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?',
+        parentValues: ['Other substance'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ]
+            )
+          ) {
+            return ['Other substance'].some((r) =>
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ].includes(r)
+            )
+          }
+          return ['Other substance'].includes(
+            values[
+              'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+            ]
+          )
+        },
+      },
+      {
         id: 'fldTc7EwOHKhSNTP0',
         name: 'Activity Description',
         type: 'text',
@@ -2086,125 +2308,6 @@ export default [
         required: true,
         helper:
           '[From Activity Description response, please assign a level.]\n\n\nIF ADULT\n 0: No/very light activity = Only sitting, watching TV or staying in bed\n\n1: Light activity = Sitting work with leisure activity; or at least 30 minutes brisk walking 3 days per week; or\nlight weight lifting, yoga, stretching exercises\n\n2: Moderate activity = Partly standing/walking work; or at least 30 minutes brisk walking 5 days per week; or\nmoderate weight lifting, low impact home exercises (push ups, sit ups, star jumps, dancing, aerobics, zumba), cycling for leisure, jog-walk combination, slow skipping, occasional hiking\n\n3: Vigorous activity = Mainly standing/walking work; or at least 60 minutes brisk walking 7 days per week; or\nheavy weight lifting, high impact home exercises, cycling to work, jogging, fast skipping, weekend hiking\n\n4: Daily sports/athlete = Daily strenuous work like heavy lifting, digging, farming, sports cycling, sports training, competitive sports, hiking\n\n\nIF MINOR\n 0: No/very light activity = Only sitting, watching TV or staying in bed\n\n1: Light activity = At least 60 minutes of running, cycling, jumping, play, sports - once per week\n\n2: Moderate activity = At least 60 minutes of running, cycling, jumping, play, sports - 3 times per week\n\n3: Vigorous activity = At least 60 minutes of running, cycling, jumping, play, sports - 5 times per week\n\n4: Daily sports/athlete = At least 60 minutes of running, cycling, jumping, play, sports - 7 times per week\n',
-      },
-      {
-        id: 'fldRozIE8zsPzozuK',
-        name: 'Social History',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '"How much a person smokes, drinks or uses recreational drugs can have an important impact on health. That is why we ask. There is no judgement, only concern for your well-being"',
-        conditionType: '',
-        parentKey: 'Is the BN a minor',
-        parentValues: ['No'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Is the BN a minor'])) {
-            return ['No'].some((r) => values['Is the BN a minor'].includes(r))
-          }
-          return ['No'].includes(values['Is the BN a minor'])
-        },
-      },
-      {
-        id: 'fldUDLKuoyJzNELNM',
-        name: 'Tobacco',
-        type: 'number',
-        format: 'integer',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Social History',
-        parentValues: ['Tobacco'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Social History'])) {
-            return ['Tobacco'].some((r) => values['Social History'].includes(r))
-          }
-          return ['Tobacco'].includes(values['Social History'])
-        },
-      },
-      {
-        id: 'fld1qv5wFWJoAM1nu',
-        name: 'Last smoking date',
-        type: 'date',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Social History',
-        parentValues: ['Tobacco'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Social History'])) {
-            return ['Tobacco'].some((r) => values['Social History'].includes(r))
-          }
-          return ['Tobacco'].includes(values['Social History'])
-        },
-      },
-      {
-        id: 'fldUYKFRJfYPWxsR5',
-        name: 'Alcohol',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Please estimate based on their response to drinks per day',
-        conditionType: '',
-        parentKey: 'Social History',
-        parentValues: ['Alcohol'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Social History'])) {
-            return ['Alcohol'].some((r) => values['Social History'].includes(r))
-          }
-          return ['Alcohol'].includes(values['Social History'])
-        },
-      },
-      {
-        id: 'fldn9k5Z9zQUupwoG',
-        name: 'Recreational Drugs',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '"Tell us about the type of drugs that you use and how often you use them."',
-        conditionType: '',
-        parentKey: 'Social History',
-        parentValues: ['Recreational drugs'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Social History'])) {
-            return ['Recreational drugs'].some((r) =>
-              values['Social History'].includes(r)
-            )
-          }
-          return ['Recreational drugs'].includes(values['Social History'])
-        },
       },
       {
         id: 'fldMwmPNsW6aq1mmB',
