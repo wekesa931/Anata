@@ -2127,6 +2127,20 @@ export default [
         },
       },
       {
+        id: 'fldS7BHxKsN4pG2gf',
+        name: 'Do you have any significant past medical history not listed above?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
         id: 'fldPRNSWPMlZv8k4A',
         name: 'Medication',
         type: 'text',
@@ -2832,128 +2846,6 @@ export default [
         helper: '',
       },
       {
-        id: 'fldOrDHca3HZ1Jgs9',
-        name: 'What is your Blood Type?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldlfqcjNGt38FcjD',
-        name: 'What is Your Weight?',
-        type: 'number',
-        format: 'decimal',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldTQkMCecLbkjzrR',
-        name: 'What is Your Height?',
-        type: 'number',
-        format: 'decimal',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldGqwP9q6K5f4Erd',
-        name: 'Do you have any medication allergies?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldiFnIzYvWkcrOSO',
-        name: 'Which medications are you allergic to?',
-        type: 'richText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Do you have any medication allergies?',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Do you have any medication allergies?'])) {
-            return ['Yes'].some((r) =>
-              values['Do you have any medication allergies?'].includes(r)
-            )
-          }
-          return ['Yes'].includes(
-            values['Do you have any medication allergies?']
-          )
-        },
-      },
-      {
-        id: 'fldO4YubmZ2JwGsv3',
-        name: 'Do you have any food allergies?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldjPCITvynDbf5A3',
-        name: 'Which food are you allergic to?',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Do you have any food allergies?',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Do you have any food allergies?'])) {
-            return ['Yes'].some((r) =>
-              values['Do you have any food allergies?'].includes(r)
-            )
-          }
-          return ['Yes'].includes(values['Do you have any food allergies?'])
-        },
-      },
-      {
         id: 'fldSRzJzWesS79XLz',
         name: 'Do you have any of the following conditions?',
         type: 'multiSelect',
@@ -3112,6 +3004,79 @@ export default [
         },
       },
       {
+        id: 'fldlfqcjNGt38FcjD',
+        name: 'What is Your Weight?',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          '"How much do you weigh"\n\n(kg) examples: 60 or 75 or 85\n(If member has already given this information during screening or PSPB or HIF phase and if you can see it on Vitals section on Scribe, please skip this step)',
+      },
+      {
+        id: 'fldTQkMCecLbkjzrR',
+        name: 'What is Your Height?',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          '"Do you know how tall you are? Even if you have a vague memory of your height in Meters, let us know."\n\n(m) examples: 1.5 or 1.8 or 1.55\n(If member has already given this information during screening or PSPB or HIF phase and if you can see it on Vitals section on Scribe, please skip this step)\n\nYou need to enter vitals? Click the button',
+      },
+      {
+        id: 'fld58mBbotwbl70uz',
+        name: 'Are you currently taking any medications?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fld2iYtTiNHWUcvUt',
+        name: 'What medications are you taking?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Are you currently taking any medications?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(values['Are you currently taking any medications?'])
+          ) {
+            return ['Yes'].some((r) =>
+              values['Are you currently taking any medications?'].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values['Are you currently taking any medications?']
+          )
+        },
+      },
+      {
         id: 'fld0cwXZ3TkbrpaA2',
         name: 'If you could work on one aspect of your health, what would it be?',
         type: 'multiSelect',
@@ -3216,8 +3181,8 @@ export default [
         },
       },
       {
-        id: 'fld58mBbotwbl70uz',
-        name: 'Are you currently taking any medications?',
+        id: 'fldOrDHca3HZ1Jgs9',
+        name: 'What is your Blood Type?',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -3228,6 +3193,86 @@ export default [
         foreignTableId: null,
         required: false,
         helper: '',
+      },
+      {
+        id: 'fldGqwP9q6K5f4Erd',
+        name: 'Do you have any medication allergies?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldiFnIzYvWkcrOSO',
+        name: 'Which medications are you allergic to?',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any medication allergies?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Do you have any medication allergies?'])) {
+            return ['Yes'].some((r) =>
+              values['Do you have any medication allergies?'].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values['Do you have any medication allergies?']
+          )
+        },
+      },
+      {
+        id: 'fldO4YubmZ2JwGsv3',
+        name: 'Do you have any food allergies?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldjPCITvynDbf5A3',
+        name: 'Which food are you allergic to?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any food allergies?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Do you have any food allergies?'])) {
+            return ['Yes'].some((r) =>
+              values['Do you have any food allergies?'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Do you have any food allergies?'])
+        },
       },
       {
         id: 'fldp7mFI4blXJlUvf',
