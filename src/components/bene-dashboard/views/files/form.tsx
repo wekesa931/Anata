@@ -178,10 +178,11 @@ const RefinedFileMetaForm = ({ uploadStart, uploadDocument }: IProps) => {
         />
       </Box>
       {shareChecked && (
-        <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
+        <FormControl fullWidth sx={{ m: 1 }}>
           <InputLabel id="folder">Choose folder</InputLabel>
           <Select
             labelId="folder"
+            label="Choose folder"
             id="select-folder"
             value={shareFolder}
             onChange={(e: SelectChangeEvent) =>
