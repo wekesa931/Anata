@@ -28,6 +28,7 @@ import {
   XCircle,
   Grid as FeatherGrid,
   List,
+  Share,
 } from 'react-feather'
 import MenuItem from '@mui/material/MenuItem'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -47,16 +48,31 @@ import MobileDatePicker from '@mui/lab/MobileDatePicker'
 import AdapterDateFns from '@mui/lab/AdapterDayjs'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import LinearProgress from '@mui/material/LinearProgress'
+import { Divider, IconButton, Popper, Stack, styled } from '@mui/material'
+import { LoadingButton } from '@mui/lab'
+import FormControl from '@mui/material/FormControl'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Tooltip from '../../../utils/tooltip/tooltip.component'
 import styles from './files.component.css'
 import PdfViewer from './pdf-viewer.component'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
-import { GET_FILES, UPLOAD_LINK, SAVE_FILE } from './files.gql'
+import {
+  GET_FILES,
+  UPLOAD_LINK,
+  SAVE_FILE,
+  GET_FOLDERS,
+  SHARE_FILE,
+} from './files.gql'
 import { useMember } from '../../../../context/member.context'
 import { useUser } from '../../../../context/user-context'
 import RefinedFileMetaForm from './form'
 import logError from '../../../utils/Bugsnag/Bugsnag'
 import DropDownComponent from '../../../../helpers/dropdown-helper'
+import analytics from '../../../../helpers/analytics'
+import ToastNotification, {
+  defaultToastMessage,
+  ToastMessage,
+} from '../../../utils/toast/toast-notification'
 
 // eslint-disable-next-line
 const mime = require('mime-types')
@@ -75,6 +91,8 @@ type DocMeta = {
   docType: string
   description: string
   title: string
+  shareWith?: string[]
+  folder?: string
 }
 
 type IFiles = {
@@ -107,6 +125,20 @@ type IUploadOptions = {
   clear: () => void
 }
 
+type IFolder = {
+  id: string
+  name: string
+}
+
+type IShareOptions = {
+  open: boolean
+  anchorEl: HTMLElement | null
+  id: string | undefined
+  close: () => void
+  folders: IFolder[]
+  fileId: string
+}
+
 function descendingComparator(a: any, b: any, orderBy: any) {
   if (b[orderBy] < a[orderBy]) {
     return -1
@@ -122,6 +154,97 @@ function getComparator(order: any, orderBy: any) {
     ? (a: any, b: any) => descendingComparator(a, b, orderBy)
     : (a: any, b: any) => -descendingComparator(a, b, orderBy)
 }
+
+const ShareFileOptions = React.forwardRef(
+  ({ open, anchorEl, id, close, folders, fileId }: IShareOptions) => {
+    const { member } = useMember()
+    const [folder, setFolder] = useState<string>('')
+    const [shareFileMutation, { loading: sharing }] = useMutation(SHARE_FILE)
+    const [toastMessage, setToastMessage] =
+      useState<ToastMessage>(defaultToastMessage)
+
+    const shareFile = () => {
+      shareFileMutation({
+        variables: {
+          fileId,
+          folderId: folder,
+          antaraId: member['Antara ID'],
+        },
+      })
+        .then((res) => {
+          const message = res?.data?.shareFile?.message
+
+          setToastMessage({
+            ...toastMessage,
+            message,
+          })
+        })
+        .catch((err) => {
+          logError(err)
+          setToastMessage({
+            ...toastMessage,
+            message: 'An error occured sharing file',
+          })
+        })
+        .finally(() => {
+          setFolder('')
+          close()
+        })
+    }
+
+    return (
+      <>
+        <ToastNotification
+          message={toastMessage}
+          isOpen={!!toastMessage.message}
+          handleToastClose={() => setToastMessage(defaultToastMessage)}
+        />
+        <Popper open={open} anchorEl={anchorEl} id={id}>
+          <Box
+            className={styles.shareDocModal}
+            sx={{ bgcolor: 'background.paper', p: 3 }}
+          >
+            <h3 className={styles.shareDocTitle}>Send doc to the app</h3>
+
+            <p className={styles.appFolder}>App Folder</p>
+            <FormControl fullWidth sx={{ mt: 2, mb: 2 }}>
+              <Select
+                value={folder}
+                onChange={(e: SelectChangeEvent) =>
+                  setFolder(e.target.value as string)
+                }
+              >
+                {folders.map((f) => (
+                  <MenuItem key={f.id} value={f.id}>
+                    {f.name}{' '}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <Stack spacing={2} direction="row">
+              <button
+                className={`btn ${styles.cancelBtn} ${styles.styledBtn}`}
+                onClick={close}
+              >
+                Cancel
+              </button>
+
+              <LoadingButton
+                className={`${styles.styledBtn} ${styles.shareFileBtn} btn`}
+                onClick={shareFile}
+                loading={sharing}
+                disabled={!folder}
+              >
+                {sharing ? 'Sharing...' : 'Share'}
+              </LoadingButton>
+            </Stack>
+          </Box>
+        </Popper>
+      </>
+    )
+  }
+)
 
 const UploadOptions = ({
   open,
@@ -467,8 +590,67 @@ const FilterComponent = ({
   )
 }
 
+const DrawerHeader = styled('div')(({ theme }: any) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+  justifyContent: 'space-between',
+  flexDirection: 'row',
+  paddingLeft: 2,
+}))
+
+const FileDetails = ({ file, close }: any) => {
+  const sharingInfo = file?.sharedfileSet?.edges[0]?.node
+
+  return (
+    <Drawer
+      anchor="left"
+      className="upload-form-drawer"
+      open={!!file}
+      onClose={close}
+    >
+      <DrawerHeader>
+        <p className={styles.docInfoHeader}>Doc info</p>
+        <IconButton onClick={close}>
+          <X />
+        </IconButton>
+      </DrawerHeader>
+      <Divider />
+      <Box sx={{ p: 2 }}>
+        <Box sx={{ mt: 1, mb: 2 }}>
+          <p className={styles.docInfoText}>{file.title}</p>
+        </Box>
+
+        <Box sx={{ mt: 1, mb: 2 }}>
+          <p className={styles.docInfoSubtext}>Uploaded</p>
+          <p className={styles.docInfoText}>
+            {dayjs(file.createdAt).format("DD MMM' YYYY, HH:mm")}
+          </p>
+        </Box>
+
+        <Box sx={{ mt: 1, mb: 2 }}>
+          <p className={styles.docInfoSubtext}>Sharing</p>
+          <p className={styles.docInfoText}>
+            {file.shared ? 'Shared with member' : 'Not shared with member'}
+          </p>
+        </Box>
+
+        {file.shared && (
+          <Box sx={{ mt: 1, mb: 2 }}>
+            <p className={styles.docInfoSubtext}>Shared by</p>
+            <p className={styles.docInfoText}>{sharingInfo?.sharedBy}</p>
+          </Box>
+        )}
+      </Box>
+    </Drawer>
+  )
+}
+
 const Files = () => {
   const [open, setOpen] = useState(false)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [filtering, setfiltering] = useState(false)
   const [docLink, setdocLink] = useState(undefined)
   const [order, setOrder] = React.useState('asc')
@@ -499,6 +681,11 @@ const Files = () => {
   const { loading, error, data, refetch } = useQuery(GET_FILES, {
     variables: { antaraId: member['Antara ID'] },
   })
+  const [folders, setFolders] = useState([])
+  const [fileDetails, showFileDetails] = useState<any>(null)
+
+  const { data: foldersData } = useQuery(GET_FOLDERS)
+
   const [getUploadLink, { loading: gettingUploadLink }] =
     useMutation(UPLOAD_LINK)
   const [saveFile] = useMutation(SAVE_FILE)
@@ -528,6 +715,13 @@ const Files = () => {
   }
 
   useEffect(() => {
+    if (foldersData) {
+      const rawFolders = foldersData?.folders?.edges
+      setFolders(rawFolders.map(({ node }) => node))
+    }
+  }, [foldersData])
+
+  useEffect(() => {
     if (gettingFile) {
       setConfirmationDrawerHelper(true)
     }
@@ -543,8 +737,26 @@ const Files = () => {
     {
       id: 'updatedAt',
       numeric: true,
-      disablePadding: false,
-      label: <p className={styles.titleName}>Date Uploaded</p>,
+      disablePadding: true,
+      label: <p className={styles.titleName}>Uploaded</p>,
+    },
+    {
+      id: 'shared',
+      numeric: true,
+      disablePadding: true,
+      label: <p className={styles.titleName}>Sharing</p>,
+    },
+    {
+      id: 'lastSent',
+      numeric: true,
+      disablePadding: true,
+      label: <p className={styles.titleName}>Last time sent</p>,
+    },
+    {
+      id: 'details',
+      numeric: true,
+      disablePadding: true,
+      label: <p className={styles.titleName}>Details</p>,
     },
   ]
   const handleUploadClick = () => {
@@ -568,9 +780,31 @@ const Files = () => {
     return <FileText className={styles.green} />
   }
 
+  const isFileShared = (sharedfileSet: any) => {
+    return !!sharedfileSet?.edges.length
+  }
+
+  const getSharedAt = (row: any) => {
+    const sharedAt = row?.sharedfileSet.edges[0]?.node?.updatedAt
+
+    if (sharedAt) {
+      return dayjs(sharedAt).format("DD MMM' YY")
+    }
+
+    return ''
+  }
+
   useEffect(() => {
     if (data) {
-      const rawFiles = data.files.edges.map((ed: { node: IFiles }) => ed.node)
+      const rawFiles = data.files.edges
+        .map((ed: { node: IFiles }) => ed.node)
+        .map((ed: any) => ({
+          ...ed,
+          category: ed?.fileCategory?.name || ed.category,
+          shared: isFileShared(ed.sharedfileSet),
+        }))
+
+      // parse shared file set
       const categorizedFiles = groupBy(rawFiles, 'category')
       setFilteredFiles(categorizedFiles)
     }
@@ -615,6 +849,11 @@ const Files = () => {
     })
     return stabilizedThis.map((el) => el[0])
   }
+
+  const closeFileSharing = () => {
+    setAnchorEl(null)
+    refetch()
+  }
   const persistData = (
     docMeta: DocMeta,
     storeKey: string,
@@ -623,21 +862,31 @@ const Files = () => {
     driveLink: any,
     fileName: any
   ) => {
+    let input: any = {
+      description: docMeta.description,
+      antaraId: member['Antara ID'],
+      storageKey: storeKey,
+      addedBy: user?.email,
+      mimeType: mimeVal,
+      fileSize,
+      category: docMeta.docType,
+      driveUrl: driveLink,
+      title: docMeta.title,
+      recordId: member.recID,
+      fileName,
+    }
+
+    if (docMeta.shareWith) {
+      input = {
+        ...input,
+        shareWith: docMeta.shareWith,
+        folder: docMeta.folder,
+      }
+    }
+
     saveFile({
       variables: {
-        input: {
-          description: docMeta.description,
-          antaraId: member['Antara ID'],
-          storageKey: storeKey,
-          addedBy: user?.email,
-          mimeType: mimeVal,
-          fileSize,
-          category: docMeta.docType,
-          driveUrl: driveLink,
-          title: docMeta.title,
-          recordId: member.recID,
-          fileName,
-        },
+        input,
       },
     }).then((res) => {
       setUploadStart(false)
@@ -647,6 +896,13 @@ const Files = () => {
       } else {
         setUploadSuccessful(true)
         refetch()
+
+        // track upload and share events
+        if (docMeta.shareWith) {
+          analytics.track('File shared with member', {
+            ...input,
+          })
+        }
       }
     })
   }
@@ -779,6 +1035,8 @@ const Files = () => {
     }
     return color
   }
+
+  console.log(fileDetails)
 
   const uploadStatusHeader = () => (
     <>
@@ -1093,9 +1351,6 @@ const Files = () => {
                                         return (
                                           <TableRow
                                             hover
-                                            onClick={(event) =>
-                                              handleClick(event, row)
-                                            }
                                             role="checkbox"
                                             tabIndex={-1}
                                             key={row.id}
@@ -1119,8 +1374,79 @@ const Files = () => {
                                               align="right"
                                             >
                                               {dayjs(row.updatedAt).format(
-                                                'DD MMMM YYYY'
+                                                "DD MMM' YY"
                                               )}
+                                            </TableCell>
+                                            <TableCell
+                                              sx={{ padding: '5px' }}
+                                              align="right"
+                                            >
+                                              {row.shared ? (
+                                                <p style={{ fontSize: 14 }}>
+                                                  <CheckCircle
+                                                    color="green"
+                                                    style={{
+                                                      width: 24,
+                                                      height: 14,
+                                                    }}
+                                                  />
+                                                  <span>Shared</span>
+                                                </p>
+                                              ) : (
+                                                <div>
+                                                  <ShareFileOptions
+                                                    anchorEl={anchorEl}
+                                                    open={!!anchorEl}
+                                                    id={
+                                                      anchorEl
+                                                        ? 'folder-popup'
+                                                        : undefined
+                                                    }
+                                                    close={closeFileSharing}
+                                                    folders={folders}
+                                                    fileId={row?.id}
+                                                  />
+                                                  <button
+                                                    className={styles.shareBtn}
+                                                    onClick={(
+                                                      e: React.MouseEvent<HTMLElement>
+                                                    ) =>
+                                                      setAnchorEl(
+                                                        anchorEl
+                                                          ? null
+                                                          : e.currentTarget
+                                                      )
+                                                    }
+                                                  >
+                                                    <Share
+                                                      style={{
+                                                        width: 34,
+                                                        height: 14,
+                                                      }}
+                                                    />
+                                                    <span>Share</span>
+                                                  </button>
+                                                </div>
+                                              )}
+                                            </TableCell>
+                                            <TableCell
+                                              sx={{ padding: '5px' }}
+                                              align="right"
+                                            >
+                                              {getSharedAt(row)}
+                                            </TableCell>
+                                            <TableCell
+                                              sx={{ padding: '5px' }}
+                                              align="right"
+                                            >
+                                              <button
+                                                className={styles.shareBtn}
+                                                onClick={() =>
+                                                  showFileDetails(row)
+                                                }
+                                              >
+                                                Show
+                                              </button>
                                             </TableCell>
                                           </TableRow>
                                         )
@@ -1184,6 +1510,9 @@ const Files = () => {
             </div>
           </div>
         </div>
+      )}
+      {fileDetails && (
+        <FileDetails file={fileDetails} close={() => showFileDetails(null)} />
       )}
       {error && (
         <p className="text-danger">

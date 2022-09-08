@@ -4,22 +4,21 @@ const GET_FILES = gql`
   query files(
     $antaraId: String!
     $category: String
-    $updatedAt: DateTime
+    $updatedAt_Gte: DateTime
     $search: String
-    $mimeType: String
   ) {
     files(
       antaraId: $antaraId
       category: $category
-      updatedAt: $updatedAt
+      updatedAt_Gte: $updatedAt_Gte
       search: $search
-      mimeType: $mimeType
     ) {
       edges {
         node {
           id
           driveUrl
           category
+          title
           storageKey
           antaraId
           description
@@ -27,10 +26,22 @@ const GET_FILES = gql`
           mimeType
           fileSize
           otherMetadata
-          storageKey
-          recordId
-          updatedAt
-          title
+          fileCategory {
+            name
+          }
+          createdAt
+          sharedfileSet {
+            edges {
+              node {
+                createdAt
+                updatedAt
+                member {
+                  antaraId
+                }
+                sharedBy
+              }
+            }
+          }
         }
       }
     }
@@ -89,4 +100,36 @@ const SAVE_FILE = gql`
   }
 `
 
-export { GET_FILES, ENCRYPT_FILE, GENERATE_FILE_LINK, UPLOAD_LINK, SAVE_FILE }
+const GET_FOLDERS = gql`
+  query folders {
+    folders {
+      edges {
+        node {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+const SHARE_FILE = gql`
+  mutation shareFile($antaraId: String!, $fileId: ID!, $folderId: ID!) {
+    shareFile(antaraId: $antaraId, fileId: $fileId, folderId: $folderId) {
+      errors
+      message
+      status
+      sharedFile
+    }
+  }
+`
+
+export {
+  GET_FILES,
+  ENCRYPT_FILE,
+  GENERATE_FILE_LINK,
+  UPLOAD_LINK,
+  SAVE_FILE,
+  GET_FOLDERS,
+  SHARE_FILE,
+}
