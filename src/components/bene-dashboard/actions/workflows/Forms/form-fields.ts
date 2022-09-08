@@ -25,6 +25,7 @@ export const duplicates = [
   'Logistics Tasks',
   'Member tasks',
   'Interventions',
+  'Kits',
 ]
 
 export const formNames = {
