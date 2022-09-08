@@ -1954,7 +1954,7 @@ a {
 }
 
 .upload-form-drawer .MuiPaper-root {
-  width: 350px !important;
+  min-width: 380px !important;
 }
 .pdf-dialog {
   position: relative;
