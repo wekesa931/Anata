@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useToasts } from 'react-toast-notifications'
 import { ConfirmationDialog } from '@airtable/blocks/ui'
 import { useMutation, useQuery } from '@apollo/client'
+import { ReportProblemOutlined } from '@mui/icons-material'
 import { SEND_SMS } from '../../../../gql/sms'
 import {
   Input,
@@ -168,12 +169,19 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
           </InputOption>
           {channel === 'app' ? (
             <Intercomdiv>
-              <IntercomButton
-                onClick={(e) => redirectToIntercom(e)}
-                data-testid="intercom-link"
-              >
-                Go to intercom
-              </IntercomButton>
+              {intercomUri ? (
+                <IntercomButton
+                  onClick={(e) => redirectToIntercom(e)}
+                  data-testid="intercom-link"
+                >
+                  Go to intercom
+                </IntercomButton>
+              ) : (
+                <p style={{ display: 'flex' }}>
+                  <ReportProblemOutlined color="error" fontSize="medium" />
+                  This member has no Intercom Url
+                </p>
+              )}
             </Intercomdiv>
           ) : (
             <>
