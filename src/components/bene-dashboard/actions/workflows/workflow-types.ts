@@ -43,6 +43,7 @@ export type WorkflowMeta = {
   template: any
   updatedAt: string
   workflowId: string
+  prefills: any
 }
 
 export type FormSectionInput = {

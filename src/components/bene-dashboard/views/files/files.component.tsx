@@ -1036,8 +1036,6 @@ const Files = () => {
     return color
   }
 
-  console.log(fileDetails)
-
   const uploadStatusHeader = () => (
     <>
       <X className={styles.uploadCancel} onClick={uploadDone} />

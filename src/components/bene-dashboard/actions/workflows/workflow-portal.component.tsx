@@ -184,12 +184,15 @@ const WorkflowPortal = ({
     deletingModule ||
     shouldSaveModule ||
     updatingMemberFeedback
-  const initialFormMeta = () => {
+
+  const initialFormMeta = (fm) => {
     const formValues = initialFormValues(member)
     let values = {}
     if (formValues[activeForm]) {
       values = formValues[activeForm]
     }
+    const prefills = fm?.prefills || {}
+
     return {
       ...values,
       moduleId: dayjs().toISOString(),
@@ -203,6 +206,7 @@ const WorkflowPortal = ({
         email: user?.email,
         name: user?.name,
       },
+      ...prefills,
     }
   }
   const notify = (text: string) => {
@@ -244,7 +248,7 @@ const WorkflowPortal = ({
           },
         }))
       } else {
-        formData = [initialFormMeta()]
+        formData = [initialFormMeta(currentWorkflow)]
       }
       setFormPayload(formData)
     }

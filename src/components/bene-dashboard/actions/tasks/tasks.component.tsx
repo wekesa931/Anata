@@ -23,6 +23,7 @@ import { useFormPortal } from '../../../../context/forms-context'
 import { WorkflowMeta } from '../workflows/workflow-types'
 
 type RecordWithId = { data: any; id: string }
+type MatchType = { key: string; value: string }
 
 function useTransformedApiRecords(rawApiRecords: any) {
   // Transforms HN Task records from Scribe API into the same format used by Airtable records
@@ -228,6 +229,43 @@ const Tasks = () => {
     })
   }
 
+  const extractPrefills = (url: string) => {
+    if (!url) {
+      return {}
+    }
+
+    const re = /prefill_(?<key>[A-Za-z+]*)=(?<value>[A-Za-z0-9%20 ]*)/gm
+    const matches: MatchType[] = [...url.matchAll(re)].map((r) => r.groups)
+
+    // parse the matches
+    let data = {}
+    matches.forEach((m) => {
+      let { key, value } = m
+
+      key = key.replace(/\+/g, ' ')
+      value = decodeURI(value)
+
+      if (value === 'True') {
+        value = true
+      }
+
+      if (value === 'False') {
+        value = false
+      }
+
+      if (typeof value === 'string' && value.startsWith('rec')) {
+        value = [value]
+      }
+
+      data = {
+        ...data,
+        [key]: value,
+      }
+    })
+
+    return data
+  }
+
   function addKeyToValue(records: { [x: string]: any }): RecordWithId[] {
     // Given a dictionary of records, insert each key into the record it maps to.
     // records is a dictionary mapping key -> record
@@ -277,6 +315,8 @@ const Tasks = () => {
                     onClick={(e) => {
                       let url = hnTask['Open URL']?.url
                       if (url) {
+                        const prefills = extractPrefills(url)
+
                         url = url.split('/').pop().split('?')
                         const formMeta = FORMS.find(
                           (fm) => fm.formId === url[0]
@@ -285,6 +325,7 @@ const Tasks = () => {
                           addOpenForm({
                             name: formMeta.name,
                             member,
+                            prefills,
                           } as WorkflowMeta)
                       }
                       e.stopPropagation()

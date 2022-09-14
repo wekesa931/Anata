@@ -76,6 +76,7 @@ const FormProvider = ({ children }: any) => {
         template: { id: '2', name: openForm?.name },
         updatedAt: dayjs().format(),
         workflowId: null,
+        prefills: openForm?.prefills,
       }
       setOpenedForms([...openedForms, form])
     }

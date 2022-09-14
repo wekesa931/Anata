@@ -681,13 +681,16 @@ const LinkRecordInput = ({
     ]
     let presentKey = ''
     const metaFields = airtableMeta[field.foreignTableId]?.fields
-    Object.keys(metaFields).forEach((ky) => {
-      validKeys.forEach((vl) => {
-        if (metaFields[ky].name === vl) {
-          presentKey = vl
-        }
+    if (metaFields) {
+      Object.keys(metaFields).forEach((ky) => {
+        validKeys.forEach((vl) => {
+          if (metaFields[ky].name === vl) {
+            presentKey = vl
+          }
+        })
       })
-    })
+    }
+
     return presentKey
   }
 
