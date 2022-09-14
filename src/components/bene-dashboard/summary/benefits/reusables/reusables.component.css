@@ -1,0 +1,37 @@
+.container {
+  font-family: Rubik;
+}
+
+.title {
+  color: #8b95a5;
+  font-size: 14px;
+}
+
+.body {
+  color: #182c4c;
+  font-size: 12px;
+}
+
+.sideBySide {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.sideBySideListWrapper {
+  color: #182c4c;
+  font-size: 14px;
+  font-family: Rubik;
+  max-height: 145;
+  overflow: auto;
+}
+
+.list {
+  color: #182c4c;
+  font-size: 13px;
+}
+
+.listSubheader {
+  color: #8b95a5;
+}

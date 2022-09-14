@@ -26,6 +26,7 @@ import DependentCard from '../dependents/dependent-card.component'
 import Icon from '../../../utils/icon/icon.component'
 import { useFormPortal } from '../../../../context/forms-context'
 import useMemberDetails from './biodata-update/useMemberDetails'
+import Benefits from '../benefits/benefits.component'
 
 const getRiskFactors = (
   diabetes: string,
@@ -994,6 +995,12 @@ const BioData = () => {
                 </div>
               </>
             )}
+
+            <hr className={styles.hrLine} />
+
+            <Benefits
+              insuranceBenefits={memberDetails?.v2Member?.insuranceDetails}
+            />
           </div>
         </div>
       )}

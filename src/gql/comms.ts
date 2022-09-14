@@ -97,6 +97,7 @@ const MEMBER_DETAILS_QUERY = gql`
           antaraId
           birthDate
           details {
+            fullName
             firstName
             middleName
             lastName
@@ -123,9 +124,6 @@ const MEMBER_DETAILS_QUERY = gql`
               name
             }
             assignedHn
-            onboardStage {
-              onboardStage
-            }
             readyForCompanyOnboarding
             readyForIndividualOnboarding
           }
@@ -142,6 +140,29 @@ const MEMBER_DETAILS_QUERY = gql`
             deliveryInstructions
             poBoxNumber
             postCode
+          }
+          insuranceDetails {
+            id
+            insuranceCompany {
+              id
+              name
+              logo
+            }
+            memberPolicy {
+              healthPolicy {
+                name
+              }
+            }
+            benefitUtilizations {
+              id
+              utilizedPortion
+              benefit {
+                name
+                description
+                api
+                limit
+              }
+            }
           }
         }
       }

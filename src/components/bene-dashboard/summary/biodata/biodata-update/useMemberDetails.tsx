@@ -67,7 +67,7 @@ const parseV2MemberData = (memberData: any) => {
 
   // insurance details
   const { insuranceDetails = {} } = memberData
-  member = { ...member, ...insuranceDetails }
+  member = { ...member, insuranceDetails }
 
   return member
 }
