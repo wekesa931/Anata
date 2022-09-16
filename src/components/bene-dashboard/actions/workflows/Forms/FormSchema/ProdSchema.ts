@@ -15308,21 +15308,6 @@ export default [
         },
       },
       {
-        id: 'fldSTWmhcnvKOV7Xk',
-        name: 'Current Milestone Measurement',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'Enter the measured milestone achievement here.\n\nSalt:\nDaily Sodium \n\nCalories (starting level will be BMI):\nWeight\n\nGlycemic Index:\n\nActivity:\nKm/week\n\nCholesterol:\nDaily cholesterol consumption\n\nAsthma:\nStage 1: Mild intermittent\nStage 2: Moderate intermittent\nStage 3: Moderate persistent\nStage 4: Severe persistent',
-      },
-      {
         id: 'fldLOX17z5GCASFOw',
         name: 'Current Milestone Target',
         type: 'select',
