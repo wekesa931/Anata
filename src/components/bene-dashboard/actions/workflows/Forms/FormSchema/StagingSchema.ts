@@ -6777,6 +6777,7 @@ export default [
           'Medication follow-up',
           'VC Follow up',
           'Chronic consent collection',
+          'Nutrition follow up',
         ],
         symmetricColumnId: null,
         unreversed: false,

@@ -5475,8 +5475,9 @@ export default [
         unreversed: true,
         relationship: 'one',
         foreignTableId: 'tblHs6JxFnMGAjNNC',
-        required: true,
-        helper: '',
+        required: false,
+        helper:
+          'If you are creating an internal appointment (performed by Antara staff, please assign the meeting to our specialist. If you are creating an external appointment (performed by another facility or specialist, not Antara, please keep the field empty)',
       },
       {
         id: 'fldHZ3rttK2QCw4Yg',
@@ -5804,7 +5805,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblYSNrfZJnzdSwmx',
-        required: false,
+        required: true,
         helper: '',
       },
       {
@@ -5832,7 +5833,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblHs6JxFnMGAjNNC',
-        required: false,
+        required: true,
         helper: '',
       },
       {
@@ -9218,7 +9219,7 @@ export default [
       },
       {
         id: 'fldpN14ChLWa4Fgpt',
-        name: 'CS task type',
+        name: 'ME task type',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -9231,12 +9232,12 @@ export default [
         helper: '',
         conditionType: '',
         parentKey: 'Type',
-        parentValues: ['CS task type'],
+        parentValues: ['ME task type'],
         condition: (values: any) => {
           if (Array.isArray(values.Type)) {
-            return ['CS task type'].some((r) => values.Type.includes(r))
+            return ['ME task type'].some((r) => values.Type.includes(r))
           }
-          return ['CS task type'].includes(values.Type)
+          return ['ME task type'].includes(values.Type)
         },
       },
       {
@@ -17338,6 +17339,7 @@ export default [
           'Medication follow-up',
           'VC Follow up',
           'Chronic consent collection',
+          'Nutrition follow up',
         ],
         symmetricColumnId: null,
         unreversed: false,

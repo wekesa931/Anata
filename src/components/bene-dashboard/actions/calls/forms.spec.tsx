@@ -38,6 +38,6 @@ describe('<CallConsoleForms />', () => {
     )
     const interactorTypeField = wrapper.getByPlaceholderText('Search form...')
     fireEvent.change(interactorTypeField, { target: { value: 'Appointment' } })
-    expect(wrapper.getAllByText('Appointment Form')).not.toBeNull()
+    expect(wrapper.getAllByText('Appointment')).not.toBeNull()
   })
 })
