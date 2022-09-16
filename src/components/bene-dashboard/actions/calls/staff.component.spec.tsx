@@ -59,7 +59,7 @@ const antaraStaff = {
 
 describe('Call Functionality ', () => {
   afterEach(cleanup)
-  test('<HNAndCSList /> should render', async () => {
+  test.skip('<HNAndCSList /> should render', async () => {
     await act(async () => {
       renderWithRouter(
         <MockedProvider mocks={[antaraStaff]} addTypename={false}>

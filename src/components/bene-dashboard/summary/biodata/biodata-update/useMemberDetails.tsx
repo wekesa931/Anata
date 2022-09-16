@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import dayjs from 'dayjs'
+import { omit } from 'lodash'
 import {
   MUTATE_MEMBER_DETAILS,
   GET_COMPANIES,
@@ -114,7 +115,7 @@ const useMemberDetails = (
     setIsSubmitting(true)
     // clear form errors
     setFormErrors([])
-    const formValues = { ...values }
+    let formValues = { ...values }
 
     // only update new values + required items
     // parse the phone number if any
@@ -130,6 +131,9 @@ const useMemberDetails = (
     if ('birthDate' in formValues) {
       formValues.birthDate = dayjs(formValues.birthDate).format('YYYY-MM-DD')
     }
+
+    // remove insurance details from the form values // TODO: re-vert once backend is live
+    formValues = omit(formValues, 'insuranceDetails')
 
     updateMember({
       variables: { input: formValues },
