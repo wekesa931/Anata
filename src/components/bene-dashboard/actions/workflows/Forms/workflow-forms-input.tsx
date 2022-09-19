@@ -873,8 +873,10 @@ const DateInputField = ({
                   disabled={disabled}
                   value={value}
                   onChange={(newValue: Date | null) => {
-                    handleChange(newValue)
-                    onChange(newValue)
+                    if (newValue) {
+                      handleChange(newValue)
+                      onChange(newValue)
+                    }
                   }}
                 />
               ) : (
@@ -884,8 +886,10 @@ const DateInputField = ({
                   disabled={disabled}
                   value={value}
                   onChange={(newValue: Date | null) => {
-                    handleChange(newValue)
-                    onChange(newValue)
+                    if (newValue) {
+                      handleChange(newValue)
+                      onChange(newValue)
+                    }
                   }}
                   renderInput={(params) => <TextField {...params} />}
                 />

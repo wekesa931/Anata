@@ -5,12 +5,11 @@ import { useMember } from '../../../../context/member.context'
 const EngagementDashboard = () => {
   const { member } = useMember()
 
-  const filters = { 'Antara Id': [member['Antara ID'] ]}
-
+  const filters = { 'Antara Id': [member['Antara ID']] }
 
   const options = {
     hideTabs: true,
-    hideToolbar: true
+    hideToolbar: true,
   }
 
   const dashboardURL =

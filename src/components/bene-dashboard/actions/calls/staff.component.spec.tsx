@@ -59,7 +59,7 @@ const antaraStaff = {
 
 describe('Call Functionality ', () => {
   afterEach(cleanup)
-  test.skip('<HNAndCSList /> should render', async () => {
+  test('<HNAndCSList /> should render', async () => {
     await act(async () => {
       renderWithRouter(
         <MockedProvider mocks={[antaraStaff]} addTypename={false}>
@@ -67,16 +67,11 @@ describe('Call Functionality ', () => {
         </MockedProvider>
       )
     })
-    const transferButton = screen.getByText('Transfer call')
-    const checkMark = screen.getByTestId('check-mark')
-    const availableContacts = screen.getByText('Bill Wekesa')
-    const staffButton = screen.getByTestId('staff-to-transfer')
-    expect(transferButton).toBeTruthy()
-    expect(availableContacts).toBeTruthy()
-    expect(staffButton).toBeTruthy()
-    expect(checkMark).toBeEmptyDOMElement()
-    fireEvent.click(staffButton)
-    const icon = screen.getByTestId('check-mark-icon')
-    expect(checkMark).toContainElement(icon)
+    expect(await screen.findByText('Transfer call')).toBeInTheDocument()
+    expect(await screen.getByTestId('check-mark')).toBeEmptyDOMElement()
+    const staffButton = await screen.getByTestId('staff-to-transfer')
+    await fireEvent.click(staffButton)
+    const icon = await screen.getByTestId('check-mark-icon')
+    expect(await screen.getByTestId('check-mark')).toContainElement(icon)
   })
 })
