@@ -458,8 +458,6 @@ const WorkflowPortal = ({
           const interactionData: any = interactionLogPayload(
             airtablePayload.fields
           )
-          const feedback: boolean =
-            interactionData.feedback && interactionData.feedback === 'Yes'
           const outcomeMetadata: any = {
             creator: user && user.email,
           }
@@ -472,7 +470,6 @@ const WorkflowPortal = ({
             variables: {
               input: {
                 ...interactionData,
-                feedback,
                 member: member['Antara ID'],
                 interactionStartedAt: dayjs(
                   interactionData.interactionStartedAt

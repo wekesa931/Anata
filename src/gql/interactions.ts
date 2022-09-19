@@ -112,10 +112,6 @@ const GET_ALL_INTERACTIONS = gql`
           outcome
           relationshipType
           interactorName
-          feedback
-          typeOfFeedback
-          reasonForFeedback
-          feedbackFromMember
         }
       }
     }

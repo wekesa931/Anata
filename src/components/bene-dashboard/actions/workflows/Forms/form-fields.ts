@@ -237,12 +237,6 @@ const interactionlogMap: any = {
   'Notes for MHC': 'mhcReferralNotes',
   'Notes for Nutritional Consultation': 'ncReferralNotes',
   'Notes for Physio Consultation': 'pcReferralNotes',
-  'Did the member provide any feedback?': 'feedback',
-  'Type of feedback': 'typeOfFeedback',
-  'What did the member provide feedback for?': 'reasonForFeedback',
-  Other: 'otherFeedback',
-  Feedback: 'feedbackFromMember',
-  Member: 'member',
 }
 
 export const interactionLogPayload = (raw: any) => {
