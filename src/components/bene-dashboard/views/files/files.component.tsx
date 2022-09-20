@@ -601,7 +601,7 @@ const DrawerHeader = styled('div')(({ theme }: any) => ({
   paddingLeft: 2,
 }))
 
-const FileDetails = ({ file, close }: any) => {
+const FileDetails = ({ file, close, showFile }: any) => {
   const sharingInfo = file?.sharedfileSet?.edges[0]?.node
 
   return (
@@ -643,6 +643,7 @@ const FileDetails = ({ file, close }: any) => {
             <p className={styles.docInfoText}>{sharingInfo?.sharedBy}</p>
           </Box>
         )}
+        <Button onClick={(e) => showFile(e, file)}>View file</Button>
       </Box>
     </Drawer>
   )
@@ -1510,7 +1511,7 @@ const Files = () => {
         </div>
       )}
       {fileDetails && (
-        <FileDetails file={fileDetails} close={() => showFileDetails(null)} />
+        <FileDetails file={fileDetails} close={() => showFileDetails(null)} showFile={handleClick} />
       )}
       {error && (
         <p className="text-danger">
