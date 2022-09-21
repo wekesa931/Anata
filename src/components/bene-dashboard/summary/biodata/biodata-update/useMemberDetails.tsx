@@ -132,8 +132,9 @@ const useMemberDetails = (
       formValues.birthDate = dayjs(formValues.birthDate).format('YYYY-MM-DD')
     }
 
-    // remove insurance details from the form values // TODO: re-vert once backend is live
+    // TODO: re-vert once mutations are updated
     formValues = omit(formValues, 'insuranceDetails')
+    formValues = omit(formValues, 'fullName')
 
     updateMember({
       variables: { input: formValues },
