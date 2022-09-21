@@ -1511,7 +1511,11 @@ const Files = () => {
         </div>
       )}
       {fileDetails && (
-        <FileDetails file={fileDetails} close={() => showFileDetails(null)} showFile={handleClick} />
+        <FileDetails
+          file={fileDetails}
+          close={() => showFileDetails(null)}
+          showFile={handleClick}
+        />
       )}
       {error && (
         <p className="text-danger">
