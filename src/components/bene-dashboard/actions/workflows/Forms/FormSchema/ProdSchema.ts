@@ -357,10 +357,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        formId: 'shrJo1OLcSNVTTA0w',
-        ctlabel: 'Create BP Intake',
         helper:
-          '"Have you ever taken or had someone else take your Blood Pressure? If so, do you remember the last BP reading you had"\n\n(mm/Hg)\nBetter to create a BP intake.',
+          '"Have you ever taken or had someone else take your Blood Pressure? If so, do you remember the last BP reading you had"\n\n(mm/Hg)\nBetter to create a BP intake. please use a form in the guided workflow',
       },
       {
         id: 'fldMBunVl8Fvmy8JB',
@@ -374,9 +372,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        formId: 'shrJo1OLcSNVTTA0w',
-        ctlabel: 'Create BP Intake',
-        helper: '(mm/Hg)\nBetter to create a BP intake.',
+        helper:
+          '(mm/Hg)\nBetter to create a BP intake. please use a form in the guided workflow',
       },
       {
         id: 'fld3GQgj3l991L0sp',
@@ -632,9 +629,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        formId: 'shrH0jDDogdH2ySWr',
-        ctlabel: 'Enter the medications',
-        helper: 'Please click the button to enter the medications.',
+        helper:
+          'please add the medication using a form in the guided workflow.',
         conditionType: '',
         parentKey: 'Is this a serious CARDIOVASCULAR condition',
         parentValues: [
@@ -2335,10 +2331,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        formId: 'shreJWFrTNVXs6RKW',
-        ctlabel: 'Enter the medications',
         helper:
-          '"Do you currently have, or have you ever been told you have, a chronic condition? That is any condition that has been present for more than 3 months. \n\nExamples of chronic conditions are: high blood pressure, diabetes, arthritis, asthma or high cholesterol."\n\nIf you identify condition(s) please click the button and enter them.',
+          '"Do you currently have, or have you ever been told you have, a chronic condition? That is any condition that has been present for more than 3 months. \n\nExamples of chronic conditions are: high blood pressure, diabetes, arthritis, asthma or high cholesterol."\n\nIf you identify condition(s) please add the condition using a form in the guided workflow.',
       },
       {
         id: 'fldCruVXj9uiYeelJ',
@@ -2403,10 +2397,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        formId: 'shreJWFrTNVXs6RKW',
-        ctlabel: 'The member at risk?',
         helper:
-          'Risk factors include a family history, prior abnormal readings, smoking, eating habits etc.\n\nIf the response is yes, click the button.',
+          'Risk factors include a family history, prior abnormal readings, smoking, eating habits etc.\n\nIf the response is yes, please add the condition using a form in the guided workflow.',
       },
       {
         id: 'fldOMzmpG7FAjST25',
@@ -7173,10 +7165,6 @@ export default [
         relationship: 'many',
         foreignTableId: 'tblMKwFctRYwBYHgt',
         required: true,
-        formId: 'shrLf0JnXDQ7jNxOg',
-        ctlabel: 'Create HMP',
-        helper:
-          "If the HMP record doesn't exist please create it first. Once done refresh this form to get the record.",
         conditionType: '',
         parentKey: 'BP Reading Type',
         parentValues: ['Data collection for HMP'],
@@ -10129,10 +10117,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        formId: 'shrSPv5zEGvh1nm22',
-        ctlabel: 'Create HN Task',
         helper:
-          'Please enter any additional comments or observation you think are important\n\nYou need to create a HN task? Click the button',
+          'Please enter any additional comments or observation you think are important\n\nif you identify a condition, please add the condition using a form in the guided workflow',
       },
     ],
   },
@@ -11787,9 +11773,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        formId: 'shrduoUdDObJnDFTj',
-        ctlabel: 'New Condition',
-        helper: 'If you identify a new condition, click the',
+        helper:
+          'if identify new condition, please add a condition using a form',
       },
       {
         id: 'fldQ4GtalrF5Kumkb',
@@ -11847,6 +11832,105 @@ export default [
         foreignTableId: null,
         required: true,
         helper: 'Select the next steps in the care of this patient',
+      },
+      {
+        id: 'fld2pp0DbbM0w3MYZ',
+        name: 'Facilities',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld0dw0mF5TfKgGrp',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tbltmQuqyuKPc4Ffo',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Plan',
+        parentValues: ['Order Labs', 'Refer to a Specialist'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Plan)) {
+            return ['Order Labs', 'Refer to a Specialist'].some((r) =>
+              values.Plan.includes(r)
+            )
+          }
+          return ['Order Labs', 'Refer to a Specialist'].includes(values.Plan)
+        },
+      },
+      {
+        id: 'fldUFerg5uqwxSTsV',
+        name: 'Other Facility',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Fill in the Facility not found in the provider base',
+        conditionType: '',
+        parentKey: 'Facilities',
+        parentValues: ['recfQYLarLZAkH6QM'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Facilities)) {
+            return ['recfQYLarLZAkH6QM'].some((r) =>
+              values.Facilities.includes(r)
+            )
+          }
+          return ['recfQYLarLZAkH6QM'].includes(values.Facilities)
+        },
+      },
+      {
+        id: 'flddYAMFOOByDFwno',
+        name: 'Specialists',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldrEEdZzxI2WanXI',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblsixUe3jfbOUMQP',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Plan',
+        parentValues: ['Order Labs', 'Refer to a Specialist'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Plan)) {
+            return ['Order Labs', 'Refer to a Specialist'].some((r) =>
+              values.Plan.includes(r)
+            )
+          }
+          return ['Order Labs', 'Refer to a Specialist'].includes(values.Plan)
+        },
+      },
+      {
+        id: 'fldLWQ4vCT91OTXMO',
+        name: 'Other Specialist',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Fill in the Specialist not found in the provider base',
+        parentKey: 'Specialists',
+        parentValues: ['rec0n79m4zKaXuZJD'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Specialists)) {
+            return ['rec0n79m4zKaXuZJD'].some((r) =>
+              values.Specialists.includes(r)
+            )
+          }
+          return ['rec0n79m4zKaXuZJD'].includes(values.Specialists)
+        },
       },
       {
         id: 'fldx9wihQQxDLZb8s',
@@ -12140,9 +12224,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        formId: 'shrY7UhjHNpZxNfNK',
-        ctlabel: 'Medical Prescription',
-        helper: 'Please click the button to write a medication prescription',
+        helper:
+          'if you prescribe a medication, please add the it using a form in the guided workflow',
         conditionType: '',
         parentKey: 'Plan',
         parentValues: ['Prescribe Medications'],
@@ -12170,130 +12253,6 @@ export default [
         helper: 'The member needs sick days?',
       },
       {
-        id: 'fld2pp0DbbM0w3MYZ',
-        name: 'Facilities',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fld0dw0mF5TfKgGrp',
-        unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tbltmQuqyuKPc4Ffo',
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldUFerg5uqwxSTsV',
-        name: 'Other Facility',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Fill in the Facility not found in the provider base',
-        conditionType: '',
-        parentKey: 'Facilities',
-        parentValues: ['recfQYLarLZAkH6QM'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Facilities)) {
-            return ['recfQYLarLZAkH6QM'].some((r) =>
-              values.Facilities.includes(r)
-            )
-          }
-          return ['recfQYLarLZAkH6QM'].includes(values.Facilities)
-        },
-      },
-      {
-        id: 'flddYAMFOOByDFwno',
-        name: 'Specialists',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldrEEdZzxI2WanXI',
-        unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblsixUe3jfbOUMQP',
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldLWQ4vCT91OTXMO',
-        name: 'Other Specialist',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Fill in the Specialist not found in the provider base',
-        parentKey: 'Specialists',
-        parentValues: ['rec0n79m4zKaXuZJD'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Specialists)) {
-            return ['rec0n79m4zKaXuZJD'].some((r) =>
-              values.Specialists.includes(r)
-            )
-          }
-          return ['rec0n79m4zKaXuZJD'].includes(values.Specialists)
-        },
-      },
-      {
-        id: 'fldgb3pmJRmhwoYa8',
-        name: 'Next appointment',
-        type: 'date',
-        format: '',
-        isDateTime: true,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '<a href="https://calendly.com/antara-health/antara-virtual-doctor-consultation?month=2021-01" target="_blank">https://calendly.com/antara-health/antara-virtual-doctor-consultation?month=2021-01</a>',
-      },
-      {
-        id: 'fldriphoZRDX96JyD',
-        name: 'Please write in any additional comments or observation you think are important',
-        type: 'richText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        formId: 'shrSPv5zEGvh1nm22',
-        ctlabel: 'Create HN Task',
-        helper:
-          'This is the place you can write anything you want to document about the patient\n\nNeed to create a task for the HN team? Click the button',
-      },
-      {
-        id: 'fldPDOnQ4PpfE46WY',
-        name: 'Consultation type - billing',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'Only for billing purpose. \nAll Blue options are billable.\nAll Yellow Options are not billable.',
-      },
-      {
         id: 'fldn4t3Jv9RheLWZU',
         name: 'Sick days number',
         type: 'number',
@@ -12315,6 +12274,50 @@ export default [
           }
           return ['Yes'].includes(values['Sick days required'])
         },
+      },
+      {
+        id: 'fldgb3pmJRmhwoYa8',
+        name: 'Next appointment',
+        type: 'date',
+        format: '',
+        isDateTime: true,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldriphoZRDX96JyD',
+        name: 'Please write in any additional comments or observation you think are important',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'This is the place you can write anything you want to document about the patient\n Need to create a task for the HN team? Please add a HN task using the form',
+      },
+      {
+        id: 'fldPDOnQ4PpfE46WY',
+        name: 'Consultation type - billing',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Only for billing purpose. \nAll Blue options are billable.\nAll Yellow Options are not billable.',
       },
       {
         id: 'fldt0PbRoCHuNlRQK',
@@ -12697,10 +12700,6 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        formId: 'shrZWjIcj1g2zMA5S',
-        ctlabel: 'Fill appointment form',
-        helper:
-          'If the appointment has been missed, you can fill a new appointment form by clicking the button',
         conditionType: '',
         parentKey: 'Appointment Type',
         parentValues: ['Outpatient', 'Virtual Consultation'],
@@ -13328,9 +13327,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        formId: 'shrH0jDDogdH2ySWr',
-        ctlabel: 'Fill in medication',
-        helper: 'Click the button to fill in the medication.',
+        helper:
+          'if a medication was prescribed, please add it using a form in the guided workflow.',
         conditionType: '',
         parentKey: 'Received medication',
         parentValues: ['True'],

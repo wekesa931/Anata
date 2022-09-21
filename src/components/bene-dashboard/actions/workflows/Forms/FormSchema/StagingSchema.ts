@@ -189,10 +189,6 @@ export default [
         relationship: 'many',
         foreignTableId: 'tblkoNkzLmWsAlWs5',
         required: true,
-        formId: 'shrLf0JnXDQ7jNxOg',
-        ctlabel: 'Create HMP',
-        helper:
-          "If the HMP record doesn't exist please create it first. \nClick the button to enter the HMP. Once done refresh this form to get the record.",
         conditionType: '',
         parentKey: 'BP Reading Type',
         parentValues: ['Data collection for HMP'],
