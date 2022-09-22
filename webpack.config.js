@@ -4,14 +4,28 @@ const CopyPlugin = require('copy-webpack-plugin')
 const dotenv = require('dotenv')
 const env = require('./env')
 const package = require('./package.json')
-const { BugsnagBuildReporterPlugin, BugsnagSourceMapUploaderPlugin} = require('webpack-bugsnag-plugins')
-
+const {
+  BugsnagBuildReporterPlugin,
+  BugsnagSourceMapUploaderPlugin,
+} = require('webpack-bugsnag-plugins')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+const universalPlugins = [
+  new HtmlWebpackPlugin({
+    template: './src/index.html',
+    favicon: './src/assets/img/logo/Antara Logo@1x.png',
+  }),
+  new webpack.DefinePlugin({
+    'process.env': env,
+  }),
+  new webpack.optimize.ModuleConcatenationPlugin(),
+]
+
 module.exports = {
   entry: './src/index',
   output: {
     path: path.join(__dirname, '/dist'),
-    filename: 'bundle.js',
+    filename: './bundle.js',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
@@ -58,17 +72,35 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './src/index.html',
-      favicon: './src/assets/img/logo/Antara Logo@1x.png',
-    }),
-    new webpack.DefinePlugin({
-      'process.env': env,
-    }),
-    new webpack.optimize.ModuleConcatenationPlugin(),
-  ],
-  devtool: 'sourcemap',
+  ...(process.env.NODE_ENV !== 'production' && {
+    plugins: [...universalPlugins],
+  }),
+  ...(process.env.NODE_ENV === 'production' && {
+    plugins: [
+      ...universalPlugins,
+      new CopyPlugin({
+        patterns: [
+          {
+            from: 'firebase-messaging-sw.js',
+            to: 'firebase-messaging-sw.js',
+          },
+        ],
+      }),
+      new BugsnagBuildReporterPlugin(
+        {
+          apiKey: process.env.BUGSNAG_API_KEY,
+          appVersion: package.version,
+        },
+        {}
+      ),
+      new BugsnagSourceMapUploaderPlugin({
+        apiKey: process.env.BUGSNAG_API_KEY,
+        appVersion: package.version,
+        overwrite: true,
+      }),
+    ],
+  }),
+  devtool: 'source-map',
   devServer: {
     headers: {
       'Access-Control-Allow-Origin': '*',
@@ -78,28 +110,4 @@ module.exports = {
     contentBase: './',
     hot: true,
   },
-}
-
-if (process.env.NODE_ENV && process.env.NODE_ENV !== 'local') {
-  module.exports.plugins.push(
-    new CopyPlugin({
-        patterns: [
-        {
-          from: 'firebase-messaging-sw.js',
-          to: 'firebase-messaging-sw.js'
-        }
-      ]
-    }),
-    new BugsnagBuildReporterPlugin({
-        apiKey: '08051b1d342d0c2d6b7102d7e046b02d',
-        appVersion: package.version
-      },
-      {}
-    ),
-    new BugsnagSourceMapUploaderPlugin({
-      apiKey: '08051b1d342d0c2d6b7102d7e046b02d',
-      appVersion: package.version,
-      overwrite: true
-    })
-  );
 }

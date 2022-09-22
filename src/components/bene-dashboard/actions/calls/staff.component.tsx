@@ -64,9 +64,9 @@ const HNAndCSList = ({
     if (selected) {
       try {
         initiateTransfer({ ...selected, transferAction: action })
-      } catch (e) {
-        seterror(e.message)
-        logError(e.message)
+      } catch (e: any) {
+        seterror(e?.message)
+        logError(e?.message)
       }
     }
   }

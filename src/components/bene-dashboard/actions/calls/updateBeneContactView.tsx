@@ -70,8 +70,8 @@ const SaveContactView = ({ callerNum, memberInfo }: IProps) => {
           setCallerName(bene['Full Name'])
         }, 4000)
       }
-    } catch (e) {
-      Toasts.showErrorNotification(e.message)
+    } catch (e: any) {
+      Toasts.showErrorNotification(e?.message)
       logError(e)
       setError(true)
     } finally {
