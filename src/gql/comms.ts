@@ -127,6 +127,23 @@ const MEMBER_DETAILS_QUERY = gql`
             readyForCompanyOnboarding
             readyForIndividualOnboarding
           }
+          dependents {
+            id
+            antaraId
+            birthDate
+            status {
+              status {
+                status
+              }
+            }
+            details {
+              fullName
+              sex {
+                sex
+              }
+              relationshipToPrimary
+            }
+          }
           contact {
             email
             constituency

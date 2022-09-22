@@ -21,14 +21,14 @@ interface IContacts {
 }
 
 interface IBeneData {
-  airtableRecordId: string
-  fullName: string
-  status: string
-  contactPhone1: string
-  contactPhone2: string
-  relationshipToPrimary: string
+  id: string
+  details: {
+    fullName: string
+    relationshipToPrimary: string
+    sex: { sex: string }
+  }
+  status: { status: { status: string } }
   birthDate: string
-  sex: string
 }
 
 export interface Member {

@@ -951,7 +951,7 @@ const BioData = () => {
                   )}
 
                   {majorDependents.map((dep) => (
-                    <React.Fragment key={dep.airtableRecordId}>
+                    <React.Fragment key={dep?.id}>
                       <DependentCard
                         dependent={dep}
                         trackAccess={trackAccess}
@@ -968,7 +968,7 @@ const BioData = () => {
                   )}
 
                   {minorDependents.map((dep) => (
-                    <React.Fragment key={dep.airtableRecordId}>
+                    <React.Fragment key={dep.id}>
                       <DependentCard
                         dependent={dep}
                         trackAccess={trackAccess}
@@ -985,7 +985,7 @@ const BioData = () => {
                 <h4 className={styles.clinicalHeading}>Primary Dependent</h4>
                 <div className={styles.dependentsDiv}>
                   {memberContact?.primary.map((mem) => (
-                    <React.Fragment key={mem.airtableRecordId}>
+                    <React.Fragment key={mem.id}>
                       <DependentCard
                         dependent={mem}
                         trackAccess={trackAccess}
@@ -998,9 +998,14 @@ const BioData = () => {
 
             <hr className={styles.hrLine} />
 
-            <Benefits
-              insuranceBenefits={memberDetails?.v2Member?.insuranceDetails}
-            />
+            {memberDetails?.v2Member?.insuranceDetails?.length > 0 && (
+              <>
+                <h4 className={styles.clinicalHeading}>Insurance Details</h4>
+                <Benefits
+                  insuranceBenefits={memberDetails?.v2Member?.insuranceDetails}
+                />
+              </>
+            )}
           </div>
         </div>
       )}

@@ -1,19 +1,21 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Box, Link } from '@mui/material'
 import styles from './dependent-card.component.css'
+import airtableFetch from '../../../../resources/airtable-fetch'
+import logError from '../../../utils/Bugsnag/Bugsnag'
 
 /* eslint-disable no-nested-ternary */
 
 interface DependentProps {
-  airtableRecordId: string
-  fullName: string
-  status: string
-  contactPhone1: string
-  contactPhone2: string
-  relationshipToPrimary: string
+  antaraId: string
+  details: {
+    fullName: string
+    relationshipToPrimary: string
+    sex: { sex: string }
+  }
+  status: { status: { status: string } }
   birthDate: string
-  sex: string
 }
 
 const DependentCard = ({
@@ -24,18 +26,42 @@ const DependentCard = ({
   trackAccess: () => void
 }) => {
   const {
-    airtableRecordId,
-    fullName: name,
-    status,
+    details: {
+      fullName: name,
+      relationshipToPrimary: relationship,
+      sex: { sex: gender },
+    },
+    status: {
+      status: { status },
+    },
     birthDate,
-    sex: gender,
-    relationshipToPrimary: relationship,
+    antaraId,
   } = dependent
+
+  const [airtableRecordId, setAirtableRecordId] = useState<string>('')
+
+  useEffect(() => {
+    airtableFetch(
+      `members/list?filterByFormula=FIND("${antaraId}", {Antara ID})`
+    )
+      .then((response) => {
+        Object.keys(response).some((key) => {
+          if (/^rec\w+/.test(key)) {
+            setAirtableRecordId(key)
+          }
+          return ''
+        })
+      })
+      .catch((err) => {
+        logError(err)
+      })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const age = new Date().getFullYear() - new Date(birthDate).getFullYear()
 
-  const isActive: boolean = status === 'ONBOARDED' || status === 'ACTIVE'
-  const isScheduled: boolean = status === 'SCHEDULED'
+  const isStatusActive: boolean = status.toUpperCase() === 'ACTIVE'
+  const isStatusTerminated: boolean =
+    status.toUpperCase() === 'TERMINATED' || status.toUpperCase() === 'DECEASED'
   return (
     <Link
       underline="none"
@@ -58,14 +84,14 @@ const DependentCard = ({
         </Box>
         <Box
           className={
-            isActive
+            isStatusActive
               ? styles.active
-              : isScheduled
-              ? styles.scheduled
-              : styles.unscheduled
+              : isStatusTerminated
+              ? styles.terminated
+              : styles.unknown
           }
         >
-          {status}
+          {status.toUpperCase()}
         </Box>
       </Box>
     </Link>
