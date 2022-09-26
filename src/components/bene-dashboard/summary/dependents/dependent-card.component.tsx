@@ -6,15 +6,16 @@ import airtableFetch from '../../../../resources/airtable-fetch'
 import logError from '../../../utils/Bugsnag/Bugsnag'
 
 /* eslint-disable no-nested-ternary */
+/* eslint-disable array-callback-return */
 
 interface DependentProps {
   antaraId: string
-  details: {
-    fullName: string
-    relationshipToPrimary: string
-    sex: { sex: string }
+  details?: {
+    fullName?: string
+    relationshipToPrimary?: string
+    sex?: { sex?: string }
   }
-  status: { status: { status: string } }
+  status?: { status?: { status?: string } }
   birthDate: string
 }
 
@@ -25,31 +26,17 @@ const DependentCard = ({
   dependent: DependentProps
   trackAccess: () => void
 }) => {
-  const {
-    details: {
-      fullName: name,
-      relationshipToPrimary: relationship,
-      sex: { sex: gender },
-    },
-    status: {
-      status: { status },
-    },
-    birthDate,
-    antaraId,
-  } = dependent
-
   const [airtableRecordId, setAirtableRecordId] = useState<string>('')
 
   useEffect(() => {
     airtableFetch(
-      `members/list?filterByFormula=FIND("${antaraId}", {Antara ID})`
+      `members/list?filterByFormula=FIND("${dependent?.antaraId}", {Antara ID})`
     )
       .then((response) => {
         Object.keys(response).some((key) => {
           if (/^rec\w+/.test(key)) {
             setAirtableRecordId(key)
           }
-          return ''
         })
       })
       .catch((err) => {
@@ -57,11 +44,14 @@ const DependentCard = ({
       })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const age = new Date().getFullYear() - new Date(birthDate).getFullYear()
+  const age =
+    new Date().getFullYear() - new Date(dependent?.birthDate).getFullYear()
 
-  const isStatusActive: boolean = status.toUpperCase() === 'ACTIVE'
+  const isStatusActive: boolean =
+    dependent?.status?.status?.status?.toUpperCase() === 'ACTIVE'
   const isStatusTerminated: boolean =
-    status.toUpperCase() === 'TERMINATED' || status.toUpperCase() === 'DECEASED'
+    dependent?.status?.status?.status?.toUpperCase() === 'TERMINATED' ||
+    dependent?.status?.status?.status?.toUpperCase() === 'DECEASED'
   return (
     <Link
       underline="none"
@@ -74,12 +64,15 @@ const DependentCard = ({
     >
       <Box className={styles.container}>
         <Box className={styles.biodataBox}>
-          <span
-            className={styles.biodataSpan}
-          >{`${name}, ${age} ${gender.substring(0, 1)}`}</span>
+          <span className={styles.biodataSpan}>{`${
+            dependent?.details?.fullName || 'Name Unknown'
+          }, ${age || ''} ${
+            dependent?.details?.sex?.sex?.substring(0, 1) || ''
+          }`}</span>
           <span className={styles.relationshipSpan}>
             {' '}
-            {relationship || 'Relationship Unknown'}{' '}
+            {dependent?.details?.relationshipToPrimary ||
+              'Relationship Unknown'}{' '}
           </span>
         </Box>
         <Box
@@ -91,7 +84,7 @@ const DependentCard = ({
               : styles.unknown
           }
         >
-          {status.toUpperCase()}
+          {dependent?.status?.status?.status?.toUpperCase()}
         </Box>
       </Box>
     </Link>
