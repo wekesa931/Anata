@@ -2068,25 +2068,6 @@ export default [
         required: true,
         helper:
           'Please fill in the numbers of hours of sleep between 0 to 10. Quality of sleep is uninterrupted 7 - 9 hours of sleep where one wakes up feeling refreshed and rejuvenated (recommended 8 hours) if anyone is sleeping less than 5 hours of sleep, it is important to refer for MH Counseling',
-        conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
-        parentValues: ['Mental Health'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
-            return ['Mental Health'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
-            )
-          }
-          return ['Mental Health'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
-        },
       },
       {
         id: 'fld1sqQhQ4FaTO32o',
@@ -2102,39 +2083,6 @@ export default [
         required: true,
         helper:
           'NOTE: A " yes " response to use of alcohol or substance  is a red flag that requires referral for MHC. \n',
-        conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
-        parentValues: ['Mental Health'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
-            return ['Mental Health'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
-            )
-          }
-          return ['Mental Health'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
-        },
-      },
-      {
-        id: 'fldS7BHxKsN4pG2gf',
-        name: 'Do you have any significant past medical history not listed above?',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
       },
       {
         id: 'fldPRNSWPMlZv8k4A',
@@ -2186,7 +2134,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: 'please enter quantify of alcohol per day',
+        helper: 'please enter quantity of alcohol per day',
         conditionType: '',
         parentKey:
           'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?',
@@ -2288,6 +2236,20 @@ export default [
             ]
           )
         },
+      },
+      {
+        id: 'fldS7BHxKsN4pG2gf',
+        name: 'Do you have any significant past medical history not listed above?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
       },
       {
         id: 'fldTc7EwOHKhSNTP0',
