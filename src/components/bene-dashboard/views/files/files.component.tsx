@@ -604,6 +604,13 @@ const DrawerHeader = styled('div')(({ theme }: any) => ({
 const FileDetails = ({ file, close, showFile }: any) => {
   const sharingInfo = file?.sharedfileSet?.edges[0]?.node
 
+  const renderSection = (title: string, value: string) => (
+    <Box sx={{ mt: 1, mb: 2 }}>
+      <p className={styles.docInfoSubtext}>{title}</p>
+      <p className={styles.docInfoText}>{value}</p>
+    </Box>
+  )
+
   return (
     <Drawer
       anchor="left"
@@ -623,26 +630,17 @@ const FileDetails = ({ file, close, showFile }: any) => {
           <p className={styles.docInfoText}>{file.title}</p>
         </Box>
 
-        <Box sx={{ mt: 1, mb: 2 }}>
-          <p className={styles.docInfoSubtext}>Uploaded</p>
-          <p className={styles.docInfoText}>
-            {dayjs(file.createdAt).format("DD MMM' YYYY, HH:mm")}
-          </p>
-        </Box>
-
-        <Box sx={{ mt: 1, mb: 2 }}>
-          <p className={styles.docInfoSubtext}>Sharing</p>
-          <p className={styles.docInfoText}>
-            {file.shared ? 'Shared with member' : 'Not shared with member'}
-          </p>
-        </Box>
-
-        {file.shared && (
-          <Box sx={{ mt: 1, mb: 2 }}>
-            <p className={styles.docInfoSubtext}>Shared by</p>
-            <p className={styles.docInfoText}>{sharingInfo?.sharedBy}</p>
-          </Box>
+        {renderSection(
+          'Uploaded at',
+          dayjs(file.createdAt).format("DD MMM' YYYY, HH:mm")
         )}
+        {renderSection(
+          'Shared status',
+          file.shared ? 'Shared with member' : 'Not shared with member'
+        )}
+        {file.shared && renderSection('Shared by', sharingInfo?.sharedBy)}
+        {renderSection('Member shared folder', sharingInfo?.folder?.name)}
+
         <Button onClick={(e) => showFile(e, file)}>View file</Button>
       </Box>
     </Drawer>
@@ -801,7 +799,6 @@ const Files = () => {
         .map((ed: { node: IFiles }) => ed.node)
         .map((ed: any) => ({
           ...ed,
-          category: ed?.fileCategory?.name || ed.category,
           shared: isFileShared(ed.sharedfileSet),
         }))
 

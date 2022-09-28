@@ -39,6 +39,9 @@ const GET_FILES = gql`
                   antaraId
                 }
                 sharedBy
+                folder {
+                  name
+                }
               }
             }
           }
