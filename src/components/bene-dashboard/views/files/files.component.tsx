@@ -257,6 +257,7 @@ const UploadOptions = ({
   clear,
 }: IUploadOptions) => {
   const [openLinkInput, setOpenLinkInput] = useState(false)
+  const showUploadLink = false
 
   return (
     <DropDownComponent isVisible={open} setvisibility={setOpen}>
@@ -270,17 +271,23 @@ const UploadOptions = ({
           {openLinkInput ? (
             <p className={`${styles.upText} ${styles.paste}`}>Paste Link URL</p>
           ) : (
-            <Button
-              onClick={() => {
-                setOpenLinkInput(true)
-              }}
-            >
-              <Link2 />
-              <div className={`d-flex ${styles.uploadText}`}>
-                <p className={styles.upText}>Upload via Link</p>
-                <p className={styles.upTextSummary}>Google Drive, Dropbox</p>
-              </div>
-            </Button>
+            <>
+              {showUploadLink && (
+                <Button
+                  onClick={() => {
+                    setOpenLinkInput(true)
+                  }}
+                >
+                  <Link2 />
+                  <div className={`d-flex ${styles.uploadText}`}>
+                    <p className={styles.upText}>Upload via Link</p>
+                    <p className={styles.upTextSummary}>
+                      Google Drive, Dropbox
+                    </p>
+                  </div>
+                </Button>
+              )}
+            </>
           )}
         </Box>
         <Box
