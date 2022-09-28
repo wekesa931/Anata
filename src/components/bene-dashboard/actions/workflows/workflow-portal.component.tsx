@@ -517,6 +517,14 @@ const WorkflowPortal = ({
               fields: {
                 ...airtablePayload.fields,
                 'Case ID': [`${openedWorkflow.airtableId}`],
+                'Data Source': 'Guided Workflow',
+              },
+            }
+          } else {
+            airtablePayload = {
+              fields: {
+                ...airtablePayload.fields,
+                'Data Source': 'Scribe form',
               },
             }
           }
