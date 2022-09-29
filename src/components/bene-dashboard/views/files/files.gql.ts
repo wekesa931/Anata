@@ -6,12 +6,16 @@ const GET_FILES = gql`
     $category: String
     $updatedAt_Gte: DateTime
     $search: String
+    $fileCategory_Name: String
+    $mimeType: String
   ) {
     files(
       antaraId: $antaraId
       category: $category
       updatedAt_Gte: $updatedAt_Gte
       search: $search
+      fileCategory_Name: $fileCategory_Name
+      mimeType: $mimeType
     ) {
       edges {
         node {
@@ -127,6 +131,20 @@ const SHARE_FILE = gql`
   }
 `
 
+const GET_FILE_CATEGORIES = gql`
+  query fileCategories {
+    fileCategories {
+      edges {
+        node {
+          name
+          description
+          id
+        }
+      }
+    }
+  }
+`
+
 export {
   GET_FILES,
   ENCRYPT_FILE,
@@ -135,4 +153,5 @@ export {
   SAVE_FILE,
   GET_FOLDERS,
   SHARE_FILE,
+  GET_FILE_CATEGORIES,
 }

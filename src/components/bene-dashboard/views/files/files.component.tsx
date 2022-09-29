@@ -62,6 +62,7 @@ import {
   SAVE_FILE,
   GET_FOLDERS,
   SHARE_FILE,
+  GET_FILE_CATEGORIES,
 } from './files.gql'
 import { useMember } from '../../../../context/member.context'
 import { useUser } from '../../../../context/user-context'
@@ -153,6 +154,10 @@ function getComparator(order: any, orderBy: any) {
   return order === 'desc'
     ? (a: any, b: any) => descendingComparator(a, b, orderBy)
     : (a: any, b: any) => -descendingComparator(a, b, orderBy)
+}
+
+const isFileShared = (sharedfileSet: any) => {
+  return !!sharedfileSet?.edges.length
 }
 
 const ShareFileOptions = React.forwardRef(
@@ -358,6 +363,12 @@ const UploadOptions = ({
   )
 }
 
+type FileCategory = {
+  id: string
+  name: string
+  description: string
+}
+
 const FilterComponent = ({
   open,
   setisOPen,
@@ -373,34 +384,16 @@ const FilterComponent = ({
   setListView,
   setConfirmationDrawerHelper,
   clear,
+  fileTypes,
 }: any) => {
-  const [fileCategory, setFileCategory] = useState(undefined)
+  const [fileCategory, setFileCategory] = useState<string | undefined>(
+    undefined
+  )
   const [fileMime, setfileMime] = useState<string | undefined>(undefined)
   const [filterDate, setFilterDate] = useState<Date | null>(null)
   const [docTitle, setDocTitle] = useState<string | undefined>(undefined)
   const { member } = useMember()
-  const fileTypes = [
-    'HMP',
-    'Prescription',
-    'X-ray',
-    'Others',
-    'Radiology Reports',
-    'Symptom Assessment Images',
-    'Avenue Progress Reports',
-    'Penda Progress Reports',
-    'Data Collection Results',
-    'Data Collection Images',
-    'Data Collection Summary Reports',
-    'Asthma Assessment Score Results',
-    'Meal Plans',
-    'Food Diaries',
-    'Receipt of Passport Photo',
-    'Identification Card Copy',
-    'NHIF Copy',
-    'Life Cover Documentation',
-    'Medical Card Copy',
-    'Medical Card Registration',
-  ]
+
   const mimeTypes = [
     'jpg',
     'image/jpeg',
@@ -422,7 +415,7 @@ const FilterComponent = ({
       antaraId: member['Antara ID'],
       search: docTitle || '',
       mimeType: fileMime || '',
-      category: fileCategory || '',
+      fileCategory_Name: fileCategory || '',
       updatedAt: filterDate,
     },
   })
@@ -456,14 +449,23 @@ const FilterComponent = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading])
 
+  // update category used
   useEffect(() => {
     if (data) {
-      const rawFiles = data.files.edges.map((ed: { node: IFiles }) => ed.node)
+      const rawFiles = data.files.edges
+        .map((ed: { node: IFiles }) => ed.node)
+        .map((ed: any) => ({
+          ...ed,
+          shared: isFileShared(ed.sharedfileSet),
+          category: ed?.fileCategory?.name || ed?.category,
+        }))
+
       const categorizedFiles = groupBy(rawFiles, 'category')
       filtered(categorizedFiles)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
+
   return (
     <div className="filters">
       <div className={styles.searchContainer}>
@@ -543,7 +545,7 @@ const FilterComponent = ({
             select
             label="Category"
             value={fileCategory || ''}
-            onChange={(e) => setFileCategory(e.target.value)}
+            onChange={(e) => setFileCategory(e.target.value as string)}
           >
             {fileTypes.map((file) => (
               <MenuItem key={file} value={file}>
@@ -689,6 +691,7 @@ const Files = () => {
   })
   const [folders, setFolders] = useState([])
   const [fileDetails, showFileDetails] = useState<any>(null)
+  const [fileTypes, setFileTypes] = useState<string[]>([])
 
   const { data: foldersData } = useQuery(GET_FOLDERS)
 
@@ -704,6 +707,8 @@ const Files = () => {
   const isFormVisible = displayForm && !gettingFile && !gettingUploadLink
   const filesRef = useRef()
   const [networkError, setNetworkError] = useState(false)
+  const { data: fileCategoryData } = useQuery(GET_FILE_CATEGORIES)
+
   const isValidURL = (url: string) => {
     const res = url.match(
       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g //eslint-disable-line
@@ -719,6 +724,15 @@ const Files = () => {
     }
     return false
   }
+
+  useEffect(() => {
+    if (fileCategoryData) {
+      const rawCategories = fileCategoryData.fileCategories.edges?.map(
+        (f: any) => f.node?.name
+      )
+      setFileTypes(rawCategories)
+    }
+  }, [fileCategoryData])
 
   useEffect(() => {
     if (foldersData) {
@@ -786,10 +800,6 @@ const Files = () => {
     return <FileText className={styles.green} />
   }
 
-  const isFileShared = (sharedfileSet: any) => {
-    return !!sharedfileSet?.edges.length
-  }
-
   const getSharedAt = (row: any) => {
     const sharedAt = row?.sharedfileSet.edges[0]?.node?.updatedAt
 
@@ -807,6 +817,7 @@ const Files = () => {
         .map((ed: any) => ({
           ...ed,
           shared: isFileShared(ed.sharedfileSet),
+          category: ed?.fileCategory?.name || ed?.category,
         }))
 
       // parse shared file set
@@ -1146,6 +1157,7 @@ const Files = () => {
           noFilesForMember={noFilesForMember}
           setConfirmationDrawerHelper={setConfirmationDrawerHelper}
           clear={clear}
+          fileTypes={fileTypes}
         />
       )}
       {noFilesForMember && (
