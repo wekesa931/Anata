@@ -24,9 +24,9 @@ const Bmi = ({ bmiInfo }: BMIProps) => {
       name: 'BMI',
       format: 'kg/m2',
       key: 'BMI',
-      info: `Stage 1: BMI 25-30
-               Stage 2: BMI 30-40
-               Stage 3: BMI >40`,
+      info: `Stage 1: BMI 25.0-29.9
+               Stage 2: BMI 30.0-39.9
+               Stage 3: BMI >=40`,
     },
   ]
 
