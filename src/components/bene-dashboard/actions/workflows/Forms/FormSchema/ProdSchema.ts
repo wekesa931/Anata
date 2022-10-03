@@ -2867,7 +2867,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          '"Do you know how tall you are? Even if you have a vague memory of your height in Meters, let us know."\n\n(m) examples: 1.5 or 1.8 or 1.55\n(If member has already given this information during screening or PSPB or HIF phase and if you can see it on Vitals section on Scribe, please skip this step)\n\nYou need to enter vitals? Click the button',
+          '"Do you know how tall you are? Even if you have a vague memory of your height in Meters, let us know."\n\n(m) examples: 1.5 or 1.8 or 1.55\n(If member has already given this information during screening or PSPB or HIF phase, please see the height in the filled form)\n\nYou need to enter vitals? Please fill the vitals form in Guided workflow form',
       },
       {
         id: 'fld58mBbotwbl70uz',
@@ -3121,7 +3121,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper: 'Insert a number from 0 to 5',
       },
     ],
