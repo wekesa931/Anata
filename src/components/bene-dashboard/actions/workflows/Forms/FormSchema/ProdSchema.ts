@@ -13815,7 +13815,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tbl3iBWzYVWEpdLje',
-        required: false,
+        required: true,
         helper:
           'Please add all the prescriptions records that will be delivered',
         conditionType: '',
@@ -13830,6 +13830,29 @@ export default [
           return ['Medication delivery', 'Medication pick up'].includes(
             values.Type
           )
+        },
+      },
+      {
+        id: 'fldOsObR3Tf4ujyZ6',
+        name: 'Pharmacy provider (Facility from Provider base)',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldUT8JomIJ3VUWxy',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tbltmQuqyuKPc4Ffo',
+        required: false,
+        helper: 'Please select the pharmacy that will deliver the medication',
+        conditionType: '',
+        parentKey: 'Type',
+        parentValues: ['Medication pick up'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Type)) {
+            return ['Medication pick up'].some((r) => values.Type.includes(r))
+          }
+          return ['Medication pick up'].includes(values.Type)
         },
       },
       {
@@ -15518,6 +15541,21 @@ export default [
         foreignTableId: 'tbl7Kh4tVrQp9JdUc',
         required: false,
         helper: '',
+      },
+      {
+        id: 'fldtvidZZAwp6pQaF',
+        name: 'Clinical Consultation',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld9azWX8GMfBldqD',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblLhL72JyizQ4ycc',
+        required: false,
+        helper:
+          'Please link the prescription to the Clinical Consultation. If you are in guided workflow, please submit the clinical consultation form first so that you can see it here',
       },
       {
         id: 'fldb32h6GgavKARi3',
