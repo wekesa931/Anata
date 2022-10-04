@@ -257,6 +257,37 @@ const WorkflowPortal = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeForm, currentWorkflow])
+  const workflowCaseId = async () => {
+    try {
+      let caseId = null
+      const res = await airtableFetch('create/caseId', 'post', {
+        fields: {
+          ID: openedWorkflow.workflowId,
+          Status: 'Ongoing',
+          Members: [recId],
+        },
+      })
+      if (Array.isArray(res)) {
+        throw new Error()
+      }
+      caseId = res.id
+      await saveWorkflow({
+        variables: {
+          workflowId: openedWorkflow.workflowId,
+          airtableId: caseId,
+          completed: false,
+        },
+      }).then((wk) => {
+        setCurrentWorkflow(wk.data.updateWorkflow.workflow)
+      })
+      onRefetch(true)
+      return [`${caseId}`]
+    } catch (e) {
+      notify('Record has not been successfully saved')
+      logError(`Retry workflow id save to airtable failed ${e}`)
+      return null
+    }
+  }
   const handleLeave = () => {
     setOpen(false)
     onFormClose(openedWorkflow.name, false)
@@ -519,7 +550,9 @@ const WorkflowPortal = ({
             airtablePayload = {
               fields: {
                 ...airtablePayload.fields,
-                'Case ID': [`${openedWorkflow.airtableId}`],
+                'Case ID': openedWorkflow.airtableId
+                  ? [`${openedWorkflow.airtableId}`]
+                  : await workflowCaseId(),
                 'Data Source': 'Guided Workflow',
               },
             }
@@ -939,7 +972,7 @@ const WorkflowPortal = ({
                   .then((res) => {
                     if (res.data.updateWorkflow.status === 200) {
                       airtableFetch('caseId', 'post', {
-                        id: openedWorkflow?.airtableId,
+                        id: currentWorkflow?.airtableId,
                         fields: {
                           Status: 'Resolved',
                         },
