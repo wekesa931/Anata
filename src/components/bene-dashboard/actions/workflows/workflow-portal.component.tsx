@@ -149,6 +149,9 @@ const WorkflowPortal = ({
     useMutation(REMOVE_MODULE)
   const isWorkflowTemplate = openedWorkflow.workflowId
   const currentIndex = formPayload?.findIndex((fm) => fm.moduleId === expanded)
+  const submittedForm = expanded
+    ? formPayload?.find((fm) => fm.moduleId === expanded)
+    : formPayload[0]
   const buttonMessage =
     formPayload.length > 1 && currentIndex === -1
       ? 'Select a form to submit'
@@ -978,20 +981,26 @@ const WorkflowPortal = ({
             </Button>
           )}
           <Tooltip title={buttonMessage}>
-            <Button
-              disabled={loaderDisplayed || !checkModuleStatus(formPayload)}
-              className={styles.submitModuleBtn}
-              onClick={() => {
-                if (buttonMessage) {
-                  notify('Select a form to submit')
-                } else {
-                  setShouldSaveModule(true)
-                  setDisplayLoader(true)
+            <div>
+              <Button
+                disabled={
+                  loaderDisplayed ||
+                  !checkModuleStatus(formPayload) ||
+                  !submittedForm?.isDraft
                 }
-              }}
-            >
-              Submit form
-            </Button>
+                className={styles.submitModuleBtn}
+                onClick={() => {
+                  if (buttonMessage) {
+                    notify('Select a form to submit')
+                  } else {
+                    setShouldSaveModule(true)
+                    setDisplayLoader(true)
+                  }
+                }}
+              >
+                Submit form
+              </Button>
+            </div>
           </Tooltip>
           <DialogContent sx={{ padding: 0, height: '90%' }}>
             {confirmSubmit()}

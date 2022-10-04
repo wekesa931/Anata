@@ -273,6 +273,9 @@ export const initialFormValues = (member: any) => {
     },
     Baseline: {
       'Health Navigator': member['Health Navigator Assignment Record ID'],
+      Gender: member.Sex,
+      'Is the BN a minor': member['Minor?'] === 'Adult' ? 'No' : 'Yes',
+      'Date of baseline': member['Baseline Date'],
     },
     Vitals: {
       Staff: member['Health Navigator Assignment Record ID'],

@@ -118,8 +118,22 @@ export default [
         helper: '',
       },
       {
+        id: 'fldPpZOvc3sID7fD3',
+        name: 'Current Health Issues',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
         id: 'fldQLkaDm3DmzIDIj',
-        name: 'Current Health Issues?',
+        name: 'Current Health Issues description?',
         type: 'richText',
         format: '',
         isDateTime: false,
@@ -131,6 +145,17 @@ export default [
         required: true,
         helper:
           '"I just wanted to ask about whether you are having any health issue, right now, that is affecting or concerning you."\n\nQuickly make a judgment on the next steps that may need to follow for the particular complaint.\n\nIn case of a complaint that may need visual confirmation, please ask the member what phone they are using and if they can take a photo or even have a WhatsApp video call\n\nThe key here is to determining the following:\nIs the condition acute?\nIs the condition chronic?\nIs the condition a Priority (meaning, does the Member consider the condition to be important)?',
+        conditionType: '',
+        parentKey: 'Current Health Issues',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Current Health Issues'])) {
+            return ['Yes'].some((r) =>
+              values['Current Health Issues'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Current Health Issues'])
+        },
       },
       {
         id: 'fldADJtt1OqdkaRJQ',
@@ -5436,20 +5461,6 @@ export default [
             values['Specialists from Provider Base']
           )
         },
-      },
-      {
-        id: 'fldersOYzP3Kjx8on',
-        name: 'Location (Other)',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
       },
       {
         id: 'fldQlXe2zComT4i3P',
