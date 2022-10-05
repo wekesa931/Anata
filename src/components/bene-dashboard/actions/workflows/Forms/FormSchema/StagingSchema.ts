@@ -6837,7 +6837,7 @@ export default [
       {
         id: 'outcome',
         name: 'Next Steps',
-        type: 'select',
+        type: 'multiSelect',
         format: '',
         isDateTime: false,
         options: [

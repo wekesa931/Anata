@@ -2824,7 +2824,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: '',
+        helper:
+          'If member has already given this information during screening or PSPB or HIF phase, please see it in the hif filled form',
       },
       {
         id: 'fld1wArLXpqRrJpMr',
@@ -16571,7 +16572,7 @@ export default [
       {
         id: 'outcome',
         name: 'Next Steps',
-        type: 'select',
+        type: 'multiSelect',
         format: '',
         isDateTime: false,
         options: [

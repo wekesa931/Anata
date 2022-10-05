@@ -495,6 +495,7 @@ const WorkflowPortal = ({
           const outcomeMetadata: any = {
             creator: user && user.email,
           }
+          const outcome = JSON.stringify(interactionData.outcome)
           if (interactionData.reasonForConsultation) {
             outcomeMetadata.reasonForConsultation =
               interactionData.reasonForConsultation
@@ -511,6 +512,7 @@ const WorkflowPortal = ({
                 historyUserIdField: user && user.email,
                 healthNavigator: user && extractUsername(user.email),
                 outcomeMetadata,
+                outcome,
               },
             },
           })
