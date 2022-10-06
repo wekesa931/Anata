@@ -83,8 +83,9 @@ export default function MiniDrawer() {
   const [showDropDownTodo, setDropDownTodo] = useState(false)
   const [showDropDownPopulation, setDropDownPopulation] = useState(false)
   const [subItem, setSublist] = useState('')
+
   const customizedView = (name: any) => {
-    if (user && iframes[user.email]) {
+    if (user && iframes[user.email] && iframes[user.email][name]) {
       return iframes[user.email][name]
     }
     return iframes.default[name]
