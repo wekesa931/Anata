@@ -162,6 +162,13 @@ const WorkflowPortal = ({
   const closeToast = () => {
     setToastMessage(defaultToastMessage)
   }
+  const updateFormMeta = (fl: IWorkflow) => {
+    let form = null
+    if (fl.currentModules[0]) {
+      form = TABLES.find((frm) => frm.name === fl.currentModules[0])
+    }
+    return form
+  }
   const workflowForms = (fm: IWorkflow) => {
     const modules = fm?.currentModules.map((mod) => {
       if (fm?.moduleData[mod]) {
@@ -231,11 +238,7 @@ const WorkflowPortal = ({
     setlistOfTables(workflowForms(openedWorkflow))
     setCurrentWorkflow(openedWorkflow)
     setActiveForm(openedWorkflow.currentModules[0])
-    let form = null
-    if (openedWorkflow.currentModules[0]) {
-      form = TABLES.find((frm) => frm.name === openedWorkflow.currentModules[0])
-    }
-    setFormMeta(form)
+    setFormMeta(updateFormMeta(openedWorkflow))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openedWorkflow])
   useEffect(() => {
@@ -403,7 +406,8 @@ const WorkflowPortal = ({
           setCurrentWorkflow(response)
           onRefetch(true)
           setlistOfTables(workflowForms(response))
-          setActiveForm(openedWorkflow.currentModules[0])
+          setActiveForm(response.currentModules[0])
+          setFormMeta(updateFormMeta(response))
         } else {
           notify(JSON.stringify(res.data.removeWorkflowModule.errors))
         }
