@@ -13,7 +13,7 @@ import airtableFetch from '../../../../../resources/airtable-fetch'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 
 const BloodPressure = () => {
-  const todayDate = dayjs(new Date()).format('YYYY-MM-DD')
+  const todayDate = dayjs(new Date()).add(1, 'day').format('YYYY-MM-DD')
   const { recId } = useParams()
   const [bpData, setBpData] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
