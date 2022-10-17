@@ -15,7 +15,7 @@ const FormSection = ({
   id,
   formPayload,
   moduleId,
-  formMeta,
+  localFormMeta,
   template,
   activeForm,
   addOpenForm,
@@ -29,7 +29,7 @@ const FormSection = ({
 }: any) => {
   const currentIndex = formPayload.findIndex((fm) => fm.moduleId === id)
   const { validationObject, dateFields, numberFields } = validationRules(
-    formMeta,
+    localFormMeta,
     template
   )
   const {
@@ -99,8 +99,7 @@ const FormSection = ({
   const renderFormState = () => {
     return (
       <div className={styles.formFieldsContainer}>
-        {/* {formMeta.helper && <p className={styles.formHelper}>{formMeta.helper}</p>} */}
-        {formMeta.fields.map((field) => {
+        {localFormMeta.fields.map((field) => {
           const openForm = () => {
             const formData = FORMS.find((fm) => fm.formId === field.formId)
             formData &&
@@ -132,7 +131,7 @@ const FormSection = ({
                   error={errors[field.name]}
                   disabled={!disabled}
                   value={fieldValue}
-                  field={{ ...field, parentTableId: formMeta.id }}
+                  field={{ ...field, parentTableId: localFormMeta.id }}
                   template={template}
                   airtableMeta={airtableMeta}
                   saveInput={(name: string, value: any) => {
@@ -164,7 +163,7 @@ const FormSection = ({
   }
   return (
     <>
-      {formMeta?.fields && <form>{renderFormState()}</form>}
+      {localFormMeta?.fields && <form>{renderFormState()}</form>}
       <Snackbar
         className={styles.errorAnchor}
         sx={{ width: 150 }}

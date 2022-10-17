@@ -126,7 +126,7 @@ const WorkflowPortal = ({
   const [activeForm, setActiveForm] = useState<string>(null)
   const [displayForms, setDisplayForms] = useState(false)
   const [allForms, setAllForms] = useState(airtableFormNames)
-  const [formMeta, setFormMeta] = useState<FormMeta>(null)
+  const [localFormMeta, setLocalFormMeta] = useState<FormMeta>(null)
   const [listOfTables, setlistOfTables] = useState([])
   const [showIncompleteForms, setShowIncompleteForms] = useState(false)
   const [currentWorkflow, setCurrentWorkflow] = useState<IWorkflow>(null)
@@ -219,6 +219,49 @@ const WorkflowPortal = ({
       ...prefills,
     }
   }
+
+  const isAllowedField = (name: string) => {
+    return (
+      name === 'createdBy' || name === 'updatedBy' || name === 'Data Source'
+    )
+  }
+
+  /**
+   * This method allows us to
+   * 1. Send the payload with ID reference of the fields on airtable and not the name(We get the ID's from the local form schema)
+   * 2. Confirm that the payload has valid fields as the ones on airtable.
+   * 3. Ensures form submission is not hindered but notifies the devs and user in case of field mismatch
+   */
+  const generatePayload = (initialPayload: any) => {
+    const airtableFieldsMap = airtableMeta[localFormMeta.id].fields
+    const erroredFields: string[] = []
+    const mappedPayload: any = {}
+    const localFieldsMap: any = {}
+    localFormMeta.fields.forEach((fm) => {
+      localFieldsMap[fm.name] = {
+        id: fm.id,
+      }
+    })
+
+    Object.keys(initialPayload).forEach((k) => {
+      if (localFieldsMap[k] && airtableFieldsMap[localFieldsMap[k].id]) {
+        mappedPayload[localFieldsMap[k].id] = initialPayload[k]
+      } else if (isAllowedField(k)) {
+        mappedPayload[k] = initialPayload[k]
+      } else {
+        erroredFields.push(k)
+      }
+    })
+    if (erroredFields.length > 0) {
+      const affectedFields = JSON.stringify(erroredFields)
+      logError(
+        `The following fields are missing on airtable and have not been saved ${affectedFields}`
+      )
+    }
+    return {
+      fields: mappedPayload,
+    }
+  }
   const notify = (text: string) => {
     setToastMessage({
       ...toastMessage,
@@ -238,7 +281,7 @@ const WorkflowPortal = ({
     setlistOfTables(workflowForms(openedWorkflow))
     setCurrentWorkflow(openedWorkflow)
     setActiveForm(openedWorkflow.currentModules[0])
-    setFormMeta(updateFormMeta(openedWorkflow))
+    setLocalFormMeta(updateFormMeta(openedWorkflow))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openedWorkflow])
   useEffect(() => {
@@ -365,7 +408,7 @@ const WorkflowPortal = ({
           setlistOfTables(workflowForms(response))
           setCurrentWorkflow(response)
           onRefetch(true)
-          setFormMeta(newMeta)
+          setLocalFormMeta(newMeta)
           setActiveForm(fm)
           setDisplayForms(false)
           setAllForms(airtableFormNames)
@@ -379,7 +422,7 @@ const WorkflowPortal = ({
         }
       })
     } else {
-      setFormMeta(newMeta)
+      setLocalFormMeta(newMeta)
       setActiveForm(fm)
       setDisplayForms(false)
       setIncomingForm(null)
@@ -407,7 +450,7 @@ const WorkflowPortal = ({
           onRefetch(true)
           setlistOfTables(workflowForms(response))
           setActiveForm(response.currentModules[0])
-          setFormMeta(updateFormMeta(response))
+          setLocalFormMeta(updateFormMeta(response))
         } else {
           notify(JSON.stringify(res.data.removeWorkflowModule.errors))
         }
@@ -572,6 +615,7 @@ const WorkflowPortal = ({
           }
 
           const tableName = TABLE_ROUTES[activeForm]
+          airtablePayload = generatePayload(airtablePayload.fields)
           const res = await airtableFetch(
             `create/${tableName}`,
             'post',
@@ -590,6 +634,7 @@ const WorkflowPortal = ({
               moduleData: airtablePayload,
               workflow: currentWorkflow,
             })
+            // logError(`${res[0].message}`)
             notify(`Error: ${res[0].message}`)
             // eslint-disable-next-line
             throw { message: `${res[0].error}` }
@@ -716,7 +761,7 @@ const WorkflowPortal = ({
         setIsFormEdited={setIsFormEdited}
         moduleId={expanded || formPayload[0].moduleId}
         airtableMeta={airtableMeta}
-        formMeta={formMeta}
+        localFormMeta={localFormMeta}
         shouldSaveModule={shouldSaveModule}
         formPayload={formPayload}
         addOpenForm={addOpenForm}
@@ -939,7 +984,7 @@ const WorkflowPortal = ({
                 </div>
               </>
             )}
-            <p className={styles.formHelperText}>{formMeta?.helper}</p>
+            <p className={styles.formHelperText}>{localFormMeta?.helper}</p>
             {currentWorkflow?.modules.length === 0 && (
               <div className={styles.fieldsLoader}>
                 <p className="text-small">

@@ -37,12 +37,10 @@ describe('<InteractionLogsView/>', () => {
   test('should render', () => {
     render(mocks)
   })
-
   test('should display loading', () => {
     const wrapper = render(mocks)
     expect(wrapper.findByText('Loading Interaction Logs')).not.toBeNull()
   })
-
   test('should display list interaction logs correctly', async () => {
     const { queryByText } = render(mocks)
     await new Promise((resolve) => setTimeout(resolve, 200))
@@ -51,7 +49,6 @@ describe('<InteractionLogsView/>', () => {
     expect(queryByText(/20 Feb '20, 12:27 PM/)).not.toBeNull()
     expect(queryByText(/Test HN 1/)).not.toBeNull()
   })
-
   test('it displays error message on failure', async () => {
     const errorMocks = [
       {

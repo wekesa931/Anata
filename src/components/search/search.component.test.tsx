@@ -29,17 +29,14 @@ describe('<SearchComponent/>', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
-
   test('Should render search component and display the search input', () => {
     const { getByRole } = render(<SearchComponent />)
     expect(getByRole('searchbox')).toBeVisible()
   })
-
   test('Should not render clear button', () => {
     const { queryByTestId } = render(<SearchComponent />)
     expect(queryByTestId('search-input-clear')).toBeNull()
   })
-
   test('Should perform search and allow users to clear input', async () => {
     const { queryByTestId, getByRole, getByText, getByTestId } = render(
       <SearchComponent />
@@ -55,7 +52,6 @@ describe('<SearchComponent/>', () => {
     fireEvent.click(clearButton)
     expect(searchInput.textContent).toBe('')
   })
-
   test('Should display results in a list and load new member on click', async () => {
     ;(airtableFetch as jest.Mock).mockResolvedValue(mockPatientSearchResponse)
     await act(async () => {

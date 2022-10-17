@@ -15,7 +15,6 @@ describe('<Sidebar />', () => {
   it('renders sidebar', () => {
     renderWithRouter(<Sidebar />)
   })
-
   it('should change colour to be grey and subchildren to be 0 ', async () => {
     const li = await waitFor(() => screen.getByText('Appointments'))
     expect(li.className).toBe('text-grey')
