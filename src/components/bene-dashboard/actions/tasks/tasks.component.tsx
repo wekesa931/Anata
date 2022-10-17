@@ -245,13 +245,17 @@ const Tasks = () => {
       key = key.replace(/\+/g, ' ')
       value = decodeURI(value)
 
-      if (value === 'True') {
-        value = true
-      }
+      /**
+       * The values should actually remain as they are
+       */
 
-      if (value === 'False') {
-        value = false
-      }
+      // if (value === 'True') {
+      //   value = true
+      // }
+
+      // if (value === 'False') {
+      //   value = false
+      // }
 
       if (typeof value === 'string' && value.startsWith('rec')) {
         value = [value]
