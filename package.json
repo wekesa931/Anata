@@ -139,7 +139,7 @@
     "throttle-debounce": "^2.3.0",
     "use-file-picker": "^1.4.1",
     "watchpack-chokidar2": "^2.0.1",
-    "webpack-bundle-analyzer": "^3.8.0",
+    "webpack-bundle-analyzer": "^4.6.1",
     "yup": "^0.29.3"
   },
   "husky": {
