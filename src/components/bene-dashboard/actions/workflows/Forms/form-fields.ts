@@ -11,6 +11,7 @@ export const DUPLICATE_DEFAULTS = {
   'HN Tasks': 'Type',
   'Logistics Tasks': 'Type',
   'Member tasks': 'Type',
+  'Prescriptions VC': 'Drug Name',
   Interventions: 'Intervention',
 }
 
