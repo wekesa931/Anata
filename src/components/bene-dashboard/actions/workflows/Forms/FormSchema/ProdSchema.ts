@@ -9178,7 +9178,7 @@ export default [
         symmetricColumnId: null,
         unreversed: false,
         relationship: null,
-        foreignTableId: null,
+        foreignTableId: 'tblHs6JxFnMGAjNNC',
         required: false,
         helper:
           'Please select yourself here only if you want to be informed about the status of this task (especially if the task is supposed to be done by somebody else)',
@@ -16192,14 +16192,14 @@ export default [
       {
         id: 'fldY9vaVYOKHLWLWr',
         name: 'Antara Staff Involved',
-        type: 'multiCollaborator',
+        type: 'collaborator',
         format: '',
         isDateTime: false,
         options: [],
         symmetricColumnId: null,
         unreversed: false,
         relationship: null,
-        foreignTableId: null,
+        foreignTableId: 'tblHs6JxFnMGAjNNC',
         required: false,
         helper:
           'Please tag the staff member who was in charge of the member or who was linked to the incident',

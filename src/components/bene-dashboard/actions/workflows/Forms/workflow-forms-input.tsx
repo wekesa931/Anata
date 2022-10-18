@@ -105,6 +105,19 @@ const WorkflowFormsInput = ({
         )
       }
       return <></>
+    case 'collaborator':
+      return (
+        <CollaboratorInput
+          value={value}
+          template={template}
+          disabled={disabled}
+          field={field}
+          airtableMeta={airtableMeta}
+          saveInput={saveInput}
+          control={control}
+          error={error}
+        />
+      )
 
     case 'select':
     case 'checkbox':
@@ -820,7 +833,150 @@ const LinkRecordInput = ({
     />
   )
 }
+const CollaboratorInput = ({
+  value: linkedValue,
+  field,
+  saveInput,
+  airtableMeta,
+  disabled,
+  control,
+  error,
+}: Form) => {
+  const [selectedChoices, setSelectedChoices] = useState<any>(() => {
+    if (field.relationship === 'many') {
+      return []
+    }
+    return null
+  })
+  const [linkedRecords, setLinkedRecords] = useState<any[]>([])
+  const filterOptions = createFilterOptions({
+    matchFrom: 'any',
+    limit: 50,
+  })
+  const [getLinkedRecords, { data, loading: gettingLinkedRecords }] =
+    useLazyQuery(GET_LINKED_RECORD)
+  const settingLinkedData = gettingLinkedRecords || !airtableMeta
+  useEffect(() => {
+    if (data) {
+      const response = data.globalSearch.data
+      const loadedMeta = response.map((res) => {
+        return {
+          email: res.fields.Email,
+          name: res.fields.Name,
+        }
+      })
 
+      setLinkedRecords(loadedMeta)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
+
+  useEffect(() => {
+    if (airtableMeta) {
+      const airtableField =
+        airtableMeta[field.foreignTableId]?.fields?.primaryFieldName
+
+      getLinkedRecords({
+        variables: {
+          table: field.foreignTableId,
+          field: airtableField,
+          searchParam: '',
+          antaraIdKey: '',
+          antaraIdValue: '',
+        },
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [airtableMeta])
+
+  useEffect(() => {
+    if (linkedValue && linkedRecords.length > 0) {
+      const recordValue = linkedRecords.filter(
+        (rec: any) => rec.name === linkedValue.name
+      )
+      if (field.relationship === 'many') {
+        setSelectedChoices(recordValue)
+      } else {
+        setSelectedChoices(recordValue[0])
+      }
+    } else if (field.relationship === 'many') {
+      setSelectedChoices([])
+    } else {
+      setSelectedChoices(null)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [linkedValue, linkedRecords])
+  const handleChange = (onChange: (val: any) => any, value: any) => {
+    if (value) {
+      onChange(value)
+      saveInput(field.name, value)
+    }
+  }
+
+  return (
+    <Controller
+      name={field.name}
+      defaultValue={linkedValue}
+      control={control}
+      rules={{ required: true }}
+      render={({ field: { onChange } }) => (
+        <>
+          {field.helper && (
+            <InputLabel>
+              <HelperText field={field} error={error} />
+            </InputLabel>
+          )}
+          <Autocomplete
+            multiple={field.relationship === 'many'}
+            disablePortal
+            filterOptions={filterOptions}
+            disabled={disabled}
+            loading={settingLinkedData}
+            loadingText={
+              <div className={styles.recordLoader}>
+                <LoadingIcon /> Loading {field.name} records
+              </div>
+            }
+            id="combo-box-demo"
+            options={linkedRecords}
+            value={selectedChoices}
+            disableCloseOnSelect={field.relationship === 'many'}
+            sx={{ marginBottom: 2 }}
+            onChange={(event: SyntheticEvent<Element, Event>, value: any) =>
+              handleChange(onChange, value)
+            }
+            getOptionLabel={(option) => option?.name || ''}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={<Label field={field} error={error} />}
+              />
+            )}
+            renderOption={(props, option, { selected }) => {
+              return (
+                <li {...props}>
+                  <Checkbox
+                    key={option.id}
+                    icon={icon}
+                    checkedIcon={checkedIcon}
+                    style={{ marginRight: 8 }}
+                    checked={selected}
+                  />
+                  {option.name}
+                </li>
+              )
+            }}
+          />
+          {error && (
+            <FormHelperText className={styles.fieldLabelError}>
+              This field is required
+            </FormHelperText>
+          )}
+        </>
+      )}
+    />
+  )
+}
 const DateInputField = ({
   value: dateValue,
   field,
