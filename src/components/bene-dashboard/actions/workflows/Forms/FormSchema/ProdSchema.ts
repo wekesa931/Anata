@@ -10806,6 +10806,31 @@ export default [
         helper: 'This field is needed for GA Billing',
       },
       {
+        id: 'fldExPhaq9FxnoRW7',
+        name: 'Other insurance provider',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Insurance Provider',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Insurance Provider'])) {
+            return ['Other'].some((r) =>
+              values['Insurance Provider'].includes(r)
+            )
+          }
+          return ['Other'].includes(values['Insurance Provider'])
+        },
+      },
+      {
         id: 'fld7papvjJHJd4IIH',
         name: 'Date of appointment',
         type: 'date',
