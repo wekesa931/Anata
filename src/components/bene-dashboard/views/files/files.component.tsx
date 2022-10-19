@@ -1403,7 +1403,7 @@ const Files = () => {
                                               sx={{ padding: '5px' }}
                                               align="right"
                                             >
-                                              {dayjs(row.updatedAt).format(
+                                              {dayjs(row.createdAt).format(
                                                 "DD MMM' YY"
                                               )}
                                             </TableCell>
