@@ -602,15 +602,13 @@ const FilterComponent = ({
 const DrawerHeader = styled('div')(({ theme }: any) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: 'space-between',
   flexDirection: 'row',
   paddingLeft: 2,
 }))
 
-const FileDetails = ({ file, close, showFile }: any) => {
+const FileDetails = ({ file, anchorEl, id, showFile, close, open }: any) => {
   const sharingInfo = file?.sharedfileSet?.edges[0]?.node
 
   const renderSection = (title: string, value: string) => (
@@ -621,44 +619,61 @@ const FileDetails = ({ file, close, showFile }: any) => {
   )
 
   return (
-    <Drawer
-      anchor="left"
-      className="upload-form-drawer"
-      open={!!file}
-      onClose={close}
-    >
-      <DrawerHeader>
-        <p className={styles.docInfoHeader}>Doc info</p>
-        <IconButton onClick={close}>
-          <X />
-        </IconButton>
-      </DrawerHeader>
-      <Divider />
-      <Box sx={{ p: 2 }}>
-        <Box sx={{ mt: 1, mb: 2 }}>
-          <p className={styles.docInfoText}>{file.title}</p>
+    <Popper id={id} open={open} anchorEl={anchorEl}>
+      <Paper
+        sx={{
+          p: 1,
+          width: 300,
+          position: 'relative',
+          bgcolor: 'background.paper',
+        }}
+        elevation={3}
+      >
+        <Box>
+          <DrawerHeader>
+            <Typography variant="h6" component="div">
+              {file?.title}
+            </Typography>
+            <IconButton onClick={close}>
+              <X />
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          {renderSection(
+            'Uploaded at',
+            dayjs(file.createdAt).format("DD MMM' YYYY, HH:mm")
+          )}
+          {renderSection(
+            'Shared status',
+            file.shared ? 'Shared with member' : 'Not shared with member'
+          )}
+          {file.shared && (
+            <>
+              {renderSection('Shared by', sharingInfo?.sharedBy)}
+              {renderSection('Member shared folder', sharingInfo?.folder?.name)}
+              {renderSection(
+                'Has member read',
+                sharingInfo?.read ? 'Read' : 'Not read'
+              )}
+            </>
+          )}
+          <Button variant="text" onClick={(e) => showFile(e, file)}>
+            View file
+          </Button>
         </Box>
-
-        {renderSection(
-          'Uploaded at',
-          dayjs(file.createdAt).format("DD MMM' YYYY, HH:mm")
-        )}
-        {renderSection(
-          'Shared status',
-          file.shared ? 'Shared with member' : 'Not shared with member'
-        )}
-        {file.shared && renderSection('Shared by', sharingInfo?.sharedBy)}
-        {renderSection('Member shared folder', sharingInfo?.folder?.name)}
-
-        <Button onClick={(e) => showFile(e, file)}>View file</Button>
-      </Box>
-    </Drawer>
+      </Paper>
+    </Popper>
   )
 }
 
 const Files = () => {
   const [open, setOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [detailsAnchorEl, setDetailsAnchorEl] = useState<null | HTMLElement>(
+    null
+  )
+  const [fileDetails, setFileDetails] = useState<null | any>(null)
+
   const [filtering, setfiltering] = useState(false)
   const [docLink, setdocLink] = useState(undefined)
   const [order, setOrder] = React.useState('asc')
@@ -690,7 +705,6 @@ const Files = () => {
     variables: { antaraId: member['Antara ID'] },
   })
   const [folders, setFolders] = useState([])
-  const [fileDetails, showFileDetails] = useState<any>(null)
   const [fileTypes, setFileTypes] = useState<string[]>([])
 
   const { data: foldersData } = useQuery(GET_FOLDERS)
@@ -1136,6 +1150,7 @@ const Files = () => {
       </div>
     )
   }
+
   return (
     <div
       className="d-flex flex-direction-column"
@@ -1456,9 +1471,16 @@ const Files = () => {
                                             >
                                               <button
                                                 className={styles.shareBtn}
-                                                onClick={() =>
-                                                  showFileDetails(row)
-                                                }
+                                                onClick={(
+                                                  e: React.MouseEvent<HTMLElement>
+                                                ) => {
+                                                  setDetailsAnchorEl(
+                                                    detailsAnchorEl
+                                                      ? null
+                                                      : e.currentTarget
+                                                  )
+                                                  setFileDetails(row)
+                                                }}
                                               >
                                                 Show
                                               </button>
@@ -1528,9 +1550,15 @@ const Files = () => {
       )}
       {fileDetails && (
         <FileDetails
+          anchorEl={detailsAnchorEl}
           file={fileDetails}
-          close={() => showFileDetails(null)}
+          id={detailsAnchorEl ? fileDetails?.id : undefined}
           showFile={handleClick}
+          close={() => {
+            setDetailsAnchorEl(null)
+            setFileDetails(null)
+          }}
+          open={!!detailsAnchorEl}
         />
       )}
       {error && (

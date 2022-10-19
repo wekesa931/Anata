@@ -46,6 +46,7 @@ const GET_FILES = gql`
                 folder {
                   name
                 }
+                read
               }
             }
           }
