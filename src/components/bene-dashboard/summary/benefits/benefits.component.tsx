@@ -52,26 +52,32 @@ const Benefits = ({
         }: InsuranceDetails) => {
           return (
             <Box className={styles.container} key={id}>
-              <Box
-                sx={{ height: '32px', width: '100px' }}
-                component="img"
-                src={insuranceCompany?.logo}
-                alt={insuranceCompany?.name || 'Unknown Insurer'}
-              />
+              {insuranceCompany?.logo && (
+                <Box
+                  sx={{ height: '32px', width: '100px' }}
+                  component="img"
+                  src={insuranceCompany?.logo}
+                  alt={insuranceCompany?.name || ''}
+                />
+              )}
 
               <Grid container spacing={1} direction="column">
-                <Grid item xs="auto">
-                  <TitleWithBody
-                    title="Provider"
-                    body={insuranceCompany?.name || 'Unknown'}
-                  />
-                </Grid>
-                <Grid item xs="auto">
-                  <TitleWithBody
-                    title="Policy"
-                    body={memberPolicy?.healthPolicy?.name || 'Unknown'}
-                  />
-                </Grid>
+                {insuranceCompany?.name && (
+                  <Grid item xs="auto">
+                    <TitleWithBody
+                      title="Provider"
+                      body={insuranceCompany?.name || 'Unknown'}
+                    />
+                  </Grid>
+                )}
+                {memberPolicy?.healthPolicy?.name && (
+                  <Grid item xs="auto">
+                    <TitleWithBody
+                      title="Policy"
+                      body={memberPolicy?.healthPolicy?.name || 'Unknown'}
+                    />
+                  </Grid>
+                )}
                 <Grid item xs="auto">
                   <SideBySideList utilization={benefitUtilizations || []} />
                 </Grid>

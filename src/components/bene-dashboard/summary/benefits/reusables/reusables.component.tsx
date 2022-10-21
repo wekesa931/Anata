@@ -44,27 +44,33 @@ const SideBySideComponents = ({
 export const SideBySideList = ({ utilization }: { utilization: any[] }) => {
   return (
     <Grid container className={styles.sideBySideListWrapper}>
-      <Grid item xs={8}>
-        <List dense disablePadding className={styles.list}>
-          <ListSubheader disableGutters className={styles.listSubheader}>
-            <SideBySideComponents first="Benefits" second="Balance" />
-          </ListSubheader>
-          {utilization.map((el) => (
-            <ListItem disablePadding key={el?.id}>
-              <ListItemText disableTypography>
-                <SideBySideComponents
-                  first={el?.benefit?.name || ''}
-                  second={
-                    el?.utilizedPortion || el?.benefit?.limit > 0 || 0
-                      ? 'Available'
-                      : 'Used Up'
-                  }
-                />
-              </ListItemText>
-            </ListItem>
-          ))}
-        </List>
-      </Grid>
+      {utilization.length === 0 ? (
+        <Grid item xs={12} className={styles.noBenefits}>
+          No data yet. Edit member to add insurance details
+        </Grid>
+      ) : (
+        <Grid item xs={8}>
+          <List dense disablePadding className={styles.list}>
+            <ListSubheader disableGutters className={styles.listSubheader}>
+              <SideBySideComponents first="Benefits" second="Balance" />
+            </ListSubheader>
+            {utilization.map((el) => (
+              <ListItem disablePadding key={el?.id}>
+                <ListItemText disableTypography>
+                  <SideBySideComponents
+                    first={el?.benefit?.name || ''}
+                    second={
+                      el?.utilizedPortion || el?.benefit?.limit > 0 || 0
+                        ? 'Available'
+                        : 'Used Up'
+                    }
+                  />
+                </ListItemText>
+              </ListItem>
+            ))}
+          </List>
+        </Grid>
+      )}
     </Grid>
   )
 }

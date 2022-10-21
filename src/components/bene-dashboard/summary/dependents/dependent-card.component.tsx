@@ -84,7 +84,7 @@ const DependentCard = ({
               : styles.unknown
           }
         >
-          {dependent?.status?.status?.status?.toUpperCase()}
+          {dependent?.status?.status?.status?.toUpperCase() || 'UNKNOWN'}
         </Box>
       </Box>
     </Link>
