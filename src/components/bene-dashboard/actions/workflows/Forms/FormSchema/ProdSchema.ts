@@ -5653,7 +5653,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblYSNrfZJnzdSwmx',
-        required: true,
+        required: false,
         helper: '',
       },
       {
