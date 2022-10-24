@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import Box from '@mui/material/Box'
-import AdapterDateFns from '@mui/lab/AdapterDayjs'
-import LocalizationProvider from '@mui/lab/LocalizationProvider'
-import { DateRangePicker, DateRange } from '@mui/lab'
+import { DateRangePicker, DateRange } from "mui-daterange-picker";
 import dayjs from 'dayjs'
 import Stack from '@mui/material/Stack'
-import { X } from 'react-feather'
 import * as styles from './vitals.component.css'
 import airtableFetch from '../../../../../resources/airtable-fetch'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
@@ -99,8 +95,8 @@ const BloodPressure = () => {
         .format('YYYY-MM-DD')
       arg = `&startDate=${firstDayOfPrevSixMonths}&endDate=${todayDate}`
     } else if (frequency === 'date-range') {
-      const startDate = newDate[0]
-      const endDate = newDate[1]
+      const startDate = newDate.startDate
+      const endDate = newDate.endDate
       arg = `&startDate=${startDate}&endDate=${endDate}`
     }
     setLoading(true)
@@ -125,13 +121,15 @@ const BloodPressure = () => {
       .catch(() => setLoading(false))
   }
 
+  const closeDatePicker = () => setShowCalendar(false)
   const handleChange = (newDate) => {
-    const minDate = dayjs(newDate[0]).format('YYYY-MM-DD')
-    const maxDate = dayjs(newDate[1]).format('YYYY-MM-DD')
-    setSelectedDate([minDate, maxDate])
-    if (newDate[1]) {
+    const startDate = dayjs(newDate.startDate).format('YYYY-MM-DD')
+    const endDate = dayjs(newDate.endDate).format('YYYY-MM-DD')
+    setSelectedDate([startDate, endDate])
+    if (newDate.startDate) {
       filter('date-range', newDate)
     }
+    setShowCalendar(false)
   }
 
   useEffect(() => {
@@ -204,39 +202,26 @@ const BloodPressure = () => {
             value="date-range"
             onClick={(e) => {
               handleClicked(e)
-              setShowCalendar(true)
             }}
           >
-            CHOOSE DATE RANGE
+            Custom
           </button>
+          {toggleButton === 'date-range' && <button
+            className={styles.dateBtn}
+            value="date-range"
+            onClick={() => setShowCalendar(!showCalendar)}
+          >
+           {showCalendar ? 'Close' : 'Choose date range'} 
+          </button>}
         </div>
-        {toggleButton === 'date-range' && showCalendar ? (
-          <div className={styles.calendar}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DateRangePicker
-                inputFormat="DD-MM-YYYY"
-                toolbarPlaceholder="DD-MM-YYYY"
-                value={selectedDate}
-                mask="__-__-____"
-                onChange={handleChange}
-                renderInput={(startProps, endProps) => (
-                  <>
-                    <input {...startProps.inputProps} />
-                    <Box sx={{ mx: 2 }}> to </Box>
-                    <input {...endProps.inputProps} />
-                  </>
-                )}
-              />
-            </LocalizationProvider>
-
-            <button
-              className={styles.cancel}
-              onClick={() => {
-                setShowCalendar(false)
-              }}
-            >
-              <X />
-            </button>
+        {toggleButton === 'date-range' ? (
+          <div className={styles.dateContainer}>
+            <DateRangePicker
+              open={showCalendar}
+              closeOnClickOutside
+              toggle={closeDatePicker}
+              onChange={handleChange}
+            />
           </div>
         ) : null}
       </>

@@ -24,6 +24,28 @@
   background-color: var(--white-bg);
   cursor: pointer;
 }
+
+.dateBtn {
+  position: absolute;
+  right: 0;
+  background: #1084ed;
+  top: 40px;
+  color: white;
+  margin-top: 10px;
+  font-weight: 500;
+  font-family: Rubik;
+  font-size: 10px;
+  padding: 7px 10px;
+  border-radius: 5px;
+  border: none;
+  margin-right: 3px;
+}
+.dateBtn :hover {
+  cursor: pointer;
+}
+.dateContainer {
+  margin-top: 35px;
+}
 .activeButton {
   width: 127px;
   height: 24px;
@@ -135,4 +157,7 @@
   flex-direction: column;
   -ms-flex-align: center;
   margin-top: 10%;
+}
+
+.range {
 }
