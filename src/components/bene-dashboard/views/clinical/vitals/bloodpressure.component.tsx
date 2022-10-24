@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { DateRangePicker, DateRange } from "mui-daterange-picker";
+import { DateRangePicker, DateRange } from 'mui-daterange-picker'
 import dayjs from 'dayjs'
 import Stack from '@mui/material/Stack'
 import * as styles from './vitals.component.css'
@@ -95,8 +95,8 @@ const BloodPressure = () => {
         .format('YYYY-MM-DD')
       arg = `&startDate=${firstDayOfPrevSixMonths}&endDate=${todayDate}`
     } else if (frequency === 'date-range') {
-      const startDate = newDate.startDate
-      const endDate = newDate.endDate
+      const { startDate } = newDate
+      const { endDate } = newDate
       arg = `&startDate=${startDate}&endDate=${endDate}`
     }
     setLoading(true)
@@ -206,13 +206,15 @@ const BloodPressure = () => {
           >
             Custom
           </button>
-          {toggleButton === 'date-range' && <button
-            className={styles.dateBtn}
-            value="date-range"
-            onClick={() => setShowCalendar(!showCalendar)}
-          >
-           {showCalendar ? 'Close' : 'Choose date range'} 
-          </button>}
+          {toggleButton === 'date-range' && (
+            <button
+              className={styles.dateBtn}
+              value="date-range"
+              onClick={() => setShowCalendar(!showCalendar)}
+            >
+              {showCalendar ? 'Close' : 'Choose date range'}
+            </button>
+          )}
         </div>
         {toggleButton === 'date-range' ? (
           <div className={styles.dateContainer}>
