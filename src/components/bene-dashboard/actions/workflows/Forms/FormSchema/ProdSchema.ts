@@ -5653,7 +5653,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblYSNrfZJnzdSwmx',
-        required: true,
+        required: false,
         helper: '',
       },
       {
@@ -14514,7 +14514,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          "What was the BN's Milestone Target at LAST HMP\n\nCaloric Reduction BMI Target: \nIf Stage 1:\n1-month: 2% reduction\n3-month: 3% reduction\n6-month: 5% reduction\n\nIf Stage 2:\n1-month: 3% reduction\n3-month: 5% reduction\n6-month: 7% reduction\n\nIf Stage 3:\n1-month: 3% reduction\n3-month: 5% reduction\n6-month: 7% reduction\n\nSalt:\nLevel 0: <1500mg (Recommended for hypertensives)\nLevel 1: 1500-2500mg (Normal)\nLevel 2: 2500-3500mg (High)\nLevel 3: 3500-4500mg (Very High)\nLevel 4: >4500mg (Excessively High)\n\nGlycemic Index:\nStage 0: 80-180 (At Risk)\nStage 1: <80 (Newly dx)\nStage 2: <100 (1st line meds)\nStage 3: <180 (2nd line meds)\n\nActivity:\nLevel 1: 7-10 km per week\nLevel 2: 10-15km brisk walking per week\nLevel 3: 15-20km brisk walking per week\nLevel 4: Daily exercise/Athlete\n\nCholesterol:\nLevel [0]: <200mg (Recommended for those with heart disease)\nLevel 1: 200-300mg (Normal)\nLevel 2: 300-500mg (High)\nLevel 3: >500mg (Very High)\n\nAsthma:\nStage 1: Mild intermittent\nStage 2: Moderate intermittent\nStage 3: Moderate persistent\nStage 4: Severe persistent",
+          "What was the BN's Milestone Target at LAST HMP\n\nCaloric Reduction BMI Target: \nIf Stage 1:\n1-month: 1% reduction\n3-month: 2% reduction\n6-month: 2% reduction\n\nIf Stage 2:\n1-month: 2% reduction\n3-month: 2% reduction\n6-month: 3% reduction\n\nIf Stage 3:\n1-month: 2% reduction\n3-month: 3% reduction\n6-month: 5% reduction\n\nSalt:\nLevel 0: <1500mg (Recommended for hypertensives)\nLevel 1: 1500-2500mg (Normal)\nLevel 2: 2500-3500mg (High)\nLevel 3: 3500-4500mg (Very High)\nLevel 4: >4500mg (Excessively High)\n\nGlycemic Index:\nStage 0: 80-180 (At Risk)\nStage 1: <80 (Newly dx)\nStage 2: <100 (1st line meds)\nStage 3: <180 (2nd line meds)\n\nActivity:\nLevel 1: 7-10 km per week\nLevel 2: 10-15km brisk walking per week\nLevel 3: 15-20km brisk walking per week\nLevel 4: Daily exercise/Athlete\n\nCholesterol:\nLevel [0]: <200mg (Recommended for those with heart disease)\nLevel 1: 200-300mg (Normal)\nLevel 2: 300-500mg (High)\nLevel 3: >500mg (Very High)\n\nAsthma:\nStage 1: Mild intermittent\nStage 2: Moderate intermittent\nStage 3: Moderate persistent\nStage 4: Severe persistent",
       },
       {
         id: 'fldm57eb2B0cNjonu',

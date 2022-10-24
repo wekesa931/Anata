@@ -663,7 +663,10 @@ const BioData = () => {
   const openUpdateMemberForm = () => {
     // clear snackbar error
     closeSnackbar()
-    addOpenForm({ name: formTitle, member: memberDetails })
+    addOpenForm({
+      name: formTitle,
+      member: memberDetails,
+    })
   }
 
   const getBioDataTitle = () =>

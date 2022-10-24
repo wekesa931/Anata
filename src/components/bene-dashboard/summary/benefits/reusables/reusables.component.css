@@ -35,3 +35,12 @@
 .listSubheader {
   color: #8b95a5;
 }
+
+.noBenefits {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  text-align: center;
+}

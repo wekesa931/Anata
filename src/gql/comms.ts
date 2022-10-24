@@ -145,18 +145,20 @@ const MEMBER_DETAILS_QUERY = gql`
             }
           }
           contact {
+            memberAddresses {
+              constituency
+              residentialAddress
+              residentialCountry
+              residentialCounty
+              residentialTown
+              deliveryInstructions
+              poBoxNumber
+              postCode
+            }
             email
-            constituency
-            residentialAddress
-            residentialCountry
-            residentialCounty
-            residentialTown
             emergencyContactName
             emergencyContactPhone
             emergencyContactRelationship
-            deliveryInstructions
-            poBoxNumber
-            postCode
           }
           insuranceDetails {
             id
