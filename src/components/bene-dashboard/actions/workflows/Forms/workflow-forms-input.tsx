@@ -216,7 +216,7 @@ const SingleSelectOption = ({
 }: Form) => {
   if (airtableMeta) {
     if (
-      airtableMeta[field.parentTableId].fields[field.id].options?.choices
+      airtableMeta[field.parentTableId]?.fields[field.id].options?.choices
         .length > 2
     ) {
       return (
@@ -269,7 +269,7 @@ const SingleSelectInput = ({
     saveInput(field.name, newValue)
   }
   const optionsData = airtableMeta
-    ? airtableMeta[field.parentTableId].fields[field.id].options?.choices
+    ? airtableMeta[field.parentTableId]?.fields[field.id].options?.choices
     : []
 
   return (
@@ -341,7 +341,7 @@ const SingleSelectView = ({
       ]
     } else {
       fieldOptions = airtableMeta
-        ? airtableMeta[field.parentTableId].fields[field.id].options?.choices
+        ? airtableMeta[field.parentTableId]?.fields[field.id].options?.choices
         : []
     }
     return fieldOptions
@@ -418,7 +418,7 @@ const MultiSelectMultipleInput = ({
   error,
 }: Form) => {
   const optionsData = airtableMeta
-    ? airtableMeta[field.parentTableId].fields[field.id].options?.choices
+    ? airtableMeta[field.parentTableId]?.fields[field.id].options?.choices
     : []
   const handleChange = (newValue: any) => {
     saveInput(field.name, newValue)

@@ -10806,31 +10806,6 @@ export default [
         helper: 'This field is needed for GA Billing',
       },
       {
-        id: 'fldExPhaq9FxnoRW7',
-        name: 'Other insurance provider',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Insurance Provider',
-        parentValues: ['Other'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Insurance Provider'])) {
-            return ['Other'].some((r) =>
-              values['Insurance Provider'].includes(r)
-            )
-          }
-          return ['Other'].includes(values['Insurance Provider'])
-        },
-      },
-      {
         id: 'fld7papvjJHJd4IIH',
         name: 'Date of appointment',
         type: 'date',
@@ -12148,11 +12123,29 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: 'Type of X-Ray',
+        parentKey: [
+          'Type of X-Ray',
+          'Type of MRI',
+          'Ultrasound',
+          'CT Scan',
+          'Echocardiogram',
+        ],
         parentValues: ['Other:'],
         condition: (values: any) => {
           if (Array.isArray(values['Type of X-Ray'])) {
             return ['Other:'].some((r) => values['Type of X-Ray'].includes(r))
+          }
+          if (Array.isArray(values['Type of MRI'])) {
+            return ['Other:'].some((r) => values['Type of MRI'].includes(r))
+          }
+          if (Array.isArray(values.Ultrasound)) {
+            return ['Other:'].some((r) => values.Ultrasound.includes(r))
+          }
+          if (Array.isArray(values['CT Scan'])) {
+            return ['Other:'].some((r) => values['CT Scan'].includes(r))
+          }
+          if (Array.isArray(values.Echocardiogram)) {
+            return ['Other:'].some((r) => values.Echocardiogram.includes(r))
           }
           return ['Other:'].includes(values['Type of X-Ray'])
         },
