@@ -569,28 +569,33 @@ const RichTextInputField = ({
   error,
 }: Form) => {
   const [open, setOpen] = useState(false)
-  const [editorState, setEditorState] = useState(() => {
+  const [markdownState, setMarkdownState] = useState<string>(null)
+  const [editorState, setEditorState] = useState<EditorState>(null)
+
+  useEffect(() => {
+    let initialValue = EditorState.createEmpty()
     if (value) {
       const rawData = markdownToDraft(value)
       const contentState = convertFromRaw(rawData)
-      return EditorState.createWithContent(contentState)
+      initialValue = EditorState.createWithContent(contentState)
     }
-    return EditorState.createEmpty()
-  })
-  const onEditorStateChange = (
-    onChange: (val: Element) => void,
-    currentState: EditorState
-  ) => {
+    setEditorState(initialValue)
+  }, [value])
+
+  const onEditorStateChange = (currentState: EditorState) => {
     setEditorState(currentState)
     const changeValue = draftToMarkdown(
       convertToRaw(currentState.getCurrentContent())
     )
-    onChange(changeValue)
-    saveInput(field.name, changeValue)
+    setMarkdownState(changeValue)
   }
 
   const displayToolbar = () => setOpen(true)
-  const hideToolbar = () => setOpen(false)
+  const hideToolbar = (onChange: (val: Element) => void) => {
+    setOpen(false)
+    onChange(markdownState)
+    saveInput(field.name, markdownState)
+  }
   return (
     <Box
       className={styles.fieldMargin}
@@ -616,9 +621,9 @@ const RichTextInputField = ({
                 editorState={editorState}
                 toolbarHidden={!open}
                 onFocus={displayToolbar}
-                onBlur={hideToolbar}
+                onBlur={() => hideToolbar(onChange)}
                 onEditorStateChange={(inputValue: EditorState) =>
-                  onEditorStateChange(onChange, inputValue)
+                  onEditorStateChange(inputValue)
                 }
                 wrapperClassName={`${styles.textField} ${
                   error?.message
