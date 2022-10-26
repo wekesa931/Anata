@@ -163,14 +163,16 @@ const Tasks = () => {
 
   const [upnextTasks, setUpnextTasks] = useState<any[]>([])
 
-  const defaultTaskFilterStatus = 'Not Started'
+  const defaultTaskFilterStatus = 'All Incomplete'
+  const allIncomplete = (value: string) =>
+    value === 'In Progress' || value === 'Not Started' || value === 'On Hold'
 
   const status = [
+    'Not Started',
     'Complete',
     'In Progress',
     'Cancelled',
     'Not Applicable',
-    'All Incomplete',
     'On Hold',
   ]
   const { recId } = useParams()
@@ -192,6 +194,7 @@ const Tasks = () => {
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
     const sortArg = `sort=[{"field":"Due Date","direction":"asc"}]`
     const filterArg = `filterByFormula=FIND("${memberRecordId}", {Member Record ID})`
+
     // Avoid fetching Complete tasks from Airtable in order to test that they are fetched from API
     // const filterArg = `filterByFormula=AND(FIND("${memberRecordId}", {Member Record ID}), {Status} != "Complete")`
     const fieldsArg = filterFields(queryFields)
@@ -244,18 +247,6 @@ const Tasks = () => {
 
       key = key.replace(/\+/g, ' ')
       value = decodeURI(value)
-
-      /**
-       * The values should actually remain as they are
-       */
-
-      // if (value === 'True') {
-      //   value = true
-      // }
-
-      // if (value === 'False') {
-      //   value = false
-      // }
 
       if (typeof value === 'string' && value.startsWith('rec')) {
         value = [value]
@@ -391,8 +382,7 @@ const Tasks = () => {
       setFilteredTasks(
         recordsToDisplay.filter((task) =>
           task.data.find(
-            ({ name, value }: any) =>
-              name === 'Status' && value === defaultTaskFilterStatus
+            ({ name, value }: any) => name === 'Status' && allIncomplete(value)
           )
         )
       )
@@ -479,7 +469,7 @@ const Tasks = () => {
     if (val === 'All Incomplete') {
       return allTasks.filter((task) =>
         task.data.find(
-          ({ name, value }: any) => name === 'Status' && value !== 'Complete'
+          ({ name, value }: any) => name === 'Status' && allIncomplete(value)
         )
       )
     }
