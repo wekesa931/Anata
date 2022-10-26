@@ -615,12 +615,38 @@ const WorkflowPortal = ({
           }
 
           const tableName = TABLE_ROUTES[activeForm]
+          let hifId = null
+          if (activeForm === 'HIF') {
+            const hifInfo = await airtableFetch(
+              `hif/list?filterByFormula=FIND("${airtablePayload.fields['Member Record ID'][0]}", {Member Record ID})`
+            )
+            if (
+              typeof hifInfo === 'object' &&
+              !Array.isArray(hifInfo) &&
+              hifInfo !== null
+            ) {
+              Object.keys(hifInfo).forEach((key) => {
+                if (/^rec\w+/.test(key)) {
+                  hifId = key
+                }
+              })
+            }
+          }
           airtablePayload = generatePayload(airtablePayload.fields)
-          const res = await airtableFetch(
-            `create/${tableName}`,
-            'post',
-            airtablePayload
-          )
+          let res = null
+          if (hifId) {
+            res = await airtableFetch('hif', 'post', {
+              id: hifId,
+              fields: airtablePayload.fields,
+            })
+          } else {
+            res = await airtableFetch(
+              `create/${tableName}`,
+              'post',
+              airtablePayload
+            )
+          }
+
           if (res === 'Network Error') {
             notify('Network Error. Changes have not been updated')
             throw new Error(res)
