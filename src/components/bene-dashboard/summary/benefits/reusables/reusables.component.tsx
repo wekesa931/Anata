@@ -9,6 +9,8 @@ import {
 } from '@mui/material'
 import styles from './reusables.component.css'
 
+/* eslint-disable no-nested-ternary */
+
 export const TitleWithBody = ({
   title,
   body,
@@ -28,7 +30,7 @@ export const TitleWithBody = ({
   )
 }
 
-const SideBySideComponents = ({
+export const SideBySideComponents = ({
   first,
   second,
 }: {
@@ -46,7 +48,8 @@ export const SideBySideList = ({ utilization }: { utilization: any[] }) => {
     <Grid container className={styles.sideBySideListWrapper}>
       {utilization.length === 0 ? (
         <Grid item xs={12} className={styles.noBenefits}>
-          No data yet. Edit member to add insurance details
+          We do NOT know the benefits for this member yet. Edit member to add
+          benefits
         </Grid>
       ) : (
         <Grid item xs={8}>
@@ -60,9 +63,12 @@ export const SideBySideList = ({ utilization }: { utilization: any[] }) => {
                   <SideBySideComponents
                     first={el?.benefit?.name || ''}
                     second={
-                      el?.utilizedPortion || el?.benefit?.limit > 0 || 0
-                        ? 'Available'
-                        : 'Used Up'
+                      (el?.benefit?.limit &&
+                        el?.utilizedPortion &&
+                        (el?.utilizedPortion || el?.benefit?.limit >= 0
+                          ? 'Used Up'
+                          : 'Available')) ??
+                      'N/A'
                     }
                   />
                 </ListItemText>

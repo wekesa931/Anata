@@ -162,6 +162,7 @@ const MEMBER_DETAILS_QUERY = gql`
           }
           insuranceDetails {
             id
+            insuranceId
             insuranceCompany {
               id
               name

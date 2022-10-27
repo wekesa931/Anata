@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box, Divider, Grid } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { SideBySideList, TitleWithBody } from './reusables/reusables.component'
 import styles from './benefits.component.css'
 
@@ -23,6 +23,7 @@ interface InsuranceCompany {
 
 interface InsuranceDetails {
   id: string
+  insuranceId: string
   insuranceCompany?: InsuranceCompany
   benefitUtilizations?: Utilization[]
   memberPolicy?: { healthPolicy?: { id: string; name?: string } }
@@ -49,6 +50,7 @@ const Benefits = ({
           benefitUtilizations,
           memberPolicy,
           insuranceCompany,
+          insuranceId,
         }: InsuranceDetails) => {
           return (
             <Box className={styles.container} key={id}>
@@ -62,27 +64,32 @@ const Benefits = ({
               )}
 
               <Grid container spacing={1} direction="column">
-                {insuranceCompany?.name && (
-                  <Grid item xs="auto">
-                    <TitleWithBody
-                      title="Provider"
-                      body={insuranceCompany?.name || 'Unknown'}
-                    />
-                  </Grid>
-                )}
-                {memberPolicy?.healthPolicy?.name && (
-                  <Grid item xs="auto">
-                    <TitleWithBody
-                      title="Policy"
-                      body={memberPolicy?.healthPolicy?.name || 'Unknown'}
-                    />
-                  </Grid>
-                )}
                 <Grid item xs="auto">
-                  <SideBySideList utilization={benefitUtilizations || []} />
+                  <TitleWithBody
+                    title="Provider"
+                    body={insuranceCompany?.name ?? 'Data NOT Available'}
+                  />
+                </Grid>
+
+                <Grid item xs="auto">
+                  <TitleWithBody
+                    title="Policy"
+                    body={
+                      memberPolicy?.healthPolicy?.name ?? 'Data NOT Available'
+                    }
+                  />
+                </Grid>
+
+                <Grid item xs="auto">
+                  <TitleWithBody
+                    title="Insurance ID"
+                    body={insuranceId ?? 'Data NOT Available'}
+                  />
+                </Grid>
+                <Grid item xs="auto">
+                  <SideBySideList utilization={benefitUtilizations ?? []} />
                 </Grid>
               </Grid>
-              <Divider variant="fullWidth" />
             </Box>
           )
         }
