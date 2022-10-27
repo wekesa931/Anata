@@ -19,10 +19,13 @@ import Dialog from '@mui/material/Dialog'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
 import Tooltip from '@mui/material/Tooltip'
+import { useFormik } from 'formik'
 import styles from './form.component.css'
 import WorkflowPortal from '../workflows/workflow-portal.component'
 import { formNames } from '../workflows/Forms/form-fields'
-import MemberDetailsUpdateForm from '../../summary/biodata/biodata-update/member-details-update.component'
+import MemberDetailsUpdateForm, {
+  memberDetailsValidationSchema,
+} from '../../summary/biodata/biodata-update/member-details-update.component'
 import { WorkflowMeta } from '../workflows/workflow-types'
 
 type IForm = {
@@ -60,17 +63,29 @@ const FormPortal = ({
   onRefetch,
   memberDetails,
 }: FormProps) => {
-  const [calloutHeight, setcalloutHeight] = useState(546)
+  const [calloutHeight, setcalloutHeight] = useState(66)
   const [isIncreasing, setIsIncreasing] = useState(true)
-  const [calloutWidth, setCalloutWidth] = useState(50)
+  const [calloutWidth, setCalloutWidth] = useState(33)
   const [isFormEdited, setIsFormEdited] = useState(false)
   const [isHighlighting, setIsHighlighting] = useState(true)
   const [dynamicPosition, setDynamicPosition] = useState(undefined)
   const [isDisabled, setIsDisabled] = useState(false)
   const dragClass = isDisabled ? 'draggable-disabled' : 'draggable'
   const containerWidth = isDisabled ? '450px' : `${calloutWidth}%`
-  const containerHeight = `${calloutHeight}px`
+  const containerHeight = `${calloutHeight}%`
   const isWorkflow = !!form.workflowId
+
+  const {
+    values,
+    errors: formikErrors,
+    submitForm,
+    handleChange,
+    setFieldValue,
+  } = useFormik({
+    initialValues: memberDetails.initialValues,
+    onSubmit: memberDetails.handleSubmit,
+    validationSchema: memberDetailsValidationSchema,
+  })
 
   const handleDragActive = (e: MouseEvent) => {
     try {
@@ -92,7 +107,7 @@ const FormPortal = ({
       setDynamicPosition({ x: formNum * 70, y: 0 })
     } else {
       setIsDisabled(false)
-      setcalloutHeight(546)
+      setcalloutHeight(500)
       setDynamicPosition(undefined)
     }
   }
@@ -122,15 +137,15 @@ const FormPortal = ({
   const changeCalloutSize = () => {
     if (isIncreasing) {
       setCalloutWidth((width) => width + 10)
-      setcalloutHeight((height) => height + 50)
+      setcalloutHeight((height) => height + 10)
     } else {
       setCalloutWidth((width) => width - 10)
-      setcalloutHeight((height) => height - 50)
+      setcalloutHeight((height) => height - 10)
     }
-    if (calloutWidth === 70) {
+    if (calloutWidth > 50) {
       setIsIncreasing(false)
     }
-    if (calloutWidth === 60) {
+    if (calloutWidth < 50) {
       setIsIncreasing(true)
     }
   }
@@ -161,6 +176,7 @@ const FormPortal = ({
       onFormClose(form.name, false)
     }
   }
+
   const confirmClose = () => {
     const formName = form.workflowId ? '' : form.name
     return (
@@ -199,12 +215,14 @@ const FormPortal = ({
   }
 
   const formRender = () => {
-    if (form.name === 'Member Details Update Form') {
+    if (form.name === 'Edit member details') {
       return (
         <MemberDetailsUpdateForm
-          setIsFormEdited={setIsFormEdited}
           memberDetails={memberDetails}
-          isEdited={isFormEdited}
+          errors={formikErrors}
+          values={values}
+          handleChange={handleChange}
+          setFieldValue={setFieldValue}
         />
       )
     }
@@ -279,6 +297,18 @@ const FormPortal = ({
             {formRender()}
             {confirmClose()}
           </DialogContent>
+
+          {form.name === 'Edit member details' && (
+            <DialogActions sx={{ p: 2 }}>
+              <Button
+                variant="outlined"
+                className={`${styles.actionBtn} `}
+                onClick={submitForm}
+              >
+                {memberDetails.submitting ? 'Saving...' : 'Save'}
+              </Button>
+            </DialogActions>
+          )}
         </Paper>
       </Draggable>
       {/* </div> */}

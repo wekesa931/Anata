@@ -114,6 +114,7 @@ const MEMBER_DETAILS_QUERY = gql`
             phoneType {
               phoneType
             }
+            priority
           }
           status {
             startDate
@@ -126,6 +127,11 @@ const MEMBER_DETAILS_QUERY = gql`
             assignedHn
             readyForCompanyOnboarding
             readyForIndividualOnboarding
+            assignedMe
+            tags
+            status {
+              status
+            }
           }
           dependents {
             id
@@ -154,6 +160,8 @@ const MEMBER_DETAILS_QUERY = gql`
               deliveryInstructions
               poBoxNumber
               postCode
+              geolocation
+              label
             }
             email
             emergencyContactName
@@ -163,6 +171,7 @@ const MEMBER_DETAILS_QUERY = gql`
           insuranceDetails {
             id
             insuranceId
+            priority
             insuranceCompany {
               id
               name
@@ -427,7 +436,22 @@ const END_CALL = gql`
   }
 `
 
-const GET_COMPANIES = gql`
+const GET_INSURANCE_COMPANIES = gql`
+  query insuranceCompanies($name: String) {
+    insuranceCompanies(name: $name) {
+      edges {
+        node {
+          name
+          email
+          api
+          phone
+        }
+      }
+    }
+  }
+`
+
+const LOOKUP_ENTRIES_QUERY = gql`
   query {
     getCompanies {
       edges {
@@ -435,6 +459,178 @@ const GET_COMPANIES = gql`
           name
         }
       }
+    }
+    healthPolicies {
+      edges {
+        node {
+          healthPolicyId
+          name
+        }
+      }
+    }
+    phoneTypes {
+      edges {
+        node {
+          phoneType
+          phoneTypeId
+        }
+      }
+    }
+    memberStatus {
+      edges {
+        node {
+          status
+        }
+      }
+    }
+    maritalStatus {
+      edges {
+        node {
+          maritalStatus
+        }
+      }
+    }
+    onboardStage {
+      edges {
+        node {
+          onboardStage
+        }
+      }
+    }
+    sex {
+      edges {
+        node {
+          sex
+        }
+      }
+    }
+    benefits {
+      edges {
+        node {
+          name
+        }
+      }
+    }
+    tags {
+      edges {
+        node {
+          name
+        }
+      }
+    }
+  }
+`
+
+const UPDATE_MEMBER_DETAILS = gql`
+  mutation UpdateMemberDetails(
+    $memberDetails: UpdateMemberDetailsInput
+    $memberContact: UpdateMemberContactInput
+    $memberInsurance: UpdateMemberInsuranceInput
+    $memberPhones: UpdateMemberPhonesInput
+    $memberStaff: UpdateMemberStaffInput
+    $memberStatus: MemberStatusUpdateInput
+    $memberAddress: UpdateMemberAddressesInput
+  ) {
+    updateMemberAddress(input: $memberAddress) {
+      data {
+        addresses {
+          constituency
+          geolocation
+          residentialAddress
+          label
+          deliveryInstructions
+        }
+      }
+      message
+      errors
+      status
+    }
+    updateMemberStatus(input: $memberStatus) {
+      data {
+        employer {
+          name
+        }
+        status {
+          status
+        }
+        onboardStage {
+          onboardStage
+        }
+        tags
+      }
+      errors
+      message
+      status
+    }
+    updateMemberStaff(input: $memberStaff) {
+      data {
+        assignedHn
+        assignedMe
+      }
+      errors
+      message
+      status
+    }
+    updateMemberDetails(input: $memberDetails) {
+      data {
+        member {
+          id
+        }
+        details {
+          firstName
+          lastName
+        }
+      }
+      errors
+      message
+      status
+    }
+
+    updateMemberContact(input: $memberContact) {
+      data {
+        email
+        emergencyContactName
+        emergencyContactPhone
+        emergencyContactRelationship
+      }
+      errors
+      status
+      message
+    }
+
+    updateMemberInsurance(input: $memberInsurance) {
+      data {
+        insuranceDetails {
+          insuranceCompany {
+            name
+          }
+          insuranceId
+          priority
+          memberPolicy {
+            healthPolicy {
+              name
+            }
+          }
+        }
+      }
+      message
+      errors
+      status
+    }
+
+    updateMemberPhones(input: $memberPhones) {
+      data {
+        phones {
+          priority
+          phoneType {
+            phoneType
+          }
+          phone
+        }
+      }
+      errors
+      message
+      status
     }
   }
 `
@@ -455,5 +651,7 @@ export {
   GET_CALL_LOGS,
   MEMBER_DETAILS_QUERY,
   MUTATE_MEMBER_DETAILS,
-  GET_COMPANIES,
+  GET_INSURANCE_COMPANIES,
+  LOOKUP_ENTRIES_QUERY,
+  UPDATE_MEMBER_DETAILS,
 }
