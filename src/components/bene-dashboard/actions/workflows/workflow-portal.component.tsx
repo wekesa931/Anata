@@ -618,7 +618,7 @@ const WorkflowPortal = ({
           let hifId = null
           if (activeForm === 'HIF') {
             const hifInfo = await airtableFetch(
-              `hif/list?filterByFormula=FIND("${airtablePayload.fields.Member[0]}", {Member})`
+              `hif/list?filterByFormula=FIND("${airtablePayload.fields.Member[0]}", {Member Record ID})`
             )
             if (
               typeof hifInfo === 'object' &&
