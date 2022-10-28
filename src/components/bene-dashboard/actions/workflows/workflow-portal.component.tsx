@@ -196,7 +196,7 @@ const WorkflowPortal = ({
     updatingMemberFeedback
 
   const initialFormMeta = (fm) => {
-    const formValues = initialFormValues(member)
+    const formValues = initialFormValues(member, user)
     let values = {}
     if (formValues[activeForm]) {
       values = formValues[activeForm]

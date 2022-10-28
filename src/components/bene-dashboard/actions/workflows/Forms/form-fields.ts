@@ -267,13 +267,13 @@ export const feedbackPayload = (raw: any) => {
   return finalPayload
 }
 
-export const initialFormValues = (member: any) => {
+export const initialFormValues = (member: any, user: any) => {
   return {
     'BP Mon': {
       Date: dayjs().format('YYYY-MM-DD'),
     },
     Baseline: {
-      'Health Navigator': member['Health Navigator Assignment Record ID'],
+      'Health Navigator': [user.userAirtableId],
       Gender: member.Sex,
       'Is the BN a minor': member['Minor?'] === 'Adult' ? 'No' : 'Yes',
       'Date of baseline': member['Baseline Date'],
