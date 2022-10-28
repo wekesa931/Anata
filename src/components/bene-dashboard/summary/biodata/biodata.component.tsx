@@ -2,11 +2,14 @@ import { useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { Info } from 'react-feather'
 import {
+  Box,
   Button,
   CardContent,
   Typography,
   Chip,
   Checkbox,
+  Grid,
+  Link,
   Snackbar,
   Alert,
   List,
@@ -16,7 +19,6 @@ import {
 import { useQuery, useMutation } from '@apollo/client'
 import { useToasts } from 'react-toast-notifications'
 import dayjs from 'dayjs'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { hmp } from '../../../../types/user'
 import styles from './biodata.component.css'
 import airtableFetch from '../../../../resources/airtable-fetch'
@@ -745,30 +747,6 @@ const BioData = () => {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
                   >
-                    Insurance ID:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    {member['Insurance ID']}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    Corporate ID:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    {member['Corporate ID']}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
                     Start Date:
                   </td>
                   <td
@@ -781,56 +759,12 @@ const BioData = () => {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
                   >
-                    Smart ID:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    {member['SMART ID']}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
                     Active Since:
                   </td>
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
                     {member['Midterm Inclusion Date']}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    Insurance Plan:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    {member['Insurance Plan']}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    Insurance Dashboard:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    <CopyToClipboard text={`${member['Insurance ID']}`}>
-                      <a
-                        href={`${gaInsuranceLink}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Open Dashboard
-                      </a>
-                    </CopyToClipboard>
                   </td>
                 </tr>
 
@@ -882,19 +816,6 @@ const BioData = () => {
                     </td>
                   </tr>
                 ) : null}
-
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    Riders:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    {member.Riders && member.Riders.join(', ')}
-                  </td>
-                </tr>
                 <tr>
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
@@ -1005,14 +926,31 @@ const BioData = () => {
             )}
 
             <hr className={styles.hrLine} />
+            <h4 className={styles.clinicalHeading}>Insurance Details</h4>
 
-            {memberDetails?.v2Member?.insuranceDetails?.length > 0 && (
-              <>
-                <h4 className={styles.clinicalHeading}>Insurance Details</h4>
-                <Benefits
-                  insuranceBenefits={memberDetails?.v2Member?.insuranceDetails}
-                />
-              </>
+            <Link
+              underline="none"
+              href={gaInsuranceLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => {
+                trackAccess()
+              }}
+            >
+              <Box className={styles.insuranceDashboard}>
+                Insurance Dashboard
+              </Box>
+            </Link>
+
+            {memberDetails?.v2Member?.insuranceDetails?.length > 0 ? (
+              <Benefits
+                insuranceBenefits={memberDetails?.v2Member?.insuranceDetails}
+              />
+            ) : (
+              <Grid item xs={12} className={styles.noBenefits}>
+                We do NOT have insurance data for this member yet. Edit member
+                to add insurance details
+              </Grid>
             )}
           </div>
         </div>

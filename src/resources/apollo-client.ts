@@ -61,7 +61,7 @@ const handleErrors = onError(
         return fromPromise(refreshToken())
           .filter((value) => Boolean(value))
           .flatMap(({ data }) => {
-            const userObj = jwt_decode(data.id_token)
+            const userObj: any = jwt_decode(data.id_token)
             storage.set(constants.USER, JSON.stringify({ ...data, ...userObj }))
             const oldHeaders = operation.getContext().headers
             // modify the operation context with a new token

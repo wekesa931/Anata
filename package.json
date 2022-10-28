@@ -44,6 +44,7 @@
     "@types/html-to-draftjs": "^1.4.0",
     "@types/jest": "^26.0.3",
     "@types/markdown-draft-js": "^2.2.4",
+    "@types/node-fetch": "^2.6.2",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "@types/react-draft-wysiwyg": "^1.13.4",
