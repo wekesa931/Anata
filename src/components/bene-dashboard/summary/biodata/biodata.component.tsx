@@ -721,12 +721,12 @@ const BioData = () => {
                   <td
                     className={`text-bold ${styles.bioDataTableColumn} ${styles.bioDataKey}`}
                   >
-                    Lead HN:
+                    Assigned HN:
                   </td>
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                    {member['Lead HN']}
+                    {member['Assigned HN']}
                   </td>
                 </tr>
                 <tr>
