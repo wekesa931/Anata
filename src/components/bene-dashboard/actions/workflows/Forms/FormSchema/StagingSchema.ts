@@ -2387,6 +2387,22 @@ export default [
         helper: '',
       },
       {
+        "id": "fldBxVz6SeEXgEoSW",
+        "name": "Assessment Type",
+        "type": "multiSelect",
+        "format": "",
+        "isDateTime": false,
+        "options": [
+
+        ],
+        "symmetricColumnId": null,
+        "unreversed": false,
+        "relationship": null,
+        "foreignTableId": null,
+        "required": false,
+        "helper": ""
+      },
+      {
         id: 'fldDt7fIfR0vFrAPy',
         name: 'Do you have any of the following conditions?',
         type: 'multiSelect',
