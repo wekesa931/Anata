@@ -11808,34 +11808,9 @@ export default [
         helper: 'Select the next steps in the care of this patient',
       },
       {
-        id: 'fld2pp0DbbM0w3MYZ',
-        name: 'Facilities',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fld0dw0mF5TfKgGrp',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tbltmQuqyuKPc4Ffo',
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Plan',
-        parentValues: ['Order Labs', 'Refer to a Specialist'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Plan)) {
-            return ['Order Labs', 'Refer to a Specialist'].some((r) =>
-              values.Plan.includes(r)
-            )
-          }
-          return ['Order Labs', 'Refer to a Specialist'].includes(values.Plan)
-        },
-      },
-      {
-        id: 'fldUFerg5uqwxSTsV',
-        name: 'Other Facility',
-        type: 'text',
+        id: 'fldfw0IXDwO7Z4rc8',
+        name: 'Providers coordination notes',
+        type: 'multilineText',
         format: '',
         isDateTime: false,
         options: [],
@@ -11844,66 +11819,31 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: 'Fill in the Facility not found in the provider base',
-        conditionType: '',
-        parentKey: 'Facilities',
-        parentValues: ['recfQYLarLZAkH6QM'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Facilities)) {
-            return ['recfQYLarLZAkH6QM'].some((r) =>
-              values.Facilities.includes(r)
-            )
-          }
-          return ['recfQYLarLZAkH6QM'].includes(values.Facilities)
-        },
-      },
-      {
-        id: 'flddYAMFOOByDFwno',
-        name: 'Specialists',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldrEEdZzxI2WanXI',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblsixUe3jfbOUMQP',
-        required: false,
-        helper: '',
+        helper:
+          'Please add as many information as possible for each providers (specialist and facility) for the different plan. If several plan, add information for each provider as well. Information can be about preferred practician, location, etc... This data will be shared with ME for appointment coordination',
         conditionType: '',
         parentKey: 'Plan',
-        parentValues: ['Order Labs', 'Refer to a Specialist'],
+        parentValues: [
+          'Order Labs',
+          'Order Radiologic Examinations',
+          'Refer for in-person Consultation',
+          'Refer to a Specialist',
+        ],
         condition: (values: any) => {
           if (Array.isArray(values.Plan)) {
-            return ['Order Labs', 'Refer to a Specialist'].some((r) =>
-              values.Plan.includes(r)
-            )
+            return [
+              'Order Labs',
+              'Order Radiologic Examinations',
+              'Refer for in-person Consultation',
+              'Refer to a Specialist',
+            ].some((r) => values.Plan.includes(r))
           }
-          return ['Order Labs', 'Refer to a Specialist'].includes(values.Plan)
-        },
-      },
-      {
-        id: 'fldLWQ4vCT91OTXMO',
-        name: 'Other Specialist',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Fill in the Specialist not found in the provider base',
-        parentKey: 'Specialists',
-        parentValues: ['rec0n79m4zKaXuZJD'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Specialists)) {
-            return ['rec0n79m4zKaXuZJD'].some((r) =>
-              values.Specialists.includes(r)
-            )
-          }
-          return ['rec0n79m4zKaXuZJD'].includes(values.Specialists)
+          return [
+            'Order Labs',
+            'Order Radiologic Examinations',
+            'Refer for in-person Consultation',
+            'Refer to a Specialist',
+          ].includes(values.Plan)
         },
       },
       {
