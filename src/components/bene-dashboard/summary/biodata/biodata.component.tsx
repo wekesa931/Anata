@@ -841,6 +841,30 @@ const BioData = () => {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
                   >
+                    Health Status:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    {member['Health Status']}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    Health Goals:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    {member['Health Goals'].toString()}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
                     {isMinor(member.Age)
                       ? 'Guardian Contact Info'
                       : 'Contact Info:'}
