@@ -19,6 +19,7 @@ import {
 import { useMutation, useLazyQuery } from '@apollo/client'
 import { useToasts } from 'react-toast-notifications'
 import dayjs from 'dayjs'
+import { capitalize } from 'lodash'
 import { hmp } from '../../../../types/user'
 import styles from './biodata.component.css'
 import airtableFetch from '../../../../resources/airtable-fetch'
@@ -32,6 +33,7 @@ import Icon from '../../../utils/icon/icon.component'
 import { useFormPortal } from '../../../../context/forms-context'
 import useMemberDetails from './biodata-update/useMemberDetails'
 import Benefits from '../benefits/benefits.component'
+import calcAge from './utils'
 
 const getRiskFactors = (
   diabetes: string,
@@ -672,8 +674,12 @@ function BioData() {
   }
 
   const getBioDataTitle = () =>
-    `${member['Full Name']}, ${member.Age} ${
-      member.Sex && member.Sex.charAt(0)
+    `${capitalize(memberDetails?.v2Member?.fullName) || ''}, ${
+      calcAge(memberDetails?.v2Member?.birthDate) || ''
+    } ${
+      (memberDetails?.v2Member?.sex &&
+        memberDetails?.v2Member?.sex.charAt(0)) ||
+      ''
     }`
 
   return (
@@ -681,7 +687,9 @@ function BioData() {
       {member && (
         <div className={styles.bioDataCard}>
           <div className={styles.beneNameContainer}>
-            <h3 className={styles.beneNameAgeGender}>{getBioDataTitle()}</h3>
+            <h3 className={styles.beneNameAgeGender}>
+              {memberDetails?.v2Member ? getBioDataTitle() : 'Loading...'}
+            </h3>
             {memberDetails && (
               <button
                 className="btn-icon"
@@ -734,46 +742,9 @@ function BioData() {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                    {member['Assigned HN']}
+                    {memberDetails?.v2Member?.assignedHn}
                   </td>
                 </tr>
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    National ID:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    {member['Kenya National ID Number']}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    Start Date:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    {member.created_at}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    Active Since:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    {member['Midterm Inclusion Date']}
-                  </td>
-                </tr>
-
                 <tr>
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
@@ -831,15 +802,14 @@ function BioData() {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                    {member.Employer || member['Account Name']}
                     <span
                       className={
-                        member['Member Status'] === 'Active'
+                        memberDetails?.v2Member?.status === 'Active'
                           ? 'text-success'
                           : 'text-danger'
                       }
                     >
-                      {` (${member['Member Status']})`}
+                      {memberDetails?.v2Member?.status}
                     </span>
                   </td>
                 </tr>
@@ -871,18 +841,19 @@ function BioData() {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
                   >
-                    {isMinor(member.Age)
+                    {isMinor(calcAge(memberDetails?.v2Member?.birthDate))
                       ? 'Guardian Contact Info'
                       : 'Contact Info:'}
                   </td>
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                    {isMinor(member.Age)
-                      ? member['Primary Phone 1']
-                      : member['Phone 1']}
-                    {!isMinor(member.Age) && member['Phone 2']
-                      ? `, ${member['Phone 2']}`
+                    {isMinor(calcAge(memberDetails?.v2Member?.birthDate))
+                      ? memberDetails?.v2Member?.phone
+                      : null}
+                    {!isMinor(calcAge(memberDetails?.v2Member?.birthDate)) &&
+                    memberDetails?.v2Member?.phone
+                      ? `${memberDetails?.v2Member?.phone}`
                       : null}
                   </td>
                 </tr>

@@ -4,6 +4,7 @@ import { Box, Link } from '@mui/material'
 import styles from './dependent-card.component.css'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import logError from '../../../utils/Bugsnag/Bugsnag'
+import calcAge from '../biodata/utils'
 
 /* eslint-disable no-nested-ternary */
 /* eslint-disable array-callback-return */
@@ -44,9 +45,6 @@ function DependentCard({
       })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const age =
-    new Date().getFullYear() - new Date(dependent?.birthDate).getFullYear()
-
   const isStatusActive: boolean =
     dependent?.status?.status?.status?.toUpperCase() === 'ACTIVE'
   const isStatusTerminated: boolean =
@@ -66,7 +64,7 @@ function DependentCard({
         <Box className={styles.biodataBox}>
           <span className={styles.biodataSpan}>{`${
             dependent?.details?.fullName || 'Name Unknown'
-          }, ${age || ''} ${
+          }, ${calcAge(dependent?.birthDate) || ''} ${
             dependent?.details?.sex?.sex?.substring(0, 1) || ''
           }`}</span>
           <span className={styles.relationshipSpan}>
