@@ -36,6 +36,7 @@ const Appointments = () => {
     'start_date_time',
     'Comments',
     'Providers',
+    'Calendly Reschedule URL',
   ]
 
   const { data, isLoading, isError, refresh } = useAirtableFetch(
@@ -169,33 +170,25 @@ const Appointments = () => {
 
   React.useEffect(() => {
     const getDisplayInfo = (appointment: any) => {
-      const testLink = `https://airtable.com/shrg4wfIhaNdPsALo`
-
-      const prodLink = 'https://airtable.com/shrZWjIcj1g2zMA5S'
-
-      const link = process.env.PROD ? prodLink : testLink
-
       return (
         <div className="d-flex flex-justify-space-between">
           <span>{appointment.Service}</span>
           <span>
-            {link && (
-              <Tooltip title="New Appointment">
-                <a
-                  href={link}
-                  target="__blank"
-                  className="btn-unstyled"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Icon
-                    name="external-link"
-                    fill="var(--blue-base)"
-                    width={16}
-                    height={16}
-                  />
-                </a>
-              </Tooltip>
-            )}
+            <Tooltip title="Reschedule">
+              <a
+                href={appointment['Calendly Reschedule URL']}
+                target="__blank"
+                className="btn-unstyled"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Icon
+                  name="external-link"
+                  fill="var(--blue-base)"
+                  width={16}
+                  height={16}
+                />
+              </a>
+            </Tooltip>
           </span>
         </div>
       )

@@ -215,7 +215,8 @@ const SingleSelectOption = ({
   error,
 }: Form) => {
   if (airtableMeta) {
-    if ( airtableMeta[field.parentTableId]?.fields[field.id].type !== 'checkbox' &&
+    if (
+      airtableMeta[field.parentTableId]?.fields[field.id].type !== 'checkbox' &&
       airtableMeta[field.parentTableId]?.fields[field.id].options?.choices
         .length > 2
     ) {
