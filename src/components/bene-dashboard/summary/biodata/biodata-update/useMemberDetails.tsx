@@ -97,7 +97,7 @@ type LoadingData = {
 
 const createInitialFormState = (member: any = {}) => {
   const getInsurances = () => {
-    const { insuranceDetails = [] } = member
+    const insuranceDetails = member?.insuranceDetails || []
 
     return insuranceDetails.map((e: any) => ({
       insuranceCompany: e?.insuranceCompany?.name,
@@ -110,7 +110,7 @@ const createInitialFormState = (member: any = {}) => {
 
   // // get the memberAddress information
   const getMemberAddress = () => {
-    const { memberAddresses = [] } = member
+    const memberAddresses = member?.memberAddresses || []
     let constituency = ''
 
     const addresses = memberAddresses.map((e: any) => {
