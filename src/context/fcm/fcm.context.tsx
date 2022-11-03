@@ -130,7 +130,6 @@ function FcmProvider({ children }: any) {
   return (
     <FcmContext.Provider value={providerValue}>
       {localPushNotification && localPushNotification?.data?.event && (
-
         <div className={styles.inboundNotification}>
           <div className="d-flex align-center">
             {memberId ? (
