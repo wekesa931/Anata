@@ -11,7 +11,7 @@ import { WorkflowMeta } from '../workflow-types'
 import validationRules from './validation-schema'
 import CalendlyLink from './CalendlyLink'
 
-const FormSection = ({
+function FormSection({
   id,
   formPayload,
   moduleId,
@@ -26,7 +26,7 @@ const FormSection = ({
   saveModule,
   setDisplayLoader,
   setShouldSaveModule,
-}: any) => {
+}: any) {
   const currentIndex = formPayload.findIndex((fm) => fm.moduleId === id)
   const { validationObject, dateFields, numberFields } = validationRules(
     localFormMeta,

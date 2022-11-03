@@ -9,7 +9,7 @@ type AirtableIframePropType = {
   height?: string
 }
 
-const AirtableIframe = ({ src, style }: AirtableIframePropType) => {
+function AirtableIframe({ src, style }: AirtableIframePropType) {
   return (
     <div className={styles.iframeContainer}>
       <iframe

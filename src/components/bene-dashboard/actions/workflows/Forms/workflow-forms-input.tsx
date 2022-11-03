@@ -12,9 +12,8 @@ import FormLabel from '@mui/material/FormLabel'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import parse from 'html-react-parser'
-import LocalizationProvider from '@mui/lab/LocalizationProvider'
-import AdapterDateFns from '@mui/lab/AdapterDateFns'
-import MobileDatePicker from '@mui/lab/MobileDatePicker'
+import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import dayjs from 'dayjs'
 import { Controller } from 'react-hook-form'
 import Checkbox from '@mui/material/Checkbox'
@@ -36,11 +35,11 @@ import { GET_LINKED_RECORD } from '../../../../../gql/workflows'
 const icon = <Square width={18} height={18} />
 const checkedIcon = <CheckSquare width={18} height={18} />
 
-const Pointer = () => (
-  <span style={{ color: 'var(--dark-blue-70)' }}>&nbsp;*</span>
-)
+function Pointer() {
+  return <span style={{ color: 'var(--dark-blue-70)' }}>&nbsp;*</span>
+}
 
-const HelperText = ({ error, field }: any) => {
+function HelperText({ error, field }: any) {
   return (
     <div>
       <p
@@ -61,7 +60,7 @@ const HelperText = ({ error, field }: any) => {
     </div>
   )
 }
-const Label = ({ error, field }: any) => {
+function Label({ error, field }: any) {
   return (
     <p
       className={
@@ -75,7 +74,7 @@ const Label = ({ error, field }: any) => {
     </p>
   )
 }
-const WorkflowFormsInput = ({
+function WorkflowFormsInput({
   value,
   field,
   disabled,
@@ -84,7 +83,7 @@ const WorkflowFormsInput = ({
   template,
   airtableMeta,
   saveInput,
-}: Form) => {
+}: Form) {
   const isWorkflowForm =
     field.name !== 'Case ID' && field.name !== 'Member' && template?.workflowId
   const isNormalForm = field.name !== 'Member' && !template?.workflowId
@@ -205,7 +204,7 @@ const WorkflowFormsInput = ({
   }
 }
 
-const SingleSelectOption = ({
+function SingleSelectOption({
   value,
   field,
   disabled,
@@ -213,7 +212,7 @@ const SingleSelectOption = ({
   saveInput,
   control,
   error,
-}: Form) => {
+}: Form) {
   if (airtableMeta) {
     if (
       airtableMeta[field.parentTableId]?.fields[field.id].type !== 'checkbox' &&
@@ -247,7 +246,7 @@ const SingleSelectOption = ({
   return <LoaderOption field={field} airtableMeta={airtableMeta} />
 }
 
-const SingleSelectInput = ({
+function SingleSelectInput({
   value,
   disabled,
   field,
@@ -255,7 +254,7 @@ const SingleSelectInput = ({
   saveInput,
   control,
   error,
-}: Form) => {
+}: Form) {
   const [option, setOption] = useState<any>(null)
   useEffect(() => {
     if (value) {
@@ -311,7 +310,7 @@ const SingleSelectInput = ({
   )
 }
 
-const SingleSelectView = ({
+function SingleSelectView({
   value,
   field,
   disabled,
@@ -319,7 +318,7 @@ const SingleSelectView = ({
   saveInput,
   control,
   error,
-}: Form) => {
+}: Form) {
   const [option, setOption] = useState<string | null>(null)
   useEffect(() => {
     if (value) {
@@ -345,6 +344,7 @@ const SingleSelectView = ({
         ? airtableMeta[field.parentTableId]?.fields[field.id].options?.choices
         : []
     }
+
     return fieldOptions
   }
 
@@ -383,7 +383,7 @@ const SingleSelectView = ({
                 }}
                 name="radio-buttons-group"
               >
-                {optionsData().map((choice) => (
+                {(optionsData() || []).map((choice) => (
                   <Fragment key={choice.name}>
                     <FormControlLabel
                       value={choice.name}
@@ -409,7 +409,7 @@ const SingleSelectView = ({
   )
 }
 
-const MultiSelectMultipleInput = ({
+function MultiSelectMultipleInput({
   value: checkedValues,
   field,
   saveInput,
@@ -417,7 +417,7 @@ const MultiSelectMultipleInput = ({
   disabled,
   control,
   error,
-}: Form) => {
+}: Form) {
   const optionsData = airtableMeta
     ? airtableMeta[field.parentTableId]?.fields[field.id].options?.choices
     : []
@@ -479,7 +479,7 @@ const MultiSelectMultipleInput = ({
   )
 }
 
-const TextInputField = ({
+function TextInputField({
   value,
   field,
   disabled,
@@ -487,7 +487,7 @@ const TextInputField = ({
   saveInput,
   control,
   error,
-}: Form) => {
+}: Form) {
   const [shouldShrink, setShouldShrink] = useState(false)
   const [numError, setNumError] = useState(false)
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -561,14 +561,14 @@ const TextInputField = ({
   )
 }
 
-const RichTextInputField = ({
+function RichTextInputField({
   value,
   field,
   disabled,
   saveInput,
   control,
   error,
-}: Form) => {
+}: Form) {
   const [open, setOpen] = useState(false)
   const [markdownState, setMarkdownState] = useState<string>(null)
   const [editorState, setEditorState] = useState<EditorState>(null)
@@ -646,7 +646,7 @@ const RichTextInputField = ({
   )
 }
 
-const LinkRecordInput = ({
+function LinkRecordInput({
   value: linkedValue,
   field,
   saveInput,
@@ -655,7 +655,7 @@ const LinkRecordInput = ({
   disabled,
   control,
   error,
-}: Form) => {
+}: Form) {
   const [selectedChoices, setSelectedChoices] = useState<any>(() => {
     if (field.relationship === 'many') {
       return []
@@ -839,7 +839,7 @@ const LinkRecordInput = ({
     />
   )
 }
-const CollaboratorInput = ({
+function CollaboratorInput({
   value: linkedValue,
   field,
   saveInput,
@@ -847,7 +847,7 @@ const CollaboratorInput = ({
   disabled,
   control,
   error,
-}: Form) => {
+}: Form) {
   const [selectedChoices, setSelectedChoices] = useState<any>(() => {
     if (field.relationship === 'many') {
       return []
@@ -983,14 +983,14 @@ const CollaboratorInput = ({
     />
   )
 }
-const DateInputField = ({
+function DateInputField({
   value: dateValue,
   field,
   saveInput,
   disabled,
   control,
   error,
-}: Form) => {
+}: Form) {
   const [value, setValue] = useState<Date | null>(null)
   useEffect(() => {
     if (dateValue) {
@@ -1069,7 +1069,7 @@ const DateInputField = ({
   )
 }
 
-const LoaderOption = ({ field, airtableMeta }: any) => {
+function LoaderOption({ field, airtableMeta }: any) {
   return (
     <Autocomplete
       id="combo-box-demo"

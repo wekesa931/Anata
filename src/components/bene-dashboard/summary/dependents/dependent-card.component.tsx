@@ -19,13 +19,13 @@ interface DependentProps {
   birthDate: string
 }
 
-const DependentCard = ({
+function DependentCard({
   dependent,
   trackAccess,
 }: {
   dependent: DependentProps
   trackAccess: () => void
-}) => {
+}) {
   const [airtableRecordId, setAirtableRecordId] = useState<string>('')
 
   useEffect(() => {

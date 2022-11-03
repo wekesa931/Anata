@@ -4,11 +4,11 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { DateRangePicker, DateRange } from 'mui-daterange-picker'
 import dayjs from 'dayjs'
 import Stack from '@mui/material/Stack'
-import * as styles from './vitals.component.css'
+import styles from './vitals.component.css'
 import airtableFetch from '../../../../../resources/airtable-fetch'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 
-const BloodPressure = () => {
+function BloodPressure() {
   const todayDate = dayjs(new Date()).add(1, 'day').format('YYYY-MM-DD')
   const { recId } = useParams()
   const [bpData, setBpData] = useState<any[]>([])
@@ -139,7 +139,7 @@ const BloodPressure = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedValue, toggleButton])
 
-  const CustomToolbar = () => {
+  function CustomToolbar() {
     return (
       <>
         <div className="justify-end d-flex flex-align-center">
@@ -229,7 +229,7 @@ const BloodPressure = () => {
       </>
     )
   }
-  const NoRowsOverlay = () => {
+  function NoRowsOverlay() {
     return (
       <Stack height="100%" alignItems="center" justifyContent="center">
         No data within this range
@@ -244,6 +244,7 @@ const BloodPressure = () => {
       </div>
     )
   }
+
   return (
     <div className={`${styles.tableContainer} margin-top-16`}>
       <h4 className={styles.vitalsHeading}>Blood Pressure Averages</h4>

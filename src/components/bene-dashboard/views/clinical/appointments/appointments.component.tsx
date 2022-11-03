@@ -10,7 +10,7 @@ import Table from '../../../../utils/table/table.component'
 import TextArea from '../../../../../helpers/textarea.component'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 
-const PafuView = ({ data }: any) => {
+function PafuView({ data }: any) {
   const [showPafu, setShowPafu] = useState(false)
   const [pafuRecordId, setPafuRecordId] = useState('')
   const [pafu, setPafu] = useState({})
@@ -70,7 +70,7 @@ const PafuView = ({ data }: any) => {
   )
 }
 
-const Appointments = () => {
+function Appointments() {
   const { recId } = useParams()
   const [appointments, setAppointments] = useState<any[]>([])
   const [filteredAppointments, setFilteredAppointments] = useState<any[]>([])
@@ -126,6 +126,7 @@ const Appointments = () => {
       key: 'PAFU',
       format: '\n',
       type: 'UI',
+      // eslint-disable-next-line react/no-unstable-nested-components
       component: ({ data }: any) => <PafuView data={data} />,
     },
   ]

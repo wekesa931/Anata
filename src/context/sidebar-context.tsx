@@ -23,7 +23,7 @@ const SidebarContext = React.createContext<sidebar>({
   prev: '',
 })
 
-const SidebarProvider = ({ children }: any) => {
+function SidebarProvider({ children }: any) {
   const [prev, setPrev] = useState<any>('')
   const [activeIndex, setActive] = useState(0)
   const [activeView, setActiveView] = useState(menu[0])
@@ -47,17 +47,21 @@ const SidebarProvider = ({ children }: any) => {
     setActiveSubViewItem(item)
   }, [])
 
+  const providerValue = React.useMemo(
+    () => ({
+      handleOnClick,
+      activeView,
+      activeIndex,
+      activeSubView,
+      handleSublistClick,
+      prev,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [activeIndex, activeSubView, activeView, prev]
+  )
+
   return (
-    <SidebarContext.Provider
-      value={{
-        handleOnClick,
-        activeView,
-        activeIndex,
-        activeSubView,
-        handleSublistClick,
-        prev,
-      }}
-    >
+    <SidebarContext.Provider value={providerValue}>
       {children}
     </SidebarContext.Provider>
   )

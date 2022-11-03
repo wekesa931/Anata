@@ -9,7 +9,7 @@ type RadioProps = {
   onChange: any
 }
 
-const Radio = ({ label, name, value, onChange, checked }: RadioProps) => {
+function Radio({ label, name, value, onChange, checked }: RadioProps) {
   return (
     <button
       className="btn-unstyled full-width"

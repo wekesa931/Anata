@@ -9,7 +9,7 @@ import Box from '@mui/material/Box'
 import MuiDrawer from '@mui/material/Drawer'
 import CssBaseline from '@mui/material/CssBaseline'
 import Divider from '@mui/material/Divider'
-import { Link, useRouteMatch, useHistory } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import config from '../../config/config'
 import analytics from '../../helpers/segment'
 import { useSidebar } from '../../context/sidebar-context'
@@ -74,12 +74,12 @@ export default function MiniDrawer() {
     setOpen(!open)
   }
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const user = useUser()
   const { iframes } = config
   const { handleOnClick, activeView, handleSublistClick, prev, activeSubView } =
     useSidebar()
-  const { path } = useRouteMatch()
+  const { pathname: path } = useLocation()
   const [showDropDownTodo, setDropDownTodo] = useState(false)
   const [showDropDownPopulation, setDropDownPopulation] = useState(false)
   const [subItem, setSublist] = useState('')
@@ -101,16 +101,16 @@ export default function MiniDrawer() {
         )}?viewControls=on`
       } else {
         // eslint-disable-next-line no-shadow
-        item.subItems.map((item: any) => {
+        item.subItems.map((i: any) => {
           // eslint-disable-next-line no-param-reassign
-          if (item.name !== 'Callbacks') {
+          if (i.name !== 'Callbacks') {
             // eslint-disable-next-line no-param-reassign
-            item.rootUrl = `https://airtable.com/embed/${customizedView(
-              item.name
+            i.rootUrl = `https://airtable.com/embed/${customizedView(
+              i.name
             )}?viewControls=on`
           }
 
-          return item
+          return i
         })
       }
 
@@ -142,7 +142,7 @@ export default function MiniDrawer() {
         handleSublistClick(item)
         setSublist(item.name)
         // eslint-disable-next-line no-unused-expressions
-        path.includes('member') && history.push('/')
+        path.includes('member') && navigate('/')
       }}
       onKeyDown={() => handleOnClick(index)}
       // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
@@ -199,7 +199,7 @@ export default function MiniDrawer() {
           handleOnClick(index)
           is_tasks && setDropDownTodo(!showDropDownTodo)
           handleSublistClick('')
-          path.includes('member') && history.push('/')
+          path.includes('member') && navigate('/')
         }}
         onKeyDown={() => handleOnClick(index)}
         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role

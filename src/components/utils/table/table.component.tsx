@@ -24,13 +24,13 @@ type TableProps = {
   modalFields?: string[]
 }
 
-const Table = ({
+function Table({
   title,
   columns,
   data,
   dateColumnKey,
   modalFields,
-}: TableProps) => {
+}: TableProps) {
   const {
     ops: { sort: globalDateSort },
   } = useSortFilter()
@@ -125,29 +125,27 @@ const Table = ({
         >
           <thead>
             <tr>
-              <>
-                <th style={{ opacity: 0 }}>icon</th>
-                {columns.map((column) => (
-                  <th
-                    key={column.name}
-                    className={
-                      column.info ? `${styles.th} ${styles.info}` : styles.th
-                    }
-                  >
-                    {column.info ? (
-                      <Tooltip title={column.info}>
-                        <p className="text-small text-bold">{column.name}</p>
-                        <p className="text-tiny text-bold">{column.format}</p>
-                      </Tooltip>
-                    ) : (
-                      <>
-                        <p className="text-small text-bold">{column.name}</p>
-                        <p className="text-tiny text-bold">{column.format}</p>
-                      </>
-                    )}
-                  </th>
-                ))}
-              </>
+              <th style={{ opacity: 0 }}>icon</th>
+              {columns.map((column) => (
+                <th
+                  key={column.name}
+                  className={
+                    column.info ? `${styles.th} ${styles.info}` : styles.th
+                  }
+                >
+                  {column.info ? (
+                    <Tooltip title={column.info}>
+                      <p className="text-small text-bold">{column.name}</p>
+                      <p className="text-tiny text-bold">{column.format}</p>
+                    </Tooltip>
+                  ) : (
+                    <>
+                      <p className="text-small text-bold">{column.name}</p>
+                      <p className="text-tiny text-bold">{column.format}</p>
+                    </>
+                  )}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>

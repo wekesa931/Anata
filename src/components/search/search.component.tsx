@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Downshift from 'downshift'
 import { throttle } from 'throttle-debounce'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import SearchIcon from '../../assets/img/icons/search.svg'
 import CloseIcon from '../../assets/img/icons/close.svg'
 import LoadingIcon from '../../assets/img/icons/loading.svg'
@@ -22,15 +22,14 @@ interface resultItemType {
   Sex: string
 }
 
-const SearchInput = ({ unknownMemberSearch, memberInfo }: IProps) => {
+function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
   const [results, setResults] = useState<Array<resultItemType>>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const searchMembers = (q: string) => {
     const throttleFunc = throttle(
       1000,
-      true,
       () => {
         if (q && q.length >= 4) {
           setIsLoading(true)
@@ -55,7 +54,7 @@ const SearchInput = ({ unknownMemberSearch, memberInfo }: IProps) => {
           })
         }
       },
-      true
+      { noTrailing: true, debounceMode: true }
     )
 
     return throttleFunc()
@@ -78,7 +77,7 @@ const SearchInput = ({ unknownMemberSearch, memberInfo }: IProps) => {
       if (unknownMemberSearch) {
         setMemberInfo(item)
       } else {
-        history.push(`/member/${item.id}`)
+        navigate(`/member/${item.id}`)
         location.reload()
       }
     }
@@ -102,7 +101,7 @@ const SearchInput = ({ unknownMemberSearch, memberInfo }: IProps) => {
         highlightedIndex,
         selectedItem,
         getRootProps,
-      }) => (
+      }: any) => (
         <div id="search-wrap" className={styles.searchWrap}>
           <div
             id="search-input-wrap"

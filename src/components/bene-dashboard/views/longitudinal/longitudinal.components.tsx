@@ -1,7 +1,7 @@
 import React from 'react'
 import AirtableIframe from '../../../utils/airtableIframe/airtableIframe.component'
 
-const Longitudinal = () => {
+function Longitudinal() {
   const interventionUrl =
     'https://airtable.com/embed/shrd2dt2jbJcFfuv4?backgroundColor=green&viewControls=on'
 

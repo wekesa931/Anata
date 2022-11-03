@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 
-const Loading = ({ color, showText = true }: any) => {
+function Loading({ color, showText = true }: any) {
   const Loader = styled.div`
     border: 5px solid #f3f3f3;
     border-top: 5px solid ${color ? '#205284' : '#ff9800'};

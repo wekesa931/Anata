@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styles from './navbar.component.css'
 import { useUser } from '../../context/user-context'
 import { useAuth } from '../../context/auth-context'
@@ -10,15 +10,15 @@ import TaskMenu from './task-menu/task-menu.component'
 import Tooltip from '../utils/tooltip/tooltip.component'
 import useClickOutside from '../../hooks/click-outside-hook'
 
-const UserMenu = () => {
+function UserMenu() {
   const user = useUser()
   const auth = useAuth()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const logout = () => {
     auth.logout()
     analytics.track('User LoggedOut')
-    history.push('/login')
+    navigate('/login')
   }
 
   const hasName = (userDetails: { given_name: string; family_name: string }) =>
@@ -48,7 +48,7 @@ const UserMenu = () => {
   )
 }
 
-const NavBar = () => {
+function NavBar() {
   const [showUserMenu, setShowUserMenu] = useState<boolean>(false)
   const [showTasksMenu, setShowTasksMenu] = useState<boolean>(false)
   const nodeRefCal = useRef<HTMLDivElement>(null)

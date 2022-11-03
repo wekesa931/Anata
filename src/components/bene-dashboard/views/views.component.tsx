@@ -23,7 +23,7 @@ import CallLog from '../actions/calls/call-log/call-log.component'
 import EngagementDashboard from './engagement/engagement-dashboard.component'
 import Longitudinal from './longitudinal/longitudinal.components'
 
-const SortButton = ({ openSortDialog, setOpenSortDialog }: any) => {
+function SortButton({ openSortDialog, setOpenSortDialog }: any) {
   const {
     ops: { sort },
   } = useSortFilter()
@@ -40,7 +40,7 @@ const SortButton = ({ openSortDialog, setOpenSortDialog }: any) => {
   )
 }
 
-const FilterComponent = () => {
+function FilterComponent() {
   const [openSortDialog, setOpenSortDialog] = useState(false)
   const absolute = openSortDialog ? 'p-absolute' : ''
   return (
@@ -71,7 +71,7 @@ const FilterComponent = () => {
   )
 }
 
-const Views = () => {
+function Views() {
   const [value, setValue] = React.useState('1')
 
   const handleChange = (event, newValue) => {

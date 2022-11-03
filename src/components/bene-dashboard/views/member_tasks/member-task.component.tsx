@@ -4,7 +4,7 @@ import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import List from '../../../utils/list/list.component'
 
-const MemberTask = () => {
+function MemberTask() {
   const { recId } = useParams()
   const [memberTask, setMemberTask] = useState<any[]>([])
 

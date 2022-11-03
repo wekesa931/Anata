@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import React from 'react'
 import styles from './footer.component.css'
 
-const Footer = () => {
+function Footer() {
   return (
     <div className={styles.container}>
       <p>

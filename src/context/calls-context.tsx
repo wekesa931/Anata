@@ -41,12 +41,6 @@ type CallContact = {
   [key: string]: string
 }
 
-type MemberDetails = {
-  name: string
-  number: string
-  antaraId: string
-}
-
 type Call = {
   title: string
   type: 'INBOUND' | 'OUTBOUND' | 'CALLBACK'
@@ -446,25 +440,36 @@ function CallProvider({ children }: any) {
     setConferenceParticipants(part)
   }
 
+  const providerValue = React.useMemo(
+    () => ({
+      activeCallContact,
+      activeCall,
+      callError,
+      conferenceParticipants,
+      memberData,
+      updateParticipantHoldState,
+      setCallerName,
+      setcallError,
+      completeCall,
+      initiateCall,
+      initiateTransfer,
+      setCounterValue,
+      setHistoryRecordId,
+      handleEndCall,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      activeCallContact,
+      activeCall,
+      callError,
+      conferenceParticipants,
+      memberData,
+      counter,
+    ]
+  )
+
   return (
-    <CallContext.Provider
-      value={{
-        activeCallContact,
-        activeCall,
-        callError,
-        conferenceParticipants,
-        memberData,
-        updateParticipantHoldState,
-        setCallerName,
-        setcallError,
-        completeCall,
-        initiateCall,
-        initiateTransfer,
-        setCounterValue,
-        setHistoryRecordId,
-        handleEndCall,
-      }}
-    >
+    <CallContext.Provider value={providerValue}>
       {children}
     </CallContext.Provider>
   )

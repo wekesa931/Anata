@@ -11,11 +11,7 @@ export interface IProps {
   tasksType?: string
 }
 
-const ContactList = ({
-  relevantContact,
-  onCallInitiated,
-  tasksType,
-}: IProps) => {
+function ContactList({ relevantContact, onCallInitiated, tasksType }: IProps) {
   const [isRinging, setisRinging] = React.useState(false)
   const [notificationError, setnotificationError] = React.useState<
     string | null

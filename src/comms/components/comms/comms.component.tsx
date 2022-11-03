@@ -5,13 +5,11 @@ type CallProps = {
   memberSpecific?: boolean
 }
 
-const Comms = ({ memberSpecific }: CallProps) => {
+function Comms({ memberSpecific }: CallProps) {
   return (
-    <>
-      <div style={{ height: '100%', overflowY: 'scroll' }}>
-        <MessageChat memberSpecific={memberSpecific} />
-      </div>
-    </>
+    <div style={{ height: '100%', overflowY: 'scroll' }}>
+      <MessageChat memberSpecific={memberSpecific} />
+    </div>
   )
 }
 

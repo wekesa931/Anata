@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useRouteMatch } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import BioData from './summary/biodata/biodata.component'
 import styles from './bene-dashboard.component.css'
 import Views from './views/views.component'
@@ -9,9 +9,9 @@ import ErrorBoundary from '../error-boundary/error-boundary.component'
 import analytics from '../../helpers/segment'
 import { MemberProvider } from '../../context/member.context'
 
-const PatientDashboard = () => {
+function PatientDashboard() {
   const [recId, setRecId] = useState<string>()
-  const { params } = useRouteMatch<any>()
+  const params = useParams<any>()
 
   if (params.recId && recId !== params.recId) {
     setRecId(params.recId)

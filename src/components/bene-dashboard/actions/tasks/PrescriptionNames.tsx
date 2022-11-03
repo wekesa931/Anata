@@ -5,7 +5,7 @@ interface IProps {
   otherMeds: string | null
 }
 
-const PrescriptionName = ({ value, otherMeds }: IProps) => {
+function PrescriptionName({ value, otherMeds }: IProps) {
   const prescription = value !== 'Other' ? value : otherMeds
   return (
     <span data-testid="prescription-name" className="badge badge-warning">

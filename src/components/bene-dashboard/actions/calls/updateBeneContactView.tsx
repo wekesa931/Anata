@@ -19,7 +19,7 @@ interface IProps {
   }
 }
 
-const SaveContactView = ({ callerNum, memberInfo }: IProps) => {
+function SaveContactView({ callerNum, memberInfo }: IProps) {
   const [numType, setNumType] = useState('Phone 1')
   const [modalOpen, setModalOpen] = useState(false)
   const [error, setError] = useState(false)

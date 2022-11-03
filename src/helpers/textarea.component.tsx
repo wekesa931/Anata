@@ -6,7 +6,7 @@ type TextAreaProps = {
 }
 const MIN_TEXTAREA_HEIGHT = 32
 
-const TextArea = ({ value, disabled }: TextAreaProps) => {
+function TextArea({ value, disabled }: TextAreaProps) {
   const textareaRef = React.useRef(null)
 
   React.useLayoutEffect(() => {

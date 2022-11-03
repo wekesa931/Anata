@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useMutation, useQuery, useLazyQuery } from '@apollo/client'
+import { useMutation, useLazyQuery } from '@apollo/client'
 import {
   MEMBER_DETAILS_QUERY,
   GET_INSURANCE_COMPANIES,
@@ -9,7 +9,7 @@ import {
 import { GET_ANTARA_STAFF } from '../../../../../gql/staff'
 import createApolloClient from '../../../../../resources/apollo-client'
 import logError from '../../../../utils/Bugsnag/Bugsnag'
-
+import { useLoading } from '../../../../../context/loading-context'
 // v2 schema apollo client
 const apolloClient = createApolloClient(true)
 
@@ -88,6 +88,13 @@ type SnackBarData = {
   errors?: any
 }
 
+type LoadingData = {
+  memberLoading: boolean
+  staffLoading: boolean
+  insuranceLoading: boolean
+  lookupLoading: boolean
+}
+
 const createInitialFormState = (member: any = {}) => {
   const getInsurances = () => {
     const { insuranceDetails = [] } = member
@@ -140,6 +147,7 @@ const createInitialFormState = (member: any = {}) => {
       lastName: member?.lastName,
       middleName: member?.middleName,
       sex: member?.sex,
+      maritalStatus: member?.maritalStatus,
     },
     memberPhones: member?.phones,
     memberContact: {
@@ -152,7 +160,6 @@ const createInitialFormState = (member: any = {}) => {
     memberInsurance: [...getInsurances()],
     memberAddress: [...getMemberAddress()],
     memberStatus: {
-      maritalStatus: member?.maritalStatus,
       onboardStage: member?.onboardStage,
       status: member?.status,
       employer: member?.employer,
@@ -180,25 +187,33 @@ const useMemberDetails = (
   const [onboardingStages, setOnboardingStages] = useState<LookupOption[]>([])
   const [sexOptions, setSexOptions] = useState<LookupOption[]>([])
   const [maritalStatus, setMaritalStatus] = useState<LookupOption[]>([])
-  const [submitting, setIsSubmitting] = useState<boolean>(false)
   const [formErrors, setFormErrors] = useState<Array<string>>([])
   const [benefits, setBenefits] = useState<LookupOption[]>([])
   const [antaraStaff, setAntaraStaff] = useState<LookupOption[]>([])
   const [initialValues, setInitialValues] = useState<any>({})
   const [tags, setTags] = useState<LookupOption[]>([])
+  const [dataLoading, setDataLoading] = useState<LoadingData>({
+    memberLoading: true,
+    staffLoading: true,
+    insuranceLoading: true,
+    lookupLoading: true,
+  })
+  const { setLoading } = useLoading()
 
-  const [getMember, { data: memberDetails, loading: memberLoading, refetch }] =
-    useLazyQuery(MEMBER_DETAILS_QUERY, { client: apolloClient })
-  const { data: lookupData, loading: lookupDataLoading } = useQuery(
-    LOOKUP_ENTRIES_QUERY,
-    { client: apolloClient }
-  )
-  const { data: insuranceData, loading: isInsuranceLoading } = useQuery(
-    GET_INSURANCE_COMPANIES
-  )
-
-  const { data: antaraStaffData, loading: isAntaraStaffLoading } =
-    useQuery(GET_ANTARA_STAFF)
+  const [getMember, { refetch }] = useLazyQuery(MEMBER_DETAILS_QUERY, {
+    client: apolloClient,
+    onCompleted: (data) => {
+      setDataLoading((prev) => ({ ...prev, memberLoading: false }))
+      const rawMember = data?.members.edges[0]?.node
+      const parsedMember = parseV2MemberData(rawMember)
+      setV2Member(parsedMember)
+      setInitialValues(createInitialFormState(parsedMember))
+    },
+    onError: (error) => {
+      setDataLoading((prev) => ({ ...prev, memberLoading: false }))
+      logError(error)
+    },
+  })
 
   const parseLookupEntries = (rawLookupData: any) => {
     setCompanies(parseDataToOptions(rawLookupData?.getCompanies, 'name'))
@@ -216,59 +231,64 @@ const useMemberDetails = (
     setTags(parseDataToOptions(rawLookupData?.tags, 'name'))
   }
 
+  const [getLookupEntries] = useLazyQuery(LOOKUP_ENTRIES_QUERY, {
+    client: apolloClient,
+    onCompleted: (data) => {
+      setDataLoading((prev) => ({ ...prev, lookupLoading: false }))
+      parseLookupEntries(data)
+    },
+    onError: (error) => {
+      setDataLoading((prev) => ({ ...prev, lookupLoading: false }))
+      logError(error)
+    },
+    notifyOnNetworkStatusChange: true,
+  })
+  const [getInsurances] = useLazyQuery(GET_INSURANCE_COMPANIES, {
+    onCompleted: (data) => {
+      setDataLoading((prev) => ({ ...prev, insuranceLoading: false }))
+      setInsuranceCompanies(
+        parseDataToOptions(data?.insuranceCompanies, 'name')
+      )
+    },
+    onError: (error) => {
+      setDataLoading((prev) => ({ ...prev, insuranceLoading: false }))
+      logError(error)
+    },
+    notifyOnNetworkStatusChange: true,
+  })
+
+  const [getAntaraStaff] = useLazyQuery(GET_ANTARA_STAFF, {
+    onCompleted: (data) => {
+      setDataLoading((prev) => ({ ...prev, staffLoading: false }))
+      setAntaraStaff(
+        data?.antaraStaff?.edges.map((staff: any) => ({
+          label: staff?.node?.fullName,
+          value: staff?.node?.emailUsername,
+        }))
+      )
+    },
+    onError: (error) => {
+      setDataLoading((prev) => ({ ...prev, staffLoading: false }))
+      logError(error)
+    },
+    notifyOnNetworkStatusChange: true,
+  })
+
+  const [updateMember] = useMutation(UPDATE_MEMBER_DETAILS, {
+    client: apolloClient,
+  })
+
   useEffect(() => {
     if (member) {
       getMember({ variables: { antaraId: member['Antara ID'] } })
     }
 
-    if (memberDetails) {
-      const memberRaw = memberDetails?.members.edges[0]?.node
-      setV2Member(parseV2MemberData(memberRaw))
-    }
+    getLookupEntries()
+    getInsurances()
+    getAntaraStaff()
 
-    if (lookupData) {
-      parseLookupEntries(lookupData)
-    }
-
-    if (insuranceData) {
-      setInsuranceCompanies(
-        parseDataToOptions(insuranceData?.insuranceCompanies, 'name')
-      )
-    }
-
-    if (antaraStaffData) {
-      const rawData = antaraStaffData?.antaraStaff?.edges
-      setAntaraStaff(
-        rawData.map((e: any) => ({
-          label: e?.node?.fullName,
-          value: e?.node?.emailUsername,
-        }))
-      )
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member, memberDetails, lookupData, insuranceData, antaraStaffData])
-
-  const [updateMember, { loading: updatingMemberDetails }] = useMutation(
-    UPDATE_MEMBER_DETAILS,
-    {
-      client: apolloClient,
-    }
-  )
-
-  useEffect(() => {
-    if (v2Member) {
-      setInitialValues(createInitialFormState(v2Member))
-    }
-
-    setIsSubmitting(updatingMemberDetails)
-  }, [v2Member, updatingMemberDetails])
-
-  const isDataLoading = [
-    memberLoading,
-    isInsuranceLoading,
-    lookupDataLoading,
-    isAntaraStaffLoading,
-  ].some((l) => !!l)
+  }, [member])
 
   const cleanObject = (obj: any) => {
     const cleanedObj = { ...obj }
@@ -349,8 +369,8 @@ const useMemberDetails = (
   }
 
   const handleSubmit = (values: any) => {
-    setIsSubmitting(true)
     const inputVariables = prepareData(cleanObject(values))
+    setLoading(true)
 
     updateMember({
       variables: {
@@ -359,11 +379,10 @@ const useMemberDetails = (
     })
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .then((res) => {
-        refetch({ antaraId: member['Antara ID'] })
+        refetch && refetch({ antaraId: member['Antara ID'] })
         const errors = handleFormSubmissionErrors(res?.data)
         if (errors.length > 0) {
           setFormErrors(errors)
-          setIsSubmitting(false)
 
           closeForm &&
             closeForm({
@@ -385,7 +404,6 @@ const useMemberDetails = (
         }
 
         setFormErrors([])
-        setIsSubmitting(false)
         closeForm &&
           closeForm({
             level: 'success',
@@ -395,7 +413,6 @@ const useMemberDetails = (
       .catch((err) => {
         logError(err)
         setFormErrors(err.graphQLErrors.map((e: any) => e.message))
-        setIsSubmitting(false)
         closeForm &&
           closeForm({
             level: 'error',
@@ -403,15 +420,18 @@ const useMemberDetails = (
             errors: err.graphQLErrors.map((e: any) => e.message),
           })
       })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
-  return {
+  // memoize the return value of the function
+  const memberDetailsValue = {
     setV2Member,
     companies,
     formErrors,
-    isDataLoading,
+    isDataLoading: Object.values(dataLoading).some((e) => e),
     handleSubmit,
-    submitting,
     member,
     v2Member,
     healthPolicies,
@@ -426,6 +446,8 @@ const useMemberDetails = (
     initialValues,
     tags,
   }
+
+  return memberDetailsValue
 }
 
 export default useMemberDetails

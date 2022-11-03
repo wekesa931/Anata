@@ -14,7 +14,7 @@ import AuthenticateMember from './AuthenticateMember'
 import { AuthButton } from './AuthenticateMember.styles'
 import styles from './callConsole.component.css'
 
-const CallFloatingBox = () => {
+function CallFloatingBox() {
   const [isOpen, setisOpen] = React.useState(true)
   const [memberInfo, setmemberInfo] = useState(null)
   const [bioVerified, setBioVerified] = useState(false)

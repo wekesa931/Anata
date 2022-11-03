@@ -11,13 +11,13 @@ import styles from './reusables.component.css'
 
 /* eslint-disable no-nested-ternary */
 
-export const TitleWithBody = ({
+export function TitleWithBody({
   title,
   body,
 }: {
   title: string
   body: string
-}) => {
+}) {
   return (
     <Grid container direction="column" className={styles.container}>
       <Grid item xs={12} className={styles.title}>
@@ -30,20 +30,22 @@ export const TitleWithBody = ({
   )
 }
 
-export const SideBySideComponents = ({
+export function SideBySideComponents({
   first,
   second,
 }: {
   first: string
   second: string
-}) => (
-  <div className={styles.sideBySide}>
-    <div>{first} </div>
-    <div>{second}</div>
-  </div>
-)
+}) {
+  return (
+    <div className={styles.sideBySide}>
+      <div>{first} </div>
+      <div>{second}</div>
+    </div>
+  )
+}
 
-export const SideBySideList = ({ utilization }: { utilization: any[] }) => {
+export function SideBySideList({ utilization }: { utilization: any[] }) {
   return (
     <Grid container className={styles.sideBySideListWrapper}>
       {utilization.length === 0 ? (

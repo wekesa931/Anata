@@ -44,9 +44,8 @@ import Accordion from '@mui/material/Accordion'
 import Drawer from '@mui/material/Drawer'
 import axios from 'axios'
 import Grid from '@mui/material/Grid'
-import MobileDatePicker from '@mui/lab/MobileDatePicker'
-import AdapterDateFns from '@mui/lab/AdapterDayjs'
-import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers'
 import LinearProgress from '@mui/material/LinearProgress'
 import { Divider, IconButton, Popper, Stack, styled } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
@@ -77,16 +76,6 @@ import ToastNotification, {
 
 // eslint-disable-next-line
 const mime = require('mime-types')
-
-type S3UploadMeta = {
-  errors: any
-  link: {
-    url: string
-    fields: any
-  }
-  message: string
-  status: number
-}
 
 type DocMeta = {
   docType: string
@@ -251,7 +240,7 @@ const ShareFileOptions = React.forwardRef(
   }
 )
 
-const UploadOptions = ({
+function UploadOptions({
   open,
   setOpen,
   docLink,
@@ -260,7 +249,7 @@ const UploadOptions = ({
   openFileSelector,
   setConfirmationDrawerHelper,
   clear,
-}: IUploadOptions) => {
+}: IUploadOptions) {
   const [openLinkInput, setOpenLinkInput] = useState(false)
   const showUploadLink = false
 
@@ -276,7 +265,7 @@ const UploadOptions = ({
           {openLinkInput ? (
             <p className={`${styles.upText} ${styles.paste}`}>Paste Link URL</p>
           ) : (
-            <>
+            <div>
               {showUploadLink && (
                 <Button
                   onClick={() => {
@@ -292,7 +281,7 @@ const UploadOptions = ({
                   </div>
                 </Button>
               )}
-            </>
+            </div>
           )}
         </Box>
         <Box
@@ -363,13 +352,7 @@ const UploadOptions = ({
   )
 }
 
-type FileCategory = {
-  id: string
-  name: string
-  description: string
-}
-
-const FilterComponent = ({
+function FilterComponent({
   open,
   setisOPen,
   docLink,
@@ -385,7 +368,7 @@ const FilterComponent = ({
   setConfirmationDrawerHelper,
   clear,
   fileTypes,
-}: any) => {
+}: any) {
   const [fileCategory, setFileCategory] = useState<string | undefined>(
     undefined
   )
@@ -430,11 +413,10 @@ const FilterComponent = ({
     if (fileCategory || fileMime || filterDate || docTitle) {
       const throttleFunc = throttle(
         1000,
-        true,
         () => {
           applyFilters()
         },
-        true
+        { debounceMode: true, noTrailing: true }
       )
 
       return throttleFunc()
@@ -608,7 +590,7 @@ const DrawerHeader = styled('div')(({ theme }: any) => ({
   paddingLeft: 2,
 }))
 
-const FileDetails = ({ file, anchorEl, id, showFile, close, open }: any) => {
+function FileDetails({ file, anchorEl, id, showFile, close, open }: any) {
   const sharingInfo = file?.sharedfileSet?.edges[0]?.node
 
   const renderSection = (title: string, value: string) => (
@@ -674,7 +656,50 @@ const FileDetails = ({ file, anchorEl, id, showFile, close, open }: any) => {
   )
 }
 
-const Files = () => {
+function EnhancedTableHead(props: any) {
+  const {
+    order: orderVal,
+    orderBy: orderByVal,
+    onRequestSort,
+    headCells,
+  } = props
+  const createSortHandler = (property: any) => (event: any) => {
+    onRequestSort(event, property)
+  }
+
+  return (
+    <TableHead>
+      <TableRow>
+        <TableCell padding="checkbox" />
+        {headCells.map((headCell) => (
+          <TableCell
+            key={headCell.id}
+            align={headCell.numeric ? 'right' : 'left'}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
+            sortDirection={orderByVal === headCell.id ? orderVal : false}
+          >
+            <TableSortLabel
+              active={orderByVal === headCell.id}
+              direction={orderByVal === headCell.id ? orderVal : 'asc'}
+              onClick={createSortHandler(headCell.id)}
+            >
+              {headCell.label}
+              {orderByVal === headCell.id ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {orderVal === 'desc'
+                    ? 'sorted descending'
+                    : 'sorted ascending'}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+  )
+}
+
+function Files() {
   const [open, setOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [detailsAnchorEl, setDetailsAnchorEl] = useState<null | HTMLElement>(
@@ -907,7 +932,7 @@ const Files = () => {
       addedBy: user?.email,
       mimeType: mimeVal,
       fileSize,
-      category: docMeta.docType,
+      fileCategory: docMeta.docType,
       driveUrl: driveLink,
       title: docMeta.title,
       recordId: member.recID,
@@ -1113,43 +1138,6 @@ const Files = () => {
     </>
   )
 
-  const EnhancedTableHead = (props: any) => {
-    const { order: orderVal, orderBy: orderByVal, onRequestSort } = props
-    const createSortHandler = (property: any) => (event: any) => {
-      onRequestSort(event, property)
-    }
-
-    return (
-      <TableHead>
-        <TableRow>
-          <TableCell padding="checkbox" />
-          {headCells.map((headCell) => (
-            <TableCell
-              key={headCell.id}
-              align={headCell.numeric ? 'right' : 'left'}
-              padding={headCell.disablePadding ? 'none' : 'normal'}
-              sortDirection={orderByVal === headCell.id ? orderVal : false}
-            >
-              <TableSortLabel
-                active={orderByVal === headCell.id}
-                direction={orderByVal === headCell.id ? orderVal : 'asc'}
-                onClick={createSortHandler(headCell.id)}
-              >
-                {headCell.label}
-                {orderByVal === headCell.id ? (
-                  <Box component="span" sx={visuallyHidden}>
-                    {orderVal === 'desc'
-                      ? 'sorted descending'
-                      : 'sorted ascending'}
-                  </Box>
-                ) : null}
-              </TableSortLabel>
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-    )
-  }
   if (loading) {
     return (
       <div className="d-flex flex-direction-column flex-align-center margin-top-32">
@@ -1323,6 +1311,7 @@ const Files = () => {
               <RefinedFileMetaForm
                 uploadStart={uploadStart}
                 uploadDocument={(docMeta: DocMeta) => uploadDocument(docMeta)}
+                options={fileTypes}
               />
             </Box>
           )}
@@ -1373,6 +1362,7 @@ const Files = () => {
                                     orderBy={orderBy}
                                     onRequestSort={handleRequestSort}
                                     rowCount={filteredFiles[key].length}
+                                    headCells={headCells}
                                   />
                                   <TableBody>
                                     {stableSort(

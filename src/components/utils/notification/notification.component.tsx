@@ -9,12 +9,7 @@ export interface IProps {
   buttonPadding?: string
 }
 
-const Notification = ({
-  message,
-  title,
-  buttonMargin,
-  buttonPadding,
-}: IProps) => {
+function Notification({ message, title, buttonMargin, buttonPadding }: IProps) {
   const backgroundColor = {
     Error: '#ffebea',
     Warning: '#fff5e5',

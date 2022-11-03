@@ -4,7 +4,7 @@ import Routes from './routes'
 import AppContexts from '../context'
 import ErrorBoundary from './error-boundary/error-boundary.component'
 
-const App = () => {
+function App() {
   return (
     <ErrorBoundary>
       <div className="appContainer">

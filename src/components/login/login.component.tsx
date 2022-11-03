@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import GoogleLogin from 'react-google-login'
 import Bugsnag from '@bugsnag/js'
 import jwt_decode from 'jwt-decode'
@@ -12,15 +12,17 @@ import storage from '../../helpers/secure-storage'
 import keys from '../../constants/storage'
 import analytics from '../../helpers/segment'
 
-const Login = () => {
-  const history = useHistory()
+function Login() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  // const history = useHistory()
   const { setCurrentUser, isLoggedIn } = useAuth()
   const [error, setError] = React.useState<string>('')
   const [isLoggingIn, setLoggingIn] = React.useState<boolean>(false)
 
   useEffect(() => {
     if (isLoggedIn()) {
-      history.goBack()
+      navigate(-1)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -59,7 +61,7 @@ const Login = () => {
     }
 
     if (authToken && authToken.id_token) {
-      const userObj = jwt_decode(authToken.id_token)
+      const userObj: any = jwt_decode(authToken.id_token)
       // @ts-ignore
       setCurrentUser(userObj)
       storage.set(keys.USER, JSON.stringify({ ...authToken, ...userObj }))
@@ -73,10 +75,10 @@ const Login = () => {
         )
       }
     }
-    if (history?.location?.state?.from?.pathname !== '/login') {
-      history.push(history?.location?.state?.from)
+    if (location?.state?.from?.pathname !== '/login') {
+      navigate(location?.state?.from)
     }
-    history.push('/member')
+    navigate('/member')
   }
 
   React.useEffect(() => {

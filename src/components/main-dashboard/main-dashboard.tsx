@@ -3,36 +3,36 @@ import styles from './main-dashboard.component.css'
 import AirtableIframe from '../utils/airtableIframe/airtableIframe.component'
 import { useSidebar } from '../../context/sidebar-context'
 
-const HNDashboard = () => {
-  const { activeView, activeSubView, prev } = useSidebar()
-
-  const AirtableView = () => {
-    const subListUrl = process.env.PROD
-      ? activeSubView?.rootUrl
-      : activeSubView?.url_sandbox
-    const listUrl = process.env.PROD
-      ? activeView?.rootUrl
-      : activeView?.url_sandbox
-    const prevUrl = process.env.PROD ? prev?.rootUrl : prev?.url_sandbox
-    const urlToShow = () => {
-      if (activeView.name === 'Tasks' && !activeSubView) {
-        return prevUrl
-      }
-      if (activeSubView) {
-        return subListUrl
-      }
-
-      return listUrl
+function AirtableView({ activeView, activeSubView, prev }) {
+  const subListUrl = process.env.PROD
+    ? activeSubView?.rootUrl
+    : activeSubView?.url_sandbox
+  const listUrl = process.env.PROD
+    ? activeView?.rootUrl
+    : activeView?.url_sandbox
+  const prevUrl = process.env.PROD ? prev?.rootUrl : prev?.url_sandbox
+  const urlToShow = () => {
+    if (activeView.name === 'Tasks' && !activeSubView) {
+      return prevUrl
     }
-    if (!prev.component) {
-      return <AirtableIframe src={urlToShow()} />
-    }
-    if (!activeSubView && prev.component && activeView.name === 'Tasks') {
-      return prev.component
+    if (activeSubView) {
+      return subListUrl
     }
 
+    return listUrl
+  }
+  if (!prev.component) {
     return <AirtableIframe src={urlToShow()} />
   }
+  if (!activeSubView && prev.component && activeView.name === 'Tasks') {
+    return prev.component
+  }
+
+  return <AirtableIframe src={urlToShow()} />
+}
+
+function HNDashboard() {
+  const { activeView, activeSubView, prev } = useSidebar()
 
   React.useEffect(() => {
     document.title = `Scribe Home: ${activeView.name}`
@@ -58,7 +58,11 @@ const HNDashboard = () => {
         {activeView?.component && !activeSubView ? (
           activeView?.component
         ) : (
-          <AirtableView />
+          <AirtableView
+            activeSubView={activeSubView}
+            activeView={activeView}
+            prev={prev}
+          />
         )}
       </div>
     </div>

@@ -5,6 +5,13 @@ import nutritionalConsultationsMock from '../../../../../__mocks__/nutritional-c
 import airtableFetch from '../../../../resources/airtable-fetch'
 import Nutrition from './nutrition.component'
 
+jest.mock('@airtable/blocks/ui', () => {
+  return {
+    Label: <></>,
+    Text: <></>,
+  }
+})
+
 jest.mock('../../../../resources/airtable-fetch', () => {
   return jest.fn().mockImplementation(() => {
     return Promise.resolve(null)

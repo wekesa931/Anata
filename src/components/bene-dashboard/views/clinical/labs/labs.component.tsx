@@ -4,7 +4,7 @@ import airtableFetch from '../../../../../resources/airtable-fetch'
 import Table from '../../../../utils/table/table.component'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 
-const Lipids = () => {
+function Lipids() {
   const { recId } = useParams()
   const [lipids, setLipids] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -86,7 +86,7 @@ const Lipids = () => {
   )
 }
 
-const GlucoseMonitoring = () => {
+function GlucoseMonitoring() {
   const { recId } = useParams()
   const [glucose, setGlucose] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -141,7 +141,7 @@ const GlucoseMonitoring = () => {
   )
 }
 
-const Labs = () => {
+function Labs() {
   return (
     <div className="margin-bottom-16">
       <h4>Labs</h4>

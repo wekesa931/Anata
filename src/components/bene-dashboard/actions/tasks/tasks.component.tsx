@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { useParams } from 'react-router-dom'
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { User, ExternalLink } from 'react-feather'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import List from '../../../utils/list/list.component'
@@ -156,7 +156,7 @@ function useMergedRecords(
   return mergedRecords
 }
 
-const Tasks = () => {
+function Tasks() {
   const [allTasks, setAllTasks] = useState<any[]>([])
   const [filteredTasks, setFilteredTasks] = useState<any[]>([])
   const { addOpenForm } = useFormPortal()
@@ -210,18 +210,23 @@ const Tasks = () => {
 
   const { member } = useMember()
 
-  const {
-    loading: isApiLoading,
-    error: apiError,
-    data: rawApiRecords,
-  } = useQuery(GET_MEMBER_TASKS, {
-    variables: { antaraId: member['Antara ID'] },
-  })
+  const [
+    loadTasks,
+    { error: apiError, loading: isApiLoading, data: rawApiRecords },
+  ] = useLazyQuery(GET_MEMBER_TASKS, {})
+
+  useEffect(() => {
+    if (member) {
+      loadTasks({ variables: { antaraId: member['Antara ID'] } })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member])
 
   const apiRecords = useTransformedApiRecords(rawApiRecords)
   const mergedRecords = useMergedRecords(airtableRecords, apiRecords)
 
-  const StrikeThrough = ({ children }: any) => {
+  function StrikeThrough({ children }: any) {
     return <s className="text-disabled">{children}</s>
   }
 
@@ -273,8 +278,8 @@ const Tasks = () => {
       return typeof assigned === 'string' ? assigned : assigned?.fullName || ''
     }
     // Display the mergedRecords
-    function renderDisplayInfo(hnTask: any) {
-      return () => (
+    function DisplayInfo({ hnTask }: any) {
+      return (
         <div className={styles.taskContainer}>
           <div className={styles.taskContainerInner}>
             <div className={styles.taskDiv}>
@@ -348,13 +353,12 @@ const Tasks = () => {
     }
 
     const renderTaskRecord = (hnTask: any) => {
-      const DisplayInfo = renderDisplayInfo(hnTask)
       return hnTask.Status === 'Complete' ? (
         <StrikeThrough>
-          <DisplayInfo />
+          <DisplayInfo hnTask={hnTask} />
         </StrikeThrough>
       ) : (
-        <DisplayInfo />
+        <DisplayInfo hnTask={hnTask} />
       )
     }
 
@@ -481,77 +485,71 @@ const Tasks = () => {
   }
 
   const isReadytoShowTasks =
-    allTasks?.length > 0 &&
-    !isAirtableLoading &&
-    !isApiLoading &&
-    !isAirtableError &&
-    !apiError
+    !isAirtableLoading && !isApiLoading && !isAirtableError && !apiError
 
   return (
-    <>
-      <div className="margin-top-0">
-        {isReadytoShowTasks && (
-          <>
-            <p className="up-next">Up next</p>
-            <div data-testid="data-list-2">
-              <List
-                list={upnextTasks}
-                getTopLeftText={getPriority}
-                getTopRightText={getTaskNotes}
-                modalTitle="Task"
-                emptyListText="No tasks found."
-                editable
-                onEdit={updateTask}
-              />
-            </div>
-          </>
-        )}
-        <div className="justify-start d-flex flex-align-center">
-          <h4>Tasks</h4>
-          <div>
-            <select
-              onChange={(e) => setFilteredTasks(filterByStatus(e.target.value))}
-              className="remove-border form-control"
-              data-testid="status-filter"
-            >
-              <option key={defaultTaskFilterStatus}>
-                {defaultTaskFilterStatus}
-              </option>
-              {status.map((stat) => (
-                <option key={stat}>{stat}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-        {isReadytoShowTasks && (
-          <div data-testid="data-list-1">
+    <div className="margin-top-0">
+      {isReadytoShowTasks && (
+        <>
+          <p className="up-next">Up next</p>
+          <div data-testid="data-list-2">
             <List
-              list={filteredTasks}
+              list={upnextTasks}
               getTopLeftText={getPriority}
               getTopRightText={getTaskNotes}
               modalTitle="Task"
-              data-testid="data-list-1"
               emptyListText="No tasks found."
               editable
               onEdit={updateTask}
             />
           </div>
-        )}
-        {/* Only show the Loading Message if either data sources are loading */}
-        {(isAirtableLoading || isApiLoading) && (
-          <div className="d-flex flex-direction-column flex-align-center margin-top-32">
-            <Icon name="loading" />
-            <p className="text-small">Loading Tasks...</p>
-          </div>
-        )}
-        {/* TODO: Consider displaying any records already retrieved in addition to error details */}
-        {(isAirtableError || apiError) && (
-          <p className="text-small text-danger margin-top-24">
-            An error occurred while fetching tasks, please refresh the page.
-          </p>
-        )}
+        </>
+      )}
+      <div className="justify-start d-flex flex-align-center">
+        <h4>Tasks</h4>
+        <div>
+          <select
+            onChange={(e) => setFilteredTasks(filterByStatus(e.target.value))}
+            className="remove-border form-control"
+            data-testid="status-filter"
+          >
+            <option key={defaultTaskFilterStatus}>
+              {defaultTaskFilterStatus}
+            </option>
+            {status.map((stat) => (
+              <option key={stat}>{stat}</option>
+            ))}
+          </select>
+        </div>
       </div>
-    </>
+      {isReadytoShowTasks && (
+        <div data-testid="data-list-1">
+          <List
+            list={filteredTasks}
+            getTopLeftText={getPriority}
+            getTopRightText={getTaskNotes}
+            modalTitle="Task"
+            data-testid="data-list-1"
+            emptyListText="No tasks found."
+            editable
+            onEdit={updateTask}
+          />
+        </div>
+      )}
+      {/* Only show the Loading Message if either data sources are loading */}
+      {(isAirtableLoading || isApiLoading) && (
+        <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+          <Icon name="loading" />
+          <p className="text-small">Loading Tasks...</p>
+        </div>
+      )}
+      {/* TODO: Consider displaying any records already retrieved in addition to error details */}
+      {(isAirtableError || apiError) && (
+        <p className="text-small text-danger margin-top-24">
+          An error occurred while fetching tasks, please refresh the page.
+        </p>
+      )}
+    </div>
   )
 }
 

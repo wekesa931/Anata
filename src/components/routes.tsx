@@ -1,5 +1,11 @@
 import React from 'react'
-import { Switch, Route, Redirect, Router } from 'react-router-dom'
+import {
+  Route,
+  BrowserRouter,
+  Routes as SwitchRoutes,
+  Navigate,
+  useLocation,
+} from 'react-router-dom'
 import {
   StyledEngineProvider,
   ThemeProvider,
@@ -11,7 +17,6 @@ import { useUser } from '../context/user-context'
 import Sidebar from './sidebar/sidebar.component'
 import Dashboard from './main-dashboard/main-dashboard'
 import BeneDashboard from './bene-dashboard/bene-dashboard.component'
-import history from '../constants/history'
 import { FcmProvider } from '../context/fcm/fcm.context'
 import { CallProvider } from '../context/calls-context'
 import CallFloatingBox from './bene-dashboard/actions/calls/callConsole.component'
@@ -37,68 +42,76 @@ const theme = createTheme({
   },
 })
 
-const Routes = () => {
-  return (
-    <Router history={history}>
-      <Switch>
-        <FcmProvider>
-          <FormProvider>
-            <CallProvider>
-              <ThemeProvider theme={theme}>
-                <StyledEngineProvider injectFirst>
-                  <CallFloatingBox />
-                  <Route exact path="/login" component={Login} />
-                  <ProtectedRoute exact path="/">
-                    <Dashboard />
-                  </ProtectedRoute>
-                  <ProtectedRoute exact path="/member">
-                    <Dashboard />
-                  </ProtectedRoute>
-                  <ProtectedRoute exact path="/member/:recId">
-                    <BeneDashboard />
-                  </ProtectedRoute>
-                </StyledEngineProvider>
-              </ThemeProvider>
-            </CallProvider>
-          </FormProvider>
-        </FcmProvider>
-      </Switch>
-    </Router>
+function ProtectedRoute({ children }: any) {
+  const user = useUser()
+  const location = useLocation()
+
+  return user ? (
+    <div className="d-flex" style={{ height: '100%' }}>
+      <Sidebar />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+          overflow: 'hidden',
+          backgroundColor: 'var(--white)',
+        }}
+      >
+        <NavBar />
+        <div className="dashboard-container">{children}</div>
+      </div>
+    </div>
+  ) : (
+    <Navigate to="/login" state={{ from: location }} />
   )
 }
 
-function ProtectedRoute({ children, ...rest }: any) {
-  const user = useUser()
+function Routes() {
   return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        user ? (
-          <div className="d-flex" style={{ height: '100%' }}>
-            <Sidebar />
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                flex: 1,
-                overflow: 'hidden',
-                backgroundColor: 'var(--white)',
-              }}
-            >
-              <NavBar />
-              <div className="dashboard-container">{children}</div>
-            </div>
-          </div>
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: location },
-            }}
-          />
-        )
-      }
-    />
+    <BrowserRouter>
+      <FcmProvider>
+        <FormProvider>
+          <CallProvider>
+            <ThemeProvider theme={theme}>
+              <StyledEngineProvider injectFirst>
+                <CallFloatingBox />
+                <SwitchRoutes>
+                  <Route path="/login" element={<Login />} />
+                  <Route
+                    path="/"
+                    element={
+                      <ProtectedRoute>
+                        {' '}
+                        <Dashboard />{' '}
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/member"
+                    element={
+                      <ProtectedRoute>
+                        {' '}
+                        <Dashboard />{' '}
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/member/:recId"
+                    element={
+                      <ProtectedRoute>
+                        {' '}
+                        <BeneDashboard />{' '}
+                      </ProtectedRoute>
+                    }
+                  />
+                </SwitchRoutes>
+              </StyledEngineProvider>
+            </ThemeProvider>
+          </CallProvider>
+        </FormProvider>
+      </FcmProvider>
+    </BrowserRouter>
   )
 }
 

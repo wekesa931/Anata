@@ -9,7 +9,7 @@ type CustomFieldProps = AirtableField & {
   disabled: boolean
 }
 
-const FormField = (customField: CustomFieldProps) => {
+function FormField(customField: CustomFieldProps) {
   const {
     name,
     type,

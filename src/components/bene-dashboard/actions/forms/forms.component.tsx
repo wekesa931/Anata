@@ -7,7 +7,7 @@ import { useFormPortal } from '../../../../context/forms-context'
 import { useMember } from '../../../../context/member.context'
 import { formNames } from '../workflows/Forms/form-fields'
 
-const Forms = () => {
+function Forms() {
   const { member } = useMember()
   const { addOpenForm } = useFormPortal()
 

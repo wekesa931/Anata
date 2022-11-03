@@ -3,6 +3,12 @@ import { screen } from '@testing-library/react'
 import renderWithRouter from '../../../__mocks__/custom-render.mock'
 import HNDashboard from './main-dashboard'
 
+jest.mock('@airtable/blocks/ui', () => {
+  return {
+    Label: <></>,
+    Text: <></>,
+  }
+})
 jest.mock('../../helpers/analytics', () => {
   return jest.fn(() => {})
 })

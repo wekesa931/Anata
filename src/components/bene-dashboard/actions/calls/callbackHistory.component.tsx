@@ -8,11 +8,11 @@ import formatDate from '../../../../helpers/date-formatting'
 import DropDownComponent from '../../../../helpers/dropdown-helper'
 import { ILogs, useCall } from '../../../../context/calls-context'
 
-const Container = ({ children }: any) => {
+function Container({ children }: any) {
   return <div className="history-container">{children}</div>
 }
 
-export const HistoryLogs = () => {
+export function HistoryLogs() {
   const [taskLog, settaskLog] = useState<any | null>(null)
   const { activeCall } = useCall()
   const { data } = useQuery(GET_CALL_LOG)
@@ -98,13 +98,13 @@ export const HistoryLogs = () => {
   )
 }
 
-const CallbackHistory = ({
+function CallbackHistory({
   isVisible,
   setdisplayHistory,
 }: {
   isVisible: boolean
   setdisplayHistory: (visible: boolean) => void
-}) => {
+}) {
   return (
     <>
       {isVisible && (

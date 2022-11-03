@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Chevron = ({
+function Chevron({
   className,
   width,
   fill,
@@ -8,7 +8,7 @@ const Chevron = ({
   className: string
   width: number
   fill: string
-}) => {
+}) {
   return (
     <svg
       className={className}

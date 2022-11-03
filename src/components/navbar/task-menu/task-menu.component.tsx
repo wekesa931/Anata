@@ -8,16 +8,18 @@ import Icon from '../../utils/icon/icon.component'
 import Tabs from '../../utils/tabs/tabs.component'
 import analytics from '../../../helpers/segment'
 
-const DateInput = ({ date, onChange }) => (
-  <input
-    className="form-control"
-    type="date"
-    value={date}
-    onChange={onChange}
-  />
-)
+function DateInput({ date, onChange }) {
+  return (
+    <input
+      className="form-control"
+      type="date"
+      value={date}
+      onChange={onChange}
+    />
+  )
+}
 
-const Task = ({ name, url }: any) => {
+function Task({ name, url }: any) {
   return (
     <Link to={url}>
       <div className={styles.listItem}>{name}</div>
@@ -25,7 +27,7 @@ const Task = ({ name, url }: any) => {
   )
 }
 
-const TaskMenu = () => {
+function TaskMenu() {
   const user = useUser()
   const email = user && user.email
   const [dueDate, setDueDate] = useState(dayjs().format('YYYY-MM-DD'))

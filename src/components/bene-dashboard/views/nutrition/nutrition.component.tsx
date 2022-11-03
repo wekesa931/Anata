@@ -5,7 +5,7 @@ import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import Table from '../../../utils/table/table.component'
 
-const Nutrition = () => {
+function Nutrition() {
   const { recId } = useParams()
   const [consultations, setConsultations] = useState<any[]>([])
   const allowedFields: string[] = [

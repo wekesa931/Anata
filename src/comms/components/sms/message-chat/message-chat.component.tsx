@@ -62,7 +62,7 @@ export type Message = {
 
 type MemberMessages = Record<DateCategory, Message[]>
 
-const MessageChat = () => {
+function MessageChat() {
   const [modalOpen, setmodalOpen] = useState<boolean>(false)
   const [modalContent, setmodalContent] = useState<Element | null>(null)
   const [memberMessages, setMemberMessages] = useState<MemberMessages>()
@@ -212,19 +212,17 @@ const MessageChat = () => {
                 let showView = <div key={att.url} />
                 if (isDocument) {
                   const pdf_component = (
-                    <>
-                      <Document
-                        file={url}
-                        onLoadSuccess={({ numPage }) => setNumPages(numPage)}
-                      >
-                        {Array(numPages)
-                          .fill(null)
-                          .map((_, i) => i + 1)
-                          .map((page, ind) => (
-                            <Page pageNumber={page} key={ind} />
-                          ))}
-                      </Document>
-                    </>
+                    <Document
+                      file={url}
+                      onLoadSuccess={({ numPage }) => setNumPages(numPage)}
+                    >
+                      {Array(numPages)
+                        .fill(null)
+                        .map((_, i) => i + 1)
+                        .map((page, ind) => (
+                          <Page pageNumber={page} key={ind} />
+                        ))}
+                    </Document>
                   )
                   showView = (
                     <>

@@ -11,7 +11,7 @@ import airtableFetch from '../../../../resources/airtable-fetch'
 import styles from './appointments.component.css'
 import { useMember } from '../../../../context/member.context'
 
-const Appointments = () => {
+function Appointments() {
   const [appointments, setAppointments] = React.useState<any[]>([])
   const [filteredAppointments, setFilteredAppointments] = React.useState<any[]>(
     []

@@ -45,7 +45,7 @@ const FormContext = createContext<FormContextType>({
   onFormClose: () => null,
 })
 
-const FormProvider = ({ children }: any) => {
+function FormProvider({ children }: any) {
   const [airtableMeta, setAirtableMeta] = useState<any>(null)
   const [shouldRefetch, setshouldRefetch] = useState(false)
   const [openedForms, setOpenedForms] = useState<Form[]>([])
@@ -121,17 +121,21 @@ const FormProvider = ({ children }: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const providerValue = React.useMemo(
+    () => ({
+      airtableMeta,
+      openedForms,
+      shouldRefetch,
+      onRefetch,
+      addOpenForm,
+      onFormClose,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [airtableMeta, openedForms, shouldRefetch]
+  )
+
   return (
-    <FormContext.Provider
-      value={{
-        airtableMeta,
-        openedForms,
-        shouldRefetch,
-        onRefetch,
-        addOpenForm,
-        onFormClose,
-      }}
-    >
+    <FormContext.Provider value={providerValue}>
       {openedForms.map((fm: Form, idx: number) => (
         <React.Fragment key={idx}>
           <FormPortal

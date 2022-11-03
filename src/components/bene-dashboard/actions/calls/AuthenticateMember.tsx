@@ -25,7 +25,7 @@ type AuthQuestions = {
   isConfirmed: boolean
   isFailed: boolean
 }
-const AuthenticateMember = ({
+function AuthenticateMember({
   antaraId,
   sessionName,
   isValidationFailed,
@@ -37,7 +37,7 @@ const AuthenticateMember = ({
   isValidationFailed: (value: boolean) => void
   isValidationSuccess: () => void
   sessionId?: string
-}) => {
+}) {
   const [questionsToDisplay, setQuestionsToDisplay] = useState<number[]>([0])
   const [memberAuthQuestions, setMemberAuthQuestions] = useState<
     AuthQuestions[]
@@ -119,10 +119,9 @@ const AuthenticateMember = ({
     const allQuestions = memberAuthQuestions
     allQuestions[idx] = updatedMember
     setMemberAuthQuestions(allQuestions)
-    setQuestionsToDisplay((questionsToDisplay) => [
-      ...questionsToDisplay,
-      questionsToDisplay[questionsToDisplay.length - 1] + 1,
-    ])
+    // eslint-disable no-shadow
+    setQuestionsToDisplay((qns) => [...qns, qns[qns.length - 1] + 1])
+    // eslint-enable no-shadow
   }
 
   const renderQuestions = () => {
@@ -168,7 +167,7 @@ const AuthenticateMember = ({
           </Content>
         )
       }
-      return <></>
+      return null
     })
   }
   return (

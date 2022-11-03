@@ -18,14 +18,14 @@ import MultiSelect from '../../utils/multiselect/multiselect.component'
 
 const ALL_INTERACTIONS = 'All'
 
-const FlagForReview = () => {
+function FlagForReview() {
   const [startDate, setStartDate] = React.useState<Date>(new Date())
   const [endDate, setEndDate] = React.useState<Date>(new Date())
   const [filter, setFilter] = React.useState<string>(ALL_INTERACTIONS)
   const [team, setTeam] = React.useState<any[]>([])
   const [showFiltersMenu, setShowFiltersMenu] = React.useState(false)
 
-  const [interactions, setInteractions] = React.useState()
+  const [interactions, setInteractions] = React.useState([])
   const [assignees, setAssignees] = React.useState<string[]>([])
 
   const { loading, error, data } = useQuery(
@@ -132,6 +132,7 @@ const FlagForReview = () => {
     }
   }
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   return (
     <>
       <div className={styles.form}>

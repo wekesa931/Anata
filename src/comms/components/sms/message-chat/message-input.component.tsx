@@ -24,7 +24,7 @@ type MessageInputProps = {
   setMessages: any
 }
 
-const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
+function MessageInput({ messages, setMessages }: MessageInputProps) {
   const { member } = useMember()
   const messageTemplate = (member && member.messageTemplate) || ''
   const [message, setMessage] = useState<string>(messageTemplate)
@@ -43,7 +43,7 @@ const MessageInput = ({ messages, setMessages }: MessageInputProps) => {
 
   useEffect(() => {
     if (textAreaRef && textAreaRef.current) {
-      const { scrollHeight } = textAreaRef?.current
+      const scrollHeight = textAreaRef?.current?.scrollHeight || 0
       if (scrollHeight > 20 && scrollHeight < 200) {
         textAreaRef.current.style.height = `${scrollHeight}px`
       }

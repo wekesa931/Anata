@@ -5,7 +5,7 @@ import { HOLD_PARTICIPANT, UNHOLD_PARTICIPANT } from '../../../../gql/comms'
 import { IParticipantSession, useCall } from '../../../../context/calls-context'
 import logError from '../../../utils/Bugsnag/Bugsnag'
 
-const ActiveCallParticipants = () => {
+function ActiveCallParticipants() {
   const { conferenceParticipants, updateParticipantHoldState } = useCall()
   const { addToast } = useToasts()
   const [holdParticipant] = useMutation(HOLD_PARTICIPANT)

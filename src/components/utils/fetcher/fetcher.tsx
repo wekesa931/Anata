@@ -1,30 +1,43 @@
-import React from 'react'
-import * as Loads from 'react-loads'
+import React, { useState } from 'react'
 import airtableFetch from '../../../resources/airtable-fetch'
 import LoadingIcon from '../../../assets/img/icons/loading.svg'
 import ListSkeletonLoader from '../skeleton-loader/skeleton-loader.component'
 
-const Fetcher = ({
+function Fetcher({
   url,
   contextKey,
   children,
   skeleton = true,
   getDocumentTitle,
-}: any) => {
-  const { response, error, isPending, isResolved } = Loads.useLoads(
-    contextKey,
-    () => airtableFetch(url)
-  )
+}: any) {
+  const [data, setData] = useState(null)
+  const [error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   React.useEffect(() => {
-    if (getDocumentTitle && response) {
-      document.title = getDocumentTitle(response)
+    if (getDocumentTitle && data) {
+      document.title = getDocumentTitle(data)
     }
-  }, [getDocumentTitle, response])
+  }, [getDocumentTitle, data])
+
+  React.useEffect(() => {
+    if (url) {
+      setIsLoading(true)
+      airtableFetch(url)
+        .then((res) => {
+          setData(res)
+          setIsLoading(false)
+        })
+        .catch((err) => {
+          setError(err)
+          setIsLoading(false)
+        })
+    }
+  }, [url])
 
   return (
     <>
-      {isPending && !isResolved && (
+      {isLoading && (
         <div
           className="full-height d-flex"
           style={{ alignItems: 'center', justifyContent: 'center' }}
@@ -43,7 +56,7 @@ const Fetcher = ({
           )}
         </div>
       )}
-      {isResolved && children(response)}
+      {data && children(data)}
       {error && `An error occurred while fetching ${contextKey}`}
     </>
   )

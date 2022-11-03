@@ -25,6 +25,7 @@ type DocMeta = {
 type IProps = {
   uploadStart: boolean
   uploadDocument: (docMeta: DocMeta) => void
+  options: string[]
 }
 
 type AppFolders = {
@@ -32,7 +33,7 @@ type AppFolders = {
   name: string
 }
 
-const RefinedFileMetaForm = ({ uploadStart, uploadDocument }: IProps) => {
+function RefinedFileMetaForm({ uploadStart, uploadDocument, options }: IProps) {
   const user = useUser()
   const { member } = useMember()
   const [docType, setDocType] = useState<string>('')
@@ -69,29 +70,6 @@ const RefinedFileMetaForm = ({ uploadStart, uploadDocument }: IProps) => {
 
     uploadDocument(meta)
   }
-
-  const options = [
-    'HMP',
-    'Prescription',
-    'X-ray',
-    'Others',
-    'Radiology Reports',
-    'Symptom Assessment Images',
-    'Avenue Progress Reports',
-    'Penda Progress Reports',
-    'Data Collection Results',
-    'Data Collection Images',
-    'Data Collection Summary Reports',
-    'Asthma Assessment Score Results',
-    'Meal Plans',
-    'Food Diaries',
-    'Receipt of Passport Photo',
-    'Identification Card Copy',
-    'NHIF Copy',
-    'Life Cover Documentation',
-    'Medical Card Copy',
-    'Medical Card Registration',
-  ]
 
   const onTitleChange = (e) => {
     setTitle(e.target.value)

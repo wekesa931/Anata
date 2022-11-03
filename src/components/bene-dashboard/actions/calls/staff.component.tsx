@@ -26,7 +26,7 @@ interface IProps {
   setSelected: (staff: IAntaraStaff) => void
 }
 
-const AvailableHnOrCs = ({ staff, selected, setSelected }: IProps) => {
+function AvailableHnOrCs({ staff, selected, setSelected }: IProps) {
   const isActiveCsOrHn = staff.id === selected
   return (
     <button
@@ -46,11 +46,11 @@ const AvailableHnOrCs = ({ staff, selected, setSelected }: IProps) => {
     </button>
   )
 }
-const HNAndCSList = ({
+function HNAndCSList({
   displayList,
 }: {
   displayList: (show: boolean) => void
-}) => {
+}) {
   const { initiateTransfer } = useCall()
   const [modalOpen, setModalOpen] = useState(false)
   const [selected, setselected] = useState<IAntaraStaff | null>(null)

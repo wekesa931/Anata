@@ -27,6 +27,7 @@ import MemberDetailsUpdateForm, {
   memberDetailsValidationSchema,
 } from '../../summary/biodata/biodata-update/member-details-update.component'
 import { WorkflowMeta } from '../workflows/workflow-types'
+import { useLoading } from '../../../../context/loading-context'
 
 type IForm = {
   name: string
@@ -53,7 +54,7 @@ type FormProps = {
   memberDetails: any
 }
 
-const FormPortal = ({
+function FormPortal({
   form,
   openedForms,
   airtableMeta,
@@ -62,7 +63,7 @@ const FormPortal = ({
   onFormClose,
   onRefetch,
   memberDetails,
-}: FormProps) => {
+}: FormProps) {
   const [calloutHeight, setcalloutHeight] = useState(66)
   const [isIncreasing, setIsIncreasing] = useState(true)
   const [calloutWidth, setCalloutWidth] = useState(33)
@@ -74,6 +75,8 @@ const FormPortal = ({
   const containerWidth = isDisabled ? '450px' : `${calloutWidth}%`
   const containerHeight = `${calloutHeight}%`
   const isWorkflow = !!form.workflowId
+
+  const { loading: isSubmitting } = useLoading()
 
   const {
     values,
@@ -102,12 +105,12 @@ const FormPortal = ({
 
   const resizeDialog = () => {
     if (!isDisabled) {
-      setcalloutHeight(60)
+      setcalloutHeight(15)
       setIsDisabled(true)
       setDynamicPosition({ x: formNum * 70, y: 0 })
     } else {
       setIsDisabled(false)
-      setcalloutHeight(500)
+      setcalloutHeight(66)
       setDynamicPosition(undefined)
     }
   }
@@ -122,10 +125,12 @@ const FormPortal = ({
   React.useEffect(() => {
     const message = `Warning Navigating away from this page will delete your text if you have not already saved it`
     window.addEventListener('beforeunload', (e) => {
+      e.stopImmediatePropagation()
       e.returnValue = message
     })
     return () =>
       window.removeEventListener('beforeunload', (e) => {
+        e.stopImmediatePropagation()
         e.returnValue = message
       })
   })
@@ -252,7 +257,7 @@ const FormPortal = ({
       >
         <Paper
           className={styles.formContainer}
-          sx={{ width: containerWidth, height: containerHeight }}
+          sx={{ width: containerWidth, height: containerHeight, zIndex: 100 }}
           elevation={5}
         >
           <DialogTitle
@@ -305,7 +310,7 @@ const FormPortal = ({
                 className={`${styles.actionBtn} `}
                 onClick={submitForm}
               >
-                {memberDetails.submitting ? 'Saving...' : 'Save'}
+                {isSubmitting ? 'Saving...' : 'Save'}
               </Button>
             </DialogActions>
           )}

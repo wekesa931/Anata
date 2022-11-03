@@ -56,7 +56,7 @@ function FilePasswordEncrypt(props) {
     })
       .then((res) => {
         if (!res.errors) {
-          const { link } = res?.data?.encryptFile
+          const link = res?.data?.encryptFile?.link
           const newWindow = window.open(link, '_blank', 'noopener,noreferrer')
           if (newWindow) newWindow.opener = null
         }
@@ -89,6 +89,26 @@ function FilePasswordEncrypt(props) {
         <Button onClick={handleEncyption}>Encrypt</Button>
       </DialogActions>
     </Dialog>
+  )
+}
+
+function Loader() {
+  return (
+    <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+      <LoadingIcon />
+      <p className="text-small">Loading File</p>
+    </div>
+  )
+}
+function LoadingError({ fileMessage }) {
+  return (
+    <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+      <AlertTriangle />
+      <p className="text-heading-5">
+        The file is no longer available for viewing
+      </p>
+      {fileMessage && <p className="text-heading-5">{fileMessage}</p>}
+    </div>
   )
 }
 
@@ -132,13 +152,17 @@ export default function PdfViewer(props) {
         },
       }).then((res) => {
         if (!res.errors) {
-          const { link: url } = res?.data?.generateLink
+          const url = res?.data?.generateLink?.link
           const fileExtension = file.storageKey.split('.').pop()
           if (handledExtensions.includes(fileExtension)) {
             setDisplayFile({ ...file, url })
           } else {
             setFileMessage('File has been downloaded or opened in the next tab')
-            window.open(url, '_blank').focus()
+
+            // open url if not undefined
+            if (url) {
+              window.open(url, '_blank').focus()
+            }
           }
         }
       })
@@ -187,21 +211,7 @@ export default function PdfViewer(props) {
   const fileContent = (content: string) => (
     <Typography className="file-title-content">{content}</Typography>
   )
-  const Loader = () => (
-    <div className="d-flex flex-direction-column flex-align-center margin-top-32">
-      <LoadingIcon />
-      <p className="text-small">Loading File</p>
-    </div>
-  )
-  const LoadingError = () => (
-    <div className="d-flex flex-direction-column flex-align-center margin-top-32">
-      <AlertTriangle />
-      <p className="text-heading-5">
-        The file is no longer available for viewing
-      </p>
-      {fileMessage && <p className="text-heading-5">{fileMessage}</p>}
-    </div>
-  )
+
   return (
     <>
       {isEncypting && (
@@ -265,7 +275,7 @@ export default function PdfViewer(props) {
                     renderMode="canvas"
                     onLoadSuccess={onDocumentLoadSuccess}
                     loading={<Loader />}
-                    error={<LoadingError />}
+                    error={<LoadingError fileMessage={fileMessage} />}
                     noData={<Loader />}
                   >
                     {Array.from(new Array(numOfPages), (el, index) => {
@@ -288,7 +298,7 @@ export default function PdfViewer(props) {
                         )
                       }
                       if (errored) {
-                        return <LoadingError />
+                        return <LoadingError fileMessage={fileMessage} />
                       }
                       return <Loader />
                     }}

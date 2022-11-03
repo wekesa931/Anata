@@ -100,8 +100,13 @@ function SortFilterProvider({ children }: any) {
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
+  const sortProviderValue = React.useMemo(
+    () => ({ ops: state, updateOps: dispatch }),
+    [state]
+  )
+
   return (
-    <SortFilterContext.Provider value={{ ops: state, updateOps: dispatch }}>
+    <SortFilterContext.Provider value={sortProviderValue}>
       {children}
     </SortFilterContext.Provider>
   )

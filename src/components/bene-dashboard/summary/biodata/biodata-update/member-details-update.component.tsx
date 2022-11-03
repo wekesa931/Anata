@@ -55,13 +55,13 @@ export const memberDetailsValidationSchema = Yup.object().shape({
   ),
 })
 
-const MemberDetailsUpdateForm = ({
+function MemberDetailsUpdateForm({
   memberDetails,
   errors,
   values,
   handleChange,
   setFieldValue,
-}: MemberDetailsProps) => {
+}: MemberDetailsProps) {
   const {
     v2Member,
     isDataLoading,
@@ -360,7 +360,7 @@ const MemberDetailsUpdateForm = ({
           dataIndex: 'maritalStatus',
           label: 'Marital Status',
           options: maritalStatus,
-          stateKey: 'memberStatus',
+          stateKey: 'memberDetails',
         },
       ],
     },

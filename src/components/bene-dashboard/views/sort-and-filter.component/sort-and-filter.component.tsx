@@ -12,7 +12,7 @@ type SortDialogProps = {
   onClose: () => void
 }
 
-const SortDialog = ({ onClose }: SortDialogProps) => {
+function SortDialog({ onClose }: SortDialogProps) {
   const {
     ops: { sort, filters },
     updateOps,

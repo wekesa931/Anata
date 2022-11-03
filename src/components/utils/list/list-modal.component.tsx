@@ -22,7 +22,37 @@ type ListModalProps = {
   editableFields?: AirtableField[]
 }
 
-const ListModal = (props: ListModalProps) => {
+function ModalHeader({
+  modalTitle,
+  formDisabled,
+  actions,
+  setFormDisabled,
+  editable,
+}: any) {
+  return (
+    <div className="full-width d-flex flex-align-center flex-justify-space-between">
+      <h3>{modalTitle}</h3>
+      {formDisabled && (
+        <div className="d-flex">
+          {actions && actions(() => setFormDisabled(false))}
+          {editable && (
+            <button
+              className="btn-icon"
+              onClick={() => setFormDisabled(false)}
+              data-testid="modal-edit-btn"
+            >
+              <Tooltip title="Update">
+                <EditIcon />
+              </Tooltip>
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ListModal(props: ListModalProps) {
   const {
     modalOpen,
     setModalOpen,
@@ -91,30 +121,6 @@ const ListModal = (props: ListModalProps) => {
     return true
   }
 
-  const ModalHeader = () => {
-    return (
-      <div className="full-width d-flex flex-align-center flex-justify-space-between">
-        <h3>{modalTitle}</h3>
-        {formDisabled && (
-          <div className="d-flex">
-            {actions && actions(() => setFormDisabled(false))}
-            {editable && (
-              <button
-                className="btn-icon"
-                onClick={() => setFormDisabled(false)}
-                data-testid="modal-edit-btn"
-              >
-                <Tooltip title="Update">
-                  <EditIcon />
-                </Tooltip>
-              </button>
-            )}
-          </div>
-        )}
-      </div>
-    )
-  }
-
   const handleSubmit = async (values: any) => {
     if (onEdit) {
       const task = { id: openItem.id || openItem?.data?.id, fields: values }
@@ -154,11 +160,19 @@ const ListModal = (props: ListModalProps) => {
   }
 
   return (
-    open && (
+    modalOpen && (
       <Modal
         open={modalOpen}
         setModalOpen={setModalOpen}
-        heading={<ModalHeader />}
+        heading={
+          <ModalHeader
+            modalTitle={modalTitle}
+            formDisabled={formDisabled}
+            actions={actions}
+            setFormDisabled={setFormDisabled}
+            editable={editable}
+          />
+        }
       >
         {modalOpen}
         {openItem.data &&

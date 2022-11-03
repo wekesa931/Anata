@@ -31,7 +31,7 @@ const createPaperSx = (color: string) => ({
   p: 1,
 })
 
-const CallStatsCard = ({
+function CallStatsCard({
   size,
   color,
   stats,
@@ -39,7 +39,7 @@ const CallStatsCard = ({
   icon,
   title,
   subTitle,
-}: CallCardProps) => {
+}: CallCardProps) {
   return (
     <Box sx={createCardBoxSx(size)}>
       <Paper elevation={2} variant="outlined" sx={createPaperSx(color)}>

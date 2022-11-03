@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { always } from 'kremling'
 import styles from './tabs.component.css'
 
-const Tab = ({ activeTab, label, onClick, orientation }: any) => {
+function Tab({ activeTab, label, onClick, orientation }: any) {
   const isActive = activeTab === label
   const isVertical = orientation === 'vertical'
   return isVertical ? (
@@ -33,12 +33,12 @@ const Tab = ({ activeTab, label, onClick, orientation }: any) => {
   )
 }
 
-const Tabs = ({
+function Tabs({
   children,
   currentTab = 0,
   orientation,
   FilterComponent = null,
-}: any) => {
+}: any) {
   const [activeTab, setActiveTab] = useState(children[currentTab].props.label)
   const isVertical = orientation === 'vertical'
   const onClickTabItem = (tab: string) => {

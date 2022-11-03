@@ -16,7 +16,7 @@ import {
   ListItemText,
   ListItem,
 } from '@mui/material'
-import { useQuery, useMutation } from '@apollo/client'
+import { useMutation, useLazyQuery } from '@apollo/client'
 import { useToasts } from 'react-toast-notifications'
 import dayjs from 'dayjs'
 import { hmp } from '../../../../types/user'
@@ -55,7 +55,7 @@ const getRiskFactors = (
   return riskFactorArray
 }
 
-const Hmp = () => {
+function Hmp() {
   const [hmpInfo, setHmpInfo] = useState<hmp[]>([])
   const { recId } = useParams()
 
@@ -133,7 +133,7 @@ const Hmp = () => {
   )
 }
 
-const ConditionsSummary = () => {
+function ConditionsSummary() {
   const [conditions, setConditions] = useState<any>([])
   const [interventions, setInterventions] = useState<any>([])
   const [milestones, setMilestones] = useState<any>([])
@@ -287,7 +287,7 @@ const ConditionsSummary = () => {
   )
 }
 
-const HifSummary = () => {
+function HifSummary() {
   const [allergies, setAllergies] = useState<any>([])
   const [riskFactor, setRiskFactor] = useState<any>([])
   const [bloodGroup, setBloodGroup] = useState<string>('Not recorded')
@@ -382,7 +382,7 @@ const HifSummary = () => {
   )
 }
 
-const GeneralSummary = ({ member }: any) => {
+function GeneralSummary({ member }: any) {
   const [frs, setFrs] = useState<number | null>()
   const [riskScore, setRiskScore] = useState<number | string>('Not Available')
 
@@ -446,17 +446,33 @@ const lastSentBeforeDay = (date: string): boolean => {
   return hours > 24
 }
 
-const TsCs = ({ member, contact }: any) => {
+function TsCs({ member, contact }: any) {
   const [showTerms, setTerms] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
   const [messageSent, setMessageSent] = useState(false)
-  const {
-    data: tscs,
-    loading: tscsLoading,
-    error: tscsError,
-  } = useQuery(GET_TERMS_CONDITIONS, {
-    variables: { antaraId: member['Antara ID'] },
-  })
+
+  const [loadTscs, { loading: tscsLoading, error: tscsError }] = useLazyQuery(
+    GET_TERMS_CONDITIONS,
+    {
+      onCompleted: (data) => {
+        if (data) {
+          const terms = data.termsAndConditions.edges
+          const newTermAvailable = terms.every(
+            (term: any) => term.node.accepted === false
+          )
+          setTerms(newTermAvailable)
+        }
+      },
+    }
+  )
+
+  useEffect(() => {
+    if (member) {
+      loadTscs({ variables: { antaraId: member['Antara ID'] } })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member])
 
   const bnname = member['Bene First Name']
   const [showBasedOnTime, setShowBasedOnTime] = useState<boolean>(false)
@@ -496,16 +512,6 @@ const TsCs = ({ member, contact }: any) => {
       setShowBasedOnTime(lastSentBeforeDay(contact?.lastConsentReminder))
     }
   }, [messageSent, contact])
-
-  useEffect(() => {
-    if (tscs) {
-      const terms = tscs.termsAndConditions.edges
-      const newTermAvailable = terms.every(
-        (term) => term.node.accepted === false
-      )
-      setTerms(newTermAvailable)
-    }
-  }, [member, tscs])
 
   const renderCard = () => {
     return (
@@ -583,7 +589,7 @@ const TsCs = ({ member, contact }: any) => {
     </>
   )
 }
-const Tags = ({ member }: any) => {
+function Tags({ member }: any) {
   const [tags, setTags] = useState<string[] | undefined>(
     undefined && 'No tag set'
   )
@@ -609,7 +615,7 @@ type SnackBarData = {
   errors?: any[]
 }
 
-const BioData = () => {
+function BioData() {
   const [snackbarData, setSnackbarData] = useState<SnackBarData | null>(null)
   const { addOpenForm, onFormClose } = useFormPortal()
 

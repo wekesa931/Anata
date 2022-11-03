@@ -28,13 +28,13 @@ const Contacts = [
   { 'Emergency 2': null },
 ]
 
-const CallsCallout = ({
+function CallsCallout({
   tasksType,
   airtableId,
 }: {
   tasksType?: string
   airtableId?: string
-}) => {
+}) {
   const [memberContacts, setmemberContacts] = React.useState(Contacts)
   const { member } = useMember()
   const { v2Member: loadedContacts } = useMemberDetails(member)

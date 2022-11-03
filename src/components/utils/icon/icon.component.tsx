@@ -7,7 +7,7 @@ type IconProps = {
   fill?: string
 }
 
-const Icon = ({ name, width = 24, height = 24, fill = '#000' }: IconProps) => {
+function Icon({ name, width = 24, height = 24, fill = '#000' }: IconProps) {
   const iconRef = useRef(null)
   const [loading, setLoading] = useState(false)
 

@@ -5,7 +5,7 @@ import styles from './communication.component.css'
 
 import { useMember } from '../../../../context/member.context'
 
-const Communication = () => {
+function Communication() {
   const user = useUser()
   const { member } = useMember()
 

@@ -50,13 +50,17 @@ function CommsProvider({ children }: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
+  const providerValue = React.useMemo(
+    () => ({
+      commsStatus: currentCommsStatus,
+      setCommsStatus: setCurrentCommsStatus,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentCommsStatus]
+  )
+
   return (
-    <CommsContext.Provider
-      value={{
-        commsStatus: currentCommsStatus,
-        setCommsStatus: setCurrentCommsStatus,
-      }}
-    >
+    <CommsContext.Provider value={providerValue}>
       {children}
     </CommsContext.Provider>
   )

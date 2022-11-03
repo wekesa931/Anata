@@ -75,7 +75,7 @@ type IProps = {
   onRefetch: (onRefetch: boolean) => void
 }
 
-const ConfirmButton = ({ onConfirm }: ConfirmButtonProps) => {
+function ConfirmButton({ onConfirm }: ConfirmButtonProps) {
   const [confirming, setConfirming] = useState(false)
   useEffect(() => {
     if (confirming) {
@@ -106,7 +106,7 @@ const ConfirmButton = ({ onConfirm }: ConfirmButtonProps) => {
   )
 }
 
-const WorkflowPortal = ({
+function WorkflowPortal({
   workflow: openedWorkflow,
   isFormEdited,
   airtableMeta,
@@ -114,7 +114,7 @@ const WorkflowPortal = ({
   onFormClose,
   setIsFormEdited,
   onRefetch,
-}: IProps) => {
+}: IProps) {
   const recId = openedWorkflow.member.recID
   const { member } = openedWorkflow
   const user = useUser()
@@ -988,27 +988,25 @@ const WorkflowPortal = ({
               </div>
             )}
             {isWorkflowTemplate && (
-              <>
-                <div className={`d-flex flex-between ${styles.stickyHeader}`}>
-                  <p className={styles.moduleName}>{formNames[activeForm]}</p>
-                  <div className="d-flex">
-                    {includes(duplicates, activeForm, 0) && (
-                      <Plus
-                        className={styles.addModuleIcon}
-                        onClick={saveModule.bind(null, true, [
-                          ...formPayload,
-                          initialFormMeta(),
-                        ])}
-                      />
+              <div className={`d-flex flex-between ${styles.stickyHeader}`}>
+                <p className={styles.moduleName}>{formNames[activeForm]}</p>
+                <div className="d-flex">
+                  {includes(duplicates, activeForm, 0) && (
+                    <Plus
+                      className={styles.addModuleIcon}
+                      onClick={saveModule.bind(null, true, [
+                        ...formPayload,
+                        initialFormMeta(),
+                      ])}
+                    />
+                  )}
+                  {moduleIsDraft() &&
+                    formPayload.length === 1 &&
+                    listOfTables.length > 1 && (
+                      <ConfirmButton onConfirm={deleteModule} />
                     )}
-                    {moduleIsDraft() &&
-                      formPayload.length === 1 &&
-                      listOfTables.length > 1 && (
-                        <ConfirmButton onConfirm={deleteModule} />
-                      )}
-                  </div>
                 </div>
-              </>
+              </div>
             )}
             <p className={styles.formHelperText}>{localFormMeta?.helper}</p>
             {currentWorkflow?.modules.length === 0 && (

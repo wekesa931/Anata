@@ -23,13 +23,13 @@ export const defaultToastMessage: ToastMessage = {
   time: 5000,
 }
 
-const ToastNotification = ({
+function ToastNotification({
   message,
   isOpen,
   handleToastClose,
   onAccept,
   onReject,
-}: IProps) => {
+}: IProps) {
   const action =
     onAccept || onReject ? (
       <>

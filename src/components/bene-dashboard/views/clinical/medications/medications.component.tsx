@@ -7,7 +7,7 @@ import { useSortFilter } from '../../../../../context/sort-filter-views.context'
 import AirtableField from '../../../../../types/airtable-field'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 
-const Medications = () => {
+function Medications() {
   const { recId } = useParams()
   const [medications, setMedications] = useState<any[]>([])
   const [editable, setEditable] = useState<boolean>(false)

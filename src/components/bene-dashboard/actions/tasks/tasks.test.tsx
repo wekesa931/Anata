@@ -24,6 +24,13 @@ jest.mock('../../../../helpers/analytics', () => {
   return jest.fn(() => {})
 })
 
+jest.mock('@airtable/blocks/ui', () => {
+  return {
+    Label: <></>,
+    Text: <></>,
+  }
+})
+
 airtableFetch.mockResolvedValue({})
 
 const mocks = [

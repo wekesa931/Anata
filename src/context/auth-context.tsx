@@ -44,7 +44,7 @@ function AuthProvider({ user, children }: any) {
   const isLoggedIn = () => !!currentUser
   useEffect(() => {
     if (currentUser) {
-      let userAirtableId = null
+      let userAirtableId: any | null = null
       airtableFetch(
         `team/list?filterByFormula=FIND("${currentUser.email}", {Email})&fields[]=Record ID`
       ).then((res) => {
@@ -60,10 +60,20 @@ function AuthProvider({ user, children }: any) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const providerValue = React.useMemo(
+    () => ({
+      user: currentUser,
+      setCurrentUser,
+      logout,
+      isLoggedIn,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentUser]
+  )
+
   return (
-    <AuthContext.Provider
-      value={{ user: currentUser, setCurrentUser, logout, isLoggedIn }}
-    >
+    <AuthContext.Provider value={providerValue}>
       {children}
     </AuthContext.Provider>
   )

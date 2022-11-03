@@ -8,7 +8,7 @@ type CommsUIPropsType = {
   memberSpecific?: boolean
 }
 
-const CommsUI = ({ memberSpecific }: CommsUIPropsType) => {
+function CommsUI({ memberSpecific }: CommsUIPropsType) {
   return (
     <>
       <GlobalStyles />

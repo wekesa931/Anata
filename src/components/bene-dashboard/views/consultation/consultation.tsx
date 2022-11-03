@@ -7,7 +7,7 @@ import { useMember } from '../../../../context/member.context'
 import logError from '../../../utils/Bugsnag/Bugsnag'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 
-const Consultation = () => {
+function Consultation() {
   const [consultationData, setconsultationData] = useState<any[]>([])
   const { member } = useMember()
   const antaraId = member['Antara ID']

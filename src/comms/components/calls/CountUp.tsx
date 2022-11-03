@@ -3,7 +3,7 @@ import * as React from 'react'
 interface IProps {
   initialTime: number
 }
-const Timer = ({ initialTime }: IProps) => {
+function Timer({ initialTime }: IProps) {
   const [seconds, setSeconds] = React.useState(Math.abs(initialTime))
 
   const secondsToTime = (secs: number) => {

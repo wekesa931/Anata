@@ -60,7 +60,7 @@ function findLastIndex<T>(
  * For a given form elements configuration and a reference initial values object containing values
  * compose and render a form.
  */
-const FormBuilder = (props: FormBuilderProps) => {
+function FormBuilder(props: FormBuilderProps) {
   const { formFields, errors, values, setFieldValue } = props
 
   const [fields, setFields] = useState<FormField[]>(formFields)

@@ -35,7 +35,7 @@ type DatePickerProps = {
   handleChange: (v: any) => any
 }
 
-export const FormDatePicker = (props: DatePickerProps) => {
+export function FormDatePicker(props: DatePickerProps) {
   const { date, label, readOnly, name, handleChange } = props
 
   return (
@@ -69,7 +69,7 @@ type TextFieldProps = {
 }
 
 /** Text input */
-export const FormTextField = (props: TextFieldProps) => {
+export function FormTextField(props: TextFieldProps) {
   const {
     value,
     label,
@@ -130,14 +130,14 @@ type SelectInputProps = {
   errors?: any
 }
 
-export const FormAutoCompleteField = ({
+export function FormAutoCompleteField({
   id,
   label,
   value,
   options,
   handleChange,
   errors,
-}: any) => {
+}: any) {
   return (
     <Autocomplete
       id={id}
@@ -164,7 +164,7 @@ export const FormAutoCompleteField = ({
   )
 }
 
-export const FormSelectField = ({
+export function FormSelectField({
   id,
   label,
   value,
@@ -173,7 +173,7 @@ export const FormSelectField = ({
   name,
   fullWidth = true,
   errors,
-}: SelectInputProps) => {
+}: SelectInputProps) {
   const changeHandler = (event: SelectChangeEvent) => {
     handleChange(event.target.value as string)
   }
@@ -227,7 +227,7 @@ function getStyles(value: string, values: readonly string[], theme: Theme) {
   }
 }
 
-export const FormMultipleSelect = ({
+export function FormMultipleSelect({
   id,
   options,
   label,
@@ -235,7 +235,7 @@ export const FormMultipleSelect = ({
   handleChange,
   value,
   errors,
-}: SelectInputProps) => {
+}: SelectInputProps) {
   const theme = useTheme()
   const [selectedValue, setValue] = useState<string[]>(value)
 
@@ -324,12 +324,12 @@ type FormPlacesFieldType = {
   handleChange: (v: any) => any
 }
 
-export const FormPlacesField = ({
+export function FormPlacesField({
   label,
   id,
   handleChange,
   initialValue,
-}: FormPlacesFieldType) => {
+}: FormPlacesFieldType) {
   const [value, setValue] = React.useState<PlaceType | null>(initialValue)
   const [inputValue, setInputValue] = React.useState('')
   const [options, setOptions] = React.useState<readonly PlaceType[]>([])

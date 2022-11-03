@@ -8,7 +8,7 @@ import { GET_MEMBER_INTERACTIONS } from '../../../../gql/interactions'
 import { useMember } from '../../../../context/member.context'
 import { useSortFilter } from '../../../../context/sort-filter-views.context'
 
-const InteractionLogs = () => {
+function InteractionLogs() {
   const [interactions, setInteractions] = useState<any>([])
   const [filteredInteractions, setFilteredInteractions] = useState<any>([])
   const { member } = useMember()

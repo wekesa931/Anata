@@ -5,7 +5,7 @@ import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import List from '../../../utils/list/list.component'
 import filterFields from '../../../../helpers/filter-fields'
 
-const Conditions = () => {
+function Conditions() {
   const { recId } = useParams()
   const [filteredConditions, setFilteredConditions] = useState<any[]>([])
   const allowedFields = [

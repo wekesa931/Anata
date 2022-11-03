@@ -11,7 +11,7 @@ type BMIInfoProps = {
 type BMIProps = {
   bmiInfo: BMIInfoProps[]
 }
-const Bmi = ({ bmiInfo }: BMIProps) => {
+function Bmi({ bmiInfo }: BMIProps) {
   const columns = [
     {
       name: 'Date',

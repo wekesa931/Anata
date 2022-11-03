@@ -29,11 +29,11 @@ interface InsuranceDetails {
   memberPolicy?: { healthPolicy?: { id: string; name?: string } }
 }
 
-const Benefits = ({
+function Benefits({
   insuranceBenefits,
 }: {
   insuranceBenefits?: InsuranceDetails[]
-}) => {
+}) {
   if (
     typeof insuranceBenefits === 'undefined' ||
     !insuranceBenefits ||

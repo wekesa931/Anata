@@ -4,7 +4,7 @@ import airtableFetch from '../../../../../resources/airtable-fetch'
 import List from '../../../../utils/list/list.component'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 
-const FilledForms = () => {
+function FilledForms() {
   const [filledForms, setFilledForms] = useState<any[]>([])
   const { recId } = useParams()
   const [loading, setLoading] = useState(true)

@@ -2,7 +2,7 @@ import React from 'react'
 import TableauReport from 'tableau-react'
 import { useMember } from '../../../../context/member.context'
 
-const EngagementDashboard = () => {
+function EngagementDashboard() {
   const { member } = useMember()
 
   const filters = { 'Antara Id': [member['Antara ID']] }

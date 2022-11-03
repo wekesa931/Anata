@@ -4,9 +4,9 @@ import { User } from '../types/user'
 
 const UserContext = React.createContext<User>(null)
 
-const UserProvider = (props: any) => (
-  <UserContext.Provider value={useAuth().user} {...props} />
-)
+function UserProvider(props: any) {
+  return <UserContext.Provider value={useAuth().user} {...props} />
+}
 
 const useUser = () => React.useContext(UserContext)
 

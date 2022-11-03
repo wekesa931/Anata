@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { XCircle } from 'react-feather'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import FCM, { fetchAllAndClear } from './utils'
 import Icon from '../../components/utils/icon/icon.component'
 import styles from '../../components/utils/notification/notification.component.css'
@@ -39,7 +39,7 @@ function FcmProvider({ children }: any) {
     'CALL' | 'MESSAGE'
   >('CALL')
   const location = useLocation()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const notificationData = incomingPushNotification?.data
@@ -82,7 +82,7 @@ function FcmProvider({ children }: any) {
 
   const handleNotification = () => {
     if (memberId) {
-      history.push(`/member/${memberId}`)
+      navigate(`/member/${memberId}`)
       setLocalPushNotification(null)
       setIncomingPushNotification(null)
       setMemberId('')
@@ -117,19 +117,21 @@ function FcmProvider({ children }: any) {
     })
   })
 
+  const providerValue = React.useMemo(
+    () => ({
+      recID,
+      pushNotification: externalPushNotification,
+      setPushNotification: setPushNotificationFromOutside,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [recID, externalPushNotification]
+  )
+
   return (
-    <FcmContext.Provider
-      value={{
-        recID,
-        pushNotification: externalPushNotification,
-        setPushNotification: setPushNotificationFromOutside,
-      }}
-    >
+    <FcmContext.Provider value={providerValue}>
       {localPushNotification && localPushNotification?.data?.event && (
-        <div
-          className={styles.inboundNotification}
-          // test-id="push-notification-wrap"
-        >
+
+        <div className={styles.inboundNotification}>
           <div className="d-flex align-center">
             {memberId ? (
               <>

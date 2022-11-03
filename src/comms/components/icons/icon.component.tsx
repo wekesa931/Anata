@@ -81,7 +81,7 @@ type IconProps = {
   fill?: string
   name: string
 }
-const Icon = ({
+function Icon({
   style = {},
   className = '',
   viewBox = '0 0 24 24',
@@ -89,7 +89,7 @@ const Icon = ({
   height = '24',
   fill = '#000',
   name,
-}: IconProps) => {
+}: IconProps) {
   return (
     <svg
       width={width}

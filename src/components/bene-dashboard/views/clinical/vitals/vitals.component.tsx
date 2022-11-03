@@ -18,7 +18,7 @@ type OtherVitalsInfoProps = {
   otherVitals: OtherVitalsInfo[]
 }
 
-const OtherVitals = ({ otherVitals }: OtherVitalsInfoProps) => {
+function OtherVitals({ otherVitals }: OtherVitalsInfoProps) {
   const columns = [
     { name: 'Date', format: 'dd/mmm/yy', key: 'Date' },
     { name: 'Temp', format: '\xB0C', key: 'Temperature' },
@@ -39,7 +39,7 @@ const OtherVitals = ({ otherVitals }: OtherVitalsInfoProps) => {
   )
 }
 
-const Vitals = () => {
+function Vitals() {
   const { recId } = useParams()
   const [vitals, setVitals] = useState<any[]>([])
   const [loading, setLoading] = useState(true)

@@ -1,5 +1,10 @@
 # Scribe 2 ![Tests](https://github.com/antarahealth/scribe2/workflows/CI/badge.svg?branch=master)
 
+![Coverage](./badges/badge-branches.svg)   
+![Coverage](./badges/badge-functions.svg)   
+![Coverage](./badges/badge-lines.svg)  
+![Coverage](./badges/badge-statements.svg)
+
 This is a React app pulls data from Airtable and provides a simpler UI for our clinicians to use in their day to day activities.
 
 # Development
@@ -14,6 +19,19 @@ This is a React app pulls data from Airtable and provides a simpler UI for our c
 # Tests
 
 We use [jest](https://jestjs.io/) and [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/) for unit tests. To run tests: `npm run test` or `npm run test:watch` in watch mode.
+
+# Coverage reports 
+We use [jest](https://jestjs.io/) to generate coverage reports on the lines, branches, statements and functions coverage and [jest-coverage-badges](https://github.com/pamepeixinho/jest-coverage-badges)
+
+Install the package globally if not available
+```bash
+ sudo npm install --location=global jest-coverage-badges
+```
+To generate the coverage badges for the reports. To generate the coverage run 
+```bash
+ npm run test:badges  
+ jest-coverage-badges --output "./badges" 
+```
 
 # Release
 

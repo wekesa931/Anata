@@ -26,7 +26,7 @@ import { useFormPortal } from '../../../../context/forms-context'
 import { IWorkflow } from './workflow-types'
 import airtableFetch from '../../../../resources/airtable-fetch'
 
-const GuidedWorkflows = () => {
+function GuidedWorkflows() {
   const { recId } = useParams()
   const { member } = useMember()
   const user = useUser()

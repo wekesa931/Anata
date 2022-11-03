@@ -20,7 +20,7 @@ type CallData = {
 
 const periods = [7, 30]
 
-const CallLog = () => {
+function CallLog() {
   const { member } = useMember()
 
   const defaultDataItem = { logs: [], stats: {} }

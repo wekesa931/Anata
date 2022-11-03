@@ -27,7 +27,7 @@ type ListProps = {
   conditionComponent?: boolean
 }
 
-const List = ({
+function List({
   list,
   getTopLeftText,
   getTopRightText,
@@ -42,7 +42,7 @@ const List = ({
   listItemActions,
   editableFields,
   conditionComponent,
-}: ListProps) => {
+}: ListProps) {
   const [isHovering, setIsHovering] = useState<number>()
   const [openItem, setOpenItem] = useState<{
     name: string
@@ -208,18 +208,16 @@ const List = ({
         </div>
       )}
       {modalOpen && openItem && (
-        <>
-          <ListModal
-            modalOpen={modalOpen}
-            setModalOpen={setModalOpen}
-            openItem={openItem}
-            modalTitle={modalTitle || openItem.name}
-            editable={editable}
-            onEdit={onEdit}
-            actions={listItemActions?.bind(null, openItem)}
-            editableFields={editableFields}
-          />
-        </>
+        <ListModal
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          openItem={openItem}
+          modalTitle={modalTitle || openItem.name}
+          editable={editable}
+          onEdit={onEdit}
+          actions={listItemActions?.bind(null, openItem)}
+          editableFields={editableFields}
+        />
       )}
     </div>
   )

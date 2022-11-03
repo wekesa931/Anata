@@ -6,7 +6,7 @@ import { useFormPortal } from '../../../../context/forms-context'
 import { useCall } from '../../../../context/calls-context'
 import { formNames } from '../workflows/Forms/form-fields'
 
-const CallConsoleForms = ({ height }: { height: string }) => {
+function CallConsoleForms({ height }: { height: string }) {
   const { memberData } = useCall()
   const { addOpenForm } = useFormPortal()
   const [filteredForms, setfilteredForms] = React.useState(FORMS)

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Tooltip } from 'react-tippy'
 
-const CustomTooltip = ({ title, children }: any) => {
+function CustomTooltip({ title, children }: any) {
   return (
     <Tooltip
       position="bottom"

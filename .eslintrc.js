@@ -14,6 +14,7 @@ module.exports = {
     radix: 'off',
     'no-restricted-globals': 'off',
     'react/no-array-index-key': 'off',
+    'react/no-unknown-property': ['error', { ignore: ['jsx'] }],
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'no-unused-expressions': [
       'error',
@@ -42,5 +43,15 @@ module.exports = {
         },
       },
     ],
+    'react/no-unstable-nested-components': [
+      'off' | 'warn' | 'error',
+      { allowAsProps: true },
+    ],
+    'react/jsx-no-useless-fragment': 'off',
+    'default-param-last': 0,
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['warn'],
   },
 }

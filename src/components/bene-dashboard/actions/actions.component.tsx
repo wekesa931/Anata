@@ -14,7 +14,7 @@ import { useCall } from '../../../context/calls-context'
 import ErrorBoundary from '../../error-boundary/error-boundary.component'
 import GuidedWorkflows from './workflows/guided-workflows.component'
 
-const Actions = () => {
+function Actions() {
   const [activeTab, setActiveTab] = React.useState<string>('tasks')
   const { setCounterValue } = useCall()
 

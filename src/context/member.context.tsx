@@ -5,6 +5,16 @@ import createApolloClient from '../resources/apollo-client'
 
 const apolloClient = createApolloClient(true)
 
+interface IBeneData {
+  id: string
+  details: {
+    fullName: string
+    relationshipToPrimary: string
+    sex: { sex: string }
+  }
+  status: { status: { status: string } }
+  birthDate: string
+}
 interface IContacts {
   status: string
   fullName: string
@@ -18,17 +28,6 @@ interface IContacts {
   dependents: IBeneData[]
   primary: IBeneData[]
   lastConsentReminder?: string
-}
-
-interface IBeneData {
-  id: string
-  details: {
-    fullName: string
-    relationshipToPrimary: string
-    sex: { sex: string }
-  }
-  status: { status: { status: string } }
-  birthDate: string
 }
 
 export interface Member {
@@ -109,14 +108,17 @@ function MemberProvider({ member, children }: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memberData])
 
+  const providerValue = React.useMemo(
+    () => ({
+      member: currentMember,
+      memberContact: memberContactDetails,
+      setCurrentMember,
+    }),
+    [currentMember, memberContactDetails]
+  )
+
   return (
-    <MemberContext.Provider
-      value={{
-        member: { ...currentMember },
-        memberContact: memberContactDetails,
-        setCurrentMember,
-      }}
-    >
+    <MemberContext.Provider value={providerValue}>
       {children}
     </MemberContext.Provider>
   )

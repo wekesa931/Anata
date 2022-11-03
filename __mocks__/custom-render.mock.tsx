@@ -1,6 +1,5 @@
 import React from 'react'
-import { Router } from 'react-router-dom'
-import { createBrowserHistory } from 'history'
+import { BrowserRouter as Router } from 'react-router-dom'
 import { render, RenderResult } from '@testing-library/react'
 import { AuthProvider } from '../src/context/auth-context'
 import { UserProvider } from '../src/context/user-context'
@@ -14,21 +13,13 @@ type CustomRenderResult = RenderResult & {
   history: any
 }
 
-function renderWithRouter(
-  ui: any,
-  {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    route = '/',
-    history = createBrowserHistory(),
-  } = {}
-): CustomRenderResult {
+const renderWithRouter = (ui, { route = '/' } = {}) => {
   const Wrapper = ({ children }: any) => (
     <ApolloProvider client={mockClient}>
       <AuthProvider user={mockUser}>
         <UserProvider>
           <MemberProvider member={mockMember}>
-            <Router history={history}>{children}</Router>
+            <Router>{children}</Router>
           </MemberProvider>
         </UserProvider>
       </AuthProvider>
@@ -36,7 +27,6 @@ function renderWithRouter(
   )
   return {
     ...render(ui, { wrapper: Wrapper }),
-    history,
   }
 }
 

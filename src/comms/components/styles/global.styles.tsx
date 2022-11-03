@@ -1,7 +1,7 @@
 import React from 'react'
 import { Global, css } from '@emotion/core'
 
-const Fonts = () => {
+function Fonts() {
   return (
     <Global
       styles={css`

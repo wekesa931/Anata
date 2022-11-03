@@ -6,7 +6,7 @@ startBugsnag()
 
 const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React)
 
-const ErrorView = (props: any) => {
+function ErrorView(props: any) {
   return (
     <div className="card my-5">
       <div className="card-header">
@@ -31,6 +31,8 @@ const ErrorView = (props: any) => {
     </div>
   )
 }
-export default ({ children }: any) => (
-  <ErrorBoundary FallbackComponent={ErrorView}>{children}</ErrorBoundary>
-)
+
+function Boundary({ children }: any) {
+  return <ErrorBoundary FallbackComponent={ErrorView}>{children}</ErrorBoundary>
+}
+export default Boundary

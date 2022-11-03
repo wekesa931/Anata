@@ -6,7 +6,7 @@ import Appointments from './appointments/appointments.component'
 import Medications from './medications/medications.component'
 import Consultation from '../consultation/consultation'
 
-const Clinical = () => {
+function Clinical() {
   return (
     <div className="flex-wrap">
       <div style={{ flex: 1, marginRight: '24px' }}>

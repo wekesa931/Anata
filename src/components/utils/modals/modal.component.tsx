@@ -3,14 +3,14 @@ import { Minimize, Maximize } from 'react-feather'
 import { Dialog } from '@airtable/blocks/ui'
 import CloseIcon from '../../../assets/img/icons/close_16.svg'
 
-const Modal = ({
+function Modal({
   open,
   setModalOpen,
   heading,
   height = '560px',
   attachmentUrl,
   children,
-}: any) => {
+}: any) {
   const [maximize, setMaximize] = useState(false)
   return (
     <div data-testid="modal">
@@ -55,7 +55,7 @@ const Modal = ({
               </>
             )}
           </div>
-          <>{children}</>
+          <div>{children}</div>
         </Dialog>
       )}
     </div>

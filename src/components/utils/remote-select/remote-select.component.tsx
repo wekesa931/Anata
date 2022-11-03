@@ -13,14 +13,14 @@ type RemoteSelectProps = {
   disabled: boolean
 }
 
-const RemoteSelect = ({
+function RemoteSelect({
   lookupUrl,
   prefetch,
   lookupFieldNames,
   field,
   form,
   disabled,
-}: RemoteSelectProps) => {
+}: RemoteSelectProps) {
   const [items, setItems] = useState<{ label: string; value: string }[]>([])
   const [initialValue, setInitialValue] = useState<{
     label: string

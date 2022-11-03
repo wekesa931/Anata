@@ -9,6 +9,7 @@ const {
   BugsnagSourceMapUploaderPlugin,
 } = require('webpack-bugsnag-plugins')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
 const universalPlugins = [
   new HtmlWebpackPlugin({
@@ -18,7 +19,7 @@ const universalPlugins = [
   new webpack.DefinePlugin({
     'process.env': env,
   }),
-  new webpack.optimize.ModuleConcatenationPlugin(),
+  new NodePolyfillPlugin(),
 ]
 
 module.exports = {
@@ -29,8 +30,21 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
+    fallback: {
+      stream: require.resolve('stream-browserify'),
+      assert: require.resolve('assert'),
+      http: require.resolve('stream-http'),
+      https: require.resolve('https-browserify'),
+      url: require.resolve('url'),
+      util: require.resolve('util'),
+      buffer: require.resolve('buffer'),
+      zlib: require.resolve('browserify-zlib'),
+      fs: false,
+      net: false,
+      path: false,
+      process: false,
+    },
   },
-
   module: {
     rules: [
       {
@@ -102,12 +116,18 @@ module.exports = {
   }),
   devtool: 'source-map',
   devServer: {
+    port: 5000,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
-    disableHostCheck: true,
+    allowedHosts: 'all',
     historyApiFallback: true,
-    contentBase: './',
+    static: './',
     hot: true,
+    static:  {
+        watch: false,
+        directory: './',
+        publicPath: '/',
+    }
   },
 }
