@@ -660,6 +660,14 @@ const FileDetails = ({ file, anchorEl, id, showFile, close, open }: any) => {
           <Button variant="text" onClick={(e) => showFile(e, file)}>
             View file
           </Button>
+          {file?.driveUrl.includes('https://docs.google.com') ? (
+            <Button
+              variant="text"
+              onClick={() => window.open(file.driveUrl, '_blank').focus()}
+            >
+              Edit File
+            </Button>
+          ) : null}
         </Box>
       </Paper>
     </Popper>

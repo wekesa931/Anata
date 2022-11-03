@@ -111,14 +111,12 @@ export default function PdfViewer(props) {
     'pdf',
   ]
   const isImage =
-    !displayFile.driveUrl &&
     displayFile.mimeType &&
     (displayFile.mimeType.includes('jpg') ||
       displayFile.mimeType.includes('jpeg') ||
       displayFile.mimeType.includes('gif') ||
       displayFile.mimeType.includes('png'))
   const isDocument =
-    !displayFile.driveUrl &&
     displayFile.mimeType &&
     (displayFile.mimeType.includes('doc') ||
       displayFile.mimeType.includes('docx') ||
@@ -145,8 +143,7 @@ export default function PdfViewer(props) {
         }
       })
     } else {
-      setFileMessage('File has been downloaded or opened in the next tab')
-      window.open(file.driveUrl, '_blank').focus()
+      setDisplayFile({ ...file })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file, generateAccessFileLink])
@@ -167,7 +164,7 @@ export default function PdfViewer(props) {
 
   const downloadFile = () => {
     const newWindow = window.open(
-      displayFile.url,
+      `${displayFile.driveUrl || displayFile.url}`,
       '_blank',
       'noopener,noreferrer'
     )
@@ -263,7 +260,7 @@ export default function PdfViewer(props) {
                 )}
                 {isDocument && (
                   <Document
-                    file={displayFile.url}
+                    file={{ url: `${displayFile.driveUrl || displayFile.url}` }}
                     externalLinkTarget="_blank"
                     renderMode="canvas"
                     onLoadSuccess={onDocumentLoadSuccess}
