@@ -12,7 +12,7 @@ import FormLabel from '@mui/material/FormLabel'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import parse from 'html-react-parser'
-import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import dayjs from 'dayjs'
 import { Controller } from 'react-hook-form'
@@ -22,7 +22,8 @@ import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import { CheckSquare, Square } from 'react-feather'
 import FormHelperText from '@mui/material/FormHelperText'
 import { InputLabel } from '@mui/material'
-import DateTimePicker from '@mui/lab/DateTimePicker'
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker'
 import { useLazyQuery } from '@apollo/client'
 import { Editor } from 'react-draft-wysiwyg'
 import { markdownToDraft, draftToMarkdown } from 'markdown-draft-js'
@@ -419,7 +420,7 @@ function MultiSelectMultipleInput({
   error,
 }: Form) {
   const optionsData = airtableMeta
-    ? airtableMeta[field.parentTableId]?.fields[field.id].options?.choices
+    ? airtableMeta[field.parentTableId]?.fields[field.id]?.options?.choices
     : []
   const handleChange = (newValue: any) => {
     saveInput(field.name, newValue)
@@ -443,7 +444,7 @@ function MultiSelectMultipleInput({
             id="checkboxes-tags-demo"
             value={val || []}
             defaultValue={checkedValues}
-            options={optionsData.map((opt) => opt.name)}
+            options={(optionsData || []).map((opt) => opt.name)}
             disabled={disabled}
             disableCloseOnSelect
             onChange={(event: SyntheticEvent<Element, Event>, value: any[]) => {
