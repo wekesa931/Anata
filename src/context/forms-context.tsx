@@ -97,9 +97,9 @@ function FormProvider({ children }: any) {
       airtableFetch('tables')
         .then((res) => {
           let tableMap: any = {}
-          res.tables.forEach((tb) => {
+          res?.tables?.forEach((tb: any) => {
             let fields: any = {}
-            tb.fields.forEach((fl) => {
+            tb?.fields?.forEach((fl: any) => {
               fields = {
                 ...fields,
                 primaryFieldName: tb.fields[0].name,
