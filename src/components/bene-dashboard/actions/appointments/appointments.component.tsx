@@ -10,6 +10,7 @@ import analytics from '../../../../helpers/segment'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import styles from './appointments.component.css'
 import { useMember } from '../../../../context/member.context'
+import useMemberDetails from '../../summary/biodata/biodata-update/useMemberDetails'
 
 function Appointments() {
   const [appointments, setAppointments] = React.useState<any[]>([])
@@ -116,15 +117,22 @@ function Appointments() {
     },
   ]
   const { member } = useMember()
-  const memberEmail = member['Email 1'] || 'navigation@antarahealth.com'
+  const { v2Member } = useMemberDetails(member)
 
-  const openCalendar = (link: string) => {
-    const newWindow = window.open(link, '_blank', 'noopener,noreferrer')
-    if (newWindow) newWindow.opener = null
+  const openCalendar = () => {
+    if (v2Member || member) {
+      const fullName = v2Member?.fullName || member['Full Name']
+      const urlName = fullName?.replaceAll(' ', '%20')
+      const email = v2Member?.email || member['Email 1']
+      const memberEmail = email || 'navigation@antarahealth.com'
+      const memberPhone = v2Member?.phone || member['Phone 1']
+
+      const link = `https://calendly.com/antara-health?name=${urlName}&email=${memberEmail}&a1=${memberPhone}`
+
+      const newWindow = window.open(link, '_blank', 'noopener,noreferrer')
+      if (newWindow) newWindow.opener = null
+    }
   }
-  let urlString = ''
-  const urlName = member['Full Name'].replaceAll(' ', '%20')
-  urlString = `https://calendly.com/antara-health?name=${urlName}&email=${memberEmail}&a1=${member['Phone 1']}`
 
   const updateAppointment = async (appointment: {
     id: string
@@ -247,10 +255,7 @@ function Appointments() {
 
   return (
     <div>
-      <button
-        className={styles.appointment}
-        onClick={() => openCalendar(urlString)}
-      >
+      <button className={styles.appointment} onClick={openCalendar}>
         Book Appointment
       </button>
       <div

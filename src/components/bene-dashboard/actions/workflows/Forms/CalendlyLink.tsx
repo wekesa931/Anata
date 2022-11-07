@@ -35,7 +35,7 @@ const CalendlyLink = ({ field, formPayload, member }: any) => {
   }
   const calendaUrl = () => {
     let urlString = ''
-    const urlName = member['Full Name'].replaceAll(' ', '%20')
+    const urlName = member['Full Name']?.replaceAll(' ', '%20')
     const memberEmail = member['Email 1'] || 'navigation@antarahealth.com'
     if (calendlyLinkedFields[field.id]) {
       const reasonUrl = formPayload[0][calendlyLinkedFields[field.id].reason]
