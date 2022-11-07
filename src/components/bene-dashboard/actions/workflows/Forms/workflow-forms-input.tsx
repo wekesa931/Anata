@@ -31,7 +31,7 @@ import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 import styles from '../guided-workflows.component.css'
 import { Form } from '../workflow-types'
-import { GET_LINKED_RECORD } from '../../../../../gql/workflows'
+import { GLOBAL_SEARCH } from '../../../../../gql/workflows'
 
 const icon = <Square width={18} height={18} />
 const checkedIcon = <CheckSquare width={18} height={18} />
@@ -669,7 +669,7 @@ function LinkRecordInput({
     limit: 50,
   })
   const [getLinkedRecords, { data, loading: gettingLinkedRecords }] =
-    useLazyQuery(GET_LINKED_RECORD)
+    useLazyQuery(GLOBAL_SEARCH)
   const settingLinkedData = gettingLinkedRecords || !airtableMeta
   useEffect(() => {
     if (data) {
@@ -861,7 +861,7 @@ function CollaboratorInput({
     limit: 50,
   })
   const [getLinkedRecords, { data, loading: gettingLinkedRecords }] =
-    useLazyQuery(GET_LINKED_RECORD)
+    useLazyQuery(GLOBAL_SEARCH)
   const settingLinkedData = gettingLinkedRecords || !airtableMeta
   useEffect(() => {
     if (data) {

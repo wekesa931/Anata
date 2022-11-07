@@ -34,6 +34,7 @@ import { useFormPortal } from '../../../../context/forms-context'
 import useMemberDetails from './biodata-update/useMemberDetails'
 import Benefits from '../benefits/benefits.component'
 import calcAge from './utils'
+import { GLOBAL_SEARCH } from '../../../../gql/workflows'
 
 const getRiskFactors = (
   diabetes: string,
@@ -619,7 +620,9 @@ type SnackBarData = {
 
 function BioData() {
   const [snackbarData, setSnackbarData] = useState<SnackBarData | null>(null)
+  const [assignedHn, setAssignedHn] = useState('')
   const { addOpenForm, onFormClose } = useFormPortal()
+  const [getRecordData, { data }] = useLazyQuery(GLOBAL_SEARCH)
 
   const { member, memberContact } = useMember()
   const hasDependants = memberContact?.dependents.length > 0
@@ -681,7 +684,30 @@ function BioData() {
         memberDetails?.v2Member?.sex.charAt(0)) ||
       ''
     }`
-
+  useEffect(() => {
+    const assignedHn = memberDetails?.v2Member?.assignedHn
+    if (assignedHn && !data) {
+      const isAirtableId = /^rec\w+/.test(assignedHn)
+      if (isAirtableId) {
+        getRecordData({
+          variables: {
+            table: 'tblHs6JxFnMGAjNNC',
+            field: 'Record ID',
+            searchParam: assignedHn,
+            antaraIdKey: '',
+            antaraIdValue: '',
+          },
+        })
+      } else {
+        setAssignedHn(assignedHn)
+      }
+    }
+    if (data) {
+      const hnName = data.globalSearch.data[0].fields.Name
+      setAssignedHn(hnName)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memberDetails.v2Member, data])
   return (
     <div className={styles.wrapper}>
       {member && (
@@ -742,7 +768,7 @@ function BioData() {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                    {memberDetails?.v2Member?.assignedHn}
+                    {assignedHn}
                   </td>
                 </tr>
                 <tr>

@@ -163,7 +163,7 @@ const REMOVE_MODULE = gql`
   }
 `
 
-const GET_LINKED_RECORD = gql`
+const GLOBAL_SEARCH = gql`
   query globalSearch(
     $table: String!
     $field: String!
@@ -224,5 +224,5 @@ export {
   GET_WORKFLOWS,
   REMOVE_MODULE,
   SAVE_WORKFLOW,
-  GET_LINKED_RECORD,
+  GLOBAL_SEARCH,
 }
