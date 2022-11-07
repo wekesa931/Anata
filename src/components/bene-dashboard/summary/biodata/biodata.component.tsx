@@ -620,7 +620,7 @@ type SnackBarData = {
 
 function BioData() {
   const [snackbarData, setSnackbarData] = useState<SnackBarData | null>(null)
-  const [assignedHn, setAssignedHn] = useState('')
+  const [leadHN, setLeadHN] = useState('')
   const { addOpenForm, onFormClose } = useFormPortal()
   const [getRecordData, { data }] = useLazyQuery(GLOBAL_SEARCH)
 
@@ -699,12 +699,12 @@ function BioData() {
           },
         })
       } else {
-        setAssignedHn(assignedHn)
+        setLeadHN(assignedHn)
       }
     }
     if (data) {
       const hnName = data.globalSearch.data[0].fields.Name
-      setAssignedHn(hnName)
+      setLeadHN(hnName)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memberDetails.v2Member, data])
@@ -768,7 +768,7 @@ function BioData() {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                    {assignedHn}
+                    {leadHN}
                   </td>
                 </tr>
                 <tr>
