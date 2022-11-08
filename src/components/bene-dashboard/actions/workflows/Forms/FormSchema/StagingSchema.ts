@@ -1296,7 +1296,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblm1g2udT6J8TOzt',
-        required: false,
+        required: true,
         helper: '',
       },
       {
@@ -1310,7 +1310,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
       },
       {
@@ -1324,7 +1324,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblm1g2udT6J8TOzt',
-        required: false,
+        required: true,
         helper: '',
       },
       {
@@ -1338,7 +1338,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
       },
       {
