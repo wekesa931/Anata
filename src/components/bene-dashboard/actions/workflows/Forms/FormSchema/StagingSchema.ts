@@ -188,7 +188,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblkoNkzLmWsAlWs5',
-        required: true,
+        required: false,
         conditionType: '',
         parentKey: 'BP Reading Type',
         parentValues: ['Data collection for HMP'],
