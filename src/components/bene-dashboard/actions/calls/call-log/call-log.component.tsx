@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { Box, Button } from '@mui/material'
 import { useMember } from '../../../../../context/member.context'
 import { GET_CALL_LOGS } from '../../../../../gql/comms'
@@ -47,8 +47,15 @@ function CallLog() {
     }
   }, [allDataCalls])
 
-  const { data, loading } = useQuery(GET_CALL_LOGS, {
-    variables: { antaraId: member['Antara ID'] },
+  const [getCallLogs, { loading }] = useLazyQuery(GET_CALL_LOGS, {
+    onCompleted: (data) => {
+      let logs = []
+      if (data?.conferenceSessions?.edges.length > 0) {
+        const rawData = data?.conferenceSessions?.edges
+        logs = rawData.map((log: { node: any }) => log.node)
+      }
+      parseCallLogs(logs)
+    },
   })
 
   const isDataLoading = () =>
@@ -106,13 +113,12 @@ function CallLog() {
   }
 
   useEffect(() => {
-    let logs = []
-    if (data?.conferenceSessions?.edges.length > 0) {
-      const rawData = data?.conferenceSessions?.edges
-      logs = rawData.map((log: { node: any }) => log.node)
+    if (member) {
+      getCallLogs({
+        variables: { antaraId: member['Antara ID'] },
+      })
     }
-    parseCallLogs(logs)
-  }, [data]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [member]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateCurrentLogs = (passedData: any, passedTitle: string) => {
     setCurrentLogs(passedData.logs)

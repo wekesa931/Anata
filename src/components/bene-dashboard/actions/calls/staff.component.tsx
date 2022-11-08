@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
 import { Check } from 'react-feather'
 import {
@@ -56,7 +56,20 @@ function HNAndCSList({
   const [selected, setselected] = useState<IAntaraStaff | null>(null)
   const [antaraStaffData, setantaraStaffData] = useState<IAntaraStaff[]>([])
   const [error, seterror] = useState<string | null>(null)
-  const { data, loading } = useQuery(GET_ANTARA_STAFF)
+
+  const [getAntaraStaff, { loading }] = useLazyQuery(GET_ANTARA_STAFF, {
+    onCompleted: (data) => {
+      const staffData: IAntaraStaff[] = data.antaraStaff.edges.map(
+        (allStaff: { node: IAntaraStaff | any }) => {
+          return {
+            ...allStaff.node,
+            email: `${allStaff.node.emailUsername}@antarahealth.com`,
+          }
+        }
+      )
+      setantaraStaffData(staffData)
+    },
+  })
   const disableTransferButton = !selected
 
   const initiateCallTransfer = (action: string) => {
@@ -71,18 +84,11 @@ function HNAndCSList({
     }
   }
   useEffect(() => {
-    if (data) {
-      const staffData: IAntaraStaff[] = data.antaraStaff.edges.map(
-        (allStaff: { node: IAntaraStaff | any }) => {
-          return {
-            ...allStaff.node,
-            email: `${allStaff.node.emailUsername}@antarahealth.com`,
-          }
-        }
-      )
-      setantaraStaffData(staffData)
-    }
-  }, [data])
+    getAntaraStaff()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   if (loading) {
     return (
       <div className="p-absolute staff-list">

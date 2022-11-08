@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import React from 'react'
 import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
@@ -28,17 +28,28 @@ function FlagForReview() {
   const [interactions, setInteractions] = React.useState([])
   const [assignees, setAssignees] = React.useState<string[]>([])
 
-  const { loading, error, data } = useQuery(
+  const [getInteractions, { loading, error }] = useLazyQuery(
     filter === ALL_INTERACTIONS
       ? GET_ALL_INTERACTIONS
       : GET_ALL_FLAGGED_INTERACTIONS,
     {
+      onCompleted: (data) => {
+        if (data) {
+          setInteractions(data.allInteractions.edges)
+        }
+      },
+    }
+  )
+
+  React.useEffect(() => {
+    getInteractions({
       variables: {
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString(),
       },
-    }
-  )
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   React.useEffect(() => {
     analytics.track('Flagged for review opened')
@@ -52,12 +63,6 @@ function FlagForReview() {
       setTeam(mappedResponse)
     })
   }, [])
-
-  React.useEffect(() => {
-    if (data) {
-      setInteractions(data.allInteractions.edges)
-    }
-  }, [data])
 
   const listItemDisplay = (node: any) => {
     return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { useMutation, useQuery, useLazyQuery } from '@apollo/client'
+import { useMutation, useLazyQuery } from '@apollo/client'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import Typography from '@mui/material/Typography'
@@ -734,13 +734,33 @@ function Files() {
     accept: '*',
     readAs: 'BinaryString',
   })
-  const { loading, error, data, refetch } = useQuery(GET_FILES, {
-    variables: { antaraId: member['Antara ID'] },
+  const [getFiles, { loading, error, refetch }] = useLazyQuery(GET_FILES, {
+    onCompleted: (data) => {
+      if (data) {
+        const rawFiles = data.files.edges
+          .map((ed: { node: IFiles }) => ed.node)
+          .map((ed: any) => ({
+            ...ed,
+            shared: isFileShared(ed.sharedfileSet),
+            category: ed?.fileCategory?.name || ed?.category,
+          }))
+
+        const categorizedFiles = groupBy(rawFiles, 'category')
+        setFilteredFiles(categorizedFiles)
+      }
+    },
   })
   const [folders, setFolders] = useState([])
   const [fileTypes, setFileTypes] = useState<string[]>([])
 
-  const { data: foldersData } = useQuery(GET_FOLDERS)
+  const [getFolders] = useLazyQuery(GET_FOLDERS, {
+    onCompleted: (foldersData) => {
+      if (foldersData) {
+        const rawFolders = foldersData?.folders?.edges
+        setFolders(rawFolders.map(({ node }) => node))
+      }
+    },
+  })
 
   const [getUploadLink, { loading: gettingUploadLink }] =
     useMutation(UPLOAD_LINK)
@@ -754,7 +774,16 @@ function Files() {
   const isFormVisible = displayForm && !gettingFile && !gettingUploadLink
   const filesRef = useRef()
   const [networkError, setNetworkError] = useState(false)
-  const { data: fileCategoryData } = useQuery(GET_FILE_CATEGORIES)
+  const [getCategories] = useLazyQuery(GET_FILE_CATEGORIES, {
+    onCompleted: (fileCategoryData) => {
+      if (fileCategoryData) {
+        const rawCategories = fileCategoryData.fileCategories.edges?.map(
+          (f: any) => f.node?.name
+        )
+        setFileTypes(rawCategories)
+      }
+    },
+  })
 
   const isValidURL = (url: string) => {
     const res = url.match(
@@ -773,20 +802,15 @@ function Files() {
   }
 
   useEffect(() => {
-    if (fileCategoryData) {
-      const rawCategories = fileCategoryData.fileCategories.edges?.map(
-        (f: any) => f.node?.name
-      )
-      setFileTypes(rawCategories)
+    if (member) {
+      getFiles({ variables: { antaraId: member['Antara ID'] } })
     }
-  }, [fileCategoryData])
 
-  useEffect(() => {
-    if (foldersData) {
-      const rawFolders = foldersData?.folders?.edges
-      setFolders(rawFolders.map(({ node }) => node))
-    }
-  }, [foldersData])
+    getFolders()
+    getCategories()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member])
 
   useEffect(() => {
     if (gettingFile) {
@@ -856,23 +880,6 @@ function Files() {
 
     return ''
   }
-
-  useEffect(() => {
-    if (data) {
-      const rawFiles = data.files.edges
-        .map((ed: { node: IFiles }) => ed.node)
-        .map((ed: any) => ({
-          ...ed,
-          shared: isFileShared(ed.sharedfileSet),
-          category: ed?.fileCategory?.name || ed?.category,
-        }))
-
-      // parse shared file set
-      const categorizedFiles = groupBy(rawFiles, 'category')
-      setFilteredFiles(categorizedFiles)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
 
   React.useEffect(() => {
     if (uploadStart) {

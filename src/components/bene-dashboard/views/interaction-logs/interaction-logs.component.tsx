@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import List from '../../../utils/list/list.component'
 import analytics from '../../../../helpers/segment'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
@@ -12,9 +12,34 @@ function InteractionLogs() {
   const [interactions, setInteractions] = useState<any>([])
   const [filteredInteractions, setFilteredInteractions] = useState<any>([])
   const { member } = useMember()
-  const { loading, error, data } = useQuery(GET_MEMBER_INTERACTIONS, {
-    variables: { antaraId: member['Antara ID'] },
-  })
+  const [getInteractions, { loading, error }] = useLazyQuery(
+    GET_MEMBER_INTERACTIONS,
+    {
+      onCompleted: (data) => {
+        if (data && data.memberInteractions) {
+          const mappedResponse = data.memberInteractions.edges.map(
+            ({ node }: any) => ({
+              data: Object.keys(node).reduce((acc, key) => {
+                if (key === 'healthNavigator') {
+                  return {
+                    ...acc,
+                    [toSentenceCase(key)]: node[key].fullName,
+                  }
+                }
+                return {
+                  ...acc,
+                  [toSentenceCase(key)]: node[key],
+                }
+              }, {}),
+              name: node.interactionSummaryNotes,
+            })
+          )
+          setInteractions(mappedResponse)
+        }
+      },
+    }
+  )
+
   const {
     ops: {
       filters: { interactions: filters },
@@ -36,27 +61,12 @@ function InteractionLogs() {
   }
 
   useEffect(() => {
-    if (data && data.memberInteractions) {
-      const mappedResponse = data.memberInteractions.edges.map(
-        ({ node }: any) => ({
-          data: Object.keys(node).reduce((acc, key) => {
-            if (key === 'healthNavigator') {
-              return {
-                ...acc,
-                [toSentenceCase(key)]: node[key].fullName,
-              }
-            }
-            return {
-              ...acc,
-              [toSentenceCase(key)]: node[key],
-            }
-          }, {}),
-          name: node.interactionSummaryNotes,
-        })
-      )
-      setInteractions(mappedResponse)
+    if (member) {
+      getInteractions({ variables: { antaraId: member['Antara ID'] } })
     }
-  }, [data])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member])
 
   useEffect(() => {
     let filteredInts = interactions

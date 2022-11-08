@@ -4,7 +4,7 @@ import { groupBy } from 'lodash'
 import { Check, Paperclip, AlertTriangle } from 'react-feather'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { useParams } from 'react-router-dom'
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import MessageInput from './message-input.component'
 import {
   SenderDiv,
@@ -74,9 +74,34 @@ function MessageChat() {
   const { recId } = useParams()
   const { pushNotification, setPushNotification } = useFcm()
 
-  const { data, loading, refetch } = useQuery(GET_MEMBER_CHATS, {
-    variables: { antaraId: member['Antara ID'] },
+  const [getChats, { loading, refetch }] = useLazyQuery(GET_MEMBER_CHATS, {
+    onCompleted: (data) => {
+      const uncleanedData: { node: Message }[] = data?.memberMessages?.edges
+      if (uncleanedData?.length > 0) {
+        setFilterLoad(true)
+        const messagesWithGrouping = groupBy(
+          uncleanedData.map((chat) => ({
+            ...chat.node,
+            updatedAt: formattedDate(chat.node.updatedAt),
+            relativeDate: getRelativeDate(chat.node.updatedAt),
+          })),
+          'relativeDate'
+        ) as unknown as MemberMessages
+        setMemberMessages(messagesWithGrouping)
+        setFilterLoad(false)
+      }
+    },
   })
+
+  useEffect(() => {
+    if (member) {
+      getChats({
+        variables: { antaraId: member['Antara ID'] },
+      })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member])
 
   const isSent = (status: string) => status.toLocaleLowerCase() === 'sent'
   const isDelivered = (status: string) =>
@@ -106,7 +131,7 @@ function MessageChat() {
       pushNotification?.data?.event?.toLowerCase().includes('message')
 
     if (isEligible) {
-      refetch()
+      refetch && refetch()
       setPushNotification(null)
     }
   }, [
@@ -138,24 +163,6 @@ function MessageChat() {
     }
     return DateCategory.PREVIOUS_MONTHS
   }
-
-  useEffect(() => {
-    const uncleanedData: { node: Message }[] = data?.memberMessages?.edges
-    if (uncleanedData?.length > 0) {
-      setFilterLoad(true)
-      const messagesWithGrouping = groupBy(
-        uncleanedData.map((chat) => ({
-          ...chat.node,
-          updatedAt: formattedDate(chat.node.updatedAt),
-          relativeDate: getRelativeDate(chat.node.updatedAt),
-        })),
-        'relativeDate'
-      ) as unknown as MemberMessages
-      setMemberMessages(messagesWithGrouping)
-      setFilterLoad(false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
 
   const separator = (time: string) => (
     <TimeDevider>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { Button } from '@mui/material'
-import { useMutation, useQuery } from '@apollo/client'
+import { useLazyQuery, useMutation } from '@apollo/client'
 import { useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { groupBy } from 'lodash'
@@ -40,28 +40,65 @@ function GuidedWorkflows() {
   const [workflowOptions, setWorkflowOptions] = useState<string[]>([])
   const [templateName, setTemplateName] = useState<string | null>(null)
   const { addOpenForm, onRefetch, shouldRefetch, openedForms } = useFormPortal()
-  const {
-    data: loadedWorkflows,
-    loading: gettingWorkflows,
-    error: gettingWorkflowError,
-    refetch,
-  } = useQuery(GET_WORKFLOWS, {
-    variables: {
-      workflowId: '',
-      memberId: member['Antara ID'],
-    },
-  })
+
+  const [loadWorkflows, { loading: gettingWorkflows, refetch }] = useLazyQuery(
+    GET_WORKFLOWS,
+    {
+      onCompleted: (loadedWorkflows) => {
+        if (loadedWorkflows) {
+          const allWorkflows = loadedWorkflows?.workflows?.edges.map(
+            (fl: { node: IWorkflow }) => fl.node
+          )
+          if (allWorkflows.length > 0) {
+            const groupedWorkflows = groupBy(allWorkflows, 'completed')
+            setWorkflowsWithGrouping({
+              incomplete: groupedWorkflows.false || [],
+              complete: groupedWorkflows.true || [],
+            })
+          }
+          onRefetch(false)
+        }
+      },
+      onError: (gettingWorkflowError) => {
+        if (gettingWorkflowError) {
+          logError(gettingWorkflowError)
+        }
+      },
+    }
+  )
+
   const [saveWorkflow, { loading: savingWorkflow }] = useMutation(SAVE_WORKFLOW)
   const [createWorkflow, { loading }] = useMutation(CREATE_WORKFLOW)
-  const { data: templateOptions, loading: gettingTemplateOptions } = useQuery(
+  const [getTemplates, { loading: gettingTemplateOptions }] = useLazyQuery(
     GET_ALL_TEMPLATES,
     {
+      onCompleted: (templateOptions) => {
+        if (templateOptions) {
+          const templateNames = templateOptions.workflowTemplates.edges.map(
+            (temp: { node: { name: string } }) => temp.node.name
+          )
+          setWorkflowOptions(templateNames)
+        }
+      },
+    }
+  )
+
+  useEffect(() => {
+    if (member) {
+      loadWorkflows({
+        variables: { memberId: member['Antara ID'], workflowId: '' },
+      })
+    }
+
+    getTemplates({
       variables: {
         name: '',
         status: 'Active',
       },
-    }
-  )
+    })
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member])
   const noRecordsRender = () => (
     <div className={styles.loader}>
       <p className={`d-flex flex-between ${styles.ongoingContainer}`}>
@@ -84,7 +121,7 @@ function GuidedWorkflows() {
   }
   useEffect(() => {
     if (shouldRefetch) {
-      refetch()
+      refetch && refetch()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldRefetch])
@@ -103,25 +140,6 @@ function GuidedWorkflows() {
   }, [loadedTemplate])
 
   useEffect(() => {
-    if (loadedWorkflows) {
-      const allWorkflows = loadedWorkflows?.workflows?.edges.map(
-        (fl: { node: IWorkflow }) => fl.node
-      )
-      if (allWorkflows.length > 0) {
-        const groupedWorkflows = groupBy(allWorkflows, 'completed')
-        setWorkflowsWithGrouping({
-          incomplete: groupedWorkflows.false || [],
-          complete: groupedWorkflows.true || [],
-        })
-      }
-      onRefetch(false)
-    }
-    if (gettingWorkflowError) {
-      logError(gettingWorkflowError)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadedWorkflows])
-  useEffect(() => {
     analytics.track(`Guided Workflow`, {
       event: 'Guided workflows page opened',
       beneId: recId,
@@ -129,14 +147,6 @@ function GuidedWorkflows() {
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  useEffect(() => {
-    if (templateOptions) {
-      const templateNames = templateOptions.workflowTemplates.edges.map(
-        (temp: { node: { name: string } }) => temp.node.name
-      )
-      setWorkflowOptions(templateNames)
-    }
-  }, [templateOptions])
 
   useEffect(() => {
     if (templateName) {

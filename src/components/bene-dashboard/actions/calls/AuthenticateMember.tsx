@@ -2,7 +2,7 @@
 /* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react'
 import { Check, CheckCircle, Slash, X } from 'react-feather'
-import { useMutation, useQuery } from '@apollo/client'
+import { useLazyQuery, useMutation } from '@apollo/client'
 
 import {
   AuthLoader,
@@ -42,9 +42,57 @@ function AuthenticateMember({
   const [memberAuthQuestions, setMemberAuthQuestions] = useState<
     AuthQuestions[]
   >([])
-  const { data: rawApiRecords, loading } = useQuery(MEMBER_CONTACT_DETAILS, {
-    variables: { antaraId },
-  })
+  const [getContactDetails, { loading }] = useLazyQuery(
+    MEMBER_CONTACT_DETAILS,
+    {
+      variables: { antaraId },
+      onCompleted: (rawApiRecords) => {
+        if (rawApiRecords) {
+          const valueType = [
+            'fullName',
+            'contactPhone1',
+            'kenyaNationalId',
+            'employerName',
+          ]
+          let authQuestions: any[] = [
+            {
+              title: 'Please confirm your full name',
+              isConfirmed: false,
+              isFailed: false,
+            },
+            {
+              title: 'Please confirm phone number',
+              isConfirmed: false,
+              isFailed: false,
+            },
+            {
+              title: 'Please confirm your national ID',
+              isConfirmed: false,
+              isFailed: false,
+            },
+            {
+              title: 'Please confirm your employee (if employed)',
+              isConfirmed: false,
+              isFailed: false,
+            },
+          ]
+          const record = rawApiRecords?.beneficiary.edges[0]?.node
+          authQuestions = authQuestions.map((rec: any, idx: number) => {
+            return { ...rec, value: record[valueType[idx]] }
+          })
+          setMemberAuthQuestions(authQuestions)
+        }
+      },
+    }
+  )
+
+  useEffect(() => {
+    if (antaraId) {
+      getContactDetails()
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [antaraId])
   const [verifyBiodata] = useMutation(VALIDATE_BIODATA)
 
   const questionsPassed = memberAuthQuestions.filter(
@@ -59,44 +107,6 @@ function AuthenticateMember({
     : authFailed
     ? '#ff3b30'
     : '#8b95a5'
-
-  useEffect(() => {
-    if (rawApiRecords) {
-      const valueType = [
-        'fullName',
-        'contactPhone1',
-        'kenyaNationalId',
-        'employerName',
-      ]
-      let authQuestions: any[] = [
-        {
-          title: 'Please confirm your full name',
-          isConfirmed: false,
-          isFailed: false,
-        },
-        {
-          title: 'Please confirm phone number',
-          isConfirmed: false,
-          isFailed: false,
-        },
-        {
-          title: 'Please confirm your national ID',
-          isConfirmed: false,
-          isFailed: false,
-        },
-        {
-          title: 'Please confirm your employee (if employed)',
-          isConfirmed: false,
-          isFailed: false,
-        },
-      ]
-      const record = rawApiRecords?.beneficiary.edges[0]?.node
-      authQuestions = authQuestions.map((rec: any, idx: number) => {
-        return { ...rec, value: record[valueType[idx]] }
-      })
-      setMemberAuthQuestions(authQuestions)
-    }
-  }, [rawApiRecords])
 
   useEffect(() => {
     if (authSuccessful) {
