@@ -125,6 +125,7 @@ const MEMBER_DETAILS_QUERY = gql`
               name
             }
             assignedHn
+            assignedHnFullName
             readyForCompanyOnboarding
             readyForIndividualOnboarding
             assignedMe
