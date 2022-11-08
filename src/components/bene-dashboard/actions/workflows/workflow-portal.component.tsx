@@ -1050,6 +1050,10 @@ function WorkflowPortal({
                         id: currentWorkflow?.airtableId,
                         fields: {
                           Status: 'Resolved',
+                          updatedBy: {
+                            email: user?.email,
+                            name: user?.name,
+                          },
                         },
                       }).then(() =>
                         notify('Workflow status successfully updated')

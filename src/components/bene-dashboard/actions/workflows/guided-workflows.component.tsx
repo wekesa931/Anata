@@ -163,6 +163,14 @@ function GuidedWorkflows() {
               ID: res.data.createWorkflow.workflow.workflowId,
               Status: 'Ongoing',
               Members: [recId],
+              createdBy: {
+                email: user?.email,
+                name: user?.name,
+              },
+              updatedBy: {
+                email: user?.email,
+                name: user?.name,
+              },
             },
           }).then((response) => {
             setSavingToAirtable(false)
