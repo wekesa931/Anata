@@ -287,9 +287,6 @@ export const initialFormValues = (member: any, user: any) => {
     'DM Mon': {
       'Test Date': dayjs().format('YYYY-MM-DD'),
     },
-    Conditions: {
-      'Health Navigator': member['Health Navigator Assignment Record ID'],
-    },
   }
 }
 
