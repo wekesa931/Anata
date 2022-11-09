@@ -144,7 +144,7 @@ export default function PdfViewer(props) {
       displayFile.mimeType.includes('pdf'))
 
   useEffect(() => {
-    if (file.id && !file.driveUrl) {
+    if (file.id && file.driveUrl) {
       generateAccessFileLink({
         variables: {
           duration: 5000,
@@ -188,7 +188,7 @@ export default function PdfViewer(props) {
 
   const downloadFile = () => {
     const newWindow = window.open(
-      `${displayFile.driveUrl || displayFile.url}`,
+      `${displayFile.url || displayFile.driveUrl}`,
       '_blank',
       'noopener,noreferrer'
     )
@@ -270,7 +270,7 @@ export default function PdfViewer(props) {
                 )}
                 {isDocument && (
                   <Document
-                    file={{ url: `${displayFile.driveUrl || displayFile.url}` }}
+                    file={{ url: `${displayFile.url || displayFile.driveUrl}` }}
                     externalLinkTarget="_blank"
                     renderMode="canvas"
                     onLoadSuccess={onDocumentLoadSuccess}
