@@ -21,7 +21,6 @@ const TABLE_ROUTES = {
   'HN Tasks': 'hntasks',
   'HN Meetings': 'meetings',
   'Clinical Rounds': 'clinicalrounds',
-  Kits: 'kits',
   'Nutritional Consultation': 'ncf',
   Activity: 'activity',
   Team: 'team',

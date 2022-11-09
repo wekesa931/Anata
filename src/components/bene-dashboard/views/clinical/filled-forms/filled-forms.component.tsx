@@ -61,7 +61,6 @@ function FilledForms() {
       'conditions',
       'hmp',
       'clinicalrounds',
-      'kits',
       'interventions',
       'interventions_tracking',
       'mhc',
@@ -120,7 +119,6 @@ function FilledForms() {
             name: 'Clinical Rounds',
             data: response[forms.indexOf('clinicalrounds')],
           },
-          { name: 'Monitoring Kit', data: response[forms.indexOf('kits')] },
           {
             name: 'Intervention',
             data: response[forms.indexOf('interventions')],
