@@ -50,7 +50,12 @@ function ContactList({ relevantContact, onCallInitiated, tasksType }: IProps) {
     setisRinging(!isRinging)
 
     try {
-      initiateCall(relevantContact, onCallInitiated, member, tasksType)
+      initiateCall({
+        memberDetails: member,
+        callContact: relevantContact,
+        onCallInitiated,
+        type: tasksType,
+      })
     } catch (error) {
       setnotificationError(error.message)
       setTimeout(() => {

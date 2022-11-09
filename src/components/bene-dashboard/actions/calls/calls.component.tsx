@@ -12,11 +12,6 @@ import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import styles from './calls.component.css'
 import useMemberDetails from '../../summary/biodata/biodata-update/useMemberDetails'
 
-const nameSplitter = (name: string) => {
-  const parts = name.split(' ', 2)
-  return parts[0]
-}
-
 export interface IProps {
   showPrompt: boolean
 }
@@ -88,17 +83,18 @@ function CallsCallout({
       setisRinging(false)
     } else {
       try {
-        initiateCall(
-          {
+        initiateCall({
+          callContact: {
             phoneNumber: `+254${phoneNumber
               .replace(/\s/g, '')
               .replace(/^(0|\+?254)/gi, '')}`,
           },
           onCallInitiated,
-          member,
-          'OUTBOUND',
-          true
-        )
+          memberDetails: member,
+          type: 'OUTBOUND',
+          dialPadInitiated: true,
+          memberContacts: loadedContacts?.phones || [],
+        })
       } finally {
         setTimeout(() => {
           setisRinging(false)
@@ -109,32 +105,22 @@ function CallsCallout({
 
   useEffect(() => {
     if (loadedContacts) {
+      const { phones = [], emergencyContactPhone } = loadedContacts
+      const parsed = phones.map((phone: any, index: number) => ({
+        [`Phone ${index + 1}`]: phone.phone,
+      }))
+
       const allContacts: any[] = [
-        { 'Phone 1': loadedContacts.phone },
-        { 'Phone 2': '' },
-        { 'Emergency 1': loadedContacts.emergencyContactPhone },
-        { 'Emergency 2': '' },
+        ...parsed,
+        { 'Emergency 1': emergencyContactPhone },
       ]
-      /**
-       * TODO
-       * Create a mutation having the dependents details configured
-       */
-      // eslint-disable-next-line no-unused-expressions
-      loadedContacts?.dependents?.forEach((dep, i) => {
-        allContacts.push({
-          [`Dependant ${i + 1} Phone 1 (${nameSplitter(dep.fullName)})`]:
-            dep.contactPhone1,
-        })
-        allContacts.push({
-          [`Dependant ${i + 2} Phone 2 (${nameSplitter(dep.fullName)})`]:
-            dep.contactPhone2,
-        })
-      })
+
       const cleanedContacts = allContacts.filter((con) => checkProperties(con))
 
       setmemberContacts(cleanedContacts)
     }
   }, [loadedContacts])
+
   const setPhonevalidation = (phone: string) => {
     setPhoneNumber(phone)
     if (phone) {

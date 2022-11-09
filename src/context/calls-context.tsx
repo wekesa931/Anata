@@ -62,6 +62,8 @@ type Call = {
   forwardTo?: string
   session?: string
   callbackHistoryId?: string
+  dialPadInitiated?: boolean
+  memberContacts: any[]
 }
 
 type ContextType = {
@@ -72,13 +74,7 @@ type ContextType = {
   memberData: any
   completeCall: () => void
   setCallerName: (name: string) => void
-  initiateCall: (
-    callContact: CallContact,
-    onCallInitiated: () => void,
-    memberDetails: any,
-    type?: string,
-    dialPadUsed?: boolean
-  ) => void
+  initiateCall: (details: any) => void
   initiateTransfer: (staff: {
     phone: string
     email: string
@@ -108,6 +104,15 @@ const CallContext = React.createContext<ContextType>({
   setHistoryRecordId: () => null,
   endCalls: () => null,
 })
+
+type InitiateCallInput = {
+  callContact: any
+  onCallInitiated: () => void
+  memberDetails: any
+  type?: string
+  dialPadInitiated?: boolean
+  memberContacts: any[]
+}
 
 function CallProvider({ children }: any) {
   const [conferenceParticipants, setConferenceParticipants] = useState<
@@ -373,13 +378,14 @@ function CallProvider({ children }: any) {
       })
   }
 
-  const initiateCall = (
-    callContact: CallContact,
-    onCallInitiated: (call: Call) => void,
-    memberDetails: any,
+  const initiateCall = ({
+    callContact,
+    onCallInitiated,
+    memberDetails,
     type = 'OUTBOUND',
-    dialPadUsed = false
-  ) => {
+    dialPadInitiated = false,
+    memberContacts = [],
+  }: InitiateCallInput) => {
     if (
       activeCall &&
       Object.prototype.hasOwnProperty.call(activeCall, 'title')
@@ -392,7 +398,6 @@ function CallProvider({ children }: any) {
         variables: {
           antaraId: memberDetails['Antara ID'],
           recipient: phoneNum,
-          dialPadUsed,
         },
       })
         .then((response) => {
@@ -406,6 +411,8 @@ function CallProvider({ children }: any) {
               initialCallTime: 0,
               memberName: memberDetails['Full Name'],
               session: response?.data?.placeCall.session,
+              dialPadInitiated,
+              memberContacts,
             }
             setActiveCall({ ...activeCall, ...call })
             setActiveCallContact(callContact)

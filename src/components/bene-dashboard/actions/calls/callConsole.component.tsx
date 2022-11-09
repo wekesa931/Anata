@@ -1,5 +1,13 @@
 import React, { useState } from 'react'
-import { Repeat, AlertTriangle, PhoneForwarded, Info } from 'react-feather'
+import {
+  Repeat,
+  AlertTriangle,
+  PhoneForwarded,
+  Info,
+  Phone,
+  CheckCircle,
+} from 'react-feather'
+import { useMutation } from '@apollo/client'
 import Icon from '../../../utils/icon/icon.component'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import { useCall } from '../../../../context/calls-context'
@@ -13,6 +21,11 @@ import ActiveCallParticipants from './ActiveCallParticipants'
 import AuthenticateMember from './AuthenticateMember'
 import { AuthButton } from './AuthenticateMember.styles'
 import styles from './callConsole.component.css'
+import { UPDATE_PHONES } from '../../../../gql/comms'
+import logError from '../../../utils/Bugsnag/Bugsnag'
+import createApolloClient from '../../../../resources/apollo-client'
+
+const apolloClient = createApolloClient(true)
 
 function CallFloatingBox() {
   const [isOpen, setisOpen] = React.useState(true)
@@ -22,6 +35,9 @@ function CallFloatingBox() {
   const [displayHistory, setdisplayHistory] = useState(false)
   const { activeCall, conferenceParticipants, completeCall, handleEndCall } =
     useCall()
+  const [showSaveDialog, setShowSaveDialog] = useState(true)
+  const [savedPhone, setSavedPhone] = useState<boolean>(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
   const [showTransferList, setshowTransferList] = useState(false)
   const isCallBack = activeCall?.type === 'CALLBACK'
   const isRinging = activeCall?.state === 'RINGING'
@@ -36,6 +52,22 @@ function CallFloatingBox() {
   const memberInCall = conferenceParticipants?.find(
     (part) => !part.isStaff && part.isMember
   )
+
+  const [updatePhones, { loading: updatePhonesLoading }] = useMutation(
+    UPDATE_PHONES,
+    {
+      client: apolloClient,
+      onCompleted: () => {
+        setSavedPhone(true)
+      },
+      onError: (error) => {
+        setSavedPhone(true)
+        setSaveError('An error occured saving phone')
+        logError(error)
+      },
+    }
+  )
+
   const showAuthButton =
     !bioVerified &&
     memberInCall &&
@@ -84,6 +116,17 @@ function CallFloatingBox() {
     !subTitle().includes('Calling') &&
     !isFulfilled
 
+  const isMemberContact = (phoneNumber: string) => {
+    return activeCall?.memberContacts?.find(
+      (contact) => contact.phone === phoneNumber
+    )
+  }
+
+  const shouldDisplaySaveMember =
+    activeCall?.dialPadInitiated &&
+    showSaveDialog &&
+    !isMemberContact(activeCall?.member)
+
   const callColorCodes = {
     CALLENDED: '#182c4c',
     INBOUND: '#1084ee',
@@ -127,6 +170,48 @@ function CallFloatingBox() {
     return null
   }
 
+  const savePhone = () => {
+    setSaveError(null)
+    const memberContacts = activeCall?.memberContacts || []
+
+    // find the contact with the highest priority and return the value + 1 if available else 0
+    const priority = memberContacts.reduce((acc, contact) => {
+      if (contact.priority > acc) {
+        return contact.priority
+      }
+      return acc
+    }, -1)
+
+    const newContacts = [
+      {
+        phone: activeCall?.member,
+        phoneType: 'Unknown',
+        priority: priority + 1,
+      },
+      ...memberContacts,
+    ]
+
+    const variables = {
+      input: {
+        phones: newContacts,
+        antaraId: activeCall?.memberAntaraId,
+      },
+    }
+
+    updatePhones({
+      variables,
+    }).catch((err) => {
+      setSaveError('An error occured saving phone')
+      logError(err)
+    })
+  }
+
+  const closeDialog = () => {
+    setShowSaveDialog(false)
+    setSaveError(null)
+    setSavedPhone(true)
+  }
+
   return (
     <div
       style={{
@@ -163,6 +248,7 @@ function CallFloatingBox() {
             />
           )}
         </div>
+
         {displayCloseButton ? (
           <span
             className="pointer white-text"
@@ -197,7 +283,9 @@ function CallFloatingBox() {
         <div className="d-flex flex-between full-width align-start">
           <div className="d-flex">
             {isActive && <Timer initialTime={activeCall.initialCallTime} />}
-            {isFulfilled && <p className="duration">{activeCall?.duration}</p>}
+            {isFulfilled && !activeCall.dialPadInitiated && (
+              <p className="duration">{activeCall?.duration}</p>
+            )}
             <p>{subTitle()}</p>
           </div>
           {showAuthButton && (
@@ -222,6 +310,7 @@ function CallFloatingBox() {
           </span>
         ) : null}
       </div>
+
       {isTransferring && (
         <div className="forward-to flex-between">
           <div className="d-flex mt-ten">
@@ -291,10 +380,66 @@ function CallFloatingBox() {
           isValidationSuccess={successfulValidation}
         />
       )}
-      {shouldDisplayForms && (
+      {shouldDisplayForms && !shouldDisplaySaveMember && (
         <CallConsoleForms
           height={isHalfHeight ? 'task-form-low' : 'task-form'}
         />
+      )}
+
+      {shouldDisplayForms && shouldDisplaySaveMember && !savedPhone && (
+        <div className={styles.saveContainer}>
+          <Phone className={styles.phone} fill="#fff" width={50} height={50} />
+          <p className={styles.saveParagraph}>
+            Save {activeCall?.member} as member&apos;s Phone?
+          </p>
+          <div className={styles.buttons}>
+            <button className={styles.savebtn} onClick={savePhone}>
+              {updatePhonesLoading ? 'Saving' : 'Save Phone'}
+            </button>
+            <button className={styles.skipbtn} onClick={closeDialog}>
+              Skip
+            </button>
+          </div>
+        </div>
+      )}
+      {savedPhone && showSaveDialog && (
+        <>
+          {saveError ? (
+            <div className={styles.saveContainer}>
+              <p className={styles.errSaving}>{saveError}</p>
+              <div className="d-flex flex-center align-center">
+                <div className={styles.errButtons}>
+                  <button className={styles.savebtn} onClick={savePhone}>
+                    {updatePhonesLoading ? 'Retrying...' : 'Retry'}
+                  </button>
+                  <button className={styles.skipbtn} onClick={closeDialog}>
+                    Skip
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className={styles.savedPhone}>
+              <CheckCircle
+                className={styles.checkCircle}
+                fill="white"
+                width={50}
+                height={50}
+              />
+              <p className={styles.saveParagraph}>
+                {activeCall.member} phone saved
+              </p>
+
+              <div className="d-flex flex-center align-center">
+                <div className={styles.errButtons}>
+                  <button className={styles.savebtn} onClick={closeDialog}>
+                    Continue
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
       {displayActionButtons && (
         <div className="full-width d-flex flex-end transfer-container">

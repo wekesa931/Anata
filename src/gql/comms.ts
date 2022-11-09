@@ -372,6 +372,25 @@ const UPDATE_CONTACT = gql`
   }
 `
 
+const UPDATE_PHONES = gql`
+  mutation updateMemberPhones($input: UpdateMemberPhonesInput!) {
+    updateMemberPhones(input: $input) {
+      status
+      message
+      errors
+      data {
+        phones {
+          phone
+          phoneType {
+            phoneType
+          }
+          priority
+        }
+      }
+    }
+  }
+`
+
 const GET_ACTIVE_CALL = gql`
   query activeCall {
     activeCall {
@@ -655,4 +674,5 @@ export {
   GET_INSURANCE_COMPANIES,
   LOOKUP_ENTRIES_QUERY,
   UPDATE_MEMBER_DETAILS,
+  UPDATE_PHONES,
 }

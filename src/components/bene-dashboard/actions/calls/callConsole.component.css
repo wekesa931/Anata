@@ -15,3 +15,69 @@
   display: flex;
   align-items: center;
 }
+.savebtn {
+  background-color: var(--blue-100);
+  margin: 0 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  color: #ffff;
+  gap: 8px;
+  padding: 10px 15px;
+  border-radius: 12px;
+  border: none;
+}
+.skipbtn {
+  background-color: var(--greyscale-7);
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+}
+.saveContainer {
+  padding: 2rem;
+}
+
+.errContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.saveParagraph {
+  font-size: 150%;
+  font-weight: normal;
+  text-align: center;
+}
+.phone {
+  margin-left: 40%;
+  color: var(--greyscale-3);
+}
+.phone2 {
+  font-weight: bold;
+}
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.errButtons {
+  margin-top: 20px;
+}
+.checkCircle {
+  margin-left: 40%;
+  color: var(--green-100)
+}
+.savedPhone {
+  padding: 2rem;
+}
+
+.errSaving{
+  color: var(--red-100);
+  font-size: 14px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}

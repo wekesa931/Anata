@@ -445,6 +445,7 @@ const useMemberDetails = (
     antaraStaff,
     initialValues,
     tags,
+    refetchMember: refetch,
   }
 
   return memberDetailsValue

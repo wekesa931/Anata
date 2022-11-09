@@ -75,8 +75,6 @@
   letter-spacing: -0.2px;
 }
 .btncallotherphone {
-  /* width: 92px; */
-  /* height: 14px; */
   flex-grow: 0;
   font-family: Rubik;
   font-size: 14px;
@@ -96,6 +94,4 @@
 .inputError {
   color: var(--red-100);
   font-size: 12px;
-}
-.inputField {
 }
