@@ -12,10 +12,13 @@ import { Button } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import CloseIcon from '@mui/icons-material/Close'
 import IconButton from '@mui/material/IconButton'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import CallView from './call-view.component'
 import styles from './call-view.component.css'
 
 import { formatDuration, loadingIcon, callIcons } from './utils'
+
+dayjs.extend(customParseFormat)
 /* eslint-disable */
 const _ = require('lodash')
 
