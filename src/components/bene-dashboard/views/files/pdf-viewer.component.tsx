@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Document, Page } from 'react-pdf/dist/esm/entry.webpack'
+// import { Document, Page } from 'react-pdf/dist/esm/entry.webpack'
 import ImageLoader from 'react-image-render'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -12,6 +12,7 @@ import { useMutation } from '@apollo/client'
 import { AlertTriangle, Download, Info, Lock, X } from 'react-feather'
 import { Grid, Typography } from '@mui/material'
 import dayjs from 'dayjs'
+import axios from 'axios'
 import { ENCRYPT_FILE, GENERATE_FILE_LINK } from './files.gql'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 
@@ -114,7 +115,6 @@ function LoadingError({ fileMessage }) {
 
 export default function PdfViewer(props) {
   const { file, onFileClosed } = props
-  const [numOfPages, setNumOfPages] = useState(null)
   const [displayFile, setDisplayFile] = useState<IFiles>(file)
   const [isEncypting, setIsEncypting] = useState(false)
   const [fileMessage, setFileMessage] = useState('')
@@ -141,7 +141,28 @@ export default function PdfViewer(props) {
     (displayFile.mimeType.includes('doc') ||
       displayFile.mimeType.includes('docx') ||
       displayFile.mimeType.includes('txt') ||
-      displayFile.mimeType.includes('pdf'))
+      displayFile.mimeType.includes('pdf')) &&
+    !isImage
+
+  const base64ToBlob = (b64Data: string, contentType = '', sliceSize = 512) => {
+    const byteCharacters = Buffer.from(b64Data, 'base64').toString('binary')
+    const byteArrays = []
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize)
+
+      const byteNumbers = new Array(slice.length)
+      for (let i = 0; i < slice.length; i += 1) {
+        byteNumbers[i] = slice.charCodeAt(i)
+      }
+
+      const byteArray = new Uint8Array(byteNumbers)
+      byteArrays.push(byteArray)
+    }
+
+    const blob = new Blob(byteArrays, { type: contentType })
+    return blob
+  }
 
   useEffect(() => {
     if (file.id && file.driveUrl) {
@@ -155,7 +176,11 @@ export default function PdfViewer(props) {
           const url = res?.data?.generateLink?.link
           const fileExtension = file.storageKey.split('.').pop()
           if (handledExtensions.includes(fileExtension)) {
-            setDisplayFile({ ...file, url })
+            axios.get(url, { responseType: 'arraybuffer' }).then((result) => {
+              const blob = base64ToBlob(result.data, file.mimeType)
+              const fileUrl = URL.createObjectURL(blob)
+              setDisplayFile({ ...file, url: fileUrl })
+            })
           } else {
             setFileMessage('File has been downloaded or opened in the next tab')
 
@@ -170,11 +195,8 @@ export default function PdfViewer(props) {
       setDisplayFile({ ...file })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [file, generateAccessFileLink])
+  }, [file])
 
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumOfPages(numPages)
-  }
   const handleClose = () => {
     onFileClosed()
     setOpen(false)
@@ -212,6 +234,14 @@ export default function PdfViewer(props) {
     <Typography className="file-title-content">{content}</Typography>
   )
 
+  const loadingIcon = () => {
+    return (
+      <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+        <LoadingIcon />
+      </div>
+    )
+  }
+
   return (
     <>
       {isEncypting && (
@@ -248,6 +278,7 @@ export default function PdfViewer(props) {
                 Download
               </Typography>
             </Button>
+
             <Button autoFocus onClick={handleClose}>
               <X className="file-close-btn" />
             </Button>
@@ -268,27 +299,20 @@ export default function PdfViewer(props) {
                     <p className="text-heading-5">{fileMessage}</p>
                   </div>
                 )}
-                {isDocument && (
-                  <Document
-                    file={{ url: `${displayFile.url || displayFile.driveUrl}` }}
-                    externalLinkTarget="_blank"
-                    renderMode="canvas"
-                    onLoadSuccess={onDocumentLoadSuccess}
-                    loading={<Loader />}
-                    error={<LoadingError fileMessage={fileMessage} />}
-                    noData={<Loader />}
-                  >
-                    {Array.from(new Array(numOfPages), (el, index) => {
-                      return (
-                        <Page
-                          key={`page_${index + 1}`}
-                          pageNumber={index + 1}
-                          width={900}
-                        />
-                      )
-                    })}
-                  </Document>
+
+                {isDocument && displayFile?.url ? (
+                  <iframe
+                    src={`${displayFile.url || displayFile.driveUrl}`}
+                    width="900px"
+                    height="600px"
+                    frameBorder={0}
+                    allowFullScreen
+                    title={displayFile.title}
+                  />
+                ) : (
+                  loadingIcon()
                 )}
+
                 {isImage && (
                   <ImageLoader src={displayFile.url}>
                     {({ loaded, errored }: any) => {
