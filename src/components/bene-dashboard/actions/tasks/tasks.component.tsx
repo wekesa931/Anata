@@ -184,7 +184,6 @@ function Tasks() {
     'Task Priority',
     'Collect Condition Data',
     'Assignee',
-    'Assignee Name',
     'Last Status changed at',
     'Open URL',
     'Prescription Drug Names',
