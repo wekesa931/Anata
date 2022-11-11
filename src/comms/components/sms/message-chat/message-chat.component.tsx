@@ -54,6 +54,7 @@ export type Message = {
   message: string
   direction: string
   status: string
+  channel: string
   staffName: string
   createdAt: string
   updatedAt: string
@@ -311,6 +312,7 @@ function MessageChat() {
           <SenderDiv key={index}>
             {renderMessage(message, index)}
             <GreyText>
+              <SenderName>{message.channel}</SenderName>
               <div className="chat-delivery">{message.updatedAt}</div>
             </GreyText>
           </SenderDiv>
@@ -320,7 +322,10 @@ function MessageChat() {
           <RecipientDiv>
             {renderMessage(message, index)}
             <OrangeText>
-              <SenderName>{message.staffName}</SenderName>
+              <SenderName>
+                <span>{message.staffName}</span>
+                <span>{message.channel}</span>
+              </SenderName>
               <DeliveryWrapper>
                 <div className="chat-delivery">{message.updatedAt}</div>
                 {isSent(message.status) && (
@@ -392,7 +397,6 @@ function MessageChat() {
           style={{
             flex: 1,
             overflowY: 'scroll',
-            overflowX: 'hidden',
           }}
         >
           {memberMessages && renderMessages()}

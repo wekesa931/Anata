@@ -18,6 +18,7 @@ const GET_MEMBER_CHATS = gql`
           direction
           attachments
           status
+          channel
           staffName
           createdAt
           updatedAt

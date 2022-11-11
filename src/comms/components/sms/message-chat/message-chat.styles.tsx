@@ -19,7 +19,7 @@ const SenderDiv = styled.div`
   align-items: stretch;
   gap: 4px;
   padding: 8px;
-  width: 240px;
+  width: 320px;
   border-radius: 12px;
   background-color: #f9fafc;
 `
@@ -48,7 +48,7 @@ const MessageLoader = styled.div`
 const RecipientDiv = styled.div`
   display: flex;
   flex-direction: column;
-  width: 240px;
+  width: 320px;
   justify-content: flex-start;
   align-items: flex-start;
   gap: 4px;
@@ -60,7 +60,7 @@ const RecipientDiv = styled.div`
 
 const GreyText = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin: 0 5px 0 0;
   font-family: Rubik;
   font-size: 10px;
@@ -101,6 +101,8 @@ const OrangeText = styled.div`
 `
 
 const SenderName = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 45%;
   white-space: nowrap;
   overflow: hidden;
