@@ -1324,7 +1324,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblm1g2udT6J8TOzt',
-        required: true,
+        required: false,
         helper: '',
       },
       {

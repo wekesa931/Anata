@@ -8850,7 +8850,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblOnZn7Vo8N9wznR',
-        required: true,
+        required: false,
         helper: '',
       },
       {
