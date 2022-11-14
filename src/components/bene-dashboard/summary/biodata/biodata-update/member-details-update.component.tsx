@@ -285,7 +285,7 @@ function MemberDetailsUpdateForm({
           items: [
             {
               id: 'lead-hn',
-              type: 'autocomplete',
+              type: 'select',
               dataIndex: 'assignedHn',
               label: 'Assigned HN',
               options: antaraStaff,
@@ -293,7 +293,7 @@ function MemberDetailsUpdateForm({
             },
             {
               id: 'assigned-me',
-              type: 'autocomplete',
+              type: 'select',
               dataIndex: 'assignedMe',
               label: 'Assigned ME',
               options: antaraStaff,
