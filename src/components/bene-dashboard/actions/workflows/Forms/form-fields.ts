@@ -265,10 +265,13 @@ export const feedbackPayload = (raw: any) => {
   return finalPayload
 }
 
-export const initialFormValues = (member: any, user: any) => {
+export const initialFormValues = (member: any, user: any, workflow = null) => {
+  const isOnsite = workflow === 'Onsite'
   return {
     'BP Mon': {
       Date: dayjs().format('YYYY-MM-DD'),
+      'BP Reading Type': isOnsite ? 'Ad hoc BP measurement' : null,
+      'Type of reading': isOnsite ? 'Measured by Antara' : null,
     },
     Baseline: {
       'Health Navigator': [user.userAirtableId],
@@ -277,13 +280,30 @@ export const initialFormValues = (member: any, user: any) => {
       'Date of baseline': member['Baseline Date'],
     },
     Vitals: {
-      Staff: member['Health Navigator Assignment Record ID'],
+      Staff: isOnsite
+        ? [user.userAirtableId]
+        : member['Health Navigator Assignment Record ID'],
+      Date: dayjs().format('YYYY-MM-DD'),
+      'Type of Reading': isOnsite ? 'Measured by Antara' : null,
     },
     'CHL Mon': {
       'Test Date': dayjs().format('YYYY-MM-DD'),
+      'Type of reading': isOnsite ? 'Measured by Antara' : null,
     },
     'DM Mon': {
       'Test Date': dayjs().format('YYYY-MM-DD'),
+      'Type of reading': isOnsite ? 'Measured by Antara' : null,
+    },
+    'Nutritional Consultation': {
+      'Date of Consultation': dayjs().format('YYYY-MM-DD'),
+      'Consulting Clinican': isOnsite ? [user.userAirtableId] : null,
+    },
+    'Clinical Consultation': {
+      'Consulting Clinician': isOnsite ? [user.userAirtableId] : null,
+      Minor: member['Minor?'] === 'Adult' ? 'no' : 'yes',
+      'Interaction type': isOnsite ? 'In-person' : null,
+      'Initial vs FU': isOnsite ? 'Initial' : null,
+      'Date of appointment': dayjs().format('YYYY-MM-DD'),
     },
   }
 }

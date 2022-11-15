@@ -5570,20 +5570,6 @@ export default [
         helper: '',
       },
       {
-        id: 'fldteF51gn1kU7ViE',
-        name: 'Consultation type',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
         id: 'fldW1SZOP6G11ny2B',
         name: 'Assessment Type',
         type: 'multiSelect',
@@ -16119,6 +16105,7 @@ export default [
       {
         id: 'healthnavigator',
         name: 'Health Navigator',
+        alias: 'Staff',
         type: 'foreignKey',
         format: '',
         isDateTime: false,

@@ -49,7 +49,7 @@ function HelperText({ error, field }: any) {
           error?.message ? `${styles.fieldNameError}` : `${styles.fieldLabel}`
         }
       >
-        {field.name}
+        {field.alias || field.name}
         {field.required && <Pointer />}
       </p>
       <p
@@ -70,7 +70,7 @@ function Label({ error, field }: any) {
           : `${field.helper ? styles.fieldLabelBlurred : styles.fieldLabel}`
       }
     >
-      {field.name}
+      {field.alias || field.name}
       {field.required && <Pointer />}
     </p>
   )
@@ -797,7 +797,7 @@ function LinkRecordInput({
             loading={settingLinkedData}
             loadingText={
               <div className={styles.recordLoader}>
-                <LoadingIcon /> Loading {field.name} records
+                <LoadingIcon /> Loading {field.alias || field.name} records
               </div>
             }
             id="combo-box-demo"

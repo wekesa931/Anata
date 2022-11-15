@@ -195,8 +195,8 @@ function WorkflowPortal({
     shouldSaveModule ||
     updatingMemberFeedback
 
-  const initialFormMeta = (fm) => {
-    const formValues = initialFormValues(member, user)
+  const initialFormMeta = (fm, fmName = null) => {
+    const formValues = initialFormValues(member, user, fmName)
     let values = {}
     if (formValues[activeForm]) {
       values = formValues[activeForm]
@@ -290,6 +290,9 @@ function WorkflowPortal({
       if (currentWorkflow?.moduleData[activeForm]) {
         const newPayload = currentWorkflow?.moduleData[activeForm].filled_values
         formData = newPayload.map((py) => ({
+          ...initialFormValues(member, user, openedWorkflow.template.name)[
+            activeForm
+          ],
           ...py,
           updatedBy: {
             email: user?.email,
@@ -297,7 +300,9 @@ function WorkflowPortal({
           },
         }))
       } else {
-        formData = [initialFormMeta(currentWorkflow)]
+        formData = [
+          initialFormMeta(currentWorkflow, openedWorkflow.template.name),
+        ]
       }
       setFormPayload(formData)
     }
