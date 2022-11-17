@@ -85,9 +85,10 @@ function WorkflowFormsInput({
   airtableMeta,
   saveInput,
 }: Form) {
+  const isMemberField = field.name === 'Member' || field.name === 'member' || field.name === 'Members'
   const isWorkflowForm =
-    field.name !== 'Case ID' && field.name !== 'Member' && template?.workflowId
-  const isNormalForm = field.name !== 'Member' && !template?.workflowId
+    field.name !== 'Case ID' && !isMemberField && template?.workflowId
+  const isNormalForm = !isMemberField && !template?.workflowId
   switch (field.type) {
     case 'foreignKey':
       if (isWorkflowForm || isNormalForm) {

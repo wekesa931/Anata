@@ -529,7 +529,6 @@ function WorkflowPortal({
           }
           delete airtablePayload.Member
         }
-
         if (activeForm === 'Intervention Data Tracking') {
           delete airtablePayload.Member
         }
