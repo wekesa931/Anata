@@ -302,7 +302,7 @@ export const initialFormValues = (member: any, user: any, workflow = null) => {
       'Consulting Clinician': isOnsite ? [user.userAirtableId] : null,
       Minor: member['Minor?'] === 'Adult' ? 'no' : 'yes',
       'Interaction type': isOnsite ? 'In-person' : null,
-      'Initial vs FU': isOnsite ? 'Initial' : null,
+      'Initial vs FU': isOnsite ? 'Initial consultation' : null,
       'Date of appointment': dayjs().format('YYYY-MM-DD'),
     },
   }
