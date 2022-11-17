@@ -243,6 +243,16 @@
   flex-direction: column;
   align-items: flex-start;
 }
+
+.insMissing {
+  font-size: 14px;
+  background-color: var(--red-100);
+  color: var(--white-100);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .termsSent {
   font-size: 14px;
   background-color: var(--white-100);

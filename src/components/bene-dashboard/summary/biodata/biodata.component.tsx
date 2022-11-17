@@ -682,6 +682,16 @@ function BioData() {
       ''
     }`
 
+  const isInsuranceIdNull = () => {
+    const insuranceDetails = memberDetails?.v2Member?.insuranceDetails || []
+    if (insuranceDetails.length > 0) {
+      return memberDetails?.v2Member?.insuranceDetails.some(
+        (item: any) => item.insuranceId === null
+      )
+    }
+    return true
+  }
+
   return (
     <div className={styles.wrapper}>
       {member && (
@@ -720,6 +730,26 @@ function BioData() {
               )}
             </Alert>
           </Snackbar>
+          {isInsuranceIdNull() && (
+            <CardContent className={styles.insMissing}>
+              <Typography
+                className={styles.termsText}
+                color="text.secondary"
+                gutterBottom
+              >
+                Member has missing insurance details. Click the button to update
+                details.
+              </Typography>
+              <Button
+                size="small"
+                variant="contained"
+                className={styles.termsButton}
+                onClick={openUpdateMemberForm}
+              >
+                Update
+              </Button>
+            </CardContent>
+          )}
 
           <TsCs member={member} contact={memberContact} />
           <div className={styles.tagContainer}>
