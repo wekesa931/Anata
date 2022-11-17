@@ -39,24 +39,29 @@ export function SideBySideComponents({
 }) {
   return (
     <div className={styles.sideBySide}>
-      <div>{first} </div>
+      <div style={{ maxWidth: '70%' }}>{first} </div>
       <div>{second}</div>
     </div>
   )
 }
 
+const formatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'KES',
+})
+
 export function SideBySideList({ utilization }: { utilization: any[] }) {
   return (
     <Grid container className={styles.sideBySideListWrapper}>
       {utilization.length === 0 ? (
-        <Grid item xs={12} className={styles.noBenefits}>
+        <Grid item className={styles.noBenefits}>
           We do NOT know the benefits for this member yet. Edit member to add
           benefits
         </Grid>
       ) : (
-        <Grid item xs={8}>
-          <List dense disablePadding className={styles.list}>
-            <ListSubheader disableGutters className={styles.listSubheader}>
+        <Grid item>
+          <List disablePadding className={styles.list}>
+            <ListSubheader className={styles.listSubheader}>
               <SideBySideComponents first="Benefits" second="Balance" />
             </ListSubheader>
             {utilization.map((el) => (
@@ -65,12 +70,14 @@ export function SideBySideList({ utilization }: { utilization: any[] }) {
                   <SideBySideComponents
                     first={el?.benefit?.name || ''}
                     second={
-                      (el?.benefit?.limit &&
-                        el?.utilizedPortion &&
-                        (el?.utilizedPortion || el?.benefit?.limit >= 0
-                          ? 'Used Up'
-                          : 'Available')) ??
-                      'N/A'
+                      el?.benefit !== null && el?.utilizedPortion !== null
+                        ? el?.benefit?.limit
+                          ? formatter.format(
+                              (el?.benefit?.limit || 0) -
+                                (el?.utilizedPortion || 0)
+                            )
+                          : 'N/A'
+                        : 'N/A'
                     }
                   />
                 </ListItemText>

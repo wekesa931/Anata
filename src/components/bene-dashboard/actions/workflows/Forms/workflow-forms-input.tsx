@@ -85,7 +85,10 @@ function WorkflowFormsInput({
   airtableMeta,
   saveInput,
 }: Form) {
-  const isMemberField = field.name === 'Member' || field.name === 'member' || field.name === 'Members'
+  const isMemberField =
+    field.name === 'Member' ||
+    field.name === 'member' ||
+    field.name === 'Members'
   const isWorkflowForm =
     field.name !== 'Case ID' && !isMemberField && template?.workflowId
   const isNormalForm = !isMemberField && !template?.workflowId

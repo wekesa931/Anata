@@ -730,7 +730,7 @@ function BioData() {
               )}
             </Alert>
           </Snackbar>
-          {isInsuranceIdNull() && (
+          {isInsuranceIdNull() && memberDetails?.v2Member && (
             <CardContent className={styles.insMissing}>
               <Typography
                 className={styles.termsText}
