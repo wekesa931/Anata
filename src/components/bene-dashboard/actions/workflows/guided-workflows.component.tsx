@@ -41,31 +41,37 @@ function GuidedWorkflows() {
   const [templateName, setTemplateName] = useState<string | null>(null)
   const { addOpenForm, onRefetch, shouldRefetch, openedForms } = useFormPortal()
 
-  const [loadWorkflows, { loading: gettingWorkflows, refetch }] = useLazyQuery(
-    GET_WORKFLOWS,
+  const [
+    loadWorkflows,
     {
-      onCompleted: (loadedWorkflows) => {
-        if (loadedWorkflows) {
-          const allWorkflows = loadedWorkflows?.workflows?.edges.map(
-            (fl: { node: IWorkflow }) => fl.node
-          )
-          if (allWorkflows.length > 0) {
-            const groupedWorkflows = groupBy(allWorkflows, 'completed')
-            setWorkflowsWithGrouping({
-              incomplete: groupedWorkflows.false || [],
-              complete: groupedWorkflows.true || [],
-            })
-          }
-          onRefetch(false)
+      loading: gettingWorkflows,
+      refetch,
+      data: loadedWorkflows,
+      error: gettingWorkflowError,
+    },
+  ] = useLazyQuery(GET_WORKFLOWS)
+
+  useEffect(() => {
+    if (loadedWorkflows) {
+      if (loadedWorkflows) {
+        const allWorkflows = loadedWorkflows?.workflows?.edges.map(
+          (fl: { node: IWorkflow }) => fl.node
+        )
+        if (allWorkflows.length > 0) {
+          const groupedWorkflows = groupBy(allWorkflows, 'completed')
+          setWorkflowsWithGrouping({
+            incomplete: groupedWorkflows.false || [],
+            complete: groupedWorkflows.true || [],
+          })
         }
-      },
-      onError: (gettingWorkflowError) => {
-        if (gettingWorkflowError) {
-          logError(gettingWorkflowError)
-        }
-      },
+        onRefetch(false)
+      }
     }
-  )
+    if (gettingWorkflowError) {
+      logError(gettingWorkflowError)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadedWorkflows])
 
   const [saveWorkflow, { loading: savingWorkflow }] = useMutation(SAVE_WORKFLOW)
   const [createWorkflow, { loading }] = useMutation(CREATE_WORKFLOW)
@@ -198,7 +204,7 @@ function GuidedWorkflows() {
               })
             }
           })
-          refetch()
+          refetch && refetch()
         })
         .catch((e) => {
           logError(e)
