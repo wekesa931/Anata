@@ -40,16 +40,8 @@ export const memberDetailsValidationSchema = Yup.object().shape({
     Yup.object().shape({
       insuranceCompany: Yup.string().required('Insurance company is required'),
       insuranceId: Yup.string().when('insuranceCompany', {
-        is: (val) => val !== '',
+        is: (val: string) => val !== '',
         then: Yup.string().required('Insurance ID is required'),
-      }),
-      healthPolicy: Yup.string().when('insuranceCompany', {
-        is: (val) => val !== '',
-        then: Yup.string().required('Health policy is required'),
-      }),
-      benefits: Yup.array().when('insuranceCompany', {
-        is: (val) => val !== '',
-        then: Yup.array().of(Yup.string()).required('Benefits is required'),
       }),
     })
   ),

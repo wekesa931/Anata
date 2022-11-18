@@ -323,7 +323,13 @@ const useMemberDetails = (
 
     if (inputVariables.memberInsurance) {
       inputVariables.memberInsurance = {
-        insuranceDetails: inputVariables.memberInsurance,
+        insuranceDetails: inputVariables.memberInsurance.map((ins: any) => ({
+          ...(!!ins.benefits && { benefits: ins.benefits }),
+          ...(!!ins.healthPolicy && { healthPolicy: ins.healthPolicy }),
+          insuranceCompany: ins.insuranceCompany,
+          insuranceId: ins.insuranceId,
+          priority: ins.priority,
+        })),
         antaraId: member['Antara ID'],
       }
     }
