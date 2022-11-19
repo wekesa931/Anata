@@ -852,7 +852,7 @@ function BioData() {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                    {member['Health Status']}
+                    {member['Health Status']?.toString()}
                   </td>
                 </tr>
                 <tr>
