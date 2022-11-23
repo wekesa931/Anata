@@ -84,7 +84,7 @@ function NavBar() {
             height="32px"
             alt="antara small logo"
           />
-          <h5 className={styles.logoText}>Antara health</h5>
+          <h5 className={styles.logoText}>Antara Health</h5>
         </div>
         <FloatingMenu
           anchorEl={anchorEl}

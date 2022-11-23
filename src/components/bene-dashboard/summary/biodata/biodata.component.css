@@ -18,6 +18,14 @@
   height: 7px;
 }
 
+.hrLine {
+  margin-left: 16px;
+  margin-right: 16px;
+  border: 1px solid var(--dark-blue-10);
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
 .beneNameContainer {
   padding: 8px 0;
   background: var(--white-bg);

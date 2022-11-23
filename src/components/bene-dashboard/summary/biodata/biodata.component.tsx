@@ -655,7 +655,7 @@ function BioData() {
         <div className={styles.bioDataCard}>
           <div className={styles.beneNameContainer}>
             <h3 className={styles.beneNameAgeGender}>{getBioDataTitle()}</h3>
-            {!isLoading && v2Member && (
+            {!isLoading && (
               <button
                 className="btn-icon"
                 onClick={openUpdateMemberForm}
