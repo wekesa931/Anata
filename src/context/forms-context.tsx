@@ -49,7 +49,6 @@ function FormProvider({ children }: any) {
   const [airtableMeta, setAirtableMeta] = useState<any>(null)
   const [shouldRefetch, setshouldRefetch] = useState(false)
   const [openedForms, setOpenedForms] = useState<Form[]>([])
-  const [memberDetails, setMemberDetails] = useState<any | null>(null)
 
   const onRefetch = (refetch: boolean) => {
     setshouldRefetch(refetch)
@@ -80,7 +79,6 @@ function FormProvider({ children }: any) {
       }
       setOpenedForms([...openedForms, form])
     }
-    setMemberDetails(openForm.member)
   }
   const onFormClose = (pointer: any, isWorkflow: boolean) => {
     let validForms: any[] = []
@@ -133,7 +131,6 @@ function FormProvider({ children }: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [airtableMeta, openedForms, shouldRefetch]
   )
-
   return (
     <FormContext.Provider value={providerValue}>
       {openedForms.map((fm: Form, idx: number) => (
@@ -146,7 +143,6 @@ function FormProvider({ children }: any) {
             addOpenForm={addOpenForm}
             onFormClose={onFormClose}
             onRefetch={onRefetch}
-            memberDetails={memberDetails}
           />
         </React.Fragment>
       ))}

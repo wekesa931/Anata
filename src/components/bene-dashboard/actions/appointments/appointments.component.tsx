@@ -10,7 +10,6 @@ import analytics from '../../../../helpers/segment'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import styles from './appointments.component.css'
 import { useMember } from '../../../../context/member.context'
-import useMemberDetails from '../../summary/biodata/biodata-update/useMemberDetails'
 
 function Appointments() {
   const [appointments, setAppointments] = React.useState<any[]>([])
@@ -116,8 +115,7 @@ function Appointments() {
       ].map((type) => ({ label: type, value: type })),
     },
   ]
-  const { member } = useMember()
-  const { v2Member } = useMemberDetails(member)
+  const { member, v2Member } = useMember()
 
   const openCalendar = () => {
     if (v2Member || member) {

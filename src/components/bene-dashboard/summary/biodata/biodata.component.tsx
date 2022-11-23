@@ -31,7 +31,6 @@ import logError from '../../../utils/Bugsnag/Bugsnag'
 import DependentCard from '../dependents/dependent-card.component'
 import Icon from '../../../utils/icon/icon.component'
 import { useFormPortal } from '../../../../context/forms-context'
-import useMemberDetails from './biodata-update/useMemberDetails'
 import Benefits from '../benefits/benefits.component'
 import calcAge from './utils'
 
@@ -619,9 +618,9 @@ type SnackBarData = {
 
 function BioData() {
   const [snackbarData, setSnackbarData] = useState<SnackBarData | null>(null)
-  const { addOpenForm, onFormClose } = useFormPortal()
+  const { addOpenForm } = useFormPortal()
 
-  const { member, memberContact } = useMember()
+  const { member, memberContact, v2Member, isLoading } = useMember()
   const hasDependants = memberContact?.dependents.length > 0
   const minorDependents = []
   const majorDependents = []
@@ -654,38 +653,29 @@ function BioData() {
   // form member details update form
   const formTitle = 'Edit member details'
 
-  // close the member form, if any erros, initiate an error snackbar
-  const closeMemberDetailsForm = (feedback: SnackBarData) => {
-    setSnackbarData(feedback)
-
-    if (feedback.level === 'success') {
-      onFormClose(formTitle, false)
-    }
-  }
-  const memberDetails = useMemberDetails(member, closeMemberDetailsForm)
-
   const closeSnackbar = () => setSnackbarData(null)
 
   // update form toggles
   const openUpdateMemberForm = () => {
     // clear snackbar error
     closeSnackbar()
-    addOpenForm({ name: formTitle, member: memberDetails })
+    addOpenForm({ name: formTitle, member })
   }
 
-  const getBioDataTitle = () =>
-    `${capitalize(memberDetails?.v2Member?.fullName) || ''}, ${
-      calcAge(memberDetails?.v2Member?.birthDate) || ''
-    } ${
-      (memberDetails?.v2Member?.sex &&
-        memberDetails?.v2Member?.sex.charAt(0)) ||
-      ''
-    }`
+  const getBioDataTitle = () => {
+    if (v2Member && !isLoading) {
+      return `${capitalize(v2Member?.fullName) || ''}, ${
+        calcAge(v2Member?.birthDate) || ''
+      } ${(v2Member?.sex && v2Member?.sex.charAt(0)) || ''}`
+    }
+
+    return 'Loading...'
+  }
 
   const isInsuranceIdNull = () => {
-    const insuranceDetails = memberDetails?.v2Member?.insuranceDetails || []
+    const insuranceDetails = v2Member?.insuranceDetails || []
     if (insuranceDetails.length > 0) {
-      return memberDetails?.v2Member?.insuranceDetails.some(
+      return v2Member?.insuranceDetails.some(
         (item: any) => item.insuranceId === null
       )
     }
@@ -697,10 +687,8 @@ function BioData() {
       {member && (
         <div className={styles.bioDataCard}>
           <div className={styles.beneNameContainer}>
-            <h3 className={styles.beneNameAgeGender}>
-              {memberDetails?.v2Member ? getBioDataTitle() : 'Loading...'}
-            </h3>
-            {memberDetails && (
+            <h3 className={styles.beneNameAgeGender}>{getBioDataTitle()}</h3>
+            {!isLoading && v2Member && (
               <button
                 className="btn-icon"
                 onClick={openUpdateMemberForm}
@@ -730,7 +718,7 @@ function BioData() {
               )}
             </Alert>
           </Snackbar>
-          {isInsuranceIdNull() && memberDetails?.v2Member && (
+          {isInsuranceIdNull() && v2Member && (
             <CardContent className={styles.insMissing}>
               <Typography
                 className={styles.termsText}
@@ -772,7 +760,7 @@ function BioData() {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                    {memberDetails?.v2Member?.assignedHnFullName}
+                    {v2Member?.assignedHnFullName}
                   </td>
                 </tr>
                 <tr>
@@ -834,12 +822,12 @@ function BioData() {
                   >
                     <span
                       className={
-                        memberDetails?.v2Member?.status === 'Active'
+                        v2Member?.status === 'Active'
                           ? 'text-success'
                           : 'text-danger'
                       }
                     >
-                      {memberDetails?.v2Member?.status}
+                      {v2Member?.status}
                     </span>
                   </td>
                 </tr>
@@ -871,19 +859,18 @@ function BioData() {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
                   >
-                    {isMinor(calcAge(memberDetails?.v2Member?.birthDate))
+                    {isMinor(calcAge(v2Member?.birthDate))
                       ? 'Guardian Contact Info'
                       : 'Contact Info:'}
                   </td>
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                    {isMinor(calcAge(memberDetails?.v2Member?.birthDate))
-                      ? memberDetails?.v2Member?.phone
+                    {isMinor(calcAge(v2Member?.birthDate))
+                      ? v2Member?.phone
                       : null}
-                    {!isMinor(calcAge(memberDetails?.v2Member?.birthDate)) &&
-                    memberDetails?.v2Member?.phone
-                      ? `${memberDetails?.v2Member?.phone}`
+                    {!isMinor(calcAge(v2Member?.birthDate)) && v2Member?.phone
+                      ? `${v2Member?.phone}`
                       : null}
                   </td>
                 </tr>
@@ -973,10 +960,8 @@ function BioData() {
               </Box>
             </Link>
 
-            {memberDetails?.v2Member?.insuranceDetails?.length > 0 ? (
-              <Benefits
-                insuranceBenefits={memberDetails?.v2Member?.insuranceDetails}
-              />
+            {v2Member?.insuranceDetails?.length > 0 ? (
+              <Benefits insuranceBenefits={v2Member?.insuranceDetails} />
             ) : (
               <Grid item xs={12} className={styles.noBenefits}>
                 We do NOT have insurance data for this member yet. Edit member

@@ -25,9 +25,17 @@ import WorkflowPortal from '../workflows/workflow-portal.component'
 import { formNames } from '../workflows/Forms/form-fields'
 import MemberDetailsUpdateForm, {
   memberDetailsValidationSchema,
+  createInitialFormState,
+  parseMemberInputData,
+  handleFormSubmissionErrors,
 } from '../../summary/biodata/biodata-update/member-details-update.component'
 import { WorkflowMeta } from '../workflows/workflow-types'
-import { useLoading } from '../../../../context/loading-context'
+import { useMember } from '../../../../context/member.context'
+import ToastNotification, {
+  defaultToastMessage,
+  ToastMessage,
+} from '../../../utils/toast/toast-notification'
+import Toasts from '../../../../helpers/toast'
 
 type IForm = {
   name: string
@@ -62,7 +70,6 @@ function FormPortal({
   addOpenForm,
   onFormClose,
   onRefetch,
-  memberDetails,
 }: FormProps) {
   const [calloutHeight, setcalloutHeight] = useState(66)
   const [isIncreasing, setIsIncreasing] = useState(true)
@@ -75,8 +82,35 @@ function FormPortal({
   const containerWidth = isDisabled ? '450px' : `${calloutWidth}%`
   const containerHeight = `${calloutHeight}%`
   const isWorkflow = !!form.workflowId
+  const [toastMessage, setToastMessage] =
+    useState<ToastMessage>(defaultToastMessage)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const { loading: isSubmitting } = useLoading()
+  const { v2Member, handleMemberUpdate, member, refetchMember, isLoading } =
+    useMember()
+
+  const updateMemberDetails = (values: any) => {
+    setIsSubmitting(true)
+    const antaraId = v2Member?.antaraId || member['Antara ID']
+    const memberDetails = parseMemberInputData(values, antaraId)
+
+    handleMemberUpdate(memberDetails)
+      .then((res: any) => {
+        const errors = handleFormSubmissionErrors(res?.data)
+        if (errors.length > 0) {
+          Toasts.showErrorNotification(
+            'There was a problem saving member details. Error has been logged'
+          )
+        } else {
+          Toasts.showSuccessNotification('Member details saved successfully')
+          onFormClose('Edit member details', false)
+        }
+      })
+      .finally(() => {
+        refetchMember()
+        setIsSubmitting(false)
+      })
+  }
 
   const {
     values,
@@ -85,8 +119,8 @@ function FormPortal({
     handleChange,
     setFieldValue,
   } = useFormik({
-    initialValues: memberDetails.initialValues,
-    onSubmit: memberDetails.handleSubmit,
+    initialValues: createInitialFormState(v2Member),
+    onSubmit: updateMemberDetails,
     validationSchema: memberDetailsValidationSchema,
   })
 
@@ -223,11 +257,11 @@ function FormPortal({
     if (form.name === 'Edit member details') {
       return (
         <MemberDetailsUpdateForm
-          memberDetails={memberDetails}
           errors={formikErrors}
           values={values}
           handleChange={handleChange}
           setFieldValue={setFieldValue}
+          isMemberLoading={isLoading}
         />
       )
     }
@@ -247,77 +281,86 @@ function FormPortal({
   }
 
   return (
-    <Portal>
-      <Draggable
-        bounds="parent"
-        enableUserSelectHack
-        disabled={isDisabled || isHighlighting}
-        defaultClassName={dragClass}
-        position={dynamicPosition}
-      >
-        <Paper
-          className={styles.formContainer}
-          sx={{ width: containerWidth, height: containerHeight, zIndex: 100 }}
-          elevation={5}
+    <>
+      <ToastNotification
+        isOpen={!!toastMessage.message}
+        message={toastMessage}
+        handleToastClose={() => setToastMessage(defaultToastMessage)}
+      />
+      <Portal>
+        <Draggable
+          bounds="parent"
+          enableUserSelectHack
+          disabled={isDisabled || isHighlighting}
+          defaultClassName={dragClass}
+          position={dynamicPosition}
         >
-          <DialogTitle
-            className={styles.formTitleContainer}
-            id="draggable-dialog-title"
+          <Paper
+            className={styles.formContainer}
+            sx={{ width: containerWidth, height: containerHeight, zIndex: 100 }}
+            elevation={5}
           >
-            <div className={styles.formTitle}>
-              {isWorkflow ? (
-                <span className="d-flex align-center">
-                  <span>Workflow</span>
-                  <ArrowRight width={15} height={15} />
-                  <span>{form.workflowId}</span>
-                </span>
-              ) : (
-                formNames[form.name] || form.name
-              )}
-            </div>
-            <div>
-              {!isDisabled && (
-                <Tooltip title={isIncreasing ? 'Maximize' : 'Minimize'}>
-                  <button
-                    className="drag-actions-size"
-                    onClick={changeCalloutSize}
-                  >
-                    {isIncreasing ? <Maximize /> : <Minimize />}
+            <DialogTitle
+              className={styles.formTitleContainer}
+              id="draggable-dialog-title"
+            >
+              <div className={styles.formTitle}>
+                {isWorkflow ? (
+                  <span className="d-flex align-center">
+                    <span>Workflow</span>
+                    <ArrowRight width={15} height={15} />
+                    <span>{form.workflowId}</span>
+                  </span>
+                ) : (
+                  formNames[form.name] || form.name
+                )}
+              </div>
+              <div>
+                {!isDisabled && (
+                  <Tooltip title={isIncreasing ? 'Maximize' : 'Minimize'}>
+                    <button
+                      className="drag-actions-size"
+                      onClick={changeCalloutSize}
+                    >
+                      {isIncreasing ? <Maximize /> : <Minimize />}
+                    </button>
+                  </Tooltip>
+                )}
+                <Tooltip title={isDisabled ? 'Expand' : 'Collapse'}>
+                  <button className="drag-actions-size" onClick={resizeDialog}>
+                    {isDisabled ? <Maximize2 /> : <Minimize2 />}
                   </button>
                 </Tooltip>
-              )}
-              <Tooltip title={isDisabled ? 'Expand' : 'Collapse'}>
-                <button className="drag-actions-size" onClick={resizeDialog}>
-                  {isDisabled ? <Maximize2 /> : <Minimize2 />}
-                </button>
-              </Tooltip>
-              <Tooltip title="Close">
-                <button className="drag-actions" onClick={handleFormCloseEvent}>
-                  <X />
-                </button>
-              </Tooltip>
-            </div>
-          </DialogTitle>
-          <DialogContent sx={{ padding: 0, height: '90%' }}>
-            {formRender()}
-            {confirmClose()}
-          </DialogContent>
+                <Tooltip title="Close">
+                  <button
+                    className="drag-actions"
+                    onClick={handleFormCloseEvent}
+                  >
+                    <X />
+                  </button>
+                </Tooltip>
+              </div>
+            </DialogTitle>
+            <DialogContent sx={{ padding: 0, height: '90%' }}>
+              {formRender()}
+              {confirmClose()}
+            </DialogContent>
 
-          {form.name === 'Edit member details' && (
-            <DialogActions sx={{ p: 2 }}>
-              <Button
-                variant="outlined"
-                className={`${styles.actionBtn} `}
-                onClick={submitForm}
-              >
-                {isSubmitting ? 'Saving...' : 'Save'}
-              </Button>
-            </DialogActions>
-          )}
-        </Paper>
-      </Draggable>
-      {/* </div> */}
-    </Portal>
+            {form.name === 'Edit member details' && (
+              <DialogActions sx={{ p: 2 }}>
+                <Button
+                  variant="outlined"
+                  className={`${styles.actionBtn} `}
+                  onClick={submitForm}
+                >
+                  {isSubmitting ? 'Saving...' : 'Save'}
+                </Button>
+              </DialogActions>
+            )}
+          </Paper>
+        </Draggable>
+      </Portal>
+    </>
   )
 }
 

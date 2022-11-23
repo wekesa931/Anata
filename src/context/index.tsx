@@ -6,7 +6,6 @@ import { AuthProvider } from './auth-context'
 import { CommsProvider } from './comms-context'
 import createApoloClient from '../resources/apollo-client'
 import { SidebarProvider } from './sidebar-context'
-import { LoadingProvider } from './loading-context'
 
 const apolloClient = createApoloClient(false)
 
@@ -17,9 +16,7 @@ function AppContexts({ children }: any) {
         <UserProvider>
           <SidebarProvider>
             <ToastProvider>
-              <CommsProvider>
-                <LoadingProvider>{children}</LoadingProvider>
-              </CommsProvider>
+              <CommsProvider>{children}</CommsProvider>
             </ToastProvider>
           </SidebarProvider>
         </UserProvider>

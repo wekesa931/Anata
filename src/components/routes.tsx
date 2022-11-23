@@ -20,7 +20,6 @@ import BeneDashboard from './bene-dashboard/bene-dashboard.component'
 import { FcmProvider } from '../context/fcm/fcm.context'
 import { CallProvider } from '../context/calls-context'
 import CallFloatingBox from './bene-dashboard/actions/calls/callConsole.component'
-import { FormProvider } from '../context/forms-context'
 // https://mui.com/guides/interoperability/#global-css
 
 const theme = createTheme({
@@ -71,45 +70,43 @@ function Routes() {
   return (
     <BrowserRouter>
       <FcmProvider>
-        <FormProvider>
-          <CallProvider>
-            <ThemeProvider theme={theme}>
-              <StyledEngineProvider injectFirst>
-                <CallFloatingBox />
-                <SwitchRoutes>
-                  <Route path="/login" element={<Login />} />
-                  <Route
-                    path="/"
-                    element={
-                      <ProtectedRoute>
-                        {' '}
-                        <Dashboard />{' '}
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/member"
-                    element={
-                      <ProtectedRoute>
-                        {' '}
-                        <Dashboard />{' '}
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/member/:recId"
-                    element={
-                      <ProtectedRoute>
-                        {' '}
-                        <BeneDashboard />{' '}
-                      </ProtectedRoute>
-                    }
-                  />
-                </SwitchRoutes>
-              </StyledEngineProvider>
-            </ThemeProvider>
-          </CallProvider>
-        </FormProvider>
+        <CallProvider>
+          <ThemeProvider theme={theme}>
+            <StyledEngineProvider injectFirst>
+              <CallFloatingBox />
+              <SwitchRoutes>
+                <Route path="/login" element={<Login />} />
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      {' '}
+                      <Dashboard />{' '}
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/member"
+                  element={
+                    <ProtectedRoute>
+                      {' '}
+                      <Dashboard />{' '}
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/member/:recId"
+                  element={
+                    <ProtectedRoute>
+                      {' '}
+                      <BeneDashboard />{' '}
+                    </ProtectedRoute>
+                  }
+                />
+              </SwitchRoutes>
+            </StyledEngineProvider>
+          </ThemeProvider>
+        </CallProvider>
       </FcmProvider>
     </BrowserRouter>
   )

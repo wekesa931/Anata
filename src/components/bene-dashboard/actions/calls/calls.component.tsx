@@ -10,7 +10,6 @@ import { useCall } from '../../../../context/calls-context'
 import DropDownComponent from '../../../../helpers/dropdown-helper'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import styles from './calls.component.css'
-import useMemberDetails from '../../summary/biodata/biodata-update/useMemberDetails'
 
 export interface IProps {
   showPrompt: boolean
@@ -31,8 +30,7 @@ function CallsCallout({
   airtableId?: string
 }) {
   const [memberContacts, setmemberContacts] = React.useState(Contacts)
-  const { member } = useMember()
-  const { v2Member: loadedContacts } = useMemberDetails(member)
+  const { member, v2Member: loadedContacts } = useMember()
   const [isPhoneChooserOpen, setIsPhoneChooserOpen] = useState<boolean>(false)
   const { callError, setHistoryRecordId, setcallError } = useCall()
   const [open, setOpen] = useState<boolean>(false)
