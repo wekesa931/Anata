@@ -58,9 +58,12 @@ export const memberDetailsValidationSchema = Yup.object().shape({
   }),
   memberInsurance: Yup.array().of(
     Yup.object().shape({
-      insuranceCompany: Yup.string().required('Insurance company is required'),
-      insuranceId: Yup.string().when('insuranceCompany', {
-        is: (val: string) => val !== '',
+      insuranceCompany: Yup.string().when('toDelete', {
+        is: (val: any) => !val,
+        then: Yup.string().required('Insurance company is required'),
+      }),
+      insuranceId: Yup.string().when(['insuranceCompany', 'toDelete'], {
+        is: (val: string, toDelete: any) => val !== '' && !toDelete,
         then: Yup.string().required('Insurance ID is required'),
       }),
     })
@@ -176,6 +179,10 @@ const prepareData = (vars: any, antaraId: string) => {
   }
 
   if (inputVariables.memberInsurance) {
+    inputVariables.memberInsurance = inputVariables.memberInsurance.filter(
+      (e: any) => e.insuranceCompany !== '' || e.insuranceId !== ''
+    )
+
     inputVariables.memberInsurance = {
       insuranceDetails: inputVariables.memberInsurance.map((ins: any) => ({
         ...(!!ins.benefits && { benefits: ins.benefits }),
