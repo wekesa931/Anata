@@ -762,7 +762,7 @@ function MemberDetailsUpdateForm({
         </div>
       ) : (
         <>
-          {errorLoadingMember ? (
+          {errorLoadingMember || !v2Member ? (
             <div
               style={{
                 display: 'flex',

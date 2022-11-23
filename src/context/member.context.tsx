@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import logError from '../components/utils/Bugsnag/Bugsnag'
 import { MEMBER_DETAILS_QUERY, UPDATE_MEMBER_DETAILS } from '../gql/comms'
 import createApolloClient from '../resources/apollo-client'
+import Toasts from '../helpers/toast'
 
 const apolloClient = createApolloClient(true)
 
@@ -143,6 +144,11 @@ function MemberProvider({ member, children }: any) {
       client: apolloClient,
       onCompleted: (data) => {
         const memberDetails = data?.members.edges[0]?.node
+
+        if (!memberDetails) {
+          Toasts.showErrorNotification('Member not found in v2 schema.')
+          return
+        }
         const parsedMember = parseV2MemberData(memberDetails)
         setV2Member(parsedMember)
 
