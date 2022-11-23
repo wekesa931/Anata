@@ -707,7 +707,7 @@ function BioData() {
           )}
 
           <TsCs member={member} contact={memberContact} />
-          {v2Member?.tags ? (
+          {v2Member?.tags?.length ? (
             <div className={styles.tagContainer}>
               <Tags member={v2Member} />
             </div>

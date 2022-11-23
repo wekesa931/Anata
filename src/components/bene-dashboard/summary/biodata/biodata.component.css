@@ -19,11 +19,8 @@
 }
 
 .hrLine {
-  margin-left: 16px;
-  margin-right: 16px;
   border: 1px solid var(--dark-blue-10);
-  margin-top: 8px;
-  margin-bottom: 12px;
+  margin: 2rem 1rem;
 }
 
 .beneNameContainer {
