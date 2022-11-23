@@ -60,3 +60,24 @@
   font-weight: 400;
   margin-top: 0.5rem;
 }
+
+.menuWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 2rem;
+  gap: 0.5rem;
+}
+
+.logoMain {
+  margin-left: 1rem;
+}
+
+.logoText {
+  font-family: 'Rubik', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: var(--dark-blue-100);
+}

@@ -1,75 +1,21 @@
-import React, { useState } from 'react'
+import React from 'react'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 import Box from '@mui/material/Box'
 import Tab from '../../utils/tabs/mui-tabs.component'
-import {
-  SortFilterProvider,
-  useSortFilter,
-} from '../../../context/sort-filter-views.context'
+import { SortFilterProvider } from '../../../context/sort-filter-views.context'
 import styles from './views.component.css'
-import Icon from '../../utils/icon/icon.component'
 import Clinical from './clinical/clinical.component'
 import InteractionLogs from './interaction-logs/interaction-logs.component'
 import Nutrition from './nutrition/nutrition.component'
 import Files from './files/files.component'
 import ErrorBoundary from '../../error-boundary/error-boundary.component'
-import SortDialog from './sort-and-filter.component/sort-and-filter.component'
 import Conditions from './conditions/conditions.component'
 import MemberTask from './member_tasks/member-task.component'
-import Tooltip from '../../utils/tooltip/tooltip.component'
 import CallLog from '../actions/calls/call-log/call-log.component'
 import EngagementDashboard from './engagement/engagement-dashboard.component'
 import Longitudinal from './longitudinal/longitudinal.components'
-
-function SortButton({ openSortDialog, setOpenSortDialog }: any) {
-  const {
-    ops: { sort },
-  } = useSortFilter()
-  return (
-    <button
-      className={sort === 'asc' ? 'btn-icon active' : 'btn-icon'}
-      onClick={() => {
-        setOpenSortDialog(!openSortDialog)
-      }}
-      style={{ margin: 0, padding: 0 }}
-    >
-      <Icon name="options" width={40} height={24} fill="var(--blue-base)" />
-    </button>
-  )
-}
-
-function FilterComponent() {
-  const [openSortDialog, setOpenSortDialog] = useState(false)
-  const absolute = openSortDialog ? 'p-absolute' : ''
-  return (
-    <div
-      className="d-flex p-relative"
-      style={!openSortDialog ? { alignItems: 'center' } : {}}
-    >
-      <div
-        className={`d-flex  flex-align-center ${absolute}`}
-        key={openSortDialog ? 1 : 0}
-      >
-        {!openSortDialog ? (
-          <div className={styles.animatedDiv}>
-            <Tooltip title="Sort And Filter">
-              <SortButton
-                setOpenSortDialog={setOpenSortDialog}
-                openSortDialog={openSortDialog}
-              />
-            </Tooltip>
-          </div>
-        ) : (
-          <div className={styles.animatedDiv}>
-            <SortDialog onClose={() => setOpenSortDialog(false)} />
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
 
 function Views() {
   const [value, setValue] = React.useState('1')
@@ -110,7 +56,6 @@ function Views() {
             <Tab label="Member Tasks" value="8" />
             <Tab label="Member Engagement" value="9" />
           </TabList>
-          <FilterComponent />
         </Box>
         <div
           style={{ overflowY: 'auto', height: '100%', paddingBottom: '36px' }}

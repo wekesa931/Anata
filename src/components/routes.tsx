@@ -14,7 +14,6 @@ import {
 import Login from './login/login.component'
 import NavBar from './navbar/navbar.component'
 import { useUser } from '../context/user-context'
-import Sidebar from './sidebar/sidebar.component'
 import Dashboard from './main-dashboard/main-dashboard'
 import BeneDashboard from './bene-dashboard/bene-dashboard.component'
 import { FcmProvider } from '../context/fcm/fcm.context'
@@ -47,7 +46,6 @@ function ProtectedRoute({ children }: any) {
 
   return user ? (
     <div className="d-flex" style={{ height: '100%' }}>
-      <Sidebar />
       <div
         style={{
           display: 'flex',

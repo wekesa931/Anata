@@ -8,9 +8,7 @@ import {
   List,
   Thermometer,
   Activity,
-  Users,
   Phone,
-  TrendingUp,
   Key,
   Heart,
   AlertCircle,
@@ -19,6 +17,7 @@ import config from '../../config/config'
 import FlagForReview from './flag-for-review/flag-for-review.component'
 
 const { iframes } = config
+
 const SidebarMenuItems = [
   {
     name: 'Members',
@@ -32,34 +31,28 @@ const SidebarMenuItems = [
     component: <FlagForReview />,
   },
   {
-    name: 'Tasks',
+    name: 'HN Tasks',
     icon: <CheckCircle />,
-    subItems: [
-      {
-        name: 'HN Tasks',
-        icon: <CheckCircle />,
-        rootUrl:
-          'https://airtable.com/embed/shrlDv3haSmnW2KXm?backgroundColor=green&viewControls=on',
-        url_sandbox:
-          'https://airtable.com/embed/shrBT8cqIRfMaixuq?backgroundColor=pink&viewControls=on',
-      },
-      {
-        name: 'Callbacks',
-        icon: <Phone />,
-        rootUrl:
-          'https://airtable.com/embed/shrWh9lzYTjGX7fDT?backgroundColor=green&viewControls=on',
-        url_sandbox:
-          'https://airtable.com/embed/shrrDnejrjuSDnDAP?backgroundColor=pink&viewControls=on',
-      },
-      {
-        name: 'Members Tasks',
-        icon: <CheckCircle />,
-        rootUrl:
-          'https://airtable.com/embed/shrz0HHYQVgNuca5v/tbljwCFIDT2vG65AH?backgroundColor=green&viewControls=on',
-        url_sandbox:
-          'https://airtable.com/embed/shrCpg6I7xco5Miov?backgroundColor=pink&viewControls=on',
-      },
-    ],
+    rootUrl:
+      'https://airtable.com/embed/shrlDv3haSmnW2KXm?backgroundColor=green&viewControls=on',
+    url_sandbox:
+      'https://airtable.com/embed/shrBT8cqIRfMaixuq?backgroundColor=pink&viewControls=on',
+  },
+  {
+    name: 'Callbacks',
+    icon: <Phone />,
+    rootUrl:
+      'https://airtable.com/embed/shrWh9lzYTjGX7fDT?backgroundColor=green&viewControls=on',
+    url_sandbox:
+      'https://airtable.com/embed/shrrDnejrjuSDnDAP?backgroundColor=pink&viewControls=on',
+  },
+  {
+    name: 'Members Tasks',
+    icon: <CheckCircle />,
+    rootUrl:
+      'https://airtable.com/embed/shrz0HHYQVgNuca5v/tbljwCFIDT2vG65AH?backgroundColor=green&viewControls=on',
+    url_sandbox:
+      'https://airtable.com/embed/shrCpg6I7xco5Miov?backgroundColor=pink&viewControls=on',
   },
   {
     name: 'Appointments',
@@ -125,29 +118,6 @@ const SidebarMenuItems = [
       'https://airtable.com/embed/shrbUlLVm043wUSJg?backgroundColor=green&viewControls=on',
     url_sandbox:
       'https://airtable.com/embed/shrsdYjJBIZt35Sup?backgroundColor=pink&viewControls=on',
-  },
-  {
-    name: 'Population',
-    icon: <Users />,
-    subItems: [
-      {
-        name: 'Members',
-        icon: <User />,
-        rootUrl: `https://airtable.com/embed/${iframes.default.members}?viewControls=on`,
-      },
-      {
-        name: 'NPS',
-        icon: <TrendingUp />,
-        rootUrl:
-          'https://airtable.com/embed/shrKb4Z74A074oLaF?backgroundColor=green&viewControls=on',
-      },
-      {
-        name: 'Interactions',
-        icon: <Minimize />,
-        component: <FlagForReview />,
-      },
-    ],
-    url_sandbox: '',
   },
 ]
 

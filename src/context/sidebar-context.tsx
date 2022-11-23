@@ -1,5 +1,5 @@
 import React, { useContext, useCallback, useEffect, useState } from 'react'
-import menu from '../components/sidebar/sidebar.menu'
+import menu from '../components/navbar/menu.items'
 
 type sidebar = {
   handleOnClick: (index: number) => void

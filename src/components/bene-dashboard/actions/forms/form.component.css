@@ -3,7 +3,7 @@
   flex-direction: column;
   position: absolute;
   bottom: 0px;
-  left: 5%;
+  left: 0;
   border-radius: 12px !important;
   box-shadow: 0 2.8px 2.2px 0 rgba(0, 0, 0, 0.02),
     0 6.7px 5.3px 0 rgba(0, 0, 0, 0.03), 0 12.5px 10px 0 rgba(0, 0, 0, 0.04),
@@ -22,10 +22,6 @@
   font-family: Rubik;
   font-size: 16px;
   font-weight: 500;
-}
-
-.formTitleContainer {
-  height: 10%;
 }
 
 .formTitle,

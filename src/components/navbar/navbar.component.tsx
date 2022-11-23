@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Menu as MenuIcon } from 'react-feather'
+import { CssBaseline, IconButton } from '@mui/material'
 import styles from './navbar.component.css'
 import { useUser } from '../../context/user-context'
 import { useAuth } from '../../context/auth-context'
@@ -9,6 +11,8 @@ import analytics from '../../helpers/segment'
 import TaskMenu from './task-menu/task-menu.component'
 import Tooltip from '../utils/tooltip/tooltip.component'
 import useClickOutside from '../../hooks/click-outside-hook'
+import FlatLogo from '../../assets/img/logo/Antara Logo@1x.png'
+import FloatingMenu from './menu.component'
 
 function UserMenu() {
   const user = useUser()
@@ -55,9 +59,38 @@ function NavBar() {
   const nodeRefUser = useRef<HTMLDivElement>(null)
   useClickOutside(nodeRefCal, () => setShowTasksMenu(false))
   useClickOutside(nodeRefUser, () => setShowUserMenu(false))
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
   return (
     <div className={styles.navWrapper} data-testid="container-calender-btn">
+      <CssBaseline />
       <div className={styles.navbar}>
+        <div className={styles.menuWrapper}>
+          <IconButton className={styles.logoMain} onClick={handleClick}>
+            <MenuIcon />
+          </IconButton>
+
+          <img
+            src={FlatLogo}
+            width="32px"
+            height="32px"
+            alt="antara small logo"
+          />
+          <h5 className={styles.logoText}>Antara health</h5>
+        </div>
+        <FloatingMenu
+          anchorEl={anchorEl}
+          open={open}
+          handleClose={handleClose}
+        />
         <SearchInput />
 
         <div className="d-flex flex-align-center flex-justify-end flex-one">

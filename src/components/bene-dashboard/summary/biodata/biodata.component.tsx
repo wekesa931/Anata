@@ -383,63 +383,6 @@ function HifSummary() {
   )
 }
 
-function GeneralSummary({ member }: any) {
-  const [frs, setFrs] = useState<number | null>()
-  const [riskScore, setRiskScore] = useState<number | string>('Not Available')
-
-  const { recId } = useParams()
-
-  useEffect(() => {
-    airtableFetch(
-      `hif/list?filterByFormula=FIND("${recId}", {Member Record ID})`
-    ).then((response) => {
-      if (response) {
-        const record_id = Object.keys(response)[0]
-
-        if (record_id != null) {
-          const riskValue = response[record_id]['Risk score']
-          const percenRiskScore = riskValue
-            ? (parseFloat(riskValue) * 100).toFixed(2)
-            : null
-          setRiskScore(
-            percenRiskScore ? `${percenRiskScore}%` : 'Not Available'
-          )
-        }
-      }
-    })
-  }, [recId])
-
-  useEffect(() => {
-    airtableFetch(
-      `fcvd/list?filterByFormula=FIND("${member['Antara ID']}", {Antara Member ID})`
-    ).then((res) => {
-      const record = Object.keys(res).map((key) => res[key])[0]
-      if (record) {
-        setFrs(record['Percent Risk'])
-      }
-    })
-  }, [member])
-
-  return (
-    <div className={`text-normal ${styles.topSummaryRow}`}>
-      <div className={styles.topSummaryColumns}>
-        <h6 className={`text-bold  ${styles.topSummaryColumnHeadings}`}>
-          Risk Score
-        </h6>
-        <span className={`text-small ${styles.topSummaryRowContent}`}>
-          {riskScore && riskScore}
-        </span>
-      </div>
-      <div className={styles.topSummaryColumns}>
-        <h6 className={`text-bold  ${styles.topSummaryColumnHeadings}`}>FRS</h6>
-        <span className={`text-small ${styles.topSummaryRowContent}`}>
-          {frs || 'Unavailable'}
-        </span>
-      </div>
-    </div>
-  )
-}
-
 const lastSentBeforeDay = (date: string): boolean => {
   const lastSent = dayjs(date)
   const dateToday = dayjs()
@@ -594,9 +537,10 @@ function Tags({ member }: any) {
   const [tags, setTags] = useState<string[] | undefined>(
     undefined && 'No tag set'
   )
+
   useEffect(() => {
-    if (member.Tags) {
-      setTags(member.Tags)
+    if (member.tags) {
+      setTags(member.tags)
     }
   }, [member])
 
@@ -619,6 +563,30 @@ type SnackBarData = {
 function BioData() {
   const [snackbarData, setSnackbarData] = useState<SnackBarData | null>(null)
   const { addOpenForm } = useFormPortal()
+
+  const [riskScore, setRiskScore] = useState<number | string>('Not Available')
+
+  const { recId } = useParams()
+
+  useEffect(() => {
+    airtableFetch(
+      `hif/list?filterByFormula=FIND("${recId}", {Member Record ID})`
+    ).then((response) => {
+      if (response) {
+        const record_id = Object.keys(response)[0]
+
+        if (record_id != null) {
+          const riskValue = response[record_id]['Risk score']
+          const percenRiskScore = riskValue
+            ? (parseFloat(riskValue) * 100).toFixed(2)
+            : null
+          setRiskScore(
+            percenRiskScore ? `${percenRiskScore}%` : 'Not Available'
+          )
+        }
+      }
+    })
+  }, [recId])
 
   const { member, memberContact, v2Member, isLoading } = useMember()
   const hasDependants = memberContact?.dependents.length > 0
@@ -648,7 +616,6 @@ function BioData() {
     )
 
   const gaInsuranceLink = 'https://health.gakenya.com/app'
-  const mixPanelLink = `https://mixpanel.com/project/2141047/view/293995/app/profile#distinct_id=${member['Antara ID']}`
 
   // form member details update form
   const formTitle = 'Edit member details'
@@ -740,15 +707,13 @@ function BioData() {
           )}
 
           <TsCs member={member} contact={memberContact} />
-          <div className={styles.tagContainer}>
-            <Tags member={member} />
-          </div>
+          {v2Member?.tags ? (
+            <div className={styles.tagContainer}>
+              <Tags member={v2Member} />
+            </div>
+          ) : null}
 
           <div className={styles.summariesContainer}>
-            <GeneralSummary member={member} />
-
-            <hr className={styles.hrLine} />
-
             <table className={`text-normal ${styles.bioDataTable}`}>
               <tbody>
                 <tr>
@@ -763,24 +728,7 @@ function BioData() {
                     {v2Member?.assignedHnFullName}
                   </td>
                 </tr>
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    MixPanel Dashboard:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    <a
-                      href={`${mixPanelLink}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Open Dashboard
-                    </a>
-                  </td>
-                </tr>
+                <tr />
                 <tr>
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
@@ -847,6 +795,18 @@ function BioData() {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
                   >
+                    Risk score:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    {riskScore}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
                     Health Goals:
                   </td>
                   <td
@@ -872,6 +832,26 @@ function BioData() {
                     {!isMinor(calcAge(v2Member?.birthDate)) && v2Member?.phone
                       ? `${v2Member?.phone}`
                       : null}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+                  >
+                    MixPanel Dashboard:
+                  </td>
+                  <td
+                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
+                  >
+                    <a
+                      href={`https://mixpanel.com/project/2141047/view/293995/app/profile#distinct_id=${
+                        v2Member?.antaraId || member['Antara ID']
+                      }`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Open Dashboard
+                    </a>
                   </td>
                 </tr>
               </tbody>

@@ -73,18 +73,21 @@ function FormPortal({
 }: FormProps) {
   const [calloutHeight, setcalloutHeight] = useState(66)
   const [isIncreasing, setIsIncreasing] = useState(true)
-  const [calloutWidth, setCalloutWidth] = useState(33)
+
   const [isFormEdited, setIsFormEdited] = useState(false)
   const [isHighlighting, setIsHighlighting] = useState(true)
   const [dynamicPosition, setDynamicPosition] = useState(undefined)
   const [isDisabled, setIsDisabled] = useState(false)
   const dragClass = isDisabled ? 'draggable-disabled' : 'draggable'
-  const containerWidth = isDisabled ? '450px' : `${calloutWidth}%`
+
   const containerHeight = `${calloutHeight}%`
   const isWorkflow = !!form.workflowId
   const [toastMessage, setToastMessage] =
     useState<ToastMessage>(defaultToastMessage)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const calloutWidth = isWorkflow ? 50 : 40
+  const containerWidth = `${calloutWidth}%`
 
   const { v2Member, handleMemberUpdate, member, refetchMember, isLoading } =
     useMember()
@@ -139,7 +142,7 @@ function FormPortal({
 
   const resizeDialog = () => {
     if (!isDisabled) {
-      setcalloutHeight(15)
+      setcalloutHeight(8)
       setIsDisabled(true)
       setDynamicPosition({ x: formNum * 70, y: 0 })
     } else {
@@ -174,17 +177,13 @@ function FormPortal({
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
   const changeCalloutSize = () => {
-    if (isIncreasing) {
-      setCalloutWidth((width) => width + 10)
-      setcalloutHeight((height) => height + 10)
-    } else {
-      setCalloutWidth((width) => width - 10)
-      setcalloutHeight((height) => height - 10)
-    }
-    if (calloutWidth > 50) {
+    const newHeight = isIncreasing ? calloutHeight + 20 : calloutHeight - 20
+    setcalloutHeight(newHeight)
+
+    if (newHeight > 66) {
       setIsIncreasing(false)
     }
-    if (calloutWidth < 50) {
+    if (newHeight <= 66) {
       setIsIncreasing(true)
     }
   }
@@ -227,7 +226,10 @@ function FormPortal({
           aria-describedby="alert-dialog-description"
           fullScreen={fullScreen}
         >
-          <DialogTitle id="alert-dialog-title">
+          <DialogTitle
+            id="alert-dialog-title"
+            sx={{ maxHeight: '10%', height: '4rem' }}
+          >
             {`Are you sure you want to leave ${formNames[formName]}?`}
           </DialogTitle>
           <DialogContent>
