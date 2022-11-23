@@ -190,6 +190,7 @@ const prepareData = (vars: any, antaraId: string) => {
         insuranceCompany: ins.insuranceCompany,
         insuranceId: ins.insuranceId,
         priority: ins.priority,
+        toDelete: !!ins?.toDelete,
       })),
       antaraId,
     }
