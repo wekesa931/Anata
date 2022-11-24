@@ -101,6 +101,9 @@ const MEMBER_DETAILS_QUERY = gql`
             firstName
             middleName
             lastName
+            intercomUrl
+            intercomRecordId
+            intercomUserId
             sex {
               sex
             }

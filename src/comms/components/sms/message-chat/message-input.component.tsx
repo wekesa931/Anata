@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useToasts } from 'react-toast-notifications'
 import { ConfirmationDialog } from '@airtable/blocks/ui'
-import { useMutation, useQuery } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { ReportProblemOutlined } from '@mui/icons-material'
 import { SEND_SMS } from '../../../../gql/sms'
 import {
@@ -17,7 +17,6 @@ import { useUser } from '../../../../context/user-context'
 import { useMember } from '../../../../context/member.context'
 import analytics from '../../../../helpers/segment'
 import logError from '../../../../components/utils/Bugsnag/Bugsnag'
-import { MEMBER_CONTACT_DETAILS } from '../../../../gql/comms'
 
 type MessageInputProps = {
   messages: any
@@ -25,7 +24,7 @@ type MessageInputProps = {
 }
 
 function MessageInput({ messages, setMessages }: MessageInputProps) {
-  const { member } = useMember()
+  const { member, v2Member } = useMember()
   const messageTemplate = (member && member.messageTemplate) || ''
   const [message, setMessage] = useState<string>(messageTemplate)
   const [charCount, setCharCount] = useState<number>(0)
@@ -36,9 +35,6 @@ function MessageInput({ messages, setMessages }: MessageInputProps) {
   const user = useUser()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [sendSms] = useMutation(SEND_SMS)
-  const { data: memberDbProfile } = useQuery(MEMBER_CONTACT_DETAILS, {
-    variables: { antaraId: member['Antara ID'] },
-  })
   const [intercomUri, setIntercomUrl] = useState<string>('')
 
   useEffect(() => {
@@ -54,12 +50,12 @@ function MessageInput({ messages, setMessages }: MessageInputProps) {
   }, [message, textAreaRef])
 
   useEffect(() => {
-    if (memberDbProfile) {
-      const { intercomUrl } = memberDbProfile.beneficiary.edges[0].node
+    if (member && v2Member.intercomUserId) {
+      const { intercomUrl } = v2Member
       setIntercomUrl(intercomUrl)
     }
     setMessage(messageTemplate)
-  }, [messageTemplate, memberDbProfile])
+  }, [messageTemplate, member, v2Member])
 
   const handleChange = ($event: any) => {
     setMessage($event.target.value)
