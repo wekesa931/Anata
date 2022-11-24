@@ -50,12 +50,11 @@ function MessageInput({ messages, setMessages }: MessageInputProps) {
   }, [message, textAreaRef])
 
   useEffect(() => {
-    if (member && v2Member.intercomUserId) {
-      const { intercomUrl } = v2Member
-      setIntercomUrl(intercomUrl)
+    if (v2Member?.intercomUserId) {
+      setIntercomUrl(v2Member?.intercomUrl)
     }
     setMessage(messageTemplate)
-  }, [messageTemplate, member, v2Member])
+  }, [messageTemplate, v2Member])
 
   const handleChange = ($event: any) => {
     setMessage($event.target.value)
