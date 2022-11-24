@@ -22,7 +22,7 @@ const SidebarMenuItems = [
   {
     name: 'Members',
     icon: <User />,
-    rootUrl: `https://airtable.com/embed/${iframes.default.members}?viewControls=on`,
+    rootUrl: `https://airtable.com/embed/${iframes.default.Members}?viewControls=on`,
     url_sandbox: 'https://airtable.com/embed/shrK946uKbTWYhDSa',
   },
   {

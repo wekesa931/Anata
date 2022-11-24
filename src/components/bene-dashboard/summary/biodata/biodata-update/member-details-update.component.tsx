@@ -180,7 +180,7 @@ const prepareData = (vars: any, antaraId: string) => {
 
   if (inputVariables.memberInsurance) {
     inputVariables.memberInsurance = inputVariables.memberInsurance.filter(
-      (e: any) => e.insuranceCompany !== '' || e.insuranceId !== ''
+      (e: any) => e.insuranceCompany !== '' && e.insuranceId !== ''
     )
 
     inputVariables.memberInsurance = {
