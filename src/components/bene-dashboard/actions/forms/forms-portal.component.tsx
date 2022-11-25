@@ -159,19 +159,6 @@ function FormPortal({
     }
   })
 
-  React.useEffect(() => {
-    const message = `Warning Navigating away from this page will delete your text if you have not already saved it`
-    window.addEventListener('beforeunload', (e) => {
-      e.stopImmediatePropagation()
-      e.returnValue = message
-    })
-    return () =>
-      window.removeEventListener('beforeunload', (e) => {
-        e.stopImmediatePropagation()
-        e.returnValue = message
-      })
-  })
-
   const [open, setOpen] = React.useState(false)
 
   const theme = useTheme()

@@ -32,12 +32,6 @@ type LookupOption = {
   value: string
 }
 
-type LoadingData = {
-  staffLoading: boolean
-  insuranceLoading: boolean
-  lookupLoading: boolean
-}
-
 const phoneRe = /^(\+254|0)\d{9}$/
 
 export const memberDetailsValidationSchema = Yup.object().shape({
@@ -274,14 +268,12 @@ function MemberDetailsUpdateForm({
   const [benefits, setBenefits] = useState<LookupOption[]>([])
   const [antaraStaff, setAntaraStaff] = useState<LookupOption[]>([])
   const [tags, setTags] = useState<LookupOption[]>([])
-  const [dataLoading, setDataLoading] = useState<LoadingData>({
-    staffLoading: true,
-    insuranceLoading: true,
-    lookupLoading: true,
-  })
+  const [dataLoading, setDataLoading] = useState<boolean>(false)
 
   const parseLookupEntries = (rawLookupData: any) => {
-    setCompanies(parseDataToOptions(rawLookupData?.getCompanies, 'name'))
+    setCompanies(
+      rawLookupData?.getCompanies?.edges?.map((e: any) => e?.node?.name) || []
+    )
     setHealthPolicies(parseDataToOptions(rawLookupData?.healthPolicies, 'name'))
     setMemberStatus(parseDataToOptions(rawLookupData?.memberStatus, 'status'))
     setOnboardingStages(
@@ -298,49 +290,33 @@ function MemberDetailsUpdateForm({
 
   const [getLookupEntries] = useLazyQuery(LOOKUP_ENTRIES_QUERY, {
     client: apolloClient,
-    onCompleted: (data) => {
-      setDataLoading((prev) => ({ ...prev, lookupLoading: false }))
-      parseLookupEntries(data)
-    },
-    onError: (error) => {
-      setDataLoading((prev) => ({ ...prev, lookupLoading: false }))
-      logError(error)
-    },
   })
-  const [getInsurances] = useLazyQuery(GET_INSURANCE_COMPANIES, {
-    onCompleted: (data) => {
-      setDataLoading((prev) => ({ ...prev, insuranceLoading: false }))
-      setInsuranceCompanies(
-        parseDataToOptions(data?.insuranceCompanies, 'name')
-      )
-    },
-    onError: (error) => {
-      setDataLoading((prev) => ({ ...prev, insuranceLoading: false }))
-      logError(error)
-    },
-  })
+  const [getInsurances] = useLazyQuery(GET_INSURANCE_COMPANIES)
+  const [getAntaraStaff] = useLazyQuery(GET_ANTARA_STAFF)
 
-  const [getAntaraStaff] = useLazyQuery(GET_ANTARA_STAFF, {
-    onCompleted: (data) => {
-      setDataLoading((prev) => ({ ...prev, staffLoading: false }))
-      setAntaraStaff(
-        data?.antaraStaff?.edges.map((staff: any) => ({
-          label: staff?.node?.fullName,
-          value: staff?.node?.emailUsername,
-        }))
-      )
-    },
-    onError: (error) => {
-      setDataLoading((prev) => ({ ...prev, staffLoading: false }))
-      logError(error)
-    },
-  })
+  const loadLooups = () => {
+    setDataLoading(true)
+    Promise.all([getLookupEntries(), getInsurances(), getAntaraStaff()])
+      .then((data) => {
+        const [lookupData, insuranceData, staffData] = data
+
+        parseLookupEntries(lookupData?.data)
+        setAntaraStaff(
+          staffData?.data?.antaraStaff?.edges.map((staff: any) => ({
+            label: staff?.node?.fullName,
+            value: staff?.node?.emailUsername,
+          }))
+        )
+        setInsuranceCompanies(
+          parseDataToOptions(insuranceData?.data?.insuranceCompanies, 'name')
+        )
+      })
+      .catch((err) => logError(err))
+      .finally(() => setDataLoading(false))
+  }
 
   useEffect(() => {
-    getLookupEntries()
-    getInsurances()
-    getAntaraStaff()
-
+    loadLooups()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -641,7 +617,7 @@ function MemberDetailsUpdateForm({
           type: 'autocomplete',
           dataIndex: 'employer',
           label: 'Employer',
-          options: companies.map((c: any) => c.value),
+          options: companies,
           stateKey: 'memberStatus',
         },
       ],
@@ -751,11 +727,9 @@ function MemberDetailsUpdateForm({
     },
   ]
 
-  const isDataLoading = Object.values(dataLoading).some((e) => e)
-
   return (
     <div>
-      {isDataLoading || isMemberLoading ? (
+      {dataLoading || isMemberLoading ? (
         <div className="d-flex flex-direction-column flex-align-center margin-top-32">
           <LoadingIcon />
           <p className="text-small">Loading Member Data...</p>
@@ -777,13 +751,17 @@ function MemberDetailsUpdateForm({
               </p>
             </div>
           ) : (
-            <FormBuilder
-              formFields={formFields}
-              errors={errors}
-              values={values}
-              handleChange={handleChange}
-              setFieldValue={setFieldValue}
-            />
+            <>
+              {v2Member && (
+                <FormBuilder
+                  formFields={formFields}
+                  errors={errors}
+                  values={values}
+                  handleChange={handleChange}
+                  setFieldValue={setFieldValue}
+                />
+              )}
+            </>
           )}
         </>
       )}
