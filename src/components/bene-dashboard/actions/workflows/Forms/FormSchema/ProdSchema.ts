@@ -7779,7 +7779,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblMKwFctRYwBYHgt',
-        required: true,
+        required: false,
         helper: '',
       },
       {
