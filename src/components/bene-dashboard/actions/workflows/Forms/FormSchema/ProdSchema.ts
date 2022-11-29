@@ -7974,7 +7974,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Please go to this view <a href="https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Activity-METs-calculator_sudrw#_luOZM" target="_blank">https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Activity-METs-calculator_sudrw#_luOZM</a> to identify the MET-Min/week (total of MET-Min/week of each activity)\nExample: 500 or 550',
+          'Please go to this view <a href="https://coda.io/d/Clinical-Hub_dLO3YmEbw6e/Activity-METs-calculator_suNvx#_luc_1" target="_blank">https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Activity-METs-calculator_sudrw#_luOZM</a> to identify the MET-Min/week (total of MET-Min/week of each activity)\nExample: 500 or 550',
         conditionType: '',
         parentKey: 'Intervention',
         parentValues: ['Activity Plan'],
@@ -13896,7 +13896,7 @@ export default [
         foreignTableId: null,
         required: true,
         helper:
-          'Please go to this view <a href="https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Activity-METs-calculator_sudrw#_luOZM" target="_blank">https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Activity-METs-calculator_sudrw#_luOZM</a> to identify the MET-Min/week (total of MET-Min/week of each activity)\nExample: 500 or 550',
+          'Please go to this view <a href="https://coda.io/d/Clinical-Hub_dLO3YmEbw6e/Activity-METs-calculator_suNvx#_luc_1" target="_blank">https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Activity-METs-calculator_sudrw#_luOZM</a> to identify the MET-Min/week (total of MET-Min/week of each activity)\nExample: 500 or 550',
         conditionType: '',
         parentKey: 'Intervention type',
         parentValues: ['Activity Plan', 'Fitness Plan'],
