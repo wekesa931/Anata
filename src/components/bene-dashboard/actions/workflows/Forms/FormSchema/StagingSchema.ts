@@ -4638,6 +4638,32 @@ export default [
         },
       },
       {
+        id: 'fldvQLkGQCYU2dSmp',
+        name: 'Osteoarthritis current pain score',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Please score the pain of the member using this website: <a href="https://www.researchgate.net/figure/The-Universal-Pain-Assessment-Tool-UPAT-that-has-been-used-to-identify-functional-TMJ_fig1_311158988" target="_blank">https://www.researchgate.net/figure/The-Universal-Pain-Assessment-Tool-UPAT-that-has-been-used-to-identify-functional-TMJ_fig1_311158988</a> ',
+        conditionType: '',
+        parentKey: 'Condition type',
+        parentValues: ['Osteoarthritis'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Condition type'])) {
+            return ['Osteoarthritis'].some((r) =>
+              values['Condition type'].includes(r)
+            )
+          }
+          return ['Osteoarthritis'].includes(values['Condition type'])
+        },
+      },
+      {
         id: 'fldnWG87BDAftBz35',
         name: 'Update GERD stage',
         type: 'select',
