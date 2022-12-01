@@ -656,6 +656,20 @@ function BioData() {
     return true
   }
 
+  const handleChange = async (e) => {
+    const isOptedIn = e.target.checked
+    try {
+      await airtableFetch('members', 'post', {
+        id: member.recID,
+        fields: {
+          'Chronic Care Consent': isOptedIn ? 'Opted In' : 'Opted Out',
+        },
+      })
+    } catch (err) {
+      logError(err)
+    }
+  }
+
   return (
     <div className={styles.wrapper}>
       {member && (
@@ -746,9 +760,12 @@ function BioData() {
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
                     <Checkbox
-                      disabled
+                      disabled={member['Chronic Care Consent'] === 'Opted Out'}
                       color="primary"
-                      checked={member['Chronic Care Consent']}
+                      defaultChecked={
+                        member['Chronic Care Consent'] === 'Opted In'
+                      }
+                      onChange={handleChange}
                     />
                   </td>
                 </tr>
