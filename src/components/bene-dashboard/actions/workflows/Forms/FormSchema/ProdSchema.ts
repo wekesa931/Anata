@@ -11962,8 +11962,8 @@ export default [
         parentKey: [
           'Type of X-Ray',
           'Type of MRI',
-          'Ultrasound',
-          'CT Scan',
+          'Type of Ultrasound',
+          'Type of CT Scan',
           'Echocardiogram',
         ],
         parentValues: ['Other:'],
@@ -11974,11 +11974,13 @@ export default [
           if (Array.isArray(values['Type of MRI'])) {
             return ['Other:'].some((r) => values['Type of MRI'].includes(r))
           }
-          if (Array.isArray(values.Ultrasound)) {
-            return ['Other:'].some((r) => values.Ultrasound.includes(r))
+          if (Array.isArray(values['Type of Ultrasound'])) {
+            return ['Other:'].some((r) =>
+              values['Type of Ultrasound'].includes(r)
+            )
           }
-          if (Array.isArray(values['CT Scan'])) {
-            return ['Other:'].some((r) => values['CT Scan'].includes(r))
+          if (Array.isArray(values['Type of CT Scan'])) {
+            return ['Other:'].some((r) => values['Type of CT Scan'].includes(r))
           }
           if (Array.isArray(values.Echocardiogram)) {
             return ['Other:'].some((r) => values.Echocardiogram.includes(r))
