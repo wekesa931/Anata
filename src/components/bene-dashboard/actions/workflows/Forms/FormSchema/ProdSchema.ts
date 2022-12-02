@@ -15769,7 +15769,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblidCJtioaFSYwvk',
-        required: true,
+        required: false,
       },
       {
         id: 'fldeqJLPLjO9XMXnu',
