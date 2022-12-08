@@ -50,7 +50,7 @@ function MessageInput({ messages, setMessages }: MessageInputProps) {
   }, [message, textAreaRef])
 
   useEffect(() => {
-    if (v2Member?.intercomUserId) {
+    if (v2Member?.intercormUrl) {
       setIntercomUrl(v2Member?.intercomUrl)
     }
     setMessage(messageTemplate)
