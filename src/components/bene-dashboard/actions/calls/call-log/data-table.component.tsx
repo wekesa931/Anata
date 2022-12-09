@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react'
+import React from 'react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell, { tableCellClasses } from '@mui/material/TableCell'
@@ -16,11 +16,10 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 import CallView from './call-view.component'
 import styles from './call-view.component.css'
 
-import { formatDuration, loadingIcon, callIcons } from './utils'
+import { formatDuration, CallIcon } from './utils'
 
 dayjs.extend(customParseFormat)
-/* eslint-disable */
-const _ = require('lodash')
+import { capitalize } from 'lodash'
 
 const headers = ['Phone no', 'Call duration', 'Date', ' Details']
 
@@ -53,7 +52,6 @@ type CleanedDataItem = {
 
 type DataTableProps = {
   data: Array<any>
-  loading: boolean
 }
 
 type CallDetailsDrawerProps = {
@@ -88,7 +86,7 @@ const CallDetailsDrawer = ({
       >
         <DrawerHeader>
           <p className={styles.header}>
-            {`${_.capitalize(callData?.callDirection)} call`}
+            {`${capitalize(callData?.callDirection)} call`}
           </p>
           <small className={styles.smallHeader}>
             {dayjs(callData?.createdAt).format("DD MMM 'YY")}
@@ -104,48 +102,45 @@ const CallDetailsDrawer = ({
   )
 }
 
-const DataTable = ({ data, loading }: DataTableProps) => {
-  const [cleanedData, setCleanedData] = React.useState<Array<CleanedDataItem>>(
-    []
-  )
-  const [open, setOpen] = React.useState(false)
-  const [callData, setCallData] = React.useState({})
+type CallsTableBodyProps = {
+  data: any[]
+  setCallData: (value: any) => void
+}
 
-  useEffect(() => {
-    if (data) {
-      setCleanedData(data)
-    }
-  }, [data])
-
-  const tableBody = () => {
-    return cleanedData.length ? (
-      cleanedData.map((row) => (
-        <>
-          <TableRow
-            key={row?.dataDate}
-            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-          >
-            <Typography
-              style={{
-                marginLeft: 15,
-                color: 'black',
-                fontSize: 10,
-                fontWeight: 600,
-              }}
-              variant="button"
-              display="block"
-              gutterBottom
+const CallsTableBody = ({ data, setCallData }: CallsTableBodyProps) => {
+  return (
+    <>
+      {data.length > 0 ? (
+        data.map((row: CleanedDataItem) => (
+          <>
+            <TableRow
+              key={row?.dataDate}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              data-testid="logs-title"
             >
-              {dayjs(row.dataDate, 'MM/YY').format('MMMM, YYYY')}
-            </Typography>
-          </TableRow>
-          {row.data
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-            .map((item, i) => (
-              <React.Fragment key={i}>
-                <StyledTableRow>
+              <Typography
+                style={{
+                  marginLeft: 15,
+                  color: 'black',
+                  fontSize: 10,
+                  fontWeight: 600,
+                }}
+                variant="button"
+                display="block"
+                gutterBottom
+              >
+                {dayjs(row.dataDate, 'MM/YY').format('MMMM, YYYY')}
+              </Typography>
+            </TableRow>
+            {row.data
+              .sort(
+                (a: any, b: any) =>
+                  new Date(b.createdAt) - new Date(a.createdAt)
+              )
+              .map((item: any, i: number) => (
+                <StyledTableRow key={i} data-testid="logs-item">
                   <StyledTableCell component="th" scope="row">
-                    {callIcons(item)}
+                    <CallIcon item={item} />
                     <span style={{ paddingLeft: 5 }}>{item.memberPhone}</span>
                   </StyledTableCell>
                   <StyledTableCell>
@@ -158,7 +153,6 @@ const DataTable = ({ data, loading }: DataTableProps) => {
                     <Button
                       size="small"
                       onClick={() => {
-                        setOpen(true)
                         setCallData(item)
                       }}
                     >
@@ -166,49 +160,48 @@ const DataTable = ({ data, loading }: DataTableProps) => {
                     </Button>
                   </StyledTableCell>
                 </StyledTableRow>
-              </React.Fragment>
-            ))}
-        </>
-      ))
-    ) : (
-      <StyledTableCell colSpan={4}>
-        <span className={`${styles.ongoingContainer}`}>No Call Logs</span>
-      </StyledTableCell>
-    )
-  }
+              ))}
+          </>
+        ))
+      ) : (
+        <StyledTableCell colSpan={4}>
+          <span className={`${styles.ongoingContainer}`}>No Call Logs</span>
+        </StyledTableCell>
+      )}
+    </>
+  )
+}
+
+const DataTable = ({ data }: DataTableProps) => {
+  const [callData, setCallData] = React.useState(null)
 
   return (
     <>
-      {loading ? (
-        loadingIcon('Loading Call Log table')
-      ) : (
-        <Table
-          sx={{ minWidth: 650, outline: 'none' }}
-          aria-label="simple table"
-        >
-          <TableHead>
-            <TableRow>
-              {headers.map((el, i) => (
-                <TableCell
-                  style={{
-                    color: 'var(--dark-blue-50)',
-                    borderBottom: 'none',
-                    fontSize: 15,
-                    fontWeight: 600,
-                  }}
-                  key={i}
-                >
-                  {el}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>{tableBody()}</TableBody>
-        </Table>
-      )}
+      <Table sx={{ minWidth: 650, outline: 'none' }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            {headers.map((el, i) => (
+              <TableCell
+                style={{
+                  color: 'var(--dark-blue-50)',
+                  borderBottom: 'none',
+                  fontSize: 15,
+                  fontWeight: 600,
+                }}
+                key={i}
+              >
+                {el}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody data-testid="logs-table">
+          <CallsTableBody data={data} setCallData={setCallData} />
+        </TableBody>
+      </Table>
       <CallDetailsDrawer
-        isOpen={open}
-        close={() => setOpen(false)}
+        isOpen={!!callData}
+        close={() => setCallData(null)}
         callData={callData}
       />
     </>

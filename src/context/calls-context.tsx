@@ -150,45 +150,47 @@ function CallProvider({ children }: any) {
   useEffect(() => {
     if (data) {
       const rawLogs = data.activeCall.edges
-      const logs = rawLogs.map((log) => log.node)
-      const { participants: allParticipants, session: activeSession } = logs[0]
-      if (allParticipants.length > 0 && activeSession) {
-        const participantsDetails: IParticipantSession[] = allParticipants.map(
-          (log: IParticipantSession) => {
-            return {
-              isOnHold: log.isOnHold,
-              participantId: log.participantId,
-              participantName: log.participantName,
-              session: activeSession.roomName,
-              sessionId: log.sessionId,
-              biodataValidated: log.biodataValidated,
-              isMember: log.isMember,
-              isStaff: log.isStaff,
-            }
+      const logs = rawLogs.map((log: { node: any }) => log.node)
+      if (logs.length > 0) {
+        const { participants: allParticipants, session: activeSession } =
+          logs[0]
+        if (allParticipants.length > 0 && activeSession) {
+          const participantsDetails: IParticipantSession[] =
+            allParticipants.map((log: IParticipantSession) => {
+              return {
+                isOnHold: log.isOnHold,
+                participantId: log.participantId,
+                participantName: log.participantName,
+                session: activeSession.roomName,
+                sessionId: log.sessionId,
+                biodataValidated: log.biodataValidated,
+                isMember: log.isMember,
+                isStaff: log.isStaff,
+              }
+            })
+          const memberParticipant = allParticipants.find(
+            (participant: any) => !participant.isStaff && participant.isMember
+          )
+          const correctRoomName = activeSession.roomName.replace(/-/g, '')
+          const call = {
+            title: callTitle(activeSession.callDirection.toLocaleLowerCase()),
+            type: activeSession.callDirection,
+            state: 'ONGOING',
+            assigned: activeSession.callDirection,
+            member: activeSession.memberPhone,
+            memberName: memberParticipant.participantName,
+            memberAntaraId: memberParticipant.antaraId,
+            initialCallTime:
+              (new Date().getMinutes() -
+                new Date(activeSession.startedAt).getMinutes()) *
+                60 +
+              (new Date().getSeconds() -
+                new Date(activeSession.startedAt).getSeconds()),
+            session: correctRoomName,
           }
-        )
-        const memberParticipant = allParticipants.find(
-          (participant) => !participant.isStaff && participant.isMember
-        )
-        const correctRoomName = activeSession.roomName.replace(/-/g, '')
-        const call = {
-          title: callTitle(activeSession.callDirection.toLocaleLowerCase()),
-          type: activeSession.callDirection,
-          state: 'ONGOING',
-          assigned: activeSession.callDirection,
-          member: activeSession.memberPhone,
-          memberName: memberParticipant.participantName,
-          memberAntaraId: memberParticipant.antaraId,
-          initialCallTime:
-            (new Date().getMinutes() -
-              new Date(activeSession.startedAt).getMinutes()) *
-              60 +
-            (new Date().getSeconds() -
-              new Date(activeSession.startedAt).getSeconds()),
-          session: correctRoomName,
+          setConferenceParticipants(participantsDetails)
+          setActiveCall(call)
         }
-        setConferenceParticipants(participantsDetails)
-        setActiveCall(call)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

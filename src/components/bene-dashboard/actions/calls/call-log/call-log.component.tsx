@@ -5,7 +5,7 @@ import { useMember } from '../../../../../context/member.context'
 import { GET_CALL_LOGS } from '../../../../../gql/comms'
 import DataTable from './data-table.component'
 import CallStatsCard from './call-stats-card.component'
-import { generateStats, groupingDataCalls, loadingIcon } from './utils'
+import { generateStats, groupingDataCalls, LoadingComponent } from './utils'
 import Icon from '../../../../utils/icon/icon.component'
 
 type CleanedDataItem = {
@@ -40,23 +40,6 @@ function CallLog() {
   const [allDataCalls, setAllData] = React.useState<Array<CleanedDataItem>>([])
 
   const [title, setTitle] = React.useState<string>('Call Logs')
-
-  React.useEffect(() => {
-    if (allDataCalls.length) {
-      setCurrentLogs(allDataCalls)
-    }
-  }, [allDataCalls])
-
-  const [getCallLogs, { loading }] = useLazyQuery(GET_CALL_LOGS, {
-    onCompleted: (data) => {
-      let logs = []
-      if (data?.conferenceSessions?.edges.length > 0) {
-        const rawData = data?.conferenceSessions?.edges
-        logs = rawData.map((log: { node: any }) => log.node)
-      }
-      parseCallLogs(logs)
-    },
-  })
 
   const isDataLoading = () =>
     [outBoundData, inBoundData, inBoundMissedData, outBoundMissedData].filter(
@@ -108,9 +91,22 @@ function CallLog() {
       logs: groupingDataCalls(missedOut),
       stats: missedOutboundStats,
     })
-
-    setAllData(groupingDataCalls(logs))
   }
+
+  const [getCallLogs, { loading }] = useLazyQuery(GET_CALL_LOGS, {
+    onCompleted: (data) => {
+      let logs = []
+      if (data?.conferenceSessions?.edges.length > 0) {
+        const rawData = data?.conferenceSessions?.edges
+        logs = rawData.map((log: { node: any }) => log.node)
+      }
+      const groupedData = groupingDataCalls(logs)
+      setAllData(groupedData)
+      setCurrentLogs(groupedData)
+
+      parseCallLogs(logs)
+    },
+  })
 
   useEffect(() => {
     if (member) {
@@ -192,30 +188,39 @@ function CallLog() {
   return (
     <>
       {isDataLoading() ? (
-        loadingIcon('Loading Call Logs')
+        <LoadingComponent text="Loading call logs..." />
       ) : (
-        <Box display="flex" flexWrap="wrap" m={-1} p={-1}>
-          {callCards.map(
-            ({ color, cardTitle, subTitle, stats, type, callback, icon }) =>
-              cardStats(color, cardTitle, subTitle, stats, type, callback, icon)
-          )}
-        </Box>
+        <>
+          <Box display="flex" flexWrap="wrap" m={-1} p={-1}>
+            {callCards.map(
+              ({ color, cardTitle, subTitle, stats, type, callback, icon }) =>
+                cardStats(
+                  color,
+                  cardTitle,
+                  subTitle,
+                  stats,
+                  type,
+                  callback,
+                  icon
+                )
+            )}
+          </Box>
+          <h4 style={{ marginTop: 30 }}>
+            {title}{' '}
+            {title !== 'Call Logs' && (
+              <Button
+                size="small"
+                onClick={() =>
+                  updateCurrentLogs({ logs: allDataCalls }, 'Call Logs')
+                }
+              >
+                Show full log
+              </Button>
+            )}
+          </h4>
+          <DataTable data={currentLogs} />
+        </>
       )}
-
-      <h4 style={{ marginTop: 30 }}>
-        {title}{' '}
-        {title !== 'Call Logs' && (
-          <Button
-            size="small"
-            onClick={() =>
-              updateCurrentLogs({ logs: allDataCalls }, 'Call Logs')
-            }
-          >
-            Show full log
-          </Button>
-        )}
-      </h4>
-      <DataTable data={currentLogs} loading={loading} />
     </>
   )
 }

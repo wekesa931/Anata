@@ -74,7 +74,7 @@ export const groupingDataCalls = (logs: Array<any>) => {
   return cleanedData
 }
 
-export const loadingIcon = (text: string) => {
+export const LoadingComponent = ({ text }: any) => {
   return (
     <div className="d-flex flex-direction-column flex-align-center margin-top-32">
       <LoadingIcon />
@@ -83,8 +83,10 @@ export const loadingIcon = (text: string) => {
   )
 }
 
-export const callIcons = (item: any) => {
-  const { callDirection, memberAnswered, agentAnswered } = item
+export const CallIcon = ({ item }: any) => {
+  const callDirection = item?.callDirection
+  const memberAnswered = item?.memberAnswered
+  const agentAnswered = item?.agentAnswered
 
   if (callDirection === 'OUTBOUND' && memberAnswered) {
     return <PhoneOutgoing width={15} height={15} color="var(--green-50)" />
