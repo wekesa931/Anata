@@ -66,27 +66,6 @@ function Appointments() {
 
   const APPOINTMENT_FIELDS: AirtableField[] = [
     {
-      name: 'Service',
-      type: 'single-select',
-      options: [
-        'Test event',
-        'Medication Pick-up',
-        'Baseline',
-        'Clinical review',
-        'Fitness',
-        'HMP followup',
-        'Laboratory',
-        'Nutrition',
-        'Outpatient Procedure',
-        'Physiotherapy',
-        'Radiology',
-        'Specialist Referral',
-        'Urgent Care',
-        'Virtual Consult',
-        'Inpatient',
-      ].map((type) => ({ label: type, value: type })),
-    },
-    {
       name: 'Comments',
       type: 'long-text',
     },
@@ -112,6 +91,8 @@ function Appointments() {
         'Missed',
         'CheckedIn',
         'Not Started',
+        'Rescheduled by member',
+        'Needed'
       ].map((type) => ({ label: type, value: type })),
     },
   ]
