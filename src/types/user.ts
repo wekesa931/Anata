@@ -12,7 +12,6 @@ export type User = {
 export type hmp = {
   hmpSendDate: string | null
   hmpNumber: string | null
-  hmpStatus: string | null
   hmpDay: number | null
   hmpLink: string | null
   hmpPhase: string | null

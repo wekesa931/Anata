@@ -66,7 +66,6 @@ function Hmp() {
           hmps.push({
             hmpSendDate: response[data]['HMP Send Date']?.toString(),
             hmpNumber: response[data]['HMP #']?.toString(),
-            hmpStatus: response[data]['HMP Status']?.toString(),
             hmpDay: response[data]['HMP Day']?.toString(),
             hmpLink: response[data]['HMP Link']?.toString(),
             hmpPhase: response[data]['HMP Phase']?.toString(),
@@ -90,10 +89,6 @@ function Hmp() {
               <div>
                 <span className={`${styles.hmpValLabel}`}>HMP #: </span>
                 <span className={`${styles.hmpVal}`}>{info.hmpNumber}</span>
-              </div>
-              <div>
-                <span className={`${styles.hmpValLabel}`}>HMP Status: </span>
-                <span className={`${styles.hmpVal}`}>{info.hmpStatus}</span>
               </div>
             </div>
             <div className={`${styles.hmpValRow}`}>
