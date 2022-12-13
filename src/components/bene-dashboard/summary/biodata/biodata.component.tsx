@@ -10,11 +10,6 @@ import {
   Checkbox,
   Grid,
   Link,
-  Snackbar,
-  Alert,
-  List,
-  ListItemText,
-  ListItem,
 } from '@mui/material'
 import { useMutation, useLazyQuery } from '@apollo/client'
 import { useToasts } from 'react-toast-notifications'
@@ -30,9 +25,10 @@ import { SEND_SMS } from '../../../../gql/sms'
 import logError from '../../../utils/Bugsnag/Bugsnag'
 import DependentCard from '../dependents/dependent-card.component'
 import Icon from '../../../utils/icon/icon.component'
-import { useFormPortal } from '../../../../context/forms-context'
 import Benefits from '../benefits/benefits.component'
 import calcAge from './utils'
+import MemberDetailsUpdateForm from './biodata-update/member-details-update.component'
+import Toasts from '../../../../helpers/toast'
 
 const getRiskFactors = (
   diabetes: string,
@@ -554,15 +550,8 @@ function Tags({ member }: any) {
   )
 }
 
-type SnackBarData = {
-  level: 'error' | 'success'
-  message: string
-  errors?: any[]
-}
-
 function BioData() {
-  const [snackbarData, setSnackbarData] = useState<SnackBarData | null>(null)
-  const { addOpenForm } = useFormPortal()
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const [riskScore, setRiskScore] = useState<number | string>('Not Available')
 
@@ -617,17 +606,7 @@ function BioData() {
 
   const gaInsuranceLink = 'https://health.gakenya.com/app'
 
-  // form member details update form
-  const formTitle = 'Edit member details'
-
-  const closeSnackbar = () => setSnackbarData(null)
-
-  // update form toggles
-  const openUpdateMemberForm = () => {
-    // clear snackbar error
-    closeSnackbar()
-    addOpenForm({ name: formTitle, member })
-  }
+  const openUpdateMemberForm = () => setIsOpen(true)
 
   const getBioDataTitle = () => {
     if (v2Member && !isLoading) {
@@ -686,26 +665,14 @@ function BioData() {
               </button>
             )}
           </div>
-          <Snackbar
-            open={!!snackbarData}
-            autoHideDuration={6000}
-            onClose={closeSnackbar}
-          >
-            <Alert onClose={closeSnackbar} severity={snackbarData?.level}>
-              {snackbarData?.level === 'error' ? (
-                <List dense>
-                  {!!snackbarData?.errors?.length &&
-                    snackbarData.errors.map((error, index) => (
-                      <ListItem key={index}>
-                        <ListItemText primary={error} />
-                      </ListItem>
-                    ))}
-                </List>
-              ) : (
-                snackbarData?.message
-              )}
-            </Alert>
-          </Snackbar>
+          {isOpen && (
+            <MemberDetailsUpdateForm
+              closeWindow={() => setIsOpen(false)}
+              successCb={(msg: string) => Toasts.showSuccessNotification(msg)}
+              errorCb={(msg: string) => Toasts.showErrorNotification(msg)}
+            />
+          )}
+
           {isInsuranceIdNull() && v2Member && (
             <CardContent className={styles.insMissing}>
               <Typography

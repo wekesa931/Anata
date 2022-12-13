@@ -1,35 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import ErrorIcon from '@mui/icons-material/Error'
-import { startCase, toLower } from 'lodash'
 import * as Yup from 'yup'
 import { useLazyQuery } from '@apollo/client'
+import { Button } from '@mui/material'
+import { useFormik } from 'formik'
 import FormBuilder from './form-builder/form-builder.component'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
-import constituencies from './constituencies.json'
 import { useMember } from '../../../../../context/member.context'
+import { V2MemberType } from '../../../../../types/member'
 import {
   GET_INSURANCE_COMPANIES,
   LOOKUP_ENTRIES_QUERY,
 } from '../../../../../gql/comms'
 import { GET_ANTARA_STAFF } from '../../../../../gql/staff'
-import createApolloClient from '../../../../../resources/apollo-client'
 import logError from '../../../../utils/Bugsnag/Bugsnag'
-
-const constituencyOptions = [...new Set(constituencies.map((c) => c.name))].map(
-  (c) => startCase(toLower(c))
-)
+import PortalWindow from '../../../../lib/portal/portal.component'
+import styles from '../biodata.component.css'
+import getFormFields, { LookupOption } from './member-details.fields'
+import ToastNotification, {
+  defaultToastMessage,
+  ToastMessage,
+} from '../../../../utils/toast/toast-notification'
 
 type MemberDetailsProps = {
-  errors: any
-  values: any
-  setFieldValue: (name: string, v: any) => any
-  handleChange: (v: any) => any
-  isMemberLoading: boolean
-}
-
-type LookupOption = {
-  label: string
-  value: string
+  closeWindow: () => void
+  successCb: (msg: string) => void
+  errorCb: (error: string) => void
 }
 
 const phoneRe = /^(\+254|0)\d{9}$/
@@ -64,7 +60,7 @@ export const memberDetailsValidationSchema = Yup.object().shape({
   ),
 })
 
-export const createInitialFormState = (member: any = {}) => {
+export const createInitialFormState = (member: V2MemberType) => {
   const getInsurancesState = () => {
     const insuranceDetails = member?.insuranceDetails || []
 
@@ -121,7 +117,6 @@ export const createInitialFormState = (member: any = {}) => {
     memberPhones: member?.phones,
     memberContact: {
       email: member?.email,
-      constituency: member?.constituency,
       emergencyContactName: member?.emergencyContactName,
       emergencyContactPhone: member?.emergencyContactPhone,
       emergencyContactRelationship: member?.emergencyContactRelationship,
@@ -218,10 +213,6 @@ const prepareData = (vars: any, antaraId: string) => {
   return inputVariables
 }
 
-export const parseMemberInputData = (vars: any, antaraId: string) => {
-  return prepareData(cleanObject(vars), antaraId)
-}
-
 export const handleFormSubmissionErrors = (data: any) => {
   const errors = Object.keys(data).filter((key) => data[key].errors)
   const errorMessages = errors.map(
@@ -233,8 +224,6 @@ export const handleFormSubmissionErrors = (data: any) => {
 
   return errorMessages
 }
-
-const apolloClient = createApolloClient(true)
 
 /**
  * Parse the details into a selectable elements
@@ -248,13 +237,17 @@ const parseDataToOptions = (data: any, key: string) => {
 }
 
 function MemberDetailsUpdateForm({
-  errors,
-  values,
-  handleChange,
-  setFieldValue,
-  isMemberLoading,
+  closeWindow,
+  successCb,
+  errorCb,
 }: MemberDetailsProps) {
-  const { v2Member, errorLoadingMember } = useMember()
+  const {
+    v2Member,
+    errorLoadingMember,
+    isLoading,
+    refetchMember,
+    handleMemberUpdate,
+  } = useMember()
   const [companies, setCompanies] = useState<any[]>([])
   const [healthPolicies, setHealthPolicies] = useState<LookupOption[]>([])
   const [phoneTypes, setPhoneTypes] = useState<LookupOption[]>([])
@@ -269,6 +262,15 @@ function MemberDetailsUpdateForm({
   const [antaraStaff, setAntaraStaff] = useState<LookupOption[]>([])
   const [tags, setTags] = useState<LookupOption[]>([])
   const [dataLoading, setDataLoading] = useState<boolean>(false)
+  const [isEdited, setIsEdited] = useState<boolean>(false)
+  const [isSaving, setIsSaving] = useState<boolean>(false)
+  const [toastMessage, setToastMessage] =
+    useState<ToastMessage>(defaultToastMessage)
+  const [initialValues, setInitialValues] = useState<any>(null)
+
+  useEffect(() => {
+    if (v2Member) setInitialValues(createInitialFormState(v2Member))
+  }, [v2Member])
 
   const parseLookupEntries = (rawLookupData: any) => {
     setCompanies(
@@ -289,7 +291,9 @@ function MemberDetailsUpdateForm({
   }
 
   const [getLookupEntries] = useLazyQuery(LOOKUP_ENTRIES_QUERY, {
-    client: apolloClient,
+    context: {
+      clientName: 'v2',
+    },
   })
   const [getInsurances] = useLazyQuery(GET_INSURANCE_COMPANIES)
   const [getAntaraStaff] = useLazyQuery(GET_ANTARA_STAFF)
@@ -320,452 +324,120 @@ function MemberDetailsUpdateForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // create a list of form fields given initial state and form field data and return the form fields or a default form field
-  const createFormFields = (initialState: any = [], formField: any) => {
-    // create a formField given the index and boolean showAddButton default true  and assign the index to the object and all items key in the
-    const createFormField = (index = 0, showAddButton = true) => {
-      return {
-        ...formField,
-        index,
-        showAddButton,
-        id: `${formField.id}-${index}`,
-        label: index ? `${formField.label} ${index}` : formField.label,
-        items: formField.items.map((item: any) => {
-          return {
-            ...item,
-            index,
-            id: `${formField.id}-${index}`,
-            label: item.label,
-          }
-        }),
-      }
-    }
+  const updateMemberDetails = (values: any) => {
+    setIsSaving(true)
+    const antaraId = v2Member?.antaraId
+    const memberDetails = prepareData(cleanObject(values), antaraId)
 
-    if (initialState.length === 0) {
-      return [createFormField()]
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return initialState.map((item: any, index: number) => {
-      return createFormField(index, index === initialState.length - 1)
-    })
+    handleMemberUpdate(memberDetails)
+      .then((res: any) => {
+        const errors = handleFormSubmissionErrors(res?.data)
+        if (errors.length > 0) {
+          errorCb('Error saving member details.')
+        } else {
+          successCb('Member details saved successfully')
+          closeWindow()
+        }
+      })
+      .finally(() => {
+        refetchMember()
+        setIsSaving(false)
+      })
   }
 
-  const insuranceField = {
-    id: 'ins-group',
-    type: 'group',
-    label: 'Insurance',
-    dataIndex: '',
-    editable: true,
-    stateKey: 'memberInsurance',
-    addButtonText: 'Add Insurance',
-    items: [
-      {
-        id: 'insurance',
-        type: 'select',
-        dataIndex: 'insuranceCompany',
-        label: 'Insurance Company',
-        options: insuranceCompanies,
-        dynamic: true,
-        stateKey: 'memberInsurance',
-      },
-      {
-        id: 'ins-id',
-        type: 'text',
-        dataIndex: 'insuranceId',
-        label: 'Insurance Id',
-        dynamic: true,
-        stateKey: 'memberInsurance',
-      },
-      {
-        id: 'cover',
-        type: 'select',
-        dataIndex: 'healthPolicy',
-        label: 'Health Policy',
-        options: healthPolicies,
-        dynamic: true,
-        stateKey: 'memberInsurance',
-      },
-      {
-        id: 'ben',
-        type: 'select',
-        dataIndex: 'benefits',
-        label: 'Benefits, riders e.t.c',
-        options: benefits,
-        multiple: true,
-        dynamic: true,
-        stateKey: 'memberInsurance',
-      },
-    ],
+  const { errors, setFieldValue, values, validateForm } = useFormik({
+    initialValues,
+    onSubmit: updateMemberDetails,
+    validationSchema: memberDetailsValidationSchema,
+    enableReinitialize: true,
+  })
+
+  const lookupData: any = {
+    healthPolicies,
+    phoneTypes,
+    memberStatus,
+    insuranceCompanies,
+    onboardingStages,
+    sexOptions,
+    maritalStatus,
+    benefits,
+    antaraStaff,
+    tags,
+    v2Member,
+    companies,
   }
-
-  const insuranceFields = createFormFields(
-    v2Member?.insuranceDetails || [],
-    insuranceField
-  )
-
-  const phoneField = {
-    id: 'phone-numbers-grp',
-    type: 'row',
-    dataIndex: '',
-    editable: true,
-    stateKey: 'memberPhones',
-    addButtonText: 'Add Phone Number',
-    items: [
-      {
-        id: 'phone-group',
-        type: 'text',
-        dataIndex: 'phone',
-        label: 'Phone',
-        dynamic: true,
-        stateKey: 'memberPhones',
-      },
-      {
-        id: 'phoneType',
-        type: 'select',
-        dataIndex: 'phoneType',
-        label: 'Phone Type',
-        options: phoneTypes,
-        dynamic: true,
-        stateKey: 'memberPhones',
-      },
-    ],
-  }
-  const phoneFields = createFormFields(v2Member?.phones || [], phoneField)
-
-  const addressField = {
-    id: 'address-1-grp',
-    type: 'group',
-    dataIndex: '',
-    label: 'Address',
-    editable: true,
-    showAddButton: true,
-    stateKey: 'memberAddress',
-    addButtonText: 'Add Address',
-    items: [
-      {
-        id: 'residentialAddress',
-        type: 'places',
-        dataIndex: 'residentialAddress',
-        label: 'Residential Address',
-        dynamic: true,
-        stateKey: 'memberAddress',
-      },
-      {
-        id: 'addressLabel',
-        type: 'select',
-        dataIndex: 'label',
-        label: 'Address Label',
-        helperText: 'Use one label for each address (Home, Office, Other)',
-        dynamic: true,
-        stateKey: 'memberAddress',
-        options: [
-          { value: 'Home', label: 'Home' },
-          { value: 'Office', label: 'Office' },
-          { value: 'Work', label: 'Work' },
-          { value: 'Other', label: 'Other' },
-        ],
-      },
-      {
-        id: 'deliveryInstructions',
-        type: 'textarea',
-        dataIndex: 'deliveryInstructions',
-        label: 'Delivery Instruction',
-        dynamic: true,
-        stateKey: 'memberAddress',
-      },
-    ],
-  }
-  const addressFields = createFormFields(
-    v2Member?.memberAddresses || [],
-    addressField
-  )
-
-  // v2 form configuration
-  const formFields = [
-    {
-      id: 'group',
-      label: 'Onboarding',
-      dataIndex: '',
-      type: 'group',
-      items: [
-        {
-          id: 'row',
-          type: 'row',
-          dataIndex: '',
-          items: [
-            {
-              id: 'onboardStage',
-              type: 'select',
-              dataIndex: 'onboardStage',
-              options: onboardingStages,
-              label: 'Onboarding Stage',
-              stateKey: 'memberStatus',
-            },
-            {
-              id: 'status',
-              type: 'select',
-              dataIndex: 'status',
-              options: memberStatus,
-              label: 'Member Status',
-              stateKey: 'memberStatus',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'hn_me-group',
-      label: 'HN & ME',
-      dataIndex: '',
-      type: 'group',
-      items: [
-        {
-          id: 'hn_me-row',
-          type: 'row',
-          dataIndex: '',
-          items: [
-            {
-              id: 'lead-hn',
-              type: 'select',
-              dataIndex: 'assignedHn',
-              label: 'Assigned HN',
-              options: antaraStaff,
-              stateKey: 'memberStaff',
-            },
-            {
-              id: 'assigned-me',
-              type: 'select',
-              dataIndex: 'assignedMe',
-              label: 'Assigned ME',
-              options: antaraStaff,
-              stateKey: 'memberStaff',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'basic_info-group',
-      type: 'group',
-      label: 'Basic info',
-      dataIndex: '',
-      items: [
-        {
-          id: 'first_name',
-          type: 'text',
-          label: 'First name',
-          dataIndex: 'firstName',
-          required: true,
-          stateKey: 'memberDetails',
-        },
-        {
-          id: 'middle_name',
-          type: 'text',
-          dataIndex: 'middleName',
-          label: 'Middle Name',
-          stateKey: 'memberDetails',
-        },
-        {
-          id: 'last_name',
-          type: 'text',
-          dataIndex: 'lastName',
-          label: 'Last Name',
-          required: true,
-          stateKey: 'memberDetails',
-        },
-        {
-          id: 'birth_sex-row',
-          type: 'row',
-          dataIndex: '',
-          items: [
-            {
-              id: 'dob',
-              type: 'date',
-              dataIndex: 'birthDate',
-              label: 'Date of Birth',
-              stateKey: 'memberDetails',
-            },
-            {
-              id: 'sex',
-              type: 'select',
-              dataIndex: 'sex',
-              options: sexOptions,
-              label: 'Sex',
-              stateKey: 'memberDetails',
-            },
-          ],
-        },
-        {
-          id: 'maritalStatus',
-          type: 'select',
-          dataIndex: 'maritalStatus',
-          label: 'Marital Status',
-          options: maritalStatus,
-          stateKey: 'memberDetails',
-        },
-      ],
-    },
-    {
-      id: 'occ-group',
-      type: 'group',
-      label: 'Occupation',
-      dataIndex: '',
-      items: [
-        {
-          id: 'employer',
-          type: 'autocomplete',
-          dataIndex: 'employer',
-          label: 'Employer',
-          options: companies,
-          stateKey: 'memberStatus',
-        },
-      ],
-    },
-    ...insuranceFields,
-    {
-      id: 'contact-info-group',
-      type: 'group',
-      dataIndex: '',
-      label: 'Contact info',
-      items: [
-        {
-          id: 'email',
-          type: 'text',
-          dataIndex: 'email',
-          label: 'Email 1',
-          stateKey: 'memberContact',
-        },
-        ...phoneFields,
-      ],
-    },
-    {
-      id: 'emergency-id',
-      dataIndex: '',
-      type: 'group',
-      label: 'Emergency | Next of kin, etc.',
-      items: [
-        {
-          id: 'emergencyContactName',
-          type: 'text',
-          dataIndex: 'emergencyContactName',
-          label: 'Emergency Contact Name',
-          stateKey: 'memberContact',
-        },
-        {
-          id: 'emergencyContactPhone',
-          type: 'text',
-          dataIndex: 'emergencyContactPhone',
-          label: 'Emergency Contact Phone',
-          stateKey: 'memberContact',
-        },
-        {
-          id: 'emergencyContactRelationship',
-          type: 'autocomplete',
-          dataIndex: 'emergencyContactRelationship',
-          label: 'Emergency Contact Relationship',
-          stateKey: 'memberContact',
-          options: [
-            'Aunt',
-            'Brother',
-            'Child',
-            'Cousin',
-            'Employer',
-            'Father',
-            'Friend',
-            'Guardian',
-            'Husband',
-            'Mother',
-            'Parent',
-            'Sibling',
-            'Sister',
-            'Son',
-            'Spouse',
-            'Uncle',
-            'Wife',
-            'Other',
-          ],
-        },
-      ],
-    },
-    {
-      id: 'address-grp',
-      dataIndex: '',
-      type: 'group',
-      label: 'Constituency',
-      items: [
-        {
-          id: 'constituency',
-          type: 'autocomplete',
-          dataIndex: 'constituency',
-          label: 'Constituency',
-          options: constituencyOptions,
-          stateKey: 'memberAddress',
-          index: 0,
-          dynamic: true,
-          showAddButton: false,
-        },
-      ],
-    },
-    ...addressFields,
-    {
-      id: 'tags-grp',
-      type: 'group',
-      label: 'Tags',
-      dataIndex: '',
-      items: [
-        {
-          id: 'tags',
-          dataIndex: 'tags',
-          type: 'select',
-          multiple: true,
-          options: tags,
-          label: 'Choose tags',
-          stateKey: 'memberStatus',
-        },
-      ],
-    },
-  ]
 
   return (
-    <div>
-      {dataLoading || isMemberLoading ? (
-        <div className="d-flex flex-direction-column flex-align-center margin-top-32">
-          <LoadingIcon />
-          <p className="text-small">Loading Member Data...</p>
-        </div>
-      ) : (
-        <>
-          {errorLoadingMember || !v2Member ? (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'start',
-                padding: '2rem',
-              }}
-            >
-              <ErrorIcon color="error" />
+    <>
+      <ToastNotification
+        isOpen={!!toastMessage.message}
+        message={toastMessage}
+        handleToastClose={() => setToastMessage(defaultToastMessage)}
+      />
+      <PortalWindow
+        title="Edit Member Details"
+        closeWindow={closeWindow}
+        windowActions={
+          <Button
+            variant="outlined"
+            className={styles.actionBtn}
+            disabled={dataLoading || isLoading}
+            onClick={() => {
+              validateForm(values).then((formikErrors) => {
+                if (Object.keys(formikErrors).length === 0) {
+                  updateMemberDetails(values)
+                } else {
+                  errorCb('Please correct the errors before saving')
+                }
+              })
+            }}
+            id="submit-details"
+          >
+            {isSaving ? 'Saving...' : 'Save'}
+          </Button>
+        }
+        isEdited={isEdited}
+        setIsEdited={setIsEdited}
+      >
+        {dataLoading || isLoading ? (
+          <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+            <LoadingIcon />
+            <p className="text-small">Loading Member Data...</p>
+          </div>
+        ) : (
+          <>
+            {errorLoadingMember || !v2Member ? (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'start',
+                  padding: '2rem',
+                }}
+              >
+                <ErrorIcon color="error" />
 
-              <p style={{ marginLeft: '1rem', color: `var(--red-100)` }}>
-                There was a problem loading this member details from v2 schema.
-              </p>
-            </div>
-          ) : (
-            <>
-              {v2Member && (
-                <FormBuilder
-                  formFields={formFields}
-                  errors={errors}
-                  values={values}
-                  handleChange={handleChange}
-                  setFieldValue={setFieldValue}
-                />
-              )}
-            </>
-          )}
-        </>
-      )}
-    </div>
+                <p style={{ marginLeft: '1rem', color: `var(--red-100)` }}>
+                  There was a problem loading this member details from v2
+                  schema.
+                </p>
+              </div>
+            ) : (
+              <>
+                {values && (
+                  <FormBuilder
+                    formFields={getFormFields(lookupData)}
+                    errors={errors}
+                    values={values}
+                    setFieldValue={setFieldValue}
+                    setIsEdited={setIsEdited}
+                  />
+                )}
+              </>
+            )}
+          </>
+        )}
+      </PortalWindow>
+    </>
   )
 }
 

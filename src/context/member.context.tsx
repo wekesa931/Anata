@@ -2,15 +2,14 @@ import { useLazyQuery, useMutation } from '@apollo/client'
 import React, { useState } from 'react'
 import logError from '../components/utils/Bugsnag/Bugsnag'
 import { MEMBER_DETAILS_QUERY, UPDATE_MEMBER_DETAILS } from '../gql/comms'
-import createApolloClient from '../resources/apollo-client'
 import Toasts from '../helpers/toast'
-
-const apolloClient = createApolloClient(true)
-
+import { V2MemberQueryType, V2MemberType } from '../types/member'
 /**
  * Extract member details from graphql response structure
  */
-const parseV2MemberData = (memberData: any) => {
+const parseV2MemberData = (
+  memberData: V2MemberQueryType
+): V2MemberType | null => {
   if (!memberData) {
     return null
   }
@@ -137,11 +136,13 @@ function MemberProvider({ member, children }: any) {
   const [currentMember, setCurrentMember] = useState(member)
   const [memberContactDetails, setmemberContactDetails] =
     useState<IContacts>(initialContacts)
-  const [v2Member, setV2Member] = useState<any>(null)
+  const [v2Member, setV2Member] = useState<V2MemberType | null>(null)
 
   const [getMember, { loading, error: errorLoadingMember, refetch }] =
     useLazyQuery(MEMBER_DETAILS_QUERY, {
-      client: apolloClient,
+      context: {
+        clientName: 'v2',
+      },
       onCompleted: (data) => {
         const memberDetails = data?.members.edges[0]?.node
 
@@ -189,7 +190,9 @@ function MemberProvider({ member, children }: any) {
   const [updateMember, { loading: isSubmitting }] = useMutation(
     UPDATE_MEMBER_DETAILS,
     {
-      client: apolloClient,
+      context: {
+        clientName: 'v2',
+      },
     }
   )
 

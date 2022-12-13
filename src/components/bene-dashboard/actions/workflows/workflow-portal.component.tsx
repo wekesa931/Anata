@@ -59,10 +59,6 @@ import {
   CREATE_INTERACTION,
   CREATE_MEMBER_FEEDBACK,
 } from '../../../../gql/interactions'
-import createApolloClient from '../../../../resources/apollo-client'
-
-// v2 schema apollo client
-const apolloClient = createApolloClient(true)
 
 type IProps = {
   workflow: IWorkflow
@@ -137,7 +133,9 @@ function WorkflowPortal({
     useMutation(SAVE_MODULE_DATA)
   const [createMemberFeedback, { loading: updatingMemberFeedback }] =
     useMutation(CREATE_MEMBER_FEEDBACK, {
-      client: apolloClient,
+      context: {
+        clientName: 'v2',
+      },
     })
   const [createInteraction, { loading: creatingInteraction }] =
     useMutation(CREATE_INTERACTION)

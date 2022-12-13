@@ -4,14 +4,12 @@ import { ToastProvider } from 'react-toast-notifications'
 import { UserProvider } from './user-context'
 import { AuthProvider } from './auth-context'
 import { CommsProvider } from './comms-context'
-import createApoloClient from '../resources/apollo-client'
+import client from '../resources/apollo-client'
 import { SidebarProvider } from './sidebar-context'
-
-const apolloClient = createApoloClient(false)
 
 function AppContexts({ children }: any) {
   return (
-    <ApolloProvider client={apolloClient}>
+    <ApolloProvider client={client}>
       <AuthProvider>
         <UserProvider>
           <SidebarProvider>

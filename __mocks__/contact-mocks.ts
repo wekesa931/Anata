@@ -1,5 +1,20 @@
-import { MEMBER_CONTACT_DETAILS } from '../src/gql/comms'
+import {
+  MEMBER_CONTACT_DETAILS,
+  LOOKUP_ENTRIES_QUERY,
+  GET_INSURANCE_COMPANIES,
+  MEMBER_DETAILS_QUERY,
+  UPDATE_MEMBER_DETAILS,
+} from '../src/gql/comms'
+import { GET_ANTARA_STAFF } from '../src/gql/staff'
 import { createMockClient } from 'mock-apollo-client'
+import {
+  mockInsuranceCompanies,
+  mockLookups,
+  mockStaff,
+  mockv2Member,
+  mockMutationSuccess,
+  mockMutationError,
+} from './comms.mock'
 
 const mockClient = createMockClient()
 mockClient.setRequestHandler(MEMBER_CONTACT_DETAILS, () =>
@@ -25,5 +40,51 @@ mockClient.setRequestHandler(MEMBER_CONTACT_DETAILS, () =>
     },
   })
 )
+
+mockClient.setRequestHandler(LOOKUP_ENTRIES_QUERY, () =>
+  Promise.resolve({
+    data: {
+      ...mockLookups,
+    },
+  })
+)
+
+mockClient.setRequestHandler(GET_INSURANCE_COMPANIES, () =>
+  Promise.resolve({
+    data: {
+      insuranceCompanies: {
+        edges: mockInsuranceCompanies,
+      },
+    },
+  })
+)
+
+mockClient.setRequestHandler(MEMBER_DETAILS_QUERY, () =>
+  Promise.resolve({
+    data: {
+      members: {
+        edges: [mockv2Member],
+      },
+    },
+  })
+)
+
+mockClient.setRequestHandler(GET_ANTARA_STAFF, () =>
+  Promise.resolve({
+    data: {
+      antaraStaff: {
+        edges: mockStaff,
+      },
+    },
+  })
+)
+
+const mutationHandler = jest
+  .fn()
+  .mockResolvedValueOnce(mockMutationError)
+  .mockResolvedValueOnce(mockMutationSuccess)
+  .mockResolvedValue(mockMutationSuccess)
+
+mockClient.setRequestHandler(UPDATE_MEMBER_DETAILS, mutationHandler)
 
 export default mockClient

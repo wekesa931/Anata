@@ -12,18 +12,6 @@
   background-color: var(--white-100) !important;
 }
 
-.formTag {
-  position: absolute;
-  top: -23px;
-  right: 0px;
-  border-radius: 3%;
-  padding: 3px;
-  background: #fb9800;
-  font-family: Rubik;
-  font-size: 16px;
-  font-weight: 500;
-}
-
 .formTitle,
 .formTitleContainer {
   display: flex;
@@ -33,19 +21,6 @@
   cursor: move;
   position: relative;
   background-color: var(--orange-100);
-  flex-grow: 0;
-  font-family: Rubik;
-  font-size: 16px;
-  font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.25;
-  letter-spacing: -0.32px;
-  text-align: left;
-  color: var(--orange-20);
-}
-
-.workflowformTitleTitle {
   flex-grow: 0;
   font-family: Rubik;
   font-size: 16px;

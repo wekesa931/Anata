@@ -34,16 +34,23 @@ const authMiddleWare = () =>
     return forward(operation)
   })
 
-const createHttpLink = (newVersion = false) => {
-  const uri = newVersion
-    ? `${process.env.API_URL}/scribe/v2/graphql/`
-    : `${process.env.API_URL}/scribe/graphql/`
-  return new HttpLink({
-    uri,
-    credentials: 'same-origin',
-    fetch,
-  })
-}
+const v1Link = new HttpLink({
+  uri: `${process.env.API_URL}/scribe/graphql/`,
+  credentials: 'same-origin',
+  fetch,
+})
+
+const v2Link = new HttpLink({
+  uri: `${process.env.API_URL}/scribe/v2/graphql/`,
+  credentials: 'same-origin',
+  fetch,
+})
+
+const searchLink = new HttpLink({
+  uri: `${process.env.API_URL}/scribe/opensearch/graphql/`,
+  credentials: 'same-origin',
+  fetch,
+})
 
 const handleErrors = onError(
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -83,15 +90,24 @@ const handleErrors = onError(
 
 /** Build a dynamic client based on the version */
 
-const createApolloClient = (newVersion = false) =>
-  new ApolloClient({
-    link: ApolloLink.from([
-      handleErrors,
-      authMiddleWare().concat(createHttpLink(newVersion)),
-    ]),
-    cache: new InMemoryCache({
-      addTypename: false,
-    }),
-  })
-
-export default createApolloClient
+const apolloClient = new ApolloClient({
+  link: ApolloLink.from([
+    handleErrors,
+    authMiddleWare().concat(
+      // 3 clients in use, v2, v1 and opensearch all with different endpoints
+      ApolloLink.split(
+        (operation) => operation.getContext().clientName === 'v2',
+        v2Link,
+        ApolloLink.split(
+          (operation) => operation.getContext().clientName === 'search',
+          searchLink,
+          v1Link
+        )
+      )
+    ),
+  ]),
+  cache: new InMemoryCache({
+    addTypename: false,
+  }),
+})
+export default apolloClient

@@ -1,0 +1,175 @@
+type PhoneType = {
+  phone: string
+  phoneType: string
+  priorirty: number
+}
+
+type AddressType = {
+  constituency?: string
+  deliveryInstructions?: string
+  geolocation?: string
+  label?: string
+  poBoxNumber?: string
+  postCode?: string
+  residentialAddress?: string
+  residentialCountry?: string
+  residentialCounty?: string
+  residentialTown?: string
+}
+
+type BenefitType = {
+  api?: string
+  description?: string
+  limit?: number
+  name?: string
+}
+
+type BenefitUtilizationType = {
+  benefit: BenefitType
+  utilizedPortion: number
+  id: string
+}
+
+type InsuranceDetailsType = {
+  benefitUtilizations?: BenefitUtilizationType[]
+  id: string
+  insuranceCompany?: {
+    id: string
+    logo?: string
+    name?: string
+  }
+  insuranceId?: string
+  priority?: number
+  memberPolicy?: {
+    healthPolicy?: {
+      name?: string
+    }
+  }
+}
+
+export type V2MemberType = {
+  antaraId: string
+  birthDate: string
+  firstName?: string
+  middleName?: string
+  lastName?: string
+  intercomRecordId?: string
+  intercomUrl?: string
+  intercomUserId?: string
+  sex?: string
+  maritalStatus?: string
+  phone?: string
+  phoneType?: string
+  phones?: PhoneType[]
+  employer?: string
+  onboardStage?: string
+  status?: string
+  assignedHn?: string
+  assignedHnFullName?: string
+  assignedMe?: string
+  readyForCompanyOnboarding?: boolean
+  readyForIndividualOnboarding?: boolean
+  startDate?: string
+  tags?: string[]
+  email?: string
+  emergencyContactName?: string
+  emergencyContactPhone?: string
+  emergencyContactRelationship?: string
+  memberAddresses?: AddressType[]
+  insuranceDetails?: InsuranceDetailsType[]
+  dependents?: InsuranceDetailsType[]
+}
+
+type RawPhoneType = {
+  phone?: string
+  phoneType?: {
+    phoneType?: string
+  }
+  priority: number
+}
+
+type RawInsuranceType = {
+  id?: string
+  insuranceId?: string
+  priority?: number
+  insuranceCompany?: {
+    id?: string
+    name?: string
+    logo?: string
+  }
+  memberPolicy?: {
+    healthPolicy?: {
+      name?: string
+    }
+  }
+  benefitUtilizations?: {
+    id?: string
+    utilizedPortion?: number
+    benefit?: {
+      name?: string
+      description?: string
+      api?: string
+      limit?: string
+    }
+  }[]
+}
+
+export type V2MemberQueryType = {
+  antaraId: string
+  birthDate?: string
+  details: {
+    fullName?: string
+    firstName?: string
+    middleName?: string
+    lastName?: string
+    intercomUrl?: string
+    intercomRecordId?: string
+    intercomUserId?: string
+    sex?: {
+      sex?: string
+    }
+    maritalStatus?: {
+      maritalStatus?: string
+    }
+    relationshipToPrimary?: string
+  }
+  phones?: RawPhoneType[]
+  status?: {
+    startDate?: string
+    onboardStage?: {
+      onboardStage?: string
+    }
+    employer?: {
+      name?: string
+    }
+    assignedHn?: string
+    assignedHnFullName?: string
+    readyForCompanyOnboarding?: boolean
+    readyForIndividualOnboarding?: boolean
+    assignedMe?: string
+    tags?: string[]
+    status?: {
+      status?: string
+    }
+  }
+  dependents?: RawInsuranceType[]
+  contact?: {
+    memberAddresses?: {
+      constituency?: string
+      residentialAddress?: string
+      residentialCountry?: string
+      residentialCounty?: string
+      residentialTown?: string
+      deliveryInstructions?: string
+      poBoxNumber?: string
+      postCode?: string
+      geolocation?: string
+      label?: string
+    }[]
+    email?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelationship?: string
+  }
+  insuranceDetails?: RawInsuranceType[]
+}

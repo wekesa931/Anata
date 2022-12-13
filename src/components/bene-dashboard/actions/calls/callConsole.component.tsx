@@ -23,9 +23,6 @@ import { AuthButton } from './AuthenticateMember.styles'
 import styles from './callConsole.component.css'
 import { UPDATE_PHONES } from '../../../../gql/comms'
 import logError from '../../../utils/Bugsnag/Bugsnag'
-import createApolloClient from '../../../../resources/apollo-client'
-
-const apolloClient = createApolloClient(true)
 
 function CallFloatingBox() {
   const [isOpen, setisOpen] = React.useState(true)
@@ -56,7 +53,9 @@ function CallFloatingBox() {
   const [updatePhones, { loading: updatePhonesLoading }] = useMutation(
     UPDATE_PHONES,
     {
-      client: apolloClient,
+      context: {
+        clientName: 'v2',
+      },
       onCompleted: () => {
         setSavedPhone(true)
       },

@@ -33,13 +33,18 @@ type DatePickerProps = {
   name: string
   setFieldValue?: (name: string, v: any) => any
   handleChange: (v: any) => any
+  id: string
 }
 
 export function FormDatePicker(props: DatePickerProps) {
-  const { date, label, readOnly, name, handleChange } = props
+  const { date, label, readOnly, name, handleChange, id } = props
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} css={{ marginTop: 5 }}>
+    <LocalizationProvider
+      dateAdapter={AdapterDateFns}
+      css={{ marginTop: 5 }}
+      key={id}
+    >
       <DatePicker
         label={label}
         value={date}
@@ -81,6 +86,7 @@ export function FormTextField(props: TextFieldProps) {
     name,
     fullWidth = true,
     helperText,
+    id,
   } = props
 
   const texareaProps = textarea
@@ -108,6 +114,7 @@ export function FormTextField(props: TextFieldProps) {
       fullWidth={fullWidth}
       sx={{ mt: 1, mb: 1.5 }}
       size="small"
+      key={id}
     />
   )
 }
@@ -148,6 +155,7 @@ export function FormAutoCompleteField({
       filterSelectedOptions
       size="small"
       fullWidth
+      key={id}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -183,6 +191,7 @@ export function FormSelectField({
       fullWidth={fullWidth}
       sx={{ minWidth: 200, mb: 1.5, mt: 1 }}
       size="small"
+      key={id}
     >
       <InputLabel id={`${id}-label`}>{label}</InputLabel>
       <Select
@@ -194,6 +203,7 @@ export function FormSelectField({
         onChange={changeHandler}
         name={name}
         error={!!errors}
+        data-testid={name}
       >
         {options &&
           options.map((option, i) => (
@@ -248,7 +258,12 @@ export function FormMultipleSelect({
   }
 
   return (
-    <FormControl fullWidth sx={{ minWidth: 200, mb: 1.5, mt: 1 }} size="small">
+    <FormControl
+      fullWidth
+      sx={{ minWidth: 200, mb: 1.5, mt: 1 }}
+      size="small"
+      key={id}
+    >
       <InputLabel id={`${id}-label`}>{label}</InputLabel>
       <Select
         labelId={`${id}-label`}
@@ -408,6 +423,7 @@ export function FormPlacesField({
       getOptionLabel={(option) =>
         typeof option === 'string' ? option : option?.description
       }
+      key={id}
       filterOptions={(x) => x}
       options={options}
       autoComplete

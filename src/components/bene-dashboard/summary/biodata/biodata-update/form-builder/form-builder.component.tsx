@@ -12,7 +12,7 @@ import {
 import styles from './form-builder.component.css'
 
 /** Form field configurations */
-type FormField = {
+export type FormField = {
   id: string
   label?: string
   type: string
@@ -38,8 +38,8 @@ type FormBuilderProps = {
   formFields: Array<FormField>
   errors: any
   setFieldValue: (name: string, v: any) => any
-  handleChange: (v: any) => any
   values: any
+  setIsEdited: (value: boolean) => void
 }
 
 type TextFieldType = 'text' | 'textarea' | 'number'
@@ -61,7 +61,7 @@ function findLastIndex<T>(
  * compose and render a form.
  */
 function FormBuilder(props: FormBuilderProps) {
-  const { formFields, errors, values, setFieldValue } = props
+  const { formFields, errors, values, setFieldValue, setIsEdited } = props
 
   const [fields, setFields] = useState<FormField[]>(formFields)
 
@@ -82,6 +82,7 @@ function FormBuilder(props: FormBuilderProps) {
 
   const markAsDeleted = (field: FormField) => {
     const { stateKey, editable, index } = field
+    setIsEdited(true)
     if (editable) {
       const newItems = values[stateKey].map((item: any) => {
         if (item.priority === index) {
@@ -107,6 +108,7 @@ function FormBuilder(props: FormBuilderProps) {
       values[stateKey][dataIndex] = value
     }
     setFieldValue(stateKey, values[stateKey])
+    setIsEdited(true)
   }
 
   const readErrors = (field: FormField) => {
@@ -158,6 +160,7 @@ function FormBuilder(props: FormBuilderProps) {
     dataIndex,
     readOnly = false,
     stateKey,
+    id,
   }: FormField) => {
     return (
       <FormDatePicker
@@ -166,6 +169,7 @@ function FormBuilder(props: FormBuilderProps) {
         handleChange={writeToFormState({ dataIndex, stateKey } as FormField)}
         readOnly={readOnly}
         name={dataIndex}
+        id={id}
       />
     )
   }
@@ -418,7 +422,7 @@ function FormBuilder(props: FormBuilderProps) {
           {showRemoveButton(field) && (
             <IconButton
               onClick={() => removeElement(field)}
-              aria-label="remove"
+              aria-label={`Remove ${label}`}
               color="error"
             >
               <Trash2 />
@@ -453,7 +457,7 @@ function FormBuilder(props: FormBuilderProps) {
         {showRemoveButton(field) && (
           <IconButton
             onClick={() => removeElement(field)}
-            aria-label="remove"
+            aria-label={`Remove ${field.stateKey}`}
             color="error"
           >
             <Trash2 />
@@ -564,7 +568,11 @@ function FormBuilder(props: FormBuilderProps) {
     >
       <div className={styles.form}>
         {collectFormFields().map((field, id) => (
-          <div key={id} className={styles.formInputSpaced}>
+          <div
+            key={id}
+            className={styles.formInputSpaced}
+            data-testid="form-field"
+          >
             {field}
           </div>
         ))}
