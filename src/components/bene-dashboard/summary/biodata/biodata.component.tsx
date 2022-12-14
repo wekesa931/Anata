@@ -781,12 +781,12 @@ function BioData() {
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
                   >
-                    Risk score:
+                    {isMinor(calcAge(v2Member?.birthDate)) ? '' : 'Risk score:'}
                   </td>
                   <td
                     className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
                   >
-                    {riskScore}
+                    {isMinor(calcAge(v2Member?.birthDate)) ? null : riskScore}
                   </td>
                 </tr>
                 <tr>

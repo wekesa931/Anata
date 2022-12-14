@@ -7,6 +7,7 @@ import { formNames } from '../workflows/Forms/form-fields'
 import { WorkflowMeta } from '../workflows/workflow-types'
 
 import PortalWindow from '../../../lib/portal/portal.component'
+import { useMember } from '../../../../context/member.context'
 
 type IForm = {
   name: string
@@ -44,7 +45,7 @@ function FormPortal({
 }: FormProps) {
   const [isFormEdited, setIsFormEdited] = useState(false)
   const isWorkflow = !!form.workflowId
-
+  const { primaryMemberHif } = useMember()
   const handleFormCloseEvent = () => {
     if (isWorkflow) {
       onFormClose(form.workflowId, true)
@@ -79,6 +80,7 @@ function FormPortal({
       setIsEdited={setIsFormEdited}
     >
       <WorkflowPortal
+        primaryMemberHif={primaryMemberHif}
         isFormEdited={isFormEdited}
         setIsFormEdited={setIsFormEdited}
         openedForms={openedForms}

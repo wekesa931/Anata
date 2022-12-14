@@ -63,6 +63,7 @@ import {
 type IProps = {
   workflow: IWorkflow
   isFormEdited: boolean
+  primaryMemberHif: any
   openedForms: any[]
   airtableMeta: any
   addOpenForm: (openForm: WorkflowMeta) => void
@@ -104,6 +105,7 @@ function ConfirmButton({ onConfirm }: ConfirmButtonProps) {
 
 function WorkflowPortal({
   workflow: openedWorkflow,
+  primaryMemberHif,
   isFormEdited,
   airtableMeta,
   addOpenForm,
@@ -194,7 +196,7 @@ function WorkflowPortal({
     updatingMemberFeedback
 
   const initialFormMeta = (fm, fmName = null) => {
-    const formValues = initialFormValues(member, user, fmName)
+    const formValues = initialFormValues(member, user, fmName, primaryMemberHif)
     let values = {}
     if (formValues[activeForm]) {
       values = formValues[activeForm]
@@ -288,9 +290,12 @@ function WorkflowPortal({
       if (currentWorkflow?.moduleData[activeForm]) {
         const newPayload = currentWorkflow?.moduleData[activeForm].filled_values
         formData = newPayload.map((py) => ({
-          ...initialFormValues(member, user, openedWorkflow.template.name)[
-            activeForm
-          ],
+          ...initialFormValues(
+            member,
+            user,
+            openedWorkflow.template.name,
+            primaryMemberHif
+          )[activeForm],
           ...py,
           updatedBy: {
             email: user?.email,
@@ -305,7 +310,7 @@ function WorkflowPortal({
       setFormPayload(formData)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeForm, currentWorkflow])
+  }, [activeForm, currentWorkflow, primaryMemberHif])
   const workflowCaseId = async () => {
     try {
       let caseId = null

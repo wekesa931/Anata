@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import logError from '../components/utils/Bugsnag/Bugsnag'
 import { MEMBER_DETAILS_QUERY, UPDATE_MEMBER_DETAILS } from '../gql/comms'
 import Toasts from '../helpers/toast'
+import { GLOBAL_SEARCH } from '../gql/workflows'
+
 import { V2MemberQueryType, V2MemberType } from '../types/member'
 /**
  * Extract member details from graphql response structure
@@ -115,6 +117,7 @@ type MemberContextType = {
   isSubmitting: boolean
   handleMemberUpdate: (variables: any) => any
   errorLoadingMember: any
+  primaryMemberHif: any
   refetchMember: () => void
 }
 
@@ -125,6 +128,7 @@ const MemberContext = React.createContext<MemberContextType>({
     return member || null
   },
   v2Member: null,
+  primaryMemberHif: null,
   isLoading: false,
   isSubmitting: false,
   handleMemberUpdate: () => null,
@@ -134,6 +138,7 @@ const MemberContext = React.createContext<MemberContextType>({
 
 function MemberProvider({ member, children }: any) {
   const [currentMember, setCurrentMember] = useState(member)
+  const [primaryMemberHif, setPrimaryMemberHif] = useState<any>(null)
   const [memberContactDetails, setmemberContactDetails] =
     useState<IContacts>(initialContacts)
   const [v2Member, setV2Member] = useState<V2MemberType | null>(null)
@@ -196,11 +201,29 @@ function MemberProvider({ member, children }: any) {
     }
   )
 
+  const [globalSearch] = useLazyQuery(GLOBAL_SEARCH, {
+    onCompleted: (data) => {
+      const res = data.globalSearch.data[0].fields
+      setPrimaryMemberHif({ ...res })
+    },
+  })
+
   React.useEffect(() => {
     if (member) {
       getMember({
         variables: { antaraId: member['Antara ID'] },
       })
+      if (member['Minor?'] === 'Minor') {
+        globalSearch({
+          variables: {
+            table: 'HIF',
+            field: 'phone 1 (from member)',
+            searchParam: member['Primary Phone 1'][0] || '',
+            antaraIdKey: '',
+            antaraIdValue: '',
+          },
+        })
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member])
@@ -223,6 +246,7 @@ function MemberProvider({ member, children }: any) {
       member: currentMember,
       memberContact: memberContactDetails,
       setCurrentMember,
+      primaryMemberHif,
       v2Member,
       isLoading: loading,
       isSubmitting,
@@ -231,7 +255,7 @@ function MemberProvider({ member, children }: any) {
       refetchMember: refetch,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentMember, memberContactDetails, v2Member]
+    [currentMember, memberContactDetails, v2Member, primaryMemberHif]
   )
 
   return (
