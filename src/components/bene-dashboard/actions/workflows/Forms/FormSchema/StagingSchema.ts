@@ -6844,6 +6844,7 @@ export default [
           'VC Follow up',
           'Chronic consent collection',
           'Nutrition follow up',
+          'Chief complaint review',
         ],
         symmetricColumnId: null,
         unreversed: false,

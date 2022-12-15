@@ -141,6 +141,7 @@ export const interactionlogform = {
           { name: 'VC Follow up' },
           { name: 'Chronic consent collection' },
           { name: 'Nutrition follow up' },
+          { name: 'Chief complaint review' },
         ],
       },
     },
