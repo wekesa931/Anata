@@ -92,7 +92,7 @@ function Appointments() {
         'CheckedIn',
         'Not Started',
         'Rescheduled by member',
-        'Needed'
+        'Needed',
       ].map((type) => ({ label: type, value: type })),
     },
   ]

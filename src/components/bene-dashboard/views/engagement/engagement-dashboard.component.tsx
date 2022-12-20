@@ -18,7 +18,12 @@ function EngagementDashboard() {
     'https://dub01.online.tableau.com/t/kenyanairobi/views/WIPMemberEngagementDashboards/ScribeEmbed-MemberLevelEngagementSummary'
 
   return (
-    <TableauReport url={dashboardURL} filters={filters} options={options} query="?:jsdebug=false" />
+    <TableauReport
+      url={dashboardURL}
+      filters={filters}
+      options={options}
+      query="?:jsdebug=false"
+    />
   )
 }
 

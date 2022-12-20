@@ -13,13 +13,13 @@ import Divider from '@mui/material/Divider'
 import CloseIcon from '@mui/icons-material/Close'
 import IconButton from '@mui/material/IconButton'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { capitalize } from 'lodash'
 import CallView from './call-view.component'
 import styles from './call-view.component.css'
 
 import { formatDuration, CallIcon } from './utils'
 
 dayjs.extend(customParseFormat)
-import { capitalize } from 'lodash'
 
 const headers = ['Phone no', 'Call duration', 'Date', ' Details']
 
@@ -60,11 +60,11 @@ type CallDetailsDrawerProps = {
   isOpen: boolean
 }
 
-const CallDetailsDrawer = ({
+function CallDetailsDrawer({
   close,
   callData,
   isOpen,
-}: CallDetailsDrawerProps) => {
+}: CallDetailsDrawerProps) {
   const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -107,7 +107,7 @@ type CallsTableBodyProps = {
   setCallData: (value: any) => void
 }
 
-const CallsTableBody = ({ data, setCallData }: CallsTableBodyProps) => {
+function CallsTableBody({ data, setCallData }: CallsTableBodyProps) {
   return (
     <>
       {data.length > 0 ? (
@@ -172,7 +172,7 @@ const CallsTableBody = ({ data, setCallData }: CallsTableBodyProps) => {
   )
 }
 
-const DataTable = ({ data }: DataTableProps) => {
+function DataTable({ data }: DataTableProps) {
   const [callData, setCallData] = React.useState(null)
 
   return (

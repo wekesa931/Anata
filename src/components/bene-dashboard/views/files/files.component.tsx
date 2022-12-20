@@ -784,6 +784,8 @@ function Files() {
       }
     },
   })
+  const [shouldShareFile, setShouldShareFile] = useState(false)
+  const [fileIdToShare, setFileIdToShare] = useState(null)
 
   const isValidURL = (url: string) => {
     const res = url.match(
@@ -1334,6 +1336,17 @@ function Files() {
         </div>
       )}
 
+      {shouldShareFile && (
+        <ShareFileOptions
+          anchorEl={anchorEl}
+          open={!!anchorEl}
+          id={anchorEl ? 'folder-popup' : undefined}
+          close={closeFileSharing}
+          folders={folders}
+          fileId={fileIdToShare}
+        />
+      )}
+
       {filteredFiles && !loading && !filtering && (
         <div className="interactions">
           <div className={styles.notes}>
@@ -1429,29 +1442,19 @@ function Files() {
                                                 </p>
                                               ) : (
                                                 <div>
-                                                  <ShareFileOptions
-                                                    anchorEl={anchorEl}
-                                                    open={!!anchorEl}
-                                                    id={
-                                                      anchorEl
-                                                        ? 'folder-popup'
-                                                        : undefined
-                                                    }
-                                                    close={closeFileSharing}
-                                                    folders={folders}
-                                                    fileId={row?.id}
-                                                  />
                                                   <button
                                                     className={styles.shareBtn}
                                                     onClick={(
                                                       e: React.MouseEvent<HTMLElement>
-                                                    ) =>
+                                                    ) => {
                                                       setAnchorEl(
                                                         anchorEl
                                                           ? null
                                                           : e.currentTarget
                                                       )
-                                                    }
+                                                      setFileIdToShare(row?.id)
+                                                      setShouldShareFile(true)
+                                                    }}
                                                   >
                                                     <Share
                                                       style={{
