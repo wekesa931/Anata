@@ -217,8 +217,8 @@ function MemberProvider({ member, children }: any) {
         globalSearch({
           variables: {
             table: 'HIF',
-            field: 'phone 1 (from member)',
-            searchParam: member['Primary Phone 1'][0] || '',
+            field: 'Antara ID (from Member)',
+            searchParam: member['Antara ID'] || '',
             antaraIdKey: '',
             antaraIdValue: '',
           },
