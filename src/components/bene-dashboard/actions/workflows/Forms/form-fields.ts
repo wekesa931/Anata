@@ -3,6 +3,7 @@ import TABLES from './FormSchema/form-fields-complete'
 
 export const DUPLICATE_DEFAULTS = {
   Conditions: 'Condition',
+  'VC condition diagnosis': 'Condition',
   Prescriptions: 'Drug Name',
   Appointments: 'Service',
   'BP Mon': 'Date',
@@ -32,6 +33,7 @@ export const duplicates = [
   'Conditions Data tracking',
   'Clinical Consultation',
   'Prescriptions VC',
+  'VC condition diagnosis',
   'Mental Health Consultation',
   'Physiotherapy Consultation',
   'PAFU',
@@ -47,6 +49,7 @@ export const formNames = {
   'Member tasks': 'Member Task',
   Prescriptions: 'HN Prescription',
   'Prescriptions VC': 'VC Prescription',
+  'VC condition diagnosis': 'VC condition diagnosis',
   Appointments: 'Appointment',
   Vitals: 'Vitals',
   'BP Mon': 'BP Monitoring',
@@ -54,7 +57,7 @@ export const formNames = {
   'DM Mon': 'DM Monitoring',
   Baseline: 'Baseline',
   Conditions: 'Condition Diagnosis',
-  'Conditions Data tracking': 'VC Conditions Data Tracking',
+  'Conditions Data tracking': 'Conditions Data Tracking',
   HIF: 'HIF',
   'HIF Minor': 'Minor HIF',
   HMP: 'HMP Intake',

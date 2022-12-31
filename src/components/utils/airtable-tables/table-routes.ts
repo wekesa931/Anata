@@ -4,6 +4,7 @@ const TABLE_ROUTES = {
   HMP: 'hmp',
   Baseline: 'baseline',
   Conditions: 'conditions',
+  'VC condition diagnosis': 'conditions',
   'Conditions Data tracking': 'conditionsDataTracking',
   'HIF Minor': 'minorhif',
   PAFU: 'pafu',
