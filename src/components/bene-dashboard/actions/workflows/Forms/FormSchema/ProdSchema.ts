@@ -12676,45 +12676,6 @@ export default [
         },
       },
       {
-        id: 'fldFyWLKY34jdfElN',
-        name: 'Specialist referred',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldqdnAoI0EaNkhs4',
-        unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblsixUe3jfbOUMQP',
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldDdb8Tcyb6bFS4G',
-        name: 'Other Specialist Referred',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Fill in the Specialist Referred not found in the provider base',
-        parentKey: 'Specialist referred',
-        parentValues: ['rec0n79m4zKaXuZJD'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Specialist referred'])) {
-            return ['rec0n79m4zKaXuZJD'].some((r) =>
-              values['Specialist referred'].includes(r)
-            )
-          }
-          return ['rec0n79m4zKaXuZJD'].includes(values['Specialist referred'])
-        },
-      },
-      {
         id: 'fld7bh8tSoQEvygHA',
         name: 'Received reminder',
         type: 'select',
@@ -13023,6 +12984,51 @@ export default [
             )
           }
           return ['recE0m2e4jKISKlRM'].includes(values['Provider referred'])
+        },
+      },
+      {
+        id: 'fldFyWLKY34jdfElN',
+        name: 'Specialist referred',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldqdnAoI0EaNkhs4',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblsixUe3jfbOUMQP',
+        required: false,
+        helper: '',
+        condition: (values: any) => {
+          if (Array.isArray(values['Received referral'])) {
+            return ['True'].some((r) => values['Received referral'].includes(r))
+          }
+          return ['True'].includes(values['Received referral'])
+        },
+      },
+      {
+        id: 'fldDdb8Tcyb6bFS4G',
+        name: 'Other Specialist Referred',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Fill in the Specialist Referred not found in the provider base',
+        parentKey: 'Specialist referred',
+        parentValues: ['rec0n79m4zKaXuZJD'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Specialist referred'])) {
+            return ['rec0n79m4zKaXuZJD'].some((r) =>
+              values['Specialist referred'].includes(r)
+            )
+          }
+          return ['rec0n79m4zKaXuZJD'].includes(values['Specialist referred'])
         },
       },
       {
@@ -15704,8 +15710,8 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
-        helper: '',
+        required: true,
+        helper: 'Enter the number of the medication is to be taken',
       },
       {
         id: 'fldD1aEmsctOhxYVs',
@@ -15894,7 +15900,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
       },
       {
@@ -15950,8 +15956,9 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
-        helper: '',
+        required: true,
+        helper:
+          'Please select YES if this medication has been prescribed as a result of a change in the current medication. It can be a change of dose or a change or drug.',
       },
     ],
   },
