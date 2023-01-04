@@ -496,7 +496,12 @@ function TextInputField({
   const [shouldShrink, setShouldShrink] = useState(false)
   const [numError, setNumError] = useState(false)
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    saveInput(field.name, event.target.value)
+    let inputValue: string | number = event.target.value
+
+    if (type === 'number') {
+      inputValue = parseFloat(inputValue)
+    }
+    saveInput(field.name, inputValue)
   }
 
   return (
