@@ -53,6 +53,7 @@ const TABLE_ROUTES = {
   'Physiotherapy Consultation': 'physio',
   'Incident reports': 'incident',
   'Member Feedback': 'member_feedback',
+  'Medications Base Sync': 'medication_base',
 }
 
 export default TABLE_ROUTES

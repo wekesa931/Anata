@@ -8,6 +8,7 @@ import { MemberProvider } from '../src/context/member.context'
 import mockMember from './member.mock'
 import { ApolloProvider } from '@apollo/client'
 import mockClient from './contact-mocks'
+import { AirtableMetaProvider } from '../src/context/airtable-context'
 
 type CustomRenderResult = RenderResult & {
   history: any
@@ -18,9 +19,11 @@ const renderWithRouter = (ui, { route = '/' } = {}) => {
     <ApolloProvider client={mockClient}>
       <AuthProvider user={mockUser}>
         <UserProvider>
-          <MemberProvider member={mockMember}>
-            <Router>{children}</Router>
-          </MemberProvider>
+          <AirtableMetaProvider>
+            <MemberProvider member={mockMember}>
+              <Router>{children}</Router>
+            </MemberProvider>
+          </AirtableMetaProvider>
         </UserProvider>
       </AuthProvider>
     </ApolloProvider>

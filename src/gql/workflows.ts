@@ -181,6 +181,12 @@ const GLOBAL_SEARCH = gql`
   }
 `
 
+const OPTIMIZED_SEARCH = gql`
+  query optimizedSearch($keyword: String!, $table: String!) {
+    optimizedSearch(keyword: $keyword, table: $table)
+  }
+`
+
 const SAVE_WORKFLOW = gql`
   mutation updateWorkflow(
     $workflowId: String!
@@ -225,4 +231,5 @@ export {
   REMOVE_MODULE,
   SAVE_WORKFLOW,
   GLOBAL_SEARCH,
+  OPTIMIZED_SEARCH,
 }

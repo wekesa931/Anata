@@ -34,5 +34,25 @@ const GET_MEMBER_DETAILS = gql`
     }
   }
 `
+
+const SEARCH_MEMBERS = gql`
+  query memberSearch($query: String!) {
+    membersSearch(query: $query) {
+      edges {
+        node {
+          antaraId
+          birthDate
+          details {
+            fullName
+            airtableRecordId
+            sex {
+              sex
+            }
+          }
+        }
+      }
+    }
+  }
+`
 // eslint-disable-next-line import/prefer-default-export
-export { GET_MEMBER_DETAILS }
+export { GET_MEMBER_DETAILS, SEARCH_MEMBERS }

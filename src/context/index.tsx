@@ -6,17 +6,20 @@ import { AuthProvider } from './auth-context'
 import { CommsProvider } from './comms-context'
 import client from '../resources/apollo-client'
 import { SidebarProvider } from './sidebar-context'
+import { AirtableMetaProvider } from './airtable-context'
 
 function AppContexts({ children }: any) {
   return (
     <ApolloProvider client={client}>
       <AuthProvider>
         <UserProvider>
-          <SidebarProvider>
-            <ToastProvider>
-              <CommsProvider>{children}</CommsProvider>
-            </ToastProvider>
-          </SidebarProvider>
+          <AirtableMetaProvider>
+            <SidebarProvider>
+              <ToastProvider>
+                <CommsProvider>{children}</CommsProvider>
+              </ToastProvider>
+            </SidebarProvider>
+          </AirtableMetaProvider>
         </UserProvider>
       </AuthProvider>
     </ApolloProvider>

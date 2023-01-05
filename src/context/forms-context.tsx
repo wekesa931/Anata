@@ -1,10 +1,8 @@
 import React, { createContext, useContext, useState } from 'react'
 import dayjs from 'dayjs'
 import { WorkflowMeta } from '../components/bene-dashboard/actions/workflows/workflow-types'
-import airtableFetch from '../resources/airtable-fetch'
 import FormPortal from '../components/bene-dashboard/actions/forms/forms-portal.component'
-import logError from '../components/utils/Bugsnag/Bugsnag'
-import { interactionlogform } from '../components/bene-dashboard/actions/workflows/Forms/form-fields'
+import { useAirtableMeta } from './airtable-context'
 
 type Form = {
   name: string
@@ -46,9 +44,9 @@ const FormContext = createContext<FormContextType>({
 })
 
 function FormProvider({ children }: any) {
-  const [airtableMeta, setAirtableMeta] = useState<any>(null)
   const [shouldRefetch, setshouldRefetch] = useState(false)
   const [openedForms, setOpenedForms] = useState<Form[]>([])
+  const { airtableMeta } = useAirtableMeta()
 
   const onRefetch = (refetch: boolean) => {
     setshouldRefetch(refetch)
@@ -89,35 +87,6 @@ function FormProvider({ children }: any) {
     }
     setOpenedForms(validForms)
   }
-
-  React.useEffect(() => {
-    if (airtableMeta === null) {
-      airtableFetch('tables')
-        .then((res) => {
-          let tableMap: any = {}
-          res?.tables?.forEach((tb: any) => {
-            let fields: any = {}
-            tb?.fields?.forEach((fl: any) => {
-              fields = {
-                ...fields,
-                primaryFieldName: tb.fields[0].name,
-                [fl.id]: fl,
-              }
-            })
-            tableMap = {
-              ...tableMap,
-              [tb.id]: {
-                ...tb,
-                fields,
-              },
-            }
-          })
-          setAirtableMeta({ ...tableMap, interactionlogform })
-        })
-        .catch((e) => logError(e))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const providerValue = React.useMemo(
     () => ({

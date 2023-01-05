@@ -28,10 +28,11 @@ import { useLazyQuery } from '@apollo/client'
 import { Editor } from 'react-draft-wysiwyg'
 import { markdownToDraft, draftToMarkdown } from 'markdown-draft-js'
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
+import { debounce } from 'lodash'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 import styles from '../guided-workflows.component.css'
 import { Form } from '../workflow-types'
-import { GLOBAL_SEARCH } from '../../../../../gql/workflows'
+import { GLOBAL_SEARCH, OPTIMIZED_SEARCH } from '../../../../../gql/workflows'
 
 const icon = <Square width={18} height={18} />
 const checkedIcon = <CheckSquare width={18} height={18} />
@@ -661,7 +662,6 @@ function LinkRecordInput({
   field,
   saveInput,
   airtableMeta,
-  template,
   disabled,
   control,
   error,
@@ -677,12 +677,222 @@ function LinkRecordInput({
     matchFrom: 'any',
     limit: 50,
   })
+
+  const isInSearchSchema = [
+    'tblglBRVOue24usUH', // Medication Base Sync staging
+    'tblm1g2udT6J8TOzt', // Providers staging
+    'tblYzI0t7WX9LGW4h', // Medications Base sync production
+    'tblOnZn7Vo8N9wznR', // Providers production
+  ].includes(field?.foreignTableId)
+
+  const dataSave = (onChange: (val: any) => any, nameId: any, name: any) => {
+    onChange(nameId)
+    setSelectedChoices(name)
+    saveInput(field.name, nameId)
+  }
+  const handleChange = (onChange: (val: any) => any, value: any) => {
+    if (value) {
+      if (Array.isArray(value)) {
+        const recordId = value.map((rec) => rec.id)
+        dataSave(onChange, recordId, value)
+      } else {
+        dataSave(onChange, [value.id], value)
+      }
+    } else {
+      dataSave(onChange, value, value)
+    }
+  }
+
+  useEffect(() => {
+    if (linkedValue && linkedRecords.length > 0) {
+      const recordValue = linkedRecords.filter((rec: any) =>
+        linkedValue.some((val: any) => rec.id === val)
+      )
+      if (field.relationship === 'many') {
+        setSelectedChoices(recordValue)
+      } else {
+        setSelectedChoices(recordValue[0])
+      }
+    } else if (field.relationship === 'many') {
+      setSelectedChoices([])
+    } else {
+      setSelectedChoices(null)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [linkedValue, linkedRecords])
+
+  return isInSearchSchema ? (
+    <LinkRecordInputOptimizedSearch
+      value={linkedValue}
+      field={field}
+      airtableMeta={airtableMeta}
+      disabled={disabled}
+      control={control}
+      error={error}
+      handleChange={handleChange}
+      filterOptions={filterOptions}
+      linkedRecords={linkedRecords}
+      setLinkedRecords={setLinkedRecords}
+      selectedChoices={selectedChoices}
+    />
+  ) : (
+    <LinkRecordInputDefault
+      value={linkedValue}
+      field={field}
+      airtableMeta={airtableMeta}
+      disabled={disabled}
+      control={control}
+      error={error}
+      handleChange={handleChange}
+      filterOptions={filterOptions}
+      linkedRecords={linkedRecords}
+      setLinkedRecords={setLinkedRecords}
+      selectedChoices={selectedChoices}
+    />
+  )
+}
+
+function LinkRecordInputOptimizedSearch({
+  value: linkedValue,
+  field,
+  airtableMeta,
+  disabled,
+  control,
+  error,
+  handleChange,
+  selectedChoices,
+  filterOptions,
+  linkedRecords,
+  setLinkedRecords,
+}: any) {
+  const [searchKey, setSearchKey] = useState<string>('')
+
+  const [search, { loading: searching }] = useLazyQuery(OPTIMIZED_SEARCH, {
+    context: {
+      clientName: 'search',
+    },
+    onCompleted: (data) => {
+      const response = data.optimizedSearch.data || []
+      const searchResults = response?.results.map(
+        (r: any) => ({ ...r, name: r[response?.displayName] } || [])
+      )
+
+      setLinkedRecords((prev: any[]) => {
+        const allRecords = [...prev, ...searchResults]
+        const uniqueRecords = allRecords.filter(
+          (v, i, a) => a.findIndex((t) => t.id === v.id) === i
+        )
+        return uniqueRecords
+      })
+    },
+  })
+
+  const settingLinkedData = searching || !airtableMeta
+
+  const debouncedSearch = debounce((keyword: string) => {
+    search({ variables: { keyword, table: field?.foreignTableId } })
+  }, 500)
+
+  const handleSearch = (
+    event: SyntheticEvent<Element, Event>,
+    value: string,
+    reason: string
+  ) => {
+    if (reason === 'reset') return
+    setSearchKey(value)
+    debouncedSearch(value)
+  }
+
+  return (
+    <Controller
+      name={field.name}
+      defaultValue={linkedValue}
+      control={control}
+      rules={{ required: true }}
+      render={({ field: { onChange } }) => (
+        <>
+          {field.helper && (
+            <InputLabel>
+              <HelperText field={field} error={error} />
+            </InputLabel>
+          )}
+          <Autocomplete
+            multiple={field.relationship === 'many'}
+            disablePortal
+            filterOptions={filterOptions}
+            disabled={disabled}
+            loading={settingLinkedData}
+            loadingText={
+              <div className={styles.recordLoader}>
+                <LoadingIcon /> Loading {field.alias || field.name} records
+              </div>
+            }
+            id="combo-box-demo"
+            options={linkedRecords}
+            value={selectedChoices}
+            disableCloseOnSelect={field.relationship === 'many'}
+            sx={{ marginBottom: 2 }}
+            onChange={(event: SyntheticEvent<Element, Event>, value: any) =>
+              handleChange(onChange, value)
+            }
+            inputValue={searchKey}
+            onInputChange={handleSearch}
+            getOptionLabel={(option) => option?.name || ''}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                value={searchKey}
+                placeholder={`Search ${field?.alias || field?.name}`}
+                label={<Label field={field} error={error} />}
+              />
+            )}
+            renderOption={(props, option, { selected }) => {
+              return (
+                <li {...props}>
+                  <Checkbox
+                    key={option.id}
+                    icon={icon}
+                    checkedIcon={checkedIcon}
+                    style={{ marginRight: 8 }}
+                    checked={selected}
+                  />
+                  {option.name}
+                </li>
+              )
+            }}
+          />
+          {error && (
+            <FormHelperText className={styles.fieldLabelError}>
+              This field is required
+            </FormHelperText>
+          )}
+        </>
+      )}
+    />
+  )
+}
+
+function LinkRecordInputDefault({
+  value: linkedValue,
+  field,
+  airtableMeta,
+  template,
+  disabled,
+  control,
+  error,
+  selectedChoices,
+  filterOptions,
+  linkedRecords,
+  handleChange,
+  setLinkedRecords,
+}: any) {
   const [getLinkedRecords, { data, loading: gettingLinkedRecords }] =
     useLazyQuery(GLOBAL_SEARCH)
   const settingLinkedData = gettingLinkedRecords || !airtableMeta
+
   useEffect(() => {
     if (data) {
-      const response = data.globalSearch.data
+      const response = data.globalSearch.data || []
       const displayFields: any[] = []
       response.forEach((fl: any) => {
         const loadedMeta =
@@ -750,41 +960,6 @@ function LinkRecordInput({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [airtableMeta])
 
-  useEffect(() => {
-    if (linkedValue && linkedRecords.length > 0) {
-      const recordValue = linkedRecords.filter((rec: any) =>
-        linkedValue.some((val: any) => rec.id === val)
-      )
-      if (field.relationship === 'many') {
-        setSelectedChoices(recordValue)
-      } else {
-        setSelectedChoices(recordValue[0])
-      }
-    } else if (field.relationship === 'many') {
-      setSelectedChoices([])
-    } else {
-      setSelectedChoices(null)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [linkedValue, linkedRecords])
-  const dataSave = (onChange: (val: any) => any, nameId: any, name: any) => {
-    onChange(nameId)
-    setSelectedChoices(name)
-    saveInput(field.name, nameId)
-  }
-  const handleChange = (onChange: (val: any) => any, value: any) => {
-    if (value) {
-      if (Array.isArray(value)) {
-        const recordId = value.map((rec) => rec.id)
-        dataSave(onChange, recordId, value)
-      } else {
-        dataSave(onChange, [value.id], value)
-      }
-    } else {
-      dataSave(onChange, value, value)
-    }
-  }
-
   return (
     <Controller
       name={field.name}
@@ -849,6 +1024,7 @@ function LinkRecordInput({
     />
   )
 }
+
 function CollaboratorInput({
   value: linkedValue,
   field,

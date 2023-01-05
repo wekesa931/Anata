@@ -693,16 +693,11 @@ function BioData() {
 
   const getBioDataTitle = () => {
     if (v2Member && !isLoading) {
-      return `${capitalize(v2Member?.fullName) || ''}, ${
-        calcAge(v2Member?.birthDate) || ''
-      } ${(v2Member?.sex && v2Member?.sex.charAt(0)) || ''}`
-    }
-    if (member) {
-      return `${capitalize(member['Full Name']) || ''} , ${
-        calcAge(member?.['Date Of Birth']) || ''
-      } 
-        ${(member && member?.Sex?.charAt(0)) || ''}
-      `
+      return v2Member?.fullName
+        ? `${capitalize(v2Member?.fullName)}, ${
+            calcAge(v2Member?.birthDate) || ''
+          } ${(v2Member?.sex && v2Member?.sex.charAt(0)) || ''}`
+        : 'Please Update Member'
     }
 
     return 'Loading...'

@@ -5,8 +5,10 @@ import {
   MEMBER_DETAILS_QUERY,
   UPDATE_MEMBER_DETAILS,
 } from '../src/gql/comms'
+import { OPTIMIZED_SEARCH } from '../src/gql/workflows'
 import { GET_ANTARA_STAFF } from '../src/gql/staff'
 import { createMockClient } from 'mock-apollo-client'
+import { SEARCH_MEMBERS } from '../src/gql/members'
 import {
   mockInsuranceCompanies,
   mockLookups,
@@ -86,5 +88,29 @@ const mutationHandler = jest
   .mockResolvedValue(mockMutationSuccess)
 
 mockClient.setRequestHandler(UPDATE_MEMBER_DETAILS, mutationHandler)
+
+mockClient.setRequestHandler(SEARCH_MEMBERS, () =>
+  Promise.resolve({
+    data: {
+      membersSearch: {
+        edges: [
+          {
+            node: {
+              antaraId: 'AAA-001',
+              birthDate: '1990-01-01',
+              details: {
+                fullName: 'John Doe',
+                airtableRecordId: 'rec123456789',
+                sex: {
+                  sex: 'Male',
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+  })
+)
 
 export default mockClient

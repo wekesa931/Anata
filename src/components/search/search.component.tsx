@@ -1,57 +1,84 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Downshift from 'downshift'
 import { throttle } from 'throttle-debounce'
 import { Link, useNavigate } from 'react-router-dom'
+import { useLazyQuery } from '@apollo/client'
 import SearchIcon from '../../assets/img/icons/search.svg'
 import CloseIcon from '../../assets/img/icons/close.svg'
 import LoadingIcon from '../../assets/img/icons/loading.svg'
-import airtableFetch from '../../resources/airtable-fetch'
 import styles from './search.component.css'
 import analytics from '../../helpers/segment'
+import { SEARCH_MEMBERS } from '../../gql/members'
 
 interface IProps {
   unknownMemberSearch?: boolean
   memberInfo?: (info: any) => void
 }
+
+interface resultItemTypeNode {
+  antaraId: string
+  birthDate: string
+  details: {
+    sex: {
+      sex: string
+    }
+    fullName: string
+    airtableRecordId: string
+  }
+}
 interface resultItemType {
-  id: string
+  node: resultItemTypeNode
+}
+
+interface searchResultType {
+  fullName: string
+  antaraId: string
+  age: number
+  sex: string
+  airtableRecordId: string
   displayName: string
-  'Full Name': string
-  Age: string
-  Employer: string
-  Sex: string
 }
 
 function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
-  const [results, setResults] = useState<Array<resultItemType>>([])
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [results, setResults] = useState<Array<searchResultType>>([])
   const navigate = useNavigate()
+
+  const [search, { loading, data }] = useLazyQuery(SEARCH_MEMBERS, {
+    context: {
+      clientName: 'v2',
+    },
+  })
+
+  useEffect(() => {
+    if (data) {
+      const searchResults =
+        data?.membersSearch?.edges?.map(({ node }: resultItemType) => {
+          const fullName = node?.details?.fullName
+          const age =
+            new Date().getFullYear() - new Date(node?.birthDate).getFullYear()
+          const sex = node?.details?.sex?.sex
+          const displayName = `${fullName} (${node.antaraId}) - ${age} yrs`
+
+          return {
+            fullName,
+            antaraId: node.antaraId,
+            age,
+            airtableRecordId: node?.details?.airtableRecordId,
+            sex,
+            displayName,
+          }
+        }) || []
+
+      setResults(searchResults)
+    }
+  }, [data])
 
   const searchMembers = (q: string) => {
     const throttleFunc = throttle(
       1000,
       () => {
         if (q && q.length >= 4) {
-          setIsLoading(true)
-          const searchQ = `filterByFormula=IF(FIND("${q.toLowerCase()}", LOWER({Full Name})), TRUE(), FALSE())&fields[]=Full Name&fields[]=Age&fields[]=Sex&fields[]=Employer`
-          airtableFetch(`members/list?${searchQ}`).then((response: any) => {
-            let finalRes = []
-            if (response && Object.keys(response).length > 0) {
-              finalRes = Object.keys(response).map((recId: string) => ({
-                ...response[recId],
-                id: recId,
-                displayName: [
-                  response[recId]['Full Name'],
-                  `${response[recId].Age}Yrs`,
-                  response[recId].Sex,
-                  response[recId].Employer,
-                ].join(', '),
-              }))
-              setResults(finalRes)
-            }
-            setResults(finalRes)
-            setIsLoading(false)
-          })
+          search({ variables: { query: q } })
         }
       },
       { noTrailing: true, debounceMode: true }
@@ -67,17 +94,17 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
   }
 
   const onResultClicked = (
-    item: resultItemType | null,
+    item: searchResultType | null,
     stateAndHelpers: { clearSelection: () => any }
   ) => {
     if (item) {
       analytics.track('Bene Searched', {
-        bene: item.id,
+        bene: item.antaraId,
       })
       if (unknownMemberSearch) {
         setMemberInfo(item)
       } else {
-        navigate(`/member/${item.id}`)
+        navigate(`/member/${item.airtableRecordId}`)
         location.reload()
       }
     }
@@ -88,7 +115,7 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
   return (
     <Downshift
       onChange={onResultClicked}
-      itemToString={(item) => (item ? `${item['Full Name']}` : '')}
+      itemToString={(item) => (item ? `${item?.fullName}` : '')}
       onInputValueChange={searchMembers}
     >
       {({
@@ -126,21 +153,21 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
                 <CloseIcon />
               </button>
             )}
-            {isLoading && (
+            {loading && (
               <div className={styles.loadingIcon}>
                 <LoadingIcon />
               </div>
             )}
           </div>
 
-          {inputValue && !isLoading && (
+          {inputValue && !loading && (
             <div className={styles.searchResultsWrap}>
               {results && results.length > 0 && isOpen && (
                 <ul {...getMenuProps()} data-testid="bene-list">
-                  {results.map((item: any, index: number) => (
+                  {results.map((item: searchResultType, index: number) => (
                     <li
                       {...getItemProps({
-                        key: item.id,
+                        key: item.antaraId,
                         index,
                         item,
                         style: {
@@ -164,7 +191,7 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
                       ) : (
                         <Link
                           to={{
-                            pathname: `/member/${item.id}`,
+                            pathname: `/member/${item.airtableRecordId}`,
                           }}
                         >
                           <span>{item.displayName}</span>
