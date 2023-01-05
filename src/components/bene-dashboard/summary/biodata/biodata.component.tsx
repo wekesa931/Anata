@@ -30,6 +30,16 @@ import calcAge from './utils'
 import MemberDetailsUpdateForm from './biodata-update/member-details-update.component'
 import Toasts from '../../../../helpers/toast'
 
+type ClinicalSummaryProps = {
+  memberContact: any
+  trackAccess: () => void
+}
+
+type BioDataTableRowProps = {
+  title: string
+  value?: any
+}
+
 const getRiskFactors = (
   diabetes: string,
   highBloodPressure: string,
@@ -545,6 +555,97 @@ function Tags({ member }: any) {
   )
 }
 
+function ClinicalSummary({ memberContact, trackAccess }: ClinicalSummaryProps) {
+  const hasDependants = memberContact?.dependents.length > 0
+  const minorDependents = []
+  const majorDependents = []
+
+  if (hasDependants) {
+    for (const dep of memberContact.dependents) {
+      const today = new Date()
+      if (today.getFullYear() - new Date(dep.birthDate).getFullYear() > 18) {
+        majorDependents.push(dep)
+      } else {
+        minorDependents.push(dep)
+      }
+    }
+  }
+
+  const hasPrimary = memberContact?.primary && memberContact?.primary.length > 0
+
+  return (
+    <>
+      <h4 className={styles.clinicalHeading}>Clinical Summary</h4>
+      <HifSummary />
+      <ConditionsSummary />
+      {hasDependants && (
+        <>
+          <hr className={styles.hrLine} />
+
+          <h4 className={styles.clinicalHeading}>Dependents</h4>
+
+          <div className={styles.dependentsDiv}>
+            {majorDependents.length > 0 && (
+              <span
+                className={styles.dependentLength}
+              >{`Major ${majorDependents.length}`}</span>
+            )}
+
+            {majorDependents.map((dep) => (
+              <React.Fragment key={dep?.id}>
+                <DependentCard dependent={dep} trackAccess={trackAccess} />
+              </React.Fragment>
+            ))}
+          </div>
+
+          <div className={styles.dependentsDiv}>
+            {minorDependents.length > 0 && (
+              <span
+                className={styles.dependentLength}
+              >{`Minor ${minorDependents.length}`}</span>
+            )}
+
+            {minorDependents.map((dep) => (
+              <React.Fragment key={dep.id}>
+                <DependentCard dependent={dep} trackAccess={trackAccess} />
+              </React.Fragment>
+            ))}
+          </div>
+        </>
+      )}
+      {hasPrimary && (
+        <>
+          <hr className={styles.hrLine} />
+
+          <h4 className={styles.clinicalHeading}>Primary Dependent</h4>
+          <div className={styles.dependentsDiv}>
+            {memberContact?.primary.map((mem: any) => (
+              <React.Fragment key={mem.id}>
+                <DependentCard dependent={mem} trackAccess={trackAccess} />
+              </React.Fragment>
+            ))}
+          </div>
+        </>
+      )}
+    </>
+  )
+}
+
+function BioDataTableRow({ title, value }: BioDataTableRowProps) {
+  return (
+    <tr>
+      <td
+        className={`text-bold ${styles.bioDataTableColumn} ${styles.bioDataKey}`}
+      >
+        {title}
+      </td>
+      <td className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}>
+        {value}
+      </td>
+    </tr>
+  )
+}
+
 function BioData() {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
@@ -573,23 +674,10 @@ function BioData() {
   }, [recId])
 
   const { member, memberContact, v2Member, isLoading } = useMember()
-  const hasDependants = memberContact?.dependents.length > 0
-  const minorDependents = []
-  const majorDependents = []
-
-  if (hasDependants) {
-    for (const dep of memberContact.dependents) {
-      const today = new Date()
-      if (today.getFullYear() - new Date(dep.birthDate).getFullYear() > 18) {
-        majorDependents.push(dep)
-      } else {
-        minorDependents.push(dep)
-      }
-    }
-  }
 
   const hasPrimary = memberContact?.primary && memberContact?.primary.length > 0
-  const isMinor = (age: number) => age < 18
+  const isMinor = () => calcAge(v2Member?.birthDate) < 18
+
   const trackAccess = () =>
     analytics.track(
       `${
@@ -630,7 +718,7 @@ function BioData() {
     return true
   }
 
-  const handleChange = async (e) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const isOptedIn = e.target.checked
     try {
       await airtableFetch('members', 'post', {
@@ -699,28 +787,13 @@ function BioData() {
           <div className={styles.summariesContainer}>
             <table className={`text-normal ${styles.bioDataTable}`}>
               <tbody>
-                <tr>
-                  <td
-                    className={`text-bold ${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    Assigned HN:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    {v2Member?.assignedHnFullName}
-                  </td>
-                </tr>
-                <tr />
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    Chronic Care Consent:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
+                <BioDataTableRow
+                  title="Assigned HN:"
+                  value={v2Member?.assignedHnFullName}
+                />
+                <BioDataTableRow
+                  title="Chronic Care Consent:"
+                  value={
                     <Checkbox
                       disabled={member['Chronic Care Consent'] === 'Opted Out'}
                       color="primary"
@@ -729,31 +802,18 @@ function BioData() {
                       }
                       onChange={handleChange}
                     />
-                  </td>
-                </tr>
-                {member['Chronic Care Consent'] ? (
-                  <tr>
-                    <td
-                      className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                    >
-                      Chronic Care Consent Date:
-                    </td>
-                    <td
-                      className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                    >
-                      {member['Chronic Care Consent Date']}
-                    </td>
-                  </tr>
-                ) : null}
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    Status:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
+                  }
+                />
+                {member['Chronic Care Consent'] && (
+                  <BioDataTableRow
+                    title="Chronic Care Consent Date:"
+                    value={member['Chronic Care Consent Date']}
+                  />
+                )}
+
+                <BioDataTableRow
+                  title="Status: "
+                  value={
                     <span
                       className={
                         v2Member?.status === 'Active'
@@ -763,72 +823,33 @@ function BioData() {
                     >
                       {v2Member?.status}
                     </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    Health Status:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    {member['Health Status']?.toString()}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    {isMinor(calcAge(v2Member?.birthDate)) ? '' : 'Risk score:'}
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    {isMinor(calcAge(v2Member?.birthDate)) ? null : riskScore}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    Health Goals:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    {member['Health Goals']?.toString()}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    {isMinor(calcAge(v2Member?.birthDate))
-                      ? 'Guardian Contact Info'
-                      : 'Contact Info:'}
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
-                    {isMinor(calcAge(v2Member?.birthDate))
-                      ? v2Member?.phone
-                      : null}
-                    {!isMinor(calcAge(v2Member?.birthDate)) && v2Member?.phone
-                      ? `${v2Member?.phone}`
-                      : null}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataKey}`}
-                  >
-                    MixPanel Dashboard:
-                  </td>
-                  <td
-                    className={`${styles.bioDataTableColumn} ${styles.bioDataValue}`}
-                  >
+                  }
+                />
+                <BioDataTableRow
+                  title="Health Status: "
+                  value={member['Health Status']?.toString()}
+                />
+                <BioDataTableRow
+                  title={isMinor() ? '' : 'Risk score:'}
+                  value={isMinor() ? null : riskScore}
+                />
+                <BioDataTableRow
+                  title="Health Goals: "
+                  value={member['Health Goals']?.toString()}
+                />
+                <BioDataTableRow
+                  title={isMinor() ? 'Guardian Contact Info' : 'Contact Info:'}
+                  value={v2Member?.phone}
+                />
+                {!isMinor() && (
+                  <BioDataTableRow
+                    title="Employer"
+                    value={v2Member.employer?.toString()}
+                  />
+                )}
+                <BioDataTableRow
+                  title="MixPanel Dashboard: "
+                  value={
                     <a
                       href={`https://mixpanel.com/project/2141047/view/293995/app/profile#distinct_id=${
                         v2Member?.antaraId || member['Antara ID']
@@ -838,76 +859,10 @@ function BioData() {
                     >
                       Open Dashboard
                     </a>
-                  </td>
-                </tr>
+                  }
+                />
               </tbody>
             </table>
-
-            <hr className={styles.hrLine} />
-
-            <h4 className={styles.clinicalHeading}>Clinical Summary</h4>
-
-            <HifSummary />
-
-            <ConditionsSummary />
-            {hasDependants && (
-              <>
-                <hr className={styles.hrLine} />
-
-                <h4 className={styles.clinicalHeading}>Dependents</h4>
-
-                <div className={styles.dependentsDiv}>
-                  {majorDependents.length > 0 && (
-                    <span
-                      className={styles.dependentLength}
-                    >{`Major ${majorDependents.length}`}</span>
-                  )}
-
-                  {majorDependents.map((dep) => (
-                    <React.Fragment key={dep?.id}>
-                      <DependentCard
-                        dependent={dep}
-                        trackAccess={trackAccess}
-                      />
-                    </React.Fragment>
-                  ))}
-                </div>
-
-                <div className={styles.dependentsDiv}>
-                  {minorDependents.length > 0 && (
-                    <span
-                      className={styles.dependentLength}
-                    >{`Minor ${minorDependents.length}`}</span>
-                  )}
-
-                  {minorDependents.map((dep) => (
-                    <React.Fragment key={dep.id}>
-                      <DependentCard
-                        dependent={dep}
-                        trackAccess={trackAccess}
-                      />
-                    </React.Fragment>
-                  ))}
-                </div>
-              </>
-            )}
-            {hasPrimary && (
-              <>
-                <hr className={styles.hrLine} />
-
-                <h4 className={styles.clinicalHeading}>Primary Dependent</h4>
-                <div className={styles.dependentsDiv}>
-                  {memberContact?.primary.map((mem) => (
-                    <React.Fragment key={mem.id}>
-                      <DependentCard
-                        dependent={mem}
-                        trackAccess={trackAccess}
-                      />
-                    </React.Fragment>
-                  ))}
-                </div>
-              </>
-            )}
 
             <hr className={styles.hrLine} />
             <h4 className={styles.clinicalHeading}>Insurance Details</h4>
@@ -934,6 +889,12 @@ function BioData() {
                 to add insurance details
               </Grid>
             )}
+
+            <hr className={styles.hrLine} />
+            <ClinicalSummary
+              memberContact={memberContact}
+              trackAccess={trackAccess}
+            />
           </div>
         </div>
       )}
