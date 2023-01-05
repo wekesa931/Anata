@@ -146,29 +146,36 @@ export function FormAutoCompleteField({
   errors,
 }: any) {
   return (
-    <Autocomplete
-      id={id}
-      value={value}
-      options={options}
-      autoComplete
-      includeInputInList
-      filterSelectedOptions
-      size="small"
+    <FormControl
       fullWidth
+      sx={{ mb: 1.5, mt: 1, minWidth: 200 }}
+      size="small"
       key={id}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label={label}
-          fullWidth
-          error={!!errors}
-          helperText={errors}
-        />
-      )}
-      onChange={(event: any, newValue: any) => {
-        handleChange(newValue)
-      }}
-    />
+    >
+      <Autocomplete
+        id={id}
+        value={value}
+        options={options}
+        autoComplete
+        includeInputInList
+        filterSelectedOptions
+        size="small"
+        fullWidth
+        key={id}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={label}
+            fullWidth
+            error={!!errors}
+            helperText={errors}
+          />
+        )}
+        onChange={(event: any, newValue: any) => {
+          handleChange(newValue)
+        }}
+      />
+    </FormControl>
   )
 }
 

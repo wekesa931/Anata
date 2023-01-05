@@ -16,7 +16,7 @@ import { GET_ANTARA_STAFF } from '../../../../../gql/staff'
 import logError from '../../../../utils/Bugsnag/Bugsnag'
 import PortalWindow from '../../../../lib/portal/portal.component'
 import styles from '../biodata.component.css'
-import getFormFields, { LookupOption } from './member-details.fields'
+import { LookupOption, getFormFields } from './member-details.fields'
 import ToastNotification, {
   defaultToastMessage,
   ToastMessage,
@@ -70,6 +70,8 @@ export const createInitialFormState = (member: V2MemberType) => {
       benefits: e?.benefitUtilizations?.map((b: any) => b?.benefit?.name),
       priority: e?.priority,
       healthPolicy: e?.memberPolicy?.healthPolicy?.name,
+      principalMemberInsuranceId: e?.principalMemberInsuranceId,
+      relationshipToPrincipalMember: e?.relationshipToPrincipalMember,
     }))
   }
 
@@ -180,6 +182,8 @@ const prepareData = (vars: any, antaraId: string) => {
         insuranceId: ins.insuranceId,
         priority: ins.priority,
         toDelete: !!ins?.toDelete,
+        principalMemberInsuranceId: ins?.principalMemberInsuranceId,
+        relationshipToPrincipalMember: ins?.relationshipToPrincipalMember,
       })),
       antaraId,
     }

@@ -45,6 +45,8 @@ type InsuranceDetailsType = {
       name?: string
     }
   }
+  principalMemberInsuranceId?: string
+  relationshipToPrincipalMember?: string
 }
 
 export type V2MemberType = {
@@ -92,6 +94,8 @@ type RawInsuranceType = {
   id?: string
   insuranceId?: string
   priority?: number
+  principalMemberInsuranceId?: string
+  relationshipToPrincipalMember?: string
   insuranceCompany?: {
     id?: string
     name?: string

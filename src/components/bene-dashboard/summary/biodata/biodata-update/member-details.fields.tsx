@@ -6,6 +6,27 @@ const constituencyOptions = [...new Set(constituencies.map((c) => c.name))].map(
   (c) => startCase(toLower(c))
 )
 
+const relationshipOptions = [
+  'Aunt',
+  'Brother',
+  'Child',
+  'Cousin',
+  'Employer',
+  'Father',
+  'Friend',
+  'Guardian',
+  'Husband',
+  'Mother',
+  'Parent',
+  'Sibling',
+  'Sister',
+  'Son',
+  'Spouse',
+  'Uncle',
+  'Wife',
+  'Other',
+]
+
 export type LookupOption = {
   label: string
   value: string
@@ -57,7 +78,7 @@ const createFormFields = (initialState: any = [], formField: any) => {
   })
 }
 
-const getFormFields = (lookups: LookupData) => {
+export const getFormFields = (lookups: LookupData) => {
   const {
     v2Member,
     insuranceCompanies,
@@ -115,6 +136,23 @@ const getFormFields = (lookups: LookupData) => {
         label: 'Benefits, riders e.t.c',
         options: benefits,
         multiple: true,
+        dynamic: true,
+        stateKey: 'memberInsurance',
+      },
+      {
+        id: 'princ',
+        type: 'text',
+        dataIndex: 'principalMemberInsuranceId',
+        label: 'Principal Member Insurance Id',
+        dynamic: true,
+        stateKey: 'memberInsurance',
+      },
+      {
+        id: 'rel',
+        type: 'autocomplete',
+        dataIndex: 'relationshipToPrincipalMember',
+        label: 'Relationship to Principal Member',
+        options: relationshipOptions,
         dynamic: true,
         stateKey: 'memberInsurance',
       },
@@ -387,26 +425,7 @@ const getFormFields = (lookups: LookupData) => {
           dataIndex: 'emergencyContactRelationship',
           label: 'Emergency Contact Relationship',
           stateKey: 'memberContact',
-          options: [
-            'Aunt',
-            'Brother',
-            'Child',
-            'Cousin',
-            'Employer',
-            'Father',
-            'Friend',
-            'Guardian',
-            'Husband',
-            'Mother',
-            'Parent',
-            'Sibling',
-            'Sister',
-            'Son',
-            'Spouse',
-            'Uncle',
-            'Wife',
-            'Other',
-          ],
+          options: relationshipOptions,
         },
       ],
     },

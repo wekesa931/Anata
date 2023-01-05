@@ -176,6 +176,8 @@ const MEMBER_DETAILS_QUERY = gql`
             id
             insuranceId
             priority
+            principalMemberInsuranceId
+            relationshipToPrincipalMember
             insuranceCompany {
               id
               name
