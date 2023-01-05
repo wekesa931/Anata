@@ -8,34 +8,12 @@ import {
   FormMultipleSelect,
   FormPlacesField,
   FormAutoCompleteField,
+  FormFieldType,
 } from './form-elements.component'
 import styles from './form-builder.component.css'
 
-/** Form field configurations */
-export type FormField = {
-  id: string
-  label?: string
-  type: string
-  dataIndex: string
-  readOnly?: boolean
-  options?: Array<any>
-  required?: boolean
-  items?: FormField[]
-  conditionalField?: string
-  showAddButton?: boolean
-  index?: number
-  editable?: boolean
-  multiple?: boolean
-  category?: string
-  fullWidth?: boolean
-  helperText?: string
-  stateKey: string
-  dynamic?: boolean
-  addButtonText?: string
-}
-
 type FormBuilderProps = {
-  formFields: Array<FormField>
+  formFields: Array<FormFieldType>
   errors: any
   setFieldValue: (name: string, v: any) => any
   values: any
@@ -63,13 +41,13 @@ function findLastIndex<T>(
 function FormBuilder(props: FormBuilderProps) {
   const { formFields, errors, values, setFieldValue, setIsEdited } = props
 
-  const [fields, setFields] = useState<FormField[]>(formFields)
+  const [fields, setFields] = useState<FormFieldType[]>(formFields)
 
   // safely get nested values
   const get = (p: any[], o: any, d: any = null) =>
     p.reduce((xs: any, x: any) => (xs && xs[x] ? xs[x] : d), o)
 
-  const readFromFormState = (field: FormField) => {
+  const readFromFormState = (field: FormFieldType) => {
     const { stateKey, dynamic, index, dataIndex } = field
     if (dynamic) {
       const newItem = (values[stateKey] || []).find(
@@ -80,7 +58,7 @@ function FormBuilder(props: FormBuilderProps) {
     return values[stateKey][dataIndex]
   }
 
-  const markAsDeleted = (field: FormField) => {
+  const markAsDeleted = (field: FormFieldType) => {
     const { stateKey, editable, index } = field
     setIsEdited(true)
     if (editable) {
@@ -94,7 +72,7 @@ function FormBuilder(props: FormBuilderProps) {
     }
   }
 
-  const writeToFormState = (field: FormField) => (value: any) => {
+  const writeToFormState = (field: FormFieldType) => (value: any) => {
     const { stateKey, dynamic, index, dataIndex } = field
     if (dynamic) {
       const item = values[stateKey].find((i: any) => i.priority === index)
@@ -111,7 +89,7 @@ function FormBuilder(props: FormBuilderProps) {
     setIsEdited(true)
   }
 
-  const readErrors = (field: FormField) => {
+  const readErrors = (field: FormFieldType) => {
     const { stateKey, dataIndex, dynamic, index } = field
 
     if (dynamic) {
@@ -135,7 +113,10 @@ function FormBuilder(props: FormBuilderProps) {
   }
 
   // create a text field
-  const createTextField = (field: FormField, type: TextFieldType = 'text') => {
+  const createTextField = (
+    field: FormFieldType,
+    type: TextFieldType = 'text'
+  ) => {
     const { label, id, dataIndex, required = false, helperText } = field
 
     return (
@@ -161,12 +142,15 @@ function FormBuilder(props: FormBuilderProps) {
     readOnly = false,
     stateKey,
     id,
-  }: FormField) => {
+  }: FormFieldType) => {
     return (
       <FormDatePicker
-        date={readFromFormState({ dataIndex, stateKey } as FormField)}
+        date={readFromFormState({ dataIndex, stateKey } as FormFieldType)}
         label={label || dataIndex}
-        handleChange={writeToFormState({ dataIndex, stateKey } as FormField)}
+        handleChange={writeToFormState({
+          dataIndex,
+          stateKey,
+        } as FormFieldType)}
         readOnly={readOnly}
         name={dataIndex}
         id={id}
@@ -175,7 +159,7 @@ function FormBuilder(props: FormBuilderProps) {
   }
 
   // a select field
-  const createSelectField = (field: FormField) => {
+  const createSelectField = (field: FormFieldType) => {
     const {
       label,
       dataIndex,
@@ -210,7 +194,7 @@ function FormBuilder(props: FormBuilderProps) {
     )
   }
 
-  const createAutoCompleteField = (field: FormField) => {
+  const createAutoCompleteField = (field: FormFieldType) => {
     const { dataIndex, label, options, id } = field
     const initialValue = readFromFormState(field)
 
@@ -359,7 +343,7 @@ function FormBuilder(props: FormBuilderProps) {
   }
   /* eslint-enable no-param-reassign */
 
-  const countFields = (field: FormField) => {
+  const countFields = (field: FormFieldType) => {
     const { stateKey } = field
     const items = fields.filter(
       (item: any) =>
@@ -380,7 +364,7 @@ function FormBuilder(props: FormBuilderProps) {
     return items.length
   }
 
-  const createPlacesField = (field: FormField) => {
+  const createPlacesField = (field: FormFieldType) => {
     const { id, label, dataIndex } = field
     return (
       <FormPlacesField
@@ -393,7 +377,7 @@ function FormBuilder(props: FormBuilderProps) {
     )
   }
 
-  const removeElement = (field: FormField) => {
+  const removeElement = (field: FormFieldType) => {
     const { id } = field
 
     const newFields = [...fields]
@@ -404,10 +388,10 @@ function FormBuilder(props: FormBuilderProps) {
     setFields(newFields)
   }
 
-  const showRemoveButton = (field: FormField) =>
+  const showRemoveButton = (field: FormFieldType) =>
     field?.editable && countFields(field) > 1
 
-  const createGroupedField = (field: FormField) => {
+  const createGroupedField = (field: FormFieldType) => {
     const { label, items } = field
 
     return (
@@ -417,6 +401,7 @@ function FormBuilder(props: FormBuilderProps) {
           direction="row"
           alignItems="center"
           justifyContent="space-between"
+          sx={{ mb: 1 }}
         >
           <p className={styles.groupLabel}>{label}</p>
           {showRemoveButton(field) && (
@@ -438,7 +423,7 @@ function FormBuilder(props: FormBuilderProps) {
     )
   }
 
-  const createRowField = (field: FormField) => {
+  const createRowField = (field: FormFieldType) => {
     const { items } = field
 
     return (
@@ -468,7 +453,7 @@ function FormBuilder(props: FormBuilderProps) {
   }
 
   /** Create any field */
-  const createFormField = (field: FormField) => {
+  const createFormField = (field: FormFieldType) => {
     const { type, id } = field
 
     let composedField

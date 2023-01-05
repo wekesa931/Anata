@@ -166,6 +166,8 @@ const MEMBER_DETAILS_QUERY = gql`
               postCode
               geolocation
               label
+              latitude
+              longitude
             }
             email
             emergencyContactName

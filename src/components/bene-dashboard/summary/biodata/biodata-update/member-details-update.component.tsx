@@ -89,6 +89,10 @@ export const createInitialFormState = (member: V2MemberType) => {
         residentialAddress: {
           description: e?.residentialAddress,
           place_id: e?.geolocation,
+          latitude: e?.latitude,
+          longitude: e?.longitude,
+          residentialCountry: e?.residentialCountry,
+          residentialCounty: e?.residentialCounty,
         },
         label: e?.label,
         deliveryInstructions: e?.deliveryInstructions,
@@ -195,6 +199,10 @@ const prepareData = (vars: any, antaraId: string) => {
         ...e,
         geolocation: e?.residentialAddress?.place_id,
         residentialAddress: e?.residentialAddress?.description,
+        residentialCountry: e?.residentialAddress?.residentialCountry,
+        latitude: e?.residentialAddress?.latitude,
+        longitude: e?.residentialAddress?.longitude,
+        residentialCounty: e?.residentialAddress?.residentialCounty,
       })),
       antaraId,
     }

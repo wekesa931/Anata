@@ -21,6 +21,30 @@ import { Theme, useTheme } from '@mui/material/styles'
 import { throttle } from 'lodash'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import parse from 'autosuggest-highlight/parse'
+import { geocodeByPlaceId } from 'react-google-places-autocomplete'
+
+/** Form field configurations */
+export type FormFieldType = {
+  id: string
+  label?: string
+  type: string
+  dataIndex: string
+  readOnly?: boolean
+  options?: Array<any>
+  required?: boolean
+  items?: FormFieldType[]
+  conditionalField?: string
+  showAddButton?: boolean
+  index?: number
+  editable?: boolean
+  multiple?: boolean
+  category?: string
+  fullWidth?: boolean
+  helperText?: string
+  stateKey: string
+  dynamic?: boolean
+  addButtonText?: string
+}
 
 /**
  * Date Picker element
@@ -336,6 +360,10 @@ interface PlaceType {
   description: string
   structured_formatting: StructuredFormatting
   place_id: string
+  latitiude: number
+  longitude: number
+  residentialCountry: string
+  residentialCounty: string
 }
 
 type FormPlacesFieldType = {
@@ -373,7 +401,10 @@ export function FormPlacesField({
     () =>
       throttle(
         (
-          request: { input: string },
+          request: {
+            input: string
+            componentRestrictions: { country: string }
+          },
           callback: (results?: readonly PlaceType[]) => void
         ) => {
           ;(autocompleteService.current as any).getPlacePredictions(
@@ -403,26 +434,79 @@ export function FormPlacesField({
       return undefined
     }
 
-    fetch({ input: inputValue }, (results?: readonly PlaceType[]) => {
-      if (active) {
-        let newOptions: readonly PlaceType[] = []
+    fetch(
+      {
+        input: inputValue,
+        componentRestrictions: { country: 'ke' },
+      },
+      (results?: readonly PlaceType[]) => {
+        if (active) {
+          let newOptions: readonly PlaceType[] = []
 
-        if (value) {
-          newOptions = [value]
+          if (value) {
+            newOptions = [value]
+          }
+
+          if (results) {
+            newOptions = [...newOptions, ...results]
+          }
+
+          setOptions(newOptions)
         }
-
-        if (results) {
-          newOptions = [...newOptions, ...results]
-        }
-
-        setOptions(newOptions)
       }
-    })
+    )
 
     return () => {
       active = false
     }
   }, [value, inputValue, fetch])
+
+  const handlePlaceDetailsChange = (event: any, newValue: PlaceType | null) => {
+    setOptions(newValue ? [newValue, ...options] : options)
+    setValue(newValue)
+
+    // extract description and place id
+    const description = newValue?.description || ''
+    const place_id = newValue?.place_id || ''
+
+    let fullAddress: any = {
+      description,
+      place_id,
+    }
+
+    // geocode the place_id
+    geocodeByPlaceId(place_id)
+      .then((results) => {
+        const addressComponents = results[0]?.address_components
+
+        const residentialCountry =
+          addressComponents.find((addressComponent: any) => {
+            return addressComponent?.types?.includes('country')
+          })?.long_name || ''
+
+        const residentialCounty =
+          addressComponents.find((addressComponent: any) => {
+            return addressComponent?.types?.includes(
+              'administrative_area_level_1'
+            )
+          })?.long_name || ''
+
+        // get the lat, lng values
+        const lat = results[0]?.geometry?.location?.lat()
+        const lng = results[0]?.geometry?.location?.lng()
+
+        fullAddress = {
+          ...fullAddress,
+          residentialCountry,
+          residentialCounty,
+          latitude: lat,
+          longitude: lng,
+        }
+      })
+      .finally(() => {
+        handleChange(fullAddress)
+      })
+  }
 
   return (
     <Autocomplete
@@ -439,15 +523,7 @@ export function FormPlacesField({
       size="small"
       value={value}
       fullWidth
-      onChange={(event: any, newValue: PlaceType | null) => {
-        setOptions(newValue ? [newValue, ...options] : options)
-        setValue(newValue)
-
-        // extract description and place id
-        const description = newValue?.description || ''
-        const place_id = newValue?.place_id || ''
-        handleChange({ description, place_id })
-      }}
+      onChange={handlePlaceDetailsChange}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue)
       }}

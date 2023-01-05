@@ -7,9 +7,10 @@
 import { fireEvent } from '@testing-library/react'
 import React from 'react'
 import renderWithRouter from '../../../../../../../__mocks__/custom-render.mock'
-import FormBuilder, { FormField } from './form-builder.component'
+import FormBuilder from './form-builder.component'
+import { FormFieldType } from './form-elements.component'
 
-const mockFieldConfig: FormField[] = [
+const mockFieldConfig: FormFieldType[] = [
   {
     id: 'ins-group',
     type: 'group',
