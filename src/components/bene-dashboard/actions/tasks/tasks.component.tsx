@@ -317,9 +317,11 @@ function Tasks() {
                         const prefills = extractPrefills(url)
 
                         url = url.split('/').pop().split('?')
+
                         const formMeta = FORMS.find(
-                          (fm) => fm.formId === url[0]
+                          (fm) => fm.formId || fm.id === url[0]
                         )
+
                         formMeta &&
                           addOpenForm({
                             name: formMeta.name,
