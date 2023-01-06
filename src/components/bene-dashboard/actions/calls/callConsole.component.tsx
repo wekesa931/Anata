@@ -8,6 +8,8 @@ import {
   CheckCircle,
 } from 'react-feather'
 import { useMutation } from '@apollo/client'
+import { Portal } from '@mui/material'
+import Draggable from 'react-draggable'
 import Icon from '../../../utils/icon/icon.component'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import { useCall } from '../../../../context/calls-context'
@@ -212,250 +214,266 @@ function CallFloatingBox() {
   }
 
   return (
-    <div
-      style={{
-        height: isOpen ? '550px' : '105px',
-      }}
-      className="call-floating-box p-absolute"
-    >
-      <div
-        style={{
-          backgroundColor: activeCall && consoleColor(),
-        }}
-        className="relative call-header d-flex flex-between align-center"
-      >
-        {showTransferList && <HNAndCSList displayList={setshowTransferList} />}
-        <div className="d-flex relative box-header">
-          <p className="call-type-title">
-            {activeCall.title ?? 'Inbound Call'}
-            <br />
-            <span>
-              <strong>{activeCall.member} </strong>
-              <span>{activeCall.memberName}</span>
-            </span>
-          </p>
-          {isCallBack && (
-            <Info
-              className="info-icon"
-              onClick={() => setdisplayHistory(!displayHistory)}
-            />
-          )}
-          {displayHistory && (
-            <CallbackHistory
-              isVisible={displayHistory}
-              setdisplayHistory={setdisplayHistory}
-            />
-          )}
-        </div>
-
-        {displayCloseButton ? (
-          <span
-            className="pointer white-text"
-            role="button"
-            tabIndex={0}
-            onKeyDown={() => completeCall()}
-            onClick={() => completeCall()}
+    <Portal>
+      <Draggable bounds="parent" enableUserSelectHack data-testid="call-console-draggable">
+        <div
+          style={{
+            height: isOpen ? '550px' : '105px',
+          }}
+          className="call-floating-box p-absolute"
+        >
+          <div
+            style={{
+              backgroundColor: activeCall && consoleColor(),
+            }}
+            className="relative call-header d-flex flex-between align-center"
           >
-            <Icon name="x" fill="white" width={20} height={20} />
-          </span>
-        ) : (
-          <span
-            className="pointer white-text"
-            role="button"
-            tabIndex={0}
-            onKeyDown={() => setisOpen(!isOpen)}
-            onClick={() => setisOpen(!isOpen)}
-          >
-            {isOpen && (
-              <Icon name="minimize" fill="white" width={20} height={20} />
+            {showTransferList && (
+              <HNAndCSList displayList={setshowTransferList} />
             )}
-            {!isOpen && (
-              <Icon name="maximize-2" fill="white" width={20} height={20} />
-            )}
-          </span>
-        )}
-      </div>
-      <div
-        style={{ backgroundColor }}
-        className="connecting-text d-flex flex-between"
-      >
-        <div className="d-flex flex-between full-width align-start">
-          <div className="d-flex">
-            {isActive && <Timer initialTime={activeCall.initialCallTime} />}
-            {isFulfilled && !activeCall.dialPadInitiated && (
-              <p className="duration">{activeCall?.duration}</p>
-            )}
-            <p>{subTitle()}</p>
-          </div>
-          {showAuthButton && (
-            <AuthButton onClick={() => setShouldAuthenticate(true)}>
-              Validate Member
-            </AuthButton>
-          )}
-        </div>
-        {isRinging ? (
-          <span className={styles.loadingContainer}>
-            <LoadingIcon />
-
-            <div>
-              <button
-                className={styles.cancel}
-                onKeyDown={() => handleEndCall()}
-                onClick={() => handleEndCall()}
-              >
-                Cancel
-              </button>
+            <div className="d-flex relative box-header">
+              <p className="call-type-title">
+                {activeCall.title ?? 'Inbound Call'}
+                <br />
+                <span>
+                  <strong>{activeCall.member} </strong>
+                  <span>{activeCall.memberName}</span>
+                </span>
+              </p>
+              {isCallBack && (
+                <Info
+                  className="info-icon"
+                  onClick={() => setdisplayHistory(!displayHistory)}
+                />
+              )}
+              {displayHistory && (
+                <CallbackHistory
+                  isVisible={displayHistory}
+                  setdisplayHistory={setdisplayHistory}
+                />
+              )}
             </div>
-          </span>
-        ) : null}
-      </div>
 
-      {isTransferring && (
-        <div className="forward-to flex-between">
-          <div className="d-flex mt-ten">
-            <span>
-              <PhoneForwarded className="icon-style" />
-            </span>
-            <p>Calling {activeCall.forwardTo}</p>
+            {displayCloseButton ? (
+              <span
+                className="pointer white-text"
+                role="button"
+                tabIndex={0}
+                onKeyDown={completeCall}
+                onClick={completeCall}
+              >
+                <Icon name="x" fill="white" width={20} height={20} />
+              </span>
+            ) : (
+              <span
+                className="pointer white-text"
+                role="button"
+                tabIndex={0}
+                onKeyDown={() => setisOpen(!isOpen)}
+                onClick={() => setisOpen(!isOpen)}
+              >
+                {isOpen && (
+                  <Icon name="minimize" fill="white" width={20} height={20} />
+                )}
+                {!isOpen && (
+                  <Icon name="maximize-2" fill="white" width={20} height={20} />
+                )}
+              </span>
+            )}
           </div>
-          <div className="mt-ten">
-            <LoadingIcon />
-          </div>
-        </div>
-      )}
-      {showActiveParticipants && <ActiveCallParticipants />}
-      {(participantBusy || staffBusy) && (
-        <div className="no-answer">
-          <div className="d-flex flex-center align-center phone-off">
-            <Icon name="phone-missed" fill="white" width={30} height={30} />
-          </div>
-          {participantBusy && <p>{activeCall?.memberName}</p>}
-          <p style={{ marginTop: '0px' }}>
-            {staffBusy && 'You'} didn&#39;t answer
-          </p>
-          <div className="task-created d-flex align-center">
-            <span>
-              <Icon name="check-circle" fill="white" width={15} height={15} />
-            </span>
-            <p>Callback task created</p>
-          </div>
-        </div>
-      )}
+          <div
+            style={{ backgroundColor }}
+            className="connecting-text d-flex flex-between"
+          >
+            <div className="d-flex flex-between full-width align-start">
+              <div className="d-flex">
+                {isActive && <Timer initialTime={activeCall.initialCallTime} />}
+                {isFulfilled && !activeCall.dialPadInitiated && (
+                  <p className="duration">{activeCall?.duration}</p>
+                )}
+                <p>{subTitle()}</p>
+              </div>
+              {showAuthButton && (
+                <AuthButton onClick={() => setShouldAuthenticate(true)}>
+                  Validate Member
+                </AuthButton>
+              )}
+            </div>
+            {isRinging ? (
+              <span className={styles.loadingContainer}>
+                <LoadingIcon />
 
-      {isTransfered && (
-        <div className="no-answer">
-          <div className="d-flex flex-center align-center phone-forward">
-            <PhoneForwarded className="icon-style-large" />
-          </div>
-          <p>{activeCall.title}</p>
-          <p>transfered</p>
-          <div className="task-created d-flex align-center">
-            <p>{activeCall.forwardTo}</p>
-          </div>
-        </div>
-      )}
-      {displayHistoryLogs && (
-        <div className="ml-twenty mt-twenty">
-          <HistoryLogs />
-        </div>
-      )}
-      {!isKnownMember &&
-        (memberInfo ? (
-          <SaveContactView
-            callerNum={activeCall.member}
-            memberInfo={memberInfo}
-          />
-        ) : (
-          <div className="unknown-member">
-            <SearchInput unknownMemberSearch memberInfo={setmemberInfo} />
-          </div>
-        ))}
-      {shouldAuthenticate && (
-        <AuthenticateMember
-          sessionId={memberInCall?.sessionId}
-          sessionName={memberInCall?.session}
-          antaraId={activeCall.memberAntaraId}
-          isValidationFailed={setShouldAuthenticate}
-          isValidationSuccess={successfulValidation}
-        />
-      )}
-      {shouldDisplayForms && !shouldDisplaySaveMember && (
-        <CallConsoleForms
-          height={isHalfHeight ? 'task-form-low' : 'task-form'}
-        />
-      )}
-
-      {shouldDisplayForms && shouldDisplaySaveMember && !savedPhone && (
-        <div className={styles.saveContainer}>
-          <Phone className={styles.phone} fill="#fff" width={50} height={50} />
-          <p className={styles.saveParagraph}>
-            Save {activeCall?.member} as member&apos;s Phone?
-          </p>
-          <div className={styles.buttons}>
-            <button className={styles.savebtn} onClick={savePhone}>
-              {updatePhonesLoading ? 'Saving' : 'Save Phone'}
-            </button>
-            <button className={styles.skipbtn} onClick={closeDialog}>
-              Skip
-            </button>
-          </div>
-        </div>
-      )}
-      {savedPhone && showSaveDialog && (
-        <>
-          {saveError ? (
-            <div className={styles.saveContainer}>
-              <p className={styles.errSaving}>{saveError}</p>
-              <div className="d-flex flex-center align-center">
-                <div className={styles.errButtons}>
-                  <button className={styles.savebtn} onClick={savePhone}>
-                    {updatePhonesLoading ? 'Retrying...' : 'Retry'}
-                  </button>
-                  <button className={styles.skipbtn} onClick={closeDialog}>
-                    Skip
+                <div>
+                  <button
+                    className={styles.cancel}
+                    onKeyDown={handleEndCall}
+                    onClick={handleEndCall}
+                  >
+                    Cancel
                   </button>
                 </div>
+              </span>
+            ) : null}
+          </div>
+
+          {isTransferring && (
+            <div className="forward-to flex-between">
+              <div className="d-flex mt-ten">
+                <span>
+                  <PhoneForwarded className="icon-style" />
+                </span>
+                <p>Calling {activeCall.forwardTo}</p>
+              </div>
+              <div className="mt-ten">
+                <LoadingIcon />
               </div>
             </div>
-          ) : (
-            <div className={styles.savedPhone}>
-              <CheckCircle
-                className={styles.checkCircle}
-                fill="white"
+          )}
+          {showActiveParticipants && <ActiveCallParticipants />}
+          {(participantBusy || staffBusy) && (
+            <div className="no-answer">
+              <div className="d-flex flex-center align-center phone-off">
+                <Icon name="phone-missed" fill="white" width={30} height={30} />
+              </div>
+              {participantBusy && <p>{activeCall?.memberName}</p>}
+              <p style={{ marginTop: '0px' }}>
+                {staffBusy && 'You'} didn&#39;t answer
+              </p>
+              <div className="task-created d-flex align-center">
+                <span>
+                  <Icon
+                    name="check-circle"
+                    fill="white"
+                    width={15}
+                    height={15}
+                  />
+                </span>
+                <p>Callback task created</p>
+              </div>
+            </div>
+          )}
+
+          {isTransfered && (
+            <div className="no-answer">
+              <div className="d-flex flex-center align-center phone-forward">
+                <PhoneForwarded className="icon-style-large" />
+              </div>
+              <p>{activeCall.title}</p>
+              <p>transfered</p>
+              <div className="task-created d-flex align-center">
+                <p>{activeCall.forwardTo}</p>
+              </div>
+            </div>
+          )}
+          {displayHistoryLogs && (
+            <div className="ml-twenty mt-twenty">
+              <HistoryLogs />
+            </div>
+          )}
+          {!isKnownMember &&
+            (memberInfo ? (
+              <SaveContactView
+                callerNum={activeCall.member}
+                memberInfo={memberInfo}
+              />
+            ) : (
+              <div className="unknown-member">
+                <SearchInput unknownMemberSearch memberInfo={setmemberInfo} />
+              </div>
+            ))}
+          {shouldAuthenticate && (
+            <AuthenticateMember
+              sessionId={memberInCall?.sessionId}
+              sessionName={memberInCall?.session}
+              antaraId={activeCall.memberAntaraId}
+              isValidationFailed={setShouldAuthenticate}
+              isValidationSuccess={successfulValidation}
+            />
+          )}
+          {shouldDisplayForms && !shouldDisplaySaveMember && (
+            <CallConsoleForms
+              height={isHalfHeight ? 'task-form-low' : 'task-form'}
+            />
+          )}
+
+          {shouldDisplayForms && shouldDisplaySaveMember && !savedPhone && (
+            <div className={styles.saveContainer}>
+              <Phone
+                className={styles.phone}
+                fill="#fff"
                 width={50}
                 height={50}
               />
               <p className={styles.saveParagraph}>
-                {activeCall.member} phone saved
+                Save {activeCall?.member} as member&apos;s Phone?
               </p>
-
-              <div className="d-flex flex-center align-center">
-                <div className={styles.errButtons}>
-                  <button className={styles.savebtn} onClick={closeDialog}>
-                    Continue
-                  </button>
-                </div>
+              <div className={styles.buttons}>
+                <button className={styles.savebtn} onClick={savePhone}>
+                  {updatePhonesLoading ? 'Saving' : 'Save Phone'}
+                </button>
+                <button className={styles.skipbtn} onClick={closeDialog}>
+                  Skip
+                </button>
               </div>
             </div>
           )}
-        </>
-      )}
-      {displayActionButtons && (
-        <div className="full-width d-flex flex-end transfer-container">
-          <button className="d-flex emergency-btn" onClick={() => null}>
-            <AlertTriangle className="emergency-btn-icon icon-size" />
-            <p>Emergency</p>
-          </button>
-          <button
-            className="d-flex"
-            onClick={() => setshowTransferList(!showTransferList)}
-          >
-            <Repeat className="icon-size" />
-            <p>Transfer to</p>
-          </button>
+          {savedPhone && showSaveDialog && (
+            <>
+              {saveError ? (
+                <div className={styles.saveContainer}>
+                  <p className={styles.errSaving}>{saveError}</p>
+                  <div className="d-flex flex-center align-center">
+                    <div className={styles.errButtons}>
+                      <button className={styles.savebtn} onClick={savePhone}>
+                        {updatePhonesLoading ? 'Retrying...' : 'Retry'}
+                      </button>
+                      <button className={styles.skipbtn} onClick={closeDialog}>
+                        Skip
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.savedPhone}>
+                  <CheckCircle
+                    className={styles.checkCircle}
+                    fill="white"
+                    width={50}
+                    height={50}
+                  />
+                  <p className={styles.saveParagraph}>
+                    {activeCall.member} phone saved
+                  </p>
+
+                  <div className="d-flex flex-center align-center">
+                    <div className={styles.errButtons}>
+                      <button className={styles.savebtn} onClick={closeDialog}>
+                        Continue
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+          {displayActionButtons && (
+            <div className="full-width d-flex flex-end transfer-container">
+              <button className="d-flex emergency-btn" onClick={() => null}>
+                <AlertTriangle className="emergency-btn-icon icon-size" />
+                <p>Emergency</p>
+              </button>
+              <button
+                className="d-flex"
+                onClick={() => setshowTransferList(!showTransferList)}
+              >
+                <Repeat className="icon-size" />
+                <p>Transfer to</p>
+              </button>
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </Draggable>
+    </Portal>
   )
 }
 
