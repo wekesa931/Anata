@@ -497,12 +497,7 @@ function TextInputField({
   const [shouldShrink, setShouldShrink] = useState(false)
   const [numError, setNumError] = useState(false)
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    let inputValue: string | number = event.target.value
-
-    if (type === 'number') {
-      inputValue = parseFloat(inputValue)
-    }
-    saveInput(field.name, inputValue)
+    saveInput(field.name, event.target.value)
   }
 
   return (
@@ -525,13 +520,12 @@ function TextInputField({
               </InputLabel>
             )}
             <TextField
-              className={`${styles.textField} ${
-                error?.message ? `${styles.textfieldError}` : ''
-              } `}
+              className={`${styles.textField} ${error?.message ? `${styles.textfieldError}` : ''
+                } `}
               id="outlined-basic"
               defaultValue={value}
               disabled={disabled}
-              value={val}
+              value={val ?? ''}
               onBlur={() => setShouldShrink(false)}
               onFocus={() => setShouldShrink(true)}
               InputLabelProps={{
@@ -539,8 +533,10 @@ function TextInputField({
               }}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 if (type === 'number') {
-                  // const num = parseFloat(e.target.value)
-                  if (isNaN(Number(e.target.value))) {
+                  // allow . for floating points
+                  const targetValue = e.target.value
+                  const regex = /^\d*\.?\d*$/
+                  if (!regex.test(targetValue)) {
                     setNumError(true)
                   } else {
                     setNumError(false)
@@ -566,7 +562,8 @@ function TextInputField({
               </FormHelperText>
             )}
           </>
-        )}
+        )
+        }
       />
     </Box>
   )
@@ -637,11 +634,10 @@ function RichTextInputField({
                 onEditorStateChange={(inputValue: EditorState) =>
                   onEditorStateChange(inputValue)
                 }
-                wrapperClassName={`${styles.textField} ${
-                  error?.message
+                wrapperClassName={`${styles.textField} ${error?.message
                     ? `${styles.textfieldError}`
                     : `${styles.wrapperClassName}`
-                } `}
+                  } `}
                 editorClassName={styles.editorClassName}
               />
             )}
