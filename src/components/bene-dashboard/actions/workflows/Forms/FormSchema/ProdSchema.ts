@@ -6846,7 +6846,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Click here to book the consultation on Calendly: <a href="https://calendly.com/antara-health/nutrition-consultation" target="_blank">https://calendly.com/antara-health/nutrition-consultation</a> ',
+          'Please book, the next appointment with the member using calendly and enter the date here in the form (please note that is if the date is in more than 10 days a task for ME will be created so that they confirm the availability of the member)',
       },
       {
         id: 'fldDt5sfuzRfkev7Q',
@@ -12125,7 +12125,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper: 'Please book, the next appointment with the member using calendly and enter the date here in the form (please note that is if the date is in more than 10 days a task for ME will be created so that they confirm the availability of the member)',
       },
       {
         id: 'fldriphoZRDX96JyD',
