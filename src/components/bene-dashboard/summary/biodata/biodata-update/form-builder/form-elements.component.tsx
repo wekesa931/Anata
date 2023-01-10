@@ -412,7 +412,7 @@ export function FormPlacesField({
             callback
           )
         },
-        200
+        1000
       ),
     []
   )
@@ -562,7 +562,7 @@ export function FormPlacesField({
                   </span>
                 ))}
                 <Typography variant="body2" color="text.secondary">
-                  {option.structured_formatting.secondary_text}
+                  {option?.structured_formatting?.secondary_text}
                 </Typography>
               </Grid>
             </Grid>
