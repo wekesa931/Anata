@@ -400,6 +400,7 @@ function CallProvider({ children }: any) {
         variables: {
           antaraId: memberDetails['Antara ID'],
           recipient: phoneNum,
+          dialPadUsed: true
         },
       })
         .then((response) => {
