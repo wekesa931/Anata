@@ -793,9 +793,7 @@ function LinkRecordInputOptimizedSearch({
   const handleSearch = (
     event: SyntheticEvent<Element, Event>,
     value: string,
-    reason: string
   ) => {
-    if (reason === 'reset') return
     setSearchKey(value)
     debouncedSearch(value)
   }
@@ -814,6 +812,7 @@ function LinkRecordInputOptimizedSearch({
             </InputLabel>
           )}
           <Autocomplete
+            noOptionsText="Type to search"
             multiple={field.relationship === 'many'}
             disablePortal
             filterOptions={filterOptions}
