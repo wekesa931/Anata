@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import ErrorIcon from '@mui/icons-material/Error'
 import * as Yup from 'yup'
 import { useLazyQuery } from '@apollo/client'
-import { Button } from '@mui/material'
+import { Button, CircularProgress } from '@mui/material'
 import { useFormik } from 'formik'
 import FormBuilder from './form-builder/form-builder.component'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
@@ -351,6 +351,7 @@ function MemberDetailsUpdateForm({
           closeWindow()
         }
       })
+      .catch((e) => errorCb(e.message))
       .finally(() => {
         refetchMember()
         setIsSaving(false)
@@ -435,6 +436,13 @@ function MemberDetailsUpdateForm({
               </div>
             ) : (
               <>
+                {isSaving && (
+                  <div className={styles.universalLoader}>
+                    <span className={styles.backdropText}>
+                      <CircularProgress color="inherit" />
+                    </span>
+                  </div>
+                )}
                 {values && (
                   <FormBuilder
                     formFields={getFormFields(lookupData)}

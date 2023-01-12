@@ -520,8 +520,9 @@ function TextInputField({
               </InputLabel>
             )}
             <TextField
-              className={`${styles.textField} ${error?.message ? `${styles.textfieldError}` : ''
-                } `}
+              className={`${styles.textField} ${
+                error?.message ? `${styles.textfieldError}` : ''
+              } `}
               id="outlined-basic"
               defaultValue={value}
               disabled={disabled}
@@ -562,8 +563,7 @@ function TextInputField({
               </FormHelperText>
             )}
           </>
-        )
-        }
+        )}
       />
     </Box>
   )
@@ -634,10 +634,11 @@ function RichTextInputField({
                 onEditorStateChange={(inputValue: EditorState) =>
                   onEditorStateChange(inputValue)
                 }
-                wrapperClassName={`${styles.textField} ${error?.message
+                wrapperClassName={`${styles.textField} ${
+                  error?.message
                     ? `${styles.textfieldError}`
                     : `${styles.wrapperClassName}`
-                  } `}
+                } `}
                 editorClassName={styles.editorClassName}
               />
             )}

@@ -215,7 +215,11 @@ function CallFloatingBox() {
 
   return (
     <Portal>
-      <Draggable bounds="parent" enableUserSelectHack data-testid="call-console-draggable">
+      <Draggable
+        bounds="parent"
+        enableUserSelectHack
+        data-testid="call-console-draggable"
+      >
         <div
           style={{
             height: isOpen ? '550px' : '105px',

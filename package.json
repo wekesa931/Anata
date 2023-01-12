@@ -177,9 +177,9 @@
     ]
   },
   "lint-staged": {
-    "**/*.js": [
+    "src/**/*.{js,ts,jsx,tsx}": [
       "npm run lint",
-      "npm run prettier",
+      "npx pretty-quick",
       "npm run test"
     ]
   },

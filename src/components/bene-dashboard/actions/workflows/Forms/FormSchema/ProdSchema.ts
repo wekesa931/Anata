@@ -12125,7 +12125,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: 'Please book, the next appointment with the member using calendly and enter the date here in the form (please note that is if the date is in more than 10 days a task for ME will be created so that they confirm the availability of the member)',
+        helper:
+          'Please book, the next appointment with the member using calendly and enter the date here in the form (please note that is if the date is in more than 10 days a task for ME will be created so that they confirm the availability of the member)',
       },
       {
         id: 'fldriphoZRDX96JyD',
