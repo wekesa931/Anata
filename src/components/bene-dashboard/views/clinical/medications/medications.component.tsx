@@ -19,11 +19,8 @@ function Medications() {
     },
   } = useSortFilter()
 
-  const getMedicationName = (data: any) => {
-    if (data['Drug Name'] === 'Other') {
-      return data['Other Medication']
-    }
-    return data['Drug Name']
+  const getMedicationName = (data: any = {}) => {
+    return data['Medication Name (from Medication Base)']
   }
 
   useEffect(() => {
@@ -66,6 +63,7 @@ function Medications() {
           data,
           name: renderInfo(data),
         }))
+
       if (!isCancelled) {
         setMedications(meds)
         setLoading(false)
@@ -87,7 +85,7 @@ function Medications() {
         )
       }
       if (filters.name) {
-        meds = meds.filter((med) => med['Drug Name'] === filters.name)
+        meds = meds.filter((med) => getMedicationName(med) === filters.name)
       }
       if (!isCancelled) {
         setFilteredMedications(meds)

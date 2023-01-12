@@ -792,7 +792,7 @@ function LinkRecordInputOptimizedSearch({
 
   const handleSearch = (
     event: SyntheticEvent<Element, Event>,
-    value: string,
+    value: string
   ) => {
     setSearchKey(value)
     debouncedSearch(value)
