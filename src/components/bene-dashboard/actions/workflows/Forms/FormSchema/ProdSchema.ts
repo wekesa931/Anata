@@ -4664,7 +4664,7 @@ export default [
         foreignTableId: null,
         required: true,
         helper:
-          'Please select the key goal\n\nif@risk: <120/80\nIf Elevated BP: <120/80\nIf Stage 1: <130/80\nIf Stage 2: <130/80',
+          'Please select the key goal\n\nif@risk: <120/80\nIf Elevated BP: <120/80\nIf Stage 1: <130/80\nIf Stage 2: <130/80 (if the member reached 140/90 before the end of HMP 3 cycle)\nIf Stage 2: <140/90',
         conditionType: '',
         parentKey: 'Condition',
         parentValues: ['Hypertension'],
