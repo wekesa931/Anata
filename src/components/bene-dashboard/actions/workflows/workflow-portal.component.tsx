@@ -237,13 +237,13 @@ function WorkflowPortal({
     const erroredFields: string[] = []
     const mappedPayload: any = {}
     const localFieldsMap: any = {}
-    localFormMeta.fields.forEach((fm) => {
-      localFieldsMap[fm.name] = {
-        id: fm.id,
+    localFormMeta?.fields?.forEach((fm) => {
+      localFieldsMap[fm?.name] = {
+        id: fm?.id,
       }
     })
 
-    Object.keys(initialPayload).forEach((k) => {
+    Object.keys(initialPayload)?.forEach((k) => {
       if (localFieldsMap[k] && airtableFieldsMap[localFieldsMap[k].id]) {
         mappedPayload[localFieldsMap[k].id] = initialPayload[k]
       } else if (isAllowedField(k)) {
@@ -356,8 +356,8 @@ function WorkflowPortal({
   }
   const checkModuleStatus = (payload: any[]) => {
     let isDraft = false
-    payload.forEach((py) => {
-      if (py.isDraft === true) {
+    payload?.forEach((py) => {
+      if (py?.isDraft === true) {
         isDraft = true
       }
     })
