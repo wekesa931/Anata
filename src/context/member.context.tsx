@@ -1,6 +1,6 @@
 import { useLazyQuery, useMutation } from '@apollo/client'
 import React, { useState } from 'react'
-import logError from '../components/utils/Bugsnag/Bugsnag'
+import logError from '../components/utils/error_handling/sentry'
 import { MEMBER_DETAILS_QUERY, UPDATE_MEMBER_DETAILS } from '../gql/comms'
 import Toasts from '../helpers/toast'
 import { GLOBAL_SEARCH } from '../gql/workflows'

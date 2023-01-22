@@ -9,7 +9,7 @@ import {
   END_CALL,
 } from '../gql/comms'
 import { useFcm } from './fcm/fcm.context'
-import logError from '../components/utils/Bugsnag/Bugsnag'
+import logError from '../components/utils/error_handling/sentry'
 
 export type ILogs = {
   startedAt: string

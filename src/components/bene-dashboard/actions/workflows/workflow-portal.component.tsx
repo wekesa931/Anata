@@ -24,7 +24,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import styles from './guided-workflows.component.css'
-import logError from '../../../utils/Bugsnag/Bugsnag'
+import logError from '../../../utils/error_handling/sentry'
 import {
   SAVE_MODULE_DATA,
   ADD_MODULE_TO_WORKFLOW,

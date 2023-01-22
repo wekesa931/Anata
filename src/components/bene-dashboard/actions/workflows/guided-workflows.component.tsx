@@ -19,7 +19,7 @@ import ToastNotification, {
 import Toasts from '../../../../helpers/toast'
 import { useMember } from '../../../../context/member.context'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
-import logError from '../../../utils/Bugsnag/Bugsnag'
+import logError from '../../../utils/error_handling/sentry'
 import analytics from '../../../../helpers/segment'
 import { useUser } from '../../../../context/user-context'
 import { useFormPortal } from '../../../../context/forms-context'

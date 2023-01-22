@@ -66,7 +66,7 @@ import {
 import { useMember } from '../../../../context/member.context'
 import { useUser } from '../../../../context/user-context'
 import RefinedFileMetaForm from './form'
-import logError from '../../../utils/Bugsnag/Bugsnag'
+import logError from '../../../utils/error_handling/sentry'
 import DropDownComponent from '../../../../helpers/dropdown-helper'
 import analytics from '../../../../helpers/analytics'
 import ToastNotification, {

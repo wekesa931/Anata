@@ -24,7 +24,7 @@ import AuthenticateMember from './AuthenticateMember'
 import { AuthButton } from './AuthenticateMember.styles'
 import styles from './callConsole.component.css'
 import { UPDATE_PHONES } from '../../../../gql/comms'
-import logError from '../../../utils/Bugsnag/Bugsnag'
+import logError from '../../../utils/error_handling/sentry'
 
 function CallFloatingBox() {
   const [isOpen, setisOpen] = React.useState(true)

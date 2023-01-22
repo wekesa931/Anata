@@ -1,7 +1,7 @@
 import React from 'react'
 import airtableFetch from '../resources/airtable-fetch'
 import { interactionlogform } from '../components/bene-dashboard/actions/workflows/Forms/form-fields'
-import logError from '../components/utils/Bugsnag/Bugsnag'
+import logError from '../components/utils/error_handling/sentry'
 
 type AirtableMetaType = {
   airtableMeta: any

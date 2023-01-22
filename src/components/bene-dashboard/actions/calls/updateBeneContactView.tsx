@@ -8,7 +8,7 @@ import Notification from '../../../utils/notification/notification.component'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
 import { UPDATE_CONTACT } from '../../../../gql/comms'
 import airtableFetch from '../../../../resources/airtable-fetch'
-import logError from '../../../utils/Bugsnag/Bugsnag'
+import logError from '../../../utils/error_handling/sentry'
 import Toasts from '../../../../helpers/toast'
 import Modal from '../../../utils/modals/modal.component'
 

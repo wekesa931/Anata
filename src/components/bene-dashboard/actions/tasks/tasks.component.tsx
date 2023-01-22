@@ -18,7 +18,7 @@ import FORMS from '../workflows/Forms/FormSchema/form-fields-complete'
 
 import { GET_MEMBER_TASKS } from '../../../../gql/hn_tasks'
 import { useMember } from '../../../../context/member.context'
-import logError from '../../../utils/Bugsnag/Bugsnag'
+import logError from '../../../utils/error_handling/sentry'
 import { useFormPortal } from '../../../../context/forms-context'
 import { WorkflowMeta } from '../workflows/workflow-types'
 

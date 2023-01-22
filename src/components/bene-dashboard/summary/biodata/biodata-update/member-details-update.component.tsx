@@ -13,7 +13,7 @@ import {
   LOOKUP_ENTRIES_QUERY,
 } from '../../../../../gql/comms'
 import { GET_ANTARA_STAFF } from '../../../../../gql/staff'
-import logError from '../../../../utils/Bugsnag/Bugsnag'
+import logError from '../../../../utils/error_handling/sentry'
 import PortalWindow from '../../../../lib/portal/portal.component'
 import styles from '../biodata.component.css'
 import { LookupOption, getFormFields } from './member-details.fields'

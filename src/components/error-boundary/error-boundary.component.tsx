@@ -1,10 +1,8 @@
 import React from 'react'
-import Bugsnag from '@bugsnag/js'
-import startBugsnag from '../../helpers/bugsnag'
+import * as Sentry from '@sentry/react'
+import startSentry from '../../helpers/sentry'
 
-startBugsnag()
-
-const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React)
+startSentry()
 
 function ErrorView(props: any) {
   return (
@@ -33,6 +31,11 @@ function ErrorView(props: any) {
 }
 
 function Boundary({ children }: any) {
-  return <ErrorBoundary FallbackComponent={ErrorView}>{children}</ErrorBoundary>
+  return (
+    <Sentry.ErrorBoundary fallback={ErrorView} showDialog>
+      {children}
+    </Sentry.ErrorBoundary>
+  )
 }
+
 export default Boundary

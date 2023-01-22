@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import GoogleLogin from 'react-google-login'
-import Bugsnag from '@bugsnag/js'
 import jwt_decode from 'jwt-decode'
 import axios from 'axios'
+import * as Sentry from '@sentry/react'
 import { useAuth } from '../../context/auth-context'
 import styles from './login.component.css'
 import logo from '../../assets/img/logo/antara-logo.png'
@@ -68,11 +68,10 @@ function Login() {
       if (userObj) {
         analytics.identify(userObj.email)
         analytics.track('User LoggedIn')
-        Bugsnag.setUser(
-          authToken.id_token,
-          userObj.email,
-          `${userObj.given_name} ${userObj.family_name}`
-        )
+        Sentry.setUser({
+          email: userObj?.email,
+          name: `${userObj.given_name} ${userObj.family_name}`,
+        })
       }
     }
     if (location?.state?.from?.pathname !== '/login') {

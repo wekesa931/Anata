@@ -3,7 +3,7 @@ import { useToasts } from 'react-toast-notifications'
 import { useMutation } from '@apollo/client'
 import { HOLD_PARTICIPANT, UNHOLD_PARTICIPANT } from '../../../../gql/comms'
 import { IParticipantSession, useCall } from '../../../../context/calls-context'
-import logError from '../../../utils/Bugsnag/Bugsnag'
+import logError from '../../../utils/error_handling/sentry'
 
 function ActiveCallParticipants() {
   const { conferenceParticipants, updateParticipantHoldState } = useCall()

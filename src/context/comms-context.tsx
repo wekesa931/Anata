@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { SAVE_FCM_TOKEN } from '../gql/comms'
 import { getRegToken } from './fcm/utils'
 import { useUser } from './user-context'
-import logError from '../components/utils/Bugsnag/Bugsnag'
+import logError from '../components/utils/error_handling/sentry'
 
 type CommsStatus = {
   callInProgress: boolean | null

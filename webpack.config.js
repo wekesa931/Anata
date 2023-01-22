@@ -4,12 +4,9 @@ const CopyPlugin = require('copy-webpack-plugin')
 const dotenv = require('dotenv')
 const env = require('./env')
 const package = require('./package.json')
-const {
-  BugsnagBuildReporterPlugin,
-  BugsnagSourceMapUploaderPlugin,
-} = require('webpack-bugsnag-plugins')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const SentryWebpackPlugin = require("@sentry/webpack-plugin");
 
 const universalPlugins = [
   new HtmlWebpackPlugin({
@@ -100,18 +97,12 @@ module.exports = {
           },
         ],
       }),
-      new BugsnagBuildReporterPlugin(
-        {
-          apiKey: process.env.BUGSNAG_API_KEY,
-          appVersion: package.version,
-        },
-        {}
-      ),
-      new BugsnagSourceMapUploaderPlugin({
-        apiKey: process.env.BUGSNAG_API_KEY,
-        appVersion: package.version,
-        overwrite: true,
-      }),
+      new SentryWebpackPlugin({
+        org:  process.env.SENTRY_PROJECT_ORG,
+        project:  process.env.SENTRY_PROJECT_NAME,
+        include: "./dist",
+        authToken: process.env.SENTRY_API_KEY,
+      })
     ],
   }),
   devtool: 'source-map',

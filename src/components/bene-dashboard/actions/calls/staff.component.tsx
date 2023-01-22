@@ -7,7 +7,7 @@ import {
 } from '../../../../context/calls-context'
 import { GET_ANTARA_STAFF } from '../../../../gql/staff'
 import LoadingIcon from '../../../../assets/img/icons/loading.svg'
-import logError from '../../../utils/Bugsnag/Bugsnag'
+import logError from '../../../utils/error_handling/sentry'
 import Notification from '../../../utils/notification/notification.component'
 import Modal from '../../../utils/modals/modal.component'
 

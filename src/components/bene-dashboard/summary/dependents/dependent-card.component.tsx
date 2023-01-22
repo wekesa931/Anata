@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Box, Link } from '@mui/material'
 import styles from './dependent-card.component.css'
 import airtableFetch from '../../../../resources/airtable-fetch'
-import logError from '../../../utils/Bugsnag/Bugsnag'
+import logError from '../../../utils/error_handling/sentry'
 import calcAge from '../biodata/utils'
 
 /* eslint-disable no-nested-ternary */

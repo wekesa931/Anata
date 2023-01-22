@@ -16,7 +16,7 @@ import {
 import { useUser } from '../../../../context/user-context'
 import { useMember } from '../../../../context/member.context'
 import analytics from '../../../../helpers/segment'
-import logError from '../../../../components/utils/Bugsnag/Bugsnag'
+import logError from '../../../../components/utils/error_handling/sentry'
 
 type MessageInputProps = {
   messages: any
