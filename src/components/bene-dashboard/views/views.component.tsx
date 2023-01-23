@@ -16,17 +16,12 @@ import MemberTask from './member_tasks/member-task.component'
 import CallLog from '../actions/calls/call-log/call-log.component'
 import EngagementDashboard from './engagement/engagement-dashboard.component'
 import Longitudinal from './longitudinal/longitudinal.components'
+import { withTabRouter } from '../../lib/routing'
 
-function Views() {
-  const [value, setValue] = React.useState('1')
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue)
-  }
-
+function Views({ view, handleChange }: any) {
   return (
     <SortFilterProvider>
-      <TabContext value={value}>
+      <TabContext value={view}>
         <Box
           sx={{
             background: 'var(--white-bg)',
@@ -44,63 +39,63 @@ function Views() {
           >
             <Tab
               label="Clinical Summary"
-              value="1"
+              value="clinical"
               classes={{ root: styles.MuiTabRoot }}
             />
-            <Tab label="Conditions" value="2" />
-            <Tab label="Longitudinal" value="3" />
-            <Tab label="Interactions" value="4" />
-            <Tab label="Call Log" value="5" />
-            <Tab label="Nutrition" value="6" />
-            <Tab label="Docs" value="7" />
-            <Tab label="Member Tasks" value="8" />
-            <Tab label="Member Engagement" value="9" />
+            <Tab label="Conditions" value="conditions" />
+            <Tab label="Longitudinal" value="longitudinal" />
+            <Tab label="Interactions" value="interactions" />
+            <Tab label="Call Log" value="call-logs" />
+            <Tab label="Nutrition" value="nutrition" />
+            <Tab label="Docs" value="udm" />
+            <Tab label="Member Tasks" value="member-tasks" />
+            <Tab label="Member Engagement" value="engagement" />
           </TabList>
         </Box>
         <div
           style={{ overflowY: 'auto', height: '100%', paddingBottom: '36px' }}
         >
-          <TabPanel value="1">
+          <TabPanel value="clinical">
             <ErrorBoundary>
               <Clinical />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel value="2">
+          <TabPanel value="conditions">
             <ErrorBoundary>
               <Conditions />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel value="3" className={styles.longitud}>
+          <TabPanel value="longitudinal" className={styles.longitud}>
             <ErrorBoundary>
               <Longitudinal />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel value="4">
+          <TabPanel value="interactions">
             <ErrorBoundary>
               <InteractionLogs />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel value="5">
+          <TabPanel value="call-logs">
             <ErrorBoundary>
               <CallLog />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel value="6">
+          <TabPanel value="nutrition">
             <ErrorBoundary>
               <Nutrition />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel value="7">
+          <TabPanel value="udm">
             <ErrorBoundary>
               <Files />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel value="8">
+          <TabPanel value="member-task">
             <ErrorBoundary>
               <MemberTask />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel value="9">
+          <TabPanel value="engagement">
             <ErrorBoundary>
               <EngagementDashboard />
             </ErrorBoundary>
@@ -111,4 +106,4 @@ function Views() {
   )
 }
 
-export default Views
+export default withTabRouter(Views, 'view', 'clinical')

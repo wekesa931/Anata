@@ -53,5 +53,11 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': ['warn'],
+    'no-restricted-syntax': [
+      'error',
+      'ForInStatement',
+      'LabeledStatement',
+      'WithStatement',
+    ],
   },
 }

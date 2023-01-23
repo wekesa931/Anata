@@ -13,9 +13,9 @@ import CallsCallout from './calls/calls.component'
 import { useCall } from '../../../context/calls-context'
 import ErrorBoundary from '../../error-boundary/error-boundary.component'
 import GuidedWorkflows from './workflows/guided-workflows.component'
+import { withTabRouter } from '../../lib/routing'
 
-function Actions() {
-  const [activeTab, setActiveTab] = React.useState<string>('tasks')
+function Actions({ handleChange, view }: any) {
   const { setCounterValue } = useCall()
 
   useEffect(() => {
@@ -23,12 +23,8 @@ function Actions() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleChange = (event: any, newValue: React.SetStateAction<string>) => {
-    setActiveTab(newValue)
-  }
-
   return (
-    <TabContext value={activeTab}>
+    <TabContext value={view}>
       <Box
         sx={{
           borderBottom: 1,
@@ -40,7 +36,7 @@ function Actions() {
       >
         <TabList
           onChange={handleChange}
-          value={activeTab}
+          value={view}
           variant="scrollable"
           scrollButtons="auto"
         >
@@ -53,10 +49,10 @@ function Actions() {
           <button
             className="btn"
             style={{
-              color: activeTab === 'messages' ? '#58a9f3' : '#af9090',
-              backgroundColor: activeTab === 'messages' ? '#e7f3fd' : '#e8eaed',
+              color: view === 'messages' ? '#58a9f3' : '#af9090',
+              backgroundColor: view === 'messages' ? '#e7f3fd' : '#e8eaed',
             }}
-            onClick={() => setActiveTab('messages')}
+            onClick={(e) => handleChange(e, 'messages')}
           >
             <Icon name="message-circle" fill="#efefef" width={16} height={16} />
           </button>
@@ -97,4 +93,4 @@ function Actions() {
   )
 }
 
-export default Actions
+export default withTabRouter(Actions, 'action', 'tasks')
