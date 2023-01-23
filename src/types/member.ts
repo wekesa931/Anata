@@ -148,6 +148,8 @@ export type V2MemberQueryType = {
     }
     assignedHn?: string
     assignedHnFullName?: string
+    assignedMeEmailUsername?: string
+    assignedHnEmailUsername?: string
     readyForCompanyOnboarding?: boolean
     readyForIndividualOnboarding?: boolean
     assignedMe?: string

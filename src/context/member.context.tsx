@@ -49,6 +49,8 @@ const parseV2MemberData = (
   member.employer = status?.employer?.name
   member.onboardStage = status?.onboardStage?.onboardStage
   member.status = status?.status?.status
+  member.assignedMe = status?.assignedMeEmailUsername
+  member.assignedHn = status?.assignedHnEmailUsername
 
   // contacts
   const { contact = {} } = memberData

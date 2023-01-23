@@ -132,6 +132,8 @@ const MEMBER_DETAILS_QUERY = gql`
             readyForCompanyOnboarding
             readyForIndividualOnboarding
             assignedMe
+            assignedHnEmailUsername
+            assignedMeEmailUsername
             tags
             status {
               status
