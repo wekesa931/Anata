@@ -193,6 +193,11 @@ const prepareData = (vars: any, antaraId: string) => {
     }
   }
 
+  const floatOrNull = (val: any) => {
+    const parsed = parseFloat(val)
+    return isNaN(parsed) ? null : parsed
+  }
+
   if (inputVariables.memberAddress) {
     inputVariables.memberAddress = {
       addresses: inputVariables.memberAddress.map((e: any) => ({
@@ -200,8 +205,8 @@ const prepareData = (vars: any, antaraId: string) => {
         geolocation: e?.residentialAddress?.place_id,
         residentialAddress: e?.residentialAddress?.description,
         residentialCountry: e?.residentialAddress?.residentialCountry,
-        latitude: e?.residentialAddress?.latitude,
-        longitude: e?.residentialAddress?.longitude,
+        latitude: floatOrNull(e?.residentialAddress?.latitude),
+        longitude: floatOrNull(e?.residentialAddress?.longitude),
         residentialCounty: e?.residentialAddress?.residentialCounty,
       })),
       antaraId,
