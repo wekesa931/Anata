@@ -25,6 +25,11 @@ interface resultItemTypeNode {
     fullName: string
     airtableRecordId: string
   }
+  status: {
+    employer: {
+      name: string
+    }
+  }
 }
 interface resultItemType {
   node: resultItemTypeNode
@@ -37,6 +42,7 @@ interface searchResultType {
   sex: string
   airtableRecordId: string
   displayName: string
+  employerName: string
 }
 
 function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
@@ -49,6 +55,12 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
     },
   })
 
+  const getSexAccronym = (sex: string) => {
+    if(sex.toLowerCase() === 'male') return 'M'
+    if(sex.toLowerCase() === 'female') return 'F'
+    return ''
+  }
+
   useEffect(() => {
     if (data) {
       const searchResults =
@@ -57,7 +69,9 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
           const age =
             new Date().getFullYear() - new Date(node?.birthDate).getFullYear()
           const sex = node?.details?.sex?.sex
-          const displayName = `${fullName} (${node.antaraId}) - ${age} yrs`
+          const employerName = node?.status?.employer?.name
+
+          const displayName = `${fullName} (${node.antaraId}) - ${age} yrs [${getSexAccronym(sex)}] - ${employerName}`
 
           return {
             fullName,
@@ -66,6 +80,7 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
             airtableRecordId: node?.details?.airtableRecordId,
             sex,
             displayName,
+            employerName,
           }
         }) || []
 

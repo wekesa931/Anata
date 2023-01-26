@@ -57,7 +57,7 @@ describe('<SearchComponent/>', () => {
     fireEvent.change(searchInput, { target: { value: 'John' } })
     await waitFor(() => {
       expect(
-        component.getByText('John Doe (AAA-001) - 33 yrs')
+        component.getByText('John Doe (AAA-001) - 33 yrs [M] - Employer')
       ).toBeInTheDocument()
       const searchResults = component.getByTestId('bene-list')
       expect(searchResults).toBeInTheDocument()

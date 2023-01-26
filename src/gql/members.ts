@@ -49,6 +49,11 @@ const SEARCH_MEMBERS = gql`
               sex
             }
           }
+          status {
+            employer {
+              name
+            }
+          }
         }
       }
     }

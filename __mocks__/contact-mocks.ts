@@ -5,7 +5,6 @@ import {
   MEMBER_DETAILS_QUERY,
   UPDATE_MEMBER_DETAILS,
 } from '../src/gql/comms'
-import { OPTIMIZED_SEARCH } from '../src/gql/workflows'
 import { GET_ANTARA_STAFF } from '../src/gql/staff'
 import { createMockClient } from 'mock-apollo-client'
 import { SEARCH_MEMBERS } from '../src/gql/members'
@@ -105,6 +104,11 @@ mockClient.setRequestHandler(SEARCH_MEMBERS, () =>
                   sex: 'Male',
                 },
               },
+              status: {
+                employer: {
+                  name: 'Employer',
+                },
+              }
             },
           },
         ],
