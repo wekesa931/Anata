@@ -6846,7 +6846,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Please book, the next appointment with the member using calendly and enter the date here in the form (please note that is if the date is in more than 10 days a task for ME will be created so that they confirm the availability of the member)',
+          'Please book the next appointment with the member using calendly now if less than 10 days from today and enter the date here in the form (note that if the date is more than 10 days, a task for ME will be created so that they confirm the availability of the member)',
       },
       {
         id: 'fldDt5sfuzRfkev7Q',
@@ -10142,7 +10142,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Please enter the date of the next appointment. If you want to book the appointment now, please use the button in scribe dashboard',
+          'Please book the next appointment with the member using calendly now if less than 10 days from today and enter the date here in the form (note that if the date is more than 10 days, a task for ME will be created so that they confirm the availability of the member)',
       },
       {
         id: 'fldZhpOo75n9kc8oY',
@@ -10573,7 +10573,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper:
+          'Please book the next appointment with the member using calendly now if less than 10 days from today and enter the date here in the form (note that if the date is more than 10 days, a task for ME will be created so that they confirm the availability of the member)',
       },
       {
         id: 'fldRzlWo9idLzYGIy',
@@ -12126,7 +12127,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Please book, the next appointment with the member using calendly and enter the date here in the form (please note that is if the date is in more than 10 days a task for ME will be created so that they confirm the availability of the member)',
+          'Please book the next appointment with the member using calendly now if less than 10 days from today and enter the date here in the form (note that if the date is more than 10 days, a task for ME will be created so that they confirm the availability of the member)',
       },
       {
         id: 'fldriphoZRDX96JyD',
