@@ -3503,7 +3503,7 @@ export default [
       },
       {
         id: 'fldHsTxV14FA65qhQ',
-        name: 'Dietary challenges',
+        name: 'Current dietary challenges',
         type: 'multiSelect',
         format: '',
         isDateTime: false,
@@ -3517,7 +3517,7 @@ export default [
       },
       {
         id: 'fldAOy5erydoGVdGj',
-        name: 'Describe dietary challenges',
+        name: 'Describe current dietary challenges',
         type: 'multilineText',
         format: '',
         isDateTime: false,
@@ -3528,6 +3528,50 @@ export default [
         foreignTableId: null,
         required: true,
         helper: '',
+        condition: (values: any) => {
+          if (Array.isArray(values['Current dietary challenges'])) {
+            return ['Other'].some((r) =>
+              values['Current dietary challenges'].includes(r)
+            )
+          }
+          return ['Other'].includes(values['Current dietary challenges'])
+        },
+      },
+      {
+        id: 'fldIcue614f7rF1Nn',
+        name: 'Future dietary challenges',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldBQdbmpOaqperuo',
+        name: 'Describe future dietary challenges',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        condition: (values: any) => {
+          if (Array.isArray(values['Future dietary challenges'])) {
+            return ['Other'].some((r) =>
+              values['Future dietary challenges'].includes(r)
+            )
+          }
+          return ['Other'].includes(values['Future dietary challenges'])
+        },
       },
       {
         id: 'fldwPNCZq5tqPwqkS',

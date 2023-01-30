@@ -6738,7 +6738,7 @@ export default [
       },
       {
         id: 'fld9OCSyJzHE7Ib5e',
-        name: 'Dietary challenges',
+        name: 'Current dietary challenges',
         type: 'multiSelect',
         format: '',
         isDateTime: false,
@@ -6748,11 +6748,11 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: '',
+        helper: 'What dietary challenges is the member facing currently?',
       },
       {
         id: 'fld2ahqR93fsHyYuH',
-        name: 'Describe dietary challenges',
+        name: 'Describe current dietary challenges',
         type: 'multilineText',
         format: '',
         isDateTime: false,
@@ -6761,8 +6761,52 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
+        condition: (values: any) => {
+          if (Array.isArray(values['Current dietary challenges'])) {
+            return ['Other'].some((r) =>
+              values['Current dietary challenges'].includes(r)
+            )
+          }
+          return ['Other'].includes(values['Current dietary challenges'])
+        },
+      },
+      {
+        id: 'fldIh3t7oy1oL3gG9',
+        name: 'Future dietary challenges',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'What dietary challenges does the member anticipate?',
+      },
+      {
+        id: 'flda0buplgSWwz2T6',
+        name: 'Describe future dietary challenges',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        condition: (values: any) => {
+          if (Array.isArray(values['Future dietary challenges'])) {
+            return ['Other'].some((r) =>
+              values['Future dietary challenges'].includes(r)
+            )
+          }
+          return ['Other'].includes(values['Future dietary challenges'])
+        },
       },
       {
         id: 'fldYbwXC8AvuQ9b8g',
