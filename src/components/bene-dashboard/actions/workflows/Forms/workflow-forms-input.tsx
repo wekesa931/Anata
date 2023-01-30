@@ -658,6 +658,7 @@ function LinkRecordInput({
   value: linkedValue,
   field,
   saveInput,
+  template,
   airtableMeta,
   disabled,
   control,
@@ -726,6 +727,7 @@ function LinkRecordInput({
       disabled={disabled}
       control={control}
       error={error}
+      template={template}
       handleChange={handleChange}
       filterOptions={filterOptions}
       linkedRecords={linkedRecords}
@@ -740,6 +742,7 @@ function LinkRecordInput({
       disabled={disabled}
       control={control}
       error={error}
+      template={template}
       handleChange={handleChange}
       filterOptions={filterOptions}
       linkedRecords={linkedRecords}
