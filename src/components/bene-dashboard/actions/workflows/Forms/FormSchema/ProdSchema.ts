@@ -6761,7 +6761,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper: '',
         condition: (values: any) => {
           if (Array.isArray(values['Current dietary challenges'])) {
@@ -6797,7 +6797,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper: '',
         condition: (values: any) => {
           if (Array.isArray(values['Future dietary challenges'])) {
