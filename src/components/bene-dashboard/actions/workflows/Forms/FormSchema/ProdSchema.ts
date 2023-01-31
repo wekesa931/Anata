@@ -8642,6 +8642,31 @@ export default [
         helper: '',
       },
       {
+        id: 'fldsOMD3iYcHSyxs9',
+        name: 'Other Medication',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Medication',
+        parentValues: ['reclKT3RDKNyYKvgW'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Medication)) {
+            return ['reclKT3RDKNyYKvgW'].some((r) =>
+              values.Medication.includes(r)
+            )
+          }
+          return ['reclKT3RDKNyYKvgW'].includes(values.Medication)
+        },
+      },
+      {
         id: 'fldLTY4n4wN0YxyRB',
         name: 'Associated condition(s)',
         type: 'foreignKey',
@@ -15661,6 +15686,31 @@ export default [
         foreignTableId: 'tblYzI0t7WX9LGW4h',
         required: false,
         helper: '',
+      },
+      {
+        id: 'fldsOMD3iYcHSyxs9',
+        name: 'Other Medication',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Medication',
+        parentValues: ['reclKT3RDKNyYKvgW'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Medication)) {
+            return ['reclKT3RDKNyYKvgW'].some((r) =>
+              values.Medication.includes(r)
+            )
+          }
+          return ['reclKT3RDKNyYKvgW'].includes(values.Medication)
+        },
       },
       {
         id: 'fldmgFni4l4fDZeqF',
