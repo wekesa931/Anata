@@ -1189,11 +1189,7 @@ function DateInputField({
   const handleChange = (newValue: Date | null) => {
     setValue(newValue)
     if (field.isDateTime) {
-      if (field.name === 'Encounter Date') {
-        saveInput(field.name, dayjs().format('YYYY-MM-DDTHH:mm'))
-      } else {
-        saveInput(field.name, dayjs(newValue).format('YYYY-MM-DDTHH:mm'))
-      }
+      saveInput(field.name, dayjs(newValue).format('YYYY-MM-DDTHH:mm'))
     } else {
       saveInput(field.name, dayjs(newValue).format('YYYY-MM-DD'))
     }

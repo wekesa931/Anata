@@ -560,9 +560,6 @@ function WorkflowPortal({
               input: {
                 ...interactionData,
                 member: member['Antara ID'],
-                interactionStartedAt: dayjs(
-                  interactionData.interactionStartedAt
-                ).toISOString(),
                 historyUserIdField: user && user.email,
                 healthNavigator: user && extractUsername(user.email),
                 outcomeMetadata,
