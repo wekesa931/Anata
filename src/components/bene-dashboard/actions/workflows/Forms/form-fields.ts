@@ -42,9 +42,10 @@ export const duplicates = [
   'Incident reports',
   'Interaction log',
   'Member Feedback',
+  "Child's Health",
 ]
 
-export const formNames = {
+export const formNames: Record<string, string> = {
   'HN Tasks': 'HN & ME Task',
   'Member tasks': 'Member Task',
   Prescriptions: 'HN Prescription',
@@ -73,6 +74,7 @@ export const formNames = {
   'Incident reports': 'Incident reports',
   'Interaction log': 'Interaction log',
   'Member Feedback': 'Member Feedback',
+  'Minor Health Check': 'Minor Health Check',
 }
 
 export const interactionlogform = {

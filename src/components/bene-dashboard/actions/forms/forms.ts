@@ -1,11 +1,25 @@
 import FORM_PAYLOAD from '../workflows/Forms/FormSchema/form-fields-complete'
 
-const updatedForms = () => {
-  const payload: any[] = []
+export type TForm = {
+  name: string
+  type?: string
+  url?: string
+}
+
+const updatedForms = (): TForm[] => {
+  const payload: TForm[] = []
   FORM_PAYLOAD.forEach((fm) => {
     payload.push({ name: fm.name })
   })
-  return payload
+
+  // add the Health Check Form
+  const healthCheckForm: TForm = {
+    name: 'Minor Health Check',
+    type: 'airtableForm',
+    url: 'https://airtable.com/embed/shrJfVFD95csPXYZF?viewControls=on',
+  }
+
+  return [...payload, healthCheckForm]
 }
 
 const sorted = updatedForms().sort((a, b) => {
