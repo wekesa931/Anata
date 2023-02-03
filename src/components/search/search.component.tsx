@@ -9,6 +9,7 @@ import LoadingIcon from '../../assets/img/icons/loading.svg'
 import styles from './search.component.css'
 import analytics from '../../helpers/segment'
 import { SEARCH_MEMBERS } from '../../gql/members'
+import calcAge from '../bene-dashboard/summary/biodata/utils'
 
 interface IProps {
   unknownMemberSearch?: boolean
@@ -66,8 +67,7 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
       const searchResults =
         data?.membersSearch?.edges?.map(({ node }: resultItemType) => {
           const fullName = node?.details?.fullName
-          const age =
-            new Date().getFullYear() - new Date(node?.birthDate).getFullYear()
+          const age = calcAge(node?.birthDate)
           const sex = node?.details?.sex?.sex
           const employerName = node?.status?.employer?.name
 
