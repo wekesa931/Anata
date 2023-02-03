@@ -159,7 +159,7 @@ function FilledForms() {
       <h4>Filled forms</h4>
       {isReadyToShow && (
         <List
-          list={filledForms}
+          list={filledForms.filter((form: any) => !!form.data)}
           emptyListText="No Forms found for this member"
           paginate
           modalTitle="Filled Form"
