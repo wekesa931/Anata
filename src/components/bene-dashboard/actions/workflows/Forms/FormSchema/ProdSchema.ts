@@ -7055,9 +7055,9 @@ export default [
       },
       {
         id: 'fldof4wve2EI0GJCG',
-        name: 'Muscle mass',
+        name: 'Muscle mass (kgs)',
         type: 'number',
-        format: 'percentV2',
+        format: 'decimal',
         isDateTime: false,
         options: [],
         symmetricColumnId: null,
@@ -7095,7 +7095,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: 'Please enter the Visceral fat identified by the device. ',
+        helper:
+          'Please enter the Visceral fat identified by the device.\n 0-9: Normal\n 10-14: High\n 15 and above: Very high',
       },
       {
         id: 'fld6xN5vVaZTfjgkp',
@@ -7109,7 +7110,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '(cm)',
+        helper:
+          'Men: <94 cm is healthy, 94-101 cm is at Risk, >102 cm is at High Risk\n Women: <80 cm is healthy, 80-87 cm is at Risk, >88 cm is at High Risk',
       },
       {
         id: 'fldV9WFYjplmekeQF',
@@ -7126,21 +7128,6 @@ export default [
         helper: '(cm)',
       },
       {
-        id: 'fldycP6j2RH1YTc1l',
-        name: 'Waist:Hip ratio',
-        type: 'number',
-        format: 'decimal',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '(formula field of waist circumference divided by hip circumference)',
-      },
-      {
         id: 'fldBjrUmBBwCgY3Rk',
         name: 'Bone density',
         type: 'number',
@@ -7152,7 +7139,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '(%)',
+        helper:
+          'Normal values for Men: 3.1 kgs to 3.3 kgs\n Normal values for Women: 2.4 kgs to 2.6 kgs',
       },
       {
         id: 'fldzDmiBfbnK1BuNO',
@@ -7166,7 +7154,23 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '(%)',
+        helper:
+          'Normal values for Men: 55% to 65%\n Normal values for Women: 45% to 60%',
+      },
+      {
+        id: 'fld8DtLYgymRbULpM',
+        name: 'Mid-Upper Arm Circumference(MUAC)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Enter vital reading for children below 5 years\n <11.5 cm - severely undernourished\n 11.5 - 12.5 cm - moderately undernourished\n >12.5 cm - healthy',
       },
       {
         id: 'fldLCh6oZY8JjMOpd',

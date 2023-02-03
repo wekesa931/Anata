@@ -630,9 +630,9 @@ export default [
       },
       {
         id: 'fldWTlbSwxCEZ3YOi',
-        name: 'Muscle mass',
+        name: 'Muscle mass (kgs)',
         type: 'number',
-        format: 'percentV2',
+        format: 'decimal',
         isDateTime: false,
         options: [],
         symmetricColumnId: null,
@@ -670,7 +670,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: 'Please enter the Visceral fat identified by the device. ',
+        helper:
+          'Please enter the Visceral fat identified by the device.\n 0-9: Normal\n 10-14: High\n 15 and above: Very high',
       },
       {
         id: 'fldWCFEBEEPAj0mpn',
@@ -684,7 +685,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '(cm)',
+        helper:
+          'Men: <94 cm is healthy, 94-101 cm is at Risk, >102 cm is at High Risk\n Women: <80 cm is healthy, 80-87 cm is at Risk, >88 cm is at High Risk',
       },
       {
         id: 'fld54GRe9Vaf358kz',
@@ -701,21 +703,6 @@ export default [
         helper: '(cm)',
       },
       {
-        id: 'fldjlwMXjBQUUMH6N',
-        name: 'Waist:Hip ratio',
-        type: 'number',
-        format: 'decimal',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '(formula field of waist circumference divided by hip circumference)',
-      },
-      {
         id: 'fldTzBfWCKB8HM8Ys',
         name: 'Bone density',
         type: 'number',
@@ -727,7 +714,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '(%)',
+        helper:
+          'Normal values for Men: 3.1 kgs to 3.3 kgs\n Normal values for Women: 2.4 kgs to 2.6 kgs',
       },
       {
         id: 'fldpahW1OHQUHeXqp',
@@ -741,7 +729,22 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '(%)',
+        helper:
+          'Normal values for Men: 55% to 65%\n Normal values for Women: 45% to 60%',
+      },
+      {
+        id: 'fldXXIImyjSl1iS9E',
+        name: 'Mid-Upper Arm Circumference(MUAC)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
       },
       {
         id: 'fldjgyLLht6Fi93BP',
