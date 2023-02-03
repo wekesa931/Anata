@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import TABLES from './FormSchema/form-fields-complete'
 
-export const DUPLICATE_DEFAULTS = {
+export const DUPLICATE_DEFAULTS: Record<string, any> = {
   Conditions: 'Condition',
   'VC condition diagnosis': 'Condition',
   Prescriptions: 'Drug Name',
@@ -359,3 +359,18 @@ export const initialFormValues = (
 }
 
 export const airtableFormNames = TABLES.map((fm) => fm.name)
+
+export const INDEXES: any = {
+  Medication: 'medications_base_sync',
+  'Prescribing facility from Provider base': 'facilities_from_provider_base',
+  'Refill facility from Provider base': 'facilities_from_provider_base',
+  'Facilities from Provider base': 'facilities_from_provider_base',
+  Facilities: 'facilities_from_provider_base',
+  'Facility referred': 'facilities_from_provider_base',
+  'Pharmacy provider (Facility from Provider base)':
+    'facilities_from_provider_base',
+  'Primary Doctor': 'specialists_from_provider_base',
+  'Specialists from Provider Base': 'specialists_from_provider_base',
+  Specialists: 'specialists_from_provider_base',
+  'Specialist referred': 'specialists_from_provider_base',
+}

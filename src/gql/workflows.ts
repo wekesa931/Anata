@@ -221,6 +221,20 @@ const SAVE_WORKFLOW = gql`
     }
   }
 `
+
+const GET_DOCUMENT_OPENSEARCH = gql`
+  query docDetails($index: String!, $docId: String!) {
+    docDetails(index: $index, docId: $docId) {
+      message
+      data {
+        id
+        name
+      }
+      status
+    }
+  }
+`
+
 // eslint-disable-next-line import/prefer-default-export
 export {
   CREATE_WORKFLOW,
@@ -232,4 +246,5 @@ export {
   SAVE_WORKFLOW,
   GLOBAL_SEARCH,
   OPTIMIZED_SEARCH,
+  GET_DOCUMENT_OPENSEARCH,
 }

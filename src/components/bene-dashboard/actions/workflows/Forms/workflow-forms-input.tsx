@@ -32,7 +32,12 @@ import { debounce } from 'lodash'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 import styles from '../guided-workflows.component.css'
 import { Form } from '../workflow-types'
-import { GLOBAL_SEARCH, OPTIMIZED_SEARCH } from '../../../../../gql/workflows'
+import {
+  GLOBAL_SEARCH,
+  OPTIMIZED_SEARCH,
+  GET_DOCUMENT_OPENSEARCH,
+} from '../../../../../gql/workflows'
+import { INDEXES } from './form-fields'
 
 const icon = <Square width={18} height={18} />
 const checkedIcon = <CheckSquare width={18} height={18} />
@@ -676,12 +681,23 @@ function LinkRecordInput({
     limit: 50,
   })
 
-  const isInSearchSchema = [
-    'tblglBRVOue24usUH', // Medication Base Sync staging
-    'tblm1g2udT6J8TOzt', // Providers staging
-    'tblYzI0t7WX9LGW4h', // Medications Base sync production
-    'tblOnZn7Vo8N9wznR', // Providers production
-  ].includes(field?.foreignTableId)
+  // map table id to the indexed table id
+  const IndexTable: Record<string, string> = {
+    // prod
+    tblYzI0t7WX9LGW4h: 'tblYzI0t7WX9LGW4h', // medication
+    tblOnZn7Vo8N9wznR: 'tbltmQuqyuKPc4Ffo', // proviers
+    tbltmQuqyuKPc4Ffo: 'tbltmQuqyuKPc4Ffo', // Facilities from Provider base
+    tblsixUe3jfbOUMQP: 'tblsixUe3jfbOUMQP', // Specialists from Provider Base
+    // staging
+    tblglBRVOue24usUH: 'tblglBRVOue24usUH', // medication
+    tblm1g2udT6J8TOzt: 'tblL1jLhX4m0soujH', // Providers
+    tblL1jLhX4m0soujH: 'tblL1jLhX4m0soujH', // Facilities from Provider base
+    tbl6tsfyrcOmxNG51: 'tbl6tsfyrcOmxNG51', // Specialists from Provider Base
+  }
+
+  const isInSearchSchema = Object.keys(IndexTable).includes(
+    field?.foreignTableId
+  )
 
   const dataSave = (onChange: (val: any) => any, nameId: any, name: any) => {
     onChange(nameId)
@@ -733,6 +749,7 @@ function LinkRecordInput({
       linkedRecords={linkedRecords}
       setLinkedRecords={setLinkedRecords}
       selectedChoices={selectedChoices}
+      indexId={IndexTable[field?.foreignTableId]}
     />
   ) : (
     <LinkRecordInputDefault
@@ -764,8 +781,46 @@ function LinkRecordInputOptimizedSearch({
   filterOptions,
   linkedRecords,
   setLinkedRecords,
+  indexId,
 }: any) {
   const [searchKey, setSearchKey] = useState<string>('')
+
+  const indexName = INDEXES[field?.name]
+
+  const [getDocument] = useLazyQuery(GET_DOCUMENT_OPENSEARCH, {
+    context: {
+      clientName: 'search',
+    },
+    onCompleted: (data) => {
+      if (data?.docDetails?.data) {
+        const { data: docData } = data.docDetails
+        const { id, name } = docData
+        setLinkedRecords((prev: any[]) =>
+          getUniqueRecords([...prev, { id, name }])
+        )
+      }
+    },
+  })
+
+  const getUniqueRecords = (records: any[]) => {
+    return records.filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i)
+  }
+
+  useEffect(() => {
+    if (linkedValue && linkedValue.length > 0) {
+      const docId = linkedValue[0]
+
+      // fetch the URL using basic auth
+      getDocument({
+        variables: {
+          index: indexName,
+          docId,
+        },
+      })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const [search, { loading: searching }] = useLazyQuery(OPTIMIZED_SEARCH, {
     context: {
@@ -777,20 +832,17 @@ function LinkRecordInputOptimizedSearch({
         (r: any) => ({ ...r, name: r[response?.displayName] } || [])
       )
 
-      setLinkedRecords((prev: any[]) => {
-        const allRecords = [...prev, ...searchResults]
-        const uniqueRecords = allRecords.filter(
-          (v, i, a) => a.findIndex((t) => t.id === v.id) === i
-        )
-        return uniqueRecords
-      })
+      setLinkedRecords((prev: any[]) =>
+        getUniqueRecords([...prev, ...searchResults])
+      )
     },
   })
 
   const settingLinkedData = searching || !airtableMeta
 
   const debouncedSearch = debounce((keyword: string) => {
-    search({ variables: { keyword, table: field?.foreignTableId } })
+    if (keyword.length < 3) return
+    search({ variables: { keyword, table: indexId } })
   }, 500)
 
   const handleSearch = (

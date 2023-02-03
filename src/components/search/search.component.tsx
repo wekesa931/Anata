@@ -56,8 +56,8 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
   })
 
   const getSexAccronym = (sex: string) => {
-    if(sex.toLowerCase() === 'male') return 'M'
-    if(sex.toLowerCase() === 'female') return 'F'
+    if (sex.toLowerCase() === 'male') return 'M'
+    if (sex.toLowerCase() === 'female') return 'F'
     return ''
   }
 
@@ -71,7 +71,9 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
           const sex = node?.details?.sex?.sex
           const employerName = node?.status?.employer?.name
 
-          const displayName = `${fullName} (${node.antaraId}) - ${age} yrs [${getSexAccronym(sex)}] - ${employerName}`
+          const displayName = `${fullName} (${
+            node.antaraId
+          }) - ${age} yrs [${getSexAccronym(sex)}] - ${employerName}`
 
           return {
             fullName,

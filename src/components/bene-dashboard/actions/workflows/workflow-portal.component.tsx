@@ -144,11 +144,12 @@ function WorkflowPortal({
   const [addModuleToWorkflow, { loading: addingModule }] = useMutation(
     ADD_MODULE_TO_WORKFLOW
   )
+
   const [saveWorkflow, { loading: savingWorkflow }] = useMutation(SAVE_WORKFLOW)
   const [deleteModuleData, { loading: deletingModule }] =
     useMutation(REMOVE_MODULE)
   const isWorkflowTemplate = openedWorkflow.workflowId
-  const currentIndex = formPayload?.findIndex((fm) => fm.moduleId === expanded)
+  const currentIndex = formPayload?.findIndex((fm) => fm?.moduleId === expanded)
   const submittedForm = expanded
     ? formPayload?.find((fm) => fm.moduleId === expanded)
     : formPayload[0]

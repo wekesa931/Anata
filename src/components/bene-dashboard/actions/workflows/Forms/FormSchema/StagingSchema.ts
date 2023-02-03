@@ -820,6 +820,31 @@ export default [
         helper: '',
       },
       {
+        id: 'fld0s3iqAtaDRVMEL',
+        name: 'Other Medication',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Medication',
+        parentValues: ['recZ4ZsdaFQHReh72'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Medication)) {
+            return ['recZ4ZsdaFQHReh72'].some((r) =>
+              values.Medication.includes(r)
+            )
+          }
+          return ['recZ4ZsdaFQHReh72'].includes(values.Medication)
+        },
+      },
+      {
         id: 'fldP34IWp4rHYG4YO',
         name: 'Dose',
         type: 'text',
