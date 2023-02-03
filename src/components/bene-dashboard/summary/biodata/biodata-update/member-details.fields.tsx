@@ -41,7 +41,8 @@ type LookupData = {
   phoneTypes: LookupOption[]
   onboardingStages: LookupOption[]
   memberStatus: any[]
-  antaraStaff: LookupOption[]
+  antaraHNs: LookupOption[]
+  antaraMEs: LookupOption[]
   tags: LookupOption[]
   sexOptions: LookupOption[]
   maritalStatus: LookupOption[]
@@ -88,7 +89,8 @@ export const getFormFields = (lookups: LookupData) => {
     phoneTypes,
     onboardingStages,
     memberStatus,
-    antaraStaff,
+    antaraHNs,
+    antaraMEs,
     tags,
     maritalStatus,
     sexOptions,
@@ -290,7 +292,7 @@ export const getFormFields = (lookups: LookupData) => {
               type: 'select',
               dataIndex: 'assignedHn',
               label: 'Assigned HN',
-              options: antaraStaff,
+              options: antaraHNs,
               stateKey: 'memberStaff',
             },
             {
@@ -298,7 +300,7 @@ export const getFormFields = (lookups: LookupData) => {
               type: 'select',
               dataIndex: 'assignedMe',
               label: 'Assigned ME',
-              options: antaraStaff,
+              options: antaraMEs,
               stateKey: 'memberStaff',
             },
           ],

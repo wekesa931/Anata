@@ -276,7 +276,8 @@ function MemberDetailsUpdateForm({
   const [sexOptions, setSexOptions] = useState<LookupOption[]>([])
   const [maritalStatus, setMaritalStatus] = useState<LookupOption[]>([])
   const [benefits, setBenefits] = useState<LookupOption[]>([])
-  const [antaraStaff, setAntaraStaff] = useState<LookupOption[]>([])
+  const [antaraHNs, setAntaraHNs] = useState<LookupOption[]>([])
+  const [antaraMEs, setAntaraMEs] = useState<LookupOption[]>([])
   const [tags, setTags] = useState<LookupOption[]>([])
   const [dataLoading, setDataLoading] = useState<boolean>(false)
   const [isEdited, setIsEdited] = useState<boolean>(false)
@@ -315,6 +316,13 @@ function MemberDetailsUpdateForm({
   const [getInsurances] = useLazyQuery(GET_INSURANCE_COMPANIES)
   const [getAntaraStaff] = useLazyQuery(GET_ANTARA_STAFF)
 
+  const getStaffTeam = (team: string) => (staffMembers: any[]) => {
+    return staffMembers.filter((e: any) => e?.node?.team === team).map((staff: any) => ({
+      label: staff?.node?.fullName,
+      value: staff?.node?.emailUsername,
+    }))
+  }
+
   const loadLooups = () => {
     setDataLoading(true)
     Promise.all([getLookupEntries(), getInsurances(), getAntaraStaff()])
@@ -322,12 +330,12 @@ function MemberDetailsUpdateForm({
         const [lookupData, insuranceData, staffData] = data
 
         parseLookupEntries(lookupData?.data)
-        setAntaraStaff(
-          staffData?.data?.antaraStaff?.edges.map((staff: any) => ({
-            label: staff?.node?.fullName,
-            value: staff?.node?.emailUsername,
-          }))
-        )
+        const getMes = getStaffTeam('MEMBER_EXPERIENCE')
+        const getHns = getStaffTeam('HEALTH_NAVIGATOR')
+
+        setAntaraHNs(getHns(staffData?.data?.antaraStaff?.edges))
+        setAntaraMEs(getMes(staffData?.data?.antaraStaff?.edges))
+
         setInsuranceCompanies(
           parseDataToOptions(insuranceData?.data?.insuranceCompanies, 'name')
         )
@@ -356,7 +364,7 @@ function MemberDetailsUpdateForm({
           closeWindow()
         }
       })
-      .catch((e) => errorCb(e.message))
+      .catch((e: any) => errorCb(e.message))
       .finally(() => {
         refetchMember()
         setIsSaving(false)
@@ -379,10 +387,11 @@ function MemberDetailsUpdateForm({
     sexOptions,
     maritalStatus,
     benefits,
-    antaraStaff,
     tags,
     v2Member,
     companies,
+    antaraHNs,
+    antaraMEs
   }
 
   return (

@@ -11,6 +11,7 @@ const GET_ANTARA_STAFF = gql`
           historyUserIdField
           slackId
           phone
+          team
         }
       }
     }
