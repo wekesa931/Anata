@@ -65,6 +65,8 @@ function FilledForms() {
       'interventions_tracking',
       'mhc',
       'physio',
+      'minor_health_check',
+      'minorhifv2',
     ]
 
     const getFields = (fields: any) => {
@@ -134,6 +136,14 @@ function FilledForms() {
           {
             name: 'Physiotherapy Consultation',
             data: response[forms.indexOf('physio')],
+          },
+          {
+            name: 'Minor Health Check',
+            data: response[forms.indexOf('minor_health_check')],
+          },
+          {
+            name: 'Minor HIF V2',
+            data: response[forms.indexOf('minorhifv2')],
           },
         ]
         setFilledForms(formResponses)
