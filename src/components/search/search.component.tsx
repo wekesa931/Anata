@@ -56,8 +56,8 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
   })
 
   const getSexAccronym = (sex: string) => {
-    if (sex.toLowerCase() === 'male') return 'M'
-    if (sex.toLowerCase() === 'female') return 'F'
+    if (sex?.toLowerCase() === 'male') return 'M'
+    if (sex?.toLowerCase() === 'female') return 'F'
     return ''
   }
 
