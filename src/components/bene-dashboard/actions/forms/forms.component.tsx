@@ -9,6 +9,11 @@ import { formNames } from '../workflows/Forms/form-fields'
 import AirtableIframe from '../../../utils/airtableIframe/airtableIframe.component'
 import PortalWindow from '../../../lib/portal/portal.component'
 
+type TPrefillInfo = {
+  label?: string
+  url?: string
+}
+
 function Forms() {
   const { member } = useMember()
   const { addOpenForm } = useFormPortal()
@@ -17,9 +22,37 @@ function Forms() {
 
   const [searchForm, setSearchForm] = useState<any[]>(FORMS)
 
+  const getPrefillUrl = (prefillInfo: TPrefillInfo) => {
+    if (prefillInfo.url) {
+      const prefillUrl = prefillInfo.url
+
+      const embedUrl = prefillUrl.replace(
+        'airtable.com/',
+        'airtable.com/embed/'
+      )
+      return embedUrl
+    }
+
+    return null
+  }
+
   const openFormHandler = (form: TForm) => {
     if (form.type === 'airtableForm') {
-      setAirtableForm(form)
+      const minorHealthCheckPrefillURL = getPrefillUrl(member['Minor HIF'])
+      const minorHealthCheckv2Prefills = getPrefillUrl(member['Minor HIF V2'])
+
+      if (form.name === 'Minor Health Check') {
+        setAirtableForm({
+          ...form,
+          url: minorHealthCheckPrefillURL || form.url,
+        })
+      }
+      if (form.name === 'Minor HIF v2') {
+        setAirtableForm({
+          ...form,
+          url: minorHealthCheckv2Prefills || form.url,
+        })
+      }
     } else {
       addOpenForm({ ...(form as any), member })
     }
