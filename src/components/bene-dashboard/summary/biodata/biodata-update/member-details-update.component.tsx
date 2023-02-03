@@ -317,10 +317,12 @@ function MemberDetailsUpdateForm({
   const [getAntaraStaff] = useLazyQuery(GET_ANTARA_STAFF)
 
   const getStaffTeam = (team: string) => (staffMembers: any[]) => {
-    return staffMembers.filter((e: any) => e?.node?.team === team).map((staff: any) => ({
-      label: staff?.node?.fullName,
-      value: staff?.node?.emailUsername,
-    }))
+    return staffMembers
+      .filter((e: any) => e?.node?.team === team)
+      .map((staff: any) => ({
+        label: staff?.node?.fullName,
+        value: staff?.node?.emailUsername,
+      }))
   }
 
   const loadLooups = () => {
@@ -391,7 +393,7 @@ function MemberDetailsUpdateForm({
     v2Member,
     companies,
     antaraHNs,
-    antaraMEs
+    antaraMEs,
   }
 
   return (

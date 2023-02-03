@@ -23,7 +23,7 @@ const startSentry = () => {
       return event
     },
     replaysOnErrorSampleRate: 1.0,
-    integrations: [new Integrations.BrowserTracing(), new Sentry.Replay()]
+    integrations: [new Integrations.BrowserTracing(), new Sentry.Replay()],
   })
 }
 

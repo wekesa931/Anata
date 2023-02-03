@@ -690,9 +690,9 @@ function LinkRecordInput({
     tblsixUe3jfbOUMQP: 'tblsixUe3jfbOUMQP', // Specialists from Provider Base
     // staging
     tblglBRVOue24usUH: 'tblglBRVOue24usUH', // medication
-    tblm1g2udT6J8TOzt: 'tblL1jLhX4m0soujH', // Providers
-    tblL1jLhX4m0soujH: 'tblL1jLhX4m0soujH', // Facilities from Provider base
-    tbl6tsfyrcOmxNG51: 'tbl6tsfyrcOmxNG51', // Specialists from Provider Base
+    tblm1g2udT6J8TOzt: 'tblU94ZnFmMT7S0o0', // Providers
+    tblU94ZnFmMT7S0o0: 'tblU94ZnFmMT7S0o0', // Facilities from Provider base
+    tblPpf5F81JypdC9k: 'tblPpf5F81JypdC9k', // Specialists from Provider Base
   }
 
   const isInSearchSchema = Object.keys(IndexTable).includes(
@@ -828,10 +828,7 @@ function LinkRecordInputOptimizedSearch({
     },
     onCompleted: (data) => {
       const response = data.optimizedSearch.data || []
-      const searchResults = response?.results.map(
-        (r: any) => ({ ...r, name: r[response?.displayName] } || [])
-      )
-
+      const searchResults = response?.results || []
       setLinkedRecords((prev: any[]) =>
         getUniqueRecords([...prev, ...searchResults])
       )
