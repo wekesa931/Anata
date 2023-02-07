@@ -7066,7 +7066,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Please enter the Muscle mass identified by the device. Example: 20%, 24.20%, 32.15%, 40%\n\n(if decimals, use a . not a ,)',
+          'Please enter the Muscle mass identified by the device in Kilograms \n(if decimals, use a . not a ,)',
       },
       {
         id: 'fld6dnS7napxuFUM8',
@@ -7081,7 +7081,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Please enter the Body fat identified by the device. \nExample: 10%, 14.20%, 22.15%, 30%\n\n(if decimals, use a . not a ,)',
+          'Please enter the Body fat identified by the device. \nExample: 10%, 14.20%, 22.15%, 30%\n(if decimals, use a . not a ,)',
       },
       {
         id: 'fld3DD0x6guc1KJYV',
