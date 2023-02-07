@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 import { Box, Link } from '@mui/material'
 import styles from './dependent-card.component.css'
-import airtableFetch from '../../../../resources/airtable-fetch'
-import logError from '../../../utils/error_handling/sentry'
 import calcAge from '../biodata/utils'
 
 /* eslint-disable no-nested-ternary */
@@ -15,6 +13,7 @@ interface DependentProps {
     fullName?: string
     relationshipToPrimary?: string
     sex?: { sex?: string }
+    airtableRecordId?: string
   }
   status?: { status?: { status?: string } }
   birthDate: string
@@ -27,24 +26,6 @@ function DependentCard({
   dependent: DependentProps
   trackAccess: () => void
 }) {
-  const [airtableRecordId, setAirtableRecordId] = useState<string>('')
-
-  useEffect(() => {
-    airtableFetch(
-      `members/list?filterByFormula=FIND("${dependent?.antaraId}", {Antara ID})`
-    )
-      .then((response) => {
-        Object.keys(response).some((key) => {
-          if (/^rec\w+/.test(key)) {
-            setAirtableRecordId(key)
-          }
-        })
-      })
-      .catch((err) => {
-        logError(err)
-      })
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
   const isStatusActive: boolean =
     dependent?.status?.status?.status?.toUpperCase() === 'ACTIVE'
   const isStatusTerminated: boolean =
@@ -53,7 +34,7 @@ function DependentCard({
   return (
     <Link
       underline="none"
-      href={`/member/${airtableRecordId}`}
+      href={`/member/${dependent?.details?.airtableRecordId || ''}`}
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => {

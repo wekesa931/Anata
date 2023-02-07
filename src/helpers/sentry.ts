@@ -8,10 +8,10 @@ const startSentry = () => {
     beforeSend(event: any, hint: any) {
       /* tslint:disable:no-string-literal only-arrow-functions */
       const isNonErrorException =
-        event?.exception?.values[0]?.value.startsWith(
+        event?.exception?.values[0]?.value?.startsWith(
           'Non-Error exception captured'
         ) ||
-        hint?.originalException?.message.startsWith(
+        hint?.originalException?.message?.startsWith(
           'Non-Error exception captured'
         )
       /* tslint:enable:no-string-literal only-arrow-functions */

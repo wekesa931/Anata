@@ -86,6 +86,9 @@ interface IContacts {
   dependents: IBeneData[]
   primary: IBeneData[]
   lastConsentReminder?: string
+  otherDependents: IBeneData[]
+  antaraId: string
+  airtableRecordId: string
 }
 
 export interface Member {
@@ -108,6 +111,9 @@ const initialContacts: IContacts = {
   memberType: 'DEPENDENT',
   dependents: [],
   primary: [],
+  otherDependents: [],
+  antaraId: '',
+  airtableRecordId: '',
 }
 
 type MemberContextType = {
@@ -166,6 +172,7 @@ function MemberProvider({ member, children }: any) {
         const fetchedMemberPhones = memberDetails?.phones
         const fetchedDependents = memberDetails?.dependents
         const fetchedPrimary = memberDetails?.primary
+        const fetchedOtherDependents = memberDetails?.otherDependents
 
         const newMemberDetails: IContacts = {
           status: fetchedMemberStatus?.onboardStage?.onboardStage || '',
@@ -182,7 +189,10 @@ function MemberProvider({ member, children }: any) {
             fetchedMemberContact?.emergencyContactRelationship || '',
           memberType: fetchedPrimary?.length > 0 ? 'DEPENDENT' : 'PRIMARY',
           dependents: fetchedDependents || [],
-          primary: fetchedPrimary || [],
+          primary: fetchedPrimary || null,
+          otherDependents: fetchedOtherDependents || [],
+          antaraId: memberDetails?.antaraId || '',
+          airtableRecordId: fetchedMemberDetails?.airtableRecordId || '',
         }
 
         if (memberDetails) {

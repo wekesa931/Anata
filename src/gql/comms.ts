@@ -104,6 +104,7 @@ const MEMBER_DETAILS_QUERY = gql`
             intercomUrl
             intercomRecordId
             intercomUserId
+            airtableRecordId
             sex {
               sex
             }
@@ -111,6 +112,23 @@ const MEMBER_DETAILS_QUERY = gql`
               maritalStatus
             }
             relationshipToPrimary
+          }
+          primary {
+            antaraId
+            birthDate
+            status {
+              status {
+                status
+              }
+            }
+            details {
+              relationshipToPrimary
+              fullName
+              airtableRecordId
+              sex {
+                sex
+              }
+            }
           }
           phones {
             phone
@@ -154,6 +172,25 @@ const MEMBER_DETAILS_QUERY = gql`
                 sex
               }
               relationshipToPrimary
+              airtableRecordId
+            }
+          }
+          otherDependents {
+            id
+            antaraId
+            birthDate
+            status {
+              status {
+                status
+              }
+            }
+            details {
+              fullName
+              sex {
+                sex
+              }
+              relationshipToPrimary
+              airtableRecordId
             }
           }
           contact {

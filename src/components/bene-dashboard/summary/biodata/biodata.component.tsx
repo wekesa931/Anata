@@ -555,8 +555,94 @@ function Tags({ member }: any) {
   )
 }
 
+type TDependentsSectionProps = {
+  majorDependents: any[] | undefined
+  minorDependents: any[] | undefined
+  primaryDependent: any | undefined
+  otherDependents: any[] | undefined
+  trackAccess: () => void
+  isPrimaryMember: boolean
+}
+
+function DependentsSection({
+  majorDependents,
+  minorDependents,
+  primaryDependent,
+  otherDependents,
+  trackAccess,
+  isPrimaryMember,
+}: TDependentsSectionProps) {
+  return (
+    <>
+    <hr className={styles.hrLine} />
+    <h4 className={styles.clinicalHeading}>Dependents</h4>
+
+      {primaryDependent && !isPrimaryMember && (
+        <>
+          <span className={styles.dependentLength}>Primary Member</span>
+          <div className={styles.dependentsDiv}>
+            <DependentCard
+              dependent={primaryDependent}
+              trackAccess={trackAccess}
+            />
+          </div>
+        </>
+      )}
+
+      {majorDependents && (
+        <div className={styles.dependentsDiv}>
+          {majorDependents.length > 0 && (
+            <span
+              className={styles.dependentLength}
+            >{`Major ${majorDependents.length}`}</span>
+          )}
+
+          {majorDependents.map((dep: any) => (
+            <React.Fragment key={dep?.id}>
+              <DependentCard dependent={dep} trackAccess={trackAccess} />
+            </React.Fragment>
+          ))}
+        </div>
+      )}
+      {minorDependents && (
+        <div className={styles.dependentsDiv}>
+          {minorDependents.length > 0 && (
+            <span
+              className={styles.dependentLength}
+            >{`Minor ${minorDependents.length}`}</span>
+          )}
+
+          {minorDependents.map((dep: any) => (
+            <React.Fragment key={dep.id}>
+              <DependentCard dependent={dep} trackAccess={trackAccess} />
+            </React.Fragment>
+          ))}
+        </div>
+      )}
+
+      {otherDependents && !isPrimaryMember && (
+        <div className={styles.dependentsDiv}>
+          {otherDependents.length > 0 && (
+            <span
+              className={styles.dependentLength}
+            >{`Others ${otherDependents?.length}`}</span>
+          )}
+
+          {otherDependents.map((dep: any) => (
+            <React.Fragment key={dep?.id}>
+              <DependentCard dependent={dep} trackAccess={trackAccess} />
+            </React.Fragment>
+          ))}
+        </div>
+      )}
+    </>
+  )
+}
+
 function ClinicalSummary({ memberContact, trackAccess }: ClinicalSummaryProps) {
-  const hasDependants = memberContact?.dependents.length > 0
+  const hasDependants =
+    memberContact?.dependents?.length > 0 ||
+    memberContact?.otherDependents?.length > 0
   const minorDependents = []
   const majorDependents = []
 
@@ -571,62 +657,31 @@ function ClinicalSummary({ memberContact, trackAccess }: ClinicalSummaryProps) {
     }
   }
 
-  const hasPrimary = memberContact?.primary && memberContact?.primary.length > 0
+  const hasPrimary =
+    !!memberContact?.primary &&
+    memberContact?.primary?.antaraId !== memberContact?.antaraId
+  const primaryMember = hasPrimary ? memberContact?.primary : null
+  const otherDependents = memberContact?.otherDependents
+  const isPrimaryMember =
+    memberContact?.antaraId === memberContact?.primary?.antaraId
+
+  const hasAnyDependents = hasDependants || hasPrimary || otherDependents.length > 0
 
   return (
     <>
       <h4 className={styles.clinicalHeading}>Clinical Summary</h4>
       <HifSummary />
       <ConditionsSummary />
-      {hasDependants && (
-        <>
-          <hr className={styles.hrLine} />
-
-          <h4 className={styles.clinicalHeading}>Dependents</h4>
-
-          <div className={styles.dependentsDiv}>
-            {majorDependents.length > 0 && (
-              <span
-                className={styles.dependentLength}
-              >{`Major ${majorDependents.length}`}</span>
-            )}
-
-            {majorDependents.map((dep) => (
-              <React.Fragment key={dep?.id}>
-                <DependentCard dependent={dep} trackAccess={trackAccess} />
-              </React.Fragment>
-            ))}
-          </div>
-
-          <div className={styles.dependentsDiv}>
-            {minorDependents.length > 0 && (
-              <span
-                className={styles.dependentLength}
-              >{`Minor ${minorDependents.length}`}</span>
-            )}
-
-            {minorDependents.map((dep) => (
-              <React.Fragment key={dep.id}>
-                <DependentCard dependent={dep} trackAccess={trackAccess} />
-              </React.Fragment>
-            ))}
-          </div>
-        </>
-      )}
-      {hasPrimary && (
-        <>
-          <hr className={styles.hrLine} />
-
-          <h4 className={styles.clinicalHeading}>Primary Dependent</h4>
-          <div className={styles.dependentsDiv}>
-            {memberContact?.primary.map((mem: any) => (
-              <React.Fragment key={mem.id}>
-                <DependentCard dependent={mem} trackAccess={trackAccess} />
-              </React.Fragment>
-            ))}
-          </div>
-        </>
-      )}
+      <>
+        {hasAnyDependents && <DependentsSection
+          trackAccess={trackAccess}
+          minorDependents={minorDependents}
+          majorDependents={majorDependents}
+          primaryDependent={primaryMember}
+          otherDependents={otherDependents}
+          isPrimaryMember={isPrimaryMember}
+        />}
+      </>
     </>
   )
 }
@@ -675,7 +730,8 @@ function BioData() {
 
   const { member, memberContact, v2Member, isLoading } = useMember()
 
-  const hasPrimary = memberContact?.primary && memberContact?.primary.length > 0
+  const hasPrimary =
+    memberContact?.primary && memberContact?.primary?.length > 0
   const isMinor = () => calcAge(v2Member?.birthDate) < 18
 
   const trackAccess = () =>

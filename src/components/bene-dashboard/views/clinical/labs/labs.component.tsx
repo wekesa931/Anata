@@ -102,7 +102,12 @@ function GlucoseMonitoring() {
              Diabetic: >7 mmol/l,
              Target for Diabetics: <7 mmol/l`,
     },
-    { name: 'RBS', format: 'mmol/L', key: 'random_bs', info:`Normal 3.9 mmol/l - 11.1 mmol/l` },
+    {
+      name: 'RBS',
+      format: 'mmol/L',
+      key: 'random_bs',
+      info: `Normal 3.9 mmol/l - 11.1 mmol/l`,
+    },
     {
       name: 'HBA1C',
       format: '%',
