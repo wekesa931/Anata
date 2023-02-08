@@ -90,7 +90,7 @@ function Views({ view, handleChange }: any) {
               <Files />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel value="member-task">
+          <TabPanel value="member-tasks">
             <ErrorBoundary>
               <MemberTask />
             </ErrorBoundary>
