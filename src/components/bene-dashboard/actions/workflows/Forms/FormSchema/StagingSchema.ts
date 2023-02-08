@@ -1349,16 +1349,16 @@ export default [
         helper: '',
       },
       {
-        id: 'fld5XDxiB9QzwwLlx',
-        name: 'Prescribing facility (Providers)',
+        id: 'fldLG9PUQxV3rbiPz',
+        name: 'Prescribing facility from Provider base',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldjdIjNeMRbl2KwH',
+        symmetricColumnId: 'fldKz9n3g1RE3macs',
         unreversed: true,
         relationship: 'one',
-        foreignTableId: 'tblm1g2udT6J8TOzt',
+        foreignTableId: 'tblU94ZnFmMT7S0o0',
         required: true,
         helper: '',
       },
@@ -1375,18 +1375,32 @@ export default [
         foreignTableId: null,
         required: true,
         helper: '',
+        parentKey: 'Prescribing facility from Provider base',
+        parentValues: ['recKyWKUXonDwCbYC'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(values['Prescribing facility from Provider base'])
+          ) {
+            return ['recKyWKUXonDwCbYC'].some((r) =>
+              values['Prescribing facility from Provider base'].includes(r)
+            )
+          }
+          return ['recKyWKUXonDwCbYC'].includes(
+            values['Prescribing facility from Provider base']
+          )
+        },
       },
       {
-        id: 'flduNglITk8RW0p1R',
-        name: 'Refill facility (providers)',
+        id: 'fldNaBGUBnt0vfVvk',
+        name: 'Refill facility from Provider base',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'flduOm55VRkJAUWkG',
+        symmetricColumnId: 'fldCRGwZg7SgcW1sq',
         unreversed: true,
         relationship: 'one',
-        foreignTableId: 'tblm1g2udT6J8TOzt',
+        foreignTableId: 'tblU94ZnFmMT7S0o0',
         required: false,
         helper: '',
       },
@@ -1403,6 +1417,18 @@ export default [
         foreignTableId: null,
         required: true,
         helper: '',
+        parentKey: 'Refill facility from Provider base',
+        parentValues: ['recKyWKUXonDwCbYC'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Refill facility from Provider base'])) {
+            return ['recKyWKUXonDwCbYC'].some((r) =>
+              values['Refill facility from Provider base'].includes(r)
+            )
+          }
+          return ['recKyWKUXonDwCbYC'].includes(
+            values['Refill facility from Provider base']
+          )
+        },
       },
       {
         id: 'fld0lcI7zArWPPw7m',
