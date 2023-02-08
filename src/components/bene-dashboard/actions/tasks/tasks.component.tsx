@@ -176,6 +176,7 @@ function Tasks() {
     'On Hold',
   ]
   const { recId } = useParams()
+
   const fields = [
     'Type',
     'Due Date',
@@ -188,6 +189,7 @@ function Tasks() {
     'Open URL',
     'Prescription Drug Names',
     'Other Prescription Drug Name',
+    'Assignee Name'
   ]
 
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
@@ -273,9 +275,10 @@ function Tasks() {
   }
 
   useEffect(() => {
-    function getAssigneeName(assigned: string | { fullName: string }) {
+    function getAssigneeName(assigned: string | { fullName: string } ) {
       return typeof assigned === 'string' ? assigned : assigned?.fullName || ''
     }
+
     // Display the mergedRecords
     function DisplayInfo({ hnTask }: any) {
       return (
@@ -296,6 +299,7 @@ function Tasks() {
                           <span key={index}>{getAssigneeName(assigned)}</span>
                         )
                       )}
+                    
                   </div>
                 )}
               </div>
