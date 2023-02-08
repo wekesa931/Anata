@@ -91,7 +91,8 @@ function CallsCallout({
           memberDetails: member,
           type: 'OUTBOUND',
           dialPadInitiated: true,
-          memberContacts: loadedContacts?.phones || [],
+          memberContacts:
+            loadedContacts?.phones || loadedContacts?.primary?.phones || [],
         })
       } finally {
         setTimeout(() => {
@@ -104,9 +105,35 @@ function CallsCallout({
   useEffect(() => {
     if (loadedContacts) {
       const { phones = [], emergencyContactPhone } = loadedContacts
-      const parsed = phones.map((phone: any, index: number) => ({
-        [`Phone ${index + 1}`]: phone.phone,
+      let parsed = phones.map((phone: any, index: number) => ({
+        [`Phone ${index + 1}`]: phone?.phone,
       }))
+
+      const { primary = null, otherDependents = [] } = loadedContacts
+      if (primary) {
+        // eslint-disable-next-line
+        const { phones = [] } = primary
+        parsed = [
+          ...parsed,
+          ...phones.map((phone: any, index: number) => ({
+            [`Primary phone ${index + 1}`]: phone?.phone,
+          })),
+        ]
+      }
+
+      if (otherDependents.length) {
+        otherDependents.forEach((dependent: any) => {
+          // eslint-disable-next-line
+          const { phones = [] } = dependent
+          parsed = [
+            ...parsed,
+            ...phones.map((phone: any, index: number) => ({
+              [`${dependent?.details?.fullName} phone ${index + 1}`]:
+                phone?.phone,
+            })),
+          ]
+        })
+      }
 
       const allContacts: any[] = [
         ...parsed,

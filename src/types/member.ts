@@ -80,6 +80,8 @@ export type V2MemberType = {
   memberAddresses?: AddressType[]
   insuranceDetails?: InsuranceDetailsType[]
   dependents?: InsuranceDetailsType[]
+  primary: InsuranceDetailsType
+  otherDependents: InsuranceDetailsType[]
 }
 
 type RawPhoneType = {
@@ -178,4 +180,6 @@ export type V2MemberQueryType = {
     emergencyContactRelationship?: string
   }
   insuranceDetails?: RawInsuranceType[]
+  primary: RawInsuranceType
+  otherDependents: RawInsuranceType[]
 }

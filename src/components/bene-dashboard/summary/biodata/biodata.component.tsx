@@ -574,8 +574,8 @@ function DependentsSection({
 }: TDependentsSectionProps) {
   return (
     <>
-    <hr className={styles.hrLine} />
-    <h4 className={styles.clinicalHeading}>Dependents</h4>
+      <hr className={styles.hrLine} />
+      <h4 className={styles.clinicalHeading}>Dependents</h4>
 
       {primaryDependent && !isPrimaryMember && (
         <>
@@ -665,7 +665,8 @@ function ClinicalSummary({ memberContact, trackAccess }: ClinicalSummaryProps) {
   const isPrimaryMember =
     memberContact?.antaraId === memberContact?.primary?.antaraId
 
-  const hasAnyDependents = hasDependants || hasPrimary || otherDependents.length > 0
+  const hasAnyDependents =
+    hasDependants || hasPrimary || otherDependents.length > 0
 
   return (
     <>
@@ -673,14 +674,16 @@ function ClinicalSummary({ memberContact, trackAccess }: ClinicalSummaryProps) {
       <HifSummary />
       <ConditionsSummary />
       <>
-        {hasAnyDependents && <DependentsSection
-          trackAccess={trackAccess}
-          minorDependents={minorDependents}
-          majorDependents={majorDependents}
-          primaryDependent={primaryMember}
-          otherDependents={otherDependents}
-          isPrimaryMember={isPrimaryMember}
-        />}
+        {hasAnyDependents && (
+          <DependentsSection
+            trackAccess={trackAccess}
+            minorDependents={minorDependents}
+            majorDependents={majorDependents}
+            primaryDependent={primaryMember}
+            otherDependents={otherDependents}
+            isPrimaryMember={isPrimaryMember}
+          />
+        )}
       </>
     </>
   )

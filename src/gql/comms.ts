@@ -129,6 +129,9 @@ const MEMBER_DETAILS_QUERY = gql`
                 sex
               }
             }
+            phones {
+              phone
+            }
           }
           phones {
             phone
@@ -174,6 +177,9 @@ const MEMBER_DETAILS_QUERY = gql`
               relationshipToPrimary
               airtableRecordId
             }
+            phones {
+              phone
+            }
           }
           otherDependents {
             id
@@ -191,6 +197,9 @@ const MEMBER_DETAILS_QUERY = gql`
               }
               relationshipToPrimary
               airtableRecordId
+            }
+            phones {
+              phone
             }
           }
           contact {

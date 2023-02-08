@@ -60,6 +60,10 @@ const parseV2MemberData = (
   const { insuranceDetails = {} } = memberData
   member = { ...member, insuranceDetails }
 
+  // dependents and primary
+  const { otherDependents = [], primary = null } = memberData
+  member = { ...member, otherDependents, primary }
+
   return member
 }
 
