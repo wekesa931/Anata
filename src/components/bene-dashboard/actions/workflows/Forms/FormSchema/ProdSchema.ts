@@ -8660,14 +8660,14 @@ export default [
         helper: '',
         conditionType: '',
         parentKey: 'Medication',
-        parentValues: ['reclKT3RDKNyYKvgW'],
+        parentValues: ['rec44gHeowdBMS8YA'],
         condition: (values: any) => {
           if (Array.isArray(values.Medication)) {
-            return ['reclKT3RDKNyYKvgW'].some((r) =>
+            return ['rec44gHeowdBMS8YA'].some((r) =>
               values.Medication.includes(r)
             )
           }
-          return ['reclKT3RDKNyYKvgW'].includes(values.Medication)
+          return ['rec44gHeowdBMS8YA'].includes(values.Medication)
         },
       },
       {
