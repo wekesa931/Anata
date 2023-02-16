@@ -37,6 +37,7 @@ function Appointments() {
     'Comments',
     'Providers',
     'Calendly Reschedule URL',
+    'Record ID'
   ]
 
   const { data, isLoading, isError, refresh } = useAirtableFetch(
@@ -184,10 +185,10 @@ function Appointments() {
     if (data && providersData) {
       const mappedResponse = Object.keys(data)
         .map((key) => ({ appointment: data[key], id: key }))
-        .map(({ appointment, id }) => ({
+        .map(({ appointment}) => ({
           data: includeFieldTypes(appointment),
           name: getDisplayInfo(appointment),
-          id,
+          id: appointment['Record ID'],
         }))
 
       setAppointments(mappedResponse)
