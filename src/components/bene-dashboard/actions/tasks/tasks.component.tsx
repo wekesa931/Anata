@@ -190,6 +190,7 @@ function Tasks() {
     'Prescription Drug Names',
     'Other Prescription Drug Name',
     'Assignee Name',
+    'recordid'
   ]
 
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
@@ -368,11 +369,11 @@ function Tasks() {
       records: any,
       getDisplayedInfo: (data: any) => JSX.Element
     ) => {
-      const recordsWithMetadata = addKeyToValue(records).map(({ data, id }) => {
+      const recordsWithMetadata = addKeyToValue(records).map(({ data }) => {
         return {
           data: includeFieldTypes(data),
-          name: getDisplayedInfo({ ...data, airtId: id }),
-          id, // Airtable Record ID
+          name: getDisplayedInfo({ ...data, airtId: data ['recordid'] }),
+          id: data ['recordid'], // Airtable Record ID
         }
       })
       return recordsWithMetadata
