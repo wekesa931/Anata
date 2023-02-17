@@ -159,7 +159,6 @@ export const interactionlogform = {
           { name: 'Flag for Review' },
           { name: 'MHC' },
           { name: 'Nutritional Consultation' },
-          { name: 'Physio Consultation' },
           { name: 'None' },
         ],
       },
@@ -237,12 +236,10 @@ const interactionlogMap: any = {
   'Next Steps': 'outcome',
   'Flag for Review': 'flagForReview',
   'Reasons for Consultation': 'reasonForConsultation',
-  'Reasons for Referral': 'pcReferralReasons',
   'MHC Reasons for Referral': 'mhcReferralReasons',
   'NC Reasons for Referral': 'ncReferralReasons',
   'Notes for MHC': 'mhcReferralNotes',
   'Notes for Nutritional Consultation': 'ncReferralNotes',
-  'Notes for Physio Consultation': 'pcReferralNotes',
 }
 
 export const interactionLogPayload = (raw: any) => {

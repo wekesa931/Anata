@@ -16681,7 +16681,6 @@ export default [
           'Flag for Review',
           'MHC',
           'Nutritional Consultation',
-          'Physio Consultation',
           'None',
         ],
         symmetricColumnId: null,
@@ -16837,56 +16836,6 @@ export default [
             )
           }
           return ['Nutritional Consultation'].includes(values['Next Steps'])
-        },
-      },
-      {
-        id: 'pcReferralNotes',
-        name: 'Notes for Physio Consultation',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Next Steps',
-        parentValues: ['Physio Consultation'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Next Steps'])) {
-            return ['Physio Consultation'].some((r) =>
-              values['Next Steps'].includes(r)
-            )
-          }
-          return ['Physio Consultation'].includes(values['Next Steps'])
-        },
-      },
-      {
-        id: 'pcReferralReasons',
-        name: 'Reasons for Referral',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Next Steps',
-        parentValues: ['Physio Consultation'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Next Steps'])) {
-            return ['Physio Consultation'].some((r) =>
-              values['Next Steps'].includes(r)
-            )
-          }
-          return ['Physio Consultation'].includes(values['Next Steps'])
         },
       },
     ],
