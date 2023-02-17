@@ -3,13 +3,13 @@ import { Label, Text } from '@airtable/blocks/ui'
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import { Form, Formik } from 'formik'
 import dayjs from 'dayjs'
+import { Tooltip } from '@mui/material'
 import Modal from '../modals/modal.component'
 import EditIcon from '../../../assets/img/icons/edit.svg'
 import AirtableField from '../../../types/airtable-field'
 import FormField from '../form-field/form-field.component'
 import Toasts from '../../../helpers/toast'
 import styles from './list.component.css'
-import { Tooltip } from '@mui/material'
 
 type ListModalProps = {
   modalOpen: boolean
