@@ -51,7 +51,7 @@ function ProtectedRoute({ children }: any) {
           display: 'flex',
           flexDirection: 'column',
           flex: 1,
-          overflow: 'hidden',
+          overflow: 'auto',
           backgroundColor: 'var(--white)',
         }}
       >
