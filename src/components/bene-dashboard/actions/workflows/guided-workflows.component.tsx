@@ -23,7 +23,7 @@ import logError from '../../../utils/error_handling/sentry'
 import analytics from '../../../../helpers/segment'
 import { useUser } from '../../../../context/user-context'
 import { useFormPortal } from '../../../../context/forms-context'
-import { IWorkflow } from './workflow-types'
+import { IWorkflow, IWorkflowGroups } from './workflow-types'
 import airtableFetch from '../../../../resources/airtable-fetch'
 
 function GuidedWorkflows() {
@@ -35,12 +35,15 @@ function GuidedWorkflows() {
   const [savingToAirtable, setSavingToAirtable] = useState(false)
   const [isToastOpen, setIsToastOpen] = useState(false)
   const [worflowOptionsOpen, setWorflowOptionsOpen] = useState(false)
-  const [workflowsWithGrouping, setWorkflowsWithGrouping] = useState<any>(null)
+  const [workflowsWithGrouping, setWorkflowsWithGrouping] =
+    useState<IWorkflowGroups>({ incomplete: [], complete: [] })
   const [loadedTemplate, setloadedTemplate] = useState<any>(null)
   const [workflowOptions, setWorkflowOptions] = useState<string[]>([])
   const [templateName, setTemplateName] = useState<string | null>(null)
   const { addOpenForm, onRefetch, shouldRefetch, openedForms } = useFormPortal()
-
+  const hasActiveWorkflows =
+    workflowsWithGrouping.complete.length > 0 ||
+    workflowsWithGrouping.incomplete.length > 0
   const [
     loadWorkflows,
     {
@@ -193,18 +196,25 @@ function GuidedWorkflows() {
                   completed: false,
                 },
               }).then((re) => {
-                setloadedTemplate(re.data.updateWorkflow.workflow)
+                const newWorkflow = re.data.updateWorkflow.workflow
+                setWorkflowsWithGrouping({
+                  ...workflowsWithGrouping,
+                  incomplete: [
+                    ...workflowsWithGrouping.incomplete,
+                    newWorkflow,
+                  ],
+                })
+                setloadedTemplate(newWorkflow)
                 Toasts.showSuccessNotification('Workflow created successfully')
                 analytics.track(`Guided Workflow`, {
                   event: 'Workflow created',
                   beneId: recId,
                   staff: user ? user.email : '',
-                  workflow: re.data.updateWorkflow.workflow,
+                  workflow: newWorkflow,
                 })
               })
             }
           })
-          refetch && refetch()
         })
         .catch((e) => {
           logError(e)
@@ -272,7 +282,7 @@ function GuidedWorkflows() {
       complete: 'Complete',
     }
     const render =
-      workflowsWithGrouping &&
+      hasActiveWorkflows &&
       Object.keys(workflowsWithGrouping).map((key, idx: number) => {
         return (
           <Fragment key={idx}>
@@ -320,7 +330,7 @@ function GuidedWorkflows() {
             <p className="text-small">Loading Workflows</p>
           </div>
         )}
-        {!gettingWorkflows && !workflowsWithGrouping && noRecordsRender()}
+        {!gettingWorkflows && !hasActiveWorkflows && noRecordsRender()}
         {render}
       </>
     )

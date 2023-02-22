@@ -16,6 +16,11 @@ export type IWorkflow = {
   updatedAt: Date
 }
 
+export type IWorkflowGroups = {
+  complete: IWorkflow[]
+  incomplete: IWorkflow[]
+}
+
 export type FormMeta = {
   id: string
   name: string
