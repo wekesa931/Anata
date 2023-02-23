@@ -516,6 +516,9 @@ function WorkflowPortal({
         if (activeForm === 'HIF Minor') {
           delete airtablePayload.Member
         }
+        if (activeForm === 'HIF') {
+          airtablePayload['HIF Completed'] = true
+        }
         if (activeForm === 'Physiotherapy Consultation') {
           airtablePayload = {
             ...airtablePayload,
@@ -625,16 +628,8 @@ function WorkflowPortal({
             const hifInfo = await airtableFetch(
               `hif/list?filterByFormula=FIND("${airtablePayload.fields.Member[0]}", {Member Record ID})`
             )
-            if (
-              typeof hifInfo === 'object' &&
-              !Array.isArray(hifInfo) &&
-              hifInfo !== null
-            ) {
-              Object.keys(hifInfo).forEach((key) => {
-                if (/^rec\w+/.test(key)) {
-                  hifId = key
-                }
-              })
+            if (hifInfo.length > 0) {
+              hifId = hifInfo[0]['HIF Record ID']
             }
           }
           airtablePayload = generatePayload(airtablePayload.fields)
