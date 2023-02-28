@@ -142,7 +142,7 @@ function FilledForms() {
             data: response[forms.indexOf('minor_health_check')],
           },
           {
-            name: 'Minor HIF V2',
+            name: 'Minor HIF v2',
             data: response[forms.indexOf('minorhifv2')],
           },
         ]

@@ -19,14 +19,7 @@ const updatedForms = (): TForm[] => {
     url: 'https://airtable.com/embed/shrJfVFD95csPXYZF?viewControls=on',
   }
 
-  // add Minor HIF v2
-  const minorHIFv2: TForm = {
-    name: 'Minor HIF v2',
-    type: 'airtableForm',
-    url: 'https://airtable.com/embed/shrn9dg2D3AL0tzWT',
-  }
-
-  return [...payload, healthCheckForm, minorHIFv2]
+  return [...payload, healthCheckForm]
 }
 
 const sorted = updatedForms().sort((a, b) => {

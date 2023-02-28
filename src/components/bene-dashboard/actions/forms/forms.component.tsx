@@ -39,18 +39,11 @@ function Forms() {
   const openFormHandler = (form: TForm) => {
     if (form.type === 'airtableForm') {
       const minorHealthCheckPrefillURL = getPrefillUrl(member['Minor HIF'])
-      const minorHealthCheckv2Prefills = getPrefillUrl(member['Minor HIF V2'])
 
       if (form.name === 'Minor Health Check') {
         setAirtableForm({
           ...form,
           url: minorHealthCheckPrefillURL || form.url,
-        })
-      }
-      if (form.name === 'Minor HIF v2') {
-        setAirtableForm({
-          ...form,
-          url: minorHealthCheckv2Prefills || form.url,
         })
       }
     } else {

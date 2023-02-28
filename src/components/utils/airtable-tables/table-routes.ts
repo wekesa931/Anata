@@ -6,7 +6,6 @@ const TABLE_ROUTES = {
   Conditions: 'conditions',
   'VC condition diagnosis': 'conditions',
   'Conditions Data tracking': 'conditionsDataTracking',
-  'HIF Minor': 'minorhif',
   PAFU: 'pafu',
   Vitals: 'vitals',
   'BP Mon': 'bp',
@@ -54,6 +53,7 @@ const TABLE_ROUTES = {
   'Incident reports': 'incident',
   'Member Feedback': 'member_feedback',
   'Medications Base Sync': 'medication_base',
+  'Minor HIF v2': 'minorhifv2',
 }
 
 export default TABLE_ROUTES

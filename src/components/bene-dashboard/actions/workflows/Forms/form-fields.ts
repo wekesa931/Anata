@@ -43,6 +43,7 @@ export const duplicates = [
   'Interaction log',
   'Member Feedback',
   "Child's Health",
+  'Minor HIF v2',
 ]
 
 export const formNames: Record<string, string> = {
@@ -60,7 +61,6 @@ export const formNames: Record<string, string> = {
   Conditions: 'Condition Diagnosis',
   'Conditions Data tracking': 'Conditions Data Tracking',
   HIF: 'HIF',
-  'HIF Minor': 'Minor HIF',
   HMP: 'HMP Intake',
   'Nutritional Consultation': 'Nutritional Consultation',
   Interventions: 'Intervention Intake',
@@ -269,12 +269,7 @@ export const feedbackPayload = (raw: any) => {
   return finalPayload
 }
 
-export const initialFormValues = (
-  member: any,
-  user: any,
-  workflow = null,
-  hif: any
-) => {
+export const initialFormValues = (member: any, user: any, workflow = null) => {
   const isOnsite = workflow === 'Onsite'
   return {
     'BP Mon': {
@@ -313,45 +308,6 @@ export const initialFormValues = (
       'Interaction type': isOnsite ? 'In-person' : null,
       'Initial vs FU': isOnsite ? 'Initial consultation' : null,
       'Date of appointment': dayjs().format('YYYY-MM-DD'),
-    },
-    'HIF Minor': {
-      Dependent: hif && hif['Dependents (from Member)'],
-      'Primary Member': hif && hif['Full Name'],
-      Staff: [user.userAirtableId],
-      Date: dayjs().format('YYYY-MM-DD'),
-      'Does anyone in your child/dependent immediate family (Grandparents, Parents, Siblings) have Diabetes?':
-        hif &&
-        hif[
-          'Does anyone in your immediate family (Grandparents, Parents, Siblings) have Diabetes?'
-        ] === 'Yes'
-          ? 'Yes'
-          : 'No',
-      'Is there anyone in your child/dependent immediate family (Grandparents, Parents, Siblings) that has had a cardiovascular disease event (heart attack, stroke) before age 55?':
-        hif &&
-        hif[
-          'Is there anyone in your immediate family (Grandparents, Parents, Siblings) that has had a cardiovascular disease event (heart attack or stroke)'
-        ] === 'Yes'
-          ? 'Yes'
-          : 'No',
-      'Does anyone in your child/dependent immediate family (Grandparents, Parents, Siblings) have hypercholesterolemia?':
-        hif &&
-        hif[
-          'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Cholesterol Levels?'
-        ] === 'Yes'
-          ? 'Yes'
-          : 'No',
-      'Does anyone in your child/dependent immediate family (Grandparents, Parents, Siblings) have hypertension?':
-        hif &&
-        hif[
-          'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Blood Pressure?'
-        ] === 'Yes'
-          ? 'Yes'
-          : 'No',
-      'Family History':
-        hif &&
-        hif[
-          'Is there any other family health history you think we should know about?'
-        ],
     },
   }
 }
