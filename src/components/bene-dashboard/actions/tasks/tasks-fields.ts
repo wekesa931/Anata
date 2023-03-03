@@ -2,6 +2,7 @@ import AirtableField from '../../../../types/airtable-field'
 
 const TASK_TYPES = [
   'HMP: Collect condition data',
+  'HMP: Data collection preparation',
   'Schedule HMP #1 follow-up',
   'Schedule Fitness consultation',
   'Prescribe medication',
