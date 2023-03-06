@@ -827,10 +827,18 @@ function LinkRecordInputOptimizedSearch({
       clientName: 'search',
     },
     onCompleted: (data) => {
-      const response = data.optimizedSearch.data || []
+      const response = data.optimizedSearch.data || {}
+      const displayKey = response?.displayName || 'name'
+
       const searchResults = response?.results || []
       setLinkedRecords((prev: any[]) =>
-        getUniqueRecords([...prev, ...searchResults])
+        getUniqueRecords([
+          ...prev,
+          ...searchResults.map((rec: any) => ({
+            id: rec.id,
+            name: rec[displayKey],
+          })),
+        ])
       )
     },
   })
