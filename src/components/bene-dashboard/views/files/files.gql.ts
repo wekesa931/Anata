@@ -41,12 +41,14 @@ const GET_FILES = gql`
                 updatedAt
                 member {
                   antaraId
+                  fullName
                 }
                 sharedBy
                 folder {
                   name
                 }
                 read
+                readAt
               }
             }
           }

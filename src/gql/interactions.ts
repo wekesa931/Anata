@@ -5,6 +5,7 @@ const GET_MEMBER_INTERACTIONS = gql`
     memberInteractions(antaraId: $antaraId) {
       edges {
         node {
+          id
           interactionStartedAt
           interactionSummaryNotes
           interactorType

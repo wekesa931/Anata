@@ -15,7 +15,7 @@ import Conditions from './conditions/conditions.component'
 import MemberTask from './member_tasks/member-task.component'
 import CallLog from '../actions/calls/call-log/call-log.component'
 import EngagementDashboard from './engagement/engagement-dashboard.component'
-import Longitudinal from './longitudinal/longitudinal.components'
+import LongitudinalV1 from './longitudinal_tracking'
 import { withTabRouter } from '../../lib/routing'
 
 function Views({ view, handleChange }: any) {
@@ -67,7 +67,7 @@ function Views({ view, handleChange }: any) {
           </TabPanel>
           <TabPanel value="longitudinal" className={styles.longitud}>
             <ErrorBoundary>
-              <Longitudinal />
+              <LongitudinalV1 />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel value="interactions">

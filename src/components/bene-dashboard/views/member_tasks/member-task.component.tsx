@@ -22,6 +22,7 @@ function MemberTask() {
       })
       setMemberTask(mappedData)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
   const isReadytoShowTasks = memberTask?.length > 0 && !isLoading && !isError
 

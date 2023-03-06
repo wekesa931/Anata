@@ -1,0 +1,267 @@
+{
+  "appointments": {
+    "fields": [
+      "created_at",
+      "status_last_modified_at",
+      "Record ID",
+      "Status",
+      "Member",
+      "Service",
+      "Assignee Name",
+      "Comments"
+    ],
+    "sort": [
+      {
+        "field": "created_at",
+        "direction": "asc"
+      }
+    ]
+  },
+  "conditions": {
+    "fields": [
+      "Record ID",
+      "Condition",
+      "Date of Diagnosis/Condition",
+      "Condition Status",
+      "Current stage",
+      "last_modified_at",
+      "created_at",
+      "status_last_modified_at",
+      "Starting Stage",
+      "Starting clinical status",
+      "Condition Notes",
+      "Diagnosis Stage",
+      "Engagement Level",
+      "Key goal - all conditions",
+      "Current clinical status",
+      "Acute vs Chronic"
+    ],
+    "sort": [
+      {
+        "field": "created_at",
+        "direction": "asc"
+      }
+    ]
+  },
+  "medications": {
+    "fields": [
+      "Medication Name (from Medication Base)",
+      "Start Date",
+      "Status",
+      "last_modified",
+      "Quantity",
+      "Quantity Units",
+      "Refillable",
+      "Record ID",
+      "created_at",
+      "status_last_modified_at",
+      "Frequency",
+      "Duration",
+      "Route",
+      "Dosage Unit",
+      "Refill Date calculated",
+      "Days until Refill",
+      "Stopped",
+      "Stop Date (Calculated)",
+      "Notes"
+    ],
+    "sort": [
+      {
+        "field": "created_at",
+        "direction": "asc"
+      }
+    ]
+  },
+  "interventions": {
+    "fields": [
+      "Record ID",
+      "Status",
+      "Target date",
+      "created_at",
+      "Last Modified",
+      "Current condition stage (from Conditions Data tracking)",
+      "Intervention",
+      "status_last_modified_at",
+      "Starting Measurement - all interventions",
+      "Starting Level - all interventions",
+      "Notes",
+      "Milestone Target - all interventions",
+      "Intervention's final result",
+      "last recorded milestone attainment",
+      "Last recorded persona",
+      "Ranking #"
+    ],
+    "sort": [
+      {
+        "field": "created_at",
+        "direction": "asc"
+      }
+    ]
+  },
+  "memberTask": {
+    "fields": [
+      "Record ID",
+      "Type",
+      "Status",
+      "Created",
+      "Due Date",
+      "created_at",
+      "status_last_modified_at",
+      "Data collection type",
+      "Appointment booking type",
+      "Priority",
+      "Notes",
+      "days overdue",
+      "Task duration"
+    ],
+    "sort": [
+      {
+        "field": "created_at",
+        "direction": "asc"
+      }
+    ]
+  },
+  "hntasks": {
+    "fields": [
+      "created_at",
+      "Due Date",
+      "Status",
+      "last_modified",
+      "Type",
+      "Record ID",
+      "status_last_modified_at",
+      "Task Priority",
+      "Task Notes",
+      "Auto Generated",
+      "Assignee Name",
+      "ME task type"
+    ],
+    "sort": [
+      {
+        "field": "Due Date",
+        "direction": "asc"
+      }
+    ]
+  },
+  "bp": {
+    "fields": [
+        "Record ID",
+        "Date",
+        "Summary",
+        "Average Daily Systolic",
+        "Average Daily Diastolic",
+        "Average Pulse",
+        "Type of reading",
+        "Data Source",
+        "Notes",
+        "last_modified",
+        "Morning Systolic",
+        "Morning Pulse",
+        "Evening Diastolic",
+        "Evening Pulse",
+        "BP Reading Type",
+        "Evening Systolic",
+        "Morning Diastolic"
+    ],
+    "sort": [
+      {
+        "field": "Date",
+        "direction": "asc"
+      }
+    ]
+  },
+  "dm": {
+    "fields": [
+        "Test Date",
+        "Type of reading",
+        "Record ID",
+        "Morning BS timing",
+        "Morning postprandial BS",
+        "Fasting Blood Sugar",
+        "Afternoon BS timing",
+        "Afternoon preprandial BS",
+        "Afternoon postprandial BS",
+        "Evening BS timing",
+        "Evening preprandial BS",
+        "Evening postprandial BS",
+        "HbA1c",
+        "Notes",
+        "created_at"
+    ],
+    "sort": [
+        {
+            "field": "Test Date",
+            "direction": "asc"
+        }
+    ]
+  },
+  "chl": {
+    "fields": [
+        "Test Date",
+        "Type of reading",
+        "Lipid panel test type",
+        "HDL",
+        "LDL",
+        "Total Cholesterol",
+        "Triglyceride",
+        "Record ID"
+    ],
+    "sort": [
+        {
+            "field": "Test Date",
+            "direction": "asc"
+        }
+    ]
+  },
+  "vitals": {
+    "fields": [
+        "Date",
+        "Type of Reading",
+        "Temperature",
+        "RR",
+        "SPO2",
+        "Height",
+        "Height (m)",
+        "Weight",
+        "BMI",
+        "6-Lead ECG Findings",
+        "height_latest",
+        "Muscle mass (kgs)",
+        "Body fat",
+        "Visceral fat",
+        "Waist circumference",
+        "Hip circumference",
+        "Waist:Hip ratio",
+        "Bone density",
+        "Water content",
+        "Muscle mass: weight ratio",
+        "Mid-Upper Arm Circumference(MUAC)",
+        "Notes",
+        "Record ID"
+    ],
+    "sort": [
+        {
+            "field": "Date",
+            "direction": "asc"
+        }
+    ]
+  },
+  "hmp": {
+    "fields": [
+        "HMP #",
+        "HMP Phase",
+        "HMP Day",
+        "HMP Send Date",
+        "HN Notes",
+        "created_at",
+        "Record ID",
+        "last_modified_at"
+    ],
+    "sort": [
+        {
+            "field": "created_at",
+            "direction": "asc"
+        }
+    ]
+  }
+}

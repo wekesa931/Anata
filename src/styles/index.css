@@ -109,6 +109,7 @@ body,
 #root,
 .appContainer {
   height: 100%;
+  font-family: 'Rubik';
 }
 
 .dashboard-container {
@@ -153,7 +154,7 @@ body,
 .right-pane {
   background: var(--white);
   border-left: 1px solid var(--dark-blue-10);
-  width: 25%;
+  width: 20%;
   padding-bottom: 30px;
 }
 .right-sidebar-container {
@@ -2134,4 +2135,31 @@ a {
 
 .none-transform {
   text-transform: none;
+}
+
+
+
+a.fc-event:has(.groupedEvent) {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  background-color: var(--blue-10);
+  border: 1px solid #87C1F7;
+}
+
+.fc-h-event .fc-event-main {
+  color: var(--blue-100) !important;
+  font-weight: 500;
+}
+
+a.fc-event:has(.singleEvent) {
+  background-color: var(--blue-10);
+  border: 1px solid #87C1F7;
+  border-radius: 0.5rem;
+}
+
+
+.fc-scrollgrid.fc-scrollgrid-liquid {
+  border-top: none !important;
 }
