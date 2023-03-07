@@ -61,7 +61,7 @@ function Forms() {
               id="input-with-icon-textfield"
               className="full-width"
               placeholder="Search forms"
-              onChange={(e) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const { value } = e.target
                 let formMeta = FORMS
                 if (value) {

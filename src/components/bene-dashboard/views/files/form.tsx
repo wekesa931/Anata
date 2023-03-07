@@ -71,10 +71,10 @@ function RefinedFileMetaForm({ uploadStart, uploadDocument, options }: IProps) {
     uploadDocument(meta)
   }
 
-  const onTitleChange = (e) => {
+  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value)
   }
-  const onDescriptionChange = (e) => {
+  const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(e.target.value)
   }
 

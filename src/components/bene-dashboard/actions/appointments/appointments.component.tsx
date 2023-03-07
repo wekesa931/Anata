@@ -227,7 +227,7 @@ function Appointments() {
     )
   }
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
     setSelected(value)
     setFilteredAppointments(filterByStatus(value))

@@ -37,7 +37,7 @@ function FilePasswordEncrypt(props) {
   const [encyptFile] = useMutation(ENCRYPT_FILE)
 
   const [password, setPassword] = useState('')
-  const handlePasswordChange = (event) => {
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value)
   }
 
@@ -52,7 +52,7 @@ function FilePasswordEncrypt(props) {
     encyptFile({
       variables: {
         password,
-        fileId: file.id,
+        fileId: file?.id,
       },
     })
       .then((res) => {
@@ -101,7 +101,12 @@ function Loader() {
     </div>
   )
 }
-function LoadingError({ fileMessage }) {
+
+type LoadingErrorProps = {
+  fileMessage: string
+}
+
+function LoadingError({ fileMessage }: LoadingErrorProps) {
   return (
     <div className="d-flex flex-direction-column flex-align-center margin-top-32">
       <AlertTriangle />
@@ -165,19 +170,19 @@ export default function PdfViewer(props) {
   }
 
   useEffect(() => {
-    if (file.id && file.driveUrl) {
+    if (file?.id && file?.driveUrl) {
       generateAccessFileLink({
         variables: {
           duration: 5000,
-          fileId: file.id,
+          fileId: file?.id,
         },
       }).then((res) => {
         if (!res.errors) {
           const url = res?.data?.generateLink?.link
-          const fileExtension = file.storageKey.split('.').pop()
+          const fileExtension = file?.storageKey?.split('.').pop()
           if (handledExtensions.includes(fileExtension)) {
             axios.get(url, { responseType: 'arraybuffer' }).then((result) => {
-              const blob = base64ToBlob(result.data, file.mimeType)
+              const blob = base64ToBlob(result?.data, file?.mimeType)
               const fileUrl = URL.createObjectURL(blob)
               setDisplayFile({ ...file, url: fileUrl })
             })
@@ -210,7 +215,7 @@ export default function PdfViewer(props) {
 
   const downloadFile = () => {
     const newWindow = window.open(
-      `${displayFile.url || displayFile.driveUrl}`,
+      `${displayFile?.url || displayFile?.driveUrl}`,
       '_blank',
       'noopener,noreferrer'
     )
@@ -227,12 +232,24 @@ export default function PdfViewer(props) {
     }
   }, [open])
 
-  const fileTitle = (title: string) => (
-    <Typography className="file-title">{title}</Typography>
-  )
-  const fileContent = (content: string) => (
-    <Typography className="file-title-content">{content}</Typography>
-  )
+  type FileTitleProps = {
+    title: string
+  }
+  const FileTitle = ({ title }: FileTitleProps ) => {
+    return (
+      <Typography className="file-title">{title}</Typography>
+    )
+  }
+ 
+  type FileContentProps = {
+    content: string
+  } 
+
+  const FileContent = ({ content}: FileContentProps) => {
+    return (
+      <Typography className="file-title-content">{content}</Typography>
+    )
+  }
 
   const loadingIcon = () => {
     return (
@@ -264,7 +281,7 @@ export default function PdfViewer(props) {
           id="scroll-dialog-title"
           className="d-flex align-center flex-between"
         >
-          {displayFile.title}
+          {displayFile?.title}
           <DialogActions>
             <Button autoFocus onClick={handleEncyptFile}>
               <Lock className="file-action-btn" />
@@ -302,23 +319,23 @@ export default function PdfViewer(props) {
 
                 {isDocument && displayFile?.url ? (
                   <iframe
-                    src={`${displayFile.url || displayFile.driveUrl}`}
+                    src={`${displayFile?.url || displayFile?.driveUrl}`}
                     width="900px"
                     height="600px"
                     frameBorder={0}
                     allowFullScreen
-                    title={displayFile.title}
+                    title={displayFile?.title}
                   />
                 ) : (
                   loadingIcon()
                 )}
 
                 {isImage && (
-                  <ImageLoader src={displayFile.url}>
+                  <ImageLoader src={displayFile?.url}>
                     {({ loaded, errored }: any) => {
                       if (loaded) {
                         return (
-                          <img src={displayFile.url} alt={displayFile.title} />
+                          <img src={displayFile?.url} alt={displayFile?.title} />
                         )
                       }
                       if (errored) {
@@ -332,18 +349,16 @@ export default function PdfViewer(props) {
             </Grid>
             <Grid item xs={3} style={{ borderLeft: '1px solid #e8eaed' }}>
               <div className="p-absolute">
-                {fileTitle('Category')}
-                {fileContent(displayFile.category)}
-                {fileTitle('Description')}
-                {fileContent(displayFile.description)}
-                {fileTitle('Created On')}
-                {fileContent(
-                  dayjs(displayFile.updatedAt).format('MMM DD YYYY')
-                )}
-                {fileTitle('Created By')}
-                {fileContent(displayFile.addedBy)}
-                {fileTitle('File Type')}
-                {fileContent(displayFile.mimeType)}
+                <FileTitle title="Category"/>
+                <FileContent content={displayFile?.category}/>
+                <FileTitle title="Description"/>
+                <FileContent content={displayFile?.description}/>
+                <FileTitle title="Created On"/>
+                <FileContent content={dayjs(displayFile?.updatedAt).format('MMM DD YYYY')}/>
+                <FileTitle title="Created By"/>
+                <FileContent content={displayFile?.addedBy}/>
+                <FileTitle title="File Type"/>
+                <FileContent content={displayFile?.mimeType}/>
               </div>
             </Grid>
           </Grid>
