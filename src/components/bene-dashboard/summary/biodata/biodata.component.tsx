@@ -891,10 +891,18 @@ function BioData() {
                   title="Health Goals: "
                   value={member['Health Goals']?.toString()}
                 />
-                <BioDataTableRow
-                  title={isMinor() ? 'Guardian Contact Info' : 'Contact Info:'}
-                  value={v2Member?.phone}
-                />
+                {isMinor() ? (
+                  <BioDataTableRow
+                    title="Guardian Contact Info"
+                    value={v2Member?.primary?.phones[0]?.phone}
+                  />
+                ) : (
+                  <BioDataTableRow
+                    title="Contact Info"
+                    value={v2Member?.phone}
+                  />
+                )}
+
                 {!isMinor() && (
                   <BioDataTableRow
                     title="Employer"

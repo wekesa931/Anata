@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // import * as Sentry from '@sentry/react'
 // import storage from '../../../helpers/secure-storage'
 // import constants from '../../../constants/storage'
