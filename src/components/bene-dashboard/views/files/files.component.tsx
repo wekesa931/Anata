@@ -590,16 +590,22 @@ const DrawerHeader = styled('div')(({ theme }: any) => ({
   paddingLeft: 2,
 }))
 
-function FileDetails({ file, anchorEl, id, showFile, close, open }: any) {
-  const sharingInfo = file?.sharedfileSet?.edges[0]?.node
+type RenderSectionProps = {
+  title: string
+  value: string
+}
 
-  const renderSection = (title: string, value: string) => (
+function RenderSection({ title, value }: RenderSectionProps) {
+  return (
     <Box sx={{ mt: 1, mb: 2 }}>
       <p className={styles.docInfoSubtext}>{title}</p>
       <p className={styles.docInfoText}>{value}</p>
     </Box>
   )
+}
 
+function FileDetails({ file, anchorEl, id, showFile, close, open }: any) {
+  const sharingInfo = file?.sharedfileSet?.edges[0]?.node
   return (
     <Popper id={id} open={open} anchorEl={anchorEl}>
       <Paper
@@ -621,31 +627,22 @@ function FileDetails({ file, anchorEl, id, showFile, close, open }: any) {
             </IconButton>
           </DrawerHeader>
           <Divider />
-          {renderSection(
-            'Uploaded at',
-            dayjs(file.createdAt).format("DD MMM' YYYY, HH:mm")
-          )}
-          {renderSection(
-            'Shared status',
-            file.shared ? 'Shared with member' : 'Not shared with member'
-          )}
-          {file.shared && (
+          <RenderSection title='Uploaded at' value={dayjs(file?.createdAt).format("DD MMM' YYYY, HH:mm")}/>
+          <RenderSection title='Shared status' value={file?.shared ? 'Shared with member' : 'Not shared with member'}/>
+          {file?.shared && (
             <>
-              {renderSection('Shared by', sharingInfo?.sharedBy)}
-              {renderSection('Member shared folder', sharingInfo?.folder?.name)}
-              {renderSection(
-                'Has member read',
-                sharingInfo?.read ? 'Read' : 'Not read'
-              )}
+          <RenderSection title='Shared by' value={sharingInfo?.sharedBy}/>
+          <RenderSection title='Member shared folder' value={sharingInfo?.folder?.name}/>
+          <RenderSection title='Has member read' value={sharingInfo?.read ? 'Read' : 'Not read'}/>
             </>
           )}
           <Button variant="text" onClick={(e) => showFile(e, file)}>
             View file
           </Button>
-          {file?.driveUrl.includes('https://docs.google.com') ? (
+          {file?.driveUrl?.includes('https://docs.google.com') ? (
             <Button
               variant="text"
-              onClick={() => window.open(file.driveUrl, '_blank').focus()}
+              onClick={() => window.open(file?.driveUrl, '_blank').focus()}
             >
               Edit File
             </Button>
