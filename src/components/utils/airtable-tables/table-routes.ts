@@ -54,6 +54,7 @@ const TABLE_ROUTES = {
   'Member Feedback': 'member_feedback',
   'Medications Base Sync': 'medication_base',
   'Minor HIF v2': 'minorhifv2',
+  'Minor Health Check': 'minor_health_check',
 }
 
 export default TABLE_ROUTES

@@ -22,7 +22,7 @@ const validationRules = (formMeta: any, template: any) => {
                       if (fl?.conditionType === '!') {
                         return !fl.parentValues.includes(val)
                       }
-                      return fl.parentValues.includes(val)
+                      return fl?.parentValues?.includes(val)
                     },
                     then: Yup.mixed().required(),
                     otherwise: Yup.mixed().nullable().notRequired(),
@@ -83,7 +83,7 @@ const validationRules = (formMeta: any, template: any) => {
                       if (fl?.conditionType === '!') {
                         return !fl.parentValues.includes(val)
                       }
-                      return fl.parentValues.includes(val)
+                      return fl?.parentValues?.includes(val)
                     },
                     then: Yup.array().nullable(),
                   })
@@ -130,7 +130,7 @@ const validationRules = (formMeta: any, template: any) => {
                       if (fl?.conditionType === '!') {
                         return !fl.parentValues.includes(val)
                       }
-                      return fl.parentValues.includes(val)
+                      return fl?.parentValues?.includes(val)
                     },
                     then: Yup.date().nullable().notRequired(),
                   })
@@ -181,7 +181,7 @@ const validationRules = (formMeta: any, template: any) => {
                       if (fl?.conditionType === '!') {
                         return !fl.parentValues.includes(val)
                       }
-                      return fl.parentValues.includes(val)
+                      return fl?.parentValues?.includes(val)
                     },
                     then: Yup.number().nullable().notRequired(),
                   })
@@ -219,7 +219,7 @@ const validationRules = (formMeta: any, template: any) => {
                 ...schema,
                 [fieldName]: Yup.string().when(`${fl.parentKey}`, {
                   is: (val) => {
-                    let res = fl.parentValues.includes(val)
+                    let res = fl?.parentValues?.includes(val)
                     if (fl?.conditionType === '!') {
                       res = !fl.parentValues.includes(val)
                     }
@@ -238,7 +238,7 @@ const validationRules = (formMeta: any, template: any) => {
                       if (fl?.conditionType === '!') {
                         return !fl.parentValues.includes(val)
                       }
-                      return fl.parentValues.includes(val)
+                      return fl?.parentValues?.includes(val)
                     },
                     then: Yup.string().nullable().notRequired(),
                     otherwise: Yup.string().nullable().notRequired(),

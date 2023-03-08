@@ -12,14 +12,7 @@ const updatedForms = (): TForm[] => {
     payload.push({ name: fm.name })
   })
 
-  // add the Health Check Form
-  const healthCheckForm: TForm = {
-    name: 'Minor Health Check',
-    type: 'airtableForm',
-    url: 'https://airtable.com/embed/shrJfVFD95csPXYZF?viewControls=on',
-  }
-
-  return [...payload, healthCheckForm]
+  return payload
 }
 
 const sorted = updatedForms().sort((a, b) => {
