@@ -647,8 +647,10 @@ function WorkflowPortal({
             )
           }
 
-          if (res === 'Network Error') {
-            notify('Network Error. Changes have not been updated')
+          if (res === 'Network Error' || res.error) {
+            notify(
+              'Network Error. Changes have not been updated. Please try again'
+            )
             throw new Error(res)
           }
           if (Array.isArray(res)) {
