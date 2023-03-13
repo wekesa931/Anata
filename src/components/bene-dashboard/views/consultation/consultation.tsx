@@ -57,6 +57,7 @@ function Consultation() {
           columns={columns}
           data={consultationData}
           dateColumnKey="Date of appointment"
+          filterByDate
         />
       )}
 

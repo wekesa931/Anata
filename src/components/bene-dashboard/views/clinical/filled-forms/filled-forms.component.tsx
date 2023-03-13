@@ -17,7 +17,6 @@ function FilledForms() {
       'Scribe URL (from Members)',
       'name',
       'Gender',
-      'created_at',
       'last_modified',
       'last_modified_ros',
       'Reporting Week',
@@ -163,6 +162,8 @@ function FilledForms() {
           emptyListText="No Forms found for this member"
           paginate
           modalTitle="Filled Form"
+          dateColumnKey="created_at"
+          filterByDate
         />
       )}
       {loading && (

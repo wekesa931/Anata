@@ -6,6 +6,7 @@ import List from '../../../../utils/list/list.component'
 import { useSortFilter } from '../../../../../context/sort-filter-views.context'
 import AirtableField from '../../../../../types/airtable-field'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
+import logError from '../../../../utils/error_handling/sentry'
 
 function Medications() {
   const { recId } = useParams()
@@ -123,7 +124,12 @@ function Medications() {
       id: updates.id,
       fields: { ...updates.fields },
     })
-    setEditable(false)
+      .catch((err) => {
+        logError(err)
+      })
+      .finally(() => {
+        setEditable(false)
+      })
   }
 
   const renderStartDate = (medication: any) => {
@@ -176,6 +182,7 @@ function Medications() {
           onEdit={updateMedication}
           editableFields={editableFields()}
           listItemActions={medicationListItemAction}
+          filterByDate
         />
       )}
       {loading && (

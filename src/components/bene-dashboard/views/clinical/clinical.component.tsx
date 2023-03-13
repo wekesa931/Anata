@@ -5,20 +5,25 @@ import FilledForms from './filled-forms/filled-forms.component'
 import Appointments from './appointments/appointments.component'
 import Medications from './medications/medications.component'
 import Consultation from '../consultation/consultation'
+import DateFilterView from './date-filter.component'
+import styles from './date-filter.component.css'
 
 function Clinical() {
   return (
-    <div className="flex-wrap">
-      <div style={{ flex: 1, marginRight: '24px' }}>
-        <Consultation />
-        <Labs />
-        <Vitals />
-      </div>
-      <div style={{ flex: 1 }}>
-        <div className="margin-bottom-16">
-          <FilledForms />
-          <Medications />
-          <Appointments />
+    <div>
+      <DateFilterView />
+      <div className="flex-wrap">
+        <div className={styles.containerFlex}>
+          <Consultation />
+          <Labs />
+          <Vitals />
+        </div>
+        <div className={styles.flex1}>
+          <div className="margin-bottom-16">
+            <FilledForms />
+            <Medications />
+            <Appointments />
+          </div>
         </div>
       </div>
     </div>

@@ -1,0 +1,50 @@
+.title {
+    font-family: Rubik;
+    color: var(--dark-blue-50);
+    font-size: 0.75rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    height: 100%;
+    width: 100%;
+    gap: 0;
+    margin: 0.5rem 0;   
+    margin-bottom: 1rem;
+}
+
+.button {
+    border-radius: 0.75rem !important;
+    text-transform: uppercase;
+    height: 1.5rem !important;
+    color: var(--dark-blue-100);    
+}
+
+.buttonSuccess {
+    background-color: var(--orange-70);
+    color: var(--white-100);
+}
+
+.dateRangeContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    height: 100%;
+    width: 100%;
+    gap: 0;
+    margin: 0.5rem 0;   
+    margin-bottom: 1rem;
+}
+
+.containerFlex {
+    flex: 1;
+    margin-right: 1.5rem;
+  }
+  
+  .flex1 {
+    flex: 1;
+  }

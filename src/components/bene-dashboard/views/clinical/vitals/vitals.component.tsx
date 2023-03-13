@@ -34,6 +34,7 @@ function OtherVitals({ otherVitals }: OtherVitalsInfoProps) {
         columns={columns}
         data={otherVitals}
         dateColumnKey="Date"
+        filterByDate
       />
     )
   )

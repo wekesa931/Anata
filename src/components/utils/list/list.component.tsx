@@ -8,6 +8,10 @@ import { useSortFilter } from '../../../context/sort-filter-views.context'
 import ListModal from './list-modal.component'
 import analytics from '../../../helpers/segment'
 import AirtableField from '../../../types/airtable-field'
+import {
+  useDateRangeFilter,
+  makeFilterListDataByDate,
+} from '../../../context/filter-views.context'
 
 type ListProps = {
   list: { name: string; data: any }[]
@@ -25,6 +29,7 @@ type ListProps = {
   editableFields?: AirtableField[]
   dueDate?: (data: any) => string | JSX.Element | null
   conditionComponent?: boolean
+  filterByDate?: boolean
 }
 
 function List({
@@ -42,6 +47,7 @@ function List({
   listItemActions,
   editableFields,
   conditionComponent,
+  filterByDate = false,
 }: ListProps) {
   const [isHovering, setIsHovering] = useState<number>()
   const [openItem, setOpenItem] = useState<{
@@ -57,6 +63,9 @@ function List({
   const {
     ops: { sort: globalDateSort },
   } = useSortFilter()
+  const { dateRange } = useDateRangeFilter()
+
+  const filterDataByDate = makeFilterListDataByDate(filterByDate, dateRange)
 
   useEffect(() => {
     const sortAsc = (arr: any[]) => {
@@ -85,9 +94,15 @@ function List({
       return sortedArr
     }
     return globalDateSort === 'asc'
-      ? setSortedList(sortAsc(list))
-      : setSortedList(sortDesc(list))
-  }, [list, dateColumnKey, globalDateSort])
+      ? setSortedList(
+          filterDataByDate(sortAsc(list), dateColumnKey || 'created_at')
+        )
+      : setSortedList(
+          filterDataByDate(sortDesc(list), dateColumnKey || 'created_at')
+        )
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [list, dateColumnKey, globalDateSort, filterByDate, dateRange])
 
   useEffect(() => {
     if (paginate && sortedList.length > defaultNoElements) {

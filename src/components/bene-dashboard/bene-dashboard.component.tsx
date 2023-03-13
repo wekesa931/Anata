@@ -9,6 +9,7 @@ import ErrorBoundary from '../error-boundary/error-boundary.component'
 import analytics from '../../helpers/segment'
 import { MemberProvider } from '../../context/member.context'
 import { FormProvider } from '../../context/forms-context'
+import { DateFilterProvider } from '../../context/filter-views.context'
 
 function PatientDashboard() {
   const [recId, setRecId] = useState<string>()
@@ -40,18 +41,20 @@ function PatientDashboard() {
       {(response: any) => (
         <MemberProvider member={response}>
           <FormProvider>
-            <div className={styles.container}>
-              <ErrorBoundary>
-                <BioData />
-              </ErrorBoundary>
-              <div className="bene-views">
-                <Views />
-              </div>
+            <DateFilterProvider>
+              <div className={styles.container}>
+                <ErrorBoundary>
+                  <BioData />
+                </ErrorBoundary>
+                <div className="bene-views">
+                  <Views />
+                </div>
 
-              <div className="right-pane">
-                <Actions />
+                <div className="right-pane">
+                  <Actions />
+                </div>
               </div>
-            </div>
+            </DateFilterProvider>
           </FormProvider>
         </MemberProvider>
       )}

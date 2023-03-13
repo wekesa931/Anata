@@ -8,6 +8,10 @@ import Modal from '../modals/modal.component'
 import Tooltip from '../tooltip/tooltip.component'
 import { useSortFilter } from '../../../context/sort-filter-views.context'
 import analytics from '../../../helpers/segment'
+import {
+  useDateRangeFilter,
+  makeFilterDataByDate,
+} from '../../../context/filter-views.context'
 
 type TableProps = {
   title: string
@@ -22,6 +26,7 @@ type TableProps = {
   data: any[]
   dateColumnKey: string
   modalFields?: string[]
+  filterByDate?: boolean
 }
 
 function Table({
@@ -30,6 +35,7 @@ function Table({
   data,
   dateColumnKey,
   modalFields,
+  filterByDate = false,
 }: TableProps) {
   const {
     ops: { sort: globalDateSort },
@@ -39,6 +45,9 @@ function Table({
   const [clickedRow, setClickedRow] = useState<any>()
   const [modalOpen, setModalOpen] = useState(false)
   const [sortedData, setSortedData] = useState(data)
+  const { dateRange } = useDateRangeFilter()
+
+  const filterDataByDate = makeFilterDataByDate(filterByDate, dateRange)
 
   useEffect(() => {
     const sortAsc = (arr: any[]) => {
@@ -58,9 +67,11 @@ function Table({
     }
 
     return globalDateSort === 'asc'
-      ? setSortedData(sortAsc(data))
-      : setSortedData(sortDesc(data))
-  }, [data, dateColumnKey, globalDateSort])
+      ? setSortedData(filterDataByDate(sortAsc(data), dateColumnKey))
+      : setSortedData(filterDataByDate(sortDesc(data), dateColumnKey))
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, dateColumnKey, globalDateSort, filterByDate, dateRange])
 
   useEffect(() => {
     setDisplayedData(

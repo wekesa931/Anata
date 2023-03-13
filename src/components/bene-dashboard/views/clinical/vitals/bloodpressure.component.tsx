@@ -248,6 +248,12 @@ function BloodPressure() {
   return (
     <div className={`${styles.tableContainer} margin-top-16`}>
       <h4 className={styles.vitalsHeading}>Blood Pressure Averages</h4>
+      <div className={styles.infoBlock}>
+        <p className={styles.infoText}>
+          To give you maximum value, we are allowing you to filter these
+          averages without affecting other tables
+        </p>
+      </div>
       <div style={{ height: 400, width: 610, justifyContent: 'center' }}>
         <DataGrid
           className={styles.table}

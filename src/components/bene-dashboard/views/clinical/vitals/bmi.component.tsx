@@ -37,6 +37,7 @@ function Bmi({ bmiInfo }: BMIProps) {
         columns={columns}
         data={bmiInfo}
         dateColumnKey="Date"
+        filterByDate
       />
     )
   )

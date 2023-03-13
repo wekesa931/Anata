@@ -150,6 +150,7 @@ function Appointments() {
           columns={columns}
           data={filteredAppointments}
           dateColumnKey="start_date_time"
+          filterByDate
         />
       )}
       {loading && (

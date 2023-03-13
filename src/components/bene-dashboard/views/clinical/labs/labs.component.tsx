@@ -74,6 +74,7 @@ function Lipids() {
           columns={columns}
           data={lipids}
           dateColumnKey="Test Date"
+          filterByDate
         />
       )}
       {loading && (
@@ -134,6 +135,7 @@ function GlucoseMonitoring() {
           columns={columns}
           data={glucose}
           dateColumnKey="Test Date"
+          filterByDate
         />
       )}
       {loading && (
