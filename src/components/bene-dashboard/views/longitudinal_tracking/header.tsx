@@ -3,20 +3,18 @@ import FullCalendar from '@fullcalendar/react'
 import dayjs, { Dayjs } from 'dayjs'
 import {
   Button,
-  Tooltip,
   Typography,
   Stack,
-  OutlinedInput,
-  Checkbox,
-  ListItemText,
   ButtonGroup,
   ToggleButtonGroup,
   ToggleButton,
+  Popper,
+  ClickAwayListener,
+  Paper,
+  Grid,
+  Divider,
 } from '@mui/material'
-import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from 'react-feather'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import { Check, ChevronDown, ChevronLeft, ChevronRight } from 'react-feather'
 import styles from './longitudinal.component.css'
 import { IResource } from './modules'
 
@@ -37,21 +35,8 @@ export type TCalendarHeader = {
   handleNext: () => void
 }
 
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-}
-
 export function CalendarHeader({
   calendarRef,
-  toMaximize,
-  setToMaximize,
   dateRange,
   setDateRange,
   currentView,
@@ -62,6 +47,8 @@ export function CalendarHeader({
   handleNext,
   handlePrev,
 }: TCalendarHeader) {
+  const [anchroEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+
   useEffect(() => {
     const callApi = calendarRef.current?.getApi()
 
@@ -117,9 +104,17 @@ export function CalendarHeader({
     ])
   }
 
-  const handleChange = (event: SelectChangeEvent<typeof selectedResources>) => {
-    const { value } = event.target
-    handleSelectResource(typeof value === 'string' ? value.split(',') : value)
+  const toggleSelectResouce = (resourceTitle: string) => {
+    const currentIndex = selectedResources.indexOf(resourceTitle)
+    const newSelectedResources = [...selectedResources]
+
+    if (currentIndex === -1) {
+      newSelectedResources.push(resourceTitle)
+    } else {
+      newSelectedResources.splice(currentIndex, 1)
+    }
+
+    handleSelectResource(newSelectedResources)
   }
 
   return (
@@ -159,7 +154,7 @@ export function CalendarHeader({
           direction="row"
           alignItems="center"
           gap={3}
-          justifyContent="space-evenly"
+          justifyContent="space-between"
           sx={{ width: '100%' }}
         >
           <Typography
@@ -199,34 +194,92 @@ export function CalendarHeader({
               6M
             </ToggleButton>
           </ToggleButtonGroup>
-          <FormControl>
-            <Select
-              id="demo-simple-resources"
-              multiple
-              value={selectedResources}
-              onChange={handleChange}
-              input={<OutlinedInput size="small" />}
-              renderValue={(selected) =>
-                selected.length > 0
-                  ? `Events (${selected.length})`
-                  : 'Events (0)'
-              }
-              MenuProps={MenuProps}
-              size="small"
-            >
-              {resources.map((resource) => (
-                <MenuItem key={resource?.id} value={resource.title}>
-                  <Checkbox
-                    checked={selectedResources.indexOf(resource.title) > -1}
-                  />
-                  <ListItemText primary={resource.title} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+
+          <Button
+            variant="text"
+            startIcon={<ChevronDown />}
+            sx={{ color: 'var(--dark-blue-100)', fontSize: 14 }}
+            size="small"
+            onClick={(e: React.MouseEvent<HTMLElement>) =>
+              setAnchorEl(anchroEl ? null : e.currentTarget)
+            }
+          >
+            Events ({selectedResources.length})
+          </Button>
+
+          <Popper
+            open={Boolean(anchroEl)}
+            anchorEl={anchroEl}
+            placement="bottom-start"
+            id={anchroEl ? 'details' : undefined}
+            sx={{ zIndex: 1 }}
+          >
+            <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
+              <Paper sx={{ p: 2, width: 350 }} elevation={2}>
+                <Grid container direction="row">
+                  {resources.map((resource) => (
+                    <Grid item xs={6} key={resource.id}>
+                      <Button
+                        variant="text"
+                        size="small"
+                        onClick={() => toggleSelectResouce(resource.title)}
+                        startIcon={
+                          selectedResources.includes(resource.title) ? (
+                            <Check />
+                          ) : null
+                        }
+                        sx={{
+                          fontSize: 14,
+                          textAlign: 'left',
+                          textTransform: 'none',
+                        }}
+                      >
+                        <span
+                          className={
+                            selectedResources.includes(resource.title)
+                              ? styles.selected
+                              : styles.hidden
+                          }
+                        >
+                          {resource.title}
+                        </span>
+                      </Button>
+                    </Grid>
+                  ))}
+                </Grid>
+                <Divider />
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  spacing={2}
+                  sx={{ mt: 2 }}
+                >
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => handleSelectResource([])}
+                  >
+                    Hide all
+                  </Button>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() =>
+                      handleSelectResource(
+                        resources.map((resource) => resource.title)
+                      )
+                    }
+                  >
+                    Show All
+                  </Button>
+                </Stack>
+              </Paper>
+            </ClickAwayListener>
+          </Popper>
         </Stack>
 
-        <Tooltip title={toMaximize ? 'Full screen' : 'Minimize'}>
+        {/* <Tooltip title={toMaximize ? 'Full screen' : 'Minimize'}>
           <Button
             variant="outlined"
             sx={{ ml: 2 }}
@@ -235,7 +288,7 @@ export function CalendarHeader({
           >
             {toMaximize ? <Maximize2 /> : <Minimize2 />}
           </Button>
-        </Tooltip>
+        </Tooltip> */}
       </Stack>
     </header>
   )

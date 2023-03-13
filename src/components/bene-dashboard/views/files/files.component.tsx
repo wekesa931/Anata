@@ -627,13 +627,27 @@ function FileDetails({ file, anchorEl, id, showFile, close, open }: any) {
             </IconButton>
           </DrawerHeader>
           <Divider />
-          <RenderSection title='Uploaded at' value={dayjs(file?.createdAt).format("DD MMM' YYYY, HH:mm")}/>
-          <RenderSection title='Shared status' value={file?.shared ? 'Shared with member' : 'Not shared with member'}/>
+          <RenderSection
+            title="Uploaded at"
+            value={dayjs(file?.createdAt).format("DD MMM' YYYY, HH:mm")}
+          />
+          <RenderSection
+            title="Shared status"
+            value={
+              file?.shared ? 'Shared with member' : 'Not shared with member'
+            }
+          />
           {file?.shared && (
             <>
-          <RenderSection title='Shared by' value={sharingInfo?.sharedBy}/>
-          <RenderSection title='Member shared folder' value={sharingInfo?.folder?.name}/>
-          <RenderSection title='Has member read' value={sharingInfo?.read ? 'Read' : 'Not read'}/>
+              <RenderSection title="Shared by" value={sharingInfo?.sharedBy} />
+              <RenderSection
+                title="Member shared folder"
+                value={sharingInfo?.folder?.name}
+              />
+              <RenderSection
+                title="Has member read"
+                value={sharingInfo?.read ? 'Read' : 'Not read'}
+              />
             </>
           )}
           <Button variant="text" onClick={(e) => showFile(e, file)}>

@@ -200,7 +200,9 @@ function FlagForReview() {
                       <label htmlFor="end">
                         To
                         <Field
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEndDate(new Date(e.target.value))}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setEndDate(new Date(e.target.value))
+                          }
                           className={`form-control ${styles.filter}`}
                           type="date"
                           value={dayjs(endDate).format('YYYY-MM-DD')}
@@ -215,7 +217,9 @@ function FlagForReview() {
                       Status
                       <Field
                         as="select"
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilter(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setFilter(e.target.value)
+                        }
                         className={`form-control ${styles.filter}`}
                         id="flagged"
                         value={filter}

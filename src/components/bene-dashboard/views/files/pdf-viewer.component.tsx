@@ -235,20 +235,16 @@ export default function PdfViewer(props) {
   type FileTitleProps = {
     title: string
   }
-  const FileTitle = ({ title }: FileTitleProps ) => {
-    return (
-      <Typography className="file-title">{title}</Typography>
-    )
+  function FileTitle({ title }: FileTitleProps) {
+    return <Typography className="file-title">{title}</Typography>
   }
- 
+
   type FileContentProps = {
     content: string
-  } 
+  }
 
-  const FileContent = ({ content}: FileContentProps) => {
-    return (
-      <Typography className="file-title-content">{content}</Typography>
-    )
+  function FileContent({ content }: FileContentProps) {
+    return <Typography className="file-title-content">{content}</Typography>
   }
 
   const loadingIcon = () => {
@@ -335,7 +331,10 @@ export default function PdfViewer(props) {
                     {({ loaded, errored }: any) => {
                       if (loaded) {
                         return (
-                          <img src={displayFile?.url} alt={displayFile?.title} />
+                          <img
+                            src={displayFile?.url}
+                            alt={displayFile?.title}
+                          />
                         )
                       }
                       if (errored) {
@@ -349,16 +348,18 @@ export default function PdfViewer(props) {
             </Grid>
             <Grid item xs={3} style={{ borderLeft: '1px solid #e8eaed' }}>
               <div className="p-absolute">
-                <FileTitle title="Category"/>
-                <FileContent content={displayFile?.category}/>
-                <FileTitle title="Description"/>
-                <FileContent content={displayFile?.description}/>
-                <FileTitle title="Created On"/>
-                <FileContent content={dayjs(displayFile?.updatedAt).format('MMM DD YYYY')}/>
-                <FileTitle title="Created By"/>
-                <FileContent content={displayFile?.addedBy}/>
-                <FileTitle title="File Type"/>
-                <FileContent content={displayFile?.mimeType}/>
+                <FileTitle title="Category" />
+                <FileContent content={displayFile?.category} />
+                <FileTitle title="Description" />
+                <FileContent content={displayFile?.description} />
+                <FileTitle title="Created On" />
+                <FileContent
+                  content={dayjs(displayFile?.updatedAt).format('MMM DD YYYY')}
+                />
+                <FileTitle title="Created By" />
+                <FileContent content={displayFile?.addedBy} />
+                <FileTitle title="File Type" />
+                <FileContent content={displayFile?.mimeType} />
               </div>
             </Grid>
           </Grid>
