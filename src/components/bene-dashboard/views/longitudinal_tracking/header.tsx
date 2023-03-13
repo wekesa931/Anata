@@ -33,6 +33,8 @@ export type TCalendarHeader = {
   selectedResources: string[]
   resources: IResource[]
   handleSelectResource: (selectedResources: string[]) => void
+  handlePrev: () => void
+  handleNext: () => void
 }
 
 const ITEM_HEIGHT = 48
@@ -57,6 +59,8 @@ export function CalendarHeader({
   selectedResources,
   handleSelectResource,
   resources,
+  handleNext,
+  handlePrev,
 }: TCalendarHeader) {
   useEffect(() => {
     const callApi = calendarRef.current?.getApi()
@@ -94,10 +98,10 @@ export function CalendarHeader({
     if (callApi) {
       switch (direction) {
         case 'prev':
-          callApi.prev()
+          handlePrev()
           break
         case 'next':
-          callApi.next()
+          handleNext()
           break
         case 'today':
           callApi.today()

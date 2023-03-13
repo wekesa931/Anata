@@ -1,7 +1,7 @@
 import React, { useEffect, useState, RefObject } from 'react'
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline'
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import { useParams } from 'react-router-dom'
 import { Modal, Paper } from '@mui/material'
 import { useLazyQuery } from '@apollo/client'
@@ -65,6 +65,8 @@ function LongitudinalTable({
     documents
   )
   const [selectedResources, setSelectedResources] = useState<IResource[]>([])
+  const [initialDate, setInitialDate] = useState<Dayjs>(dayjs())
+
   useEffect(() => {
     setSelectedResources(longitudinalData?.getResources() || [])
 
@@ -108,8 +110,25 @@ function LongitudinalTable({
 
   useEffect(() => {
     const callApi = calendarRef.current?.getApi()
+
     if (callApi) {
       callApi.changeView(currentView)
+      let date
+
+      switch (currentView) {
+        case 'resourceThreeMonths':
+          date = dayjs().subtract(2, 'months')
+          setInitialDate(date)
+          callApi.gotoDate(date.toDate())
+          break
+        case 'resourceSixMonths':
+          date = dayjs().subtract(5, 'months')
+          setInitialDate(date)
+          callApi.gotoDate(date.toDate())
+          break
+        default:
+          setInitialDate(dayjs())
+      }
     }
 
     const start = callApi?.view.activeStart
@@ -162,6 +181,43 @@ function LongitudinalTable({
     return null
   }
 
+  const handlePrev = () => {
+    // when you click previous you should set the start date
+    const calApi = calendarRef.current?.getApi()
+    if (calApi) {
+      const start = calApi.view.currentStart
+      let currentStart
+      switch (currentView) {
+        case 'resourceThreeMonths':
+        case 'resourceSixMonths':
+          currentStart = dayjs(start).subtract(1, 'month')
+          setInitialDate(currentStart)
+          calApi.gotoDate(currentStart.toDate())
+          break
+        default:
+          calApi.prev()
+      }
+    }
+  }
+
+  const handleNext = () => {
+    const calApi = calendarRef.current?.getApi()
+    if (calApi) {
+      const start = calApi.view.currentStart
+      let currentStart
+      switch (currentView) {
+        case 'resourceThreeMonths':
+        case 'resourceSixMonths':
+          currentStart = dayjs(start).add(1, 'month')
+          setInitialDate(currentStart)
+          calApi.gotoDate(currentStart.toDate())
+          break
+        default:
+          calApi.next()
+      }
+    }
+  }
+
   return (
     <div>
       <CalendarHeader
@@ -175,6 +231,8 @@ function LongitudinalTable({
         selectedResources={selectedResources.map((resource) => resource.title)}
         resources={longitudinalData?.getResources() || []}
         handleSelectResource={handleSelectResource}
+        handlePrev={handlePrev}
+        handleNext={handleNext}
       />
       {isLoading ? (
         <Loading />
@@ -185,6 +243,7 @@ function LongitudinalTable({
           plugins={[resourceTimelinePlugin]}
           initialView="resourceMonthly"
           headerToolbar={false}
+          initialDate={initialDate.toDate()}
           views={{
             resourceThreeMonths: {
               type: 'resourceTimeline',
