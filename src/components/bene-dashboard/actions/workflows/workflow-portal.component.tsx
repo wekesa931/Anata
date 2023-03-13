@@ -1,3 +1,4 @@
+/* eslint-disable no-console, no-control-regex */
 import React, { useState, useEffect } from 'react'
 import {
   Accordion,
@@ -647,7 +648,7 @@ function WorkflowPortal({
             )
           }
 
-          if (res === 'Network Error' || res.error) {
+          if (typeof res === 'string') {
             notify(
               'Network Error. Changes have not been updated. Please try again'
             )
