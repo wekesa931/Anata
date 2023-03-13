@@ -2210,18 +2210,82 @@ export default [
         helper: '',
       },
       {
-        id: 'fldJ88BmfLBEDlgh5',
-        name: 'Providers',
+        id: 'fldNKv1UvsAHQtjJ7',
+        name: 'Facilities from Provider base',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldGfOttut3SPqnHL',
+        symmetricColumnId: 'fld7a0xDiFGwtl0AP',
         unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblm1g2udT6J8TOzt',
+        relationship: 'one',
+        foreignTableId: 'tblU94ZnFmMT7S0o0',
         required: false,
         helper: '',
+      },
+      {
+        id: 'fldb62TqEvIfNgSMx',
+        name: 'Other Facility',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Fill in the Facility not found in the provider base',
+        parentKey: 'Specialists from Provider Base',
+        parentValues: ['OTHER'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Specialists from Provider Base'])) {
+            return ['OTHER'].some((r) =>
+              values['Specialists from Provider Base'].includes(r)
+            )
+          }
+          return ['OTHER'].includes(values['Specialists from Provider Base'])
+        },
+      },
+      {
+        id: 'fldIGh0a3iL16e4GI',
+        name: 'Specialists from Provider Base',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldqLEmeE6Q11L1tW',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblPpf5F81JypdC9k',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldeCfGYt1fSZ1uTY',
+        name: 'Other Specialist',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Fill in the Specialist not found in the provider base',
+        parentKey: 'Specialists from Provider Base',
+        parentValues: ['reco4phjmLbZai3dD'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Specialists from Provider Base'])) {
+            return ['reco4phjmLbZai3dD'].some((r) =>
+              values['Specialists from Provider Base'].includes(r)
+            )
+          }
+          return ['reco4phjmLbZai3dD'].includes(
+            values['Specialists from Provider Base']
+          )
+        },
       },
       {
         id: 'fldM5JtlRk1GiUnAZ',
@@ -3023,6 +3087,88 @@ export default [
         foreignTableId: null,
         required: true,
         helper: '',
+      },
+      {
+        id: 'fldNaBGUBnt0vfVvk',
+        name: 'Refill facility from Provider base',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldCRGwZg7SgcW1sq',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblU94ZnFmMT7S0o0',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldnBDiS3bvcOOweC',
+        name: 'Other refill facility',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        parentKey: 'Refill facility from Provider base',
+        parentValues: ['OTHER'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Refill facility from Provider base'])) {
+            return ['OTHER'].some((r) =>
+              values['Refill facility from Provider base'].includes(r)
+            )
+          }
+          return ['OTHER'].includes(
+            values['Refill facility from Provider base']
+          )
+        },
+      },
+      {
+        id: 'fldLG9PUQxV3rbiPz',
+        name: 'Prescribing facility from Provider base',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldKz9n3g1RE3macs',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblU94ZnFmMT7S0o0',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldMg2J8OnyeH8DpA',
+        name: 'Other prescribing facility',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        parentKey: 'Prescribing facility from Provider base',
+        parentValues: ['OTHER'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(values['Prescribing facility from Provider base'])
+          ) {
+            return ['OTHER'].some((r) =>
+              values['Prescribing facility from Provider base'].includes(r)
+            )
+          }
+          return ['OTHER'].includes(
+            values['Prescribing facility from Provider base']
+          )
+        },
       },
       {
         id: 'fldUUW2FmQ2bCmtCh',
