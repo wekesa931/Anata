@@ -2639,8 +2639,31 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: 'Please select the next steps to be taken after this baseline',
+      },
+      {
+        id: 'fldyhH53h0a3Ncxuy',
+        name: 'Next Steps (Others)',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Next steps',
+        parentValues: ['Others'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Next steps'])) {
+            return ['Others'].some((r) => values['Next steps'].includes(r))
+          }
+          return ['Others'].includes(values['Next steps'])
+        },
       },
       {
         id: 'fldCid3k9MRImOQta',
