@@ -112,6 +112,7 @@ const MEMBER_DETAILS_QUERY = gql`
               maritalStatus
             }
             relationshipToPrimary
+            primaryMemberAntaraId
           }
           primary {
             antaraId

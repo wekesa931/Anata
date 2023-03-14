@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   TextField,
   FormControl,
@@ -11,6 +11,7 @@ import {
   Grid,
   Typography,
   FormHelperText,
+  CircularProgress,
 } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
@@ -22,6 +23,10 @@ import { throttle } from 'lodash'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import parse from 'autosuggest-highlight/parse'
 import { geocodeByPlaceId } from 'react-google-places-autocomplete'
+import { Person } from '@mui/icons-material'
+import useMemberSearch, {
+  SearchResultType,
+} from '../../../../../../context/search-context'
 
 /** Form field configurations */
 export type FormFieldType = {
@@ -569,6 +574,124 @@ export function FormPlacesField({
           </li>
         )
       }}
+    />
+  )
+}
+
+type FormMemberSearchFieldType = {
+  id: string
+  label: string
+  handleChange: (value: string) => void
+  initialValue: string
+  required?: boolean
+  errors?: string
+  name: string
+}
+
+export function FormMemberSearchField({
+  id,
+  label,
+  handleChange,
+  initialValue,
+  required = false,
+  errors,
+}: FormMemberSearchFieldType) {
+  const [value, setValue] = React.useState<SearchResultType | null>(null)
+  const {
+    search,
+    loading,
+    results,
+    getMemberDetails,
+    loadingMember,
+    memberDetails,
+  } = useMemberSearch()
+  const [options, setOptions] = useState<SearchResultType[]>([])
+
+  useEffect(() => {
+    if (initialValue && !value) {
+      getMemberDetails(initialValue)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    setOptions(results)
+
+    if (memberDetails && results.length === 0) {
+      setValue(memberDetails)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [results, memberDetails])
+
+  const handleSearchChange = (event: any, newValue: any) => {
+    const antaraId = (newValue as SearchResultType)?.antaraId
+    setValue(newValue)
+    handleChange(antaraId)
+  }
+
+  const handleSearch = (event: React.SyntheticEvent, query: string) => {
+    if (query.length > 3) {
+      search(query)
+    }
+  }
+
+  return (
+    <Autocomplete
+      id={id}
+      key={id}
+      options={options}
+      loading={loading || loadingMember}
+      autoComplete
+      filterSelectedOptions
+      getOptionLabel={(option) => option?.displayName}
+      size="small"
+      value={value}
+      fullWidth
+      onChange={handleSearchChange}
+      onInputChange={handleSearch}
+      noOptionsText="Search members by name or antara id"
+      renderOption={(props, option) => {
+        return (
+          <li {...props}>
+            <Grid container alignItems="center">
+              <Grid item>
+                <Box
+                  component={Person}
+                  sx={{ color: 'text.secondary', mr: 2 }}
+                />
+              </Grid>
+              <Grid item xs>
+                <Typography variant="body2" color="text.secondary">
+                  {option?.displayName}
+                </Typography>
+              </Grid>
+            </Grid>
+          </li>
+        )
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          fullWidth
+          error={!!errors}
+          helperText={errors}
+          required={required}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
     />
   )
 }

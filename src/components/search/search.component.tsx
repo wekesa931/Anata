@@ -1,39 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Downshift from 'downshift'
-import { throttle } from 'throttle-debounce'
 import { Link, useNavigate } from 'react-router-dom'
-import { useLazyQuery } from '@apollo/client'
 import SearchIcon from '../../assets/img/icons/search.svg'
 import CloseIcon from '../../assets/img/icons/close.svg'
 import LoadingIcon from '../../assets/img/icons/loading.svg'
 import styles from './search.component.css'
 import analytics from '../../helpers/segment'
-import { SEARCH_MEMBERS } from '../../gql/members'
-import calcAge from '../bene-dashboard/summary/biodata/utils'
+import useMemberSearch from '../../context/search-context'
 
 interface IProps {
   unknownMemberSearch?: boolean
   memberInfo?: (info: any) => void
-}
-
-interface resultItemTypeNode {
-  antaraId: string
-  birthDate: string
-  details: {
-    sex: {
-      sex: string
-    }
-    fullName: string
-    airtableRecordId: string
-  }
-  status: {
-    employer: {
-      name: string
-    }
-  }
-}
-interface resultItemType {
-  node: resultItemTypeNode
 }
 
 interface searchResultType {
@@ -47,62 +24,8 @@ interface searchResultType {
 }
 
 function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
-  const [results, setResults] = useState<Array<searchResultType>>([])
   const navigate = useNavigate()
-
-  const [search, { loading, data }] = useLazyQuery(SEARCH_MEMBERS, {
-    context: {
-      clientName: 'v2',
-    },
-  })
-
-  const getSexAccronym = (sex: string) => {
-    if (sex?.toLowerCase() === 'male') return 'M'
-    if (sex?.toLowerCase() === 'female') return 'F'
-    return ''
-  }
-
-  useEffect(() => {
-    if (data) {
-      const searchResults =
-        data?.membersSearch?.edges?.map(({ node }: resultItemType) => {
-          const fullName = node?.details?.fullName
-          const age = calcAge(node?.birthDate)
-          const sex = node?.details?.sex?.sex
-          const employerName = node?.status?.employer?.name
-
-          const displayName = `${fullName} (${
-            node.antaraId
-          }) - ${age} yrs [${getSexAccronym(sex)}] - ${employerName}`
-
-          return {
-            fullName,
-            antaraId: node.antaraId,
-            age,
-            airtableRecordId: node?.details?.airtableRecordId,
-            sex,
-            displayName,
-            employerName,
-          }
-        }) || []
-
-      setResults(searchResults)
-    }
-  }, [data])
-
-  const searchMembers = (q: string) => {
-    const throttleFunc = throttle(
-      1000,
-      () => {
-        if (q && q.length >= 4) {
-          search({ variables: { query: q } })
-        }
-      },
-      { noTrailing: true, debounceMode: true }
-    )
-
-    return throttleFunc()
-  }
+  const { search, loading, results, error } = useMemberSearch()
 
   const setMemberInfo = (info: any) => {
     if (memberInfo) {
@@ -133,7 +56,7 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
     <Downshift
       onChange={onResultClicked}
       itemToString={(item) => (item ? `${item?.fullName}` : '')}
-      onInputValueChange={searchMembers}
+      onInputValueChange={search}
     >
       {({
         getInputProps,
@@ -220,7 +143,7 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
               )}
               {inputValue && results.length === 0 && (
                 <div className={styles.noResultWrap}>
-                  {inputValue.length >= 4 ? (
+                  {inputValue.length >= 4 || error ? (
                     <>
                       <span className={styles.noResultMsg}>
                         Your search - <strong>{inputValue}</strong> - did not

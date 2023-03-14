@@ -82,6 +82,7 @@ export type V2MemberType = {
   dependents?: InsuranceDetailsType[]
   primary: InsuranceDetailsType
   otherDependents: InsuranceDetailsType[]
+  primaryMemberAntaraId?: string
 }
 
 type RawPhoneType = {
@@ -130,6 +131,7 @@ export type V2MemberQueryType = {
     lastName?: string
     intercomUrl?: string
     intercomRecordId?: string
+    airtableRecordId?: string
     intercomUserId?: string
     sex?: {
       sex?: string

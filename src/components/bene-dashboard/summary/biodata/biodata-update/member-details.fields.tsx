@@ -384,6 +384,21 @@ export const getFormFields = (lookups: LookupData) => {
         },
       ],
     },
+    {
+      id: 'primary-member-group',
+      type: 'group',
+      label: 'Primary Member',
+      dataIndex: '',
+      items: [
+        {
+          id: 'primaryMember',
+          type: 'search',
+          dataIndex: 'primaryMemberAntaraId',
+          label: 'Primary Member',
+          stateKey: 'memberDetails',
+        },
+      ],
+    },
     ...insuranceFields,
     {
       id: 'contact-info-group',

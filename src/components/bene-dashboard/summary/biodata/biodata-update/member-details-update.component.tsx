@@ -119,6 +119,7 @@ export const createInitialFormState = (member: V2MemberType) => {
       middleName: member?.middleName,
       sex: member?.sex,
       maritalStatus: member?.maritalStatus,
+      primaryMemberAntaraId: member?.primaryMemberAntaraId,
     },
     memberPhones: member?.phones,
     memberContact: {

@@ -1037,16 +1037,16 @@ export const LongitudinalData = (
     data.set('hmp', hmp)
   }
 
-  const addInteractions = (interactionsData?: InteractionsData[]) => {
-    if (!interactionsData) return
-    const interactions = Interactions(interactionsData)
-    data.set('interactions', interactions)
+  const addInteractions = (rawInteractionsData?: InteractionsData[]) => {
+    if (!rawInteractionsData) return
+    const parsed = Interactions(rawInteractionsData)
+    data.set('interactions', parsed)
   }
 
   const addDocuments = (documentsData?: IDocument[]) => {
     if (!documentsData) return
-    const documents = Documents(documentsData)
-    data.set('documents', documents)
+    const docs = Documents(documentsData)
+    data.set('documents', docs)
   }
 
   addLongitudinalData(longitudinalData)

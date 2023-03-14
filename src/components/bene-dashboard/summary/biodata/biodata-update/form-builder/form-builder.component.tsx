@@ -9,6 +9,7 @@ import {
   FormPlacesField,
   FormAutoCompleteField,
   FormFieldType,
+  FormMemberSearchField,
 } from './form-elements.component'
 import styles from './form-builder.component.css'
 
@@ -110,6 +111,23 @@ function FormBuilder(props: FormBuilderProps) {
     const stateErrors = errors[stateKey] || {}
 
     return stateErrors[dataIndex]
+  }
+
+  // create a members search field
+  const createSearchField = (field: FormFieldType) => {
+    const { label, id, dataIndex, required = false } = field
+
+    return (
+      <FormMemberSearchField
+        label={label || dataIndex}
+        id={id}
+        initialValue={readFromFormState(field)}
+        handleChange={writeToFormState(field)}
+        required={required}
+        name={dataIndex}
+        errors={readErrors(field)}
+      />
+    )
   }
 
   // create a text field
@@ -494,6 +512,9 @@ function FormBuilder(props: FormBuilderProps) {
         break
       case 'autocomplete':
         composedField = createAutoCompleteField(field)
+        break
+      case 'search':
+        composedField = createSearchField(field)
         break
       default:
         // assume a text field
