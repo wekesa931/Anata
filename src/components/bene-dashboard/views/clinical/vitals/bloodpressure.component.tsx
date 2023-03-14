@@ -1,36 +1,27 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { DateRangePicker, DateRange } from 'mui-daterange-picker'
 import dayjs from 'dayjs'
 import Stack from '@mui/material/Stack'
 import styles from './vitals.component.css'
 import airtableFetch from '../../../../../resources/airtable-fetch'
 import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
+import {
+  useDateRangeFilter,
+  Actions,
+} from '../../../../../context/filter-views.context'
 
 function BloodPressure() {
   const todayDate = dayjs(new Date()).add(1, 'day').format('YYYY-MM-DD')
   const { recId } = useParams()
   const [bpData, setBpData] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<DateRange<Date>>([
-    null,
-    null,
-  ])
-  const [showCalendar, setShowCalendar] = useState(true)
 
   const status = ['DAILY', 'WEEKLY', 'MONTHLY']
   const [selectedValue, setSelectedValue] = useState(status[0])
-  const handleDropdown = (e) => {
+  const handleDropdown = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target
     setSelectedValue(value)
-  }
-
-  const [toggleButton, setToggleButton] = useState('last-six-months')
-  const [tabActive, setTabActive] = useState<boolean>(false)
-  const handleClicked = (e) => {
-    setToggleButton(e.target.value)
-    setTabActive(!tabActive)
   }
 
   const columns: GridColDef[] = [
@@ -66,78 +57,78 @@ function BloodPressure() {
     },
   ]
 
-  const filter = (frequency: string, newDate = null) => {
-    let arg = ''
-    if (frequency === 'last-week') {
-      const startDayOfPrevWeek = dayjs(todayDate)
-        .subtract(1, 'week')
-        .startOf('week')
-        .format('YYYY-MM-DD')
-      const lastDayOfPrevWeek = dayjs(todayDate)
-        .subtract(1, 'week')
-        .endOf('week')
-        .format('YYYY-MM-DD')
-      arg = `&startDate=${startDayOfPrevWeek}&endDate=${lastDayOfPrevWeek}`
-    } else if (frequency === 'last-month') {
-      const startDayOfPrevMonth = dayjs(todayDate)
-        .subtract(1, 'month')
-        .startOf('month')
-        .format('YYYY-MM-DD')
-      const lastDayOfPrevMonth = dayjs(todayDate)
-        .subtract(1, 'month')
-        .endOf('month')
-        .format('YYYY-MM-DD')
-      arg = `&startDate=${startDayOfPrevMonth}&endDate=${lastDayOfPrevMonth}`
-    } else if (frequency === 'last-six-months') {
-      const firstDayOfPrevSixMonths = dayjs(todayDate)
-        .subtract(5, 'month')
-        .startOf('month')
-        .format('YYYY-MM-DD')
-      arg = `&startDate=${firstDayOfPrevSixMonths}&endDate=${todayDate}`
-    } else if (frequency === 'date-range') {
-      const { startDate } = newDate
-      const { endDate } = newDate
-      arg = `&startDate=${startDate}&endDate=${endDate}`
+  const { currentFilter, dateRange } = useDateRangeFilter()
+
+  const getRange = () => {
+    let startOfRange
+    let endOfRange
+
+    switch (currentFilter) {
+      case Actions.WEEKLY:
+        startOfRange = dayjs(todayDate).subtract(1, 'week').startOf('week')
+        endOfRange = dayjs(todayDate).subtract(1, 'week').endOf('week')
+        break
+      case Actions.MONTHLY:
+        startOfRange = dayjs(todayDate).subtract(1, 'month').startOf('month')
+        endOfRange = dayjs(todayDate).subtract(1, 'month').endOf('month')
+        break
+      case Actions.LAST_3_MONTHS:
+        startOfRange = dayjs(todayDate).subtract(2, 'month').startOf('month')
+        endOfRange = dayjs(todayDate).subtract(2, 'month').endOf('month')
+        break
+      case Actions.LAST_6_MONTHS:
+        startOfRange = dayjs(todayDate).subtract(5, 'month').startOf('month')
+        endOfRange = dayjs(todayDate)
+        break
+      case Actions.SET_DATE_RANGE:
+        startOfRange = dayjs(dateRange[0])
+        endOfRange = dayjs(dateRange[1])
+        break
+      default:
+        startOfRange = dayjs(todayDate).subtract(5, 'month').startOf('month')
+        endOfRange = dayjs(todayDate)
     }
+
+    return [startOfRange.format('YYYY-MM-DD'), endOfRange.format('YYYY-MM-DD')]
+  }
+
+  const filterData = () => {
+    const [startOfRange, endOfRange] = getRange()
+
+    const arg = `&startDate=${startOfRange}&endDate=${endOfRange}`
+
     setLoading(true)
     return airtableFetch(
       `bp/analysis?computation_type=${selectedValue.toLowerCase()}${arg}&member_id=${recId}`
     )
       .then((response) => {
         setLoading(false)
-        const filterResults = response.data.averages.map((avs, index) => {
-          return {
-            id: index,
-            Date: avs.date,
-            'Morning BP': `${avs.mornSytoAvg || '-'}/${avs.mornDiasAvg || '-'}`,
-            'Evening BP': `${avs.evenSytoAvg || '-'}/${avs.evenDiasAvg || '-'}`,
-            'Average BP': `${avs.sytolicAverage || '-'}/${
-              avs.diastolicAverage || '-'
-            }`,
+        const filterResults = response.data.averages.map(
+          (avs: any, index: number) => {
+            return {
+              id: index,
+              Date: avs.date,
+              'Morning BP': `${avs.mornSytoAvg || '-'}/${
+                avs.mornDiasAvg || '-'
+              }`,
+              'Evening BP': `${avs.evenSytoAvg || '-'}/${
+                avs.evenDiasAvg || '-'
+              }`,
+              'Average BP': `${avs.sytolicAverage || '-'}/${
+                avs.diastolicAverage || '-'
+              }`,
+            }
           }
-        })
+        )
         setBpData(filterResults)
       })
       .catch(() => setLoading(false))
   }
 
-  const closeDatePicker = () => setShowCalendar(false)
-  const handleChange = (newDate) => {
-    const startDate = dayjs(newDate.startDate).format('YYYY-MM-DD')
-    const endDate = dayjs(newDate.endDate).format('YYYY-MM-DD')
-    setSelectedDate([startDate, endDate])
-    if (newDate.startDate) {
-      filter('date-range', newDate)
-    }
-    setShowCalendar(false)
-  }
-
   useEffect(() => {
-    if (selectedValue && toggleButton) {
-      filter(toggleButton, selectedDate)
-    }
+    filterData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedValue, toggleButton])
+  }, [currentFilter, selectedValue, dateRange])
 
   function CustomToolbar() {
     return (
@@ -157,75 +148,7 @@ function BloodPressure() {
               ))}
             </select>
           </div>
-          <button
-            className={
-              toggleButton === 'last-week' ? styles.activeButton : styles.btn
-            }
-            value="last-week"
-            onClick={(e) => {
-              filter('last-week')
-              handleClicked(e)
-            }}
-          >
-            LAST WEEK
-          </button>
-          <button
-            className={
-              toggleButton === 'last-month' ? styles.activeButton : styles.btn
-            }
-            value="last-month"
-            onClick={(e) => {
-              filter('last-month')
-              handleClicked(e)
-            }}
-          >
-            LAST MONTH
-          </button>
-          <button
-            className={
-              toggleButton === 'last-six-months'
-                ? styles.activeButton
-                : styles.btn
-            }
-            value="last-six-months"
-            onClick={(e) => {
-              filter('last-six-months')
-              handleClicked(e)
-            }}
-          >
-            LAST 6 MONTHS
-          </button>
-          <button
-            className={
-              toggleButton === 'date-range' ? styles.activeButton : styles.btn
-            }
-            value="date-range"
-            onClick={(e) => {
-              handleClicked(e)
-            }}
-          >
-            Custom
-          </button>
-          {toggleButton === 'date-range' && (
-            <button
-              className={styles.dateBtn}
-              value="date-range"
-              onClick={() => setShowCalendar(!showCalendar)}
-            >
-              {showCalendar ? 'Close' : 'Choose date range'}
-            </button>
-          )}
         </div>
-        {toggleButton === 'date-range' ? (
-          <div className={styles.dateContainer}>
-            <DateRangePicker
-              open={showCalendar}
-              closeOnClickOutside
-              toggle={closeDatePicker}
-              onChange={handleChange}
-            />
-          </div>
-        ) : null}
       </>
     )
   }
@@ -248,12 +171,6 @@ function BloodPressure() {
   return (
     <div className={`${styles.tableContainer} margin-top-16`}>
       <h4 className={styles.vitalsHeading}>Blood Pressure Averages</h4>
-      <div className={styles.infoBlock}>
-        <p className={styles.infoText}>
-          To give you maximum value, we are allowing you to filter these
-          averages without affecting other tables
-        </p>
-      </div>
       <div style={{ height: 400, width: 610, justifyContent: 'center' }}>
         <DataGrid
           className={styles.table}

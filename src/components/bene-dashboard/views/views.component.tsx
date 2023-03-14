@@ -55,7 +55,7 @@ function Views({ view, handleChange }: any) {
         <div
           style={{ overflowY: 'auto', height: '100%', paddingBottom: '36px' }}
         >
-          <TabPanel value="clinical">
+          <TabPanel value="clinical" sx={{ pt: 0 }}>
             <ErrorBoundary>
               <Clinical />
             </ErrorBoundary>

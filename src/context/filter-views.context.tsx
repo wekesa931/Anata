@@ -24,7 +24,9 @@ const DateRangeContext = React.createContext<ContextType>({
 })
 
 function DateFilterProvider({ children }: any) {
-  const [currentFilter, setCurrentFilter] = React.useState<Actions | null>(null)
+  const [currentFilter, setCurrentFilter] = React.useState<Actions | null>(
+    Actions.LAST_3_MONTHS
+  )
 
   const reducer = (state: any, action: { type: Actions; payload: any }) => {
     switch (action.type) {

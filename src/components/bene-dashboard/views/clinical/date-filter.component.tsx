@@ -55,7 +55,7 @@ function DateFilterView() {
   }, [currentFilter])
 
   return (
-    <div>
+    <div className={styles.dateFilterContainer}>
       <CssBaseline />
       <p className={styles.title}>Filter all tables</p>
       <div className={styles.container}>
@@ -109,7 +109,8 @@ function DateFilterView() {
                 bgcolor: 'background.paper',
                 boxShadow: 1,
                 borderRadius: 2,
-                width: 300,
+                width: 350,
+                mt: 1.25,
               }}
             >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
