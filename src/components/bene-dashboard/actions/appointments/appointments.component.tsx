@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import { useUser } from '../../../../context/user-context'
 import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
 import List from '../../../utils/list/list.component'
 import filterFields from '../../../../helpers/filter-fields'
@@ -98,7 +99,7 @@ function Appointments() {
     },
   ]
   const { member, v2Member } = useMember()
-
+  const user = useUser()
   const openCalendar = () => {
     if (v2Member || member) {
       const fullName = v2Member?.fullName || member['Full Name']
@@ -107,7 +108,7 @@ function Appointments() {
       const memberEmail = email || 'navigation@antarahealth.com'
       const memberPhone = v2Member?.phone || member['Phone 1']
 
-      const link = `https://calendly.com/antara-health?name=${urlName}&email=${memberEmail}&a1=${memberPhone}`
+      const link = `https://calendly.com/antara-health?name=${urlName}&email=${memberEmail}&a1=${memberPhone}&utm_source=Scribe - ${user.name}`
 
       const newWindow = window.open(link, '_blank', 'noopener,noreferrer')
       if (newWindow) newWindow.opener = null

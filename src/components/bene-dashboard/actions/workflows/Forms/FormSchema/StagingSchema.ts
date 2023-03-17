@@ -9570,29 +9570,6 @@ export default [
         },
       },
       {
-        id: 'mhcReferralNotes',
-        name: 'Notes for MHC',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Next Steps',
-        parentValues: ['MHC'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Next Steps'])) {
-            return ['MHC'].some((r) => values['Next Steps'].includes(r))
-          }
-          return ['MHC'].includes(values['Next Steps'])
-        },
-      },
-      {
         id: 'mhcReferralReasons',
         name: 'MHC Reasons for Referral',
         type: 'multilineText',

@@ -1,8 +1,10 @@
 import Button from '@mui/material/Button'
 import React from 'react'
 import styles from '../guided-workflows.component.css'
+import { useUser } from '../../../../../context/user-context'
 
 const CalendlyLink = ({ field, formPayload, member }: any) => {
+  const user = useUser()
   const calendlyLinkedFields: any = {
     reasonForConsultation: {
       link: 'antara-virtual-doctor-consultation',
@@ -13,7 +15,7 @@ const CalendlyLink = ({ field, formPayload, member }: any) => {
     mhcReferralReasons: {
       link: 'mental-health-consultation',
       reason: 'MHC Reasons for Referral',
-      notes: 'Notes for MHC',
+      notes: '',
       ctLabel: 'Book MHC appointment',
     },
     ncReferralReasons: {
@@ -54,7 +56,7 @@ const CalendlyLink = ({ field, formPayload, member }: any) => {
         calendlyLinkedFields[field.id].link
       }?name=${urlName}&email=${memberEmail}&a1=${
         member['Phone 1']
-      }&a2=${reasonUrl}&a3=${notes}`
+      }&a2=${reasonUrl}&a3=${notes}&utm_source=Scribe - ${user.name}`
       return (
         <Button
           variant="outlined"

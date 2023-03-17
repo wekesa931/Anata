@@ -238,7 +238,6 @@ const interactionlogMap: any = {
   'Reasons for Consultation': 'reasonForConsultation',
   'MHC Reasons for Referral': 'mhcReferralReasons',
   'NC Reasons for Referral': 'ncReferralReasons',
-  'Notes for MHC': 'mhcReferralNotes',
   'Notes for Nutritional Consultation': 'ncReferralNotes',
 }
 
