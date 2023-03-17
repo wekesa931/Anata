@@ -167,6 +167,12 @@ const cleanObject = (obj: any) => {
 const prepareData = (vars: any, antaraId: string) => {
   const inputVariables = { ...vars }
 
+  if (inputVariables.memberDetails) {
+    const { primaryMemberAntaraId, ...rest } = inputVariables.memberDetails
+    inputVariables.memberDetails =
+      primaryMemberAntaraId !== '' ? { ...rest, primaryMemberAntaraId } : rest
+  }
+
   if (inputVariables.memberPhones) {
     inputVariables.memberPhones = {
       phones: inputVariables.memberPhones,
