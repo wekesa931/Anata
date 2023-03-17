@@ -11918,19 +11918,6 @@ export default [
         foreignTableId: 'tblZB4YOpd7XH3cYt',
         required: true,
         helper: '',
-        conditionType: '',
-        parentKey: 'Appointment Type',
-        parentValues: ['Inpatient', 'Outpatient'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Appointment Type'])) {
-            return ['Inpatient', 'Outpatient'].some((r) =>
-              values['Appointment Type'].includes(r)
-            )
-          }
-          return ['Inpatient', 'Outpatient'].includes(
-            values['Appointment Type']
-          )
-        },
       },
       {
         id: 'fldif086hra6vZMua',
@@ -13252,14 +13239,14 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Tasks will be done as soon as possible, please enter the latest possible date at which you want the task to be performed.',
+          'Please enter the due date you agreed with the member. Remember that for members who can do it at the office, we have I&M on Tuesday morning and Jubilee on Thursday morning.',
       },
       {
-        id: 'fldXAnmikYNI6pI1V',
-        name: 'Time preference',
-        type: 'select',
+        id: 'fldqIcXvtcB2w3D83',
+        name: 'Time (test)',
+        type: 'date',
         format: '',
-        isDateTime: false,
+        isDateTime: true,
         options: [],
         symmetricColumnId: null,
         unreversed: false,
@@ -13267,7 +13254,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'What is the best time range for the member? (Note that this is a general preference as we can not ensure the date of delivery) The member will be notified as soon as the date is validated by our system',
+          'This is a test / work in progress to identify specific time. \nIt is the agreed time with member, please note that Logistic admin might be requesting a reschedule.\nDo not fill if no specific time was agreed with the member.',
       },
       {
         id: 'fldFiJvTaVC3jK7tT',
@@ -16434,6 +16421,21 @@ export default [
         foreignTableId: null,
         required: true,
         helper: '',
+      },
+      {
+        id: 'fldXp3Xds1Ehx3kMX',
+        name: 'Appointments',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldjPS2N9vEyNJ5Go',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblZB4YOpd7XH3cYt',
+        required: false,
+        helper:
+          'Please select and link this baseline to the right appointment so that we can automatically change the status of the appointment after you finalize your baseline consultation',
       },
       {
         id: 'fldMSK1BkvmhUhRai',
