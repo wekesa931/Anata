@@ -129,7 +129,7 @@ function CallProvider({ children }: any) {
   const [initiateCallTransfer] = useMutation(TRANSFER_CALL)
   const [endCall] = useMutation(END_CALL)
   const user = useUser()
-  const { data } = useQuery(GET_ACTIVE_CALL)
+  const { data, refetch: getCallSessions } = useQuery(GET_ACTIVE_CALL)
   const participantBusy =
     pushNotification?.data?.event === 'Participant Busy' ||
     pushNotification?.data?.event === 'Participant No Answer'
@@ -151,45 +151,50 @@ function CallProvider({ children }: any) {
     if (data) {
       const rawLogs = data.activeCall.edges
       const logs = rawLogs.map((log: { node: any }) => log.node)
-      if (logs.length > 0) {
-        const { participants: allParticipants, session: activeSession } =
+      if (logs.length > 0 ) {
+        if(logs[0].session === null){
+          setConferenceParticipants([])
+          setActiveCall(null)
+        } else {
+          const { participants: allParticipants, session: activeSession } =
           logs[0]
-        if (allParticipants.length > 0 && activeSession) {
-          const participantsDetails: IParticipantSession[] =
-            allParticipants.map((log: IParticipantSession) => {
-              return {
-                isOnHold: log.isOnHold,
-                participantId: log.participantId,
-                participantName: log.participantName,
-                session: activeSession.roomName,
-                sessionId: log.sessionId,
-                biodataValidated: log.biodataValidated,
-                isMember: log.isMember,
-                isStaff: log.isStaff,
-              }
-            })
-          const memberParticipant = allParticipants.find(
-            (participant: any) => !participant.isStaff && participant.isMember
-          )
-          const correctRoomName = activeSession.roomName.replace(/-/g, '')
-          const call = {
-            title: callTitle(activeSession.callDirection.toLocaleLowerCase()),
-            type: activeSession.callDirection,
-            state: 'ONGOING',
-            assigned: activeSession.callDirection,
-            member: activeSession.memberPhone,
-            memberName: memberParticipant.participantName,
-            memberAntaraId: memberParticipant.antaraId,
-            initialCallTime:
-              (new Date().getMinutes() -
-                new Date(activeSession.startedAt).getMinutes()) *
-                60 +
-              (new Date().getSeconds() -
-                new Date(activeSession.startedAt).getSeconds()),
-            session: correctRoomName,
+          if (allParticipants.length > 0 && activeSession) {
+            const participantsDetails: IParticipantSession[] =
+              allParticipants.map((log: IParticipantSession) => {
+                return {
+                  isOnHold: log.isOnHold,
+                  participantId: log.participantId,
+                  participantName: log.participantName,
+                  session: activeSession.roomName,
+                  sessionId: log.sessionId,
+                  biodataValidated: log.biodataValidated,
+                  isMember: log.isMember,
+                  isStaff: log.isStaff,
+                }
+              })
+            const memberParticipant = allParticipants.find(
+              (participant: any) => !participant.isStaff && participant.isMember
+            )
+            const correctRoomName = activeSession.roomName.replace(/-/g, '')
+            const call = {
+              title: callTitle(activeSession.callDirection.toLocaleLowerCase()),
+              type: activeSession.callDirection,
+              state: 'ONGOING',
+              assigned: activeSession.callDirection,
+              member: activeSession.memberPhone,
+              memberName: memberParticipant.participantName,
+              memberAntaraId: memberParticipant.antaraId,
+              initialCallTime:
+                (new Date().getMinutes() -
+                  new Date(activeSession.startedAt).getMinutes()) *
+                  60 +
+                (new Date().getSeconds() -
+                  new Date(activeSession.startedAt).getSeconds()),
+              session: correctRoomName,
+            }
+            setConferenceParticipants(participantsDetails)
+            setActiveCall(call)
           }
-          setConferenceParticipants(participantsDetails)
-          setActiveCall(call)
         }
       }
     }
@@ -329,6 +334,7 @@ function CallProvider({ children }: any) {
     })
       .then((res) => {
         if (res.data.endCall.status === 200) {
+          getCallSessions()
           setcallError(null)
         } else {
           setcallError(res.data.endCall.message)

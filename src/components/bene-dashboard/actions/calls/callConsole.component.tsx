@@ -6,6 +6,7 @@ import {
   Info,
   Phone,
   CheckCircle,
+  PhoneOff,
 } from 'react-feather'
 import { useMutation } from '@apollo/client'
 import { Portal } from '@mui/material'
@@ -461,18 +462,24 @@ function CallFloatingBox() {
             </>
           )}
           {displayActionButtons && (
-            <div className="full-width d-flex flex-end transfer-container">
-              <button className="d-flex emergency-btn" onClick={() => null}>
-                <AlertTriangle className="emergency-btn-icon icon-size" />
-                <p>Emergency</p>
+            <div className="full-width d-flex flex-between transfer-container">
+              <button className="d-flex emergency-btn" onClick={handleEndCall}>
+                <PhoneOff className="emergency-btn-icon icon-size" />
+                <p>End Session</p>
               </button>
-              <button
-                className="d-flex"
-                onClick={() => setshowTransferList(!showTransferList)}
-              >
-                <Repeat className="icon-size" />
-                <p>Transfer to</p>
-              </button>
+              <div className="d-flex flex-end">
+                <button className="d-flex emergency-btn" onClick={() => null}>
+                  <AlertTriangle className="emergency-btn-icon icon-size" />
+                  <p>Emergency</p>
+                </button>
+                <button
+                  className="d-flex"
+                  onClick={() => setshowTransferList(!showTransferList)}
+                >
+                  <Repeat className="icon-size" />
+                  <p>Transfer to</p>
+                </button>
+              </div>
             </div>
           )}
         </div>
