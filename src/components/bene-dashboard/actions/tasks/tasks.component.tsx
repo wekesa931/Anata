@@ -21,6 +21,7 @@ import { useMember } from '../../../../context/member.context'
 import logError from '../../../utils/error_handling/sentry'
 import { useFormPortal } from '../../../../context/forms-context'
 import { WorkflowMeta } from '../workflows/workflow-types'
+import Toasts from '../../../../helpers/toast'
 
 type RecordWithId = { data: any; id: string }
 type MatchType = { key: string; value: string }
@@ -453,23 +454,32 @@ function Tasks() {
     }
     return null
   }
+  const reusableAnalytics = (message: string) => {
+    analytics.track(`${message}`, {
+      bene: recId,
+    }) 
+}
   const updateTask = async (task: { id: string; fields: any }) => {
-    try {
       await airtableFetch('hntasks', 'post', {
         id: task.id,
         fields: {
           ...task.fields,
           Assignee: task.fields.Assignee ? [task.fields.Assignee] : [],
         },
-      })
-      analytics.track(`Tasks Updated`, {
-        bene: recId,
-      })
-      return refetchTasks()
-    } catch (error) {
-      logError(error)
-      return refetchTasks()
-    }
+      }).then((res) => {
+        if(typeof res === 'object') {
+          Toasts.showSuccessNotification('Tasks Updated')
+          reusableAnalytics('Task Updated')
+        }
+          if (Array.isArray(res) && res.some(el => el.error === 'INVALID_RECORDS')) {
+          Toasts.showErrorNotification('Tasks Not Updated')
+          reusableAnalytics('Task Updated')
+        } 
+      }).catch((err) => {
+        logError(err)
+      }).finally(() => {
+        return refetchTasks()
+      }) 
   }
 
   const filterByStatus = (val: string) => {

@@ -11,6 +11,8 @@ import analytics from '../../../../helpers/segment'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import styles from './appointments.component.css'
 import { useMember } from '../../../../context/member.context'
+import Toasts from '../../../../helpers/toast'
+import logError from '../../../utils/error_handling/sentry'
 
 function Appointments() {
   const [appointments, setAppointments] = React.useState<any[]>([])
@@ -115,6 +117,13 @@ function Appointments() {
     }
   }
 
+  const reusableAnalytics = (message: string) => {
+      setSelected(status[0])
+      analytics.track(`${message}`, {
+        bene: recId,
+      }) 
+  }
+
   const updateAppointment = async (appointment: {
     id: string
     fields: any
@@ -132,14 +141,19 @@ function Appointments() {
         Providers: provCheck,
       },
     }).then((res) => {
-      if (res) {
-        setSelected(status[0])
-      }
-    })
-    analytics.track(`Appointment Updated`, {
-      bene: recId,
-    })
-    return refresh()
+        if(typeof res === 'object') {
+          Toasts.showSuccessNotification('Record updated')
+          reusableAnalytics('Appointment Updated')
+        }
+          if (Array.isArray(res) && res.some(el => el.error === 'INVALID_RECORDS')) {
+          Toasts.showErrorNotification('Record Not Updated')
+          reusableAnalytics('Appointment Not Updated')
+        } 
+    }).catch((err) => {
+      logError(err)
+    }).finally(() => {
+      return refresh()
+    })  
   }
 
   const includeFieldTypes = (appointment) => {

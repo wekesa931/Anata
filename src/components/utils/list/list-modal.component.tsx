@@ -9,7 +9,6 @@ import Modal from '../modals/modal.component'
 import EditIcon from '../../../assets/img/icons/edit.svg'
 import AirtableField from '../../../types/airtable-field'
 import FormField from '../form-field/form-field.component'
-import Toasts from '../../../helpers/toast'
 import styles from './list.component.css'
 
 export type TOpenItem = {
@@ -200,7 +199,6 @@ function ListModal(props: ListModalProps) {
       await onEdit(task)
       setFormDisabled(true)
       setModalOpen(false)
-      Toasts.showSuccessNotification()
     }
   }
 
