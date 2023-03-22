@@ -9,7 +9,7 @@ import ErrorBoundary from '../error-boundary/error-boundary.component'
 import analytics from '../../helpers/segment'
 import { MemberProvider } from '../../context/member.context'
 import { FormProvider } from '../../context/forms-context'
-import { DateFilterProvider } from '../../context/filter-views.context'
+import { DateFilterProvider } from '../../hooks/filter-views.hook'
 
 function PatientDashboard() {
   const [recId, setRecId] = useState<string>()

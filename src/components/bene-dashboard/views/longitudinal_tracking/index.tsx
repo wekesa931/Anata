@@ -10,8 +10,7 @@ import requestBody from '../../../../config/config.longitudinal.json'
 import { CalendarHeader, TDateRange } from './header'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import Loading from '../../../../comms/components/loading/loading.component'
-import ListModal from '../../../utils/list/list-modal.component'
-
+import ListModal, { TOpenItem } from '../../../utils/list/list-modal.component'
 import styles from './longitudinal.component.css'
 import {
   LongitudinalData,
@@ -26,6 +25,7 @@ import {
 import { useMember } from '../../../../context/member.context'
 import { GET_MEMBER_INTERACTIONS } from '../../../../gql/interactions'
 import { GET_FILES } from '../files/files.gql'
+import useLongitudinalTracker from './analytics'
 
 dayjs.extend(weekOfYear)
 
@@ -66,6 +66,7 @@ function LongitudinalTable({
   )
   const [selectedResources, setSelectedResources] = useState<IResource[]>([])
   const [initialDate, setInitialDate] = useState<Dayjs>(dayjs())
+  const { viewChanged } = useLongitudinalTracker()
 
   useEffect(() => {
     setSelectedResources(longitudinalData?.getResources() || [])
@@ -81,6 +82,11 @@ function LongitudinalTable({
         .filter((resource) => resources.includes(resource.title)) || []
 
     setSelectedResources(newSelectedResources)
+  }
+
+  const handleViewChange = (newView: string) => {
+    viewChanged(currentView, newView)
+    setCurrentView(newView)
   }
 
   const fetchEvents = (
@@ -225,7 +231,7 @@ function LongitudinalTable({
         toMaximize={toMaximize}
         setToMaximize={setToMaximize}
         currentView={currentView}
-        setCurrentView={setCurrentView}
+        setCurrentView={handleViewChange}
         dateRange={dateRange}
         setDateRange={setDateRange}
         selectedResources={selectedResources.map((resource) => resource.title)}
@@ -256,6 +262,7 @@ function LongitudinalTable({
                   {dayjs(info.date).format("MMM'YY")}
                 </span>
               ),
+              description: '3 months view',
             },
             resourceSixMonths: {
               type: 'resourceTimeline',
@@ -358,6 +365,13 @@ function LongitudinalView() {
   const [rawLongitudinalData, setLongitduinalData] =
     useState<ILongitudinalTrackingData>()
   const [documents, setDocuments] = useState<IDocument[]>([])
+  const { page } = useLongitudinalTracker()
+
+  useEffect(() => {
+    page()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const { recId } = useParams()
   useEffect(() => {
@@ -469,12 +483,21 @@ function EventDetails({ event, setSelectedEvent }: any) {
     return groupedEvent?.from(0)?.map((e: IEvent) => e?.getEventDetails())
   }
 
+  const { itemOpened } = useLongitudinalTracker()
+
+  const trackItem = (item: TOpenItem) => {
+    const { data } = item
+
+    itemOpened(data)
+  }
+
   return event?.eventType === 'grouped' ? (
     <ListModal
       modalOpen={!!event}
       setModalOpen={setSelectedEvent}
       items={getGroupedEvents(event)}
       multiple
+      itemCallback={trackItem}
     />
   ) : (
     <ListModal
@@ -485,6 +508,7 @@ function EventDetails({ event, setSelectedEvent }: any) {
       editable={false}
       multiple={false}
       items={[]}
+      itemCallback={trackItem}
     />
   )
 }

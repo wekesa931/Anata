@@ -6,7 +6,7 @@ import CloseIcon from '../../assets/img/icons/close.svg'
 import LoadingIcon from '../../assets/img/icons/loading.svg'
 import styles from './search.component.css'
 import analytics from '../../helpers/segment'
-import useMemberSearch from '../../context/search-context'
+import useMemberSearch from '../../hooks/search-hook'
 
 interface IProps {
   unknownMemberSearch?: boolean

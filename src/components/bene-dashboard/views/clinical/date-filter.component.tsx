@@ -15,7 +15,7 @@ import { TDateRange } from '../longitudinal_tracking/header'
 import {
   useDateRangeFilter,
   Actions,
-} from '../../../../context/filter-views.context'
+} from '../../../../hooks/filter-views.hook'
 import styles from './date-filter.component.css'
 
 function DateFilterView() {

@@ -9,7 +9,7 @@ import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 import {
   useDateRangeFilter,
   Actions,
-} from '../../../../../context/filter-views.context'
+} from '../../../../../hooks/filter-views.hook'
 
 function BloodPressure() {
   const todayDate = dayjs(new Date()).add(1, 'day').format('YYYY-MM-DD')

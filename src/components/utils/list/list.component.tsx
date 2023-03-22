@@ -11,7 +11,7 @@ import AirtableField from '../../../types/airtable-field'
 import {
   useDateRangeFilter,
   makeFilterListDataByDate,
-} from '../../../context/filter-views.context'
+} from '../../../hooks/filter-views.hook'
 
 type ListProps = {
   list: { name: string; data: any }[]

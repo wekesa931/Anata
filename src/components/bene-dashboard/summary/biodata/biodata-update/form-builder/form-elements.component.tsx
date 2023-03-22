@@ -26,7 +26,7 @@ import { geocodeByPlaceId } from 'react-google-places-autocomplete'
 import { Person } from '@mui/icons-material'
 import useMemberSearch, {
   SearchResultType,
-} from '../../../../../../context/search-context'
+} from '../../../../../../hooks/search-hook'
 
 /** Form field configurations */
 export type FormFieldType = {

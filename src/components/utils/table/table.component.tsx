@@ -11,7 +11,7 @@ import analytics from '../../../helpers/segment'
 import {
   useDateRangeFilter,
   makeFilterDataByDate,
-} from '../../../context/filter-views.context'
+} from '../../../hooks/filter-views.hook'
 
 type TableProps = {
   title: string

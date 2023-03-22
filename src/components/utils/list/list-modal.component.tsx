@@ -1,6 +1,6 @@
 /* eslint-disable radix */
 import { Label, Text } from '@airtable/blocks/ui'
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { Form, Formik } from 'formik'
 import dayjs from 'dayjs'
 import { ChevronLeft, ChevronRight } from 'react-feather'
@@ -12,7 +12,7 @@ import FormField from '../form-field/form-field.component'
 import Toasts from '../../../helpers/toast'
 import styles from './list.component.css'
 
-type TOpenItem = {
+export type TOpenItem = {
   name: string
   id: string
   data: AirtableField[] | any
@@ -29,6 +29,7 @@ type ListModalProps = {
   editableFields?: AirtableField[]
   multiple: boolean
   items: any[]
+  itemCallback?: (item: TOpenItem) => void
 }
 
 function ModalHeader({
@@ -98,6 +99,7 @@ function ListModal(props: ListModalProps) {
     editableFields,
     multiple = false,
     items = [],
+    itemCallback,
   } = props
   const getActiveItem = () => {
     if (multiple && items.length > 0) {
@@ -126,6 +128,14 @@ function ListModal(props: ListModalProps) {
       setCurrentIndex(nextIndex)
     }
   }
+
+  useEffect(() => {
+    if (itemCallback) {
+      itemCallback(activeItem)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeItem])
   const [formDisabled, setFormDisabled] = useState<boolean>(true)
   const displayObject = (obj: any) => {
     if (obj) {

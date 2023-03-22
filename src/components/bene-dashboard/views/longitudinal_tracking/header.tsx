@@ -17,6 +17,7 @@ import {
 import { Check, ChevronDown, ChevronLeft, ChevronRight } from 'react-feather'
 import styles from './longitudinal.component.css'
 import { IResource } from './modules'
+import useLongitudinalTracker from './analytics'
 
 export type TDateRange = [Dayjs | null, Dayjs | null]
 
@@ -48,6 +49,7 @@ export function CalendarHeader({
   handlePrev,
 }: TCalendarHeader) {
   const [anchroEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const { periodChanged, resourcesSelected } = useLongitudinalTracker()
 
   useEffect(() => {
     const callApi = calendarRef.current?.getApi()
@@ -96,6 +98,8 @@ export function CalendarHeader({
         default:
           break
       }
+
+      periodChanged(callApi.view)
     }
 
     setDateRange([
@@ -113,8 +117,8 @@ export function CalendarHeader({
     } else {
       newSelectedResources.splice(currentIndex, 1)
     }
-
     handleSelectResource(newSelectedResources)
+    resourcesSelected(newSelectedResources)
   }
 
   return (
