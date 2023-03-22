@@ -10215,6 +10215,21 @@ export default [
           'Please add the appointment record here. If you do not, the appointment will not be automatically marked as completed',
       },
       {
+        id: 'fldnO6I4UugUZgr9C',
+        name: 'Conditions',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldQKRpnV6wF2L6EG',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblYSNrfZJnzdSwmx',
+        required: false,
+        helper:
+          'Please link this consultation form to the condition(s) that was reviewed or discussed or diagnosed during this consultation',
+      },
+      {
         id: 'fldOSLWjqjBZUDiap',
         name: 'Insurance Provider',
         type: 'multiSelect',
