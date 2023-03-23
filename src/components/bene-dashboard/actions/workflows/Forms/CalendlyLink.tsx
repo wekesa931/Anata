@@ -30,6 +30,12 @@ const CalendlyLink = ({ field, formPayload, member }: any) => {
       notes: 'Notes for Physio Consultation',
       ctLabel: 'Book PC appointment',
     },
+    pedcReferralReasons: {
+      link: 'pediatric-consultation',
+      reason: 'Reasons for Referral',
+      notes: 'Notes for Pediatric',
+      ctLabel: 'Book Pedriatic appointment',
+    },
   }
   const openCalendar = (link: string) => {
     const newWindow = window.open(link, '_blank', 'noopener,noreferrer')

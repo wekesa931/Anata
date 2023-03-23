@@ -16126,6 +16126,7 @@ export default [
           'Flag for Review',
           'MHC',
           'Nutritional Consultation',
+          'Pediatric Consultation',
           'None',
         ],
         symmetricColumnId: null,
@@ -16258,6 +16259,56 @@ export default [
             )
           }
           return ['Nutritional Consultation'].includes(values['Next Steps'])
+        },
+      },
+      {
+        id: 'pedcReferralReasons',
+        name: 'Pedriatic Reasons for Referral',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Next Steps',
+        parentValues: ['Pediatric Consultation'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Next Steps'])) {
+            return ['Pediatric Consultation'].some((r) =>
+              values['Next Steps'].includes(r)
+            )
+          }
+          return ['Pediatric Consultation'].includes(values['Next Steps'])
+        },
+      },
+      {
+        id: 'pedcReferralNotes',
+        name: 'Notes for Pediatric',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Next Steps',
+        parentValues: ['Pediatric Consultation'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Next Steps'])) {
+            return ['Pediatric Consultation'].some((r) =>
+              values['Next Steps'].includes(r)
+            )
+          }
+          return ['Pediatric Consultation'].includes(values['Next Steps'])
         },
       },
     ],

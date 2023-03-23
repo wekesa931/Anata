@@ -159,6 +159,7 @@ export const interactionlogform = {
           { name: 'Flag for Review' },
           { name: 'MHC' },
           { name: 'Nutritional Consultation' },
+          { name: 'Pediatric Consultation' },
           { name: 'None' },
         ],
       },
@@ -239,6 +240,8 @@ const interactionlogMap: any = {
   'MHC Reasons for Referral': 'mhcReferralReasons',
   'NC Reasons for Referral': 'ncReferralReasons',
   'Notes for Nutritional Consultation': 'ncReferralNotes',
+  'Pedriatic Reasons for Referral': 'pedcReferralReasons',
+  'Notes for Pediatric': 'pedcReferralNotes',
 }
 
 export const interactionLogPayload = (raw: any) => {
