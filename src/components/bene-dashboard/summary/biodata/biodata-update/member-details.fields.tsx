@@ -7,6 +7,7 @@ const constituencyOptions = [...new Set(constituencies.map((c) => c.name))].map(
 )
 
 const relationshipOptions = [
+  'Self',
   'Aunt',
   'Brother',
   'Child',
