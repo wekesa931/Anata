@@ -47,16 +47,20 @@ function AuthProvider({ user, children }: any) {
       let userAirtableId: any | null = null
       airtableFetch(
         `team/list?filterByFormula=FIND("${currentUser.email}", {Email})&fields[]=Record ID`
-      ).then((res) => {
-        if (typeof res === 'object' && !Array.isArray(res) && res !== null) {
-          Object.keys(res).forEach((key) => {
-            if (/^rec\w+/.test(key)) {
-              userAirtableId = key
-            }
-          })
-          setCurrentUser({ ...currentUser, userAirtableId })
-        }
-      })
+      )
+        .then((res) => {
+          if (typeof res === 'object' && !Array.isArray(res) && res !== null) {
+            Object.keys(res).forEach((key) => {
+              if (/^rec\w+/.test(key)) {
+                userAirtableId = key
+              }
+            })
+            setCurrentUser({ ...currentUser, userAirtableId })
+          }
+        })
+        .catch(() => {
+          logout()
+        })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

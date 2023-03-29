@@ -1,3 +1,4 @@
+/*eslint-disable */
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
 import history from '../constants/history'
@@ -50,20 +51,16 @@ axios.interceptors.response.use(
 )
 
 const airtableFetch = async (table: string, method?: any, data = {}) => {
-  try {
-    const response = await axios({
-      url: `${baseUrl}/${table}`,
-      headers: {
-        Authorization: `Bearer ${getTokenFromLocalStorage()}`,
-        'Content-Type': 'application/json',
-      },
-      method: method || 'GET',
-      data: method === 'GET' ? null : data,
-    })
-    return response.data
-  } catch (e) {
-    return e.message
-  }
+  const response = await axios({
+    url: `${baseUrl}/${table}`,
+    headers: {
+      Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+      'Content-Type': 'application/json',
+    },
+    method: method || 'GET',
+    data: method === 'GET' ? null : data,
+  })
+  return response.data
 }
 
 export default airtableFetch
