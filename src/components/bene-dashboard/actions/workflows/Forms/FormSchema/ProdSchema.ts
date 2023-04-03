@@ -4800,6 +4800,21 @@ export default [
         helper: '',
       },
       {
+        id: 'fldzq9nKvEgOpuKpy',
+        name: 'Internal vs External',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Please select Internal if the appointment will be performed by Antara. If not, select External',
+      },
+      {
         id: 'fldv1OxoNTVJJ5b8r',
         name: 'Assignee',
         type: 'foreignKey',

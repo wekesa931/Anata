@@ -2181,6 +2181,21 @@ export default [
         helper: '',
       },
       {
+        id: 'fldGHTFjfMxVmmQep',
+        name: 'Internal vs External',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 
+        'Please select Internal if the appointment will be performed by Antara. If not, select External',
+      },
+      {
         id: 'fld3x0MzCwooOc1A6',
         name: 'start_date_time',
         type: 'date',
