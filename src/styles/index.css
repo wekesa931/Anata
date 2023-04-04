@@ -422,6 +422,12 @@ h6,
   justify-content: flex-end;
 }
 
+.flex-start {
+  justify-content: flex-start;
+  display: flex;
+  align-items: center;
+}
+
 .flex-column {
   flex-direction: column;
 }
@@ -2137,15 +2143,13 @@ a {
   text-transform: none;
 }
 
-
-
 a.fc-event:has(.groupedEvent) {
   height: 2rem;
   width: 2rem;
   border-radius: 0.5rem;
   text-align: center;
   background-color: var(--blue-10);
-  border: 1px solid #87C1F7;
+  border: 1px solid #87c1f7;
 }
 
 .fc-h-event .fc-event-main {
@@ -2155,10 +2159,9 @@ a.fc-event:has(.groupedEvent) {
 
 a.fc-event:has(.singleEvent) {
   background-color: var(--blue-10);
-  border: 1px solid #87C1F7;
+  border: 1px solid #87c1f7;
   border-radius: 0.5rem;
 }
-
 
 .fc-scrollgrid.fc-scrollgrid-liquid {
   border-top: none !important;

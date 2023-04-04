@@ -124,6 +124,7 @@
 
 .btnContainer {
   height: 10%;
+  /* position: relative; */
 }
 .workflowDialogueContentGrid {
   height: 100%;
@@ -223,6 +224,51 @@
   border-radius: 12px !important;
   background-color: var(--blue-10) !important;
 }
+.cancelWorkflow {
+  text-transform: none !important;
+  font-family: Rubik !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--red-100) !important;
+}
+.disabledCancelWorkflow {
+  text-transform: none !important;
+  font-family: Rubik !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--dark-blue-20) !important;
+}
+.confirmBox {
+  text-transform: none !important;
+  font-family: Rubik !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  width: 100% !important;
+  padding: 0 10px !important;
+  background-color: var(--red-10) !important;
+  background-color: var(--red-20) !important;
+}
+.closeButton {
+  text-transform: none !important;
+  font-family: Rubik !important;
+  align-items: center !important;
+  gap: 8px;
+  margin: 3px !important;
+  font-size: 14px !important;
+  border-radius: 8px !important;
+  background-color: white !important;
+  color: var(--dark-blue-50) !important;
+}
+.deleteButton {
+  text-transform: none !important;
+  font-family: Rubik !important;
+  align-items: center !important;
+  gap: 8px;
+  font-size: 14px !important;
+  border-radius: 8px !important;
+  background-color: white !important;
+  color: #ff3b30 !important;
+}
 
 .saveDraftBtn {
   margin-right: 8px !important;
@@ -243,6 +289,9 @@
   color: var(--white-100) !important;
   border-radius: 12px !important;
   background-color: var(--blue-100) !important;
+}
+.buttonContainer {
+  float: right;
 }
 
 .loader {

@@ -4,6 +4,7 @@ export type IWorkflow = {
   workflowId: string
   airtableId: string
   completed: boolean
+  cancelled: boolean
   template: {
     id: string
     name: string
@@ -39,6 +40,7 @@ export type WorkflowMeta = {
   name: string
   airtableId: string
   completed: boolean
+  cancelled: boolean
   createdAt: string
   currentModules: any[]
   id: string

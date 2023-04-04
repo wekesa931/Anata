@@ -11,6 +11,7 @@ const CREATE_WORKFLOW = gql`
         workflowId
         airtableId
         completed
+        cancelled
         template {
           id
           name
@@ -48,6 +49,7 @@ const SAVE_MODULE_DATA = gql`
         workflowId
         airtableId
         completed
+        cancelled
         template {
           id
           name
@@ -75,6 +77,7 @@ const ADD_MODULE_TO_WORKFLOW = gql`
         workflowId
         airtableId
         completed
+        cancelled
         template {
           id
           name
@@ -118,6 +121,7 @@ const GET_WORKFLOWS = gql`
           workflowId
           airtableId
           completed
+          cancelled
           template {
             id
             name
@@ -147,6 +151,7 @@ const REMOVE_MODULE = gql`
         workflowId
         airtableId
         completed
+        cancelled
         template {
           id
           name
@@ -206,6 +211,7 @@ const SAVE_WORKFLOW = gql`
         workflowId
         airtableId
         completed
+        cancelled
         template {
           id
           name
@@ -234,6 +240,33 @@ const GET_DOCUMENT_OPENSEARCH = gql`
     }
   }
 `
+const CANCEL_WORKFLOW = gql`
+  mutation cancelWorkflow($workflowId: String!) {
+    cancelWorkflow(workflowId: $workflowId) {
+      status
+      message
+      errors
+      workflow {
+        id
+        workflowId
+        airtableId
+        completed
+        cancelled
+        template {
+          id
+          name
+        }
+        modules {
+          name
+        }
+        currentModules
+        moduleData
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`
 
 // eslint-disable-next-line import/prefer-default-export
 export {
@@ -247,4 +280,5 @@ export {
   GLOBAL_SEARCH,
   OPTIMIZED_SEARCH,
   GET_DOCUMENT_OPENSEARCH,
+  CANCEL_WORKFLOW,
 }

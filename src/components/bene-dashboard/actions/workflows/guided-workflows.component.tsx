@@ -53,7 +53,6 @@ function GuidedWorkflows() {
       error: gettingWorkflowError,
     },
   ] = useLazyQuery(GET_WORKFLOWS)
-
   useEffect(() => {
     if (loadedWorkflows) {
       if (loadedWorkflows) {

@@ -9,6 +9,7 @@ import {
   TextField,
   InputAdornment,
   CircularProgress,
+  Stack,
 } from '@mui/material'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
@@ -31,6 +32,7 @@ import {
   ADD_MODULE_TO_WORKFLOW,
   REMOVE_MODULE,
   SAVE_WORKFLOW,
+  CANCEL_WORKFLOW,
 } from '../../../../gql/workflows'
 import { useUser } from '../../../../context/user-context'
 import analytics from '../../../../helpers/segment'
@@ -60,6 +62,7 @@ import {
   CREATE_INTERACTION,
   CREATE_MEMBER_FEEDBACK,
 } from '../../../../gql/interactions'
+import Alert, { TAlert } from '../../../utils/alert/alert.component'
 
 type IProps = {
   workflow: IWorkflow
@@ -147,6 +150,8 @@ function WorkflowPortal({
   )
 
   const [saveWorkflow, { loading: savingWorkflow }] = useMutation(SAVE_WORKFLOW)
+  const [cancelWorkflow, { loading: cancellingWorkflow }] =
+    useMutation(CANCEL_WORKFLOW)
   const [deleteModuleData, { loading: deletingModule }] =
     useMutation(REMOVE_MODULE)
   const isWorkflowTemplate = openedWorkflow.workflowId
@@ -164,6 +169,8 @@ function WorkflowPortal({
   const closeToast = () => {
     setToastMessage(defaultToastMessage)
   }
+  const [alertMessage, setAlertMessage] = useState<TAlert | null>(null)
+
   const updateFormMeta = (fl: IWorkflow) => {
     let form = null
     if (fl.currentModules[0]) {
@@ -195,7 +202,8 @@ function WorkflowPortal({
     savingWorkflow ||
     deletingModule ||
     shouldSaveModule ||
-    updatingMemberFeedback
+    updatingMemberFeedback ||
+    cancellingWorkflow
 
   const initialFormMeta = (fm, fmName = null) => {
     const formValues = initialFormValues(member, user, fmName, primaryMemberHif)
@@ -397,6 +405,29 @@ function WorkflowPortal({
         </Dialog>
       </div>
     )
+  }
+  const handleDelete = () => {
+    setIsdeleteWorkflow(false)
+    cancelWorkflow({
+      variables: {
+        workflowId: openedWorkflow.workflowId,
+      },
+    })
+      .then((res) => {
+        if (res.data.cancelWorkflow.status === 200) {
+          setIsFormEdited(false)
+          onRefetch(true)
+          setAlertMessage({
+            type: 'success',
+            message: 'Workflow has been successfully deleted',
+            timeout: 1000,
+          })
+        }
+      })
+      .catch((e) => {
+        notify(e.message)
+        logError(e.message)
+      })
   }
   const moduleIsDraft = () => {
     const activeMod = listOfTables.find((tb) => tb.name === activeForm)
@@ -778,6 +809,9 @@ function WorkflowPortal({
       </>
     )
   }
+
+  const [deleteWorkflow, setIsdeleteWorkflow] = useState<boolean>(false)
+
   const renderForm = () => {
     const formSection = (id: string) => (
       <FormSection
@@ -858,6 +892,29 @@ function WorkflowPortal({
     return (
       <div className={styles.forms}>{formSection(formPayload[0].moduleId)}</div>
     )
+  }
+
+  const canDeleteWorkflow = !(
+    loaderDisplayed ||
+    currentWorkflow?.completed ||
+    (currentWorkflow &&
+      currentWorkflow?.moduleData &&
+      Object.keys(currentWorkflow?.moduleData)?.length !== 0)
+  )
+
+  const deleteNotification = () => {
+    if (currentWorkflow?.completed) {
+      setAlertMessage({
+        type: 'error',
+        message:
+          'Workflow cannot be deleted because a form has already been submitted',
+      })
+    } else {
+      setAlertMessage({
+        type: 'error',
+        message: 'Please delete data from forms so as to delete the workflow',
+      })
+    }
   }
   return (
     <>
@@ -1020,88 +1077,189 @@ function WorkflowPortal({
               </div>
             )}
             {formPayload.length > 0 && renderForm()}
+            <div className={`${styles.buttonContainer} d-flex flex-end `}>
+              {currentWorkflow?.workflowId && (
+                <Button
+                  disabled={loaderDisplayed || !checkModuleStatus(formPayload)}
+                  className={styles.saveDraftBtn}
+                  onClick={() => saveModule(true)}
+                >
+                  Save Draft
+                </Button>
+              )}
+              {currentWorkflow?.workflowId && (
+                <Tooltip title={buttonMessage}>
+                  <div>
+                    <Button
+                      disabled={
+                        loaderDisplayed ||
+                        !checkModuleStatus(formPayload) ||
+                        !submittedForm?.isDraft ||
+                        currentWorkflow?.cancelled === true
+                      }
+                      className={styles.submitModuleBtn}
+                      onClick={() => {
+                        if (buttonMessage) {
+                          notify('Select a form to submit')
+                        } else {
+                          setShouldSaveModule(true)
+                          setDisplayLoader(true)
+                        }
+                      }}
+                    >
+                      Submit form
+                    </Button>
+                  </div>
+                </Tooltip>
+              )}
+              <DialogContent sx={{ padding: 0, height: '90%' }}>
+                {confirmSubmit()}
+              </DialogContent>
+            </div>
           </Grid>
         </Grid>
       </div>
+      <div className={styles.alertMessage}>
+        {alertMessage && (
+          <Alert
+            {...alertMessage}
+            hide={() => {
+              setAlertMessage(null)
+
+              if (alertMessage.type === 'success') {
+                onFormClose(currentWorkflow?.workflowId, true)
+                setCurrentWorkflow(null)
+              }
+            }}
+          />
+        )}
+      </div>
       <div
-        className={`${styles.btnContainer} d-flex flex-between p-8 ${
+        className={`${styles.btnContainer} d-flex ${
           !currentWorkflow?.workflowId && 'flex-end'
         }`}
       >
-        {currentWorkflow?.workflowId && (
-          <Button
-            className={styles.completeWorkflow}
-            disabled={loaderDisplayed || currentWorkflow.completed}
-            onClick={() => {
-              let canComplete = true
-              for (const tbl of listOfTables) {
-                if (tbl.isDraft) {
-                  canComplete = false
+        {!deleteWorkflow ? (
+          <>
+            {currentWorkflow?.workflowId && (
+              <Button
+                className={
+                  canDeleteWorkflow
+                    ? styles.cancelWorkflow
+                    : styles.disabledCancelWorkflow
                 }
-              }
-              if (canComplete) {
-                saveWorkflow({
-                  variables: {
-                    workflowId: openedWorkflow.workflowId,
-                    completed: true,
-                    airtableId: currentWorkflow?.airtableId,
-                  },
-                })
-                  .then((res) => {
-                    if (res.data.updateWorkflow.status === 200) {
-                      airtableFetch('caseId', 'post', {
-                        id: currentWorkflow?.airtableId,
-                        fields: {
-                          Status: 'Resolved',
-                          updatedBy: {
-                            email: user?.email,
-                            name: user?.name,
-                          },
-                        },
-                      }).then(() =>
-                        notify('Workflow status successfully updated')
-                      )
-                      setCurrentWorkflow(res.data.updateWorkflow.workflow)
-                      notify('Workflow submitted successfully')
-                      setIsFormEdited(false)
-                      onRefetch(true)
-                      analytics.track(`Guided Workflow`, {
-                        event: 'Workflow completed',
-                        beneId: recId,
-                        staff: user ? user.email : '',
-                        workflow: res.data.updateWorkflow.workflow,
-                      })
-                    } else {
-                      notify('The changes have not been saved successfully')
+                onClick={() => {
+                  canDeleteWorkflow
+                    ? setIsdeleteWorkflow(true)
+                    : deleteNotification()
+                }}
+              >
+                Delete Workflow
+              </Button>
+            )}
+
+            {currentWorkflow?.workflowId && (
+              <Button
+                className={styles.completeWorkflow}
+                disabled={loaderDisplayed || currentWorkflow.completed}
+                onClick={() => {
+                  let canComplete = true
+                  for (const tbl of listOfTables) {
+                    if (tbl.isDraft) {
+                      canComplete = false
                     }
-                  })
-                  .catch((err) => logError(`saveWorkflow: ${err.message}`))
-              } else {
-                setShowIncompleteForms(true)
-                notify('You have to submit all forms to complete the workflow')
-              }
-            }}
-          >
-            Complete Workflow
-          </Button>
-        )}
-        <div className="d-flex flex-end">
-          {currentWorkflow?.workflowId && (
-            <Button
-              disabled={loaderDisplayed || !checkModuleStatus(formPayload)}
-              className={styles.saveDraftBtn}
-              onClick={() => saveModule(true)}
+                  }
+                  if (canComplete) {
+                    saveWorkflow({
+                      variables: {
+                        workflowId: openedWorkflow.workflowId,
+                        completed: true,
+                        airtableId: currentWorkflow?.airtableId,
+                      },
+                    })
+                      .then((res) => {
+                        if (res.data.updateWorkflow.status === 200) {
+                          airtableFetch('caseId', 'post', {
+                            id: currentWorkflow?.airtableId,
+                            fields: {
+                              Status: 'Resolved',
+                              updatedBy: {
+                                email: user?.email,
+                                name: user?.name,
+                              },
+                            },
+                          }).then(() =>
+                            notify('Workflow status successfully updated')
+                          )
+                          setCurrentWorkflow(res.data.updateWorkflow.workflow)
+                          notify('Workflow submitted successfully')
+                          setIsFormEdited(false)
+                          onRefetch(true)
+                          analytics.track(`Guided Workflow`, {
+                            event: 'Workflow completed',
+                            beneId: recId,
+                            staff: user ? user.email : '',
+                            workflow: res.data.updateWorkflow.workflow,
+                          })
+                        } else {
+                          notify('The changes have not been saved successfully')
+                        }
+                      })
+                      .catch((err) => logError(`saveWorkflow: ${err.message}`))
+                  } else {
+                    setShowIncompleteForms(true)
+                    notify(
+                      'You have to submit all forms to complete the workflow'
+                    )
+                  }
+                }}
+              >
+                Complete Workflow
+              </Button>
+            )}
+          </>
+        ) : (
+          <>
+            <Stack
+              className={styles.confirmBox}
+              justifyContent="space-between"
+              direction="row"
+              alignItems="center"
             >
-              Save Draft
-            </Button>
-          )}
+              <p>Delete workflow?</p>
+
+              <div className="flex">
+                <Button
+                  className={styles.closeButton}
+                  // sx={{backgroundColor: 'var(--white-100-fff)', color:'var(--dark-blue-50)'}}
+                  onClick={() => {
+                    setIsdeleteWorkflow(false)
+                  }}
+                >
+                  No, Go back
+                </Button>
+                <Button
+                  className={styles.deleteButton}
+                  onClick={() => {
+                    handleDelete()
+                    setIsdeleteWorkflow(false)
+                  }}
+                >
+                  Yes, Delete
+                </Button>
+              </div>
+            </Stack>
+          </>
+        )}
+        {!currentWorkflow?.workflowId && (
           <Tooltip title={buttonMessage}>
             <div>
               <Button
                 disabled={
                   loaderDisplayed ||
                   !checkModuleStatus(formPayload) ||
-                  !submittedForm?.isDraft
+                  !submittedForm?.isDraft ||
+                  currentWorkflow?.cancelled === true
                 }
                 className={styles.submitModuleBtn}
                 onClick={() => {
@@ -1117,10 +1275,7 @@ function WorkflowPortal({
               </Button>
             </div>
           </Tooltip>
-          <DialogContent sx={{ padding: 0, height: '90%' }}>
-            {confirmSubmit()}
-          </DialogContent>
-        </div>
+        )}
       </div>
     </>
   )
