@@ -158,38 +158,38 @@ function CallProvider({ children }: any) {
         } else {
           const { participants: allParticipants, session: activeSession } =
           logs[0]
-          if (allParticipants.length > 0 && activeSession) {
+          if (allParticipants?.length > 0 && activeSession) {
             const participantsDetails: IParticipantSession[] =
-              allParticipants.map((log: IParticipantSession) => {
+              allParticipants?.map((log: IParticipantSession) => {
                 return {
-                  isOnHold: log.isOnHold,
-                  participantId: log.participantId,
-                  participantName: log.participantName,
-                  session: activeSession.roomName,
-                  sessionId: log.sessionId,
-                  biodataValidated: log.biodataValidated,
-                  isMember: log.isMember,
-                  isStaff: log.isStaff,
+                  isOnHold: log?.isOnHold,
+                  participantId: log?.participantId,
+                  participantName: log?.participantName,
+                  session: activeSession?.roomName,
+                  sessionId: log?.sessionId,
+                  biodataValidated: log?.biodataValidated,
+                  isMember: log?.isMember,
+                  isStaff: log?.isStaff,
                 }
               })
             const memberParticipant = allParticipants.find(
-              (participant: any) => !participant.isStaff && participant.isMember
+              (participant: any) => !participant?.isStaff && participant?.isMember
             )
-            const correctRoomName = activeSession.roomName.replace(/-/g, '')
+            const correctRoomName = activeSession?.roomName.replace(/-/g, '')
             const call = {
-              title: callTitle(activeSession.callDirection.toLocaleLowerCase()),
-              type: activeSession.callDirection,
+              title: callTitle(activeSession?.callDirection?.toLocaleLowerCase()),
+              type: activeSession?.callDirection,
               state: 'ONGOING',
-              assigned: activeSession.callDirection,
-              member: activeSession.memberPhone,
-              memberName: memberParticipant.participantName,
-              memberAntaraId: memberParticipant.antaraId,
+              assigned: activeSession?.callDirection,
+              member: activeSession?.memberPhone,
+              memberName: memberParticipant?.participantName,
+              memberAntaraId: memberParticipant?.antaraId,
               initialCallTime:
                 (new Date().getMinutes() -
-                  new Date(activeSession.startedAt).getMinutes()) *
+                  new Date(activeSession?.startedAt).getMinutes()) *
                   60 +
                 (new Date().getSeconds() -
-                  new Date(activeSession.startedAt).getSeconds()),
+                  new Date(activeSession?.startedAt).getSeconds()),
               session: correctRoomName,
             }
             setConferenceParticipants(participantsDetails)
