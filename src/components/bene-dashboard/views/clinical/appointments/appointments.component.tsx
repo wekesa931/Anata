@@ -8,7 +8,7 @@ import Icon from '../../../../utils/icon/icon.component'
 import Modal from '../../../../utils/modals/modal.component'
 import Table from '../../../../utils/table/table.component'
 import TextArea from '../../../../../helpers/textarea.component'
-import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
+import LoadingComponent from '../utils/loading.component'
 
 function PafuView({ data }: any) {
   const [showPafu, setShowPafu] = useState(false)
@@ -153,12 +153,7 @@ function Appointments() {
           filterByDate
         />
       )}
-      {loading && (
-        <div className="d-flex flex-direction-column flex-align-center margin-top-32">
-          <LoadingIcon />
-          <p className="text-small"> Loading Appointments </p>
-        </div>
-      )}
+      {loading && <LoadingComponent message="Loading Appointments " />}
     </div>
   )
 }

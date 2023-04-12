@@ -5,8 +5,8 @@ import airtableFetch from '../../../../../resources/airtable-fetch'
 import List from '../../../../utils/list/list.component'
 import { useSortFilter } from '../../../../../context/sort-filter-views.context'
 import AirtableField from '../../../../../types/airtable-field'
-import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 import logError from '../../../../utils/error_handling/sentry'
+import LoadingComponent from '../utils/loading.component'
 
 function Medications() {
   const { recId } = useParams()
@@ -185,12 +185,7 @@ function Medications() {
           filterByDate
         />
       )}
-      {loading && (
-        <div className="d-flex flex-direction-column flex-align-center margin-top-32">
-          <LoadingIcon />
-          <p className="text-small"> Loading Medications </p>
-        </div>
-      )}
+      {loading && <LoadingComponent message="Loading Medication" />}
     </div>
   )
 }

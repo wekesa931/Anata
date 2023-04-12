@@ -5,8 +5,10 @@ import FilledForms from './filled-forms/filled-forms.component'
 import Appointments from './appointments/appointments.component'
 import Medications from './medications/medications.component'
 import Consultation from '../consultation/consultation'
+import Logistic from './logistic-task/components/logistic-task.component'
 import DateFilterView from './date-filter.component'
 import styles from './date-filter.component.css'
+import LabRequest from './labs/components/lab-request.component'
 
 function Clinical() {
   return (
@@ -15,7 +17,9 @@ function Clinical() {
       <div className="flex-wrap">
         <div className={styles.containerFlex}>
           <Consultation />
+          <Logistic />
           <Labs />
+          <LabRequest />
           <Vitals />
         </div>
         <div className={styles.flex1}>

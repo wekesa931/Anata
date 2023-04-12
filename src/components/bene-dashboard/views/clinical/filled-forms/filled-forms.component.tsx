@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import airtableFetch from '../../../../../resources/airtable-fetch'
 import List from '../../../../utils/list/list.component'
-import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
+import LoadingComponent from '../utils/loading.component'
 
 function FilledForms() {
   const [filledForms, setFilledForms] = useState<any[]>([])
@@ -166,13 +166,7 @@ function FilledForms() {
           filterByDate
         />
       )}
-      {loading && (
-        <div className="d-flex flex-direction-column flex-align-center margin-top-32">
-          <LoadingIcon />
-
-          <p className="text-small">Loading Filled Forms</p>
-        </div>
-      )}
+      {loading && <LoadingComponent message="Loading Filled Forms " />}
     </div>
   )
 }

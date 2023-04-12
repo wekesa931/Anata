@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 import Table from '../../../../utils/table/table.component'
 import airtableFetch from '../../../../../resources/airtable-fetch'
 import BloodPressure from './bloodpressure.component'
 import Bmi from './bmi.component'
+import LoadingComponent from '../utils/loading.component'
 
 type OtherVitalsInfo = {
   Temperature: number
@@ -74,12 +74,7 @@ function Vitals() {
           )}
         />
       )}
-      {loading && (
-        <div className="d-flex flex-direction-column flex-align-center margin-top-32">
-          <LoadingIcon />
-          <p className="text-small"> Loading Vitals </p>
-        </div>
-      )}
+      {loading && <LoadingComponent message="Loading Vitals " />}
     </div>
   )
 }
