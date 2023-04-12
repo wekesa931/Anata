@@ -49,6 +49,7 @@ export type FormFieldType = {
   stateKey: string
   dynamic?: boolean
   addButtonText?: string
+  disabled?: boolean
 }
 
 /**
@@ -100,6 +101,7 @@ type TextFieldProps = {
   name: string
   fullWidth?: boolean
   helperText?: string
+  disabled?: boolean
 }
 
 /** Text input */
@@ -116,6 +118,7 @@ export function FormTextField(props: TextFieldProps) {
     fullWidth = true,
     helperText,
     id,
+    disabled = false,
   } = props
 
   const texareaProps = textarea
@@ -144,6 +147,7 @@ export function FormTextField(props: TextFieldProps) {
       sx={{ mt: 1, mb: 1.5 }}
       size="small"
       key={id}
+      disabled={disabled}
     />
   )
 }
@@ -496,6 +500,11 @@ export function FormPlacesField({
             )
           })?.long_name || ''
 
+        const residentialTown =
+          addressComponents.find((addressComponent: any) => {
+            return addressComponent?.types?.includes('locality')
+          })?.long_name || ''
+
         // get the lat, lng values
         const lat = results[0]?.geometry?.location?.lat()
         const lng = results[0]?.geometry?.location?.lng()
@@ -504,6 +513,7 @@ export function FormPlacesField({
           ...fullAddress,
           residentialCountry,
           residentialCounty,
+          residentialTown,
           latitude: lat,
           longitude: lng,
         }

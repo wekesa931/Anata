@@ -93,6 +93,7 @@ export const createInitialFormState = (member: V2MemberType) => {
           longitude: e?.longitude,
           residentialCountry: e?.residentialCountry,
           residentialCounty: e?.residentialCounty,
+          residentialTown: e?.residentialTown,
         },
         label: e?.label,
         deliveryInstructions: e?.deliveryInstructions,
@@ -215,6 +216,7 @@ const prepareData = (vars: any, antaraId: string) => {
         latitude: floatOrNull(e?.residentialAddress?.latitude),
         longitude: floatOrNull(e?.residentialAddress?.longitude),
         residentialCounty: e?.residentialAddress?.residentialCounty,
+        residentialTown: e?.residentialTown?.residentialTown,
       })),
       antaraId,
     }

@@ -54,6 +54,14 @@ function FormBuilder(props: FormBuilderProps) {
       const newItem = (values[stateKey] || []).find(
         (item: any) => item.priority === index && !item.deleted
       )
+      if (newItem) {
+        if (dataIndex === 'residentialCounty') {
+          return newItem?.residentialAddress?.residentialCounty || ''
+        }
+        if (dataIndex === 'residentialTown') {
+          return newItem?.residentialAddress?.residentialTown || ''
+        }
+      }
       return newItem ? newItem[dataIndex] : ''
     }
     return values[stateKey][dataIndex]
@@ -135,7 +143,14 @@ function FormBuilder(props: FormBuilderProps) {
     field: FormFieldType,
     type: TextFieldType = 'text'
   ) => {
-    const { label, id, dataIndex, required = false, helperText } = field
+    const {
+      label,
+      id,
+      dataIndex,
+      required = false,
+      helperText,
+      disabled = false,
+    } = field
 
     return (
       <FormTextField
@@ -149,6 +164,7 @@ function FormBuilder(props: FormBuilderProps) {
         textarea={type === 'textarea'}
         number={type === 'number'}
         helperText={helperText}
+        disabled={disabled}
       />
     )
   }

@@ -209,6 +209,7 @@ const MEMBER_DETAILS_QUERY = gql`
               residentialAddress
               residentialCountry
               residentialCounty
+              subCounty
               residentialTown
               deliveryInstructions
               poBoxNumber
@@ -278,6 +279,7 @@ const MUTATE_MEMBER_DETAILS = gql`
         deliveryInstructions
         residentialTown
         residentialCounty
+        subCounty
         residentialCountry
         emergencyContactName
         emergencyContactPhone

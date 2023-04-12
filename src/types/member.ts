@@ -14,6 +14,7 @@ type AddressType = {
   residentialAddress?: string
   residentialCountry?: string
   residentialCounty?: string
+  subCounty?: string
   residentialTown?: string
 }
 
@@ -169,6 +170,7 @@ export type V2MemberQueryType = {
       residentialAddress?: string
       residentialCountry?: string
       residentialCounty?: string
+      subCounty?: string
       residentialTown?: string
       deliveryInstructions?: string
       poBoxNumber?: string

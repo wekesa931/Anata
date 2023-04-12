@@ -1,11 +1,3 @@
-import { startCase, toLower } from 'lodash'
-
-import constituencies from './constituencies.json'
-
-const constituencyOptions = [...new Set(constituencies.map((c) => c.name))].map(
-  (c) => startCase(toLower(c))
-)
-
 const relationshipOptions = [
   'Self',
   'Aunt',
@@ -207,14 +199,6 @@ export const getFormFields = (lookups: LookupData) => {
     addButtonText: 'Add Address',
     items: [
       {
-        id: 'residentialAddress',
-        type: 'places',
-        dataIndex: 'residentialAddress',
-        label: 'Residential Address',
-        dynamic: true,
-        stateKey: 'memberAddress',
-      },
-      {
         id: 'addressLabel',
         type: 'select',
         dataIndex: 'label',
@@ -230,12 +214,38 @@ export const getFormFields = (lookups: LookupData) => {
         ],
       },
       {
+        id: 'residentialAddress',
+        type: 'places',
+        dataIndex: 'residentialAddress',
+        label: 'Address',
+        dynamic: true,
+        stateKey: 'memberAddress',
+      },
+      {
         id: 'deliveryInstructions',
         type: 'textarea',
         dataIndex: 'deliveryInstructions',
         label: 'Delivery Instruction',
         dynamic: true,
         stateKey: 'memberAddress',
+      },
+      {
+        id: 'residentialCounty',
+        type: 'text',
+        dataIndex: 'residentialCounty',
+        label: 'County',
+        dynamic: true,
+        stateKey: 'memberAddress',
+        disabled: true,
+      },
+      {
+        id: 'residentialTown',
+        type: 'text',
+        dataIndex: 'residentialTown',
+        label: 'Town',
+        dynamic: true,
+        stateKey: 'memberAddress',
+        disabled: true,
       },
     ],
   }
@@ -444,25 +454,6 @@ export const getFormFields = (lookups: LookupData) => {
           label: 'Emergency Contact Relationship',
           stateKey: 'memberContact',
           options: relationshipOptions,
-        },
-      ],
-    },
-    {
-      id: 'address-grp',
-      dataIndex: '',
-      type: 'group',
-      label: 'Constituency',
-      items: [
-        {
-          id: 'constituency',
-          type: 'autocomplete',
-          dataIndex: 'constituency',
-          label: 'Constituency',
-          options: constituencyOptions,
-          stateKey: 'memberAddress',
-          index: 0,
-          dynamic: true,
-          showAddButton: false,
         },
       ],
     },
