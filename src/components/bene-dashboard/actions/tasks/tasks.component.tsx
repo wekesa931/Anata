@@ -457,29 +457,35 @@ function Tasks() {
   const reusableAnalytics = (message: string) => {
     analytics.track(`${message}`, {
       bene: recId,
-    }) 
-}
+    })
+  }
   const updateTask = async (task: { id: string; fields: any }) => {
-      await airtableFetch('hntasks', 'post', {
-        id: task.id,
-        fields: {
-          ...task.fields,
-          Assignee: task.fields.Assignee ? [task.fields.Assignee] : [],
-        },
-      }).then((res) => {
-        if(typeof res === 'object') {
+    await airtableFetch('hntasks', 'post', {
+      id: task.id,
+      fields: {
+        ...task.fields,
+        Assignee: task.fields.Assignee ? [task.fields.Assignee] : [],
+      },
+    })
+      .then((res) => {
+        if (typeof res === 'object') {
           Toasts.showSuccessNotification('Tasks Updated')
           reusableAnalytics('Task Updated')
         }
-          if (Array.isArray(res) && res.some(el => el.error === 'INVALID_RECORDS')) {
+        if (
+          Array.isArray(res) &&
+          res.some((el) => el.error === 'INVALID_RECORDS')
+        ) {
           Toasts.showErrorNotification('Tasks Not Updated')
           reusableAnalytics('Task Updated')
-        } 
-      }).catch((err) => {
+        }
+      })
+      .catch((err) => {
         logError(err)
-      }).finally(() => {
+      })
+      .finally(() => {
         return refetchTasks()
-      }) 
+      })
   }
 
   const filterByStatus = (val: string) => {
@@ -518,7 +524,7 @@ function Tasks() {
           </div>
         </>
       )}
-      <div className="justify-start d-flex flex-align-center">
+      <div className="d-flex flex-align-center justify-start">
         <h4>Tasks</h4>
         <div>
           <select

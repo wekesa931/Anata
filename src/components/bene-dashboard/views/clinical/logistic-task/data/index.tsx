@@ -2,24 +2,31 @@ import { useEffect, useState } from 'react'
 import airtableFetch from '../../../../../../resources/airtable-fetch'
 import logError from '../../../../../utils/error_handling/sentry'
 import useAnalytics from '../../../../../../hooks/analytics.hook'
+import { useMember } from '../../../../../../context/member.context'
 
 const useLogisticTasksEvents = () => {
   const { track } = useAnalytics('Logistic Tasks')
-  const LogisticTasksOpen = () => {
+  const trackLogisticsPageOpen = () => {
     track('Logistic Tasks Opened')
   }
-  return { LogisticTasksOpen }
+  return { trackLogisticsPageOpen }
 }
 
-const useLogisticData = (antaraId: string | undefined) => {
+const useLogisticData = () => {
   const [logisticData, setLogisticData] = useState<any[]>([])
+  const { v2Member } = useMember()
 
   const [loading, setLoading] = useState(true)
-  const { LogisticTasksOpen } = useLogisticTasksEvents()
+  const { trackLogisticsPageOpen } = useLogisticTasksEvents()
 
   useEffect(() => {
-    LogisticTasksOpen()
-    const getLogisticTasks = async () => {
+    trackLogisticsPageOpen()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    const getLogisticTasks = async (antaraId: string) => {
       try {
         const logisticTask = await airtableFetch(
           `logisticsTasks/list?&filterByFormula=FIND("${antaraId}", {Antara ID (from Members)})`
@@ -42,8 +49,13 @@ const useLogisticData = (antaraId: string | undefined) => {
         logError(e)
       }
     }
-    getLogisticTasks()
-  }, [antaraId, LogisticTasksOpen])
+
+    if (v2Member) {
+      getLogisticTasks(v2Member?.antaraId)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [v2Member])
   return { logisticData, loading }
 }
 

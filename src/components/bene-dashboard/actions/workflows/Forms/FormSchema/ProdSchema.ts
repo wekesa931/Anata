@@ -11279,10 +11279,9 @@ export default [
         parentValues: ['Order Labs', 'Order Radiologic Examinations'],
         condition: (values: any) => {
           if (Array.isArray(values.Plan)) {
-            return [
-              'Order Labs',
-              'Order Radiologic Examinations',
-            ].some((r) => values.Plan.includes(r))
+            return ['Order Labs', 'Order Radiologic Examinations'].some((r) =>
+              values.Plan.includes(r)
+            )
           }
           return ['Order Labs', 'Order Radiologic Examinations'].includes(
             values.Plan

@@ -2,25 +2,32 @@ import { useEffect, useState } from 'react'
 import airtableFetch from '../../../../../../resources/airtable-fetch'
 import logError from '../../../../../utils/error_handling/sentry'
 import useAnalytics from '../../../../../../hooks/analytics.hook'
+import { useMember } from '../../../../../../context/member.context'
 
 const useLabRequestEvents = () => {
   const { track } = useAnalytics('Lab Request')
-  const LabReqOpen = () => {
+  const trackLabRequestsOpen = () => {
     track('Lab Request Opened')
   }
-  return { LabReqOpen }
+  return { trackLabRequestsOpen }
 }
 
-const useLabData = (antaraId: string | undefined) => {
+const useLabData = () => {
   const [labData, setLabData] = useState<any[]>([])
 
   const [loading, setLoading] = useState(true)
+  const { v2Member } = useMember()
 
-  const { LabReqOpen } = useLabRequestEvents()
+  const { trackLabRequestsOpen } = useLabRequestEvents()
 
   useEffect(() => {
-    LabReqOpen()
-    const getLab = async () => {
+    trackLabRequestsOpen()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    const getLab = async (antaraId: string) => {
       try {
         const memberLab = await airtableFetch(
           `labs/list?&filterByFormula=FIND("${antaraId}", {Antara ID (from Members)})`
@@ -43,8 +50,12 @@ const useLabData = (antaraId: string | undefined) => {
         logError(e)
       }
     }
-    getLab()
-  }, [antaraId, LabReqOpen])
+    if (v2Member) {
+      getLab(v2Member?.antaraId)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [v2Member])
   return { labData, loading }
 }
 

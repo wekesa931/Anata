@@ -133,7 +133,7 @@ function BloodPressure() {
   function CustomToolbar() {
     return (
       <>
-        <div className="justify-end d-flex flex-align-center">
+        <div className="d-flex flex-align-center justify-end">
           <div>
             <select
               onChange={handleDropdown}

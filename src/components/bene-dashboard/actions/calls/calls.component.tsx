@@ -163,7 +163,7 @@ function CallsCallout({
       <a
         role="button"
         tabIndex={0}
-        className="btn relative call-btn"
+        className="btn call-btn relative"
         data-testid="initiate-call-button"
         style={{
           color: isPhoneChooserOpen ? '#32d74b' : '#af9090',

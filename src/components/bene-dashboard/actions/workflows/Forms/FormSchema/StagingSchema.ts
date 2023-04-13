@@ -2192,8 +2192,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: 
-        'Please select Internal if the appointment will be performed by Antara. If not, select External',
+        helper:
+          'Please select Internal if the appointment will be performed by Antara. If not, select External',
       },
       {
         id: 'fld3x0MzCwooOc1A6',

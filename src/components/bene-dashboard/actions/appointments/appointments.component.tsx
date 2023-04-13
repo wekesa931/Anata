@@ -118,10 +118,10 @@ function Appointments() {
   }
 
   const reusableAnalytics = (message: string) => {
-      setSelected(status[0])
-      analytics.track(`${message}`, {
-        bene: recId,
-      }) 
+    setSelected(status[0])
+    analytics.track(`${message}`, {
+      bene: recId,
+    })
   }
 
   const updateAppointment = async (appointment: {
@@ -140,20 +140,26 @@ function Appointments() {
         ).toISOString(),
         Providers: provCheck,
       },
-    }).then((res) => {
-        if(typeof res === 'object') {
+    })
+      .then((res) => {
+        if (typeof res === 'object') {
           Toasts.showSuccessNotification('Record updated')
           reusableAnalytics('Appointment Updated')
         }
-          if (Array.isArray(res) && res.some(el => el.error === 'INVALID_RECORDS')) {
+        if (
+          Array.isArray(res) &&
+          res.some((el) => el.error === 'INVALID_RECORDS')
+        ) {
           Toasts.showErrorNotification('Record Not Updated')
           reusableAnalytics('Appointment Not Updated')
-        } 
-    }).catch((err) => {
-      logError(err)
-    }).finally(() => {
-      return refresh()
-    })  
+        }
+      })
+      .catch((err) => {
+        logError(err)
+      })
+      .finally(() => {
+        return refresh()
+      })
   }
 
   const includeFieldTypes = (appointment) => {

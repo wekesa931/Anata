@@ -231,12 +231,12 @@ function CallFloatingBox() {
             style={{
               backgroundColor: activeCall && consoleColor(),
             }}
-            className="relative call-header d-flex flex-between align-center"
+            className="call-header d-flex flex-between align-center relative"
           >
             {showTransferList && (
               <HNAndCSList displayList={setshowTransferList} />
             )}
-            <div className="d-flex relative box-header">
+            <div className="d-flex box-header relative">
               <p className="call-type-title">
                 {activeCall.title ?? 'Inbound Call'}
                 <br />

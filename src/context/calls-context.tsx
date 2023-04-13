@@ -151,13 +151,13 @@ function CallProvider({ children }: any) {
     if (data) {
       const rawLogs = data.activeCall.edges
       const logs = rawLogs.map((log: { node: any }) => log.node)
-      if (logs.length > 0 ) {
-        if(logs[0].session === null){
+      if (logs.length > 0) {
+        if (logs[0].session === null) {
           setConferenceParticipants([])
           setActiveCall(null)
         } else {
           const { participants: allParticipants, session: activeSession } =
-          logs[0]
+            logs[0]
           if (allParticipants?.length > 0 && activeSession) {
             const participantsDetails: IParticipantSession[] =
               allParticipants?.map((log: IParticipantSession) => {
@@ -173,11 +173,14 @@ function CallProvider({ children }: any) {
                 }
               })
             const memberParticipant = allParticipants.find(
-              (participant: any) => !participant?.isStaff && participant?.isMember
+              (participant: any) =>
+                !participant?.isStaff && participant?.isMember
             )
             const correctRoomName = activeSession?.roomName.replace(/-/g, '')
             const call = {
-              title: callTitle(activeSession?.callDirection?.toLocaleLowerCase()),
+              title: callTitle(
+                activeSession?.callDirection?.toLocaleLowerCase()
+              ),
               type: activeSession?.callDirection,
               state: 'ONGOING',
               assigned: activeSession?.callDirection,

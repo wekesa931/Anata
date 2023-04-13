@@ -140,7 +140,7 @@ function FcmProvider({ children }: any) {
                   width={24}
                   height={24}
                 />
-                <div className="ml-10 d-flex flex-column">
+                <div className="d-flex flex-column ml-10">
                   <button
                     className={styles.goToDashboard}
                     onKeyDown={handleNotification}
