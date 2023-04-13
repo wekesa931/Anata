@@ -27,6 +27,7 @@ const useLogisticData = () => {
 
   useEffect(() => {
     const getLogisticTasks = async (antaraId: string) => {
+      setLoading(true)
       try {
         const logisticTask = await airtableFetch(
           `logisticsTasks/list?&filterByFormula=FIND("${antaraId}", {Antara ID (from Members)})`
@@ -44,9 +45,10 @@ const useLogisticData = () => {
           return parent
         })
         setLogisticData(mappedResponses)
-        setLoading(false)
       } catch (e) {
         logError(e)
+      } finally {
+        setLoading(false)
       }
     }
 

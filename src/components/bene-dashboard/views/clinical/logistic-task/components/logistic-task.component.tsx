@@ -21,15 +21,17 @@ function Logistic() {
   return (
     <div className="mb-ten">
       <h4>Logistic Tasks</h4>
-      <Table
-        title="Logistic details"
-        columns={columns}
-        data={logisticData}
-        dateColumnKey="Due date"
-        filterByDate
-      />
-
-      {loading && <LoadingComponent message="Loading logistic tasks" />}
+      {!loading ? (
+        <Table
+          title="Logistic Details"
+          columns={columns}
+          data={logisticData}
+          dateColumnKey="Due date"
+          filterByDate
+        />
+      ) : (
+        <LoadingComponent message="Loading logistic tasks" />
+      )}
     </div>
   )
 }

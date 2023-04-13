@@ -28,6 +28,7 @@ const useLabData = () => {
 
   useEffect(() => {
     const getLab = async (antaraId: string) => {
+      setLoading(true)
       try {
         const memberLab = await airtableFetch(
           `labs/list?&filterByFormula=FIND("${antaraId}", {Antara ID (from Members)})`
@@ -45,9 +46,10 @@ const useLabData = () => {
           return parent
         })
         setLabData(mappedResponses)
-        setLoading(false)
       } catch (e) {
         logError(e)
+      } finally {
+        setLoading(false)
       }
     }
     if (v2Member) {
