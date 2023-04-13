@@ -1238,13 +1238,7 @@ function WorkflowPortal({
                 >
                   No, Go back
                 </Button>
-                <Button
-                  className={styles.deleteButton}
-                  onClick={() => {
-                    handleDelete()
-                    setIsdeleteWorkflow(false)
-                  }}
-                >
+                <Button className={styles.deleteButton} onClick={handleDelete}>
                   Yes, Delete
                 </Button>
               </div>

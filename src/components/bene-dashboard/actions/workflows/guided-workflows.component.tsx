@@ -44,36 +44,32 @@ function GuidedWorkflows() {
   const hasActiveWorkflows =
     workflowsWithGrouping.complete.length > 0 ||
     workflowsWithGrouping.incomplete.length > 0
-  const [
-    loadWorkflows,
+  const [loadWorkflows, { loading: gettingWorkflows, refetch }] = useLazyQuery(
+    GET_WORKFLOWS,
     {
-      loading: gettingWorkflows,
-      refetch,
-      data: loadedWorkflows,
-      error: gettingWorkflowError,
-    },
-  ] = useLazyQuery(GET_WORKFLOWS)
-  useEffect(() => {
-    if (loadedWorkflows) {
-      if (loadedWorkflows) {
-        const allWorkflows = loadedWorkflows?.workflows?.edges.map(
-          (fl: { node: IWorkflow }) => fl.node
-        )
-        if (allWorkflows.length > 0) {
-          const groupedWorkflows = groupBy(allWorkflows, 'completed')
-          setWorkflowsWithGrouping({
-            incomplete: groupedWorkflows.false || [],
-            complete: groupedWorkflows.true || [],
-          })
+      onCompleted: (loadedWorkflows) => {
+        if (loadedWorkflows) {
+          const allWorkflows = loadedWorkflows?.workflows?.edges.map(
+            (fl: { node: IWorkflow }) => fl.node
+          )
+          if (allWorkflows.length > 0) {
+            const groupedWorkflows = groupBy(allWorkflows, 'completed')
+            setWorkflowsWithGrouping({
+              incomplete: groupedWorkflows.false || [],
+              complete: groupedWorkflows.true || [],
+            })
+          } else {
+            setWorkflowsWithGrouping({ incomplete: [], complete: [] })
+          }
+          onRefetch(false)
         }
-        onRefetch(false)
-      }
+      },
+      onError: (err) => {
+        logError(err)
+      },
+      fetchPolicy: 'cache-and-network',
     }
-    if (gettingWorkflowError) {
-      logError(gettingWorkflowError)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadedWorkflows])
+  )
 
   const [saveWorkflow, { loading: savingWorkflow }] = useMutation(SAVE_WORKFLOW)
   const [createWorkflow, { loading }] = useMutation(CREATE_WORKFLOW)
