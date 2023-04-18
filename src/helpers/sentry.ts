@@ -9,10 +9,12 @@ const startSentry = () => {
       /* tslint:disable:no-string-literal only-arrow-functions */
       const isNonErrorException =
         event?.exception?.values[0]?.value?.startsWith(
-          'Non-Error exception captured'
+          'Non-Error exception captured',
+          'Non-Error promise rejection captured'
         ) ||
         hint?.originalException?.message?.startsWith(
-          'Non-Error exception captured'
+          'Non-Error exception captured',
+          'Non-Error promise rejection captured'
         )
       /* tslint:enable:no-string-literal only-arrow-functions */
 
