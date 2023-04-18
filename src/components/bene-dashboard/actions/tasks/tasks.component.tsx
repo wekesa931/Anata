@@ -321,7 +321,7 @@ function Tasks() {
                       if (url) {
                         const prefills = extractPrefills(url)
 
-                        url = url.split('/').pop().split('?')
+                        url = url.split('/')[3].split('?')
                         const formMeta = FORMS.find(
                           (fm: any) => fm.formId === url[0] || fm.id === url[0]
                         )
