@@ -150,8 +150,7 @@ function ConditionsSummary() {
         const memberInterventions: any[] = []
 
         Object.keys(intervention_response).forEach((key) => {
-          if (intervention_response[key].Status === 'Active')
-            memberInterventions.push(intervention_response[key].Intervention)
+          memberInterventions.push(intervention_response[key].Intervention)
         })
         setInterventions(Array.from(new Set(memberInterventions.flat())))
       }

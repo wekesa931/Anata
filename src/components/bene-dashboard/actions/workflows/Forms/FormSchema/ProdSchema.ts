@@ -13959,48 +13959,9 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldqAL8R4DCw2IKsL',
-        name: 'Status Cause',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
+        required: true,
         helper:
-          "If intervention has been completely successful or should stop for any reason and we do not need the member to continue it, please change the status below. \n\n(By entering a new status below, the Intervention status will be automatically changed in Airtable)\n\n`Paused` means Antara and/or bene temporarily stop an intervention\n'Stopped' means Antara decided to stop the intervention\n'Opted out' means beneficiary decided to stop the intervention",
-      },
-      {
-        id: 'fld8oWfNzH0zQwcVX',
-        name: 'Resumption Date',
-        type: 'date',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Status Cause',
-        parentValues: ['Stopped', 'Paused'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Status Cause'])) {
-            return ['Stopped', 'Paused'].some((r) =>
-              values['Status Cause'].includes(r)
-            )
-          }
-          return ['Stopped', 'Paused'].includes(values['Status Cause'])
-        },
+          'Select the status: Active : intervention is ongoing \n Paused: the member decided to stop for now or you decide to pause it to focus on another intervention \n Completed: intervention is done \n Canceled: the intervention will not apply anymore',
       },
       {
         id: 'fldKyHKhvNtQ3WRZj',
@@ -14013,8 +13974,8 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
-        helper: 'Please enter the reason why the status changed',
+        required: true,
+        helper: 'Please enter the reason that explain the status',
       },
       {
         id: 'fldQzwHoVXf9ure8X',
@@ -14029,16 +13990,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Since you have stopped the intervention, please enter here if it has been successful or not.',
-        conditionType: '',
-        parentKey: 'Status update',
-        parentValues: ['Inactive'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Status update'])) {
-            return ['Inactive'].some((r) => values['Status update'].includes(r))
-          }
-          return ['Inactive'].includes(values['Status update'])
-        },
+          'If you are doing this update at the end of a HMP cycle, please capture the result of the intervention',
       },
       {
         id: 'fldJm6DPdfLZfoLUG',
