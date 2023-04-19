@@ -7,14 +7,16 @@ const startSentry = () => {
     tracesSampleRate: 1.0,
     beforeSend(event: any, hint: any) {
       /* tslint:disable:no-string-literal only-arrow-functions */
+      const errorMessages = [
+        'Non-Error exception captured',
+        'Non-Error promise rejection captured',
+      ]
       const isNonErrorException =
-        event?.exception?.values[0]?.value?.startsWith(
-          'Non-Error exception captured',
-          'Non-Error promise rejection captured'
+        errorMessages.some((val) =>
+          event?.exception?.values[0]?.value?.startsWith(val)
         ) ||
-        hint?.originalException?.message?.startsWith(
-          'Non-Error exception captured',
-          'Non-Error promise rejection captured'
+        errorMessages.some((val) =>
+          hint?.originalException?.message?.startsWith(val)
         )
       /* tslint:enable:no-string-literal only-arrow-functions */
 
