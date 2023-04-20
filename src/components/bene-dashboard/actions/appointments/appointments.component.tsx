@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import AirtableField from '../../../../types/airtable-field'
 import { useUser } from '../../../../context/user-context'
 import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
 import List from '../../../utils/list/list.component'
@@ -41,6 +42,8 @@ function Appointments() {
     'Providers',
     'Calendly Reschedule URL',
     'Record ID',
+    'Assignee',
+    'Reasons for missed or rescheduled meeting',
   ]
 
   const { data, isLoading, isError, refresh } = useAirtableFetch(
@@ -98,6 +101,16 @@ function Appointments() {
         'Rescheduled by member',
         'Needed',
       ].map((type) => ({ label: type, value: type })),
+    },
+    {
+      name: 'Assignee',
+      type: 'lookup',
+      lookupUrl: 'team',
+      lookupFieldNames: ['Name', 'Record ID'],
+    },
+    {
+      name: 'Reasons for missed or rescheduled meeting',
+      type: 'long-text',
     },
   ]
   const { member, v2Member } = useMember()
@@ -162,7 +175,7 @@ function Appointments() {
       })
   }
 
-  const includeFieldTypes = (appointment) => {
+  const includeFieldTypes = (appointment: any) => {
     return Object.keys(appointment).map((key) => {
       const field = APPOINTMENT_FIELDS.find(({ name }) => name === key)
       return field

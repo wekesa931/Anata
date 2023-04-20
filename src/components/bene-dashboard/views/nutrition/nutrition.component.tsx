@@ -10,6 +10,8 @@ function Nutrition() {
   const [consultations, setConsultations] = useState<any[]>([])
   const allowedFields: string[] = [
     'Date of Consultation',
+    'Date of next Nutritional Consultation',
+    'Put anything else you want to share here!',
     'Nutritional Consultation #',
     'Source of NC request',
     'Consultation type',
@@ -76,6 +78,11 @@ function Nutrition() {
   const columns = [
     { name: '#', format: '', key: 'Nutritional Consultation #' },
     { name: 'Date', format: 'dd/mmm/yy', key: 'Date of Consultation' },
+    {
+      name: 'Next Consultation',
+      format: 'dd/mmm/yy',
+      key: 'Date of next Nutritional Consultation',
+    },
     { name: 'BMR', format: '', key: 'Basal Metabolic Rate' },
     {
       name: 'Caloric Intake',

@@ -39,7 +39,8 @@ describe('<InteractionLogsView/>', () => {
     const table = getByTestId('data-table')
     const tableBody = table.children[1]
     const firstRow = tableBody.children[0]
-
+    
+    expect(queryByText('Next Consultation')).not.toBeNull()
     expect(queryByText('BMR')).not.toBeNull()
     expect(queryByText('Caloric Intake')).not.toBeNull()
     expect(queryByText('Caloric Needs')).not.toBeNull()
@@ -51,14 +52,15 @@ describe('<InteractionLogsView/>', () => {
 
     expect(firstRow.children[1].textContent).toBe('2')
     expect(firstRow.children[2].textContent).toBe("07 Aug '20")
-    expect(firstRow.children[3].textContent).toBe('1769')
-    expect(firstRow.children[4].textContent).toBe('2200')
-    expect(firstRow.children[5].textContent).toBe('2000')
-    expect(firstRow.children[6].textContent).toBe('96')
-    expect(firstRow.children[7].textContent).toBe('2329.71')
-    expect(firstRow.children[8].textContent).toBe('2690.29')
-    expect(firstRow.children[9].textContent).toBe('67')
-    expect(firstRow.children[10].textContent).toContain(
+    expect(firstRow.children[3].textContent).toBe("07 Aug '20")
+    expect(firstRow.children[4].textContent).toBe('1769')
+    expect(firstRow.children[5].textContent).toBe('2200')
+    expect(firstRow.children[6].textContent).toBe('2000')
+    expect(firstRow.children[7].textContent).toBe('96')
+    expect(firstRow.children[8].textContent).toBe('2329.71')
+    expect(firstRow.children[9].textContent).toBe('2690.29')
+    expect(firstRow.children[10].textContent).toBe('67')
+    expect(firstRow.children[11].textContent).toContain(
       'Dietary milestones: <1500 mg sodium/day, maintain a 2000 kcal diet and increase her activity levels.'
     )
   })

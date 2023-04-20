@@ -8697,7 +8697,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '1: BMI 25-30\n2: BMI 31-40\n3: BMI >40',
+        helper: '1: BMI 25.0 - 29.9\n2: BMI 30.0 - 39.9\n3: BMI =/>40',
         conditionType: '',
         parentKey: 'Intervention type',
         parentValues: ['Caloric Reduction Plan'],
