@@ -11733,18 +11733,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: "This field is used to fill in GA's claim form.",
-        conditionType: '',
-        parentKey: 'Insurance Provider',
-        parentValues: ['GA insurance'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Insurance Provider'])) {
-            return ['GA insurance'].some((r) =>
-              values['Insurance Provider'].includes(r)
-            )
-          }
-          return ['GA insurance'].includes(values['Insurance Provider'])
-        },
+        helper: '',
       },
       {
         id: 'fld266ZMLYKJLahbD',
@@ -11758,18 +11747,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: "This field is used to fill in GA's claim form.",
-        conditionType: '',
-        parentKey: 'Insurance Provider',
-        parentValues: ['GA insurance'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Insurance Provider'])) {
-            return ['GA insurance'].some((r) =>
-              values['Insurance Provider'].includes(r)
-            )
-          }
-          return ['GA insurance'].includes(values['Insurance Provider'])
-        },
+        helper: '',
       },
       {
         id: 'fldoCRXun8dC87Yit',
@@ -11785,15 +11763,23 @@ export default [
         required: true,
         helper: "This field is used to fill in GA's claim form.",
         conditionType: '',
-        parentKey: 'Insurance Provider',
-        parentValues: ['GA insurance'],
+        parentKey: 'Has the patient suffered from this complaint previously?',
+        parentValues: ['Yes'],
         condition: (values: any) => {
-          if (Array.isArray(values['Insurance Provider'])) {
-            return ['GA insurance'].some((r) =>
-              values['Insurance Provider'].includes(r)
+          if (
+            Array.isArray(
+              values['Has the patient suffered from this complaint previously?']
+            )
+          ) {
+            return ['Yes'].some((r) =>
+              values[
+                'Has the patient suffered from this complaint previously?'
+              ].includes(r)
             )
           }
-          return ['GA insurance'].includes(values['Insurance Provider'])
+          return ['Yes'].includes(
+            values['Has the patient suffered from this complaint previously?']
+          )
         },
       },
       {
@@ -11808,18 +11794,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: "This field is used to fill in GA's claim form.",
-        conditionType: '',
-        parentKey: 'Insurance Provider',
-        parentValues: ['GA insurance'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Insurance Provider'])) {
-            return ['GA insurance'].some((r) =>
-              values['Insurance Provider'].includes(r)
-            )
-          }
-          return ['GA insurance'].includes(values['Insurance Provider'])
-        },
+        helper: '',
       },
     ],
   },
