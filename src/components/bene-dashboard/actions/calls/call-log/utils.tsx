@@ -1,21 +1,12 @@
 import React from 'react'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
-/* eslint-disable */
-const duration = require('dayjs/plugin/duration')
-import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 import { PhoneMissed, PhoneIncoming, PhoneOutgoing } from 'react-feather'
+import duration from 'dayjs/plugin/duration'
+import LoadingIcon from '../../../../../assets/img/icons/loading.svg'
 
 dayjs.extend(duration)
 dayjs.extend(isBetween)
-
-export const formatDuration = (dur: number) => {
-  const cleanedDur = Number(dur).toFixed()
-  const d = dayjs.duration(cleanedDur, 's')
-  const min = d.minutes()
-  const sec = cleanedDur - 60 * min
-  return `${min}: ${sec}`
-}
 
 /**
  * Generate weekly and monthly stats for a given list of records
@@ -54,6 +45,7 @@ export const groupingDataCalls = (logs: Array<any>) => {
       s?.createdAt !== undefined
         ? dayjs(s?.createdAt).format('MM/YY')
         : dayjs(s?.createdAt).format('MM/YY')
+    // eslint-disable-next-line no-param-reassign
     r[createdAt] = r[createdAt] ?? []
     r[createdAt].push(s)
     return r
@@ -74,7 +66,7 @@ export const groupingDataCalls = (logs: Array<any>) => {
   return cleanedData
 }
 
-export const LoadingComponent = ({ text }: any) => {
+export function LoadingComponent({ text }: any) {
   return (
     <div className="d-flex flex-direction-column flex-align-center margin-top-32">
       <LoadingIcon />
@@ -83,20 +75,27 @@ export const LoadingComponent = ({ text }: any) => {
   )
 }
 
-export const CallIcon = ({ item }: any) => {
+export function CallIcon({ item }: any) {
   const callDirection = item?.callDirection
   const memberAnswered = item?.memberAnswered
   const agentAnswered = item?.agentAnswered
 
   if (callDirection === 'OUTBOUND' && memberAnswered) {
     return <PhoneOutgoing width={15} height={15} color="var(--green-50)" />
-  } else if (callDirection === 'INBOUND' && agentAnswered) {
-    return <PhoneIncoming width={15} height={15} color="var(--blue-50)" />
-  } else if (callDirection === 'INBOUND' && !agentAnswered) {
-    return <PhoneMissed width={15} height={15} color="var(--red-50)" />
-  } else if (callDirection === 'OUTBOUND' && !memberAnswered) {
-    return <PhoneMissed width={15} height={15} color="var(--red-50)" />
-  } else {
-    return null
   }
+  if (callDirection === 'INBOUND' && agentAnswered) {
+    return <PhoneIncoming width={15} height={15} color="var(--blue-50)" />
+  }
+  if (callDirection === 'INBOUND' && !agentAnswered) {
+    return <PhoneMissed width={15} height={15} color="var(--red-50)" />
+  }
+  if (callDirection === 'OUTBOUND' && !memberAnswered) {
+    return <PhoneMissed width={15} height={15} color="var(--red-50)" />
+  }
+  return null
+}
+
+export const formatDuration = (d: number) => {
+  const dur = dayjs.duration(d, 'seconds')
+  return dur.format(d >= 3600 ? 'H [hrs] m [mins] s [sec]' : 'm [mins] s [sec]')
 }

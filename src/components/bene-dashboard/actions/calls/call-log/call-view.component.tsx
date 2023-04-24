@@ -2,21 +2,26 @@ import React from 'react'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
-import ListItemIcon from '@mui/material/ListItemIcon'
 import { capitalize } from 'lodash'
-import { formatDuration, CallIcon } from './utils'
+import { formatDuration } from './utils'
 
 type CallViewProps = {
   callData: any
 }
 
-function CallView({ callData }: CallViewProps) {
-  const iconCall = (
-    <ListItemIcon>
-      <CallIcon item={callData} />{' '}
-    </ListItemIcon>
+function CallDetailsItem({ title, subtitle }: any) {
+  return (
+    <ListItem
+      sx={{ flexDirection: 'column', alignItems: 'flex-start' }}
+      key={title}
+    >
+      <ListItemText secondary={title} />
+      <ListItemText primary={subtitle} sx={{ marginTop: -1 }} />
+    </ListItem>
   )
+}
 
+function CallView({ callData }: CallViewProps) {
   const data = [
     {
       title: 'Phone number',
@@ -30,42 +35,19 @@ function CallView({ callData }: CallViewProps) {
       title: 'Type',
       subtitle: capitalize(callData?.callDirection),
     },
+    {
+      title: 'Staff',
+      subtitle: callData?.agentEmail,
+    },
   ]
 
-  const list = () => {
-    return (
-      <>
-        {data &&
-          data.map(({ title, subtitle }, index) => (
-            <List
-              sx={{ width: '100%', maxWidth: 360, bgColor: 'background.paper' }}
-            >
-              <ListItem
-                key={index}
-                sx={{ flexDirection: 'column', alignItems: 'flex-start' }}
-              >
-                <ListItemText secondary={title} />
-
-                {title === 'Type' ? (
-                  <>
-                    {iconCall}{' '}
-                    <ListItemText sx={{ marginTop: 0.5 }}>
-                      {' '}
-                      {subtitle}{' '}
-                    </ListItemText>{' '}
-                  </>
-                ) : (
-                  <ListItemText primary={subtitle} sx={{ marginTop: -1 }} />
-                )}
-              </ListItem>
-            </List>
-          ))}
-      </>
-    )
-  }
   return (
     <div style={{ flexDirection: 'column', marginLeft: 10, marginTop: 10 }}>
-      {list()}
+      <List sx={{ width: '100%', maxWidth: 360, bgColor: 'background.paper' }}>
+        {data.map(({ title, subtitle }, index) => (
+            <CallDetailsItem title={title} subtitle={subtitle} key={index} />
+          ))}
+      </List>
     </div>
   )
 }
