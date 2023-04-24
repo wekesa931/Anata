@@ -244,8 +244,8 @@ export const handleFormSubmissionErrors = (data: any) => {
   const errorMessages = errors.map(
     (e) =>
       `There was an error updating ${e
-        .replace('update', '')
-        .replace('Member', '')}`
+        ?.replace('update', '')
+        ?.replace('Member', '')}`
   )
 
   return errorMessages

@@ -434,14 +434,51 @@ function TsCs({ member, contact }: any) {
     showCard &&
     member['Onboard Stage'] === 'Onboarded'
 
+  type SmsValues = {
+    Channel: string
+    Channels: string[]
+    'In App Action Link': string
+    'In App Template': string
+    'In App Title': string
+    'Record ID': string
+    'SMS Template': string
+    Status: string
+    'Template ID': string
+    'Template record ID': string
+    Title: string
+    Type: string[]
+    char_count: number
+    'char_count copy': number
+    'created at': Date
+    tableName: string
+  }
+
   useEffect(() => {
     airtableFetch(
       `msgTemplates/list?filterByFormula=FIND("Consent reminder", {Title})`
     )
       .then((res) => {
-        const { Message } = Object.keys(res).map((key) => res[key])[0]
-        const msg = Message.replace('{bnname}', bnname)
-        setMessage(msg)
+        let smsTemplate = ''
+
+        if (
+          typeof res === 'object' &&
+          Object.keys(res).length > 0 &&
+          res !== null
+        ) {
+          const getFirstVal = Object.values(res)[0] as SmsValues
+
+          if (
+            typeof getFirstVal === 'object' &&
+            getFirstVal !== null &&
+            'SMS Template' in getFirstVal
+          ) {
+            smsTemplate = getFirstVal['SMS Template']
+          }
+
+          const msg = smsTemplate?.replace('{bnname}', bnname)
+
+          setMessage(msg)
+        }
       })
       .catch((error) => {
         logError(error.message)
