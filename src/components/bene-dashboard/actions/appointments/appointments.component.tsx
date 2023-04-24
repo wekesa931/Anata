@@ -152,6 +152,9 @@ function Appointments() {
           appointment.fields.start_date_time
         ).toISOString(),
         Providers: provCheck,
+        Assignee: appointment.fields.Assignee
+          ? [appointment.fields.Assignee]
+          : [],
       },
     })
       .then((res) => {
