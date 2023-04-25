@@ -1,5 +1,6 @@
 import React from 'react'
 import '../styles/index.css'
+import '../styles/tailwind.styles.css'
 import Routes from './routes'
 import AppContexts from '../context'
 import ErrorBoundary from './error-boundary/error-boundary.component'

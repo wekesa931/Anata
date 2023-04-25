@@ -66,8 +66,8 @@ module.exports = {
         ],
       },
       {
-        test: /(index|tippy)\.css$/,
-        use: ['style-loader', 'css-loader'],
+        test: /(index|tippy|tailwind\.styles)\.css$/,
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {
         test: /\.(jp(e*)g|png|gif|)$/,
