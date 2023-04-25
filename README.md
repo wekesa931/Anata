@@ -16,6 +16,13 @@ This is a React app pulls data from Airtable and provides a simpler UI for our c
 5. Create a new `.env` on the root dir and add the required variables from `.env.example`. The environment variables can be accessed [here](https://antara.1password.com/vaults/vlce5zlfjwpfukscylhotjfbga/allitems/2xfh2jcgdj4y6hfelfe3h2hf3a)
 6. run `npm run dev`
 
+# Styling and theming
+We use for styling. Tailwind is a utility-first CSS framework for rapidly building custom user interfaces. It is a low-level CSS framework that gives you all of the building blocks you need to build designs without any annoying opinionated styles you have to fight to override. To learn more about tailwind check out their [docs](https://tailwindcss.com/docs/installation).
+
+The themes can be configured within the `tailwind.config.js` to enable theme related changes. The themes are configured in the `src/styles/themes.js` file. 
+
+To generate tailwind css and watch for changes during development run `npm run tailwind:dev`. To generate the tailwind css for production run `npm run tailwind:prod`. For a reference on production optimizations check out the [docs](https://tailwindcss.com/docs/optimizing-for-production).
+
 # Tests
 
 We use [jest](https://jestjs.io/) and [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/) for unit tests. To run tests: `npm run test` or `npm run test:watch` in watch mode.

@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root,
+  .appContainer {
+    font-family: Rubik, system-ui, sans-serif !important;
+  }
+}
