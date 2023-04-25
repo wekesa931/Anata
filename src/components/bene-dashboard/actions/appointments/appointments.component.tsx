@@ -8,12 +8,11 @@ import List from '../../../utils/list/list.component'
 import filterFields from '../../../../helpers/filter-fields'
 import Icon from '../../../utils/icon/icon.component'
 import Tooltip from '../../../utils/tooltip/tooltip.component'
-import analytics from '../../../../helpers/segment'
 import airtableFetch from '../../../../resources/airtable-fetch'
 import styles from './appointments.component.css'
 import { useMember } from '../../../../context/member.context'
-import Toasts from '../../../../helpers/toast'
 import logError from '../../../utils/error_handling/sentry'
+import useHandleResponses from '../utils'
 
 function Appointments() {
   const [appointments, setAppointments] = React.useState<any[]>([])
@@ -130,12 +129,7 @@ function Appointments() {
     }
   }
 
-  const reusableAnalytics = (message: string) => {
-    setSelected(status[0])
-    analytics.track(`${message}`, {
-      bene: recId,
-    })
-  }
+  const { handleResponses } = useHandleResponses('Appointments')
 
   const updateAppointment = async (appointment: {
     id: string
@@ -158,17 +152,8 @@ function Appointments() {
       },
     })
       .then((res) => {
-        if (typeof res === 'object') {
-          Toasts.showSuccessNotification('Record updated')
-          reusableAnalytics('Appointment Updated')
-        }
-        if (
-          Array.isArray(res) &&
-          res.some((el) => el.error === 'INVALID_RECORDS')
-        ) {
-          Toasts.showErrorNotification('Record Not Updated')
-          reusableAnalytics('Appointment Not Updated')
-        }
+        handleResponses(res)
+        setSelected(status[0])
       })
       .catch((err) => {
         logError(err)

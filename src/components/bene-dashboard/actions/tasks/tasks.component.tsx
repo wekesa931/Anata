@@ -11,17 +11,15 @@ import styles from './tasks.component.css'
 import filterFields from '../../../../helpers/filter-fields'
 import TASK_FIELDS from './tasks-fields'
 import useAirtableFetch from '../../../../hooks/airtable-fetch.hook'
-import analytics from '../../../../helpers/segment'
 import PrescriptionName from './PrescriptionNames'
 import CallsCallout from '../calls/calls.component'
 import FORMS from '../workflows/Forms/FormSchema/form-fields-complete'
-
 import { GET_MEMBER_TASKS } from '../../../../gql/hn_tasks'
 import { useMember } from '../../../../context/member.context'
 import logError from '../../../utils/error_handling/sentry'
 import { useFormPortal } from '../../../../context/forms-context'
 import { WorkflowMeta } from '../workflows/workflow-types'
-import Toasts from '../../../../helpers/toast'
+import useHandleResponses from '../utils'
 
 type RecordWithId = { data: any; id: string }
 type MatchType = { key: string; value: string }
@@ -454,11 +452,9 @@ function Tasks() {
     }
     return null
   }
-  const reusableAnalytics = (message: string) => {
-    analytics.track(`${message}`, {
-      bene: recId,
-    })
-  }
+
+  const { handleResponses } = useHandleResponses('Tasks')
+
   const updateTask = async (task: { id: string; fields: any }) => {
     await airtableFetch('hntasks', 'post', {
       id: task.id,
@@ -468,17 +464,7 @@ function Tasks() {
       },
     })
       .then((res) => {
-        if (typeof res === 'object') {
-          Toasts.showSuccessNotification('Tasks Updated')
-          reusableAnalytics('Task Updated')
-        }
-        if (
-          Array.isArray(res) &&
-          res.some((el) => el.error === 'INVALID_RECORDS')
-        ) {
-          Toasts.showErrorNotification('Tasks Not Updated')
-          reusableAnalytics('Task Updated')
-        }
+        handleResponses(res)
       })
       .catch((err) => {
         logError(err)
