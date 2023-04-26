@@ -11369,17 +11369,17 @@ export default [
         },
       },
       {
-        id: 'fldUY3O7pjQpY5kE6',
-        name: 'What lab tests would you like to order?',
-        type: 'multiSelect',
+        id: 'fldaomDGBfdks4ude',
+        name: 'Routine labs (synced view from lab base)',
+        type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
+        symmetricColumnId: 'fldRTcRqRxpvhbjXg',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblV0rNDZCPe3ZalK',
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Plan',
@@ -11557,35 +11557,6 @@ export default [
             return ['Other:'].some((r) => values.Echocardiogram.includes(r))
           }
           return ['Other:'].includes(values['Type of X-Ray'])
-        },
-      },
-      {
-        id: 'fldsNwD20slDl4Dg1',
-        name: 'Other lab test',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'What lab tests would you like to order?',
-        parentValues: ['Other'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(values['What lab tests would you like to order?'])
-          ) {
-            return ['Other'].some((r) =>
-              values['What lab tests would you like to order?'].includes(r)
-            )
-          }
-          return ['Other'].includes(
-            values['What lab tests would you like to order?']
-          )
         },
       },
       {
