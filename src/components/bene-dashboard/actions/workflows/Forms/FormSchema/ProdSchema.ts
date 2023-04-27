@@ -11259,7 +11259,34 @@ export default [
         foreignTableId: 'tblYOGN4iEGRc3Mjm',
         required: false,
         helper:
-          'When requesting for lab or imaging, if the the request already exist in our system, please select it in the dropdown so that we can update the status automatically. If it is a new request, the lab/imaging record will automatically be created in our system once you submit this form',
+          'When requesting for lab or imaging, if the request already exists in our system, please select it in the dropdown so that we can update the status automatically. If it is a new request, please fill the next field with the labs that are required and the lab/imaging record will automatically be created in our system once you submit this form',
+        conditionType: '',
+        parentKey: 'Plan',
+        parentValues: ['Order Labs', 'Order Radiologic Examinations'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Plan)) {
+            return ['Order Labs', 'Order Radiologic Examinations'].some((r) =>
+              values.Plan.includes(r)
+            )
+          }
+          return ['Order Labs', 'Order Radiologic Examinations'].includes(
+            values.Plan
+          )
+        },
+      },
+      {
+        id: 'fldaomDGBfdks4ude',
+        name: 'Routine labs (synced view from lab base)',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldRTcRqRxpvhbjXg',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblV0rNDZCPe3ZalK',
+        required: false,
+        helper: '',
         conditionType: '',
         parentKey: 'Plan',
         parentValues: ['Order Labs', 'Order Radiologic Examinations'],
@@ -11366,29 +11393,6 @@ export default [
             'Refer to a Specialist',
             'Refer for in-person Consultation',
           ].includes(values.Plan)
-        },
-      },
-      {
-        id: 'fldaomDGBfdks4ude',
-        name: 'Routine labs (synced view from lab base)',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldRTcRqRxpvhbjXg',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblV0rNDZCPe3ZalK',
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Plan',
-        parentValues: ['Order Labs'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Plan)) {
-            return ['Order Labs'].some((r) => values.Plan.includes(r))
-          }
-          return ['Order Labs'].includes(values.Plan)
         },
       },
       {
