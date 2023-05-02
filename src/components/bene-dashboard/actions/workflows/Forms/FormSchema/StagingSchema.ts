@@ -4863,21 +4863,6 @@ export default [
         },
       },
       {
-        id: 'fldIMHe5e8VMbMyIc',
-        name: 'On a scale from 1-10, how likely are you to recommend the services to your friends?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Only ask this question when the provider is NOT related to Avenue HealthCare',
-      },
-      {
         id: 'fldWPDwz7t1aPkRNw',
         name: 'Flag for review',
         type: 'checkbox',
