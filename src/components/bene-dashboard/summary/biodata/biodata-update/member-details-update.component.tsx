@@ -165,7 +165,11 @@ const cleanObject = (obj: any) => {
   return cleanedObj
 }
 
-const prepareData = (vars: any, antaraId: string) => {
+const prepareData = (
+  vars: any,
+  antaraId: string,
+  benefitOptions: LookupOption[]
+) => {
   const inputVariables = { ...vars }
 
   if (inputVariables.memberDetails) {
@@ -188,7 +192,14 @@ const prepareData = (vars: any, antaraId: string) => {
 
     inputVariables.memberInsurance = {
       insuranceDetails: inputVariables.memberInsurance.map((ins: any) => ({
-        ...(!!ins.benefits && { benefits: ins.benefits }),
+        ...(!!ins.benefits && {
+          benefits: ins.benefits.map((b: any) => {
+            const id = benefitOptions.find(
+              (bo: any) => bo.name === b
+            )?.benefitId
+            return id
+          }),
+        }),
         ...(!!ins.healthPolicy && { healthPolicy: ins.healthPolicy }),
         insuranceCompany: ins.insuranceCompany,
         insuranceId: ins.insuranceId,
@@ -259,7 +270,11 @@ export const handleFormSubmissionErrors = (data: any) => {
 const parseDataToOptions = (data: any, key: string) => {
   const raw: any[] = data?.edges
 
-  return raw?.map((e) => ({ label: e?.node[key], value: e?.node[key] }))
+  return raw?.map((e) => ({
+    label: e?.node[key],
+    value: e?.node[key],
+    ...e?.node,
+  }))
 }
 
 function MemberDetailsUpdateForm({
@@ -354,7 +369,7 @@ function MemberDetailsUpdateForm({
   const updateMemberDetails = (values: any) => {
     setIsSaving(true)
     const antaraId = v2Member?.antaraId
-    const memberDetails = prepareData(cleanObject(values), antaraId)
+    const memberDetails = prepareData(cleanObject(values), antaraId, benefits)
 
     handleMemberUpdate(memberDetails)
       .then((res: any) => {
@@ -364,11 +379,11 @@ function MemberDetailsUpdateForm({
         } else {
           successCb('Member details saved successfully')
           closeWindow()
+          refetchMember()
         }
       })
       .catch((e: any) => errorCb(e.message))
       .finally(() => {
-        refetchMember()
         setIsSaving(false)
       })
   }

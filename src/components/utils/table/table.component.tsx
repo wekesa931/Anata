@@ -211,14 +211,15 @@ function Table({
           </tbody>
         </table>
         <div className={styles.pagination}>
-          {sortedData.length > 3 && sortedData.length !== displayedData.length && (
-            <button
-              className={`btn-unstyled ${styles.tableBtn}`}
-              onClick={displayMore}
-            >
-              More
-            </button>
-          )}
+          {sortedData.length > 3 &&
+            sortedData.length !== displayedData.length && (
+              <button
+                className={`btn-unstyled ${styles.tableBtn}`}
+                onClick={displayMore}
+              >
+                More
+              </button>
+            )}
           {displayedData.length > 3 && (
             <button
               className={`btn-unstyled ${styles.tableBtn}`}

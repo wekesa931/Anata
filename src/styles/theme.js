@@ -1,6 +1,6 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
-export default {
+module.exports = {
   extend: {
     fontFamily: {
       'sans': ['Rubik', ...defaultTheme.fontFamily.sans],
