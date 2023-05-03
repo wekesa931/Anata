@@ -12,7 +12,6 @@ import {
   GET_INSURANCE_COMPANIES,
   LOOKUP_ENTRIES_QUERY,
 } from '../../../../../gql/comms'
-import { GET_ANTARA_STAFF } from '../../../../../gql/staff'
 import logError from '../../../../utils/error_handling/sentry'
 import PortalWindow from '../../../../lib/portal/portal.component'
 import styles from '../biodata.component.css'
@@ -21,6 +20,7 @@ import ToastNotification, {
   defaultToastMessage,
   ToastMessage,
 } from '../../../../utils/toast/toast-notification'
+import useAntaraStaff from '../../../../../hooks/antara-staff.hook'
 
 type MemberDetailsProps = {
   closeWindow: () => void
@@ -285,8 +285,7 @@ function MemberDetailsUpdateForm({
   const [sexOptions, setSexOptions] = useState<LookupOption[]>([])
   const [maritalStatus, setMaritalStatus] = useState<LookupOption[]>([])
   const [benefits, setBenefits] = useState<LookupOption[]>([])
-  const [antaraHNs, setAntaraHNs] = useState<LookupOption[]>([])
-  const [antaraMEs, setAntaraMEs] = useState<LookupOption[]>([])
+
   const [tags, setTags] = useState<LookupOption[]>([])
   const [dataLoading, setDataLoading] = useState<boolean>(false)
   const [isEdited, setIsEdited] = useState<boolean>(false)
@@ -323,30 +322,22 @@ function MemberDetailsUpdateForm({
     },
   })
   const [getInsurances] = useLazyQuery(GET_INSURANCE_COMPANIES)
-  const [getAntaraStaff] = useLazyQuery(GET_ANTARA_STAFF)
 
-  const getStaffTeam = (team: string) => (staffMembers: any[]) => {
-    return staffMembers
-      .filter((e: any) => e?.node?.team === team)
-      .map((staff: any) => ({
-        label: staff?.node?.fullName,
-        value: staff?.node?.emailUsername,
-      }))
+  const { antaraHNs, antaraMEs, loading: loadingStaff } = useAntaraStaff()
+
+  const mapStaffToLookup = (staffMembers: any[]) => {
+    return staffMembers.map((staff: any) => ({
+      label: staff?.fullName,
+      value: staff?.emailUsername,
+    }))
   }
 
   const loadLooups = () => {
     setDataLoading(true)
-    Promise.all([getLookupEntries(), getInsurances(), getAntaraStaff()])
+    Promise.all([getLookupEntries(), getInsurances()])
       .then((data) => {
-        const [lookupData, insuranceData, staffData] = data
-
+        const [lookupData, insuranceData] = data
         parseLookupEntries(lookupData?.data)
-        const getMes = getStaffTeam('MEMBER_EXPERIENCE')
-        const getHns = getStaffTeam('HEALTH_NAVIGATOR')
-
-        setAntaraHNs(getHns(staffData?.data?.antaraStaff?.edges))
-        setAntaraMEs(getMes(staffData?.data?.antaraStaff?.edges))
-
         setInsuranceCompanies(
           parseDataToOptions(insuranceData?.data?.insuranceCompanies, 'name')
         )
@@ -401,8 +392,8 @@ function MemberDetailsUpdateForm({
     tags,
     v2Member,
     companies,
-    antaraHNs,
-    antaraMEs,
+    antaraHNs: mapStaffToLookup(antaraHNs),
+    antaraMEs: mapStaffToLookup(antaraMEs),
   }
 
   return (
@@ -437,7 +428,7 @@ function MemberDetailsUpdateForm({
         isEdited={isEdited}
         setIsEdited={setIsEdited}
       >
-        {dataLoading || isLoading ? (
+        {dataLoading || isLoading || loadingStaff ? (
           <div className="d-flex flex-direction-column flex-align-center margin-top-32">
             <LoadingIcon />
             <p className="text-small">Loading Member Data...</p>

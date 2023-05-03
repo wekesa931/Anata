@@ -45,8 +45,8 @@ function CallView({ callData }: CallViewProps) {
     <div style={{ flexDirection: 'column', marginLeft: 10, marginTop: 10 }}>
       <List sx={{ width: '100%', maxWidth: 360, bgColor: 'background.paper' }}>
         {data.map(({ title, subtitle }, index) => (
-            <CallDetailsItem title={title} subtitle={subtitle} key={index} />
-          ))}
+          <CallDetailsItem title={title} subtitle={subtitle} key={index} />
+        ))}
       </List>
     </div>
   )

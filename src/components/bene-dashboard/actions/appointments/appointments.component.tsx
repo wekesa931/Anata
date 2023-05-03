@@ -13,6 +13,7 @@ import styles from './appointments.component.css'
 import { useMember } from '../../../../context/member.context'
 import logError from '../../../utils/error_handling/sentry'
 import useHandleResponses from '../utils'
+import useAntaraStaff from '../../../../hooks/antara-staff.hook'
 
 function Appointments() {
   const [appointments, setAppointments] = React.useState<any[]>([])
@@ -50,6 +51,22 @@ function Appointments() {
     &sort=[{"field":"start_date_time","direction":"desc"}]
     &${filterFields(allowedFields)}`
   )
+
+  const { allAntaraStaffs, loading } = useAntaraStaff()
+
+  const mapAssigneeTeam = (antaraStaff: any[]) => {
+    const teamType = [
+      'DOCTOR',
+      'NUTRITIONIST',
+      'HEALTH_NAVIGATOR',
+      'MEMBER_EXPERIENCE',
+    ]
+    return antaraStaff
+      .filter(({ team }: any) => {
+        return teamType.some((value) => team === value)
+      })
+      .sort((a, b) => a?.fullName?.localeCompare(b?.fullName))
+  }
 
   const {
     data: providersData,
@@ -103,9 +120,11 @@ function Appointments() {
     },
     {
       name: 'Assignee',
-      type: 'lookup',
-      lookupUrl: 'team',
-      lookupFieldNames: ['Name', 'Record ID'],
+      type: 'single-select',
+      options: mapAssigneeTeam(allAntaraStaffs).map(({ fullName, atRecordId }: any) => ({
+        label: fullName,
+        value: atRecordId,
+      })),
     },
     {
       name: 'Reasons for missed or rescheduled meeting',
@@ -282,7 +301,7 @@ function Appointments() {
           </select>
         </div>
       </div>
-      {filteredAppointments && !isLoading && (
+      {filteredAppointments && !isLoading && !loading && (
         <List
           list={filteredAppointments}
           getTopLeftText={getAppointmentDate}
@@ -293,7 +312,7 @@ function Appointments() {
           modalTitle="Appointment"
         />
       )}
-      {isLoading && providersLoading && (
+      {isLoading && providersLoading && loading && (
         <div className="d-flex flex-direction-column flex-align-center margin-top-32">
           <Icon name="loading" />
           <p className="text-small">Loading Appointments...</p>

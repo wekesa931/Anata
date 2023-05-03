@@ -1,7 +1,6 @@
 import Toasts from '../../../../helpers/toast'
 import useAnalytics from '../../../../hooks/analytics.hook'
 
-
 const useTrackEvents = (type: string) => {
   const { track } = useAnalytics(`${type}`)
 
@@ -20,17 +19,15 @@ const useTrackEvents = (type: string) => {
 }
 
 const useHandleResponses = (type: string) => {
-  const { trackRecordUpdated, trackRecordUpdateFailed } =
-    useTrackEvents(type)
+  const { trackRecordUpdated, trackRecordUpdateFailed } = useTrackEvents(type)
 
   const handleResponses = (res: any) => {
     const errorTypes = ['INVALID_RECORDS', 'INVALID_VALUE_FOR_COLUMN']
 
-    const errorChecks = (errRes: any[]) => 
-        errRes.some((el: any) => errorTypes.includes(el.error)) ||
+    const errorChecks = (errRes: any[]) =>
+      errRes.some((el: any) => errorTypes.includes(el.error)) ||
       errRes.some((el: any) => el.statusCode >= 300)
-    
-    
+
     if (typeof res === 'object' && res !== null) {
       Toasts.showSuccessNotification('Record updated')
       trackRecordUpdated()
