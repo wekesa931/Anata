@@ -9704,6 +9704,32 @@ export default [
         },
       },
       {
+        id: 'fldIZh3Q8dRNbRYnq',
+        name: 'Testimonial',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Written In 1st person (“I cannot remember”) and In Member’s own words. This can be general, service focused, value, segment or feature focused. Record testimonial in the language of the member and put a translation to it. It can be something touching, something memorable, something funny',
+        conditionType: '',
+        parentKey: 'Type of feedback',
+        parentValues: ['Testimonial'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Type of feedback'])) {
+            return ['Testimonial'].some((r) =>
+              values['Type of feedback'].includes(r)
+            )
+          }
+          return ['Testimonial'].includes(values['Type of feedback'])
+        },
+      },
+      {
         id: 'fldqzI67eT0Lpt9lZ',
         name: 'What did the member provide feedback for?',
         type: 'multiSelect',

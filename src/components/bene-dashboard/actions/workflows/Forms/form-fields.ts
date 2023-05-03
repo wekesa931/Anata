@@ -261,6 +261,7 @@ const feedbackMap: any = {
   Feedback: 'feedbackFromMember',
   Member: 'memberAntaraId',
   Source: 'source',
+  Testimonial: 'testimonial',
 }
 
 export const feedbackPayload = (raw: any) => {
