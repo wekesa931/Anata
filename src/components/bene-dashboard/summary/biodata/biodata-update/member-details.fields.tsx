@@ -210,7 +210,6 @@ export const getFormFields = (lookups: LookupData) => {
         options: [
           { value: 'Home', label: 'Home' },
           { value: 'Office', label: 'Office' },
-          { value: 'Work', label: 'Work' },
           { value: 'Other', label: 'Other' },
         ],
       },
