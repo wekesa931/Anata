@@ -1,0 +1,96 @@
+import React, { useEffect } from 'react'
+import TabContext from '@mui/lab/TabContext'
+import TabList from '@mui/lab/TabList'
+import TabPanel from '@mui/lab/TabPanel'
+import Box from '@mui/material/Box'
+import Tab from 'src/components/tabs/mui-tabs.component'
+import Communication from 'src/modules/comms/chat/views/messages'
+import Forms from 'src/modules/workflows/views/forms-page'
+import Appointments from 'src/modules/appointments'
+import Tasks from 'src/modules/tasks/views/hn-tasks'
+import Icon from 'src/components/icon/svg-icon'
+import CallsCallout from 'src/modules/comms/calls/views'
+import { useCall } from 'src/context/calls'
+import ErrorBoundary from 'src/components/error-boundary'
+import GuidedWorkflows from 'src/modules/workflows/views/workflows-page'
+import { withTabRouter } from 'src/utils/routing/tab-router'
+
+function Actions({ handleChange, view }: any) {
+  const { setCounterValue } = useCall()
+
+  useEffect(() => {
+    setCounterValue()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <TabContext value={view}>
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: 'divider',
+          display: 'flex',
+          justifyContent: 'space-between',
+          background: 'var(--white-bg)',
+        }}
+      >
+        <TabList
+          onChange={handleChange}
+          value={view}
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          <Tab className="tab-view" label="Tasks" value="tasks" />
+          <Tab className="tab-view" label="Forms" value="forms" />
+          <Tab className="tab-view" label="Workflows" value="workflows" />
+          <Tab label="Appointments" value="appointments" />
+        </TabList>
+        <div className="d-flex flex-between communication-icons">
+          <button
+            className="btn"
+            style={{
+              color: view === 'messages' ? '#58a9f3' : '#af9090',
+              backgroundColor: view === 'messages' ? '#e7f3fd' : '#e8eaed',
+            }}
+            onClick={(e) => handleChange(e, 'messages')}
+          >
+            <Icon name="message-circle" fill="#efefef" width={16} height={16} />
+          </button>
+          <CallsCallout />
+        </div>
+      </Box>
+      <div
+        className="full-height d-flex flex-column flex-1"
+        style={{ overflowY: 'auto' }}
+      >
+        <TabPanel value="tasks">
+          <ErrorBoundary>
+            <Tasks />
+          </ErrorBoundary>
+        </TabPanel>
+        <TabPanel value="forms">
+          <ErrorBoundary>
+            <Forms />
+          </ErrorBoundary>
+        </TabPanel>
+        <TabPanel value="workflows">
+          <ErrorBoundary>
+            <GuidedWorkflows />
+          </ErrorBoundary>
+        </TabPanel>
+        <TabPanel value="appointments">
+          <ErrorBoundary>
+            <Appointments />
+          </ErrorBoundary>
+        </TabPanel>
+        <TabPanel value="messages" className="full-height">
+          <ErrorBoundary>
+            <Communication />
+          </ErrorBoundary>
+        </TabPanel>
+      </div>
+    </TabContext>
+  )
+}
+
+export default withTabRouter(Actions, 'action', 'tasks')

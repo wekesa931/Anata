@@ -1,0 +1,43 @@
+.inboundNotification {
+  position: absolute;
+  right: 100px;
+  top: 10px;
+  width: 222px;
+  border: 1px solid #fdefef;
+  position: absolute;
+  background: white;
+  z-index: 3000;
+  padding: 6px;
+  text-align: center;
+  border-radius: 10px;
+  color: #32d74b;
+}
+
+.goToDashboard {
+  cursor: pointer;
+  flex-grow: 0;
+  font-family: Rubik;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: -0.28px;
+  text-align: left;
+  color: #1084ee;
+}
+
+.error {
+  color: red;
+  font-family: Rubik;
+  border: none;
+  background: none;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: -0.28px;
+}

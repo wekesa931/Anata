@@ -1,14 +1,14 @@
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useUser } from '../../../context/user-context'
-import useAirtableFetch from '../../../hooks/airtable-fetch.hook'
+import { useUser } from 'src/context/user'
+import useAirtableFetch from 'src/hooks/airtable-fetch'
+import Icon from 'src/components/icon/svg-icon'
+import Tabs from 'src/components/tabs/tabs.component'
+import analytics from 'src/config/analytics'
 import styles from './task-menu.component.css'
-import Icon from '../../utils/icon/icon.component'
-import Tabs from '../../utils/tabs/tabs.component'
-import analytics from '../../../helpers/segment'
 
-function DateInput({ date, onChange }) {
+function DateInput({ date, onChange }: any) {
   return (
     <input
       className="form-control"

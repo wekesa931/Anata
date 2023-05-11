@@ -59,5 +59,13 @@ module.exports = {
       'LabeledStatement',
       'WithStatement',
     ],
+    "no-param-reassign": 0,
+    "import/no-named-as-default": 0,
+    "import/prefer-default-export": 0,
+  },
+  settings: {
+    "import/resolver": {
+      typescript: {} // this loads <rootdir>/tsconfig.json to eslint
+    },
   },
 }

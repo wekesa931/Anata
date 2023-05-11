@@ -1,4 +1,4 @@
-import { User } from '../src/types/user'
+import { User } from '../old_src/types/user'
 
 const mockUser: User = {
   accessToken: 'accessToken',

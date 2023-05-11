@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react'
+import SVGIcon from 'src/components/icon/svg-icon'
+import FCM, { fetchAllAndClear } from 'src/context/fcm/utils'
 import { XCircle } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
-import FCM, { fetchAllAndClear } from './utils'
-import Icon from '../../components/utils/icon/icon.component'
-import styles from '../../components/utils/notification/notification.component.css'
+import styles from './fcm.component.css'
 
 type PushNotification = {
-  notification: {
-    title: string
-    body: string
-  }
+  notification:
+    | {
+        title: string
+        body: string
+      }
+    | undefined
   data: {
     [key: string]: any
   }
@@ -134,7 +136,7 @@ function FcmProvider({ children }: any) {
           <div className="d-flex align-center">
             {memberId ? (
               <>
-                <Icon
+                <SVGIcon
                   name={notificationIconsMap[localPushCategory]}
                   fill="white"
                   width={24}

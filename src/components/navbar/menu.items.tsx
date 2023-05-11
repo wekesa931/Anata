@@ -13,7 +13,7 @@ import {
   Heart,
   AlertCircle,
 } from 'react-feather'
-import config from '../../config/config'
+import config from 'src/config/hnos_views'
 import FlagForReview from './flag-for-review/flag-for-review.component'
 
 const { iframes } = config
@@ -22,7 +22,7 @@ const SidebarMenuItems = [
   {
     name: 'Members',
     icon: <User />,
-    rootUrl: `https://airtable.com/embed/${iframes.default.Members}?viewControls=on`,
+    rootUrl: `https://airtable.com/embed/${iframes?.default?.Members}?viewControls=on`,
     url_sandbox: 'https://airtable.com/embed/shrK946uKbTWYhDSa',
   },
   {

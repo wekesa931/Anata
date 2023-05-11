@@ -1,9 +1,6 @@
+import { fetchAll, clearTable } from 'src/storage/indexeddb/comms.db'
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/messaging'
-import {
-  fetchAll,
-  clearTable,
-} from '../../comms/resources/localstorage.resources'
 
 export type FCMState = {
   data: any

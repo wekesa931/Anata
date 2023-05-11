@@ -1,14 +1,14 @@
 import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { render, RenderResult } from '@testing-library/react'
-import { AuthProvider } from '../src/context/auth-context'
-import { UserProvider } from '../src/context/user-context'
+import { AuthProvider } from 'scribe/context/auth'
+import { UserProvider } from 'scribe/context/user'
 import mockUser from './user.mock'
-import { MemberProvider } from '../src/context/member.context'
+import { MemberProvider } from 'scribe/context/member'
 import mockMember from './member.mock'
 import { ApolloProvider } from '@apollo/client'
 import mockClient from './contact-mocks'
-import { AirtableMetaProvider } from '../src/context/airtable-context'
+import { AirtableMetaProvider } from 'scribe/context/airtable-meta'
 
 type CustomRenderResult = RenderResult & {
   history: any

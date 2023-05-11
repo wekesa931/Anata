@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useLazyQuery } from '@apollo/client'
-import { GET_ANTARA_STAFF } from '../gql/staff'
+import { GET_ANTARA_STAFF } from 'src/gql/staff'
 
 const useAntaraStaff = () => {
   const [antaraMEs, setAntaraMEs] = useState<any>([])

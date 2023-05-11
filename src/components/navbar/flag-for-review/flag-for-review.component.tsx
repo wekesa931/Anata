@@ -7,14 +7,14 @@ import { Field, Form, Formik } from 'formik'
 import {
   GET_ALL_FLAGGED_INTERACTIONS,
   GET_ALL_INTERACTIONS,
-} from '../../../gql/interactions'
-import LoadingIcon from '../../../assets/img/icons/loading.svg'
-import List from '../../utils/list/list.component'
-import styles from './flag-for-review.component.css'
-import analytics from '../../../helpers/segment'
-import Icon from '../../utils/icon/icon.component'
-import airtableFetch from '../../../resources/airtable-fetch'
-import MultiSelect from '../../utils/multiselect/multiselect.component'
+} from 'src/modules/interactions/services/gql'
+import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import List from 'src/components/list'
+import analytics from 'src/config/analytics'
+import Icon from 'src/components/icon/svg-icon'
+import airtableFetch from 'src/services/airtable/fetch'
+import MultiSelect from 'src/components/forms/multiselect.field'
+import styles from './styles.component.css'
 
 const ALL_INTERACTIONS = 'All'
 

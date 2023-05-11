@@ -7,11 +7,11 @@ import {
   ListItemText,
 } from '@mui/material'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useSidebar } from 'src/context/sidebar'
+import analytics from 'src/config/analytics'
+import config from 'src/config/hnos_views'
+import { useUser } from 'src/context/user'
 import MenuItems from './menu.items'
-import { useSidebar } from '../../context/sidebar-context'
-import analytics from '../../helpers/segment'
-import config from '../../config/config'
-import { useUser } from '../../context/user-context'
 
 type FloatingMenuProps = {
   anchorEl: any
@@ -28,10 +28,10 @@ function FloatingMenu({ anchorEl, open, handleClose }: FloatingMenuProps) {
   const { pathname: path } = useLocation()
 
   const customizedView = (name: any) => {
-    if (user && iframes[user.email] && iframes[user.email][name]) {
+    if (user && iframes && iframes[user?.email] && iframes[user?.email][name]) {
       return iframes[user.email][name]
     }
-    return iframes.default[name]
+    return iframes && iframes.default[name]
   }
 
   let items: any = []

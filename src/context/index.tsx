@@ -1,28 +1,34 @@
 import React from 'react'
 import { ApolloProvider } from '@apollo/client'
 import { ToastProvider } from 'react-toast-notifications'
-import { UserProvider } from './user-context'
-import { AuthProvider } from './auth-context'
-import { CommsProvider } from './comms-context'
-import client from '../resources/apollo-client'
-import { SidebarProvider } from './sidebar-context'
-import { AirtableMetaProvider } from './airtable-context'
+import client from 'src/services/api/client'
+import { UserProvider } from 'src/context/user'
+import { AuthProvider } from 'src/context/auth'
+import { AirtableMetaProvider } from 'src/context/airtable-meta'
+import { SidebarProvider } from 'src/context/sidebar'
+import { CommsProvider } from 'src/context/comms'
+import { DataProvider } from 'src/storage/indexeddb/watermelon/db'
+import { NotificationsProvider } from 'src/context/notifications'
 
 function AppContexts({ children }: any) {
   return (
-    <ApolloProvider client={client}>
-      <AuthProvider>
-        <UserProvider>
-          <AirtableMetaProvider>
-            <SidebarProvider>
-              <ToastProvider>
-                <CommsProvider>{children}</CommsProvider>
-              </ToastProvider>
-            </SidebarProvider>
-          </AirtableMetaProvider>
-        </UserProvider>
-      </AuthProvider>
-    </ApolloProvider>
+    <DataProvider>
+      <NotificationsProvider>
+        <ApolloProvider client={client}>
+          <AuthProvider>
+            <UserProvider>
+              <AirtableMetaProvider>
+                <SidebarProvider>
+                  <ToastProvider>
+                    <CommsProvider>{children}</CommsProvider>
+                  </ToastProvider>
+                </SidebarProvider>
+              </AirtableMetaProvider>
+            </UserProvider>
+          </AuthProvider>
+        </ApolloProvider>
+      </NotificationsProvider>
+    </DataProvider>
   )
 }
 

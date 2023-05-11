@@ -1,8 +1,0 @@
-.container {
-  display: flex;
-  justify-content: space-between;
-  background: var(--white);
-  height: 100%;
-  border-radius: 16px 0 0 0;
-  position: relative;
-}

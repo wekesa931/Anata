@@ -3,8 +3,8 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
   extend: {
     fontFamily: {
-      'sans': ['Rubik', ...defaultTheme.fontFamily.sans],
-      'rubik': ['Rubik', ...defaultTheme.fontFamily.sans],
+      sans: ['Rubik', ...defaultTheme.fontFamily.sans],
+      rubik: ['Rubik', ...defaultTheme.fontFamily.sans],
     },
     colors: {
       'dark-blue-100': 'var(--dark-blue-100)',
@@ -26,7 +26,7 @@ module.exports = {
       'greyscale-1': 'var(--greyscale-1)',
       'greyscale-2': 'var(--greyscale-2)',
       'greyscale-3': 'var(--greyscale-3)',
-      'status':'#783434',
+      status: '#783434',
       'green-100': 'var(--green-100)',
       'green-50': 'var(--green-50)',
       'green-10': 'var(--green-10)',
@@ -34,23 +34,27 @@ module.exports = {
       'red-50': 'var(--red-50)',
       'red-10': 'var(--red-10)',
       'red-20': 'var(--red-20)',
+      'neutral-base': 'var(--neutral-base)',
     },
     zIndex: {
-      '2000': '2000',
-      '1000': '1000',
-      '100': '100'
+      2000: '2000',
+      1000: '1000',
+      100: '100',
     },
     minWidth: {
-      '200': '200px',
-      '1/2': '50%'
+      200: '200px',
+      '1/2': '50%',
     },
     boxShadow: {
-      'template':`0 2.8px 2.2px 0 rgba(0, 0, 0, 0.02), 0 6.7px 5.3px 0 rgba(0, 0, 0, 0.03), 0 12.5px 10px 0 rgba(0, 0, 0, 0.04),
+      template: `0 2.8px 2.2px 0 rgba(0, 0, 0, 0.02), 0 6.7px 5.3px 0 rgba(0, 0, 0, 0.03), 0 12.5px 10px 0 rgba(0, 0, 0, 0.04),
       0 22.3px 17.9px 0 rgba(0, 0, 0, 0.04), 0 41.8px 33.4px 0 rgba(0, 0, 0, 0.05),
       0 100px 80px 0 rgba(0, 0, 0, 0.07)`,
     },
     width: {
-      'fill-available': '-webkit-fill-available'
-    }
+      'fill-available': '-webkit-fill-available',
+    },
+    height: {
+      'dashboard-height': 'calc(100vh - 64px)',
+    },
   },
 }

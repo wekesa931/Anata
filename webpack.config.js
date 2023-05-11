@@ -26,6 +26,10 @@ module.exports = {
     filename: './bundle.js',
   },
   resolve: {
+    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+    alias: {
+      'src': path.resolve(__dirname, 'src'),
+    },
     extensions: ['.ts', '.tsx', '.js'],
     fallback: {
       stream: require.resolve('stream-browserify'),

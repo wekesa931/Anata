@@ -1,13 +1,15 @@
 import {
   MEMBER_CONTACT_DETAILS,
-  LOOKUP_ENTRIES_QUERY,
-  GET_INSURANCE_COMPANIES,
   MEMBER_DETAILS_QUERY,
   UPDATE_MEMBER_DETAILS,
-} from '../src/gql/comms'
-import { GET_ANTARA_STAFF } from '../src/gql/staff'
+} from 'scribe/modules/member/services/gql'
+import {
+  GET_INSURANCE_COMPANIES,
+  LOOKUP_ENTRIES_QUERY,
+} from 'scribe/gql/lookups'
+import { GET_ANTARA_STAFF } from 'scribe/gql/staff'
 import { createMockClient } from 'mock-apollo-client'
-import { SEARCH_MEMBERS } from '../src/gql/members'
+import { SEARCH_MEMBERS } from 'scribe/gql/search'
 import {
   mockInsuranceCompanies,
   mockLookups,

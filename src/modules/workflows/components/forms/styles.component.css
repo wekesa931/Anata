@@ -1,0 +1,45 @@
+.radioBtn,
+.textField {
+  width: -webkit-fill-available !important;
+}
+
+.textField {
+  margin-left: 0px !important;
+}
+
+.textfieldError div input {
+  border: 1px solid var(--red-100) !important;
+  border-radius: 3px;
+}
+
+.textField input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+.wrapperClassName {
+  border: 1px solid var(--greyscale-3) !important;
+  border-radius: 4px;
+}
+
+.editorClassName {
+  padding: 5px;
+}
+
+.richTextField {
+  border: 1px solid var(--greyscale-3);
+  padding: 10px;
+  border-radius: 4px;
+  min-height: 50px;
+}
+
+.datefieldError div div input {
+  border: 1px solid var(--red-100) !important;
+  border-radius: 3px;
+}
+
+.datefieldError {
+  margin: 8px 0 15px 0 !important;
+}
