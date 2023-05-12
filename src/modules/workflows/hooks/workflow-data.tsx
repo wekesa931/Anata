@@ -172,7 +172,7 @@ export const useWorkflowData = () => {
 
     payload = {
       ...payload,
-      'Data Source': 'src form',
+      'Data Source': 'Scribe form',
     }
 
     return processNewWorkflowData(payload, formName, formMeta)

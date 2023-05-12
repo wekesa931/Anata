@@ -34,6 +34,9 @@ export const useFormsData = () => {
           form.data = {
             ...initialFormData[formName],
             ...formData,
+            Member: [v2Member?.airtableRecordId],
+            createdBy: getUserModelDetails(user),
+            updatedBy: getUserModelDetails(user),
           }
 
           // eslint-disable-next-line no-underscore-dangle
