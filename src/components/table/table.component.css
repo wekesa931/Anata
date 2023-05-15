@@ -21,10 +21,13 @@
   flex-direction: column;
   justify-content: center;
 }
-.th:nth-child(3),
-.td:nth-child(3) {
-  width: 300%;
+
+td:first-child,
+th:first-child {
+  width: 5px;
 }
+
+
 .pagination {
   display: flex;
   justify-content: center;

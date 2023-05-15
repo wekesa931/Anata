@@ -15,6 +15,8 @@ function LabRequest() {
     { name: 'Status', format: '', key: 'Status' },
     { name: 'Type', format: '', key: 'Type' },
     { name: 'Notes', format: '', key: 'Notes' },
+    { name: 'Lab type', format: '', key: 'Lab type' },
+    { name: 'Imaging type', format: '', key: 'Imaging type' },
   ]
 
   return (

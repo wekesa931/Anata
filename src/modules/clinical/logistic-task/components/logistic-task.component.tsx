@@ -13,7 +13,7 @@ function Logistic() {
       format: 'dd/mmm/yy',
       key: 'Due date',
     },
-    { name: 'Time', format: '', key: 'Time preference' },
+    { name: 'Type', format: '', key: 'Type' },
     { name: 'Status', format: '', key: 'Status' },
     { name: 'Field notes', format: '', key: 'Field notes' },
   ]

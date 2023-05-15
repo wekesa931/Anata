@@ -37,11 +37,9 @@ const useLabData = () => {
         const mappedResponses = Object.keys(memberLab).map((key) => {
           const parent = memberLab[key]
           Object.keys(parent).forEach((pointer) => {
-            if (
-              Object.prototype.toString.call(parent[pointer]) ===
-              '[object Array]'
-            )
+            if (Array.isArray(parent[pointer])) {
               parent[pointer] = parent[pointer].join(',')
+            }
           })
           return parent
         })
