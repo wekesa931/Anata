@@ -278,7 +278,6 @@ export const useInitialFormMeta = (v2Member: any, user: any) => {
 
 export const DUPLICATE_DEFAULTS: Record<string, any> = {
   Conditions: 'Condition',
-  'VC condition diagnosis': 'Condition',
   Prescriptions: 'Drug Name',
   Appointments: 'Service',
   'BP Mon': 'Date',
@@ -308,7 +307,6 @@ export const duplicates = [
   'Conditions Data tracking',
   'Clinical Consultation',
   'Prescriptions VC',
-  'VC condition diagnosis',
   'Mental Health Consultation',
   'Physiotherapy Consultation',
   'PAFU',
@@ -326,7 +324,6 @@ export const formNames: Record<string, string> = {
   'Member tasks': 'Member Task',
   Prescriptions: 'HN Prescription',
   'Prescriptions VC': 'VC Prescription',
-  'VC condition diagnosis': 'VC condition diagnosis',
   Appointments: 'Appointment',
   Vitals: 'Vitals',
   'BP Mon': 'BP Monitoring',
