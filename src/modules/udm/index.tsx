@@ -399,8 +399,8 @@ function FilterComponent({
       search: docTitle || '',
       mimeType: fileMime || '',
       fileCategory_Name: fileCategory || '',
-      updatedAt: filterDate,
-    },
+      updatedAt_Gte: filterDate,
+    }
   })
 
   const removeFilters = () => {
@@ -414,7 +414,7 @@ function FilterComponent({
       const throttleFunc = throttle(
         1000,
         () => {
-          applyFilters()
+        applyFilters()
         },
         { debounceMode: true, noTrailing: true }
       )
@@ -540,7 +540,7 @@ function FilterComponent({
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <MobileDatePicker
               label="Date Uploaded"
-              inputFormat="DD/MM/YYYY"
+              inputFormat="dd/MM/yyyy"
               toolbarPlaceholder="DD/MM/YYYY"
               value={filterDate}
               onChange={(date: Date | null) => setFilterDate(date)}
