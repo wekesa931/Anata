@@ -16312,7 +16312,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper: 'Please enter the height/ length in meters',
       },
       {
@@ -16326,7 +16326,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper: 'Please enter the weight in kgs',
       },
       {
