@@ -31,8 +31,6 @@ export type WorkflowDataApi = ReturnType<typeof useWorkflowData>
 
 export const useWorkflowData = () => {
   const database = useDatabase()
-  const workflowsCollection: Collection<Workflows> =
-    database.collections.get('workflows')
   const { v2Member } = useMember()
   const user = useUser()
   const { createCase, updateCase, loading: creatingCase } = useCreateCase()
@@ -51,6 +49,11 @@ export const useWorkflowData = () => {
   const { getData, loading: gettingWorkflows } = useLoadWorkflows()
   const { removeModule, loading: removingModule } = useRemoveModule()
   const { removeWorkflow, loading: removingWorkflow } = useRemoveWorkflow()
+
+  const formsCollection: Collection<TWorkflowForm> =
+    database.collections.get('forms')
+  const workflowsCollection: Collection<Workflows> =
+    database.collections.get('workflows')
 
   const incompleteWorkflowsObservable = workflowsCollection
     .query(
@@ -87,35 +90,43 @@ export const useWorkflowData = () => {
   const [submittingForm, setSubmittingForm] = useState<boolean>(false)
   const [shouldRefetch, setShouldRefetch] = useState<boolean>(false)
 
-  const deleteAllWorkflows = async () => {
-    const workflows = await workflowsCollection.query(
-      Q.where('member', v2Member?.antaraId || localStorage.getItem('MemberID'))
-    )
+  const deleteAllWorkflows = async (memberId: string) => {
+    try {
+      const workflows = await workflowsCollection
+        .query(Q.where('member', memberId))
+        .fetch()
 
-    // delete all of them including the associated forms
-    await database.write(async () => {
-      await database.batch(
-        ...workflows.map((workflow) => workflow.prepareDestroyPermanently())
-      )
-    })
+      if (workflows.length === 0) return
+
+      // delete all of them including the associated forms
+      await database.write(async () => {
+        await database.batch(
+          ...workflows.map((workflow: TWorkflowModel) =>
+            workflow.prepareDestroyPermanently()
+          )
+        )
+      })
+    } catch (err) {
+      logError(err)
+    }
   }
 
-  const deleteAllForms = async () => {
-    const forms = await database.collections
-      .get('forms')
-      .query(
-        Q.where(
-          'member',
-          v2Member?.antaraId || localStorage.getItem('MemberID')
-        )
-      )
+  const deleteAllForms = async (memberId: string) => {
+    try {
+      const forms = await formsCollection
+        .query(Q.where('member', memberId))
+        .fetch()
+      if (forms.length === 0) return
 
-    // delete all of them
-    await database.write(async () => {
-      await database.batch(
-        ...forms.map((form) => form.prepareDestroyPermanently())
-      )
-    })
+      // delete all of them
+      await database.write(async () => {
+        await database.batch(
+          ...forms.map((form) => form.prepareDestroyPermanently())
+        )
+      })
+    } catch (err) {
+      logError(err)
+    }
   }
 
   const getNewCaseId = async (workflow: TWorkflowModel) => {
@@ -431,8 +442,9 @@ export const useWorkflowData = () => {
       hydrateWorkflows().finally(() => {
         setLoading(false)
       })
-      // deleteAllForms()
-      // deleteAllWorkflows()
+      //
+      // deleteAllForms(v2Member.antaraId)
+      // deleteAllWorkflows(v2Member.antaraId)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

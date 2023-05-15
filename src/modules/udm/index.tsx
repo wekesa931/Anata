@@ -400,7 +400,7 @@ function FilterComponent({
       mimeType: fileMime || '',
       fileCategory_Name: fileCategory || '',
       updatedAt_Gte: filterDate,
-    }
+    },
   })
 
   const removeFilters = () => {
@@ -414,7 +414,7 @@ function FilterComponent({
       const throttleFunc = throttle(
         1000,
         () => {
-        applyFilters()
+          applyFilters()
         },
         { debounceMode: true, noTrailing: true }
       )

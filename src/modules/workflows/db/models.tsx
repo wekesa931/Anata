@@ -236,10 +236,12 @@ export class Workflows extends Model {
         }
 
         filledValues.forEach((d: any) => {
-          const moduleId = d?.moduleId
+          // grab module id or set it to created date
+          const moduleId =
+            d?.moduleId || dayjs(moduleData[m]?.created_at).toISOString()
           formsToCreateOrUpdate = [
             ...formsToCreateOrUpdate,
-            { moduleId, data: d, formName: m },
+            { moduleId, data: { ...d, moduleId }, formName: m },
           ]
         })
       }
@@ -274,26 +276,43 @@ export class Workflows extends Model {
       }
     }
 
-    await Promise.all(
-      formsToCreateOrUpdate.map(async (f: any) => {
-        try {
-          const existingForm = await formsCollection.find(f.moduleId)
-          if (existingForm) {
-            existingForm.update((form: Forms) => {
-              form.data = f.data
-              form.name = f.formName
-              form.isDraft = false
-              form.isEdited = false
-              form.isSynced = true
-              form.createdBy = userData
-              form.updatedBy = userData
-            })
+    if (formsToCreateOrUpdate.length > 0) {
+      await Promise.all(
+        formsToCreateOrUpdate.map(async (f: any) => {
+          try {
+            const existingForm = await formsCollection.find(f.moduleId)
+            if (existingForm) {
+              await existingForm.update((form: Forms) => {
+                form.data = f.data
+                form.isSynced = true
+                form.workflow.set(this)
+                form.updatedBy = f.data?.updatedBy || userData
+              })
+            }
+          } catch (e: Error | any) {
+            const notFoundRegex = /Record ([^ ]+) not found/
+            const notFoundError = e?.message.match(notFoundRegex)
+            if (notFoundError) {
+              // create a new form
+              formsCollection.create((form: Forms) => {
+                form.name = f.formName
+                form.workflow.set(this)
+                form.member = this.member
+                form.data = f.data
+                form.isDraft = false
+                form.isEdited = false
+                form.isSynced = true
+                form.createdBy = userData
+                form.updatedBy = userData
+
+                // eslint-disable-next-line no-underscore-dangle
+                form._raw.id = f.moduleId
+              })
+            }
           }
-        } catch (e) {
-          Promise.resolve()
-        }
-      })
-    )
+        })
+      )
+    }
 
     return this
   }
