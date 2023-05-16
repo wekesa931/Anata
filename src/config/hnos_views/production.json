@@ -280,6 +280,38 @@
       "Conditions": "shrhkDBhApwYQAp18",
       "Clinical Consultation": "shrPLLsysmODFSfVI",
       "Clinical Rounds": "shrDoay2dUyT5xT3K"
+    },
+    "maureen@antarahealth.com": {
+      "hntasks": {
+        "calendar": "shr9X5XXxg3sVTdpp",
+        "grid": "shrj1HZ3RmGBZlWyy"
+      },
+      "Appointments": "shrbwIc9ZYVIgsVep",
+      "HN Tasks": "shr6J3jxl1H2yoJC1",
+      "Interventions": "shrtUu8PINwlkr7yJ",
+      "Interventions Data Tracking": "shrR4a0luFnYtpi2a",
+      "Members Tasks": "shrQL1ZRg3NUKMQ6P",
+      "Members": "shrxsjUqwta8Hug1R",
+      "Prescription": "shrTkV2yqMV3vpnnG",
+      "Vitals": "shrqmPWKiWdnROSro",
+      "HMP": "shrE33QkDme9AzpWb",
+      "Conditions": "shrHSbXqr5VVy1MdE"
+    },
+    "edel@antarahealth.com": {
+      "hntasks": {
+        "calendar": "shr9X5XXxg3sVTdpp",
+        "grid": "shrj1HZ3RmGBZlWyy"
+      },
+      "Appointments": "shrFRWyISLdZklBzJ",
+      "HN Tasks": "shrUeYmLXyqcGq6DG",
+      "Interventions": "shrDqS3N1eJVm7c7s",
+      "Interventions Data Tracking": "shrYgWuMGwBZlFNtL",
+      "Members Tasks": "shrUsPP5ahArVyihl",
+      "Members": "shr0NqV3qDUWY7W59",
+      "Prescription": "shrB5J3toKwGq1TNB",
+      "Vitals": "shrFXiSbUzNIxlaXe",
+      "HMP": "shrLy8PigtwbjWz4y",
+      "Conditions": "shrnNSzfAGkiNs7Mc"
     }
   }
 }
