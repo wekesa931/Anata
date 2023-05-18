@@ -1,22 +1,17 @@
-import { useState, useEffect } from 'react'
+import React , { useState, useEffect } from 'react'
 import { useLazyQuery } from '@apollo/client'
 import { GET_ANTARA_STAFF } from 'src/gql/staff'
+import logError from 'src/utils/logging/logger'
 
 const useAntaraStaff = () => {
-  const [antaraMEs, setAntaraMEs] = useState<any>([])
-  const [antaraHNs, setAntaraHNs] = useState<any>([])
   const [allAntaraStaffs, setAllAntaraStaffs] = useState<any>([])
 
   const [getAntaraStaff, { loading }] = useLazyQuery(GET_ANTARA_STAFF)
 
+
   const getStaffTeam =
-    (team: string) =>
-    (staffMembers: any[] = []) => {
-      return staffMembers
-        .filter((e: any) => e?.node?.team === team)
-        .map((staff: any) => ({
-          ...staff?.node,
-        }))
+    (team: string, staffMembers: any[] = []) => {
+      return staffMembers.filter((e: any) => e?.team === team)
     }
 
   const getAllStaff = (staffMembers: any[] = []) => {
@@ -25,24 +20,27 @@ const useAntaraStaff = () => {
     }))
   }
 
+
   useEffect(() => {
     getAntaraStaff().then(({ data }) => {
-      const getMes = getStaffTeam('MEMBER_EXPERIENCE')
-      const getHns = getStaffTeam('HEALTH_NAVIGATOR')
-
-      setAntaraHNs(getHns(data?.antaraStaff?.edges))
-      setAntaraMEs(getMes(data?.antaraStaff?.edges))
-      setAllAntaraStaffs(getAllStaff(data?.antaraStaff?.edges))
+      const fetchedData = data?.antaraStaff?.edges
+      setAllAntaraStaffs(getAllStaff(fetchedData))
+    }).catch((err) => {
+      logError(err)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return {
-    antaraHNs,
-    antaraMEs,
+  const returnValue = React.useMemo(() => ({
     allAntaraStaffs,
     loading,
-  }
+    antaraHNs: getStaffTeam('HEALTH_NAVIGATOR', allAntaraStaffs),
+    antaraMEs: getStaffTeam('MEMBER_EXPERIENCE', allAntaraStaffs),
+  }), [loading, allAntaraStaffs])
+
+
+  return returnValue
+  
 }
 
 export default useAntaraStaff

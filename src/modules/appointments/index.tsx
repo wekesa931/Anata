@@ -52,7 +52,7 @@ function Appointments() {
     &${filterFields(allowedFields)}`
   )
 
-  const { allAntaraStaffs, loading } = useAntaraStaff()
+  const  { allAntaraStaffs, loading }  = useAntaraStaff()
 
   const mapAssigneeTeam = (antaraStaff: any[]) => {
     const teamType = [
