@@ -63,15 +63,15 @@ function BloodPressure() {
     switch (currentFilter) {
       case Actions.WEEKLY:
         startOfRange = dayjs(todayDate).subtract(1, 'week').startOf('week')
-        endOfRange = dayjs(todayDate).subtract(1, 'week').endOf('week')
+        endOfRange = dayjs(todayDate).endOf('week')
         break
       case Actions.MONTHLY:
         startOfRange = dayjs(todayDate).subtract(1, 'month').startOf('month')
-        endOfRange = dayjs(todayDate).subtract(1, 'month').endOf('month')
+        endOfRange = dayjs(todayDate).endOf('month')
         break
       case Actions.LAST_3_MONTHS:
         startOfRange = dayjs(todayDate).subtract(2, 'month').startOf('month')
-        endOfRange = dayjs(todayDate).subtract(2, 'month').endOf('month')
+        endOfRange = dayjs(todayDate).endOf('month')
         break
       case Actions.LAST_6_MONTHS:
         startOfRange = dayjs(todayDate).subtract(5, 'month').startOf('month')
