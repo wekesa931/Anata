@@ -3225,6 +3225,54 @@ export default [
           'Please enter any new or previously unregistered condition here\n\nNote that GERD includes, hyperacidity, heartburn, acid reflux and dyspepsia.',
       },
       {
+        id: 'fld0GTYwhld18Rv5T',
+        name: 'Starting Underweight stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          '      * Stage 1: BMI 17.0 - 18.4\n      * Stage 2: BMI 16.0 - 16.9\n      * Stage 3: BMI < 16.0',
+        conditionType: '',
+        parentKey: 'Condition',
+        parentValues: ['Underweight'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Condition)) {
+            return ['Underweight'].some((r) => values.Condition.includes(r))
+          }
+          return ['Underweight'].includes(values.Condition)
+        },
+      },
+      {
+        id: 'flddAWmwGgrUz1x48',
+        name: 'Underweight Key Goal',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          '      * If Stage 1: 3% BMI increase\n      * If Stage 2: 5% BMI increase\n      * If Stage 3: 7% BMI increase',
+        conditionType: '',
+        parentKey: 'Condition',
+        parentValues: ['Underweight'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Condition)) {
+            return ['Underweight'].some((r) => values.Condition.includes(r))
+          }
+          return ['Underweight'].includes(values.Condition)
+        },
+      },
+      {
         id: 'fldC507d7BMWauGE2',
         name: 'ICD10 code',
         type: 'text',
@@ -3237,7 +3285,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Please look for ICD10 codes here: <a href="https://icdcodelookup.com/icd-10/codes" target="_blank">https://icdcodelookup.com/icd-10/codes</a>\nand enter it in the field. Examples: I10 or E10 or E11',
+          'Please look for ICD10 codes here: <a href="https://icd10cmtool.cdc.gov/?fy=FY2023" target="_blank">https://icd10cmtool.cdc.gov/?fy=FY2023</a>\nand enter it in the field. Examples: I10 or E10 or E11',
       },
       {
         id: 'fldOxXWdy7eBWoaon',
@@ -7590,14 +7638,16 @@ export default [
         helper: 'Calculate starting BMI using the current beneficiary weight',
         conditionType: '',
         parentKey: 'Intervention',
-        parentValues: ['Caloric Reduction Plan'],
+        parentValues: ['Weight Gain Plan', 'Caloric Reduction Plan'],
         condition: (values: any) => {
           if (Array.isArray(values.Intervention)) {
-            return ['Caloric Reduction Plan'].some((r) =>
+            return ['Weight Gain Plan', 'Caloric Reduction Plan'].some((r) =>
               values.Intervention.includes(r)
             )
           }
-          return ['Caloric Reduction Plan'].includes(values.Intervention)
+          return ['Weight Gain Plan', 'Caloric Reduction Plan'].includes(
+            values.Intervention
+          )
         },
       },
       {
@@ -7769,14 +7819,42 @@ export default [
         helper: '1: BMI 25-30\n2: BMI 31-40\n3: BMI >40',
         conditionType: '',
         parentKey: 'Intervention',
-        parentValues: ['Caloric Reduction Plan'],
+        parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
         condition: (values: any) => {
           if (Array.isArray(values.Intervention)) {
-            return ['Caloric Reduction Plan'].some((r) =>
+            return ['Caloric Reduction Plan', 'Weight Gain Plan'].some((r) =>
               values.Intervention.includes(r)
             )
           }
-          return ['Caloric Reduction Plan'].includes(values.Intervention)
+          return ['Caloric Reduction Plan', 'Weight Gain Plan'].includes(
+            values.Intervention
+          )
+        },
+      },
+      {
+        id: 'fld8vyy47pdiFprUD',
+        name: 'Weight gain milestone target',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          '      * If BMI 17.0 - 18.4:\n1-month: 1% increase\n3-month: 1% increase\n6-month: 1% increase\n      * If BMI 16.0 - 16.9:\n1-month: 1% increase\n3-month: 2% increase\n6-month: 2% increase\n      * If BMI < 16.0:\n1-month: 2% increase\n3-month: 2% increase\n6-month: 3% increase',
+        conditionType: '',
+        parentKey: 'Intervention',
+        parentValues: ['Weight Gain Plan'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Intervention)) {
+            return ['Weight Gain Plan'].some((r) =>
+              values.Intervention.includes(r)
+            )
+          }
+          return ['Weight Gain Plan'].includes(values.Intervention)
         },
       },
       {
@@ -13518,7 +13596,7 @@ export default [
       },
       {
         id: 'fldYQsM2dhJdhXXn6',
-        name: 'Current BMI reduction measurement',
+        name: 'Current BMI change measurement',
         type: 'text',
         format: '',
         isDateTime: false,
@@ -13532,14 +13610,14 @@ export default [
           'Calculate current BMI using the new current weight. \nIdentify the difference between previous BMI and current BMI\nEnter the increase or decrease in BMI\nFormula to use: ((current BMI/initial BMI)-1)*100\n\nexample: \ninitial BMI was 24 \ncurrent BMI is 26\nformula: X = ((26/24)-1)*100\nresult = 8.33\nenter: 8.33% increase\n\nexample 2:\ninitial BMI was 25\ncurrent BMI is 23\nformula: X = ((23/25)-1)*100\nresult = -8\nenter: 8% reduction\n\nSome examples:\n3% reduction, 4% increase, 2% reduction, 0%\n',
         conditionType: '',
         parentKey: 'Intervention type',
-        parentValues: ['Caloric Reduction Plan'],
+        parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
         condition: (values: any) => {
           if (Array.isArray(values['Intervention type'])) {
-            return ['Caloric Reduction Plan'].some((r) =>
+            return ['Caloric Reduction Plan', 'Weight Gain Plan'].some((r) =>
               values['Intervention type'].includes(r)
             )
           }
-          return ['Caloric Reduction Plan'].includes(
+          return ['Caloric Reduction Plan', 'Weight Gain Plan'].includes(
             values['Intervention type']
           )
         },
@@ -13704,7 +13782,7 @@ export default [
       },
       {
         id: 'fldozIVUzDlVUE1is',
-        name: 'Current caloric level',
+        name: 'Current BMI level',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -13717,14 +13795,14 @@ export default [
         helper: '1: BMI 25-30\n2: BMI 31-40\n3: BMI >40',
         conditionType: '',
         parentKey: 'Intervention type',
-        parentValues: ['Caloric Reduction Plan'],
+        parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
         condition: (values: any) => {
           if (Array.isArray(values['Intervention type'])) {
-            return ['Caloric Reduction Plan'].some((r) =>
+            return ['Caloric Reduction Plan', 'Weight Gain Plan'].some((r) =>
               values['Intervention type'].includes(r)
             )
           }
-          return ['Caloric Reduction Plan'].includes(
+          return ['Caloric Reduction Plan', 'Weight Gain Plan'].includes(
             values['Intervention type']
           )
         },
@@ -13848,7 +13926,20 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          "What was the BN's Milestone Target at LAST HMP\n\nCaloric Reduction BMI Target: \nIf Stage 1:\n1-month: 1% reduction\n3-month: 2% reduction\n6-month: 2% reduction\n\nIf Stage 2:\n1-month: 2% reduction\n3-month: 2% reduction\n6-month: 3% reduction\n\nIf Stage 3:\n1-month: 2% reduction\n3-month: 3% reduction\n6-month: 5% reduction\n\nSalt:\nLevel 0: <1500mg (Recommended for hypertensives)\nLevel 1: 1500-2500mg (Normal)\nLevel 2: 2500-3500mg (High)\nLevel 3: 3500-4500mg (Very High)\nLevel 4: >4500mg (Excessively High)\n\nGlycemic Index:\nStage 0: 80-180 (At Risk)\nStage 1: <80 (Newly dx)\nStage 2: <100 (1st line meds)\nStage 3: <180 (2nd line meds)\n\nActivity:\nLevel 1: 7-10 km per week\nLevel 2: 10-15km brisk walking per week\nLevel 3: 15-20km brisk walking per week\nLevel 4: Daily exercise/Athlete\n\nCholesterol:\nLevel [0]: <200mg (Recommended for those with heart disease)\nLevel 1: 200-300mg (Normal)\nLevel 2: 300-500mg (High)\nLevel 3: >500mg (Very High)\n\nAsthma:\nStage 1: Mild intermittent\nStage 2: Moderate intermittent\nStage 3: Moderate persistent\nStage 4: Severe persistent",
+          "What was the BN's Milestone Target at LAST HMP\n\nCaloric Reduction BMI Target: \nIf Stage 1:\n1-month: 1% reduction\n3-month: 2% reduction\n6-month: 2% reduction\n \nIf Stage 2:\n1-month: 2% reduction\n3-month: 2% reduction\n6-month: 3% reduction\n\nIf Stage 3:\n1-month: 2% reduction\n3-month: 3% reduction\n6-month: 5% reduction\n\nSalt:\nLevel 0: <1500mg (Recommended for hypertensives)\nLevel 1: 1500-2500mg (Normal)\nLevel 2: 2500-3500mg (High)\nLevel 3: 3500-4500mg (Very High)\nLevel 4: >4500mg (Excessively High)\n\nGlycemic Index:\nStage 0: 80-180 (At Risk)\nStage 1: <80 (Newly dx)\nStage 2: <100 (1st line meds)\nStage 3: <180 (2nd line meds)\n\nActivity:\nLevel 1: 7-10 km per week\nLevel 2: 10-15km brisk walking per week\nLevel 3: 15-20km brisk walking per week\nLevel 4: Daily exercise/Athlete\n\nCholesterol:\nLevel [0]: <200mg (Recommended for those with heart disease)\nLevel 1: 200-300mg (Normal)\nLevel 2: 300-500mg (High)\nLevel 3: >500mg (Very High)\n\nAsthma:\nStage 1: Mild intermittent\nStage 2: Moderate intermittent\nStage 3: Moderate persistent\nStage 4: Severe persistent\n\nIf BMI 17.0 - 18.4:\n1-month: 1% increase\n3-month: 1% increase\n6-month: 1% increase\nIf BMI 16.0 - 16.9:\n1-month: 1% increase\n3-month: 2% increase\n6-month: 2% increase\nIf BMI < 16.0:\n1-month: 2% increase\n3-month: 2% increase\n6-month: 3% increase",
+        conditionType: '',
+        parentKey: 'Intervention type',
+        parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Intervention type'])) {
+            return ['Caloric Reduction Plan', 'Weight Gain Plan'].some((r) =>
+              values['Intervention type'].includes(r)
+            )
+          }
+          return ['Caloric Reduction Plan', 'Weight Gain Plan'].includes(
+            values['Intervention type']
+          )
+        },
       },
       {
         id: 'fldm57eb2B0cNjonu',
@@ -14110,7 +14201,7 @@ export default [
       },
       {
         id: 'flduaiyogoXQQ4OL7',
-        name: 'Next caloric reduction milestone',
+        name: 'Next BMI milestone',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -14121,17 +14212,17 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Optional unless you want to change the current milestone\n\nIf Stage 1:\n1-month: 1% reduction\n3-month: 2% reduction\n6-month: 2% reduction\n \nIf Stage 2:\n1-month: 2% reduction\n3-month: 2% reduction\n6-month: 3% reduction\n\nIf Stage 3:\n1-month: 2% reduction\n3-month: 3% reduction\n6-month: 5% reduction',
+          'Optional unless you want to change the current milestone\n\nIf Stage 1:\n1-month: 1% reduction\n3-month: 2% reduction\n6-month: 2% reduction\n \nIf Stage 2:\n1-month: 2% reduction\n3-month: 2% reduction\n6-month: 3% reduction\n\nIf Stage 3:\n1-month: 2% reduction\n3-month: 3% reduction\n6-month: 5% reduction\n\nIf BMI 17.0 - 18.4:\n1-month: 1% increase\n3-month: 1% increase\n6-month: 1% increase\nIf BMI 16.0 - 16.9:\n1-month: 1% increase\n3-month: 2% increase\n6-month: 2% increase\nIf BMI < 16.0:\n1-month: 2% increase\n3-month: 2% increase\n6-month: 3% increase',
         conditionType: '',
         parentKey: 'Intervention type',
-        parentValues: ['Caloric Reduction Plan'],
+        parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
         condition: (values: any) => {
           if (Array.isArray(values['Intervention type'])) {
-            return ['Caloric Reduction Plan'].some((r) =>
+            return ['Caloric Reduction Plan', 'Weight Gain Plan'].some((r) =>
               values['Intervention type'].includes(r)
             )
           }
-          return ['Caloric Reduction Plan'].includes(
+          return ['Caloric Reduction Plan', 'Weight Gain Plan'].includes(
             values['Intervention type']
           )
         },
@@ -14280,6 +14371,32 @@ export default [
         required: false,
         helper:
           'WIP (we are still adding conditions on a monthly basis)\nThis field is used to provide you with the appropriate questions',
+      },
+      {
+        id: 'fld0YymouKkwHQRY1',
+        name: 'Update Underweight stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          '    * Stage 1: BMI 17.0 - 18.4\n    * Stage 2: BMI 16.0 - 16.9\n    * Stage 3: BMI < 16.0',
+        conditionType: '',
+        parentKey: 'Condition type',
+        parentValues: ['Underweight'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Condition type'])) {
+            return ['Underweight'].some((r) =>
+              values['Condition type'].includes(r)
+            )
+          }
+          return ['Underweight'].includes(values['Condition type'])
+        },
       },
       {
         id: 'fldDM5Pru8LLyL45X',
