@@ -8,7 +8,7 @@ import List from 'src/components/list'
 import Icon from 'src/components/icon/svg-icon'
 import Tooltip from 'src/components/tooltip'
 import { filterFields } from 'src/utils/airtable/field-utils'
-import TASK_FIELDS from 'src/modules/tasks/config/hn-tasks-fields'
+import getTaskFields from 'src/modules/tasks/config/hn-tasks-fields'
 import useAirtableFetch from 'src/hooks/airtable-fetch'
 import CallsCallout from 'src/modules/comms/calls/views'
 import FORMS from 'src/modules/workflows/components/forms/form-inputs-definitions'
@@ -18,6 +18,9 @@ import logError from 'src/utils/logging/logger'
 import { useFormsRouting } from 'src/modules/workflows/hooks/routing/forms'
 import PrescriptionName from '../components/prescription-name'
 import styles from './tasks.component.css'
+import useHandleResponses from 'src/utils/airtable/error-handler'
+import useAntaraStaff from 'src/hooks/antara-staff.hook'
+import mapAssigneeTeam from 'src/modules/utils'
 
 type RecordWithId = { data: any; id: string }
 type MatchType = { key: string; value: string }
@@ -209,10 +212,16 @@ function Tasks() {
 
   const { member } = useMember()
 
+  const { handleResponses } = useHandleResponses('Tasks')
+
+  const { allAntaraStaffs, loading: loadingAntaraStaff } = useAntaraStaff()
+
   const [
     loadTasks,
     { error: apiError, loading: isApiLoading, data: rawApiRecords },
   ] = useLazyQuery(GET_MEMBER_TASKS, {})
+
+  const taskFields = getTaskFields(mapAssigneeTeam(allAntaraStaffs))
 
   useEffect(() => {
     if (member) {
@@ -231,7 +240,7 @@ function Tasks() {
 
   const includeFieldTypes = (data: { [x: string]: any }) => {
     return Object.keys(data).map((key) => {
-      const field = TASK_FIELDS.find(({ name }) => name === key)
+      const field = taskFields.find(({ name }) => name === key)
       return field ? { value: data[key], ...field } : data
     })
   }
@@ -447,11 +456,7 @@ function Tasks() {
     }
     return null
   }
-  const reusableAnalytics = (message: string) => {
-    analytics.track(`${message}`, {
-      bene: recId,
-    })
-  }
+ 
   const updateTask = async (task: { id: string; fields: any }) => {
     await airtableFetch('hntasks', 'post', {
       id: task.id,
@@ -461,17 +466,7 @@ function Tasks() {
       },
     })
       .then((res) => {
-        if (typeof res === 'object') {
-          Toasts.showSuccessNotification('Tasks Updated')
-          reusableAnalytics('Task Updated')
-        }
-        if (
-          Array.isArray(res) &&
-          res.some((el) => el.error === 'INVALID_RECORDS')
-        ) {
-          Toasts.showErrorNotification('Tasks Not Updated')
-          reusableAnalytics('Task Updated')
-        }
+        handleResponses(res)
       })
       .catch((err) => {
         logError(err)
@@ -497,7 +492,7 @@ function Tasks() {
   }
 
   const isReadytoShowTasks =
-    !isAirtableLoading && !isApiLoading && !isAirtableError && !apiError
+    !isAirtableLoading && !isApiLoading && !isAirtableError && !apiError && !loadingAntaraStaff
 
   return (
     <div className="margin-top-0">

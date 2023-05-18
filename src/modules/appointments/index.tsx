@@ -14,6 +14,7 @@ import logError from 'src/utils/logging/logger'
 import useHandleResponses from 'src/utils/airtable/error-handler'
 import useAntaraStaff from 'src/hooks/antara-staff.hook'
 import styles from './appointments.component.css'
+import mapAssigneeTeam from 'src/modules/utils'
 
 function Appointments() {
   const [appointments, setAppointments] = React.useState<any[]>([])
@@ -54,19 +55,6 @@ function Appointments() {
 
   const  { allAntaraStaffs, loading }  = useAntaraStaff()
 
-  const mapAssigneeTeam = (antaraStaff: any[]) => {
-    const teamType = [
-      'DOCTOR',
-      'NUTRITIONIST',
-      'HEALTH_NAVIGATOR',
-      'MEMBER_EXPERIENCE',
-    ]
-    return antaraStaff
-      .filter(({ team }: any) => {
-        return teamType.some((value) => team === value)
-      })
-      .sort((a, b) => a?.fullName?.localeCompare(b?.fullName))
-  }
 
   const {
     data: providersData,

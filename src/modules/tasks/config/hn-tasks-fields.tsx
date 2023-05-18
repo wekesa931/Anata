@@ -1,5 +1,7 @@
 import AirtableField from 'src/types/airtable-field'
 
+
+
 const TASK_TYPES = [
   'HMP: Collect condition data',
   'HMP: Data collection preparation',
@@ -49,56 +51,69 @@ const TASK_TYPES = [
   'Nutrition: Perform Consultation',
 ].sort()
 
-const TASK_FIELDS: AirtableField[] = [
-  {
-    name: 'Type',
-    type: 'single-select',
-    options: TASK_TYPES.map((type) => ({ label: type, value: type })),
-  },
-  {
-    name: 'Due Date',
-    type: 'date',
-  },
-  {
-    name: 'Task Priority',
-    type: 'single-select',
-    options: ['High', 'Medium', 'Low'].map((option) => ({
-      label: option,
-      value: option,
-    })),
-  },
-  {
-    name: 'Task Notes',
-    type: 'long-text',
-  },
-  {
-    name: 'Assignee',
-    type: 'lookup',
-    lookupUrl: 'team',
-    lookupFieldNames: ['Name', 'Record ID'],
-  },
-  {
-    name: 'Status',
-    type: 'single-select',
-    options: [
-      'Not Started',
-      'In Progress',
-      'Complete',
-      'On Hold',
-      'Cancelled',
-      'Not Applicable',
-    ].map((option) => ({ label: option, value: option })),
-  },
-  {
-    name: 'Last Status changed at',
-    type: 'date',
-    calculated: true,
-  },
-  {
-    name: 'Assignee Name',
-    type: 'lookup',
-    calculated: true,
-  },
-]
 
-export default TASK_FIELDS
+const getTaskFields = ( allAntaraStaffs: any[]) => {
+
+  const TASK_FIELDS: AirtableField[] = [
+    {
+      name: 'Type',
+      type: 'single-select',
+      options: TASK_TYPES.map((type) => ({ label: type, value: type })),
+    },
+    {
+      name: 'Due Date',
+      type: 'date',
+    },
+    {
+      name: 'Task Priority',
+      type: 'single-select',
+      options: ['High', 'Medium', 'Low'].map((option) => ({
+        label: option,
+        value: option,
+      })),
+    },
+    {
+      name: 'Task Notes',
+      type: 'long-text',
+    },
+    {
+      name: 'Assignee',
+      type: 'single-select',
+      options: allAntaraStaffs.map(
+        ({ fullName, atRecordId }: any) => ({
+          label: fullName,
+          value: atRecordId,
+        })
+      ),
+    },
+    {
+      name: 'Status',
+      type: 'single-select',
+      options: [
+        'Not Started',
+        'In Progress',
+        'Complete',
+        'On Hold',
+        'Cancelled',
+        'Not Applicable',
+      ].map((option) => ({ label: option, value: option })),
+    },
+    {
+      name: 'Last Status changed at',
+      type: 'date',
+      calculated: true,
+    },
+    {
+      name: 'Assignee Name',
+      type: 'lookup',
+      calculated: true,
+    },
+  ]
+
+  return TASK_FIELDS
+
+}
+
+
+
+export default getTaskFields
