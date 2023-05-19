@@ -19,6 +19,7 @@ import {
   normalizeWorkflowData,
   useRemoveModule,
   useRemoveWorkflow,
+  useAddWorkflowModule,
 } from 'src/modules/workflows/services/workflows.api'
 import { useUser } from 'src/context/user'
 import { TWorkflow, CreateCaseVariables } from 'src/modules/workflows/types'
@@ -49,6 +50,7 @@ export const useWorkflowData = () => {
   const { getData, loading: gettingWorkflows } = useLoadWorkflows()
   const { removeModule, loading: removingModule } = useRemoveModule()
   const { removeWorkflow, loading: removingWorkflow } = useRemoveWorkflow()
+  const { addModule, loading: addingWorkflowModule } = useAddWorkflowModule()
 
   const formsCollection: Collection<TWorkflowForm> =
     database.collections.get('forms')
@@ -108,6 +110,20 @@ export const useWorkflowData = () => {
       })
     } catch (err) {
       logError(err)
+    }
+  }
+
+  const addNewWorkflowModule = async (
+    workflow: TWorkflowModel,
+    moduleName: string
+  ) => {
+    try {
+      return await addModule({
+        workflowId: workflow.workflowId,
+        moduleName,
+      })
+    } catch (err) {
+      return logError(err)
     }
   }
 
@@ -328,66 +344,102 @@ export const useWorkflowData = () => {
         workflowId: '',
         memberId: v2Member.antaraId,
       },
+      fetchPolicy: 'network-only',
     })
     const normalizedWorkflows = normalizeWorkflowData(loadedWorkflows?.data)
 
+    const newWorkflowIds = normalizedWorkflows.map(
+      (w: TWorkflow) => w.workflowId
+    )
+    const existingWorkflows = await workflowsCollection
+      .query(Q.where('member', v2Member.antaraId))
+      .fetch()
+    const existingWorkflowIds = existingWorkflows.map(
+      (w: TWorkflowModel) => w.workflowId
+    )
+
+    const workflowsToDelete = existingWorkflows.filter(
+      (w: TWorkflowModel) => !newWorkflowIds.includes(w.workflowId)
+    )
+    const workflowsToUpdate = existingWorkflows.filter((w: TWorkflowModel) =>
+      newWorkflowIds.includes(w.workflowId)
+    )
+
+    const workflowsToCreate = normalizedWorkflows.filter(
+      (w: TWorkflow) => !existingWorkflowIds.includes(w.workflowId)
+    )
+
+    // delete workflows that are no longer in the db
+    await Promise.all(
+      workflowsToDelete.map(async (w: TWorkflowModel) => {
+        await w.delete()
+      })
+    )
+
+    // update workflows that are still in the db
+    await Promise.all(
+      workflowsToUpdate.map(async (w: TWorkflowModel) => {
+        const updatedWorkflow = normalizedWorkflows.find(
+          (nw: TWorkflow) => nw.workflowId === w.workflowId
+        )
+        if (updatedWorkflow) {
+          await w
+            .createFromAPI(updatedWorkflow, v2Member.antaraId, user)
+            .then(() => {
+              w.synchronizeWorkflowFormData(
+                updatedWorkflow,
+                v2Member.antaraId,
+                user
+              )
+            })
+        }
+      })
+    )
+
     // create a new workflow for each workflow in the db
     await Promise.all(
-      normalizedWorkflows.map(async (w: TWorkflow) => {
+      workflowsToCreate.map(async (w: TWorkflow) => {
         try {
           const existingWorkflow = await workflowsCollection.find(w.workflowId)
-          existingWorkflow.createFromAPI(w, v2Member.antaraId, user)
+          await existingWorkflow.synchronizeWorkflowFormData(
+            w,
+            v2Member.antaraId,
+            user
+          )
         } catch (err: any) {
-          const createdWorkflow = await database.write(async () => {
-            return workflowsCollection.create((n) => {
-              n.isCompleted = w.completed
-              n.workflowId = w.workflowId
-              n.member = v2Member.antaraId
-              // eslint-disable-next-line no-underscore-dangle
-              n._raw.id = w.workflowId
-            })
-          })
-          await createdWorkflow.createFromAPI(w, v2Member.antaraId, user)
+          const notFoundRegex = /Record ([^ ]+) not found/
+          const notFoundError = err?.message.match(notFoundRegex)
+          if (notFoundError) {
+            try {
+              const createdWorkflow = await database.write(async () => {
+                return workflowsCollection.create((n) => {
+                  n.isCompleted = w.completed
+                  n.workflowId = w.workflowId
+                  n.member = v2Member.antaraId
+                  // eslint-disable-next-line no-underscore-dangle
+                  n._raw.id = w.workflowId
+                })
+              })
+              await createdWorkflow
+                .createFromAPI(w, v2Member.antaraId, user)
+                .then(() => {
+                  createdWorkflow.synchronizeWorkflowFormData(
+                    w,
+                    v2Member.antaraId,
+                    user
+                  )
+                })
+            } catch (e) {
+              logError(e)
+            }
+          }
         }
       })
     )
   }
 
   const findWorkflow = async (workflowId: string) => {
-    try {
-      return await workflowsCollection.find(workflowId)
-    } catch {
-      const loadedWorkflows = await getData({
-        variables: {
-          workflowId,
-          memberId: v2Member.antaraId,
-        },
-      })
-
-      const normalizedWorkflows = normalizeWorkflowData(loadedWorkflows?.data)
-      if (normalizedWorkflows.length === 0) {
-        return null // no workflow found
-      }
-
-      const createdWorkflow = await database.write(async () => {
-        const created = await workflowsCollection.create((n) => {
-          n.isCompleted = normalizedWorkflows[0].completed
-          n.workflowId = normalizedWorkflows[0].workflowId
-          n.member = v2Member.antaraId
-
-          // eslint-disable-next-line no-underscore-dangle
-          n._raw.id = normalizedWorkflows[0].workflowId
-        })
-
-        return created.createFromAPI(
-          normalizedWorkflows[0],
-          v2Member.antaraId,
-          user
-        )
-      })
-
-      return createdWorkflow
-    }
+    return workflowsCollection.find(workflowId)
   }
 
   const handleSaveDraftWorkflow = async (
@@ -413,11 +465,16 @@ export const useWorkflowData = () => {
     return saveModuleData({
       workflowId: workflow.workflowId,
       moduleName: formName,
-      data: [payload],
+      data: payload[formName],
       draft: hasDraft,
     }).then(async (res) => {
       if (res) {
         trackModuleDataSaved(workflow.workflowObject, formName, payload)
+        await workflow.markSavedDraft()
+        // mark all the active forms as synced
+        activeForms.forEach((f) => {
+          f.markAsSynced()
+        })
       }
     })
   }
@@ -459,7 +516,8 @@ export const useWorkflowData = () => {
     creatingFeedback ||
     savingModuleData ||
     removingModule ||
-    removingWorkflow
+    removingWorkflow ||
+    addingWorkflowModule
 
   return {
     loading, // pulling workflows from the DB
@@ -479,6 +537,7 @@ export const useWorkflowData = () => {
     incompleteWorkflows,
     completedWorkflows,
     getFormsByName,
+    addNewWorkflowModule,
   }
 }
 

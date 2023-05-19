@@ -35,7 +35,7 @@ import {
   Forms as TWorkflowForm,
   Workflows as TWorkflowModel,
 } from 'src/modules/workflows/db/models'
-import useObservable from 'src/hooks/observable'
+import dayjs from 'dayjs'
 import { formNames, duplicates, initialFormValues } from '../utils'
 
 type TitleProps = {
@@ -88,6 +88,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
   const [isEdited, setIsEdited] = useState<boolean>(false)
   const [submissionForm, setSubmissionForm] = useState<any | null>(null)
   const [formsData, setFormsData] = useState<any>([])
+  const [isDraftSaved, setIsDraftSaved] = useState<boolean>(false)
   const {
     submitForm,
     loaderDisplayed,
@@ -96,8 +97,9 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     deleteWorkflowFromAPI,
     saveDraftWorkflow,
     getFormsByName,
+    addNewWorkflowModule,
   } = useWorkflowData()
-  const { member } = useMember()
+  const { member, v2Member } = useMember()
   const user = useUser()
   const [showDeleteWorkflowPrompt, setShowDeleteWorkflowPrompt] =
     useState<boolean>(false)
@@ -105,19 +107,21 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
   const [copyAlertMessage, setCopyAlertMessage] =
     React.useState<CopyAlertMessage | null>(null)
   const { openForm } = useFormsRouting()
-  const workflowFormsObservable = workflow.forms.observe()
-  const workflowForms = useObservable(workflowFormsObservable, [], [workflow])
+  const [workflowForms, setWorkflowForms] = useState<TWorkflowForm[]>([])
+  // const workflowFormsObservable = workflow.forms.observe()
+  // const workflowForms = useObservable(workflowFormsObservable, [], [workflow])
 
   // can only delete workflow is the workflow is not completed
   // or if any of the workflow forms is not edited and is a draft,
   // or if any of the workflow forms data property is empty object or null
   const canDeleteWorkflow =
     !workflow.isCompleted &&
-    (!some(workflowForms, (form: any) => form.isEdited && form.isDraft) ||
-      !some(
-        workflowForms,
-        (form: any) => form.data === null || Object.keys(form.data).length === 0
-      ))
+    !isDraftSaved &&
+    !isEdited &&
+    !some(
+      workflowForms,
+      (form: TWorkflowForm) => form.isEdited || form.isSynced
+    )
 
   const setFormStates = (formName: string) => {
     setActiveFormName(formName)
@@ -130,36 +134,53 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
   }
 
   useEffect(() => {
-    if (workflowForms.length > 0) {
-      setFormStates(workflowForms[0].name)
-    }
+    workflow.forms.fetch().then((wForms: TWorkflowForm[]) => {
+      setWorkflowForms(wForms)
+      if (!activeFormName) {
+        setFormStates(wForms[0].name)
+      }
+    })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workflowForms])
+  }, [workflow, activeFormName])
 
   const isWorkflow = !!workflow?.workflowId
 
   const deleteForm = async (form: TWorkflowForm) => {
-    if (workflow.isSynced && form.isSynced) {
-      // delete the module data from the API first
-      await deleteModuleFromAPI(workflow, form.name)
+    const removeFormFromDb = async () => {
+      form.delete().then(async () => {
+        notify(`Deleted ${form.name} from workflow`)
+        if (activeForms.length < 2) {
+          const remainingWorkflowForms = await workflow.forms.fetch()
+          setFormStates(remainingWorkflowForms[0].name)
+        }
+      })
     }
-
-    form.delete().then(() => {
-      notify(`Deleted ${form.name} from workflow`)
-      if (activeForms.length < 2) {
-        setFormStates(workflowForms[0].name)
-      }
-    })
+    if (form.isSynced) {
+      // delete the module data from the API first
+      deleteModuleFromAPI(workflow, form.name).then(async () => {
+        await removeFormFromDb()
+      })
+    } else {
+      await removeFormFromDb()
+    }
   }
 
   const addForm = async (addedFormName: string) => {
     const initialFormData =
       initialFormValues(member, user, workflow.template)[addedFormName] || {}
 
-    workflow.addForm(addedFormName, initialFormData).then(() => {
-      setFormStates(addedFormName)
-      notify(`Added ${addedFormName} to workflow`)
+    addNewWorkflowModule(workflow, addedFormName).then(() => {
+      workflow
+        .addForm(addedFormName, {
+          initialFormData,
+          Member: [v2Member?.airtableRecordId],
+          moduleId: dayjs().toISOString(),
+        })
+        .then(() => {
+          setFormStates(addedFormName)
+          notify(`Added ${addedFormName} to workflow`)
+        })
     })
   }
 
@@ -243,16 +264,13 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
 
   const deleteWorkflow = async () => {
     if (canDeleteWorkflow) {
-      // if workflow is synced, delete from api first
-      if (workflow.isSynced) {
-        await deleteWorkflowFromAPI(workflow)
-      }
-
-      // remove it from the database
-      await workflow.delete()
-      setShowDeleteWorkflowPrompt(false)
-      notify('Workflow deleted successfully')
-      closeWorkflow()
+      deleteWorkflowFromAPI(workflow).then(() => {
+        workflow.delete().then(() => {
+          setShowDeleteWorkflowPrompt(false)
+          notify('Workflow deleted successfully')
+          closeWorkflow()
+        })
+      })
     }
   }
 
@@ -284,6 +302,16 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
         })
       }
     }
+
+  const handleSaveDraftWorkflow = async () => {
+    saveDraftWorkflow(workflow, activeForms)
+      .then(() => {
+        notify('Draft saved successfully')
+        setIsDraftSaved(true)
+        setIsEdited(false)
+      })
+      .catch(logError)
+  }
 
   return (
     <>
@@ -451,7 +479,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                           loaderDisplayed || !getSubmittedForm()?.isDraft
                         }
                         className="rounded-xl bg-white-100 font-rubik font-medium normal-case text-blue-100"
-                        onClick={() => saveDraftWorkflow(workflow, activeForms)}
+                        onClick={handleSaveDraftWorkflow}
                       >
                         Save draft
                       </Button>
@@ -478,9 +506,9 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                     className="w-full bg-red-20 py-0 px-2.5 font-rubik text-sm font-medium  normal-case"
                   >
                     <p>Delete workflow?</p>
-                    <div className="flex justify-end">
+                    <div className="flex justify-end gap-2">
                       <Button
-                        className="gap-2 rounded-lg bg-white-100 font-rubik font-medium normal-case text-white"
+                        className="gap-2 rounded-lg bg-white-100 font-rubik font-medium normal-case text-dark-blue-100"
                         onClick={() => {
                           setShowDeleteWorkflowPrompt(false)
                         }}

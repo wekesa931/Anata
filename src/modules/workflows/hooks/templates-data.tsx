@@ -64,8 +64,8 @@ export const useTemplatesData = () => {
         const initialFormData = initialFormValues(member, user, template.name)
 
         // for each module in the template, create a form
-        Promise.all(
-          modules.forEach(async (module: any) => {
+        await Promise.all(
+          modules.map(async (module: any) => {
             await formsCollection.create((form) => {
               form.workflow.set(created)
               form.member = v2Member?.antaraId
@@ -73,6 +73,7 @@ export const useTemplatesData = () => {
               form.data = {
                 ...initialFormData[module],
                 moduleId: dayjs().toISOString(),
+                Member: [v2Member?.airtableRecordId],
               }
               form.isDraft = true
 
@@ -90,7 +91,7 @@ export const useTemplatesData = () => {
   }
 
   const deleteAllTemplates = async () => {
-    await database.write(async () => {
+    return database.write(async () => {
       const allTemplates = await templatesCollection.query().fetch()
       await database.batch(
         ...allTemplates.map((t) => t.prepareDestroyPermanently())
@@ -101,40 +102,45 @@ export const useTemplatesData = () => {
   const hydrateTemplates = async () => {
     const data = await getData()
     const normalizedTemplates = normalizeWorkflowTemplates(data?.data)
+    if (normalizedTemplates.length) {
+      database.write(async () => {
+        // clear the templates from the collection first
+        Promise.all(
+          normalizedTemplates.map(async (template) => {
+            try {
+              // check if a template with template.id exists
+              await templatesCollection.find(template.id)
+            } catch (err: any) {
+              const notFoundRegex = /Record ([^ ]+) not found/
+              const notFoundError = err?.message.match(notFoundRegex)
+              if (notFoundError) {
+                templatesCollection.create((t) => {
+                  t.name = template.name
+                  t.modules = template.modules
 
-    database.write(async () => {
-      // write the normalized templates
-      Promise.all(
-        normalizedTemplates.map(async (template) => {
-          return templatesCollection.create((t) => {
-            t.name = template.name
-            t.modules = template.modules
-
-            // eslint-disable-next-line no-underscore-dangle
-            t._raw.id = template.id
-            t.updatedAt = dayjs(template.updatedAt).toDate().getDate()
+                  // eslint-disable-next-line no-underscore-dangle
+                  t._raw.id = template.id
+                  t.updatedAt = dayjs(template.updatedAt).toDate().getDate()
+                })
+              }
+            }
           })
-        })
-      )
-    })
+        )
+      })
+    }
   }
 
   useEffect(() => {
     setLoading(true)
 
-    templatesCollection
-      .query()
-      .fetchCount()
-      .then((count) => {
-        if (count === 0) {
-          // pull the new templates and write them
-          hydrateTemplates()
-        }
-      })
-      .finally(() => setLoading(false))
+    hydrateTemplates().finally(() => {
+      setLoading(false)
+    })
+
+    // deleteAllTemplates()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [templatesCollection])
+  }, [])
 
   return {
     templates,

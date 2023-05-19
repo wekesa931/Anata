@@ -35,11 +35,11 @@ export function Alert({ type, message, timeout = 10000, hide }: AlertProps) {
   const getClassName = () => {
     switch (type) {
       case 'success':
-        return 'background-green-10 text-green-100'
+        return 'bg-green-10 text-green-100'
       case 'error':
-        return 'background-red-10 text-red-100'
+        return 'bg-red-10 text-red-100'
       default:
-        return 'background-[#efeff3] text-dark-blue-100'
+        return 'bg-[#efeff3] text-dark-blue-100'
     }
   }
 

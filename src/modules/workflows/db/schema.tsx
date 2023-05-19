@@ -52,6 +52,7 @@ export const WorkflowSchema = tableSchema({
     { name: 'updatedBy', type: 'string' },
     { name: 'airtableId', type: 'string' }, // duplicate of case_id
     { name: 'is_synced', type: 'boolean' },
+    { name: 'is_draft_saved', type: 'boolean' },
   ],
 })
 

@@ -38,6 +38,7 @@ import {
   GET_WORKFLOWS,
   REMOVE_MODULE,
   CANCEL_WORKFLOW,
+  ADD_MODULE_TO_WORKFLOW,
 } from './gql'
 
 export const normalizeWorkflowData: NormalizeDataFn<TWorkflow[]> = (
@@ -150,6 +151,26 @@ export const useProcessNewWorkflowModule = () => {
 
   return {
     processNewWorkflowData,
+  }
+}
+
+export const useAddWorkflowModule = () => {
+  const [mutate, { loading, error }] = useMutation(ADD_MODULE_TO_WORKFLOW)
+
+  return {
+    addModule: async (variables: any) => {
+      const res = await mutate({
+        variables,
+      })
+
+      if (res?.data?.addWorkflowModule?.status !== 200) {
+        throw new Error(JSON.stringify(res.data.addWorkflowModule.errors))
+      }
+
+      return res?.data?.addWorkflowModule?.workflow
+    },
+    loading,
+    error,
   }
 }
 

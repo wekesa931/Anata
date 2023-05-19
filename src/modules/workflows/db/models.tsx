@@ -96,6 +96,12 @@ export class Forms extends Model {
       f.airtableId = airtableId
     })
   }
+
+  @writer async markAsSynced() {
+    await this.update((f) => {
+      f.isSynced = true
+    })
+  }
 }
 
 export class Workflows extends Model {
@@ -127,6 +133,8 @@ export class Workflows extends Model {
 
   @field('is_synced') isSynced!: boolean
 
+  @text('is_draft_saved') isDraftSaved?: boolean
+
   get workflowObject() {
     return {
       workflowId: this.workflowId,
@@ -140,6 +148,12 @@ export class Workflows extends Model {
       airtableId: this.airtableId,
       isSynced: this.isSynced,
     }
+  }
+
+  @writer async markSavedDraft() {
+    await this.update((w) => {
+      w.isDraftSaved = true
+    })
   }
 
   // create a writer to add a form
@@ -205,114 +219,112 @@ export class Workflows extends Model {
     })
   }
 
+  @writer async synchronizeWorkflowFormData(
+    newWorkflow: any,
+    member: string,
+    user: any
+  ) {
+    const formData = newWorkflow.moduleData || {}
+    const workflowModules = newWorkflow.currentModules
+
+    const initialFormData = initialFormValues(
+      member,
+      user,
+      newWorkflow.template.name
+    )
+
+    const forms = await this.forms.fetch()
+    const formDataKeys = Object.keys(formData)
+    formDataKeys.forEach((k: string) => {
+      const filledValues = formData[k].filled_values || []
+      filledValues.forEach((fv: any) => {
+        const moduleId = fv?.moduleId
+        if (moduleId) {
+          const form = forms.find((f: Forms) => f.id === moduleId)
+          if (form) {
+            form.update((f: Forms) => {
+              // f.data = merge f.data and dv
+              f.data = { ...f.data, ...fv }
+              f.isSynced = true
+            })
+          }
+        }
+      })
+    })
+
+    // if new forms were created that are not within the db, we need to add them
+    const uniqueCurrentFormNames = new Set(...[forms.map((f: Forms) => f.name)])
+    // get the forms to create, forms in currentModules and not in uniqueCurrentModules
+    const formsToCreate = workflowModules.filter(
+      (m: any) => !uniqueCurrentFormNames.has(m)
+    )
+    const formsToDelete = forms.filter(
+      (f: Forms) => !uniqueCurrentFormNames.has(f.name)
+    )
+
+    // create the forms
+    const formsCollection: Collection<Forms> = this.collections.get('forms')
+    await Promise.all(
+      formsToCreate.map(async (f: any) => {
+        const thisFormsData = formData[f]?.filled_values || []
+
+        if (thisFormsData.length !== 0) {
+          // some data exists for this form, so we need to create it
+          thisFormsData.forEach(async (fv: any) => {
+            await formsCollection.create((form: Forms) => {
+              form.name = f
+              form.workflow.set(this)
+              form.member = this.member
+              form.data = { ...initialFormData[f], ...fv }
+              form.isDraft = true
+              form.isEdited = false
+              form.isSynced = true
+              form.createdBy = this.createdBy
+              form.updatedBy = this.updatedBy
+            })
+          })
+        } else {
+          await formsCollection.create((form: Forms) => {
+            form.name = f
+            form.workflow.set(this)
+            form.member = this.member
+            form.data = initialFormData[f]
+            form.isDraft = true
+            form.isEdited = false
+            form.isSynced = false
+            form.createdBy = this.createdBy
+            form.updatedBy = this.updatedBy
+          })
+        }
+      })
+    )
+
+    // delete the forms
+    await Promise.all(
+      formsToDelete.map(async (f: Forms) => {
+        await f.destroyPermanently()
+      })
+    )
+  }
+
   @writer async createFromAPI(newWorkflow: any, member: string, user: any) {
     const userData = {
       email: user.email,
       name: user.name,
     }
-    const formsCollection: Collection<Forms> = this.collections.get('forms')
     await this.update((w) => {
       w.workflowId = newWorkflow.workflowId
       w.template = newWorkflow.template.name
       w.member = member
       w.isCompleted = newWorkflow.completed
       w.isSynced = true
+      w.isDraftSaved = true
       w.airtableId = newWorkflow.airtableId
       w.createdBy = userData
       w.updatedBy = userData
       w.createdAt = dayjs(newWorkflow.createdAt).valueOf()
       w.updatedAt = dayjs(newWorkflow.updatedAt).valueOf()
     })
-
-    const currentModules = newWorkflow.currentModules || []
-    const moduleData = newWorkflow.moduleData || {}
-    let formsToCreateOrUpdate: any[] = []
-
-    currentModules.forEach((m: string) => {
-      if (moduleData[m]) {
-        let filledValues = moduleData[m].filled_values || []
-        if (!Array.isArray(filledValues)) {
-          filledValues = [filledValues]
-        }
-
-        filledValues.forEach((d: any) => {
-          // grab module id or set it to created date
-          const moduleId =
-            d?.moduleId || dayjs(moduleData[m]?.created_at).toISOString()
-          formsToCreateOrUpdate = [
-            ...formsToCreateOrUpdate,
-            { moduleId, data: { ...d, moduleId }, formName: m },
-          ]
-        })
-      }
-    })
-
-    if (formsToCreateOrUpdate.length === 0) {
-      const forms = await this.forms.fetch()
-      if (forms.length !== currentModules.length) {
-        const initialFormData = initialFormValues(
-          member,
-          user,
-          newWorkflow.template.name
-        )
-        currentModules.forEach((m: string) => {
-          if (!forms.find((f: any) => f.name === m)) {
-            formsCollection.create((f) => {
-              f.name = m
-              f.workflow.set(this)
-              f.member = this.member
-              f.data = {
-                moduleId: dayjs().toISOString(),
-                ...initialFormData[m],
-              }
-              f.isDraft = true
-              f.isEdited = false
-              f.isSynced = false
-              f.createdBy = userData
-              f.updatedBy = userData
-            })
-          }
-        })
-      }
-    }
-
-    if (formsToCreateOrUpdate.length > 0) {
-      await Promise.all(
-        formsToCreateOrUpdate.map(async (f: any) => {
-          try {
-            const existingForm = await formsCollection.find(f.moduleId)
-            if (existingForm) {
-              await existingForm.update((form: Forms) => {
-                form.data = f.data
-                form.isSynced = true
-                form.workflow.set(this)
-                form.updatedBy = f.data?.updatedBy || userData
-              })
-            }
-          } catch (e: Error | any) {
-            const notFoundRegex = /Record ([^ ]+) not found/
-            const notFoundError = e?.message.match(notFoundRegex)
-            if (notFoundError) {
-              // create a new form
-              formsCollection.create((form: Forms) => {
-                form.name = f.formName
-                form.workflow.set(this)
-                form.member = this.member
-                form.data = f.data
-                form.isDraft = false
-                form.isEdited = false
-                form.isSynced = true
-                form.createdBy = userData
-                form.updatedBy = userData
-
-                // eslint-disable-next-line no-underscore-dangle
-                form._raw.id = f.moduleId
-              })
-            }
-          }
-        })
-      )
-    }
 
     return this
   }
