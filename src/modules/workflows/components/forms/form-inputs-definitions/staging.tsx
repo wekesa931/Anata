@@ -8239,8 +8239,8 @@ export default [
         helper: '',
       },
       {
-        id: 'fldEgIKm2Sx0mr11R',
-        name: 'HMP Phase',
+        id: 'fldkIqvhbFczIqDNP',
+        name: 'HMP State',
         type: 'select',
         format: '',
         isDateTime: false,

@@ -19,7 +19,7 @@ export interface ILongitudinalTrackingData {
 
 interface HMPData {
   'HMP #': string
-  'HMP Phase': string
+  'HMP State': string
   'HMP Day': string
   'HMP Send Date': string
   'HN Notes': string
@@ -377,7 +377,7 @@ const HMP = (hmpData: HMPData[]) => {
           id: hmp['Record ID'],
           data: {
             'HMP #': hmp['HMP #'],
-            'HMP Phase': hmp['HMP Phase'],
+            'HMP State': hmp['HMP State'],
             'HMP Day': hmp['HMP Day'],
             'HMP Send Date': hmp['HMP Send Date'],
             'HN Notes': hmp['HN Notes'],

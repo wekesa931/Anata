@@ -11760,8 +11760,8 @@ export default [
         helper: '',
       },
       {
-        id: 'fld6Cr5ZKnz4n4MPf',
-        name: 'HMP Phase',
+        id: 'fldr1VOEwRtLo32tW',
+        name: 'HMP State',
         type: 'select',
         format: '',
         isDateTime: false,

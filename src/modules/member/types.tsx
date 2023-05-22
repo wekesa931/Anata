@@ -193,5 +193,5 @@ export type HMPType = {
   hmpNumber: string | null
   hmpDay: number | null
   hmpLink: string | null
-  hmpPhase: string | null
+  hmpState: string | null
 }

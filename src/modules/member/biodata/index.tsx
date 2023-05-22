@@ -78,7 +78,7 @@ function Hmp() {
             hmpNumber: response[data]['HMP #']?.toString(),
             hmpDay: response[data]['HMP Day']?.toString(),
             hmpLink: response[data]['HMP Link']?.toString(),
-            hmpPhase: response[data]['HMP Phase']?.toString(),
+            hmpState: response[data]['HMP State']?.toString(),
           })
         })
         setHmpInfo(hmps)
@@ -113,8 +113,8 @@ function Hmp() {
             </div>
             <div className={`${styles.hmpValRow}`}>
               <div>
-                <span className={`${styles.hmpValLabel}`}>HMP Phase: </span>
-                <span className={`${styles.hmpVal}`}>{info.hmpPhase}</span>
+                <span className={`${styles.hmpValLabel}`}>HMP State: </span>
+                <span className={`${styles.hmpVal}`}>{info.hmpState}</span>
               </div>
               {info.hmpLink && (
                 <div>
