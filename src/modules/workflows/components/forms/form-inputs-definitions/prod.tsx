@@ -3409,32 +3409,6 @@ export default [
         },
       },
       {
-        id: 'fldTZQp13J6facu5H',
-        name: 'Starting Hypercholesterolemia stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Starting stage should be captured at the first interaction with member (initial diagnosis)',
-        conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Hypercholesterolemia'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Hypercholesterolemia'].some((r) =>
-              values.Condition.includes(r)
-            )
-          }
-          return ['Hypercholesterolemia'].includes(values.Condition)
-        },
-      },
-      {
         id: 'fldcuGv2Odr8AJrPp',
         name: 'Starting Hyperlipidemia stage',
         type: 'select',
@@ -3447,7 +3421,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Starting stage should be captured at the first interaction with member (initial diagnosis)',
+          'At risk if members with previous hx or family hx\n Hypercholesterolemia if TC>200mg/dl\n Hypertriglyceridemia if TG >150mg/dl only done in a fasting state\n Mixed hyperlipidemia if defined as elevated LDL >130mg/dl, TC>200mg/dl and TG>150mg/dl',
         conditionType: '',
         parentKey: 'Condition',
         parentValues: ['Hyperlipidemia'],
@@ -3456,32 +3430,6 @@ export default [
             return ['Hyperlipidemia'].some((r) => values.Condition.includes(r))
           }
           return ['Hyperlipidemia'].includes(values.Condition)
-        },
-      },
-      {
-        id: 'fldUNR6bhbc9Z3FY8',
-        name: 'Starting Hypertriglyceridemia stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Starting stage should be captured at the first interaction with member (initial diagnosis)',
-        conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Hypertriglyceridemia'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Hypertriglyceridemia'].some((r) =>
-              values.Condition.includes(r)
-            )
-          }
-          return ['Hypertriglyceridemia'].includes(values.Condition)
         },
       },
       {
@@ -3538,10 +3486,8 @@ export default [
           'Gastritis: H.pylori associated',
           'Gastroesophageal reflux (GERD)',
           'Hemorrhoids',
-          'Hypercholesterolemia',
           'Hyperlipidemia',
           'Hypertension',
-          'Hypertriglyceridemia',
           'Lower Back Pain',
           'Osteoarthritis of Hip',
           'Osteoarthritis of Knee',
@@ -3565,10 +3511,8 @@ export default [
               'Gastritis: H.pylori associated',
               'Gastroesophageal reflux (GERD)',
               'Hemorrhoids',
-              'Hypercholesterolemia',
               'Hyperlipidemia',
               'Hypertension',
-              'Hypertriglyceridemia',
               'Lower Back Pain',
               'Osteoarthritis of Hip',
               'Osteoarthritis of Knee',
@@ -3591,10 +3535,8 @@ export default [
             'Gastritis: H.pylori associated',
             'Gastroesophageal reflux (GERD)',
             'Hemorrhoids',
-            'Hypercholesterolemia',
             'Hyperlipidemia',
             'Hypertension',
-            'Hypertriglyceridemia',
             'Lower Back Pain',
             'Osteoarthritis of Hip',
             'Osteoarthritis of Knee',
@@ -4276,7 +4218,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: 'Please select the key goal',
+        helper:
+          'At risk →  LDL<130mg/dl, TC < 200mg/dl, Fasting TG < 150mg/dl\n Hypercholesterolemia → TC< 200mg/dl\n Hypertriglyceridemia → Fasting TG < 150mg/dl\n Mixed hyperlipidemia → LDL<130mg/dl, TC<200mg/dl, Fasting TG <150mg/dl',
         conditionType: '',
         parentKey: 'Condition',
         parentValues: ['Hyperlipidemia'],
@@ -4285,56 +4228,6 @@ export default [
             return ['Hyperlipidemia'].some((r) => values.Condition.includes(r))
           }
           return ['Hyperlipidemia'].includes(values.Condition)
-        },
-      },
-      {
-        id: 'fldpLDncfoYZy4A86',
-        name: 'Hypertriglyceridemia key goal',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Please select the key goal',
-        conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Hypertriglyceridemia'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Hypertriglyceridemia'].some((r) =>
-              values.Condition.includes(r)
-            )
-          }
-          return ['Hypertriglyceridemia'].includes(values.Condition)
-        },
-      },
-      {
-        id: 'fldAHgOi8C2aymAZA',
-        name: 'Hypercholesterolemia key goal',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Please select the key goal',
-        conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Hypercholesterolemia'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Hypercholesterolemia'].some((r) =>
-              values.Condition.includes(r)
-            )
-          }
-          return ['Hypercholesterolemia'].includes(values.Condition)
         },
       },
       {
@@ -4623,10 +4516,8 @@ export default [
           'Osteoarthritis of spine',
           'Osteoarthritis, other',
           'Lower Back Pain',
-          'Hypercholesterolemia',
           'Hyperlipidemia',
           'Hypertension',
-          'Hypertriglyceridemia',
           'Hemorrhoids',
           'Gastroesophageal reflux (GERD)',
           'Gastritis',
@@ -4650,10 +4541,8 @@ export default [
               'Osteoarthritis of spine',
               'Osteoarthritis, other',
               'Lower Back Pain',
-              'Hypercholesterolemia',
               'Hyperlipidemia',
               'Hypertension',
-              'Hypertriglyceridemia',
               'Hemorrhoids',
               'Gastroesophageal reflux (GERD)',
               'Gastritis',
@@ -4676,10 +4565,8 @@ export default [
             'Osteoarthritis of spine',
             'Osteoarthritis, other',
             'Lower Back Pain',
-            'Hypercholesterolemia',
             'Hyperlipidemia',
             'Hypertension',
-            'Hypertriglyceridemia',
             'Hemorrhoids',
             'Gastroesophageal reflux (GERD)',
             'Gastritis',
@@ -14386,31 +14273,6 @@ export default [
         },
       },
       {
-        id: 'fld5GcH5Wf1xgMlw5',
-        name: 'Update Hypercholesterolemia stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Hypercholesterolemia'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Hypercholesterolemia'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Hypercholesterolemia'].includes(values['Condition type'])
-        },
-      },
-      {
         id: 'fldCDPMXM2qUX2R0c',
         name: 'Update Hyperlipidemia stage',
         type: 'select',
@@ -14422,7 +14284,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper:
+          'At risk if members with previous hx or family hx\n Hypercholesterolemia if TC>200mg/dl\n Hypertriglyceridemia if TG >150mg/dl only done in a fasting state\n Mixed hyperlipidemia if defined as elevated LDL >130mg/dl, TC>200mg/dl and TG>150mg/dl',
         conditionType: '',
         parentKey: 'Condition type',
         parentValues: ['Hyperlipidemia'],
@@ -14433,31 +14296,6 @@ export default [
             )
           }
           return ['Hyperlipidemia'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldKb7GRejVgRPD4m',
-        name: 'Update Hypertriglyceridemia stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Hypertriglyceridemia'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Hypertriglyceridemia'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Hypertriglyceridemia'].includes(values['Condition type'])
         },
       },
       {

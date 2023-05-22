@@ -6840,31 +6840,6 @@ export default [
         },
       },
       {
-        id: 'fldDktmseKZtf9AIH',
-        name: 'Update Hypercholesterolemia stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Hypercholesterolemia'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Hypercholesterolemia'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Hypercholesterolemia'].includes(values['Condition type'])
-        },
-      },
-      {
         id: 'fldah6rk4xoQWp6cO',
         name: 'Update Hyperlipidemia stage',
         type: 'select',
@@ -6876,7 +6851,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper: 'At risk if members with previous hx or family hx\n Hypercholesterolemia if TC>200mg/dl\n Hypertriglyceridemia if TG >150mg/dl only done in a fasting state\n Mixed hyperlipidemia if defined as elevated LDL >130mg/dl, TC>200mg/dl and TG>150mg/dl',
         conditionType: '',
         parentKey: 'Condition type',
         parentValues: ['Hyperlipidemia'],
@@ -6887,31 +6862,6 @@ export default [
             )
           }
           return ['Hyperlipidemia'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldiPolewOTcQcSgY',
-        name: 'Update Hypertriglyceridemia stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Hypertriglyceridemia'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Hypertriglyceridemia'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Hypertriglyceridemia'].includes(values['Condition type'])
         },
       },
       {
