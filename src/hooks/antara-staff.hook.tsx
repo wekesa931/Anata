@@ -3,6 +3,29 @@ import { useLazyQuery } from '@apollo/client'
 import { GET_ANTARA_STAFF } from 'src/gql/staff'
 import logError from 'src/utils/logging/logger'
 
+const mapAssigneeTeam = (antaraStaff: any[]) => {
+  const teamType = [
+    'DOCTOR',
+    'NUTRITIONIST',
+    'HEALTH_NAVIGATOR',
+    'MEMBER_EXPERIENCE',
+  ]
+  return antaraStaff
+    .filter(({ team }: any) => {
+      return teamType.some((value) => team === value)
+    })
+    .sort((a, b) => a?.fullName?.localeCompare(b?.fullName))
+}
+
+export const mapAssigneeToLookup = (allAntaraStaffs: any[]) => {
+  return mapAssigneeTeam(allAntaraStaffs).map(
+    ({ fullName, atRecordId }: any) => ({
+      label: fullName,
+      value: atRecordId,
+    })
+  )
+}
+
 const useAntaraStaff = () => {
   const [allAntaraStaffs, setAllAntaraStaffs] = useState<any>([])
 
@@ -17,6 +40,8 @@ const useAntaraStaff = () => {
       ...staff?.node,
     }))
   }
+
+
 
   useEffect(() => {
     getAntaraStaff()

@@ -17,8 +17,7 @@ import { useMember } from 'src/context/member'
 import logError from 'src/utils/logging/logger'
 import { useFormsRouting } from 'src/modules/workflows/hooks/routing/forms'
 import useHandleResponses from 'src/utils/airtable/error-handler'
-import useAntaraStaff from 'src/hooks/antara-staff.hook'
-import mapAssigneeTeam from 'src/modules/utils'
+import useAntaraStaff, { mapAssigneeToLookup } from 'src/hooks/antara-staff.hook'
 import styles from './tasks.component.css'
 import PrescriptionName from '../components/prescription-name'
 
@@ -221,7 +220,7 @@ function Tasks() {
     { error: apiError, loading: isApiLoading, data: rawApiRecords },
   ] = useLazyQuery(GET_MEMBER_TASKS, {})
 
-  const taskFields = getTaskFields(mapAssigneeTeam(allAntaraStaffs))
+  const taskFields = getTaskFields(mapAssigneeToLookup(allAntaraStaffs))
 
   useEffect(() => {
     if (member) {

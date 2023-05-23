@@ -12,8 +12,7 @@ import airtableFetch from 'src/services/airtable/fetch'
 import { useMember } from 'src/context/member'
 import logError from 'src/utils/logging/logger'
 import useHandleResponses from 'src/utils/airtable/error-handler'
-import useAntaraStaff from 'src/hooks/antara-staff.hook'
-import mapAssigneeTeam from 'src/modules/utils'
+import useAntaraStaff, { mapAssigneeToLookup } from 'src/hooks/antara-staff.hook'
 import styles from './appointments.component.css'
 
 function Appointments() {
@@ -108,12 +107,7 @@ function Appointments() {
     {
       name: 'Assignee',
       type: 'single-select',
-      options: mapAssigneeTeam(allAntaraStaffs).map(
-        ({ fullName, atRecordId }: any) => ({
-          label: fullName,
-          value: atRecordId,
-        })
-      ),
+      options: mapAssigneeToLookup(allAntaraStaffs),
     },
     {
       name: 'Reasons for missed or rescheduled meeting',

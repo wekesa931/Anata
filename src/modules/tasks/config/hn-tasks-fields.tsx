@@ -75,10 +75,7 @@ const getTaskFields = (allAntaraStaffs: any[]) => {
     {
       name: 'Assignee',
       type: 'single-select',
-      options: allAntaraStaffs.map(({ fullName, atRecordId }: any) => ({
-        label: fullName,
-        value: atRecordId,
-      })),
+      options: allAntaraStaffs,
     },
     {
       name: 'Status',

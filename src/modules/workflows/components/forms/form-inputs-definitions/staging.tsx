@@ -6865,7 +6865,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: 'At risk if members with previous hx or family hx\n Hypercholesterolemia if TC>200mg/dl\n Hypertriglyceridemia if TG >150mg/dl only done in a fasting state\n Mixed hyperlipidemia if defined as elevated LDL >130mg/dl, TC>200mg/dl and TG>150mg/dl',
+        helper:
+          'At risk if members with previous hx or family hx\n Hypercholesterolemia if TC>200mg/dl\n Hypertriglyceridemia if TG >150mg/dl only done in a fasting state\n Mixed hyperlipidemia if defined as elevated LDL >130mg/dl, TC>200mg/dl and TG>150mg/dl',
         conditionType: '',
         parentKey: 'Condition type',
         parentValues: ['Hyperlipidemia'],
