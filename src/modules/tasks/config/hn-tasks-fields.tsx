@@ -1,7 +1,5 @@
 import AirtableField from 'src/types/airtable-field'
 
-
-
 const TASK_TYPES = [
   'HMP: Collect condition data',
   'HMP: Data collection preparation',
@@ -51,9 +49,7 @@ const TASK_TYPES = [
   'Nutrition: Perform Consultation',
 ].sort()
 
-
-const getTaskFields = ( allAntaraStaffs: any[]) => {
-
+const getTaskFields = (allAntaraStaffs: any[]) => {
   const TASK_FIELDS: AirtableField[] = [
     {
       name: 'Type',
@@ -79,12 +75,10 @@ const getTaskFields = ( allAntaraStaffs: any[]) => {
     {
       name: 'Assignee',
       type: 'single-select',
-      options: allAntaraStaffs.map(
-        ({ fullName, atRecordId }: any) => ({
-          label: fullName,
-          value: atRecordId,
-        })
-      ),
+      options: allAntaraStaffs.map(({ fullName, atRecordId }: any) => ({
+        label: fullName,
+        value: atRecordId,
+      })),
     },
     {
       name: 'Status',
@@ -111,9 +105,6 @@ const getTaskFields = ( allAntaraStaffs: any[]) => {
   ]
 
   return TASK_FIELDS
-
 }
-
-
 
 export default getTaskFields

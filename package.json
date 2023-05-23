@@ -58,6 +58,7 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/react-test-renderer": "^18.0.0",
     "@types/throttle-debounce": "^5.0.0",
+    "@types/uuid": "^9.0.1",
     "@types/yup": "^0.29.14",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
@@ -173,6 +174,7 @@
     "throttle-debounce": "^5.0.0",
     "use-file-picker": "^1.5.1",
     "util": "^0.12.5",
+    "uuid": "^9.0.0",
     "webpack-bundle-analyzer": "^4.7.0",
     "yup": "^0.32.11"
   },

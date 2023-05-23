@@ -13,8 +13,8 @@ import { useMember } from 'src/context/member'
 import logError from 'src/utils/logging/logger'
 import useHandleResponses from 'src/utils/airtable/error-handler'
 import useAntaraStaff from 'src/hooks/antara-staff.hook'
-import styles from './appointments.component.css'
 import mapAssigneeTeam from 'src/modules/utils'
+import styles from './appointments.component.css'
 
 function Appointments() {
   const [appointments, setAppointments] = React.useState<any[]>([])
@@ -53,8 +53,7 @@ function Appointments() {
     &${filterFields(allowedFields)}`
   )
 
-  const  { allAntaraStaffs, loading }  = useAntaraStaff()
-
+  const { allAntaraStaffs, loading } = useAntaraStaff()
 
   const {
     data: providersData,

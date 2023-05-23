@@ -386,11 +386,7 @@ export const useWorkflowData = () => {
           await w
             .createFromAPI(updatedWorkflow, v2Member.antaraId, user)
             .then(() => {
-              w.synchronizeWorkflowFormData(
-                updatedWorkflow,
-                v2Member.antaraId,
-                user
-              )
+              w.synchronizeWorkflowFormData(updatedWorkflow, v2Member, user)
             })
         }
       })
@@ -401,11 +397,7 @@ export const useWorkflowData = () => {
       workflowsToCreate.map(async (w: TWorkflow) => {
         try {
           const existingWorkflow = await workflowsCollection.find(w.workflowId)
-          await existingWorkflow.synchronizeWorkflowFormData(
-            w,
-            v2Member.antaraId,
-            user
-          )
+          await existingWorkflow.synchronizeWorkflowFormData(w, v2Member, user)
         } catch (err: any) {
           const notFoundRegex = /Record ([^ ]+) not found/
           const notFoundError = err?.message.match(notFoundRegex)
@@ -423,11 +415,7 @@ export const useWorkflowData = () => {
               await createdWorkflow
                 .createFromAPI(w, v2Member.antaraId, user)
                 .then(() => {
-                  createdWorkflow.synchronizeWorkflowFormData(
-                    w,
-                    v2Member.antaraId,
-                    user
-                  )
+                  createdWorkflow.synchronizeWorkflowFormData(w, v2Member, user)
                 })
             } catch (e) {
               logError(e)

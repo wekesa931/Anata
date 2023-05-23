@@ -184,9 +184,9 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     })
   }
 
-  const formSchema = (form_schemas as any[]).find(
-    (form: any) => form.name === activeFormName
-  )
+  const formSchema =
+    (form_schemas as any[]).find((form: any) => form.name === activeFormName) ||
+    {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleExpand =
@@ -346,103 +346,114 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
           </ModulesSection>
           <FormsSection>
             <>
-              {isWorkflow && (
-                <div
-                  className={`fixed z-1000 flex w-[64%] justify-between bg-white pt-2 `}
-                >
-                  <p className="m-0 mr-2 text-left font-rubik text-sm font-medium text-dark-blue-100">
-                    {formNames[activeFormName]}
-                  </p>
-                  <div className="d-flex">
-                    {includes(duplicates, activeFormName, 0) && (
-                      <Plus
-                        className="mr-[5px] h-[18px] w-[18px] cursor-pointer text-white-50"
-                        onClick={addForm.bind(null, activeFormName)}
-                      />
-                    )}
-                    {formIsDraft() && activeForms.length === 1 && (
-                      <ConfirmButton
-                        onConfirm={() => deleteForm(activeForms[0])}
-                      />
-                    )}
-                  </div>
-                </div>
-              )}
-
-              <p className="mb-2.5 mt-[30px] whitespace-pre-line text-xs text-dark-blue-100">
-                {formSchema?.helper}
-              </p>
-              {activeForms.length === 0 ? (
-                <div className="flex h-3/4 flex-col items-center pt-7">
-                  <p className="font-rubik text-xs">
-                    This workflow does not have a module
-                  </p>
-                </div>
-              ) : (
+              {Object.keys(formSchema).length > 0 ? (
                 <>
-                  {activeForms.length > 1 ? (
-                    <>
-                      {activeForms.map((form: any, index: number) => (
-                        <Accordion
-                          key={form.id}
-                          expanded={form.id === expanded}
-                          onChange={handleExpand(form.id)}
-                        >
-                          <AccordionSummary
-                            aria-controls="panel1bh-content"
-                            id="panel1bh-header"
-                            expandIcon={<ExpandMoreIcon />}
-                          >
-                            <Typography>
-                              <div>
-                                <span>
-                                  <div className="flex items-center">
-                                    <span>-</span>
-                                    <Tooltip title="Delete Module">
-                                      <ConfirmButton
-                                        onConfirm={() => deleteForm(form)}
-                                      />
-                                    </Tooltip>
-                                  </div>
-                                </span>
-                                <div
-                                  className={`ml-2.5 flex w-[60px] justify-center rounded-[5px] py-[3px] px-[7px] text-[10px] font-bold ${
-                                    form.isDraft
-                                      ? ' bg-yellow-200 text-status'
-                                      : 'bg-green-100 text-white'
-                                  }`}
-                                >
-                                  {form.isDraft ? 'Pending' : 'Submitted'}
-                                </div>
-                              </div>
-                            </Typography>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            <WorkflowForm
-                              form={form}
-                              formSchema={formSchema}
-                              submissionId={submissionForm?.id}
-                              submitForm={submitForm}
-                              openForm={openForm}
-                              saveInput={handleSaveInput(form, index)}
-                              formData={formsData[index] || {}}
-                            />
-                          </AccordionDetails>
-                        </Accordion>
-                      ))}
-                    </>
+                  {isWorkflow && (
+                    <div
+                      className={`fixed z-1000 flex w-[64%] justify-between bg-white pt-2 `}
+                    >
+                      <p className="m-0 mr-2 text-left font-rubik text-sm font-medium text-dark-blue-100">
+                        {formNames[activeFormName]}
+                      </p>
+                      <div className="d-flex">
+                        {includes(duplicates, activeFormName, 0) && (
+                          <Plus
+                            className="mr-[5px] h-[18px] w-[18px] cursor-pointer text-white-50"
+                            onClick={addForm.bind(null, activeFormName)}
+                          />
+                        )}
+                        {formIsDraft() && activeForms.length === 1 && (
+                          <ConfirmButton
+                            onConfirm={() => deleteForm(activeForms[0])}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  <p className="mb-2.5 mt-[30px] whitespace-pre-line text-xs text-dark-blue-100">
+                    {formSchema?.helper}
+                  </p>
+                  {activeForms.length === 0 ? (
+                    <div className="flex h-3/4 flex-col items-center pt-7">
+                      <p className="font-rubik text-xs">
+                        This workflow does not have a module
+                      </p>
+                    </div>
                   ) : (
-                    <WorkflowForm
-                      form={activeForms[0]}
-                      formSchema={formSchema}
-                      submissionId={submissionForm?.id}
-                      submitForm={submitForm}
-                      openForm={openForm}
-                      saveInput={handleSaveInput(activeForms[0], 0)}
-                      formData={formsData[0] || {}}
-                    />
+                    <>
+                      {activeForms.length > 1 ? (
+                        <>
+                          {activeForms.map((form: any, index: number) => (
+                            <Accordion
+                              key={form.id}
+                              expanded={form.id === expanded}
+                              onChange={handleExpand(form.id)}
+                            >
+                              <AccordionSummary
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                                expandIcon={<ExpandMoreIcon />}
+                              >
+                                <Typography>
+                                  <div>
+                                    <span>
+                                      <div className="flex items-center">
+                                        <span>-</span>
+                                        <Tooltip title="Delete Module">
+                                          <ConfirmButton
+                                            onConfirm={() => deleteForm(form)}
+                                          />
+                                        </Tooltip>
+                                      </div>
+                                    </span>
+                                    <div
+                                      className={`ml-2.5 flex w-[60px] justify-center rounded-[5px] py-[3px] px-[7px] text-[10px] font-bold ${
+                                        form.isDraft
+                                          ? ' bg-yellow-200 text-status'
+                                          : 'bg-green-100 text-white'
+                                      }`}
+                                    >
+                                      {form.isDraft ? 'Pending' : 'Submitted'}
+                                    </div>
+                                  </div>
+                                </Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <WorkflowForm
+                                  form={form}
+                                  formSchema={formSchema}
+                                  submissionId={submissionForm?.id}
+                                  submitForm={submitForm}
+                                  openForm={openForm}
+                                  saveInput={handleSaveInput(form, index)}
+                                  formData={formsData[index] || {}}
+                                />
+                              </AccordionDetails>
+                            </Accordion>
+                          ))}
+                        </>
+                      ) : (
+                        <WorkflowForm
+                          form={activeForms[0]}
+                          formSchema={formSchema}
+                          submissionId={submissionForm?.id}
+                          submitForm={submitForm}
+                          openForm={openForm}
+                          saveInput={handleSaveInput(activeForms[0], 0)}
+                          formData={formsData[0] || {}}
+                        />
+                      )}
+                    </>
                   )}
                 </>
+              ) : (
+                <div className="flex h-3/4 flex-col items-center pt-7">
+                  <p className="font-rubik text-xs">
+                    The selected form ({activeFormName}) does not have form
+                    inputs configured in {process.env.NODE_ENV} environment
+                  </p>
+                </div>
               )}
             </>
           </FormsSection>

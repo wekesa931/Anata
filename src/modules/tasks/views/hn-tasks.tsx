@@ -16,11 +16,11 @@ import { GET_MEMBER_TASKS } from 'src/modules/tasks/services/gql'
 import { useMember } from 'src/context/member'
 import logError from 'src/utils/logging/logger'
 import { useFormsRouting } from 'src/modules/workflows/hooks/routing/forms'
-import PrescriptionName from '../components/prescription-name'
-import styles from './tasks.component.css'
 import useHandleResponses from 'src/utils/airtable/error-handler'
 import useAntaraStaff from 'src/hooks/antara-staff.hook'
 import mapAssigneeTeam from 'src/modules/utils'
+import styles from './tasks.component.css'
+import PrescriptionName from '../components/prescription-name'
 
 type RecordWithId = { data: any; id: string }
 type MatchType = { key: string; value: string }
@@ -456,7 +456,7 @@ function Tasks() {
     }
     return null
   }
- 
+
   const updateTask = async (task: { id: string; fields: any }) => {
     await airtableFetch('hntasks', 'post', {
       id: task.id,
@@ -492,7 +492,11 @@ function Tasks() {
   }
 
   const isReadytoShowTasks =
-    !isAirtableLoading && !isApiLoading && !isAirtableError && !apiError && !loadingAntaraStaff
+    !isAirtableLoading &&
+    !isApiLoading &&
+    !isAirtableError &&
+    !apiError &&
+    !loadingAntaraStaff
 
   return (
     <div className="margin-top-0">

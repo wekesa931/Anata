@@ -334,8 +334,7 @@ function MemberDetailsUpdateForm({
   })
   const [getInsurances] = useLazyQuery(GET_INSURANCE_COMPANIES)
 
-  const { antaraHNs, antaraMEs, loading: loadingStaff }  = useAntaraStaff()
-
+  const { antaraHNs, antaraMEs, loading: loadingStaff } = useAntaraStaff()
 
   const mapStaffToLookup = (staffMembers: any[]) => {
     return staffMembers.map((staff: any) => ({

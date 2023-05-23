@@ -9,6 +9,7 @@ import {
   getUserModelDetails,
 } from 'src/modules/workflows/utils'
 import useObservable from 'src/hooks/observable'
+import { generateId } from 'src/storage/utils'
 import { Workflows, Forms, Templates } from '../db/models'
 import {
   useWorkflowTemplates,
@@ -66,19 +67,20 @@ export const useTemplatesData = () => {
         // for each module in the template, create a form
         await Promise.all(
           modules.map(async (module: any) => {
+            const moduleId = generateId()
             await formsCollection.create((form) => {
               form.workflow.set(created)
               form.member = v2Member?.antaraId
               form.name = module
               form.data = {
                 ...initialFormData[module],
-                moduleId: dayjs().toISOString(),
+                moduleId,
                 Member: [v2Member?.airtableRecordId],
               }
               form.isDraft = true
 
               // eslint-disable-next-line no-underscore-dangle
-              form._raw.id = dayjs().toISOString()
+              form._raw.id = moduleId
             })
           })
         )

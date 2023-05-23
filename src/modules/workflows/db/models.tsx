@@ -13,6 +13,7 @@ import {
 
 import { Associations } from '@nozbe/watermelondb/Model'
 import dayjs from 'dayjs'
+import { generateId } from 'src/storage/utils'
 import { initialFormValues } from '../utils'
 import { CollectionType } from '../../../storage/types'
 
@@ -102,6 +103,11 @@ export class Forms extends Model {
       f.isSynced = true
     })
   }
+}
+
+type V2MemberParam = {
+  antaraId: string
+  airtableRecordId: string
 }
 
 export class Workflows extends Model {
@@ -221,9 +227,10 @@ export class Workflows extends Model {
 
   @writer async synchronizeWorkflowFormData(
     newWorkflow: any,
-    member: string,
+    v2Member: V2MemberParam,
     user: any
   ) {
+    const member = v2Member.antaraId
     const formData = newWorkflow.moduleData || {}
     const workflowModules = newWorkflow.currentModules
 
@@ -244,7 +251,7 @@ export class Workflows extends Model {
           if (form) {
             form.update((f: Forms) => {
               // f.data = merge f.data and dv
-              f.data = { ...f.data, ...fv }
+              f.data = { ...f.data, ...fv, moduleId }
               f.isSynced = true
             })
           }
@@ -267,7 +274,13 @@ export class Workflows extends Model {
     await Promise.all(
       formsToCreate.map(async (f: any) => {
         const thisFormsData = formData[f]?.filled_values || []
+        const moduleId = generateId()
 
+        const setupFormData = {
+          ...initialFormData[f],
+          moduleId,
+          Member: [v2Member?.airtableRecordId],
+        }
         if (thisFormsData.length !== 0) {
           // some data exists for this form, so we need to create it
           thisFormsData.forEach(async (fv: any) => {
@@ -275,7 +288,7 @@ export class Workflows extends Model {
               form.name = f
               form.workflow.set(this)
               form.member = this.member
-              form.data = { ...initialFormData[f], ...fv }
+              form.data = { ...setupFormData, ...fv }
               form.isDraft = true
               form.isEdited = false
               form.isSynced = true
@@ -288,7 +301,7 @@ export class Workflows extends Model {
             form.name = f
             form.workflow.set(this)
             form.member = this.member
-            form.data = initialFormData[f]
+            form.data = setupFormData
             form.isDraft = true
             form.isEdited = false
             form.isSynced = false

@@ -74,6 +74,7 @@ function WorkflowTemplateList({ openWorkflow }: any) {
                                   onClick={() => {
                                     handleCreateWorkflow(d)
                                   }}
+                                  key={d.id}
                                 >
                                   {d.name}
                                 </Button>
