@@ -426,6 +426,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                                   openForm={openForm}
                                   saveInput={handleSaveInput(form, index)}
                                   formData={formsData[index] || {}}
+                                  setIsEdited={setIsEdited}
                                 />
                               </AccordionDetails>
                             </Accordion>
@@ -440,6 +441,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                           openForm={openForm}
                           saveInput={handleSaveInput(activeForms[0], 0)}
                           formData={formsData[0] || {}}
+                          setIsEdited={setIsEdited}
                         />
                       )}
                     </>

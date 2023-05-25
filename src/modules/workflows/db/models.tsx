@@ -240,14 +240,15 @@ export class Workflows extends Model {
       newWorkflow.template.name
     )
 
-    const forms = await this.forms.fetch()
     const formDataKeys = Object.keys(formData)
+    const forms = await this.forms.fetch()
     formDataKeys.forEach((k: string) => {
       let filledValues = formData[k].filled_values || []
       if (!Array.isArray(filledValues)) {
         filledValues = [filledValues]
       }
-      filledValues.forEach((fv: any) => {
+
+      filledValues.map(async (fv: any) => {
         const moduleId = fv?.moduleId
         if (moduleId) {
           const form = forms.find((f: Forms) => f.id === moduleId)
@@ -301,6 +302,8 @@ export class Workflows extends Model {
               form.isSynced = true
               form.createdBy = this.createdBy
               form.updatedBy = this.updatedBy
+              // eslint-disable-next-line no-underscore-dangle
+              form._raw.id = moduleId
             })
           })
         } else {
@@ -314,6 +317,8 @@ export class Workflows extends Model {
             form.isSynced = false
             form.createdBy = this.createdBy
             form.updatedBy = this.updatedBy
+            // eslint-disable-next-line no-underscore-dangle
+            form._raw.id = moduleId
           })
         }
       })

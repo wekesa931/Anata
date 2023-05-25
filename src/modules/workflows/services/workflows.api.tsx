@@ -117,7 +117,7 @@ export const useProcessNewWorkflowModule = () => {
     formMeta: any
   ) => {
     const activeForm = ActiveForm(formName)
-    if (!activeForm.isInteractionsLog || !activeForm.isMemberFeedback) {
+    if (!activeForm.isInteractionsLog && !activeForm.isMemberFeedback) {
       let payload = omitKeys(data, ['moduleId', 'Case ID'])
 
       if (activeForm.isHIFMinor || activeForm.isInterventionDataTracking) {

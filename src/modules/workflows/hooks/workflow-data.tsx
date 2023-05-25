@@ -176,8 +176,10 @@ export const useWorkflowData = () => {
 
     if (activeForm.isInteractionsLog) {
       await createInteraction(form.data)
+      await form.markAsCompleted()
     } else if (activeForm.isMemberFeedback) {
       await createFeedback(form.data)
+      await form.markAsCompleted()
     }
 
     // grab the workflow associated with this form
@@ -199,43 +201,44 @@ export const useWorkflowData = () => {
 
     payload = {
       ...payload,
-      'Data Source': 'Scribe form',
+      'Data Source': form.workflow.id ? 'Guided Workflow' : 'Scribe form',
     }
 
     return processNewWorkflowData(payload, formName, formMeta)
-      .then(async (res) => {
-        form.markAsCompleted(res?.id).then(async () => {
-          let isModulesDraft = false
-          if (workflow) {
-            const forms = await workflow.forms.fetch()
-            const formsWithSameName = forms.filter(
-              (f: Forms) => f.name === formName
-            )
-            // if there are forms with the same name, check if any of them isDraft
-            if (formsWithSameName.length > 0) {
-              isModulesDraft = formsWithSameName.some((f: Forms) => f.isDraft)
-            }
+      .then(async (res: any) => {
+        let isModulesDraft = false
+        if (workflow) {
+          const forms = await workflow.forms.fetch()
+          const formsWithSameName = forms.filter(
+            (f: Forms) => f.name === formName
+          )
+          // if there are forms with the same name, check if any of them isDraft
+          if (formsWithSameName.length > 0) {
+            isModulesDraft = formsWithSameName.some((f: Forms) => f.isDraft)
+          }
 
-            saveModuleData({
-              workflowId: workflow?.workflowId,
-              moduleName: formName,
-              data: form.data,
-              draft: isModulesDraft,
-            }).then(() => {
+          saveModuleData({
+            workflowId: workflow?.workflowId,
+            moduleName: formName,
+            data: form.data,
+            draft: isModulesDraft,
+          }).then(() => {
+            form.markAsCompleted(res?.id).then(async () => {
               trackAirtableSaveSucceeded(
                 workflow?.workflowObject,
                 formName,
                 form.data
               )
             })
-          }
-        })
+          })
+        }
       })
-      .catch((err) => {
+      .catch((err: any) => {
         logError(err)
         if (workflow) {
           trackAirtableSaveFailed(workflow?.workflowObject, formName, form.data)
         }
+        throw err
       })
       .finally(() => {
         setSubmittingForm(false)

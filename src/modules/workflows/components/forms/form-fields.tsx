@@ -366,7 +366,12 @@ function SingleSelectView({
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
     setOption(event.target.value)
-    saveInput(field.name, event.target.value)
+
+    if (field.type === 'checkbox') {
+      saveInput(field.name, event.target.value === 'true')
+    } else {
+      saveInput(field.name, event.target.value)
+    }
   }
 
   return (

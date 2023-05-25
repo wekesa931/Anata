@@ -121,7 +121,7 @@ export const createInitialFormState = (member: V2MemberType) => {
     },
     memberPhones: member?.phones,
     memberContact: {
-      email: member?.email,
+      email: member?.email || '',
       emergencyContactName: member?.emergencyContactName,
       emergencyContactPhone: member?.emergencyContactPhone,
       emergencyContactRelationship: member?.emergencyContactRelationship,

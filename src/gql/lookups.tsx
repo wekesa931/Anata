@@ -72,6 +72,7 @@ export const LOOKUP_ENTRIES_QUERY = gql`
       edges {
         node {
           name
+          benefitId
         }
       }
     }

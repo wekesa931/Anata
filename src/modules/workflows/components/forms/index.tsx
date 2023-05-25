@@ -20,6 +20,8 @@ type WorkflowFormProps = {
   openForm: (formName: string) => void
   saveInput: (name: string, value: string) => void
   formData: any
+  setIsEdited: (isEdited: boolean) => void
+  closeForm?: () => void
 }
 
 function WorkflowForm({
@@ -30,8 +32,14 @@ function WorkflowForm({
   openForm,
   saveInput,
   formData,
+  setIsEdited,
+  closeForm,
 }: WorkflowFormProps) {
-  const [isFormDraft, setIsFormDraft] = React.useState<boolean>(form.isDraft)
+  const [isFormDraft, setIsFormDraft] = React.useState<boolean>(false)
+
+  useEffect(() => {
+    setIsFormDraft(form.isDraft)
+  }, [form.isDraft])
   const { validationObject, numberFields, dateFields } = validationRules(
     formSchema,
     form
@@ -97,9 +105,15 @@ function WorkflowForm({
           .catch((err) => {
             notify('There was an error submitting your form. Please try again.')
             logError(err)
+            setIsFormDraft(true)
           })
           .then(() => {
             setIsFormDraft(false)
+            notify('Form submitted succesfully.')
+            setIsEdited(false)
+            if (!form.workflow.id && closeForm) {
+              closeForm()
+            }
           })
       })()
     }
@@ -114,7 +128,7 @@ function WorkflowForm({
           {formSchema?.fields?.map((field: any) => {
             if (!field.condition || field.condition(getValues())) {
               const fieldValue = formData[field.name] || null
-              const disabled = !isFormDraft || !form.isDraft
+              const disabled = !isFormDraft
 
               return (
                 <div className="mt-[40px]" key={field.id}>

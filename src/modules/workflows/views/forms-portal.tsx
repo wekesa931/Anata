@@ -113,6 +113,8 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
               openForm={openForm}
               saveInput={saveInput}
               formData={formData}
+              setIsEdited={setIsEdited}
+              closeForm={() => closeForm(form)}
             />
           </FormsSection>
           <ActionsSection>
