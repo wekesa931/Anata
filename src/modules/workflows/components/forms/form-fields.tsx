@@ -37,6 +37,7 @@ import {
   GET_DOCUMENT_OPENSEARCH,
 } from 'src/gql/search'
 import { INDEXES } from 'src/modules/workflows/utils'
+import { useMember } from 'src/context/member'
 import styles from './styles.component.css'
 
 const icon = <Square width={18} height={18} />
@@ -932,7 +933,6 @@ function LinkRecordInputDefault({
   value: linkedValue,
   field,
   airtableMeta,
-  template,
   disabled,
   control,
   error,
@@ -945,6 +945,7 @@ function LinkRecordInputDefault({
   const [getLinkedRecords, { data, loading: gettingLinkedRecords }] =
     useLazyQuery(GLOBAL_SEARCH)
   const settingLinkedData = gettingLinkedRecords || !airtableMeta
+  const { v2Member } = useMember()
 
   useEffect(() => {
     if (data) {
@@ -1007,9 +1008,7 @@ function LinkRecordInputDefault({
           field: airtableField,
           searchParam,
           antaraIdKey: checkAntaraIdKey(),
-          antaraIdValue: checkAntaraIdKey()
-            ? template?.member['Antara ID'] || ''
-            : '',
+          antaraIdValue: checkAntaraIdKey() ? v2Member?.antaraId || '' : '',
         },
       })
     }

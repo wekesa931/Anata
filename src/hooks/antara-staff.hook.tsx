@@ -41,8 +41,6 @@ const useAntaraStaff = () => {
     }))
   }
 
-
-
   useEffect(() => {
     getAntaraStaff()
       .then(({ data }) => {

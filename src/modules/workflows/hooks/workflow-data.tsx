@@ -204,33 +204,32 @@ export const useWorkflowData = () => {
 
     return processNewWorkflowData(payload, formName, formMeta)
       .then(async (res) => {
-        // update the form to mark it as not draft
-        await form.markAsCompleted(res?.id)
-        // check if this workflow has multiple forms with the same name, if so, check if any of them isDraft
-        let isModulesDraft = false
-        if (workflow) {
-          const forms = await workflow.forms
-          const formsWithSameName = forms.filter(
-            (f: Forms) => f.name === formName
-          )
-          // if there are forms with the same name, check if any of them isDraft
-          if (formsWithSameName.length > 0) {
-            isModulesDraft = formsWithSameName.some((f: Forms) => f.isDraft)
-          }
-
-          saveModuleData({
-            workflowId: workflow?.workflowId,
-            moduleName: formName,
-            data: form.data,
-            draft: isModulesDraft,
-          }).then(() => {
-            trackAirtableSaveSucceeded(
-              workflow?.workflowObject,
-              formName,
-              form.data
+        form.markAsCompleted(res?.id).then(async () => {
+          let isModulesDraft = false
+          if (workflow) {
+            const forms = await workflow.forms.fetch()
+            const formsWithSameName = forms.filter(
+              (f: Forms) => f.name === formName
             )
-          })
-        }
+            // if there are forms with the same name, check if any of them isDraft
+            if (formsWithSameName.length > 0) {
+              isModulesDraft = formsWithSameName.some((f: Forms) => f.isDraft)
+            }
+
+            saveModuleData({
+              workflowId: workflow?.workflowId,
+              moduleName: formName,
+              data: form.data,
+              draft: isModulesDraft,
+            }).then(() => {
+              trackAirtableSaveSucceeded(
+                workflow?.workflowObject,
+                formName,
+                form.data
+              )
+            })
+          }
+        })
       })
       .catch((err) => {
         logError(err)
@@ -378,17 +377,22 @@ export const useWorkflowData = () => {
 
     // update workflows that are still in the db
     await Promise.all(
-      workflowsToUpdate.map(async (w: TWorkflowModel) => {
+      workflowsToUpdate.map((w: TWorkflowModel) => {
         const updatedWorkflow = normalizedWorkflows.find(
           (nw: TWorkflow) => nw.workflowId === w.workflowId
         )
         if (updatedWorkflow) {
-          await w
+          return w
             .createFromAPI(updatedWorkflow, v2Member.antaraId, user)
             .then(() => {
-              w.synchronizeWorkflowFormData(updatedWorkflow, v2Member, user)
+              return w.synchronizeWorkflowFormData(
+                updatedWorkflow,
+                v2Member,
+                user
+              )
             })
         }
+        return Promise.resolve()
       })
     )
 
@@ -412,7 +416,7 @@ export const useWorkflowData = () => {
                   n._raw.id = w.workflowId
                 })
               })
-              await createdWorkflow
+              createdWorkflow
                 .createFromAPI(w, v2Member.antaraId, user)
                 .then(() => {
                   createdWorkflow.synchronizeWorkflowFormData(w, v2Member, user)

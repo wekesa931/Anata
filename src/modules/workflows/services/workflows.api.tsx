@@ -142,7 +142,9 @@ export const useProcessNewWorkflowModule = () => {
         }
       } else {
         const tableName = TABLE_ROUTES[formName]
-        return createTableEntry(tableName, generatedPayload)
+        if (tableName) {
+          return createTableEntry(tableName, generatedPayload)
+        }
       }
     }
 

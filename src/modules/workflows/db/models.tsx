@@ -243,7 +243,10 @@ export class Workflows extends Model {
     const forms = await this.forms.fetch()
     const formDataKeys = Object.keys(formData)
     formDataKeys.forEach((k: string) => {
-      const filledValues = formData[k].filled_values || []
+      let filledValues = formData[k].filled_values || []
+      if (!Array.isArray(filledValues)) {
+        filledValues = [filledValues]
+      }
       filledValues.forEach((fv: any) => {
         const moduleId = fv?.moduleId
         if (moduleId) {
@@ -253,6 +256,7 @@ export class Workflows extends Model {
               // f.data = merge f.data and dv
               f.data = { ...f.data, ...fv, moduleId }
               f.isSynced = true
+              f.isDraft = false
             })
           }
         }
@@ -273,7 +277,10 @@ export class Workflows extends Model {
     const formsCollection: Collection<Forms> = this.collections.get('forms')
     await Promise.all(
       formsToCreate.map(async (f: any) => {
-        const thisFormsData = formData[f]?.filled_values || []
+        let thisFormsData = formData[f]?.filled_values || []
+        if (!Array.isArray(thisFormsData)) {
+          thisFormsData = [thisFormsData]
+        }
         const moduleId = generateId()
 
         const setupFormData = {
@@ -289,7 +296,7 @@ export class Workflows extends Model {
               form.workflow.set(this)
               form.member = this.member
               form.data = { ...setupFormData, ...fv }
-              form.isDraft = true
+              form.isDraft = false
               form.isEdited = false
               form.isSynced = true
               form.createdBy = this.createdBy

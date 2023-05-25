@@ -292,15 +292,13 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
 
   const handleSaveInput =
     (form: any, index: number) => (name: string, value: any) => {
-      if (!!value || !!value.length) {
-        setIsEdited(true)
-        form.saveInput(name, value)
-        setFormsData((prev: any) => {
-          const newForms = [...prev]
-          newForms[index] = form.data
-          return newForms
-        })
-      }
+      setIsEdited(true)
+      form.saveInput(name, value)
+      setFormsData((prev: any) => {
+        const newForms = [...prev]
+        newForms[index] = form.data
+        return newForms
+      })
     }
 
   const handleSaveDraftWorkflow = async () => {

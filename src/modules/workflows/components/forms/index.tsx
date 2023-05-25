@@ -31,6 +31,7 @@ function WorkflowForm({
   saveInput,
   formData,
 }: WorkflowFormProps) {
+  const [isFormDraft, setIsFormDraft] = React.useState<boolean>(form.isDraft)
   const { validationObject, numberFields, dateFields } = validationRules(
     formSchema,
     form
@@ -43,6 +44,7 @@ function WorkflowForm({
     formState: { errors },
     getValues,
     handleSubmit,
+    reset,
   } = useForm({
     resolver: yupResolver(validationObject),
   })
@@ -53,6 +55,12 @@ function WorkflowForm({
     )
     newFormMeta && openForm(newFormMeta.name)
   }
+
+  useEffect(() => {
+    reset(formData)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData, form.name])
 
   const canSubmit = every(errors, isEmpty)
 
@@ -85,10 +93,14 @@ function WorkflowForm({
             }
           }
         })
-        submitForm(form, formSchema).catch((err) => {
-          notify('There was an error submitting your form. Please try again.')
-          logError(err)
-        })
+        submitForm(form, formSchema)
+          .catch((err) => {
+            notify('There was an error submitting your form. Please try again.')
+            logError(err)
+          })
+          .then(() => {
+            setIsFormDraft(false)
+          })
       })()
     }
 
@@ -102,7 +114,7 @@ function WorkflowForm({
           {formSchema?.fields?.map((field: any) => {
             if (!field.condition || field.condition(getValues())) {
               const fieldValue = formData[field.name] || null
-              const disabled = !form?.isDraft
+              const disabled = !isFormDraft || !form.isDraft
 
               return (
                 <div className="mt-[40px]" key={field.id}>

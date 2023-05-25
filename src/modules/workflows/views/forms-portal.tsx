@@ -85,11 +85,9 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
   }
 
   const saveInput = async (name: string, value: any) => {
-    if (!!value || !!value.length) {
-      setIsEdited(true)
-      form.saveInput(name, value)
-      setFormData({ ...formData, [name]: value })
-    }
+    setIsEdited(true)
+    form.saveInput(name, value)
+    setFormData({ ...formData, [name]: value })
   }
 
   return (

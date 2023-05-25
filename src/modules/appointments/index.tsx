@@ -12,7 +12,9 @@ import airtableFetch from 'src/services/airtable/fetch'
 import { useMember } from 'src/context/member'
 import logError from 'src/utils/logging/logger'
 import useHandleResponses from 'src/utils/airtable/error-handler'
-import useAntaraStaff, { mapAssigneeToLookup } from 'src/hooks/antara-staff.hook'
+import useAntaraStaff, {
+  mapAssigneeToLookup,
+} from 'src/hooks/antara-staff.hook'
 import styles from './appointments.component.css'
 
 function Appointments() {
