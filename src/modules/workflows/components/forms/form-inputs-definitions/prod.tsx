@@ -2360,6 +2360,39 @@ export default [
         },
       },
       {
+        id: 'fld700OGRlw77ATAQ',
+        name: 'Other Conditions',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Or a Minor Chronic Condition / Acute Condition?',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Or a Minor Chronic Condition / Acute Condition?']
+            )
+          ) {
+            return ['Other'].some((r) =>
+              values[
+                'Or a Minor Chronic Condition / Acute Condition?'
+              ].includes(r)
+            )
+          }
+          return ['Other'].includes(
+            values['Or a Minor Chronic Condition / Acute Condition?']
+          )
+        },
+      },
+      {
         id: 'fldISgDp8nGwq7BR1',
         name: 'Is the Member @ risk of a condition?',
         type: 'select',
@@ -3210,19 +3243,18 @@ export default [
         helper: '',
       },
       {
-        id: 'fldLdJoyPP28KJ5sd',
-        name: 'Condition',
-        type: 'select',
+        id: 'fld9AVIdnQw496G46',
+        name: 'Conditions master list',
+        type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
+        symmetricColumnId: 'fldZJUrSBCt3qggt6',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblR6LlerAkXAmVnc',
         required: true,
-        helper:
-          'Please enter any new or previously unregistered condition here\n\nNote that GERD includes, hyperacidity, heartburn, acid reflux and dyspepsia.',
+        helper: '',
       },
       {
         id: 'fld0GTYwhld18Rv5T',
@@ -3239,13 +3271,17 @@ export default [
         helper:
           '      * Stage 1: BMI 17.0 - 18.4\n      * Stage 2: BMI 16.0 - 16.9\n      * Stage 3: BMI < 16.0',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Underweight'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recpKWliH8DpATqAW'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Underweight'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recpKWliH8DpATqAW'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Underweight'].includes(values.Condition)
+          return ['recpKWliH8DpATqAW'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3263,13 +3299,17 @@ export default [
         helper:
           '      * If Stage 1: 3% BMI increase\n      * If Stage 2: 5% BMI increase\n      * If Stage 3: 7% BMI increase',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Underweight'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recpKWliH8DpATqAW'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Underweight'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recpKWliH8DpATqAW'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Underweight'].includes(values.Condition)
+          return ['recpKWliH8DpATqAW'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3302,16 +3342,16 @@ export default [
         helper:
           '"I am just going to walk you through a simple questionnaire that we use to give you/your child and Asthma Score. This score is used to measure asthma control. \n\nOur goal is to get your score to be above 20. \nNo matter what it is now, we will get there!"\n\n\nPlease use this link to score the asthma condition and enter the result: <a href="https://www.asthmacontroltest.com/en-gb/welcome/" target="_blank">https://www.asthmacontroltest.com/en-gb/welcome/</a>\n\nPlease use the language in the Score Flow to guide the questions you ask. \n\nREMEMBER: If a child’s score is 12 or less, his or her asthma is likely to be very poorly controlled.',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Asthma', 'Asthma, exercise induced'],
+        parentKey: 'Conditions mster list',
+        parentValues: ['recsYfjhmamvUbgM7'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Asthma', 'Asthma, exercise induced'].some((r) =>
-              values.Condition.includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recsYfjhmamvUbgM7'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Asthma', 'Asthma, exercise induced'].includes(
-            values.Condition
+          return ['recsYfjhmamvUbgM7'].includes(
+            values['Conditions master list']
           )
         },
       },
@@ -3330,13 +3370,17 @@ export default [
         helper:
           '"Do you know what triggers [member\'s name]\'s Asthma. Common triggers are: cold, exercise, smoke, pollen, pollution and dust. Do any of those consistently trigger an attack?"',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Asthma'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recsYfjhmamvUbgM7'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Asthma'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recsYfjhmamvUbgM7'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Asthma'].includes(values.Condition)
+          return ['recsYfjhmamvUbgM7'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3378,31 +3422,31 @@ export default [
         helper:
           '"One of the worst things about Osteoarthritis is the pain it brings. On a scale of 1-10, how bad would you say the pain is, with 0 being no pain and 10 being the worst pain of your life. Please score the pain as it is before you take medicine to help with that pain."\n\nPlease score the pain of the member using this website: <a href="https://www.researchgate.net/figure/The-Universal-Pain-Assessment-Tool-UPAT-that-has-been-used-to-identify-functional-TMJ_fig1_311158988" target="_blank">https://www.researchgate.net/figure/The-Universal-Pain-Assessment-Tool-UPAT-that-has-been-used-to-identify-functional-TMJ_fig1_311158988</a>\n\nOnce you have scored it, please enter the result. \nExamples: 1 or 5 or 8\n',
         conditionType: '',
-        parentKey: 'Condition',
+        parentKey: 'Conditions master list',
         parentValues: [
-          'Osteoarthritis of Hip',
-          'Osteoarthritis of Knee',
-          'Osteoarthritis of Shoulder',
-          'Osteoarthritis of spine',
-          'Osteoarthritis, other',
+          'recZETSYK81fAKYEy',
+          'recCvj1vrZI7QJTJT',
+          'rec976C51ukYbVEZP',
+          'recatck1FWNN5RmWe',
+          'recZ36sY8T3Yungmo',
         ],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
+          if (Array.isArray(values['Conditions master list'])) {
             return [
-              'Osteoarthritis of Hip',
-              'Osteoarthritis of Knee',
-              'Osteoarthritis of Shoulder',
-              'Osteoarthritis of spine',
-              'Osteoarthritis, other',
-            ].some((r) => values.Condition.includes(r))
+              'recZETSYK81fAKYEy',
+              'recCvj1vrZI7QJTJT',
+              'rec976C51ukYbVEZP',
+              'recatck1FWNN5RmWe',
+              'recZ36sY8T3Yungmo',
+            ].some((r) => values['Conditions master list'].includes(r))
           }
           return [
-            'Osteoarthritis of Hip',
-            'Osteoarthritis of Knee',
-            'Osteoarthritis of Shoulder',
-            'Osteoarthritis of spine',
-            'Osteoarthritis, other',
-          ].includes(values.Condition)
+            'recZETSYK81fAKYEy',
+            'recCvj1vrZI7QJTJT',
+            'rec976C51ukYbVEZP',
+            'recatck1FWNN5RmWe',
+            'recZ36sY8T3Yungmo',
+          ].includes(values['Conditions master list'])
         },
       },
       {
@@ -3419,13 +3463,17 @@ export default [
         required: false,
         helper: 'Where applicable',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Other'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recfNbsZGueaHQUto'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Other'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recfNbsZGueaHQUto'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Other'].includes(values.Condition)
+          return ['recfNbsZGueaHQUto'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3443,16 +3491,16 @@ export default [
         helper:
           'Starting stage should be captured at the first interaction with member (initial diagnosis)\n\nAt risk: Sys <120 and Dia <80\nElevated BP: Sys is 120-130 and Dia <80\nStage 1 Hypertension: Sys is 130-140 or Dia is 80-89\nStage 2 Hypertension: Sys >140 or Dia >=90',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Hypertension', 'Hypertension, malignant'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recfOQjJ8Yo2oiVD6'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Hypertension', 'Hypertension, malignant'].some((r) =>
-              values.Condition.includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recfOQjJ8Yo2oiVD6'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Hypertension', 'Hypertension, malignant'].includes(
-            values.Condition
+          return ['recfOQjJ8Yo2oiVD6'].includes(
+            values['Conditions master list']
           )
         },
       },
@@ -3471,13 +3519,17 @@ export default [
         helper:
           'At risk if members with previous hx or family hx\n Hypercholesterolemia if TC>200mg/dl\n Hypertriglyceridemia if TG >150mg/dl only done in a fasting state\n Mixed hyperlipidemia if defined as elevated LDL >130mg/dl, TC>200mg/dl and TG>150mg/dl',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Hyperlipidemia'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recLdUqB94LuWsfpj'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Hyperlipidemia'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recLdUqB94LuWsfpj'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Hyperlipidemia'].includes(values.Condition)
+          return ['recLdUqB94LuWsfpj'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3495,15 +3547,17 @@ export default [
         helper:
           'Starting stage should be captured at the first interaction with member (initial diagnosis)',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Gastroesophageal reflux (GERD)'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recLpbGIM06FnDBN4'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Gastroesophageal reflux (GERD)'].some((r) =>
-              values.Condition.includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recLpbGIM06FnDBN4'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Gastroesophageal reflux (GERD)'].includes(values.Condition)
+          return ['recLpbGIM06FnDBN4'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3521,79 +3575,79 @@ export default [
         helper:
           'Starting stage should be captured at the first interaction with member (initial diagnosis)',
         conditionType: '!',
-        parentKey: 'Condition',
+        parentKey: 'Conditions master list',
         parentValues: [
-          'Allergic rhinitis',
-          'Asthma',
-          'Diabetes I',
-          'Diabetes II',
-          'Diabetes, Gestational',
-          'Eczema',
-          'Fibroid (leiomyoma)',
-          'Gastritis',
-          'Gastritis: H.pylori associated',
-          'Gastroesophageal reflux (GERD)',
-          'Hemorrhoids',
-          'Hyperlipidemia',
-          'Hypertension',
-          'Lower Back Pain',
-          'Osteoarthritis of Hip',
-          'Osteoarthritis of Knee',
-          'Osteoarthritis of Shoulder',
-          'Osteoarthritis of spine',
-          'Osteoarthritis, other',
-          'Overweight',
-          'Varicose Veins',
+          'recFEGuc9JL0Tajlb',
+          'recsYfjhmamvUbgM7',
+          'receXizGwFWI5igxn',
+          'receXizGwFWI5igxn',
+          'recQPGTOSPnwjyPPA',
+          'rechQ6Cvl5WeVP6tI',
+          'rec9GJtCUjz54voue',
+          'recjHCg4fZrqtuim3',
+          'recauBAdwn9QuqRRs',
+          'recLpbGIM06FnDBN4',
+          'recpLfyAirbx5OlFS',
+          'recLdUqB94LuWsfpj',
+          'recfOQjJ8Yo2oiVD6',
+          'recVlgx6cf6Fw3gzn',
+          'recZETSYK81fAKYEy',
+          'recCvj1vrZI7QJTJT',
+          'rec976C51ukYbVEZP',
+          'recatck1FWNN5RmWe',
+          'recZ36sY8T3Yungmo',
+          'recwoDtKd1B4ztytB',
+          'rec1yyeyxkQxZtIsD',
         ],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
+          if (Array.isArray(values['Conditions master list'])) {
             return [
-              'Allergic rhinitis',
-              'Asthma',
-              'Diabetes I',
-              'Diabetes II',
-              'Diabetes, Gestational',
-              'Eczema',
-              'Fibroid (leiomyoma)',
-              'Gastritis',
-              'Gastritis: H.pylori associated',
-              'Gastroesophageal reflux (GERD)',
-              'Hemorrhoids',
-              'Hyperlipidemia',
-              'Hypertension',
-              'Lower Back Pain',
-              'Osteoarthritis of Hip',
-              'Osteoarthritis of Knee',
-              'Osteoarthritis of Shoulder',
-              'Osteoarthritis of spine',
-              'Osteoarthritis, other',
-              'Overweight',
-              'Varicose Veins',
-            ].some((r) => !values.Condition.includes(r))
+              'recFEGuc9JL0Tajlb',
+              'recsYfjhmamvUbgM7',
+              'receXizGwFWI5igxn',
+              'receXizGwFWI5igxn',
+              'recQPGTOSPnwjyPPA',
+              'rechQ6Cvl5WeVP6tI',
+              'rec9GJtCUjz54voue',
+              'recjHCg4fZrqtuim3',
+              'recauBAdwn9QuqRRs',
+              'recLpbGIM06FnDBN4',
+              'recpLfyAirbx5OlFS',
+              'recLdUqB94LuWsfpj',
+              'recfOQjJ8Yo2oiVD6',
+              'recVlgx6cf6Fw3gzn',
+              'recZETSYK81fAKYEy',
+              'recCvj1vrZI7QJTJT',
+              'rec976C51ukYbVEZP',
+              'recatck1FWNN5RmWe',
+              'recZ36sY8T3Yungmo',
+              'recwoDtKd1B4ztytB',
+              'rec1yyeyxkQxZtIsD',
+            ].some((r) => !values['Conditions master list'].includes(r))
           }
           return ![
-            'Allergic rhinitis',
-            'Asthma',
-            'Diabetes I',
-            'Diabetes II',
-            'Diabetes, Gestational',
-            'Eczema',
-            'Fibroid (leiomyoma)',
-            'Gastritis',
-            'Gastritis: H.pylori associated',
-            'Gastroesophageal reflux (GERD)',
-            'Hemorrhoids',
-            'Hyperlipidemia',
-            'Hypertension',
-            'Lower Back Pain',
-            'Osteoarthritis of Hip',
-            'Osteoarthritis of Knee',
-            'Osteoarthritis of Shoulder',
-            'Osteoarthritis of spine',
-            'Osteoarthritis, other',
-            'Overweight',
-            'Varicose Veins',
-          ].includes(values.Condition)
+            'recFEGuc9JL0Tajlb',
+            'recsYfjhmamvUbgM7',
+            'receXizGwFWI5igxn',
+            'receXizGwFWI5igxn',
+            'recQPGTOSPnwjyPPA',
+            'rechQ6Cvl5WeVP6tI',
+            'rec9GJtCUjz54voue',
+            'recjHCg4fZrqtuim3',
+            'recauBAdwn9QuqRRs',
+            'recLpbGIM06FnDBN4',
+            'recpLfyAirbx5OlFS',
+            'recLdUqB94LuWsfpj',
+            'recfOQjJ8Yo2oiVD6',
+            'recVlgx6cf6Fw3gzn',
+            'recZETSYK81fAKYEy',
+            'recCvj1vrZI7QJTJT',
+            'rec976C51ukYbVEZP',
+            'recatck1FWNN5RmWe',
+            'recZ36sY8T3Yungmo',
+            'recwoDtKd1B4ztytB',
+            'rec1yyeyxkQxZtIsD',
+          ].includes(values['Conditions master list'])
         },
       },
       {
@@ -3611,13 +3665,17 @@ export default [
         helper:
           'Starting stage should be captured at the first interaction with member (initial diagnosis)',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Diabetes I'],
+        parentKey: 'Conditions master list',
+        parentValues: ['receXizGwFWI5igxn'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Diabetes I'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['receXizGwFWI5igxn'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Diabetes I'].includes(values.Condition)
+          return ['receXizGwFWI5igxn'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3635,13 +3693,17 @@ export default [
         helper:
           '"Can you tell me a little bit more about your Diabetes.\nAre you taking any medications to treat your diabetes?\nAre you or have you ever taken injectable insulin to treat your diabetes?"\n\nStarting stage should be captured at the first interaction with member (initial diagnosis)\n\nAt risk: HB1AC <5.7%\nStage 1: HB1AC > 6.5%\nStage 2: HB1AC >7.5%, FBS >7 mmol/l, only on oral meds\nStage 3: HB1AC >7.5%, FBS >7 mmol/l, on insulin\nPrediabetes: HBA1C 5.7% to 6.4% FBS >6 mmol/l, Positive impaired glucose tolerance test (RBS 7.8-11.1 mmol/l)',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Diabetes II'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recR916dEtATKYuvw'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Diabetes II'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recR916dEtATKYuvw'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Diabetes II'].includes(values.Condition)
+          return ['recR916dEtATKYuvw'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3659,15 +3721,17 @@ export default [
         helper:
           'Starting stage should be captured at the first interaction with member (initial diagnosis)',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Diabetes, Gestational'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recQPGTOSPnwjyPPA'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Diabetes, Gestational'].some((r) =>
-              values.Condition.includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recQPGTOSPnwjyPPA'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Diabetes, Gestational'].includes(values.Condition)
+          return ['recQPGTOSPnwjyPPA'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3685,13 +3749,17 @@ export default [
         helper:
           '"Can you please describe the impact of your varicose veins on everyday life? \nDo you have any pain?"\n\nIf NO --> MILD\n\nIf YES\n"Does the pain limit any activity? How frequently do you have pain?\nDo you have any swelling? Does the swelling ever go above the ankles? How high?\nCan you please describe your varicose veins or send me a picture of them?\nHave you ever had, or do you have ulcers "\n\n\nStarting stage should be captured at the first interaction with member (initial diagnosis)\n\nMILD: Occasional pain not restricting activities , few veins, number of active ulcers 1, occasional edema\n\nMODERATE: Daily moderate activity limitation requiring occasional analgesia use, Multiple veins/torturous, 2 ulcers present, Occasional edema above the level of the ankles\n\nSEVERE: Extensive veins, daily pain limiting daily activities, more than 3 ulcers, edema to the level of the knee, severe cellulitis',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Varicose Veins'],
+        parentKey: 'Conditions master list',
+        parentValues: ['rec1yyeyxkQxZtIsD'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Varicose Veins'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['rec1yyeyxkQxZtIsD'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Varicose Veins'].includes(values.Condition)
+          return ['rec1yyeyxkQxZtIsD'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3709,13 +3777,17 @@ export default [
         helper:
           'Starting stage should be captured at the first interaction with member (initial diagnosis)',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Hemorrhoids'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recpLfyAirbx5OlFS'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Hemorrhoids'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recpLfyAirbx5OlFS'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Hemorrhoids'].includes(values.Condition)
+          return ['recpLfyAirbx5OlFS'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3733,13 +3805,17 @@ export default [
         helper:
           '"How long have you been having pain for?"\n\nIf less than 4 weeks: ACUTE\n"I am sorry you are having acute back pain. Why don\'t we schedule a session with our Physiotherapist who should be able to help you with this?"\n\nIf between 4 and 12 weeks: SUB-ACUTE\n"I am sorry you are having sub-acute back pain. Why don\'t we schedule a session with our Physiotherapist who should be able to help you with this?"\n\nIf > 12 weeks: CHRONIC\n"It sounds as though this has been going on for a long time. I want to understand your back pain a bit better in order to help. I am going to take you through a few questions that will allow us to give your lower back pain a score. Then we will work together to improve that score. Part of that work will definitely involve a visit to our physical therapist, but there are other things we shall do as well!"\n\nIf more than 12 weeks, please calculate the score here: <a href="https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Lower-back-pain-calculator_sutix#_lumhe" target="_blank">https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Lower-back-pain-calculator_sutix#_lumhe</a> \n',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Lower Back Pain'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recVlgx6cf6Fw3gzn'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Lower Back Pain'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recVlgx6cf6Fw3gzn'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Lower Back Pain'].includes(values.Condition)
+          return ['recVlgx6cf6Fw3gzn'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3757,15 +3833,17 @@ export default [
         helper:
           'Starting stage should be captured at the first interaction with member (initial diagnosis)',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Gastritis: H.pylori associated'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recauBAdwn9QuqRRs'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Gastritis: H.pylori associated'].some((r) =>
-              values.Condition.includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recauBAdwn9QuqRRs'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Gastritis: H.pylori associated'].includes(values.Condition)
+          return ['recauBAdwn9QuqRRs'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3783,13 +3861,17 @@ export default [
         helper:
           'Starting stage should be captured at the first interaction with member (initial diagnosis)\n\nAcute: < 6 weeks\nChronic > 6 weeks',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Gastritis'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recjHCg4fZrqtuim3'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Gastritis'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recjHCg4fZrqtuim3'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Gastritis'].includes(values.Condition)
+          return ['recjHCg4fZrqtuim3'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3807,15 +3889,17 @@ export default [
         helper:
           '"Are you having any noticeable symptoms?"\nIf NOT: Asymptomatic\n\nif YES:\n"Are you having any pain associated with your menstrual period? Have you ever been anemic or had difficulty getting pregnant?"\n\nIf YES: Symptomatic\n\nStarting stage should be captured at the first interaction with member (initial diagnosis)',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Fibroid (leiomyoma)'],
+        parentKey: 'Conditions master list',
+        parentValues: ['rec9GJtCUjz54voue'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Fibroid (leiomyoma)'].some((r) =>
-              values.Condition.includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['rec9GJtCUjz54voue'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Fibroid (leiomyoma)'].includes(values.Condition)
+          return ['rec9GJtCUjz54voue'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3833,15 +3917,17 @@ export default [
         helper:
           '"Do you have any of the following symptoms: running nose, watery eyes, itchy eyes or nose, sneezing, red eyes?\nWhen do you get these symptoms? \nIs it seasonal, meaning at different times during the year or is it more constant than that?\nIf it is more constant than that, would you say you have symptoms more or less than 4 days per week or more or less than 4 weeks per year?"\n\n\nStages:\nSEASONAL: Symptoms triggered seasonally\nINTERMITTENT: Symptoms < 4 days per week or < 4 weeks per year\nPERSISTENT: Symptoms > 4 days per week or > 4 weeks per year\n\nStarting stage should be captured at the first interaction with member (initial diagnosis)',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Allergic rhinitis'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recFEGuc9JL0Tajlb'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Allergic rhinitis'].some((r) =>
-              values.Condition.includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recFEGuc9JL0Tajlb'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Allergic rhinitis'].includes(values.Condition)
+          return ['recFEGuc9JL0Tajlb'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3859,13 +3945,17 @@ export default [
         helper:
           'Starting stage should be captured at the first interaction with member (initial diagnosis)',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Eczema'],
+        parentKey: 'Conditions master list',
+        parentValues: ['rechQ6Cvl5WeVP6tI'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Eczema'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['rechQ6Cvl5WeVP6tI'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Eczema'].includes(values.Condition)
+          return ['rechQ6Cvl5WeVP6tI'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -3883,31 +3973,31 @@ export default [
         helper:
           '"One of the worst things about Osteoarthritis is the pain it brings. On a scale of 1-10, how bad would you say the pain is, with 0 being no pain and 10 being the worst pain of your life. Please score the pain as it is before you take medicine to help with that pain."\n\nStarting stage should be captured at the first interaction with member (initial diagnosis)\n\nStage 1: Minor wear-and-tear in the joints. Little to no pain in the affected area\nStage 2: Pain score <3 - Mild (some morning stiffness, intermittent pain with NO quality of life impact)\nStage 3: Pain score 4-7 - Moderate (intermittent pain with impact on quality of life)\nStage 4: Pain score >8 - Severe (persistent pain with significant impact on quality of life)',
         conditionType: '',
-        parentKey: 'Condition',
+        parentKey: 'Conditions master list',
         parentValues: [
-          'Osteoarthritis of Hip',
-          'Osteoarthritis of Knee',
-          'Osteoarthritis of Shoulder',
-          'Osteoarthritis of spine',
-          'Osteoarthritis, other',
+          'recZETSYK81fAKYEy',
+          'recCvj1vrZI7QJTJT',
+          'rec976C51ukYbVEZP',
+          'recatck1FWNN5RmWe',
+          'recZ36sY8T3Yungmo',
         ],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
+          if (Array.isArray(values['Conditions master list'])) {
             return [
-              'Osteoarthritis of Hip',
-              'Osteoarthritis of Knee',
-              'Osteoarthritis of Shoulder',
-              'Osteoarthritis of spine',
-              'Osteoarthritis, other',
-            ].some((r) => values.Condition.includes(r))
+              'recZETSYK81fAKYEy',
+              'recCvj1vrZI7QJTJT',
+              'rec976C51ukYbVEZP',
+              'recatck1FWNN5RmWe',
+              'recZ36sY8T3Yungmo',
+            ].some((r) => values['Conditions master list'].includes(r))
           }
           return [
-            'Osteoarthritis of Hip',
-            'Osteoarthritis of Knee',
-            'Osteoarthritis of Shoulder',
-            'Osteoarthritis of spine',
-            'Osteoarthritis, other',
-          ].includes(values.Condition)
+            'recZETSYK81fAKYEy',
+            'recCvj1vrZI7QJTJT',
+            'rec976C51ukYbVEZP',
+            'recatck1FWNN5RmWe',
+            'recZ36sY8T3Yungmo',
+          ].includes(values['Conditions master list'])
         },
       },
       {
@@ -3925,16 +4015,16 @@ export default [
         helper:
           'Starting stage should be captured at the first interaction with member (initial diagnosis)\n\nStage 1: Score of 24-25\nStage 2: Score of 21-23\nStage 3: Score of 16-20\nStage 4: Score <15',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Asthma', 'Asthma, exercise induced'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recsYfjhmamvUbgM7'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Asthma', 'Asthma, exercise induced'].some((r) =>
-              values.Condition.includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recsYfjhmamvUbgM7'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Asthma', 'Asthma, exercise induced'].includes(
-            values.Condition
+          return ['recsYfjhmamvUbgM7'].includes(
+            values['Conditions master list']
           )
         },
       },
@@ -3953,13 +4043,17 @@ export default [
         helper:
           'Starting stage should be captured at the first interaction with member (initial diagnosis)\n\nStage 1: BMI 25-29.9\nStage 2: BMI 30-39.9\nStage 3: BMI >=40',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Overweight'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recwoDtKd1B4ztytB'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Overweight'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recwoDtKd1B4ztytB'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Overweight'].includes(values.Condition)
+          return ['recwoDtKd1B4ztytB'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4099,13 +4193,17 @@ export default [
         helper:
           'Please select the key goal\n\nif@risk: <120/80\nIf Elevated BP: <120/80\nIf Stage 1: <130/80\nIf Stage 2: <130/80 (if the member reached 140/90 before the end of HMP 3 cycle)\nIf Stage 2: <140/90',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Hypertension'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recfOQjJ8Yo2oiVD6'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Hypertension'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recfOQjJ8Yo2oiVD6'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Hypertension'].includes(values.Condition)
+          return ['recfOQjJ8Yo2oiVD6'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4122,13 +4220,17 @@ export default [
         required: false,
         helper: 'Please select the key goal',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Eczema'],
+        parentKey: 'Conditions master list',
+        parentValues: ['rechQ6Cvl5WeVP6tI'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Eczema'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['rechQ6Cvl5WeVP6tI'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Eczema'].includes(values.Condition)
+          return ['rechQ6Cvl5WeVP6tI'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4146,13 +4248,17 @@ export default [
         helper:
           'Please select the key goal\n\nIf Stage 1: 60% reduction in use of rescue inhaler, Asthma Score > 20\nIf Stage 2: 60% reduction in use of rescue inhaler, Asthma Score > 20\nIf Stage 3: 60% reduction in use of rescue inhaler, Asthma Score > 20, 60% reduction in Nos of exacerbation\nIf Stage 4: 60% reduction in use of rescue inhaler, Asthma Score > 20, 60% reduction in Nos of exacerbation',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Asthma'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recsYfjhmamvUbgM7'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Asthma'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recsYfjhmamvUbgM7'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Asthma'].includes(values.Condition)
+          return ['recsYfjhmamvUbgM7'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4170,13 +4276,17 @@ export default [
         helper:
           'Please select the key goal\n\nMild: Symptom relief\nModerate and Severe: Symptom relief and improve functionality',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Varicose Veins'],
+        parentKey: 'Conditions master list',
+        parentValues: ['rec1yyeyxkQxZtIsD'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Varicose Veins'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['rec1yyeyxkQxZtIsD'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Varicose Veins'].includes(values.Condition)
+          return ['rec1yyeyxkQxZtIsD'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4193,15 +4303,17 @@ export default [
         required: false,
         helper: 'Please select the key goal',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Fibroid (leiomyoma)'],
+        parentKey: 'Conditions master list',
+        parentValues: ['rec9GJtCUjz54voue'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Fibroid (leiomyoma)'].some((r) =>
-              values.Condition.includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['rec9GJtCUjz54voue'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Fibroid (leiomyoma)'].includes(values.Condition)
+          return ['rec9GJtCUjz54voue'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4218,15 +4330,17 @@ export default [
         required: false,
         helper: 'Please select the key goal',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Gastroesophageal reflux (GERD)'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recLpbGIM06FnDBN4'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Gastroesophageal reflux (GERD)'].some((r) =>
-              values.Condition.includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recLpbGIM06FnDBN4'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Gastroesophageal reflux (GERD)'].includes(values.Condition)
+          return ['recLpbGIM06FnDBN4'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4243,15 +4357,17 @@ export default [
         required: false,
         helper: 'Please select the key goal',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Allergic rhinitis'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recFEGuc9JL0Tajlb'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Allergic rhinitis'].some((r) =>
-              values.Condition.includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recFEGuc9JL0Tajlb'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Allergic rhinitis'].includes(values.Condition)
+          return ['recFEGuc9JL0Tajlb'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4269,13 +4385,17 @@ export default [
         helper:
           'At risk →  LDL<130mg/dl, TC < 200mg/dl, Fasting TG < 150mg/dl\n Hypercholesterolemia → TC< 200mg/dl\n Hypertriglyceridemia → Fasting TG < 150mg/dl\n Mixed hyperlipidemia → LDL<130mg/dl, TC<200mg/dl, Fasting TG <150mg/dl',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Hyperlipidemia'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recLdUqB94LuWsfpj'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Hyperlipidemia'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recLdUqB94LuWsfpj'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Hyperlipidemia'].includes(values.Condition)
+          return ['recLdUqB94LuWsfpj'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4293,13 +4413,17 @@ export default [
         helper:
           'Please select the key goal\n\nAcute: symptom resolution\nChronic: symptom management',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Gastritis'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recjHCg4fZrqtuim3'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Gastritis'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recjHCg4fZrqtuim3'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Gastritis'].includes(values.Condition)
+          return ['recjHCg4fZrqtuim3'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4317,13 +4441,17 @@ export default [
         helper:
           'Please select the key goal\n\nAll stages: pain control, functional recovery',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Lower Back Pain'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recVlgx6cf6Fw3gzn'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Lower Back Pain'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recVlgx6cf6Fw3gzn'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Lower Back Pain'].includes(values.Condition)
+          return ['recVlgx6cf6Fw3gzn'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4340,15 +4468,17 @@ export default [
         required: false,
         helper: 'Please select the key goal',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Gastritis: H.pylori associated'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recauBAdwn9QuqRRs'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Gastritis: H.pylori associated'].some((r) =>
-              values.Condition.includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recauBAdwn9QuqRRs'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Gastritis: H.pylori associated'].includes(values.Condition)
+          return ['recauBAdwn9QuqRRs'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4365,13 +4495,17 @@ export default [
         required: false,
         helper: 'Please select the key goal',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Diabetes I'],
+        parentKey: 'Conditions master list',
+        parentValues: ['receXizGwFWI5igxn'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Diabetes I'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['receXizGwFWI5igxn'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Diabetes I'].includes(values.Condition)
+          return ['receXizGwFWI5igxn'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4389,13 +4523,17 @@ export default [
         helper:
           'Please select the key goal\n\nif @risk = HgBA1c <5.7%\nif stage 1 = HB1AC <6.5%, FBS <7 mmol/l\nIf stage 2 = HB1AC <7.5%, FBS <7 mmol/l\nIf stage 3 = HB1AC <7.5%, FBS <7 mmol/l\nIf pre-diabetic = HB1AC <5.7%, FBS <5.5 mmol/l\n ',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Diabetes II'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recR916dEtATKYuvw'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Diabetes II'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recR916dEtATKYuvw'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Diabetes II'].includes(values.Condition)
+          return ['recR916dEtATKYuvw'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4412,15 +4550,17 @@ export default [
         required: false,
         helper: 'HB1AC< 6.0% ',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Diabetes, Gestational'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recQPGTOSPnwjyPPA'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Diabetes, Gestational'].some((r) =>
-              values.Condition.includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recQPGTOSPnwjyPPA'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Diabetes, Gestational'].includes(values.Condition)
+          return ['recQPGTOSPnwjyPPA'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4437,13 +4577,17 @@ export default [
         required: false,
         helper: 'Please select the key goal',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Hemorrhoids'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recpLfyAirbx5OlFS'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Hemorrhoids'].some((r) => values.Condition.includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recpLfyAirbx5OlFS'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Hemorrhoids'].includes(values.Condition)
+          return ['recpLfyAirbx5OlFS'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4461,31 +4605,31 @@ export default [
         helper:
           'Please select the key goal\n\nIf stage 1: avoid progression of symptoms\nOther stages: improved functionality and pain scale <3',
         conditionType: '',
-        parentKey: 'Condition',
+        parentKey: 'Conditions master list',
         parentValues: [
-          'Osteoarthritis of Hip',
-          'Osteoarthritis of Knee',
-          'Osteoarthritis of Shoulder',
-          'Osteoarthritis of spine',
-          'Osteoarthritis, other',
+          'recZETSYK81fAKYEy',
+          'recCvj1vrZI7QJTJT',
+          'rec976C51ukYbVEZP',
+          'recatck1FWNN5RmWe',
+          'recZ36sY8T3Yungmo',
         ],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
+          if (Array.isArray(values['Conditions master list'])) {
             return [
-              'Osteoarthritis of Hip',
-              'Osteoarthritis of Knee',
-              'Osteoarthritis of Shoulder',
-              'Osteoarthritis of spine',
-              'Osteoarthritis, other',
-            ].some((r) => values.Condition.includes(r))
+              'recZETSYK81fAKYEy',
+              'recCvj1vrZI7QJTJT',
+              'rec976C51ukYbVEZP',
+              'recatck1FWNN5RmWe',
+              'recZ36sY8T3Yungmo',
+            ].some((r) => values['Conditions master list'].includes(r))
           }
           return [
-            'Osteoarthritis of Hip',
-            'Osteoarthritis of Knee',
-            'Osteoarthritis of Shoulder',
-            'Osteoarthritis of spine',
-            'Osteoarthritis, other',
-          ].includes(values.Condition)
+            'recZETSYK81fAKYEy',
+            'recCvj1vrZI7QJTJT',
+            'rec976C51ukYbVEZP',
+            'recatck1FWNN5RmWe',
+            'recZ36sY8T3Yungmo',
+          ].includes(values['Conditions master list'])
         },
       },
       {
@@ -4503,15 +4647,17 @@ export default [
         helper:
           'If Stage 1: 5% BMI reduction\nIf Stage 2: 7% BMI reduction\nIf Stage 3: 10% BMI reduction',
         conditionType: '',
-        parentKey: 'Condition',
-        parentValues: ['Obesity', 'Overweight'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recc2gPxj8JniRiyY', 'recwoDtKd1B4ztytB'],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
-            return ['Obesity', 'Overweight'].some((r) =>
-              values.Condition.includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recc2gPxj8JniRiyY', 'recwoDtKd1B4ztytB'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Obesity', 'Overweight'].includes(values.Condition)
+          return ['recc2gPxj8JniRiyY', 'recwoDtKd1B4ztytB'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -4554,79 +4700,79 @@ export default [
         required: false,
         helper: '',
         conditionType: '!',
-        parentKey: 'Condition',
+        parentKey: 'Conditions master list',
         parentValues: [
-          'Varicose Veins',
-          'Overweight',
-          'Osteoarthritis of Hip',
-          'Osteoarthritis of Knee',
-          'Osteoarthritis of Shoulder',
-          'Osteoarthritis of spine',
-          'Osteoarthritis, other',
-          'Lower Back Pain',
-          'Hyperlipidemia',
-          'Hypertension',
-          'Hemorrhoids',
-          'Gastroesophageal reflux (GERD)',
-          'Gastritis',
-          'Gastritis: H.pylori associated',
-          'Fibroid (leiomyoma)',
-          'Eczema',
-          'Diabetes I',
-          'Diabetes II',
-          'Diabetes, Gestational',
-          'Asthma',
-          'Allergic rhinitis',
+          'rec1yyeyxkQxZtIsD',
+          'recwoDtKd1B4ztytB',
+          'recZETSYK81fAKYEy',
+          'recCvj1vrZI7QJTJT',
+          'rec976C51ukYbVEZP',
+          'recatck1FWNN5RmWe',
+          'recZ36sY8T3Yungmo',
+          'recVlgx6cf6Fw3gzn',
+          'recLdUqB94LuWsfpj',
+          'recfOQjJ8Yo2oiVD6',
+          'recpLfyAirbx5OlFS',
+          'recLpbGIM06FnDBN4',
+          'recjHCg4fZrqtuim3',
+          'recauBAdwn9QuqRRs',
+          'rec9GJtCUjz54voue',
+          'rechQ6Cvl5WeVP6tI',
+          'receXizGwFWI5igxn',
+          'recR916dEtATKYuvw',
+          'recQPGTOSPnwjyPPA',
+          'recsYfjhmamvUbgM7',
+          'recFEGuc9JL0Tajlb',
         ],
         condition: (values: any) => {
-          if (Array.isArray(values.Condition)) {
+          if (Array.isArray(values['Conditions master list'])) {
             return [
-              'Varicose Veins',
-              'Overweight',
-              'Osteoarthritis of Hip',
-              'Osteoarthritis of Knee',
-              'Osteoarthritis of Shoulder',
-              'Osteoarthritis of spine',
-              'Osteoarthritis, other',
-              'Lower Back Pain',
-              'Hyperlipidemia',
-              'Hypertension',
-              'Hemorrhoids',
-              'Gastroesophageal reflux (GERD)',
-              'Gastritis',
-              'Gastritis: H.pylori associated',
-              'Fibroid (leiomyoma)',
-              'Eczema',
-              'Diabetes I',
-              'Diabetes II',
-              'Diabetes, Gestational',
-              'Asthma',
-              'Allergic rhinitis',
-            ].some((r) => !values.Condition.includes(r))
+              'rec1yyeyxkQxZtIsD',
+              'recwoDtKd1B4ztytB',
+              'recZETSYK81fAKYEy',
+              'recCvj1vrZI7QJTJT',
+              'rec976C51ukYbVEZP',
+              'recatck1FWNN5RmWe',
+              'recZ36sY8T3Yungmo',
+              'recVlgx6cf6Fw3gzn',
+              'recLdUqB94LuWsfpj',
+              'recfOQjJ8Yo2oiVD6',
+              'recpLfyAirbx5OlFS',
+              'recLpbGIM06FnDBN4',
+              'recjHCg4fZrqtuim3',
+              'recauBAdwn9QuqRRs',
+              'rec9GJtCUjz54voue',
+              'rechQ6Cvl5WeVP6tI',
+              'receXizGwFWI5igxn',
+              'recR916dEtATKYuvw',
+              'recQPGTOSPnwjyPPA',
+              'recsYfjhmamvUbgM7',
+              'recFEGuc9JL0Tajlb',
+            ].some((r) => !values['Conditions master list'].includes(r))
           }
           return ![
-            'Varicose Veins',
-            'Overweight',
-            'Osteoarthritis of Hip',
-            'Osteoarthritis of Knee',
-            'Osteoarthritis of Shoulder',
-            'Osteoarthritis of spine',
-            'Osteoarthritis, other',
-            'Lower Back Pain',
-            'Hyperlipidemia',
-            'Hypertension',
-            'Hemorrhoids',
-            'Gastroesophageal reflux (GERD)',
-            'Gastritis',
-            'Gastritis: H.pylori associated',
-            'Fibroid (leiomyoma)',
-            'Eczema',
-            'Diabetes I',
-            'Diabetes II',
-            'Diabetes, Gestational',
-            'Asthma',
-            'Allergic rhinitis',
-          ].includes(values.Condition)
+            'rec1yyeyxkQxZtIsD',
+            'recwoDtKd1B4ztytB',
+            'recZETSYK81fAKYEy',
+            'recCvj1vrZI7QJTJT',
+            'rec976C51ukYbVEZP',
+            'recatck1FWNN5RmWe',
+            'recZ36sY8T3Yungmo',
+            'recVlgx6cf6Fw3gzn',
+            'recLdUqB94LuWsfpj',
+            'recfOQjJ8Yo2oiVD6',
+            'recpLfyAirbx5OlFS',
+            'recLpbGIM06FnDBN4',
+            'recjHCg4fZrqtuim3',
+            'recauBAdwn9QuqRRs',
+            'rec9GJtCUjz54voue',
+            'rechQ6Cvl5WeVP6tI',
+            'receXizGwFWI5igxn',
+            'recR916dEtATKYuvw',
+            'recQPGTOSPnwjyPPA',
+            'recsYfjhmamvUbgM7',
+            'recFEGuc9JL0Tajlb',
+          ].includes(values['Conditions master list'])
         },
       },
       {
@@ -14245,19 +14391,18 @@ export default [
           'Please note that "current stage" in the condition name is the last recorded current stage. In this form you will be tracking the new current stage',
       },
       {
-        id: 'fldcvaP9Z8Lug3oFK',
-        name: 'Condition type',
-        type: 'select',
+        id: 'fldTNLhh5wic9GP4Z',
+        name: 'Conditions master list',
+        type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
+        symmetricColumnId: 'fldAoPcKjUN8vKTTy',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblR6LlerAkXAmVnc',
         required: false,
-        helper:
-          'WIP (we are still adding conditions on a monthly basis)\nThis field is used to provide you with the appropriate questions',
+        helper: '',
       },
       {
         id: 'fld0YymouKkwHQRY1',
@@ -14274,15 +14419,17 @@ export default [
         helper:
           '    * Stage 1: BMI 17.0 - 18.4\n    * Stage 2: BMI 16.0 - 16.9\n    * Stage 3: BMI < 16.0',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Underweight'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recpKWliH8DpATqAW'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Underweight'].some((r) =>
-              values['Condition type'].includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recpKWliH8DpATqAW'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Underweight'].includes(values['Condition type'])
+          return ['recpKWliH8DpATqAW'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14300,15 +14447,17 @@ export default [
         helper:
           '@risk: Sys/DIa <120/80\nElevated BP: 120-130 and <80 mmHg\nStage 1 Hypertension: 130-140 or 80-89 mmHg\nStage 2 Hypertension: >140 or >90mmHg',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Hypertension'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recfOQjJ8Yo2oiVD6'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Hypertension'].some((r) =>
-              values['Condition type'].includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recfOQjJ8Yo2oiVD6'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Hypertension'].includes(values['Condition type'])
+          return ['recfOQjJ8Yo2oiVD6'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14326,14 +14475,14 @@ export default [
         helper: 'Acute: < 6 weeks\nChronic > 6 weeks',
         conditionType: '',
         parentKey: 'Condition type',
-        parentValues: ['Gastritis'],
+        parentValues: ['recjHCg4fZrqtuim3'],
         condition: (values: any) => {
           if (Array.isArray(values['Condition type'])) {
-            return ['Gastritis'].some((r) =>
+            return ['recjHCg4fZrqtuim3'].some((r) =>
               values['Condition type'].includes(r)
             )
           }
-          return ['Gastritis'].includes(values['Condition type'])
+          return ['recjHCg4fZrqtuim3'].includes(values['Condition type'])
         },
       },
       {
@@ -14350,16 +14499,16 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Gastritis H.Pylori-associated'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recauBAdwn9QuqRRs'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Gastritis H.Pylori-associated'].some((r) =>
-              values['Condition type'].includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recauBAdwn9QuqRRs'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Gastritis H.Pylori-associated'].includes(
-            values['Condition type']
+          return ['recauBAdwn9QuqRRs'].includes(
+            values['Conditions master list']
           )
         },
       },
@@ -14378,15 +14527,17 @@ export default [
         helper:
           'Acute: symptoms < 4 weeks\nSub-acute: symptoms > 4 weeks & < 12 weeks\nMild chronic: symptoms  >12 weeks; score to be defined\nModerate chronic: symptoms  >12 weeks; score to be defined\nSevere chronic: symptoms  >12 weeks; score to be defined',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Lower back pain'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recVlgx6cf6Fw3gzn'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Lower back pain'].some((r) =>
-              values['Condition type'].includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recVlgx6cf6Fw3gzn'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Lower back pain'].includes(values['Condition type'])
+          return ['recVlgx6cf6Fw3gzn'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14404,15 +14555,17 @@ export default [
         helper:
           'At risk if members with previous hx or family hx\n Hypercholesterolemia if TC>200mg/dl\n Hypertriglyceridemia if TG >150mg/dl only done in a fasting state\n Mixed hyperlipidemia if defined as elevated LDL >130mg/dl, TC>200mg/dl and TG>150mg/dl',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Hyperlipidemia'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recLdUqB94LuWsfpj'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Hyperlipidemia'].some((r) =>
-              values['Condition type'].includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recLdUqB94LuWsfpj'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Hyperlipidemia'].includes(values['Condition type'])
+          return ['recLdUqB94LuWsfpj'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14429,13 +14582,17 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Other'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recfNbsZGueaHQUto'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Other'].some((r) => values['Condition type'].includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recfNbsZGueaHQUto'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Other'].includes(values['Condition type'])
+          return ['recfNbsZGueaHQUto'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14453,13 +14610,17 @@ export default [
         helper:
           'Stage 1: Mild intermittent = score of 24-25\nStage 2: Moderate intermittent = score of 21-23\nStage 3: Moderate persistent = score of 16-20\nStage 4: Severe persistent = score of 0-15',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Asthma'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recsYfjhmamvUbgM7'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Asthma'].some((r) => values['Condition type'].includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recsYfjhmamvUbgM7'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Asthma'].includes(values['Condition type'])
+          return ['recsYfjhmamvUbgM7'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14477,15 +14638,17 @@ export default [
         helper:
           'Mild: Occasional pain not restricting activities , few veins, number of active ulcers 1, occasional edema\nModerate: Daily moderate activity limitation requiring occasional analgesia use, Multiple veins/torturous, 2 ulcers present, Occasional edema above the level of the ankles\nSevere: Extensive veins, daily pain limiting daily activities, more than 3 ulcers, edema to the level of the knee, severe cellulitis',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Varicose veins'],
+        parentKey: 'Conditions master list',
+        parentValues: ['rec1yyeyxkQxZtIsD'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Varicose veins'].some((r) =>
-              values['Condition type'].includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['rec1yyeyxkQxZtIsD'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Varicose veins'].includes(values['Condition type'])
+          return ['rec1yyeyxkQxZtIsD'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14503,15 +14666,17 @@ export default [
         helper:
           'Asymptomatic: diagnosed during routine visit but not symptomatic\nSymptomatic: associated with menstrual disturbances, anemia, difficulty in conception',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Fibroid (leiomyoma)'],
+        parentKey: 'Conditions master list',
+        parentValues: ['rec9GJtCUjz54voue'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Fibroid (leiomyoma)'].some((r) =>
-              values['Condition type'].includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['rec9GJtCUjz54voue'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Fibroid (leiomyoma)'].includes(values['Condition type'])
+          return ['rec9GJtCUjz54voue'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14529,15 +14694,17 @@ export default [
         helper:
           'At risk: HB1AC <5.7%\nStage 1: HB1AC > 6.5%\nStage 2: HB1AC >7.5%, FBS >7 mmol/l, only on oral meds\nStage 3: HB1AC >7.5%, FBS >7 mmol/l, on insulin\nPrediabetes: HBA1C 5.7% to 6.4% FBS >6 mmol/l, Positive impaired glucose tolerance test (RBS 7.8-11.1 mmol/l)',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Diabetes 2'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recR916dEtATKYuvw'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Diabetes 2'].some((r) =>
-              values['Condition type'].includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recR916dEtATKYuvw'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Diabetes 2'].includes(values['Condition type'])
+          return ['recR916dEtATKYuvw'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14554,15 +14721,17 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Diabetes 1'],
+        parentKey: 'Conditions master list',
+        parentValues: ['receXizGwFWI5igxn'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Diabetes 1'].some((r) =>
-              values['Condition type'].includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['receXizGwFWI5igxn'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Diabetes 1'].includes(values['Condition type'])
+          return ['receXizGwFWI5igxn'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14579,15 +14748,17 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Diabetes, Gestational'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recQPGTOSPnwjyPPA'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Diabetes, Gestational'].some((r) =>
-              values['Condition type'].includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recQPGTOSPnwjyPPA'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Diabetes, Gestational'].includes(values['Condition type'])
+          return ['recQPGTOSPnwjyPPA'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14605,15 +14776,17 @@ export default [
         helper:
           'To identify the stage, please assess following symptoms: running nose, watery eyes, itchy eyes or nose, sneezing, red eyes.\n\nStages:\nSeasonal: Symptoms triggered seasonally\nIntermittent: Symptoms < 4 days per week or < 4 weeks per year\nPersistent: Symptoms > 4 days per week or > 4 weeks per year',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Allergic rhinitis'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recFEGuc9JL0Tajlb'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Allergic rhinitis'].some((r) =>
-              values['Condition type'].includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recFEGuc9JL0Tajlb'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Allergic rhinitis'].includes(values['Condition type'])
+          return ['recFEGuc9JL0Tajlb'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14630,15 +14803,17 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Hemorrhoids'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recpLfyAirbx5OlFS'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Hemorrhoids'].some((r) =>
-              values['Condition type'].includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recpLfyAirbx5OlFS'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Hemorrhoids'].includes(values['Condition type'])
+          return ['recpLfyAirbx5OlFS'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14655,15 +14830,17 @@ export default [
         required: false,
         helper: 'Stage 1: BMI 25-29.9\nStage 2: BMI 30-39.9\nStage 3: BMI >=40',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Overweight'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recwoDtKd1B4ztytB'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Overweight'].some((r) =>
-              values['Condition type'].includes(r)
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recwoDtKd1B4ztytB'].some((r) =>
+              values['Conditions master list'].includes(r)
             )
           }
-          return ['Overweight'].includes(values['Condition type'])
+          return ['recwoDtKd1B4ztytB'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14681,15 +14858,31 @@ export default [
         helper:
           'Stage 1: Minor wear-and-tear in the joints. Little to no pain in the affected area\nStage 2: Pain score <3 - Mild (some morning stiffness, intermittent pain with NO quality of life impact)\nStage 3: Pain score 4-7 - Moderate (intermittent pain with impact on quality of life)\nStage 4: Pain score >8 - Severe (persistent pain with significant impact on quality of life)',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Osteoarthritis'],
+        parentKey: 'Conditions master list',
+        parentValues: [
+          'recZETSYK81fAKYEy',
+          'recCvj1vrZI7QJTJT',
+          'rec976C51ukYbVEZP',
+          'recatck1FWNN5RmWe',
+          'recZ36sY8T3Yungmo',
+        ],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Osteoarthritis'].some((r) =>
-              values['Condition type'].includes(r)
-            )
+          if (Array.isArray(values['Conditions master list'])) {
+            return [
+              'recZETSYK81fAKYEy',
+              'recCvj1vrZI7QJTJT',
+              'rec976C51ukYbVEZP',
+              'recatck1FWNN5RmWe',
+              'recZ36sY8T3Yungmo',
+            ].some((r) => values['Conditions master list'].includes(r))
           }
-          return ['Osteoarthritis'].includes(values['Condition type'])
+          return [
+            'recZETSYK81fAKYEy',
+            'recCvj1vrZI7QJTJT',
+            'rec976C51ukYbVEZP',
+            'recatck1FWNN5RmWe',
+            'recZ36sY8T3Yungmo',
+          ].includes(values['Conditions master list'])
         },
       },
       {
@@ -14707,15 +14900,31 @@ export default [
         helper:
           'Please score the pain of the member using this website: <a href="https://www.researchgate.net/figure/The-Universal-Pain-Assessment-Tool-UPAT-that-has-been-used-to-identify-functional-TMJ_fig1_311158988" target="_blank">https://www.researchgate.net/figure/The-Universal-Pain-Assessment-Tool-UPAT-that-has-been-used-to-identify-functional-TMJ_fig1_311158988</a> ',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Osteoarthritis'],
+        parentKey: 'Conditions master list',
+        parentValues: [
+          'recZETSYK81fAKYEy',
+          'recCvj1vrZI7QJTJT',
+          'rec976C51ukYbVEZP',
+          'recatck1FWNN5RmWe',
+          'recZ36sY8T3Yungmo',
+        ],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Osteoarthritis'].some((r) =>
-              values['Condition type'].includes(r)
-            )
+          if (Array.isArray(values['Conditions master list'])) {
+            return [
+              'recZETSYK81fAKYEy',
+              'recCvj1vrZI7QJTJT',
+              'rec976C51ukYbVEZP',
+              'recatck1FWNN5RmWe',
+              'recZ36sY8T3Yungmo',
+            ].some((r) => values['Conditions master list'].includes(r))
           }
-          return ['Osteoarthritis'].includes(values['Condition type'])
+          return [
+            'recZETSYK81fAKYEy',
+            'recCvj1vrZI7QJTJT',
+            'rec976C51ukYbVEZP',
+            'recatck1FWNN5RmWe',
+            'recZ36sY8T3Yungmo',
+          ].includes(values['Conditions master list'])
         },
       },
       {
@@ -14732,13 +14941,17 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['GERD'],
+        parentKey: 'Conditions master list',
+        parentValues: ['recLpbGIM06FnDBN4'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['GERD'].some((r) => values['Condition type'].includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recLpbGIM06FnDBN4'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['GERD'].includes(values['Condition type'])
+          return ['recLpbGIM06FnDBN4'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
@@ -14755,13 +14968,17 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Eczema'],
+        parentKey: 'Conditions master list',
+        parentValues: ['rechQ6Cvl5WeVP6tI'],
         condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Eczema'].some((r) => values['Condition type'].includes(r))
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['rechQ6Cvl5WeVP6tI'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
           }
-          return ['Eczema'].includes(values['Condition type'])
+          return ['rechQ6Cvl5WeVP6tI'].includes(
+            values['Conditions master list']
+          )
         },
       },
       {
