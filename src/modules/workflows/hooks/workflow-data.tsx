@@ -424,8 +424,12 @@ export const useWorkflowData = () => {
                 .then(() => {
                   createdWorkflow.synchronizeWorkflowFormData(w, v2Member, user)
                 })
-            } catch (e) {
-              logError(e)
+            } catch (e: any) {
+              const duplicateRegex =
+                /Diagnostic error: Error: Duplicate key for property id: ([A-Z0-9-]+)/
+              if (!e?.message.match(duplicateRegex)) {
+                logError(e)
+              }
             }
           }
         }

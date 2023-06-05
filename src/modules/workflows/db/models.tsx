@@ -257,7 +257,7 @@ export class Workflows extends Model {
               // f.data = merge f.data and dv
               f.data = { ...f.data, ...fv, moduleId }
               f.isSynced = true
-              f.isDraft = false
+              f.isDraft = isFormDraft(this, formData, k)
             })
           }
         }
@@ -297,7 +297,7 @@ export class Workflows extends Model {
               form.workflow.set(this)
               form.member = this.member
               form.data = { ...setupFormData, ...fv }
-              form.isDraft = false
+              form.isDraft = isFormDraft(this, formData, f)
               form.isEdited = false
               form.isSynced = true
               form.createdBy = this.createdBy
@@ -312,7 +312,7 @@ export class Workflows extends Model {
             form.workflow.set(this)
             form.member = this.member
             form.data = setupFormData
-            form.isDraft = true
+            form.isDraft = isFormDraft(this, formData, f)
             form.isEdited = false
             form.isSynced = false
             form.createdBy = this.createdBy
@@ -362,3 +362,15 @@ export class Workflows extends Model {
 }
 
 export default [Templates, Forms, Workflows]
+
+const isFormDraft = (workflow: Workflows, formData: any, formName: string) => {
+  if (workflow.isCompleted) {
+    return false
+  }
+
+  if (formData[formName]?.status === 'Saved') {
+    return false
+  }
+
+  return true
+}

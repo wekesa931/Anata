@@ -101,21 +101,21 @@ export const useTemplatesData = () => {
     })
   }
 
+  // determine the templates to create and delete
   const hydrateTemplates = async () => {
     const data = await getData()
     const normalizedTemplates = normalizeWorkflowTemplates(data?.data)
     if (normalizedTemplates.length) {
-      database.write(async () => {
-        // clear the templates from the collection first
-        Promise.all(
-          normalizedTemplates.map(async (template) => {
-            try {
-              // check if a template with template.id exists
-              await templatesCollection.find(template.id)
-            } catch (err: any) {
-              const notFoundRegex = /Record ([^ ]+) not found/
-              const notFoundError = err?.message.match(notFoundRegex)
-              if (notFoundError) {
+      Promise.all(
+        normalizedTemplates.map(async (template) => {
+          try {
+            // check if a template with template.id exists
+            await templatesCollection.find(template.id)
+          } catch (err: any) {
+            const notFoundRegex = /Record ([^ ]+) not found/
+            const notFoundError = err?.message.match(notFoundRegex)
+            if (notFoundError) {
+              database.write(async () => {
                 templatesCollection.create((t) => {
                   t.name = template.name
                   t.modules = template.modules
@@ -124,11 +124,11 @@ export const useTemplatesData = () => {
                   t._raw.id = template.id
                   t.updatedAt = dayjs(template.updatedAt).toDate().getDate()
                 })
-              }
+              })
             }
-          })
-        )
-      })
+          }
+        })
+      )
     }
   }
 

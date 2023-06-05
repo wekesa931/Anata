@@ -22,7 +22,7 @@ const relationshipOptions = [
 
 export type LookupOption = {
   label: string
-  value: string,
+  value: string
   [key: string]: any
 }
 

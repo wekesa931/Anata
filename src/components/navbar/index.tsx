@@ -10,6 +10,7 @@ import analytics from 'src/config/analytics'
 import Tooltip from 'src/components/tooltip'
 import useClickOutside from 'src/hooks/click-outside'
 import FlatLogo from 'src/assets/img/logo/Antara Logo@1x.png'
+import { useDatabase } from '@nozbe/watermelondb/hooks'
 import TaskMenu from './task-menu/task-menu.component'
 import styles from './navbar.component.css'
 import FloatingMenu from './menu.component'
@@ -18,11 +19,18 @@ function UserMenu() {
   const user = useUser()
   const auth = useAuth()
   const navigate = useNavigate()
+  const database = useDatabase()
 
   const logout = () => {
-    auth.logout()
-    analytics.track('User LoggedOut')
-    navigate('/login')
+    database.write(async () => {
+      // eslint-disable-next-line no-underscore-dangle
+      database._subscribers = []
+      return database.unsafeResetDatabase().then(() => {
+        auth.logout()
+        analytics.track('User LoggedOut')
+        navigate('/login')
+      })
+    })
   }
 
   const hasName = (userDetails: { given_name: string; family_name: string }) =>
