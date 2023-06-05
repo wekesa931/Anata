@@ -2251,15 +2251,17 @@ export default [
         foreignTableId: null,
         required: true,
         helper: 'Fill in the Facility not found in the provider base',
-        parentKey: 'Specialists from Provider Base',
-        parentValues: ['OTHER'],
+        parentKey: 'Facilities from Provider base',
+        parentValues: ['recT1DtxlC4G9BuUj'],
         condition: (values: any) => {
-          if (Array.isArray(values['Specialists from Provider Base'])) {
-            return ['OTHER'].some((r) =>
-              values['Specialists from Provider Base'].includes(r)
+          if (Array.isArray(values['Facilities from Provider base'])) {
+            return ['recT1DtxlC4G9BuUj'].some((r) =>
+              values['Facilities from Provider base'].includes(r)
             )
           }
-          return ['OTHER'].includes(values['Specialists from Provider Base'])
+          return ['recT1DtxlC4G9BuUj'].includes(
+            values['Facilities from Provider base']
+          )
         },
       },
       {
@@ -4036,12 +4038,14 @@ export default [
         required: false,
         helper: 'Fill in the Facility not found in the provider base',
         parentKey: 'Facilities',
-        parentValues: ['OTHER'],
+        parentValues: ['recT1DtxlC4G9BuUj'],
         condition: (values: any) => {
           if (Array.isArray(values.Facilities)) {
-            return ['OTHER'].some((r) => values.Facilities.includes(r))
+            return ['recT1DtxlC4G9BuUj'].some((r) =>
+              values.Facilities.includes(r)
+            )
           }
-          return ['OTHER'].includes(values.Facilities)
+          return ['recT1DtxlC4G9BuUj'].includes(values.Facilities)
         },
       },
       {
