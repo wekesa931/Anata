@@ -181,7 +181,7 @@ function List({
                         <div>
                           {item.data.Condition === 'Other'
                             ? item.data['Other, specify']
-                            : `${item.data.Condition}, `}
+                            : `${item.data['Name (from Conditions master list)'] || `${item.data.Condition}`}, `}
                           {item.data['Starting clinical status'] && (
                             <>
                               <b>Starting Clinical Status: </b>
