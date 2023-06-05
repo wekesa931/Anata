@@ -276,7 +276,7 @@ export const useWorkflowData = () => {
         return syncWorkflow(workflow)
           .then(() => {
             trackWorkflowCreated(workflow.workflowObject)
-            handleSubmitForm(form, formMeta)
+            return handleSubmitForm(form, formMeta)
           })
           .finally(() => {
             setSubmittingForm(false)

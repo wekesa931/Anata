@@ -506,7 +506,14 @@ function TextInputField({
   const [shouldShrink, setShouldShrink] = useState(false)
   const [numError, setNumError] = useState(false)
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    saveInput(field.name, event.target.value)
+    if (field.type === 'number') {
+      const num = Number(event.target.value)
+      if (!isNaN(num)) {
+        saveInput(field.name, num)
+      }
+    } else {
+      saveInput(field.name, event.target.value)
+    }
   }
 
   return (

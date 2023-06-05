@@ -621,3 +621,20 @@ export const getUserModelDetails = (user: User) => ({
   email: user?.email,
   name: user?.name,
 })
+
+type SortableForms = {
+  name: string
+  [key: string]: any
+}
+
+export const sortAlphabetically = (forms: SortableForms[]) => {
+  return forms.sort((a, b) => {
+    if (a.name > b.name) {
+      return 1
+    }
+    if (b.name > a.name) {
+      return -1
+    }
+    return 0
+  })
+}

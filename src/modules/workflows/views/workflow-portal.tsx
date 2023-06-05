@@ -173,7 +173,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     addNewWorkflowModule(workflow, addedFormName).then(() => {
       workflow
         .addForm(addedFormName, {
-          initialFormData,
+          ...initialFormData,
           Member: [v2Member?.airtableRecordId],
           moduleId: dayjs().toISOString(),
         })

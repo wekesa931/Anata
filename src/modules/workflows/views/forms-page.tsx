@@ -9,7 +9,7 @@ import PortalWindow from 'src/components/portal'
 import { useFormsRouting } from 'src/modules/workflows/hooks/routing/forms'
 import { Forms as TWorkflowForm } from 'src/modules/workflows/db/models'
 import FormPortal from './forms-portal'
-import { formNames } from '../utils'
+import { formNames, sortAlphabetically } from '../utils'
 
 function Forms() {
   const [airtableForm, setAirtableForm] = useState<TForm | null>(null)
@@ -59,7 +59,7 @@ function Forms() {
               variant="standard"
             />
           </div>
-          {searchForm.map((form) => (
+          {sortAlphabetically(searchForm).map((form) => (
             <button
               onClick={() => openFormHandler(form)}
               className="full-width btn btn-secondary form-btns"

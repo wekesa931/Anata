@@ -103,6 +103,13 @@ export class Forms extends Model {
       f.isSynced = true
     })
   }
+
+  @writer async clearDraft() {
+    await this.update((f) => {
+      f.isDraft = false
+      f.isEdited = false
+    })
+  }
 }
 
 type V2MemberParam = {

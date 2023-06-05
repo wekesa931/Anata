@@ -5,7 +5,6 @@ import { Button } from '@mui/material'
 import { every, isEmpty } from 'lodash'
 import { useAirtableMeta } from 'src/context/airtable-meta'
 import { useNotifications } from 'src/context/notifications'
-import logError from 'src/utils/logging/logger'
 import { Forms as TWorkflowForm } from 'src/modules/workflows/db/models'
 import validationRules from './validation-schema'
 import WorkflowFormsFields from './form-fields'
@@ -102,18 +101,23 @@ function WorkflowForm({
           }
         })
         submitForm(form, formSchema)
-          .catch((err) => {
-            notify('There was an error submitting your form. Please try again.')
-            logError(err)
-            setIsFormDraft(true)
-          })
           .then(() => {
-            setIsFormDraft(false)
-            notify('Form submitted succesfully.')
-            setIsEdited(false)
-            if (!form.workflow.id && closeForm) {
-              closeForm()
-            }
+            form.clearDraft().then(() => {
+              setIsFormDraft(false)
+              notify('Form submitted succesfully.')
+              setIsEdited(false)
+              if (!form.workflow.id && closeForm) {
+                closeForm()
+              }
+            })
+          })
+          .catch((err) => {
+            notify(
+              err?.message
+                ? err?.message
+                : 'There was an error submitting your form. Please try again.'
+            )
+            setIsFormDraft(true)
           })
       })()
     }
