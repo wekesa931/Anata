@@ -13392,7 +13392,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Please enter the due date you agreed with the member. Remember that for members who can do it at the office, we have I&M on Tuesday morning and Jubilee on Thursday morning.',
       },

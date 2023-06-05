@@ -241,6 +241,11 @@ export const initialFormValues = (
     'Interaction log': {
       'Encounter Date': new Date(),
     },
+    'Logistics Tasks': {
+      Beneficiary: member['Full Name'],
+      Status: 'Scheduled',
+      Creator: [user.userAirtableId],
+    },
   }
 }
 
