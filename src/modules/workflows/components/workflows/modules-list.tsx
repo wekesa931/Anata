@@ -38,6 +38,13 @@ function FormsListRaw({
 
   const uniqueFormsByName = uniqBy(forms, 'name')
 
+  const isFormDraft = (form: any) => {
+    const allFormsWithName = forms.filter((f: any) => f.name === form.name)
+
+    // check if any of these forms is draft 
+    return allFormsWithName.some((f: any) => f.isDraft)
+  }
+
   return (
     <>
       {uniqueFormsByName.map((form: any) => (
@@ -53,7 +60,7 @@ function FormsListRaw({
         >
           {formNames[form.name]}
 
-          {!form.isDraft && (
+          {!isFormDraft(form) && (
             <Check color="var(--green-100)" width={18} height={18} />
           )}
 

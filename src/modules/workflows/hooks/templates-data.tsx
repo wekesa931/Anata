@@ -76,6 +76,7 @@ export const useTemplatesData = () => {
                 ...initialFormData[module],
                 moduleId,
                 Member: [v2Member?.airtableRecordId],
+                isDraft: true,
               }
               form.isDraft = true
 

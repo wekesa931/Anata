@@ -264,7 +264,8 @@ export class Workflows extends Model {
               // f.data = merge f.data and dv
               f.data = { ...f.data, ...fv, moduleId }
               f.isSynced = true
-              f.isDraft = isFormDraft(this, formData, k)
+              f.isDraft =
+                'isDraft' in fv ? fv.isDraft : isFormDraft(this, formData, k)
             })
           }
         }
@@ -295,6 +296,7 @@ export class Workflows extends Model {
           ...initialFormData[f],
           moduleId,
           Member: [v2Member?.airtableRecordId],
+          isDraft: true,
         }
         if (thisFormsData.length !== 0) {
           // some data exists for this form, so we need to create it
@@ -304,7 +306,8 @@ export class Workflows extends Model {
               form.workflow.set(this)
               form.member = this.member
               form.data = { ...setupFormData, ...fv }
-              form.isDraft = isFormDraft(this, formData, f)
+              form.isDraft =
+                'isDraft' in fv ? fv.isDraft : isFormDraft(this, formData, f)
               form.isEdited = false
               form.isSynced = true
               form.createdBy = this.createdBy
@@ -371,8 +374,8 @@ export class Workflows extends Model {
 export default [Templates, Forms, Workflows]
 
 const isFormDraft = (workflow: Workflows, formData: any, formName: string) => {
-  if(formData[formName]?.status === 'Draft'){
-    return true 
+  if (formData[formName]?.status === 'Draft') {
+    return true
   }
 
   if (formData[formName]?.status === 'Saved') {

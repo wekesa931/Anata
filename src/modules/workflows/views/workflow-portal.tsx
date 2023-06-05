@@ -35,8 +35,8 @@ import {
   Forms as TWorkflowForm,
   Workflows as TWorkflowModel,
 } from 'src/modules/workflows/db/models'
-import dayjs from 'dayjs'
 import { formNames, duplicates, initialFormValues } from '../utils'
+import { generateId } from 'src/storage/utils'
 
 type TitleProps = {
   workflow: TWorkflowModel
@@ -175,7 +175,8 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
         .addForm(addedFormName, {
           ...initialFormData,
           Member: [v2Member?.airtableRecordId],
-          moduleId: dayjs().toISOString(),
+          moduleId: generateId(),
+          isDraft: true 
         })
         .then(() => {
           setFormStates(addedFormName)
