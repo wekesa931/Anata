@@ -216,7 +216,10 @@ export const useWorkflowData = () => {
           if (formsWithSameName.length > 0) {
             isModulesDraft = formsWithSameName.some((f: Forms) => f.isDraft)
           }
-          const allFormsData = formsWithSameName.map((f: Forms) => ({...f.data, isDraft: false}))
+          const allFormsData = formsWithSameName.map((f: Forms) => ({
+            ...f.data,
+            isDraft: false,
+          }))
 
           saveModuleData({
             workflowId: workflow?.workflowId,

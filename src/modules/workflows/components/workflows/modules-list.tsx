@@ -41,7 +41,7 @@ function FormsListRaw({
   const isFormDraft = (form: any) => {
     const allFormsWithName = forms.filter((f: any) => f.name === form.name)
 
-    // check if any of these forms is draft 
+    // check if any of these forms is draft
     return allFormsWithName.some((f: any) => f.isDraft)
   }
 

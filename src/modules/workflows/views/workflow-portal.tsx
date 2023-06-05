@@ -35,8 +35,8 @@ import {
   Forms as TWorkflowForm,
   Workflows as TWorkflowModel,
 } from 'src/modules/workflows/db/models'
-import { formNames, duplicates, initialFormValues } from '../utils'
 import { generateId } from 'src/storage/utils'
+import { formNames, duplicates, initialFormValues } from '../utils'
 
 type TitleProps = {
   workflow: TWorkflowModel
@@ -176,7 +176,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
           ...initialFormData,
           Member: [v2Member?.airtableRecordId],
           moduleId: generateId(),
-          isDraft: true 
+          isDraft: true,
         })
         .then(() => {
           setFormStates(addedFormName)

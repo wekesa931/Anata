@@ -49,13 +49,25 @@ function AuthProvider({ user, children }: any) {
         `team/list?filterByFormula=FIND("${currentUser.email}", {Email})&fields[]=Record ID`
       )
         .then((res) => {
-          if (typeof res === 'object' && !Array.isArray(res) && res !== null) {
+          if (Array.isArray(res) && res.length > 0) {
+            userAirtableId = res[0]['Record ID']
+          } else if (
+            typeof res === 'object' &&
+            !Array.isArray(res) &&
+            res !== null
+          ) {
             Object.keys(res).forEach((key) => {
               if (/^rec\w+/.test(key)) {
                 userAirtableId = key
               }
             })
-            setCurrentUser({ ...currentUser, userAirtableId })
+          }
+
+          if (userAirtableId) {
+            setCurrentUser({
+              ...currentUser,
+              userAirtableId,
+            })
           }
         })
         .catch(() => {

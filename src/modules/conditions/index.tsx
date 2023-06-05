@@ -30,7 +30,7 @@ function Conditions() {
     'Diabetes Control Milestone',
     'Asthma Action Plan Milestone',
     'Asthma Key Goal',
-    'Name (from Conditions master list)'
+    'Name (from Conditions master list)',
   ]
 
   const { data, isLoading, isError } = useAirtableFetch(
