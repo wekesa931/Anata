@@ -371,11 +371,15 @@ export class Workflows extends Model {
 export default [Templates, Forms, Workflows]
 
 const isFormDraft = (workflow: Workflows, formData: any, formName: string) => {
-  if (workflow.isCompleted) {
-    return false
+  if(formData[formName]?.status === 'Draft'){
+    return true 
   }
 
   if (formData[formName]?.status === 'Saved') {
+    return false
+  }
+
+  if (workflow.isCompleted) {
     return false
   }
 
