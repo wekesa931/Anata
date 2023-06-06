@@ -1,7 +1,6 @@
 import { useDatabase } from '@nozbe/watermelondb/hooks'
 import { useEffect, useState } from 'react'
-import { Collection } from '@nozbe/watermelondb'
-import dayjs from 'dayjs'
+import { Collection, Q } from '@nozbe/watermelondb'
 import { useMember } from 'src/context/member'
 import { useUser } from 'src/context/user'
 import {
@@ -10,6 +9,7 @@ import {
 } from 'src/modules/workflows/utils'
 import useObservable from 'src/hooks/observable'
 import { generateId } from 'src/storage/utils'
+import { logError } from 'src/utils/logging/logger'
 import { Workflows, Forms, Templates } from '../db/models'
 import {
   useWorkflowTemplates,
@@ -106,30 +106,43 @@ export const useTemplatesData = () => {
   const hydrateTemplates = async () => {
     const data = await getData()
     const normalizedTemplates = normalizeWorkflowTemplates(data?.data)
+    const templatesToCreate: any[] = []
     if (normalizedTemplates.length) {
-      Promise.all(
+      // find templates to create, only those whose name is not in the database, query from db
+      await Promise.all(
         normalizedTemplates.map(async (template) => {
-          try {
-            // check if a template with template.id exists
-            await templatesCollection.find(template.id)
-          } catch (err: any) {
-            const notFoundRegex = /Record ([^ ]+) not found/
-            const notFoundError = err?.message.match(notFoundRegex)
-            if (notFoundError) {
-              database.write(async () => {
-                templatesCollection.create((t) => {
-                  t.name = template.name
-                  t.modules = template.modules
+          const existingTemplate = await templatesCollection
+            .query(Q.where('name', template.name))
+            .fetch()
 
-                  // eslint-disable-next-line no-underscore-dangle
-                  t._raw.id = template.id
-                  t.updatedAt = dayjs(template.updatedAt).toDate().getDate()
-                })
-              })
-            }
+          if (!existingTemplate.length) {
+            templatesToCreate.push(template)
           }
         })
       )
+
+      // create new templates from the API
+      database.write(async () => {
+        await Promise.all(
+          templatesToCreate.map(async (template) => {
+            await templatesCollection
+              .create((t) => {
+                t.name = template.name
+                t.modules = template.modules
+
+                // eslint-disable-next-line no-underscore-dangle
+                t._raw.id = template.name
+              })
+              .catch((err) => {
+                const duplicateRegex =
+                  /Diagnostic error: Error: Duplicate key for property id: ([A-Z0-9-]+)/
+                if (!err?.message.match(duplicateRegex)) {
+                  logError(err)
+                }
+              })
+          })
+        )
+      })
     }
   }
 

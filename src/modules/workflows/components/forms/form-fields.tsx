@@ -541,10 +541,14 @@ function TextInputField({
               InputLabelProps={{
                 shrink: value || shouldShrink,
               }}
-              inputProps={ type === 'number' ? {
-                inputMode: 'numeric',
-                pattern: '^\d*\.?\d*$'
-              } : {}}
+              inputProps={
+                type === 'number'
+                  ? {
+                      inputMode: 'numeric',
+                      pattern: '^d*.?d*$',
+                    }
+                  : {}
+              }
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 if (type === 'number') {
                   // allow . for floating points

@@ -170,7 +170,11 @@ export const useWorkflowData = () => {
     return caseId
   }
 
-  const handleSubmitForm = async (form: TWorkflowForm, formMeta: any, formData: any) => {
+  const handleSubmitForm = async (
+    form: TWorkflowForm,
+    formMeta: any,
+    formData: any
+  ) => {
     const formName = form.name
     const activeForm = ActiveForm(formName)
 
@@ -389,15 +393,7 @@ export const useWorkflowData = () => {
           (nw: TWorkflow) => nw.workflowId === w.workflowId
         )
         if (updatedWorkflow) {
-          return w
-            .createFromAPI(updatedWorkflow, v2Member.antaraId, user)
-            .then(() => {
-              return w.synchronizeWorkflowFormData(
-                updatedWorkflow,
-                v2Member,
-                user
-              )
-            })
+          return w.createFromAPI(updatedWorkflow, v2Member, user)
         }
         return Promise.resolve()
       })
@@ -408,7 +404,7 @@ export const useWorkflowData = () => {
       workflowsToCreate.map(async (w: TWorkflow) => {
         try {
           const existingWorkflow = await workflowsCollection.find(w.workflowId)
-          await existingWorkflow.synchronizeWorkflowFormData(w, v2Member, user)
+          await existingWorkflow.createFromAPI(w, v2Member, user)
         } catch (err: any) {
           const notFoundRegex = /Record ([^ ]+) not found/
           const notFoundError = err?.message.match(notFoundRegex)
@@ -423,11 +419,7 @@ export const useWorkflowData = () => {
                   n._raw.id = w.workflowId
                 })
               })
-              createdWorkflow
-                .createFromAPI(w, v2Member.antaraId, user)
-                .then(() => {
-                  createdWorkflow.synchronizeWorkflowFormData(w, v2Member, user)
-                })
+              createdWorkflow.createFromAPI(w, v2Member, user)
             } catch (e: any) {
               const duplicateRegex =
                 /Diagnostic error: Error: Duplicate key for property id: ([A-Z0-9-]+)/

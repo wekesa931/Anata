@@ -7,7 +7,6 @@ export const normalizeWorkflowTemplates: NormalizeDataFn<
   TWorkflowTemplate[]
 > = (data: any) => {
   return data?.workflowTemplates?.edges?.map(({ node }: any) => ({
-    id: node?.id,
     name: node?.name,
     moduleNames: node?.moduleNames,
     modules: node?.modules,

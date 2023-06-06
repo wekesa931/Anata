@@ -29,6 +29,7 @@ import {
 import TABLE_ROUTES from 'src/config/airtable-tables'
 import { useAirtableMeta } from 'src/context/airtable-meta'
 import { useLazyDataSource, NormalizeDataFn } from 'src/services/api/utils'
+import { generateId } from 'src/storage/utils'
 import {
   CREATE_WORKFLOW,
   SAVE_WORKFLOW,
@@ -41,10 +42,75 @@ import {
   ADD_MODULE_TO_WORKFLOW,
 } from './gql'
 
+type RawForm = {
+  name: string
+  moduleId: string
+  isDraft: boolean
+  data: Record<string, any>
+}
+
+const isFormDraft = (workflow: TWorkflow, formData: any, formName: string) => {
+  if (formData[formName]?.status === 'Draft') {
+    return true
+  }
+
+  if (formData[formName]?.status === 'Saved') {
+    return false
+  }
+
+  if (workflow.completed) {
+    return false
+  }
+
+  return true
+}
+
+const transformWorkflow = (workflow: TWorkflow) => {
+  const { currentModules, moduleData, ...rest } = workflow
+
+  const forms: RawForm[] = []
+  currentModules.forEach((moduleName: string) => {
+    if (!moduleData[moduleName]) {
+      forms.push({
+        name: moduleName,
+        moduleId: generateId(),
+        isDraft: true,
+        data: {},
+      })
+    } else {
+      let moduleValues = moduleData[moduleName]?.filled_values || []
+      if (moduleValues && !Array.isArray(moduleValues)) {
+        moduleValues = [moduleValues]
+      }
+
+      moduleValues.forEach((moduleValue: any) => {
+        const { moduleId, ...values } = moduleValue
+        const isDraft =
+          'isDraft' in values
+            ? values.isDraft
+            : isFormDraft(workflow, moduleData, moduleName)
+        forms.push({
+          name: moduleName,
+          moduleId: moduleId || generateId(),
+          isDraft,
+          data: values,
+        })
+      })
+    }
+  })
+
+  return {
+    ...rest,
+    forms,
+  }
+}
+
 export const normalizeWorkflowData: NormalizeDataFn<TWorkflow[]> = (
   data: any
 ) => {
-  return data?.workflows?.edges?.map(({ node }: { node: TWorkflow }) => node)
+  return data?.workflows?.edges?.map(({ node }: { node: TWorkflow }) =>
+    transformWorkflow(node)
+  )
 }
 
 export const useLoadWorkflows = () =>

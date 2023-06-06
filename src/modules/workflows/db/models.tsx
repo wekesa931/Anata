@@ -13,7 +13,6 @@ import {
 
 import { Associations } from '@nozbe/watermelondb/Model'
 import dayjs from 'dayjs'
-import { generateId } from 'src/storage/utils'
 import { initialFormValues } from '../utils'
 import { CollectionType } from '../../../storage/types'
 
@@ -238,111 +237,47 @@ export class Workflows extends Model {
     user: any
   ) {
     const member = v2Member.antaraId
-    const formData = newWorkflow.moduleData || {}
-    const workflowModules = newWorkflow.currentModules
-
     const initialFormData = initialFormValues(
       member,
       user,
       newWorkflow.template.name
     )
-
-    const formDataKeys = Object.keys(formData)
-    const forms = await this.forms.fetch()
-    formDataKeys.forEach((k: string) => {
-      let filledValues = formData[k].filled_values || []
-      if (!Array.isArray(filledValues)) {
-        filledValues = [filledValues]
-      }
-
-      filledValues.map(async (fv: any) => {
-        const moduleId = fv?.moduleId
-        if (moduleId) {
-          const form = forms.find((f: Forms) => f.id === moduleId)
-          if (form) {
-            form.update((f: Forms) => {
-              // f.data = merge f.data and dv
-              f.data = { ...f.data, ...fv, moduleId }
-              f.isSynced = true
-              f.isDraft =
-                'isDraft' in fv ? fv.isDraft : isFormDraft(this, formData, k)
-            })
-          }
-        }
-      })
-    })
-
-    // if new forms were created that are not within the db, we need to add them
-    const uniqueCurrentFormNames = new Set(...[forms.map((f: Forms) => f.name)])
-    // get the forms to create, forms in currentModules and not in uniqueCurrentModules
-    const formsToCreate = workflowModules.filter(
-      (m: any) => !uniqueCurrentFormNames.has(m)
-    )
-    const formsToDelete = forms.filter(
-      (f: Forms) => !uniqueCurrentFormNames.has(f.name)
-    )
+    const formsCollection: Collection<Forms> = this.collections.get('forms')
+    const currentForms = await this.forms.fetch()
+    // delete all these forms
+    await Promise.all(currentForms.map((f: Forms) => f.destroyPermanently()))
+    const newForms = newWorkflow.forms
 
     // create the forms
-    const formsCollection: Collection<Forms> = this.collections.get('forms')
     await Promise.all(
-      formsToCreate.map(async (f: any) => {
-        let thisFormsData = formData[f]?.filled_values || []
-        if (!Array.isArray(thisFormsData)) {
-          thisFormsData = [thisFormsData]
-        }
-        const moduleId = generateId()
-
+      newForms.map(async (nf: any) => {
         const setupFormData = {
-          ...initialFormData[f],
-          moduleId,
+          ...initialFormData[nf.name],
           Member: [v2Member?.airtableRecordId],
-          isDraft: true,
+          moduleId: nf.moduleId,
+          isDraft: nf.isDraft,
         }
-        if (thisFormsData.length !== 0) {
-          // some data exists for this form, so we need to create it
-          thisFormsData.forEach(async (fv: any) => {
-            await formsCollection.create((form: Forms) => {
-              form.name = f
-              form.workflow.set(this)
-              form.member = this.member
-              form.data = { ...setupFormData, ...fv }
-              form.isDraft =
-                'isDraft' in fv ? fv.isDraft : isFormDraft(this, formData, f)
-              form.isEdited = false
-              form.isSynced = true
-              form.createdBy = this.createdBy
-              form.updatedBy = this.updatedBy
-              // eslint-disable-next-line no-underscore-dangle
-              form._raw.id = moduleId
-            })
-          })
-        } else {
-          await formsCollection.create((form: Forms) => {
-            form.name = f
-            form.workflow.set(this)
-            form.member = this.member
-            form.data = setupFormData
-            form.isDraft = isFormDraft(this, formData, f)
-            form.isEdited = false
-            form.isSynced = false
-            form.createdBy = this.createdBy
-            form.updatedBy = this.updatedBy
-            // eslint-disable-next-line no-underscore-dangle
-            form._raw.id = moduleId
-          })
-        }
-      })
-    )
+        const formData =
+          Object.keys(nf.data).length === 0 ? setupFormData : nf.data
 
-    // delete the forms
-    await Promise.all(
-      formsToDelete.map(async (f: Forms) => {
-        await f.destroyPermanently()
+        const form = await formsCollection.create((f) => {
+          f.name = nf.name
+          f.workflow.set(this)
+          f.member = this.member
+          f.data = formData
+          f.isDraft = nf.isDraft
+          f.isEdited = false
+          f.isSynced = true
+          f.createdBy = this.createdBy
+          f.updatedBy = this.updatedBy
+        })
+
+        return form
       })
     )
   }
 
-  @writer async createFromAPI(newWorkflow: any, member: string, user: any) {
+  @writer async createFromAPI(newWorkflow: any, member: any, user: any) {
     const userData = {
       email: user.email,
       name: user.name,
@@ -350,7 +285,7 @@ export class Workflows extends Model {
     await this.update((w) => {
       w.workflowId = newWorkflow.workflowId
       w.template = newWorkflow.template.name
-      w.member = member
+      w.member = member.antaraId
       w.isCompleted = newWorkflow.completed
       w.isSynced = true
       w.isDraftSaved = true
@@ -361,7 +296,9 @@ export class Workflows extends Model {
       w.updatedAt = dayjs(newWorkflow.updatedAt).valueOf()
     })
 
-    return this
+    return this.callWriter(() => {
+      return this.synchronizeWorkflowFormData(newWorkflow, member, user)
+    })
   }
 
   @writer async delete() {
@@ -372,19 +309,3 @@ export class Workflows extends Model {
 }
 
 export default [Templates, Forms, Workflows]
-
-const isFormDraft = (workflow: Workflows, formData: any, formName: string) => {
-  if (formData[formName]?.status === 'Draft') {
-    return true
-  }
-
-  if (formData[formName]?.status === 'Saved') {
-    return false
-  }
-
-  if (workflow.isCompleted) {
-    return false
-  }
-
-  return true
-}

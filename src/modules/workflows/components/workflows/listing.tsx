@@ -55,39 +55,43 @@ function WorkflowList({ openWorkflow }: WorkflowListProps) {
         <>
           {hasActiveWorkflows ? (
             <>
-              <p className="mx-0 mt-4 mb-2.5 flex grow text-left text-sm font-medium text-dark-blue-100">
-                Ongoing
-              </p>
-              {incompleteWorkflows?.length ? (
-                incompleteWorkflows.map((workflow: TWorkflowModel) => (
-                  <WorkflowListItem
-                    workflow={workflow}
-                    key={workflow.id}
-                    openWorkflow={openWorkflow}
-                  />
-                ))
-              ) : (
+              <div className="overflow-scroll max-h-[300px]">
                 <p className="mx-0 mt-4 mb-2.5 flex grow text-left text-sm font-medium text-dark-blue-100">
-                  No ongoing workflows
+                  Ongoing
                 </p>
-              )}
+                {incompleteWorkflows?.length ? (
+                  incompleteWorkflows.map((workflow: TWorkflowModel) => (
+                    <WorkflowListItem
+                      workflow={workflow}
+                      key={workflow.id}
+                      openWorkflow={openWorkflow}
+                    />
+                  ))
+                ) : (
+                  <p className="mx-0 mt-4 mb-2.5 flex grow text-left text-sm font-medium text-dark-blue-100">
+                    No ongoing workflows
+                  </p>
+                )}
+              </div>
 
-              <p className="mx-0 mt-4 mb-2.5 flex grow text-left text-sm font-medium text-dark-blue-100">
-                Complete
-              </p>
-              {completedWorkflows?.length ? (
-                completedWorkflows.map((workflow: TWorkflowModel) => (
-                  <WorkflowListItem
-                    workflow={workflow}
-                    openWorkflow={openWorkflow}
-                    key={workflow.id}
-                  />
-                ))
-              ) : (
+              <div className="overflow-scroll max-h-[300px]">
                 <p className="mx-0 mt-4 mb-2.5 flex grow text-left text-sm font-medium text-dark-blue-100">
-                  No completed workflows
+                  Complete
                 </p>
-              )}
+                {completedWorkflows?.length ? (
+                  completedWorkflows.map((workflow: TWorkflowModel) => (
+                    <WorkflowListItem
+                      workflow={workflow}
+                      openWorkflow={openWorkflow}
+                      key={workflow.id}
+                    />
+                  ))
+                ) : (
+                  <p className="mx-0 mt-4 mb-2.5 flex grow text-left text-sm font-medium text-dark-blue-100">
+                    No completed workflows
+                  </p>
+                )}
+              </div>
             </>
           ) : (
             <div className="flex h-3/4 flex-col items-center">
