@@ -506,14 +506,7 @@ function TextInputField({
   const [shouldShrink, setShouldShrink] = useState(false)
   const [numError, setNumError] = useState(false)
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (field.type === 'number') {
-      const num = Number(event.target.value)
-      if (!isNaN(num)) {
-        saveInput(field.name, num)
-      }
-    } else {
-      saveInput(field.name, event.target.value)
-    }
+    saveInput(field.name, event.target.value)
   }
 
   return (
@@ -548,6 +541,10 @@ function TextInputField({
               InputLabelProps={{
                 shrink: value || shouldShrink,
               }}
+              inputProps={ type === 'number' ? {
+                inputMode: 'numeric',
+                pattern: '^\d*\.?\d*$'
+              } : {}}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 if (type === 'number') {
                   // allow . for floating points

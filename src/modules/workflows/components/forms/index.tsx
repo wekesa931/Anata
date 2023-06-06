@@ -100,7 +100,7 @@ function WorkflowForm({
             }
           }
         })
-        submitForm(form, formSchema)
+        submitForm(form, formSchema, formattedPayload)
           .then(() => {
             form.clearDraft().then(() => {
               setIsFormDraft(false)

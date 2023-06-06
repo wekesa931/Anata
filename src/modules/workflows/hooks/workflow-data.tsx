@@ -170,21 +170,21 @@ export const useWorkflowData = () => {
     return caseId
   }
 
-  const handleSubmitForm = async (form: TWorkflowForm, formMeta: any) => {
+  const handleSubmitForm = async (form: TWorkflowForm, formMeta: any, formData: any) => {
     const formName = form.name
     const activeForm = ActiveForm(formName)
 
     if (activeForm.isInteractionsLog) {
-      await createInteraction(form.data)
+      await createInteraction(formData)
       await form.markAsCompleted()
     } else if (activeForm.isMemberFeedback) {
-      await createFeedback(form.data)
+      await createFeedback(formData)
       await form.markAsCompleted()
     }
 
     // grab the workflow associated with this form
     let workflow: TWorkflowModel | null = null
-    let payload = form.data
+    let payload = formData
 
     if (form.workflow.id) {
       workflow = await workflowsCollection.find(form.workflow.id)
@@ -231,7 +231,7 @@ export const useWorkflowData = () => {
               trackAirtableSaveSucceeded(
                 workflow?.workflowObject,
                 formName,
-                form.data
+                formData
               )
             })
           })
@@ -240,7 +240,7 @@ export const useWorkflowData = () => {
       .catch((err: any) => {
         logError(err)
         if (workflow) {
-          trackAirtableSaveFailed(workflow?.workflowObject, formName, form.data)
+          trackAirtableSaveFailed(workflow?.workflowObject, formName, formData)
         }
         throw err
       })
@@ -272,7 +272,7 @@ export const useWorkflowData = () => {
     throw new Error('Member or user not found')
   }
 
-  const submitForm = async (form: any, formMeta: any) => {
+  const submitForm = async (form: any, formMeta: any, formData: any) => {
     setSubmittingForm(true)
     if (form.workflow.id) {
       const workflow = await workflowsCollection.find(form.workflow.id)
@@ -280,14 +280,14 @@ export const useWorkflowData = () => {
         return syncWorkflow(workflow)
           .then(() => {
             trackWorkflowCreated(workflow.workflowObject)
-            return handleSubmitForm(form, formMeta)
+            return handleSubmitForm(form, formMeta, formData)
           })
           .finally(() => {
             setSubmittingForm(false)
           })
       }
     }
-    return handleSubmitForm(form, formMeta)
+    return handleSubmitForm(form, formMeta, formData)
   }
 
   const handleCompleteWorkflow = async (workflow: TWorkflowModel) => {
