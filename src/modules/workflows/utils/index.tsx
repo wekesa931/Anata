@@ -643,3 +643,16 @@ export const sortAlphabetically = (forms: SortableForms[]) => {
     return 0
   })
 }
+
+export const sortByCreatedAt = (workflows: any[]) => {
+  // sort from most recent to oldest
+  return workflows.sort((a, b) => {
+    if (a.createdAt > b.createdAt) {
+      return -1
+    }
+    if (b.createdAt > a.createdAt) {
+      return 1
+    }
+    return 0
+  })
+}

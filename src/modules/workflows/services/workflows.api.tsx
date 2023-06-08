@@ -89,11 +89,16 @@ const transformWorkflow = (workflow: TWorkflow) => {
           'isDraft' in values
             ? values.isDraft
             : isFormDraft(workflow, moduleData, moduleName)
+
+        const formModuleId = moduleId || generateId()
         forms.push({
           name: moduleName,
-          moduleId: moduleId || generateId(),
+          moduleId: formModuleId,
           isDraft,
-          data: values,
+          data: {
+            ...values,
+            moduleId: formModuleId,
+          },
         })
       })
     }

@@ -156,9 +156,11 @@ function MemberProvider({ member, children }: any) {
   const [memberContactDetails, setmemberContactDetails] =
     useState<IContacts>(initialContacts)
   const [v2Member, setV2Member] = useState<V2MemberType | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  const [getMember, { loading, error: errorLoadingMember, refetch }] =
-    useLazyQuery(MEMBER_DETAILS_QUERY, {
+  const [getMember, { error: errorLoadingMember, refetch }] = useLazyQuery(
+    MEMBER_DETAILS_QUERY,
+    {
       context: {
         clientName: 'v2',
       },
@@ -204,11 +206,15 @@ function MemberProvider({ member, children }: any) {
         if (memberDetails) {
           setmemberContactDetails(newMemberDetails)
         }
+
+        setLoading(false)
       },
       onError: (error) => {
         logError(error)
+        setLoading(false)
       },
-    })
+    }
+  )
 
   const [updateMember, { loading: isSubmitting }] = useMutation(
     UPDATE_MEMBER_DETAILS,
@@ -228,8 +234,11 @@ function MemberProvider({ member, children }: any) {
 
   React.useEffect(() => {
     if (member) {
+      setLoading(true)
       getMember({
         variables: { antaraId: member['Antara ID'] },
+      }).finally(() => {
+        setLoading(false)
       })
       if (member['Minor?'] === 'Minor') {
         globalSearch({

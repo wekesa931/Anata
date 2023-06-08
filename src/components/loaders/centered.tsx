@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 
-function Loading({ color, showText = true }: any) {
+function Loading({ color, message = 'Loading' }: any) {
   const Loader = styled.div`
     border: 5px solid #f3f3f3;
     border-top: 5px solid ${color ? '#205284' : '#ff9800'};
@@ -30,7 +30,7 @@ function Loading({ color, showText = true }: any) {
   return (
     <CenteredDiv>
       <Loader />
-      <div>{showText ? 'Loading' : ''}</div>
+      <div>{message}</div>
     </CenteredDiv>
   )
 }

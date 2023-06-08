@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@mui/material'
-import { workflowStartDate } from 'src/modules/workflows/utils'
+import { sortByCreatedAt, workflowStartDate } from 'src/modules/workflows/utils'
 import { useWorkflowData } from 'src/modules/workflows/hooks/workflow-data'
 import { Workflows as TWorkflowModel } from 'src/modules/workflows/db/models'
 import Loader from '../loaders'
@@ -41,15 +41,26 @@ function WorkflowListItem({
 }
 
 function WorkflowList({ openWorkflow }: WorkflowListProps) {
-  const { loading, gettingWorkflows, incompleteWorkflows, completedWorkflows } =
+  const { incompleteWorkflows, completedWorkflows, hydrateWorkflows } =
     useWorkflowData()
+
+  const [isLoadingWorflows, setIsLoadingWorkflows] = useState<boolean>(false)
 
   const hasActiveWorkflows =
     !!incompleteWorkflows?.length || !!completedWorkflows?.length
 
+  useEffect(() => {
+    setIsLoadingWorkflows(true)
+    hydrateWorkflows().finally(() => {
+      setIsLoadingWorkflows(false)
+    })
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <>
-      {loading || gettingWorkflows ? (
+      {isLoadingWorflows ? (
         <Loader message="Loading Workflows" />
       ) : (
         <>
@@ -60,13 +71,15 @@ function WorkflowList({ openWorkflow }: WorkflowListProps) {
                   Ongoing
                 </p>
                 {incompleteWorkflows?.length ? (
-                  incompleteWorkflows.map((workflow: TWorkflowModel) => (
-                    <WorkflowListItem
-                      workflow={workflow}
-                      key={workflow.id}
-                      openWorkflow={openWorkflow}
-                    />
-                  ))
+                  sortByCreatedAt(incompleteWorkflows).map(
+                    (workflow: TWorkflowModel) => (
+                      <WorkflowListItem
+                        workflow={workflow}
+                        key={workflow.id}
+                        openWorkflow={openWorkflow}
+                      />
+                    )
+                  )
                 ) : (
                   <p className="mx-0 mt-4 mb-2.5 flex grow text-left text-sm font-medium text-dark-blue-100">
                     No ongoing workflows
@@ -79,13 +92,15 @@ function WorkflowList({ openWorkflow }: WorkflowListProps) {
                   Complete
                 </p>
                 {completedWorkflows?.length ? (
-                  completedWorkflows.map((workflow: TWorkflowModel) => (
-                    <WorkflowListItem
-                      workflow={workflow}
-                      openWorkflow={openWorkflow}
-                      key={workflow.id}
-                    />
-                  ))
+                  sortByCreatedAt(completedWorkflows).map(
+                    (workflow: TWorkflowModel) => (
+                      <WorkflowListItem
+                        workflow={workflow}
+                        openWorkflow={openWorkflow}
+                        key={workflow.id}
+                      />
+                    )
+                  )
                 ) : (
                   <p className="mx-0 mt-4 mb-2.5 flex grow text-left text-sm font-medium text-dark-blue-100">
                     No completed workflows

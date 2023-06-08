@@ -1,5 +1,5 @@
 import { useDatabase } from '@nozbe/watermelondb/hooks'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Q, Collection } from '@nozbe/watermelondb'
 import { useMember } from 'src/context/member'
 import {
@@ -88,7 +88,6 @@ export const useWorkflowData = () => {
     return forms.filter((form: TWorkflowForm) => form.name === name)
   }
 
-  const [loading, setLoading] = useState<boolean>(false)
   const [submittingForm, setSubmittingForm] = useState<boolean>(false)
   const [shouldRefetch, setShouldRefetch] = useState<boolean>(false)
 
@@ -487,23 +486,7 @@ export const useWorkflowData = () => {
     })
   }
 
-  useEffect(() => {
-    // hydrate the workflows from the API on first load
-    if (v2Member && user) {
-      setLoading(true)
-      hydrateWorkflows().finally(() => {
-        setLoading(false)
-      })
-      //
-      // deleteAllForms(v2Member.antaraId)
-      // deleteAllWorkflows(v2Member.antaraId)
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, v2Member])
-
   const loaderDisplayed =
-    loading ||
     creatingCase ||
     savingWorkflow ||
     submittingForm ||
@@ -515,7 +498,6 @@ export const useWorkflowData = () => {
     addingWorkflowModule
 
   return {
-    loading, // pulling workflows from the DB
     deleteAllWorkflows, // delete all workflows from the DB
     submitForm,
     loaderDisplayed,

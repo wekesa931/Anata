@@ -1,15 +1,8 @@
 import React, { useState } from 'react'
 import airtableFetch from 'src/services/airtable/fetch'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
-import ListSkeletonLoader from 'src/components/loaders/skeleton'
+import CenteredLoader from 'src/components/loaders/centered'
 
-function Fetcher({
-  url,
-  contextKey,
-  children,
-  skeleton = true,
-  getDocumentTitle,
-}: any) {
+function Fetcher({ url, contextKey, children, getDocumentTitle }: any) {
   const [data, setData] = useState(null)
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -37,25 +30,7 @@ function Fetcher({
 
   return (
     <>
-      {isLoading && (
-        <div
-          className="full-height d-flex"
-          style={{ alignItems: 'center', justifyContent: 'center' }}
-        >
-          {skeleton ? (
-            <ListSkeletonLoader />
-          ) : (
-            <div
-              className="d-flex"
-              style={{ alignItems: 'center', flexDirection: 'column' }}
-            >
-              {' '}
-              <LoadingIcon />
-              <h6>Loading Member</h6>
-            </div>
-          )}
-        </div>
-      )}
+      {isLoading && <CenteredLoader message="Loading member" />}
       {data && children(data)}
       {error && `An error occurred while fetching ${contextKey}`}
     </>

@@ -117,11 +117,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
   const canDeleteWorkflow =
     !workflow.isCompleted &&
     !isDraftSaved &&
-    !isEdited &&
-    !some(
-      workflowForms,
-      (form: TWorkflowForm) => form.isEdited || form.isSynced
-    )
+    !some(workflowForms, (form: TWorkflowForm) => form.isSynced)
 
   const setFormStates = (formName: string) => {
     setActiveFormName(formName)

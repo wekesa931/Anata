@@ -237,42 +237,57 @@ export class Workflows extends Model {
     user: any
   ) {
     const member = v2Member.antaraId
-    const initialFormData = initialFormValues(
-      member,
-      user,
-      newWorkflow.template.name
-    )
-    const formsCollection: Collection<Forms> = this.collections.get('forms')
-    const currentForms = await this.forms.fetch()
-    // delete all these forms
-    await Promise.all(currentForms.map((f: Forms) => f.destroyPermanently()))
-    const newForms = newWorkflow.forms
+    const prefills = initialFormValues(member, user, newWorkflow.template.name)
+    const cachedForms = await this.forms.fetch()
+    const currentWorkflowForms = newWorkflow.forms
 
     // create the forms
     await Promise.all(
-      newForms.map(async (nf: any) => {
+      currentWorkflowForms.map(async (nf: any) => {
         const setupFormData = {
-          ...initialFormData[nf.name],
+          ...prefills[nf.name],
           Member: [v2Member?.airtableRecordId],
           moduleId: nf.moduleId,
           isDraft: nf.isDraft,
         }
-        const formData =
-          Object.keys(nf.data).length === 0 ? setupFormData : nf.data
 
-        const form = await formsCollection.create((f) => {
-          f.name = nf.name
-          f.workflow.set(this)
-          f.member = this.member
-          f.data = formData
-          f.isDraft = nf.isDraft
-          f.isEdited = false
-          f.isSynced = true
-          f.createdBy = this.createdBy
-          f.updatedBy = this.updatedBy
-        })
+        const hasAnyFormData = Object.keys(nf.data).length !== 0
+        const formData = hasAnyFormData ? nf.data : setupFormData
 
-        return form
+        const existingForm = cachedForms.find(
+          (f: Forms) => f.data?.moduleId === formData?.moduleId
+        )
+
+        if (existingForm) {
+          return existingForm.update((f: Forms) => {
+            f.data = formData
+            f.isDraft = nf.isDraft
+            f.isSynced = hasAnyFormData
+          })
+        }
+
+        const shouldCreateForm =
+          !hasAnyFormData && !cachedForms.find((f: Forms) => f.name === nf.name)
+
+        if (shouldCreateForm) {
+          const formsCollection: Collection<Forms> =
+            this.collections.get('forms')
+          const form = await formsCollection.create((f) => {
+            f.name = nf.name
+            f.workflow.set(this)
+            f.member = this.member
+            f.data = formData
+            f.isDraft = nf.isDraft
+            f.isEdited = false
+            f.isSynced = hasAnyFormData
+            f.createdBy = this.createdBy
+            f.updatedBy = this.updatedBy
+          })
+
+          return form
+        }
+
+        return Promise.resolve()
       })
     )
   }

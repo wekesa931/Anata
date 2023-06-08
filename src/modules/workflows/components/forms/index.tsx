@@ -15,7 +15,11 @@ type WorkflowFormProps = {
   form: TWorkflowForm
   formSchema: any
   submissionId: string
-  submitForm: (form: TWorkflowForm, formSchema: any) => Promise<any>
+  submitForm: (
+    form: TWorkflowForm,
+    formSchema: any,
+    formData: any
+  ) => Promise<any>
   openForm: (formName: string) => void
   saveInput: (name: string, value: string) => void
   formData: any
