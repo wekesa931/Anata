@@ -3251,7 +3251,7 @@ export default [
         options: [],
         symmetricColumnId: 'fldZJUrSBCt3qggt6',
         unreversed: true,
-        relationship: 'many',
+        relationship: 'one',
         foreignTableId: 'tblR6LlerAkXAmVnc',
         required: true,
         helper: '',
