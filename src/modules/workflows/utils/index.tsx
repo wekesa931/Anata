@@ -534,6 +534,7 @@ const feedbackMap: any = {
   'Did the member provide any feedback?': 'feedback',
   'Type of feedback': 'typeOfFeedback',
   'What did the member provide feedback for?': 'reasonForFeedback',
+  Testimonial: 'testimonial',
   Other: 'otherFeedback',
   Feedback: 'feedbackFromMember',
   Member: 'memberAntaraId',

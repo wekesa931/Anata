@@ -11480,17 +11480,17 @@ export default [
         },
       },
       {
-        id: 'fldUY3O7pjQpY5kE6',
-        name: 'What lab tests would you like to order?',
-        type: 'multiSelect',
+        id: 'fldaomDGBfdks4ude',
+        name: 'Routine labs (synced view from lab base)',
+        type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
+        symmetricColumnId: 'fldRTcRqRxpvhbjXg',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblV0rNDZCPe3ZalK',
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Plan',
@@ -16352,6 +16352,32 @@ export default [
           return ['Yes'].includes(
             values['Did the member provide any feedback?']
           )
+        },
+      },
+      {
+        id: 'fldIZh3Q8dRNbRYnq',
+        name: 'Testimonial',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Written In 1st person (“I cannot remember”) and In Member’s own words. This can be general, service focused, value, segment or feature focused. Record testimonial in the language of the member and put a translation to it. It can be something touching, something memorable, something funny',
+        conditionType: '',
+        parentKey: 'Type of feedback',
+        parentValues: ['Testimonial'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Type of feedback'])) {
+            return ['Testimonial'].some((r) =>
+              values['Type of feedback'].includes(r)
+            )
+          }
+          return ['Testimonial'].includes(values['Type of feedback'])
         },
       },
       {
