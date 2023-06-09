@@ -251,7 +251,7 @@ export class Workflows extends Model {
           isDraft: nf.isDraft,
         }
 
-        const hasAnyFormData = Object.keys(nf.data).length !== 0
+        const hasAnyFormData = Object.keys(nf.data).length !== 0 
         const formData = hasAnyFormData ? nf.data : setupFormData
 
         const existingForm = cachedForms.find(
@@ -266,8 +266,9 @@ export class Workflows extends Model {
           })
         }
 
-        const shouldCreateForm =
-          !hasAnyFormData && !cachedForms.find((f: Forms) => f.name === nf.name)
+        const shouldCreateForm = !cachedForms.find(
+          (f: Forms) => f.name === nf.name
+        )
 
         if (shouldCreateForm) {
           const formsCollection: Collection<Forms> =
