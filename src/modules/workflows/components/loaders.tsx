@@ -6,7 +6,7 @@ type LoaderProps = {
   message: string
 }
 
-function Loader({ message }: LoaderProps) {
+function Loader({ message = 'Loading...' }: LoaderProps) {
   return (
     <div className="flex h-3/4 flex-col items-center">
       <LoadingIcon />

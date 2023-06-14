@@ -181,7 +181,7 @@ export const useCreateCase = () => {
 export const useProcessNewWorkflowModule = () => {
   const { getHifInfo, createHif, createTableEntry } = useHNOSData()
   const { airtableMeta } = useAirtableMeta()
-  const {v2Member} = useMember()
+  const { v2Member } = useMember()
 
   const processNewWorkflowData = async (
     data: any,
@@ -204,11 +204,11 @@ export const useProcessNewWorkflowModule = () => {
         payload = renameField(payload, 'Member', 'Members')
       }
 
-      if(activeForm.isHIF){
+      if (activeForm.isHIF) {
         payload = {
           ...payload,
           'HIF Completed': true,
-          'Antara ID': v2Member?.antaraId
+          'Antara ID': v2Member?.antaraId,
         }
       }
 

@@ -251,7 +251,7 @@ export class Workflows extends Model {
           isDraft: nf.isDraft,
         }
 
-        const hasAnyFormData = Object.keys(nf.data).length !== 0 
+        const hasAnyFormData = Object.keys(nf.data).length !== 0
         const formData = hasAnyFormData ? nf.data : setupFormData
 
         const existingForm = cachedForms.find(

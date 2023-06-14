@@ -7,6 +7,7 @@ function Fetcher({ url, contextKey, children, getDocumentTitle }: any) {
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  // test for pre-push
   React.useEffect(() => {
     if (getDocumentTitle && data) {
       document.title = getDocumentTitle(data)
