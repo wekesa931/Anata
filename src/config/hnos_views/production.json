@@ -344,6 +344,38 @@
       "Vitals": "shrPKJPoewm5GuM59",
       "HMP": "shr5qWGiCdNWRMEtM",
       "Conditions": "shrWCf9QmiEcvalVv"
+    },
+    "sarah.wairimu@antarahealth.com": {
+      "hntasks": {
+        "calendar": "shr9X5XXxg3sVTdpp",
+        "grid": "shrj1HZ3RmGBZlWyy"
+      },
+      "Appointments": "shrbcmaEJfgrSsbpB",
+      "HN Tasks": "shr8p1IAxFsxVSjUX",
+      "Interventions": "shrgGiVX15kwprYG0",
+      "Interventions Data Tracking": "shrQm3KWb5cOzhoqG",
+      "Members Tasks": "shrJsVvERySkng3ur",
+      "Members": "shrbrZ0HJGjqsQ3f6",
+      "Prescription": "shrQwiRAvkQdM26i1",
+      "Vitals": "shrsvUZRtZUKURkTs",
+      "HMP": "shrWpCAmE4319JrlE",
+      "Conditions": "shrzaaVB5YF8je00b"
+    },
+    "judy.musyoka@antarahealth.com": {
+      "hntasks": {
+        "calendar": "shr9X5XXxg3sVTdpp",
+        "grid": "shrj1HZ3RmGBZlWyy"
+      },
+      "Appointments": "shruuBlcnsEdLSoHI",
+      "HN Tasks": "shrnyqh35MZ2WKAmQ",
+      "Interventions": "shrO62Nllp5vlEac6",
+      "Interventions Data Tracking": "shrr7BJZ1O1h5F1Ei",
+      "Members Tasks": "shrbuWNAk3GVqcql8",
+      "Members": "shrYeQOJHS83q9LXE",
+      "Prescription": "shrludnPQi1KaO8Tm",
+      "Vitals": "shr2ASQgtmpj3f3wj",
+      "HMP": "shrFYu424yZhoZ7xX",
+      "Conditions": "shriwr0MYAhNOvFIA"
     }
   }
 }
