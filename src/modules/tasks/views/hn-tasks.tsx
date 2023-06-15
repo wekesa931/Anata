@@ -13,7 +13,6 @@ import useAirtableFetch from 'src/hooks/airtable-fetch'
 import CallsCallout from 'src/modules/comms/calls/views'
 import FORMS from 'src/modules/workflows/components/forms/form-inputs-definitions'
 import { GET_MEMBER_TASKS } from 'src/modules/tasks/services/gql'
-import { useMember } from 'src/context/member'
 import logError from 'src/utils/logging/logger'
 import { useFormsRouting } from 'src/modules/workflows/hooks/routing/forms'
 import useHandleResponses from 'src/utils/airtable/error-handler'
@@ -211,7 +210,7 @@ function Tasks() {
     isError: isAirtableError,
   } = useAirtableFetch(buildAirtableUrl(recId, fields))
 
-  const { member } = useMember()
+  const { antaraId } = useParams()
 
   const { handleResponses } = useHandleResponses('Tasks')
 
@@ -225,12 +224,12 @@ function Tasks() {
   const taskFields = getTaskFields(mapAssigneeToLookup(allAntaraStaffs))
 
   useEffect(() => {
-    if (member) {
-      loadTasks({ variables: { antaraId: member['Antara ID'] } })
+    if (antaraId) {
+      loadTasks({ variables: { antaraId } })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member])
+  }, [antaraId])
 
   const apiRecords = useTransformedApiRecords(rawApiRecords)
   const mergedRecords = useMergedRecords(airtableRecords, apiRecords)
@@ -409,7 +408,7 @@ function Tasks() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mergedRecords, member])
+  }, [mergedRecords])
 
   const getPriorityColor = (priority: string) => {
     switch (priority.toLowerCase()) {

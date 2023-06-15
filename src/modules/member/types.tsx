@@ -1,21 +1,8 @@
-type PhoneType = {
+export type PhoneType = {
   phone: string
   phoneType: string
-  priorirty: number
-}
-
-type AddressType = {
-  constituency?: string
-  deliveryInstructions?: string
-  geolocation?: string
-  label?: string
-  poBoxNumber?: string
-  postCode?: string
-  residentialAddress?: string
-  residentialCountry?: string
-  residentialCounty?: string
-  subCounty?: string
-  residentialTown?: string
+  priority: number
+  toDelete?: boolean
 }
 
 type BenefitType = {
@@ -31,25 +18,6 @@ type BenefitUtilizationType = {
   id: string
 }
 
-type InsuranceDetailsType = {
-  benefitUtilizations?: BenefitUtilizationType[]
-  id: string
-  insuranceCompany?: {
-    id: string
-    logo?: string
-    name?: string
-  }
-  insuranceId?: string
-  priority?: number
-  memberPolicy?: {
-    healthPolicy?: {
-      name?: string
-    }
-  }
-  principalMemberInsuranceId?: string
-  relationshipToPrincipalMember?: string
-}
-
 export type V2MemberType = {
   antaraId: string
   birthDate: string
@@ -58,32 +26,37 @@ export type V2MemberType = {
   lastName?: string
   intercomRecordId?: string
   intercomUrl?: string
-  intercomUserId?: string
   sex?: string
   maritalStatus?: string
   phone?: string
   phoneType?: string
   phones?: PhoneType[]
   employer?: string
+  department?: string
   onboardStage?: string
   status?: string
   assignedHn?: string
   assignedHnFullName?: string
   assignedMe?: string
-  readyForCompanyOnboarding?: boolean
-  readyForIndividualOnboarding?: boolean
+  assignedMeFullName?: string
   startDate?: string
   tags?: string[]
   email?: string
   emergencyContactName?: string
   emergencyContactPhone?: string
   emergencyContactRelationship?: string
-  memberAddresses?: AddressType[]
+  memberAddresses?: Address[]
   insuranceDetails?: InsuranceDetailsType[]
-  dependents?: InsuranceDetailsType[]
-  primary: InsuranceDetailsType
-  otherDependents: InsuranceDetailsType[]
+  dependents?: V2MemberType[]
+  primary: V2MemberType
+  otherDependents: V2MemberType[]
   primaryMemberAntaraId?: string
+  age?: number
+  displayName?: string
+  fullName?: string
+  employerName?: string
+  airtableRecordId?: string
+  relationshipToPrimary?: string
 }
 
 type RawPhoneType = {
@@ -133,7 +106,6 @@ export type V2MemberQueryType = {
     intercomUrl?: string
     intercomRecordId?: string
     airtableRecordId?: string
-    intercomUserId?: string
     sex?: {
       sex?: string
     }
@@ -155,15 +127,14 @@ export type V2MemberQueryType = {
     assignedHnFullName?: string
     assignedMeEmailUsername?: string
     assignedHnEmailUsername?: string
-    readyForCompanyOnboarding?: boolean
-    readyForIndividualOnboarding?: boolean
     assignedMe?: string
+    assignedMeFullName?: string
     tags?: string[]
     status?: {
       status?: string
     }
   }
-  dependents?: RawInsuranceType[]
+  dependents?: V2MemberQueryType[]
   contact?: {
     memberAddresses?: {
       constituency?: string
@@ -173,8 +144,6 @@ export type V2MemberQueryType = {
       subCounty?: string
       residentialTown?: string
       deliveryInstructions?: string
-      poBoxNumber?: string
-      postCode?: string
       geolocation?: string
       label?: string
     }[]
@@ -184,14 +153,160 @@ export type V2MemberQueryType = {
     emergencyContactRelationship?: string
   }
   insuranceDetails?: RawInsuranceType[]
-  primary: RawInsuranceType
-  otherDependents: RawInsuranceType[]
+  primary: V2MemberQueryType
+  otherDependents: V2MemberQueryType[]
 }
 
 export type HMPType = {
   hmpSendDate: string | null
   hmpNumber: string | null
-  hmpDay: number | null
+  hmpDay: number | string | null
   hmpLink: string | null
   hmpState: string | null
+  hmpLastReviewDate: string | null
+}
+
+export type ConditionType = {
+  condition: string | null
+  startingClinicalStatus: string | null
+  healthStatus: string | null
+}
+export type InterventionType = {
+  intervention: string | null
+  milestoneAttainments: string | null
+}
+
+export type BiodataValues = {
+  firstName: string
+  middleName: string
+  lastName: string
+  phone: string
+  birthDate: Date | null
+  sex: string
+  maritalStatus: string
+  tags: string[]
+  antaraId: string
+}
+
+export type ContactValues = {
+  email: string
+  phones: PhoneType[]
+  emergencyContact: {
+    name?: string
+    phoneNumber?: string
+    relationship?: string
+  }
+  antaraId: string
+}
+
+export type Address = {
+  constituency?: string
+  deliveryInstructions?: string
+  geolocation?: string
+  label?: string
+  residentialAddress?: string
+  residentialCountry?: string
+  residentialCounty?: string
+  subCounty?: string
+  residentialTown?: string
+  latitude?: number
+  longitude?: number
+}
+
+export type InsuranceDetailsType = {
+  benefitUtilizations?: BenefitUtilizationType[]
+  id?: string
+  insuranceCompany?: {
+    id: string
+    logo?: string
+    name?: string
+  }
+  insuranceId?: string
+  priority?: number
+  memberPolicy?: {
+    healthPolicy?: {
+      name?: string
+    }
+  }
+  principalMemberInsuranceId?: string
+  relationshipToPrincipalMember?: string
+  toDelete?: boolean
+  verificationStatus?: string
+}
+
+export type VerificationStatus = 'verified' | 'unverified' | 'pending'
+
+export type RegistrationFormsNames = 'primary' | 'spouse' | 'child'
+
+export type LookupOption = {
+  label: string
+  value: string
+  [key: string]: string
+}
+
+export type LookupOptions = {
+  employers: LookupOption[]
+  healthPolicies: LookupOption[]
+  memberStatuses: LookupOption[]
+  onboardingStages: LookupOption[]
+  sexes: LookupOption[]
+  maritalStatuses: LookupOption[]
+  phoneTypes: LookupOption[]
+  benefits: LookupOption[]
+  tags: LookupOption[]
+}
+
+export type MemberDetailsQueryVariables = {
+  antaraId: string
+}
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
+export namespace DbValueTypes {
+  export type InsuranceType = {
+    insuranceCompany?: string
+    insuranceId?: string
+    isPrincipalMember?: 'yes' | 'no'
+    principalMemberInsuranceId?: string
+    relationshipToPrincipalMember?: string
+    priority?: number
+    toDelete?: boolean
+    verificationStatus?: string
+    benefits: BenefitUtilizationType[]
+    healthPolicy?: string
+    insuranceCompanyLogo?: string
+    id?: string
+  }
+
+  export type InsuranceDetailsValues = {
+    insurances: InsuranceType[]
+    employer?: string
+    antaraId: string
+  }
+
+  export type AddressType = {
+    description?: string
+    place_id?: string
+    residentialCountry?: string
+    residentialCounty?: string
+    residentialTown?: string
+    latitude?: number
+    longitude?: number
+  }
+
+  export type AddressValues = {
+    addresses: {
+      address: AddressType
+      addressLabel?: string
+      deliveryInstructions?: string
+      toDelete?: boolean
+    }[]
+    antaraId: string
+  }
+}
+
+export enum MemberStatuses {
+  ACTIVE = 'ACTIVE',
+  PROVISIONED = 'PROVISIONED',
+  DECEASED = 'DECEASED',
+  UNKNOWN = 'UNKNOWN',
 }

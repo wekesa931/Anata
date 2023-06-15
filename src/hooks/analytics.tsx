@@ -16,24 +16,24 @@ type EventProperties = {
 
 const useAnalytics = (eventCategory: string) => {
   const user = useUser()
-  const { v2Member } = useMember()
+  const { member } = useMember()
 
   const [requiredProps, setRequiredProps] = useState<EventProperties | null>(
     null
   )
 
   useEffect(() => {
-    if (user && v2Member) {
+    if (user && member) {
       setRequiredProps({
         user: user.email,
         member: {
-          antaraId: v2Member?.antaraId,
-          fullName: v2Member?.fullName,
+          antaraId: member?.antaraId,
+          fullName: member?.fullName,
         },
         timestamp: dayjs().format(),
       })
     }
-  }, [user, v2Member])
+  }, [user, member])
 
   return {
     track: (eventName: string, properties?: Record<string, unknown>) => {

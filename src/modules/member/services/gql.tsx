@@ -1,3 +1,5 @@
+import { MEMBERS_DETAILS_FRAGMENT } from 'src/gql/search'
+import { composeMutations } from 'src/modules/member/utils/apollo-compose'
 import { gql } from '@apollo/client'
 
 export const MEMBER_DETAILS_QUERY = gql`
@@ -5,179 +7,29 @@ export const MEMBER_DETAILS_QUERY = gql`
     members(antaraId: $antaraId) {
       edges {
         node {
-          antaraId
-          birthDate
-          details {
-            fullName
-            firstName
-            middleName
-            lastName
-            intercomUrl
-            intercomRecordId
-            intercomUserId
-            airtableRecordId
-            sex {
-              sex
-            }
-            maritalStatus {
-              maritalStatus
-            }
-            relationshipToPrimary
-            primaryMemberAntaraId
-          }
-          primary {
-            antaraId
-            birthDate
-            status {
-              status {
-                status
-              }
-            }
-            details {
-              relationshipToPrimary
-              fullName
-              airtableRecordId
-              sex {
-                sex
-              }
-            }
-            phones {
-              phone
-            }
-          }
-          phones {
-            phone
-            phoneType {
-              phoneType
-            }
-            priority
-          }
-          status {
-            startDate
-            onboardStage {
-              onboardStage
-            }
-            employer {
-              name
-            }
-            assignedHn
-            assignedHnFullName
-            readyForCompanyOnboarding
-            readyForIndividualOnboarding
-            assignedMe
-            assignedHnEmailUsername
-            assignedMeEmailUsername
-            tags
-            status {
-              status
-            }
-          }
-          dependents {
-            id
-            antaraId
-            birthDate
-            status {
-              status {
-                status
-              }
-            }
-            details {
-              fullName
-              sex {
-                sex
-              }
-              relationshipToPrimary
-              airtableRecordId
-            }
-            phones {
-              phone
-            }
-          }
-          otherDependents {
-            id
-            antaraId
-            birthDate
-            status {
-              status {
-                status
-              }
-            }
-            details {
-              fullName
-              sex {
-                sex
-              }
-              relationshipToPrimary
-              airtableRecordId
-            }
-            phones {
-              phone
-            }
-          }
-          contact {
-            memberAddresses {
-              constituency
-              residentialAddress
-              residentialCountry
-              residentialCounty
-              subCounty
-              residentialTown
-              deliveryInstructions
-              poBoxNumber
-              postCode
-              geolocation
-              label
-              latitude
-              longitude
-            }
-            email
-            emergencyContactName
-            emergencyContactPhone
-            emergencyContactRelationship
-          }
-          insuranceDetails {
-            id
-            insuranceId
-            priority
-            principalMemberInsuranceId
-            relationshipToPrincipalMember
-            insuranceCompany {
-              id
-              name
-              logo
-            }
-            memberPolicy {
-              healthPolicy {
-                name
-              }
-            }
-            benefitUtilizations {
-              id
-              utilizedPortion
-              benefit {
-                name
-                description
-                api
-                limit
-              }
-            }
-          }
+          ...MemberDetailsFragment
         }
       }
     }
   }
+  ${MEMBERS_DETAILS_FRAGMENT}
 `
 
-export const UPDATE_MEMBER_DETAILS = gql`
-  mutation UpdateMemberDetails(
-    $memberDetails: UpdateMemberDetailsInput
-    $memberContact: UpdateMemberContactInput
-    $memberInsurance: UpdateMemberInsuranceInput
-    $memberPhones: UpdateMemberPhonesInput
-    $memberStaff: UpdateMemberStaffInput
-    $memberStatus: MemberStatusUpdateInput
-    $memberAddress: UpdateMemberAddressesInput
-  ) {
+export const GET_MEMBER_BY_PHONE = gql`
+  query membersWithPhone($phoneNumber: String!) {
+    membersWithPhone(phoneNumber: $phoneNumber) {
+      edges {
+        node {
+          ...MemberDetailsFragment
+        }
+      }
+    }
+  }
+  ${MEMBERS_DETAILS_FRAGMENT}
+`
+
+export const UPDATE_MEMBER_ADDRESSES = gql`
+  mutation UpdateMemberAddresses($memberAddress: UpdateMemberAddressesInput) {
     updateMemberAddress(input: $memberAddress) {
       data {
         addresses {
@@ -192,6 +44,11 @@ export const UPDATE_MEMBER_DETAILS = gql`
       errors
       status
     }
+  }
+`
+
+export const UPDATE_MEMBER_STATUS = gql`
+  mutation UpdateMemberStatus($memberStatus: MemberStatusUpdateInput) {
     updateMemberStatus(input: $memberStatus) {
       data {
         employer {
@@ -209,6 +66,11 @@ export const UPDATE_MEMBER_DETAILS = gql`
       message
       status
     }
+  }
+`
+
+export const UPDATE_MEMBER_STAFF = gql`
+  mutation UpdateMemberStaff($memberStaff: UpdateMemberStaffInput) {
     updateMemberStaff(input: $memberStaff) {
       data {
         assignedHn
@@ -218,6 +80,11 @@ export const UPDATE_MEMBER_DETAILS = gql`
       message
       status
     }
+  }
+`
+
+export const UPDATE_MEMBER_DETAILS = gql`
+  mutation UpdateMemberDetails($memberDetails: UpdateMemberDetailsInput) {
     updateMemberDetails(input: $memberDetails) {
       data {
         member {
@@ -226,13 +93,18 @@ export const UPDATE_MEMBER_DETAILS = gql`
         details {
           firstName
           lastName
+          middleName
         }
       }
       errors
       message
       status
     }
+  }
+`
 
+export const UPDATE_MEMBER_CONTACT = gql`
+  mutation UpdateMemberContact($memberContact: UpdateMemberContactInput) {
     updateMemberContact(input: $memberContact) {
       data {
         email
@@ -244,18 +116,38 @@ export const UPDATE_MEMBER_DETAILS = gql`
       status
       message
     }
+  }
+`
 
+export const UPDATE_MEMBER_INSURANCE = gql`
+  mutation UpdateMemberInsurance($memberInsurance: UpdateMemberInsuranceInput) {
     updateMemberInsurance(input: $memberInsurance) {
       data {
         insuranceDetails {
-          insuranceCompany {
-            name
-          }
+          id
           insuranceId
           priority
+          principalMemberInsuranceId
+          relationshipToPrincipalMember
+          verificationStatus
+          insuranceCompany {
+            id
+            name
+            logo
+          }
           memberPolicy {
             healthPolicy {
               name
+            }
+          }
+          benefitUtilizations {
+            id
+            utilizedPortion
+            benefit {
+              name
+              description
+              api
+              limit
             }
           }
         }
@@ -264,7 +156,11 @@ export const UPDATE_MEMBER_DETAILS = gql`
       errors
       status
     }
+  }
+`
 
+export const UPDATE_MEMBER_PHONES = gql`
+  mutation UpdateMemberPhones($memberPhones: UpdateMemberPhonesInput) {
     updateMemberPhones(input: $memberPhones) {
       data {
         phones {
@@ -281,6 +177,16 @@ export const UPDATE_MEMBER_DETAILS = gql`
     }
   }
 `
+
+export const UPDATE_MEMBER = composeMutations(
+  UPDATE_MEMBER_ADDRESSES,
+  UPDATE_MEMBER_STATUS,
+  UPDATE_MEMBER_STAFF,
+  UPDATE_MEMBER_DETAILS,
+  UPDATE_MEMBER_CONTACT,
+  UPDATE_MEMBER_INSURANCE,
+  UPDATE_MEMBER_PHONES
+)
 
 export const MEMBER_CONTACT_DETAILS = gql`
   query beneficiary($antaraId: String!) {
@@ -339,6 +245,18 @@ export const GET_TERMS_CONDITIONS = gql`
           accepted
           type
         }
+      }
+    }
+  }
+`
+
+export const CREATE_MEMBER = gql`
+  mutation createMember {
+    createMember {
+      message
+      status
+      data {
+        antaraId
       }
     }
   }

@@ -5,13 +5,13 @@ import List from 'src/components/list'
 import analytics from 'src/config/analytics'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import { GET_MEMBER_INTERACTIONS } from 'src/modules/interactions/services/gql'
-import { useMember } from 'src/context/member'
 import { useSortFilter } from 'src/context/sort-filter'
+import { useParams } from 'react-router-dom'
 
 function InteractionLogs() {
   const [interactions, setInteractions] = useState<any>([])
   const [filteredInteractions, setFilteredInteractions] = useState<any>([])
-  const { member } = useMember()
+  const { antaraId } = useParams()
   const [getInteractions, { loading, error }] = useLazyQuery(
     GET_MEMBER_INTERACTIONS,
     {
@@ -61,12 +61,12 @@ function InteractionLogs() {
   }
 
   useEffect(() => {
-    if (member) {
-      getInteractions({ variables: { antaraId: member['Antara ID'] } })
+    if (antaraId) {
+      getInteractions({ variables: { antaraId } })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member])
+  }, [antaraId])
 
   useEffect(() => {
     let filteredInts = interactions

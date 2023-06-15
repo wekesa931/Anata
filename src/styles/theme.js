@@ -35,6 +35,13 @@ module.exports = {
       'red-10': 'var(--red-10)',
       'red-20': 'var(--red-20)',
       'neutral-base': 'var(--neutral-base)',
+      'primary-button': '#205284',
+      'light-blue': '#e6f3fa',
+      'blue-btn': '#205284',
+      'grey-main': '#777',
+      purple: '#e0ddf1',
+      'orange-main': '#ff9800',
+      'dark-red-100': '#972323',
     },
     zIndex: {
       2000: '2000',
@@ -55,6 +62,10 @@ module.exports = {
     },
     height: {
       'dashboard-height': 'calc(100vh - 64px)',
+    },
+    minWidth: {
+      '1/2': '50%',
+      '1/4': '25%',
     },
   },
 }

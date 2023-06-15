@@ -44,8 +44,8 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
       if (unknownMemberSearch) {
         setMemberInfo(item)
       } else {
-        navigate(`/member/${item.airtableRecordId}`)
-        location.reload()
+        navigate(`/member/${item.antaraId}`)
+        // location.reload()
       }
     }
     // clear selection

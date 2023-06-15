@@ -4,6 +4,8 @@ export enum CollectionType {
   WORKFLOW = 'workflows',
   FORM = 'forms',
   WORKFLOW_TEMPLATES = 'workflow_templates',
+  MEMBERS = 'members',
+  LOOKUPS = 'lookups',
 }
 
 export type Model<T> = T &

@@ -958,7 +958,7 @@ function LinkRecordInputDefault({
   const [getLinkedRecords, { data, loading: gettingLinkedRecords }] =
     useLazyQuery(GLOBAL_SEARCH)
   const settingLinkedData = gettingLinkedRecords || !airtableMeta
-  const { v2Member } = useMember()
+  const { member } = useMember()
 
   useEffect(() => {
     if (data) {
@@ -1021,7 +1021,7 @@ function LinkRecordInputDefault({
           field: airtableField,
           searchParam,
           antaraIdKey: checkAntaraIdKey(),
-          antaraIdValue: checkAntaraIdKey() ? v2Member?.antaraId || '' : '',
+          antaraIdValue: checkAntaraIdKey() ? member?.antaraId || '' : '',
         },
       })
     }

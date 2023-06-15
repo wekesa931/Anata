@@ -5,7 +5,7 @@ import { useMember } from 'src/context/member'
 function EngagementDashboard() {
   const { member } = useMember()
 
-  const filters = { 'Antara Id (Members)': [member['Antara ID']] }
+  const filters = { 'Antara Id (Members)': [member?.antaraId] }
 
   const options = {
     hideTabs: true,

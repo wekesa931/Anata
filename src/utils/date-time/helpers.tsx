@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import isYesterday from 'dayjs/plugin/isYesterday'
 import isToday from 'dayjs/plugin/isToday'
 import isBetween from 'dayjs/plugin/isBetween'
+import { calcAge } from 'src/utils/date-time/date-formatters'
 
 dayjs.extend(isBetween)
 dayjs.extend(isToday)
@@ -35,10 +36,13 @@ const formattedDate = (date: string | Date) => {
   return dayjs(date).format('DD-MMM-YY')
 }
 
+const isMinor = (birthDate: string) => calcAge(birthDate) < 18
+
 export {
   dateIsToday,
   dateIsYesterday,
   dateInPastWeek,
   dateInPastMonth,
   formattedDate,
+  isMinor,
 }

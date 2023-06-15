@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useNotifications } from 'src/context/notifications'
-import { useMember } from 'src/context/member'
 import { useFormsData } from '../forms-data'
 import { Forms as TWorkflowForm } from '../../db/models'
 
@@ -12,7 +11,6 @@ export const useFormsRouting = () => {
   const navigate = useNavigate()
   const { notify } = useNotifications()
   const { getForms, createForm, deleteForm } = useFormsData()
-  const { v2Member } = useMember()
 
   const getFormIdsFromSearchParams = () => {
     const formIds = searchParams.get('formIds')
@@ -100,27 +98,25 @@ export const useFormsRouting = () => {
   }
 
   useEffect(() => {
-    if (v2Member) {
-      const { formIds, formName } = getFormIdsFromSearchParams()
-      if (formIds.length > 0) {
-        getForms(formIds, formName)
-          .then((result: TWorkflowForm[]) => {
-            if (result.length > 0) {
-              setForms(result)
-            } else {
-              // reset the search params if the form ids are invalid
-              setFormIdsInSearchParams([])
-              notify(`Failed to open given forms`)
-            }
-          })
-          .catch((error) => {
-            notify(`Failed to load forms: ${error.message}`)
-          })
-      }
+    const { formIds, formName } = getFormIdsFromSearchParams()
+    if (formIds.length > 0) {
+      getForms(formIds, formName)
+        .then((result: TWorkflowForm[]) => {
+          if (result.length > 0) {
+            setForms(result)
+          } else {
+            // reset the search params if the form ids are invalid
+            setFormIdsInSearchParams([])
+            notify(`Failed to open given forms`)
+          }
+        })
+        .catch((error) => {
+          notify(`Failed to load forms: ${error.message}`)
+        })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [v2Member])
+  }, [])
 
   return {
     forms,

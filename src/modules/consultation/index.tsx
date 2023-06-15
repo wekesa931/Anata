@@ -10,7 +10,7 @@ import LoadingIcon from 'src/assets/img/icons/loading.svg'
 function Consultation() {
   const [consultationData, setconsultationData] = useState<any[]>([])
   const { member } = useMember()
-  const antaraId = member['Antara ID']
+  const antaraId = member?.antaraId
   const [loading, setLoading] = useState(true)
   const columns = [
     {

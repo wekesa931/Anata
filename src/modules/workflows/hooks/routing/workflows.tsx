@@ -1,7 +1,6 @@
 import React from 'react'
 import { useSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useNotifications } from 'src/context/notifications'
-import { useMember } from 'src/context/member'
 import { useWorkflowData } from '../workflow-data'
 import { Workflows as TWorkflowModel } from '../../db/models'
 
@@ -19,7 +18,6 @@ export const useWorkflowRouter = (): WorkflowRouterProps => {
   const [workflow, setWorkflow] = React.useState<TWorkflowModel | null>(null)
   const { notify } = useNotifications()
   const { findWorkflow } = useWorkflowData()
-  const { v2Member } = useMember()
 
   const getWorkflowIdFromSearchParams = () => {
     return searchParams.get('workflowId')
@@ -36,7 +34,7 @@ export const useWorkflowRouter = (): WorkflowRouterProps => {
 
   React.useEffect(() => {
     const workflowId = getWorkflowIdFromSearchParams()
-    if (workflowId && v2Member) {
+    if (workflowId) {
       findWorkflow(workflowId)
         .then((result: TWorkflowModel | null) => setWorkflow(result))
         .catch((error) => {
@@ -45,7 +43,7 @@ export const useWorkflowRouter = (): WorkflowRouterProps => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [v2Member])
+  }, [])
 
   const openWorkflow = (newWorkflow: TWorkflowModel) => {
     const isWorkflowOpen = !!workflow

@@ -3,26 +3,11 @@ import { useLazyQuery } from '@apollo/client'
 import { throttle } from 'throttle-debounce'
 import { SEARCH_MEMBERS } from 'src/gql/search'
 import { MEMBER_DETAILS_QUERY } from 'src/modules/member/services/gql'
-import { calcAge } from 'src/utils/date-time/date-formatters'
+import type { V2MemberQueryType, V2MemberType } from 'src/modules/member/types'
+import { parseV2MemberData } from 'src/utils/data-transform'
 
-interface ResultItemTypeNode {
-  antaraId: string
-  birthDate: string
-  details: {
-    sex: {
-      sex: string
-    }
-    fullName: string
-    airtableRecordId: string
-  }
-  status: {
-    employer: {
-      name: string
-    }
-  }
-}
 interface ResultItemType {
-  node: ResultItemTypeNode
+  node: V2MemberQueryType
 }
 
 export interface SearchResultType {
@@ -35,17 +20,9 @@ export interface SearchResultType {
   employerName: string
 }
 
-const getSexAccronym = (sex: string) => {
-  if (sex?.toLowerCase() === 'male') return 'M'
-  if (sex?.toLowerCase() === 'female') return 'F'
-  return ''
-}
-
-const useMemberSearch = () => {
+export const useMemberSearch = () => {
   const [results, setResults] = useState<SearchResultType[]>([])
-  const [memberDetails, setMemberDetails] = useState<SearchResultType | null>(
-    null
-  )
+  const [memberDetails, setMemberDetails] = useState<V2MemberType | null>(null)
 
   const [search, { loading, data, error }] = useLazyQuery(SEARCH_MEMBERS, {
     context: {
@@ -62,27 +39,6 @@ const useMemberSearch = () => {
     },
   })
 
-  const processMemberDetails = (node: ResultItemTypeNode) => {
-    const fullName = node?.details?.fullName
-    const age = calcAge(node?.birthDate || '')
-    const sex = node?.details?.sex?.sex
-    const employerName = node?.status?.employer?.name
-
-    const displayName = `${fullName} (${
-      node.antaraId
-    }) - ${age} yrs [${getSexAccronym(sex || '')}] - ${employerName}`
-
-    return {
-      fullName,
-      antaraId: node?.antaraId,
-      age,
-      airtableRecordId: node?.details?.airtableRecordId,
-      sex,
-      displayName,
-      employerName,
-    }
-  }
-
   const getMemberDetails = (antaraId: string) => {
     getMember({
       variables: {
@@ -96,7 +52,7 @@ const useMemberSearch = () => {
       const details = memberData?.members.edges[0]?.node
 
       if (details) {
-        setMemberDetails(processMemberDetails(details))
+        setMemberDetails(parseV2MemberData(details))
       }
     }
 
@@ -121,11 +77,29 @@ const useMemberSearch = () => {
     if (data) {
       const searchResults =
         data?.membersSearch?.edges?.map(({ node }: ResultItemType) =>
-          processMemberDetails(node)
+          parseV2MemberData(node)
         ) || []
       setResults(searchResults)
     }
   }, [data])
+
+  const querySearch = async (q: string) => {
+    const res = await search({
+      variables: {
+        query: q,
+      },
+    })
+
+    if (res?.data) {
+      const searchResults =
+        res?.data?.membersSearch?.edges?.map(({ node }: ResultItemType) =>
+          parseV2MemberData(node)
+        ) || []
+      return searchResults
+    }
+
+    return []
+  }
 
   return {
     search: searchMembers,
@@ -136,6 +110,7 @@ const useMemberSearch = () => {
     getMemberDetails,
     memberDetails,
     memberError,
+    querySearch,
   }
 }
 

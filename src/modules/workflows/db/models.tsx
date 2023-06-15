@@ -13,6 +13,7 @@ import {
 
 import { Associations } from '@nozbe/watermelondb/Model'
 import dayjs from 'dayjs'
+import type { Members } from 'src/modules/member/db/models'
 import { initialFormValues } from '../utils'
 import { CollectionType } from '../../../storage/types'
 
@@ -109,11 +110,6 @@ export class Forms extends Model {
       f.isEdited = false
     })
   }
-}
-
-type V2MemberParam = {
-  antaraId: string
-  airtableRecordId: string
 }
 
 export class Workflows extends Model {
@@ -233,10 +229,9 @@ export class Workflows extends Model {
 
   @writer async synchronizeWorkflowFormData(
     newWorkflow: any,
-    v2Member: V2MemberParam,
+    member: Members,
     user: any
   ) {
-    const member = v2Member.antaraId
     const prefills = initialFormValues(member, user, newWorkflow.template.name)
     const cachedForms = await this.forms.fetch()
     const currentWorkflowForms = newWorkflow.forms
@@ -246,7 +241,7 @@ export class Workflows extends Model {
       currentWorkflowForms.map(async (nf: any) => {
         const setupFormData = {
           ...prefills[nf.name],
-          Member: [v2Member?.airtableRecordId],
+          Member: [member?.airtableRecordId],
           moduleId: nf.moduleId,
           isDraft: nf.isDraft,
         }

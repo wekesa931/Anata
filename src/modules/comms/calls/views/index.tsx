@@ -30,7 +30,7 @@ function CallsCallout({
   airtableId?: string
 }) {
   const [memberContacts, setmemberContacts] = React.useState(Contacts)
-  const { member, v2Member: loadedContacts } = useMember()
+  const { member } = useMember()
   const [isPhoneChooserOpen, setIsPhoneChooserOpen] = useState<boolean>(false)
   const { callError, setHistoryRecordId, setcallError } = useCall()
   const [open, setOpen] = useState<boolean>(false)
@@ -91,8 +91,7 @@ function CallsCallout({
           memberDetails: member,
           type: 'OUTBOUND',
           dialPadInitiated: true,
-          memberContacts:
-            loadedContacts?.phones || loadedContacts?.primary?.phones || [],
+          memberContacts: member?.phones || member?.primary?.phones || [],
         })
       } finally {
         setTimeout(() => {
@@ -103,19 +102,19 @@ function CallsCallout({
   }
 
   useEffect(() => {
-    if (loadedContacts) {
-      const { phones = [], emergencyContactPhone } = loadedContacts
+    if (member) {
+      const { allPhones } = member
+      const { phones = [], emergencyContactPhone } = allPhones
       let parsed = phones.map((phone: any, index: number) => ({
         [`Phone ${index + 1}`]: phone?.phone,
       }))
 
-      const { primary = null, otherDependents = [] } = loadedContacts
+      const { primary = null, otherDependents = [] } = allPhones
       if (primary) {
         // eslint-disable-next-line
-        const { phones = [] } = primary
         parsed = [
           ...parsed,
-          ...phones.map((phone: any, index: number) => ({
+          ...primary.map((phone: any, index: number) => ({
             [`Primary phone ${index + 1}`]: phone?.phone,
           })),
         ]
@@ -144,7 +143,7 @@ function CallsCallout({
 
       setmemberContacts(cleanedContacts)
     }
-  }, [loadedContacts])
+  }, [member])
 
   const setPhonevalidation = (phone: string) => {
     setPhoneNumber(phone)

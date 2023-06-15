@@ -32,7 +32,7 @@ export type WorkflowDataApi = ReturnType<typeof useWorkflowData>
 
 export const useWorkflowData = () => {
   const database = useDatabase()
-  const { v2Member } = useMember()
+  const { member } = useMember()
   const user = useUser()
   const { createCase, updateCase, loading: creatingCase } = useCreateCase()
   const { saveWorkflow, loading: savingWorkflow } = useSaveWorkflow()
@@ -59,7 +59,7 @@ export const useWorkflowData = () => {
 
   const incompleteWorkflowsObservable = workflowsCollection
     .query(
-      Q.where('member', v2Member?.antaraId || ''),
+      Q.where('member', member?.antaraId || ''),
       Q.where('is_completed', false),
       Q.sortBy('created_at', Q.desc)
     )
@@ -67,12 +67,12 @@ export const useWorkflowData = () => {
   const incompleteWorkflows = useObservable(
     incompleteWorkflowsObservable,
     [] as TWorkflowModel[],
-    [workflowsCollection, v2Member?.antaraId]
+    [workflowsCollection, member?.antaraId]
   )
 
   const completedWorkflowsObservable = workflowsCollection
     .query(
-      Q.where('member', v2Member?.antaraId || ''),
+      Q.where('member', member?.antaraId || ''),
       Q.where('is_completed', true),
       Q.sortBy('created_at', Q.desc)
     )
@@ -80,7 +80,7 @@ export const useWorkflowData = () => {
   const completedWorkflows = useObservable(
     completedWorkflowsObservable,
     [] as TWorkflowModel[],
-    [workflowsCollection, v2Member?.antaraId]
+    [workflowsCollection, member?.antaraId]
   )
 
   const getFormsByName = async (workflow: TWorkflowModel, name: string) => {
@@ -149,7 +149,7 @@ export const useWorkflowData = () => {
     const caseVariables: CreateCaseVariables = {
       ID: workflow?.workflowId,
       Status: 'Ongoing',
-      Members: [v2Member?.airtableRecordId],
+      Members: [member?.airtableRecordId || ''],
       createdBy: workflow.createdBy,
       updatedBy: workflow.updatedBy,
     }
@@ -253,11 +253,11 @@ export const useWorkflowData = () => {
   }
 
   const syncWorkflow = async (workflow: TWorkflowModel) => {
-    if (v2Member && user) {
+    if (member && user) {
       const airtableCase = await createCase({
         ID: workflow?.workflowId,
         Status: 'Ongoing',
-        Members: [v2Member.airtableRecordId],
+        Members: [member.airtableRecordId || ''],
         createdBy: workflow.createdBy,
         updatedBy: workflow.updatedBy,
       })
@@ -348,88 +348,92 @@ export const useWorkflowData = () => {
   }
 
   const hydrateWorkflows = async () => {
-    const loadedWorkflows = await getData({
-      variables: {
-        workflowId: '',
-        memberId: v2Member.antaraId,
-      },
-      fetchPolicy: 'network-only',
-    })
-    const normalizedWorkflows = normalizeWorkflowData(loadedWorkflows?.data)
-
-    const newWorkflowIds = normalizedWorkflows.map(
-      (w: TWorkflow) => w.workflowId
-    )
-    const existingWorkflows = await workflowsCollection
-      .query(Q.where('member', v2Member.antaraId))
-      .fetch()
-    const existingWorkflowIds = existingWorkflows.map(
-      (w: TWorkflowModel) => w.workflowId
-    )
-
-    const workflowsToDelete = existingWorkflows.filter(
-      (w: TWorkflowModel) => !newWorkflowIds.includes(w.workflowId)
-    )
-    const workflowsToUpdate = existingWorkflows.filter((w: TWorkflowModel) =>
-      newWorkflowIds.includes(w.workflowId)
-    )
-
-    const workflowsToCreate = normalizedWorkflows.filter(
-      (w: TWorkflow) => !existingWorkflowIds.includes(w.workflowId)
-    )
-
-    // delete workflows that are no longer in the db
-    await Promise.all(
-      workflowsToDelete.map(async (w: TWorkflowModel) => {
-        await w.delete()
+    if (member) {
+      const loadedWorkflows = await getData({
+        variables: {
+          workflowId: '',
+          memberId: member.antaraId,
+        },
+        fetchPolicy: 'network-only',
       })
-    )
+      const normalizedWorkflows = normalizeWorkflowData(loadedWorkflows?.data)
 
-    // update workflows that are still in the db
-    await Promise.all(
-      workflowsToUpdate.map((w: TWorkflowModel) => {
-        const updatedWorkflow = normalizedWorkflows.find(
-          (nw: TWorkflow) => nw.workflowId === w.workflowId
-        )
-        if (updatedWorkflow) {
-          return w.createFromAPI(updatedWorkflow, v2Member, user)
-        }
-        return Promise.resolve()
-      })
-    )
+      const newWorkflowIds = normalizedWorkflows.map(
+        (w: TWorkflow) => w.workflowId
+      )
+      const existingWorkflows = await workflowsCollection
+        .query(Q.where('member', member.antaraId))
+        .fetch()
+      const existingWorkflowIds = existingWorkflows.map(
+        (w: TWorkflowModel) => w.workflowId
+      )
 
-    // create a new workflow for each workflow in the db
-    await Promise.all(
-      workflowsToCreate.map(async (w: TWorkflow) => {
-        try {
-          const existingWorkflow = await workflowsCollection.find(w.workflowId)
-          await existingWorkflow.createFromAPI(w, v2Member, user)
-        } catch (err: any) {
-          const notFoundRegex = /Record ([^ ]+) not found/
-          const notFoundError = err?.message.match(notFoundRegex)
-          if (notFoundError) {
-            try {
-              const createdWorkflow = await database.write(async () => {
-                return workflowsCollection.create((n) => {
-                  n.isCompleted = w.completed
-                  n.workflowId = w.workflowId
-                  n.member = v2Member.antaraId
-                  // eslint-disable-next-line no-underscore-dangle
-                  n._raw.id = w.workflowId
+      const workflowsToDelete = existingWorkflows.filter(
+        (w: TWorkflowModel) => !newWorkflowIds.includes(w.workflowId)
+      )
+      const workflowsToUpdate = existingWorkflows.filter((w: TWorkflowModel) =>
+        newWorkflowIds.includes(w.workflowId)
+      )
+
+      const workflowsToCreate = normalizedWorkflows.filter(
+        (w: TWorkflow) => !existingWorkflowIds.includes(w.workflowId)
+      )
+
+      // delete workflows that are no longer in the db
+      await Promise.all(
+        workflowsToDelete.map(async (w: TWorkflowModel) => {
+          await w.delete()
+        })
+      )
+
+      // update workflows that are still in the db
+      await Promise.all(
+        workflowsToUpdate.map((w: TWorkflowModel) => {
+          const updatedWorkflow = normalizedWorkflows.find(
+            (nw: TWorkflow) => nw.workflowId === w.workflowId
+          )
+          if (updatedWorkflow) {
+            return w.createFromAPI(updatedWorkflow, member, user)
+          }
+          return Promise.resolve()
+        })
+      )
+
+      // create a new workflow for each workflow in the db
+      await Promise.all(
+        workflowsToCreate.map(async (w: TWorkflow) => {
+          try {
+            const existingWorkflow = await workflowsCollection.find(
+              w.workflowId
+            )
+            await existingWorkflow.createFromAPI(w, member, user)
+          } catch (err: any) {
+            const notFoundRegex = /Record ([^ ]+) not found/
+            const notFoundError = err?.message.match(notFoundRegex)
+            if (notFoundError) {
+              try {
+                const createdWorkflow = await database.write(async () => {
+                  return workflowsCollection.create((n) => {
+                    n.isCompleted = w.completed
+                    n.workflowId = w.workflowId
+                    n.member = member?.antaraId || ''
+                    // eslint-disable-next-line no-underscore-dangle
+                    n._raw.id = w.workflowId
+                  })
                 })
-              })
-              createdWorkflow.createFromAPI(w, v2Member, user)
-            } catch (e: any) {
-              const duplicateRegex =
-                /Diagnostic error: Error: Duplicate key for property id: ([A-Z0-9-]+)/
-              if (!e?.message.match(duplicateRegex)) {
-                logError(e)
+                createdWorkflow.createFromAPI(w, member, user)
+              } catch (e: any) {
+                const duplicateRegex =
+                  /Diagnostic error: Error: Duplicate key for property id: ([A-Z0-9-]+)/
+                if (!e?.message.match(duplicateRegex)) {
+                  logError(e)
+                }
               }
             }
           }
-        }
-      })
-    )
+        })
+      )
+    }
   }
 
   const findWorkflow = async (workflowId: string) => {

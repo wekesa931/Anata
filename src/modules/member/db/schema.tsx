@@ -1,0 +1,39 @@
+import { tableSchema, ColumnSchema } from '@nozbe/watermelondb'
+import { CollectionType } from 'src/storage/types'
+
+export const membersTableColumns: ColumnSchema[] = [
+  { name: 'antaraId', type: 'string' },
+  { name: 'first_name', type: 'string' },
+  { name: 'last_name', type: 'string' },
+  { name: 'middle_name', type: 'string', isOptional: true },
+  { name: 'email', type: 'string' },
+  { name: 'phone', type: 'string' },
+  { name: 'phones', type: 'string' },
+  { name: 'birth_date', type: 'string' },
+  { name: 'sex', type: 'string' },
+  { name: 'marital_status', type: 'string' },
+  { name: 'tags', type: 'string' },
+  { name: 'emergency_contact', type: 'string' },
+  { name: 'addresses', type: 'string' },
+  { name: 'insurances', type: 'string' },
+  { name: 'is_synced', type: 'boolean' },
+  { name: 'employer', type: 'string' },
+  { name: 'airtableRecordId', type: 'string' },
+  { name: 'dependents', type: 'string' },
+  { name: 'primary', type: 'string' },
+  { name: 'other_dependents', type: 'string' },
+  { name: 'display_name', type: 'string' },
+  { name: 'intercom_url', type: 'string' },
+  { name: 'assigned_hn', type: 'string' },
+  { name: 'assigned_me', type: 'string' },
+  { name: 'onboard_stage', type: 'string' },
+  { name: 'status', type: 'string' },
+  { name: 'last_synced_at', type: 'number' },
+]
+
+export const MembersSchema = tableSchema({
+  name: CollectionType.MEMBERS,
+  columns: membersTableColumns,
+})
+
+export default [MembersSchema]

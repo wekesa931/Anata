@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import { useLazyQuery } from '@apollo/client'
 import { Box, Button } from '@mui/material'
-import { useMember } from 'src/context/member'
 import { GET_CALL_LOGS } from 'src/modules/comms/services/gql'
 import DataTable from 'src/modules/comms/calls/components/call-logs/table'
 import CallStatsCard from 'src/modules/comms/calls/components/call-logs/stats-card'
 import LoadingComponent from 'src/components/loaders/table-loader'
 import Icon from 'src/components/icon/svg-icon'
+import { useParams } from 'react-router-dom'
 import { generateStats, groupingDataCalls } from '../../utils'
 
 type CleanedDataItem = {
@@ -22,7 +22,7 @@ type CallData = {
 const periods = [7, 30]
 
 function CallLog() {
-  const { member } = useMember()
+  const { antaraId } = useParams()
 
   const defaultDataItem = { logs: [], stats: {} }
 
@@ -110,12 +110,12 @@ function CallLog() {
   })
 
   useEffect(() => {
-    if (member) {
+    if (antaraId) {
       getCallLogs({
-        variables: { antaraId: member['Antara ID'] },
+        variables: { antaraId },
       })
     }
-  }, [member]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [antaraId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateCurrentLogs = (passedData: any, passedTitle: string) => {
     setCurrentLogs(passedData.logs)

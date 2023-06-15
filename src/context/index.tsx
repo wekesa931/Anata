@@ -9,6 +9,7 @@ import { SidebarProvider } from 'src/context/sidebar'
 import { CommsProvider } from 'src/context/comms'
 import { DataProvider } from 'src/storage/indexeddb/watermelon/db'
 import { NotificationsProvider } from 'src/context/notifications'
+import { RegistrationFormProvider } from 'src/context/member-registration'
 
 function AppContexts({ children }: any) {
   return (
@@ -20,7 +21,11 @@ function AppContexts({ children }: any) {
               <AirtableMetaProvider>
                 <SidebarProvider>
                   <ToastProvider>
-                    <CommsProvider>{children}</CommsProvider>
+                    <CommsProvider>
+                      <RegistrationFormProvider>
+                        {children}
+                      </RegistrationFormProvider>
+                    </CommsProvider>
                   </ToastProvider>
                 </SidebarProvider>
               </AirtableMetaProvider>

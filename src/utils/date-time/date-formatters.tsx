@@ -12,7 +12,7 @@ export const formatDateLong = (value: string) => {
 }
 
 // calculate year difference between birthDate and today
-export const calcAge = (birthDate: string) => {
+export const calcAge = (birthDate?: string) => {
   const today = dayjs()
   const birth = dayjs(birthDate)
   return today.diff(birth, 'year')
@@ -21,4 +21,8 @@ export const calcAge = (birthDate: string) => {
 export const humanize = (d: number) => {
   const dur = dayjs.duration(d, 'seconds')
   return dur.format(d >= 3600 ? 'H [hrs] m [mins] s [sec]' : 'm [mins] s [sec]')
+}
+
+export const formatDOB = (dob: string) => {
+  return dayjs(dob).format('DD/MM/YYYY')
 }

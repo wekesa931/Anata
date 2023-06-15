@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { filterFields } from 'src/utils/airtable/field-utils'
 import useAirtableFetch from 'src/hooks/airtable-fetch'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import Table from 'src/components/table'
+import { useMember } from 'src/context/member'
 
 function Nutrition() {
-  const { recId } = useParams()
+  const { member } = useMember()
   const [consultations, setConsultations] = useState<any[]>([])
   const allowedFields: string[] = [
     'Date of Consultation',
@@ -138,7 +138,9 @@ Level [3]: >500mg (Very High)`,
   ]
   const { data, isLoading, isError } = useAirtableFetch(
     encodeURI(
-      `ncf/list?filterByFormula=FIND("${recId}", {Member Record ID})&sort=[{"field":"Date of Consultation","direction":"desc"}]&${encodeURIComponent(
+      `ncf/list?filterByFormula=FIND("${
+        member?.airtableRecordId
+      }", {Member Record ID})&sort=[{"field":"Date of Consultation","direction":"desc"}]&${encodeURIComponent(
         filterFields(allowedFields)
       )}`
     )

@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
 import useAirtableFetch from 'src/hooks/airtable-fetch'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import List from 'src/components/list'
 import { filterFields } from 'src/utils/airtable/field-utils'
+import { useMember } from 'src/context/member'
 
 function Conditions() {
-  const { recId } = useParams()
+  const { member } = useMember()
+  const recId = member?.airtableRecordId
   const [filteredConditions, setFilteredConditions] = useState<any[]>([])
   const allowedFields = [
     'Calculated Date of Diagnosis',

@@ -99,7 +99,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     getFormsByName,
     addNewWorkflowModule,
   } = useWorkflowData()
-  const { member, v2Member } = useMember()
+  const { member } = useMember()
   const user = useUser()
   const [showDeleteWorkflowPrompt, setShowDeleteWorkflowPrompt] =
     useState<boolean>(false)
@@ -170,7 +170,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
       workflow
         .addForm(addedFormName, {
           ...initialFormData,
-          Member: [v2Member?.airtableRecordId],
+          Member: [member?.airtableRecordId],
           moduleId: generateId(),
           isDraft: true,
         })

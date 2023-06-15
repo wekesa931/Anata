@@ -72,6 +72,7 @@ import ToastNotification, {
   defaultToastMessage,
   ToastMessage,
 } from 'src/components/toasts/toast-notification'
+import { useParams } from 'react-router-dom'
 import styles from './files.component.css'
 
 // eslint-disable-next-line
@@ -151,7 +152,7 @@ const isFileShared = (sharedfileSet: any) => {
 
 const ShareFileOptions = React.forwardRef(
   ({ open, anchorEl, id, close, folders, fileId }: IShareOptions) => {
-    const { member } = useMember()
+    const { antaraId } = useParams()
     const [folder, setFolder] = useState<string>('')
     const [shareFileMutation, { loading: sharing }] = useMutation(SHARE_FILE)
     const [toastMessage, setToastMessage] =
@@ -162,7 +163,7 @@ const ShareFileOptions = React.forwardRef(
         variables: {
           fileId,
           folderId: folder,
-          antaraId: member['Antara ID'],
+          antaraId,
         },
       })
         .then((res) => {
@@ -375,7 +376,7 @@ function FilterComponent({
   const [fileMime, setfileMime] = useState<string | undefined>(undefined)
   const [filterDate, setFilterDate] = useState<Date | null>(null)
   const [docTitle, setDocTitle] = useState<string | undefined>(undefined)
-  const { member } = useMember()
+  const { antaraId } = useParams()
 
   const mimeTypes = [
     'jpg',
@@ -395,7 +396,7 @@ function FilterComponent({
 
   const [applyFilters, { data, loading }] = useLazyQuery(GET_FILES, {
     variables: {
-      antaraId: member['Antara ID'],
+      antaraId,
       search: docTitle || '',
       mimeType: fileMime || '',
       fileCategory_Name: fileCategory || '',
@@ -732,6 +733,7 @@ function Files() {
   const [uploadSuccessful, setUploadSuccessful] = useState(false)
   const [uploadFailed, setUploadFailed] = useState(false)
   const { member } = useMember()
+  const { antaraId } = useParams()
   const displayForm = !uploadSuccessful && !uploadFailed
   const user = useUser()
   const [filteredFiles, setFilteredFiles] = useState<IGRoupedFiles>(
@@ -815,15 +817,15 @@ function Files() {
   }
 
   useEffect(() => {
-    if (member) {
-      getFiles({ variables: { antaraId: member['Antara ID'] } })
+    if (antaraId) {
+      getFiles({ variables: { antaraId } })
     }
 
     getFolders()
     getCategories()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member])
+  }, [antaraId])
 
   useEffect(() => {
     if (gettingFile) {
@@ -947,7 +949,7 @@ function Files() {
   ) => {
     let input: any = {
       description: docMeta.description,
-      antaraId: member['Antara ID'],
+      antaraId,
       storageKey: storeKey,
       addedBy: user?.email,
       mimeType: mimeVal,
@@ -955,7 +957,7 @@ function Files() {
       fileCategory: docMeta.docType,
       driveUrl: driveLink,
       title: docMeta.title,
-      recordId: member.recID,
+      recordId: member?.airtableRecordId,
       fileName,
     }
 
@@ -995,7 +997,7 @@ function Files() {
     let fileName: any = null
     let storeKey =
       filesContent.length > 0
-        ? `${member['Antara ID']}/${docMeta.docType}/${filesContent[0].name}`
+        ? `${antaraId}/${docMeta.docType}/${filesContent[0].name}`
         : docLink
     let fileSize = 0
     let driveLink: any = null
@@ -1047,7 +1049,7 @@ function Files() {
             fileName.pop()
             fileName = fileName.join('.')
             formData.append('file', plainFiles[0])
-            storeKey = `${member['Antara ID']}/${docMeta.docType}/${filesContent[0].name}`
+            storeKey = `${antaraId}/${docMeta.docType}/${filesContent[0].name}`
             mimeVal = mime.lookup(filesContent[0].name)
             fileSize = plainFiles[0].size
             const config = {

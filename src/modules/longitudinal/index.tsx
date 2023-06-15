@@ -360,7 +360,7 @@ function LongitudinalView() {
   const [dateRange, setDateRange] = useState<TDateRange>([null, null])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<any>(null)
-  const { v2Member } = useMember()
+  const { member } = useMember()
   const [interactions, setInteractions] = useState<InteractionsData[]>([])
   const [rawLongitudinalData, setLongitduinalData] =
     useState<ILongitudinalTrackingData>()
@@ -373,15 +373,15 @@ function LongitudinalView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const { recId } = useParams()
+  const { antaraId } = useParams()
   useEffect(() => {
-    if (v2Member) {
-      getInteractions({ variables: { antaraId: v2Member?.antaraId } })
-      getDocuments({ variables: { antaraId: v2Member?.antaraId } })
+    if (antaraId) {
+      getInteractions({ variables: { antaraId } })
+      getDocuments({ variables: { antaraId } })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [v2Member])
+  }, [antaraId])
 
   const [getDocuments, { loading: loadingDocs }] = useLazyQuery(GET_FILES, {
     onCompleted: (data: any) => {
@@ -428,10 +428,14 @@ function LongitudinalView() {
   })
 
   useEffect(() => {
-    if (recId) {
+    if (member) {
       setIsLoading(true)
       setError(null)
-      airtableFetch(`longitudinal/${recId}`, 'POST', requestBody)
+      airtableFetch(
+        `longitudinal/${member?.airtableRecordId}`,
+        'POST',
+        requestBody
+      )
         .then((data: ILongitudinalTrackingData) => {
           setLongitduinalData(data)
         })
@@ -442,7 +446,7 @@ function LongitudinalView() {
           setIsLoading(false)
         })
     }
-  }, [recId])
+  }, [member])
 
   const renderCalendar = () => {
     return (

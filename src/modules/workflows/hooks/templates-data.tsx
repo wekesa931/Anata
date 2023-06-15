@@ -21,7 +21,7 @@ export const useTemplatesData = () => {
   const database = useDatabase()
   const { getData } = useWorkflowTemplates()
   const [loading, setLoading] = useState<boolean>(false)
-  const { v2Member, member } = useMember()
+  const { member } = useMember()
   const user = useUser()
   const { createWorkflow: syncWorkflowAPI, loading: creatingWorkflow } =
     useCreateWorkflow()
@@ -40,17 +40,17 @@ export const useTemplatesData = () => {
   )
 
   const createWorkflow = async (template: Templates) => {
-    const res = await syncWorkflowAPI({
-      templateName: template.name,
-      memberId: v2Member.antaraId,
-    })
+    if (member) {
+      const res = await syncWorkflowAPI({
+        templateName: template.name,
+        memberId: member.antaraId,
+      })
 
-    const modules = res?.currentModules || []
+      const modules = res?.currentModules || []
 
-    if (v2Member) {
       return database.write(async () => {
         const created = await workflowsCollection.create((workflow) => {
-          workflow.member = v2Member?.antaraId
+          workflow.member = member?.antaraId
           workflow.template = template.name
           workflow.isCompleted = false
           workflow.workflowId = res?.workflowId
@@ -70,12 +70,12 @@ export const useTemplatesData = () => {
             const moduleId = generateId()
             await formsCollection.create((form) => {
               form.workflow.set(created)
-              form.member = v2Member?.antaraId
+              form.member = member?.antaraId
               form.name = module
               form.data = {
                 ...initialFormData[module],
                 moduleId,
-                Member: [v2Member?.airtableRecordId],
+                Member: [member?.airtableRecordId],
                 isDraft: true,
               }
               form.isDraft = true

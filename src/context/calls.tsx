@@ -10,6 +10,7 @@ import {
 } from 'src/modules/comms/services/gql'
 import { useFcm } from 'src/context/fcm/fcm.context'
 import { logError } from 'src/utils/logging/logger'
+import type { Members } from 'src/modules/member/db/models'
 
 export type ILogs = {
   startedAt: string
@@ -109,7 +110,7 @@ const CallContext = React.createContext<ContextType>({
 type InitiateCallInput = {
   callContact: any
   onCallInitiated: (data?: any) => void
-  memberDetails: any
+  memberDetails: Members
   type?: 'INBOUND' | 'OUTBOUND' | 'CALLBACK'
   dialPadInitiated?: boolean
   memberContacts: any[]
@@ -122,7 +123,7 @@ function CallProvider({ children }: any) {
   const [activeCallContact, setActiveCallContact] =
     useState<CallContact | null>()
   const [counter, setcounter] = useState(0)
-  const [memberData, setMemberData] = useState<any>({})
+  const [memberData, setMemberData] = useState<Members>()
   const [activeCall, setActiveCall] = useState<Call | null>()
   const [callError, setcallError] = useState<string | null>(null)
   const { pushNotification } = useFcm()
@@ -250,8 +251,8 @@ function CallProvider({ children }: any) {
         }
       }
       let conferenceName = ''
-      let callerNum = memberData.number || ''
-      let callerName = memberData['Full Name'] || ''
+      let callerNum = memberData?.phone || ''
+      let callerName = memberData?.fullName || ''
       const callUpdates: Call = {} as Call
       const isStaff = pushNotification?.data?.is_staff === 'true'
       if (
@@ -417,7 +418,7 @@ function CallProvider({ children }: any) {
     if (phoneNum) {
       initiateConferenceCall({
         variables: {
-          antaraId: memberDetails['Antara ID'],
+          antaraId: memberDetails?.antaraId,
           recipient: phoneNum,
           dialPadUsed: dialPadInitiated,
         },
@@ -431,16 +432,16 @@ function CallProvider({ children }: any) {
               assigned: user ? user.email : '',
               member: phoneNum,
               initialCallTime: 0,
-              memberName: memberDetails['Full Name'],
+              memberName: memberDetails?.fullName,
               session: response?.data?.placeCall.session,
               dialPadInitiated,
               memberContacts,
-              memberAntaraId: memberDetails['Antara ID'],
+              memberAntaraId: memberDetails?.antaraId,
             }
             setActiveCall({ ...activeCall, ...call })
             setActiveCallContact(callContact)
             onCallInitiated(response?.data)
-            setMemberData({ ...memberDetails, number: phoneNum })
+            setMemberData(memberDetails)
           } else {
             setcallError(response?.data?.placeCall.message)
           }

@@ -84,13 +84,13 @@ const transformWorkflow = (workflow: TWorkflow) => {
       }
 
       moduleValues.forEach((moduleValue: any) => {
-        const { moduleId, ...values } = moduleValue
+        const values = moduleValue || {}
         const isDraft =
           'isDraft' in values
             ? values.isDraft
             : isFormDraft(workflow, moduleData, moduleName)
 
-        const formModuleId = moduleId || generateId()
+        const formModuleId = values?.moduleId || generateId()
         forms.push({
           name: moduleName,
           moduleId: formModuleId,
@@ -280,10 +280,10 @@ export const useSaveWorkflow = () => {
 export const useCreateInteraction = () => {
   const [mutate, { loading, error }] = useMutation(CREATE_INTERACTION)
   const user = useUser()
-  const { v2Member } = useMember()
+  const { member } = useMember()
 
   const createInteraction = async (data: any) => {
-    if (v2Member) {
+    if (member) {
       const interactionsData: InteractionsVariables =
         interactionLogPayload(data)
       const outcomeMetadata: any = {
@@ -302,7 +302,7 @@ export const useCreateInteraction = () => {
           outcome,
           outcomeMetadata,
           historyUserIdField: user && user.email,
-          member: v2Member.antaraId,
+          member: member.antaraId,
           healthNavigator: user && extractUsername(user.email),
         },
       }
@@ -337,10 +337,10 @@ export const useCreateFeedback = () => {
     },
   })
   const user = useUser()
-  const { v2Member } = useMember()
+  const { member } = useMember()
 
   const createFeedback = async (data: any) => {
-    if (v2Member) {
+    if (member) {
       const feedbackData: FeedbackVariables = feedbackPayload(data)
       const feedback = feedbackData.feedback && feedbackData.feedback === 'Yes'
       const createdBy = user && user.email
@@ -349,7 +349,7 @@ export const useCreateFeedback = () => {
           ...feedbackData,
           feedback,
           createdBy,
-          memberAntaraId: v2Member.antaraId,
+          memberAntaraId: member.antaraId,
           source: feedbackData?.source[0],
         },
       }

@@ -8,6 +8,7 @@ import { useUser } from 'src/context/user'
 import { useMember } from 'src/context/member'
 import analytics from 'src/config/analytics'
 import logError from 'src/utils/logging/logger'
+import { useParams } from 'react-router-dom'
 import {
   Input,
   SendButton,
@@ -24,9 +25,8 @@ type ChatInputProps = {
 }
 
 function ChatInput({ messages, setMessages }: ChatInputProps) {
-  const { member, v2Member } = useMember()
-  const messageTemplate = (member && member.messageTemplate) || ''
-  const [message, setMessage] = useState<string>(messageTemplate)
+  const { member } = useMember()
+  const [message, setMessage] = useState<string>('')
   const [charCount, setCharCount] = useState<number>(0)
   const [channel, setChannel] = useState<string>('sms')
   const [sendingSMS, setSendingSMS] = useState<boolean>(false)
@@ -36,6 +36,7 @@ function ChatInput({ messages, setMessages }: ChatInputProps) {
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [sendSms] = useMutation(SEND_SMS)
   const [intercomUri, setIntercomUrl] = useState<string>('')
+  const { antaraId } = useParams()
 
   useEffect(() => {
     if (textAreaRef && textAreaRef.current) {
@@ -50,11 +51,10 @@ function ChatInput({ messages, setMessages }: ChatInputProps) {
   }, [message, textAreaRef])
 
   useEffect(() => {
-    if (v2Member?.intercormUrl) {
-      setIntercomUrl(v2Member?.intercomUrl)
+    if (member?.intercomUrl) {
+      setIntercomUrl(member?.intercomUrl)
     }
-    setMessage(messageTemplate)
-  }, [messageTemplate, v2Member])
+  }, [member])
 
   const handleChange = ($event: any) => {
     setMessage($event.target.value)
@@ -72,11 +72,11 @@ function ChatInput({ messages, setMessages }: ChatInputProps) {
       direction: 'OUTBOUND',
       createdAt: new Date().toDateString(),
     }
-    if (sms && member) {
+    if (sms) {
       sendSms({
         variables: {
           message: sms.message,
-          antaraId: member['Antara ID'],
+          antaraId,
         },
       })
         .then((res) => {
@@ -222,9 +222,9 @@ function ChatInput({ messages, setMessages }: ChatInputProps) {
             setSendingSMS(false)
             if (member) {
               analytics.track('SMS Sending Cancelled', {
-                bene_id: member.airtable_rec_id,
+                bene_id: member.airtableRecordId,
                 hn: user ? user.email : '',
-                phone_number: member.phoneNumber,
+                phone_number: member.phone,
               })
             }
           }}

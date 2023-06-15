@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
 import useAirtableFetch from 'src/hooks/airtable-fetch'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import List from 'src/components/list'
+import { useMember } from 'src/context/member'
 
 function MemberTask() {
-  const { recId } = useParams()
+  const { member } = useMember()
   const [memberTask, setMemberTask] = useState<any[]>([])
 
   const { data, isLoading, isError } = useAirtableFetch(
-    `memberTask/list?filterByFormula=FIND("${recId}", {Member Record ID})`
+    `memberTask/list?filterByFormula=FIND("${member?.airtableRecordId}", {Member Record ID})`
   )
 
   React.useEffect(() => {

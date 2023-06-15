@@ -37,27 +37,172 @@ export const GET_DOCUMENT_OPENSEARCH = gql`
   }
 `
 
+export const MEMBERS_DETAILS_FRAGMENT = gql`
+  fragment MemberDetailsFragment on MemberType {
+    antaraId
+    birthDate
+    details {
+      fullName
+      firstName
+      middleName
+      lastName
+      intercomUrl
+      airtableRecordId
+      sex {
+        sex
+      }
+      maritalStatus {
+        maritalStatus
+      }
+      relationshipToPrimary
+      primaryMemberAntaraId
+    }
+    primary {
+      antaraId
+      birthDate
+      status {
+        status {
+          status
+        }
+      }
+      details {
+        relationshipToPrimary
+        fullName
+        airtableRecordId
+        sex {
+          sex
+        }
+      }
+      phones {
+        phone
+      }
+    }
+    phones {
+      phone
+      phoneType {
+        phoneType
+      }
+      priority
+    }
+    status {
+      startDate
+      onboardStage {
+        onboardStage
+      }
+      employer {
+        name
+      }
+      assignedHn
+      assignedHnFullName
+      assignedMe
+      assignedHnEmailUsername
+      assignedMeEmailUsername
+      tags
+      status {
+        status
+      }
+    }
+    dependents {
+      id
+      antaraId
+      birthDate
+      status {
+        status {
+          status
+        }
+      }
+      details {
+        fullName
+        sex {
+          sex
+        }
+        relationshipToPrimary
+        airtableRecordId
+      }
+      phones {
+        phone
+      }
+    }
+    otherDependents {
+      id
+      antaraId
+      birthDate
+      status {
+        status {
+          status
+        }
+      }
+      details {
+        fullName
+        sex {
+          sex
+        }
+        relationshipToPrimary
+        airtableRecordId
+      }
+      phones {
+        phone
+      }
+    }
+    contact {
+      memberAddresses {
+        constituency
+        residentialAddress
+        residentialCountry
+        residentialCounty
+        subCounty
+        residentialTown
+        deliveryInstructions
+        geolocation
+        label
+        latitude
+        longitude
+      }
+      email
+      emergencyContactName
+      emergencyContactPhone
+      emergencyContactRelationship
+    }
+    insuranceDetails {
+      id
+      insuranceId
+      priority
+      principalMemberInsuranceId
+      relationshipToPrincipalMember
+      verificationStatus
+      insuranceCompany {
+        id
+        name
+        logo
+      }
+      memberPolicy {
+        healthPolicy {
+          name
+        }
+      }
+      benefitUtilizations {
+        id
+        utilizedPortion
+        benefit {
+          name
+          description
+          api
+          limit
+        }
+      }
+    }
+  }
+`
+
 export const SEARCH_MEMBERS = gql`
   query memberSearch($query: String!) {
     membersSearch(query: $query) {
       edges {
         node {
-          antaraId
-          birthDate
-          details {
-            fullName
-            airtableRecordId
-            sex {
-              sex
-            }
-          }
-          status {
-            employer {
-              name
-            }
-          }
+          ...MemberDetailsFragment
         }
       }
     }
   }
+  ${MEMBERS_DETAILS_FRAGMENT}
 `

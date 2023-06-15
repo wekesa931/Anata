@@ -146,6 +146,7 @@
     "kremling": "^2.1.0",
     "lodash": "^4.17.21",
     "markdown-draft-js": "^2.4.0",
+    "material-ui-phone-number": "^3.0.0",
     "mime-types": "^2.1.35",
     "mock-apollo-client": "^1.2.1",
     "mui-daterange-picker": "^1.0.5",

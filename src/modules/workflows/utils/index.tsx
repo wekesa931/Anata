@@ -208,14 +208,11 @@ export const initialFormValues = (
     },
     Baseline: {
       'Health Navigator': [user.userAirtableId],
-      Gender: member.Sex,
-      'Is the BN a minor': member['Minor?'] === 'Adult' ? 'No' : 'Yes',
-      'Date of baseline': member['Baseline Date'],
+      Gender: member?.sex,
+      'Is the BN a minor': member?.isMinor ? 'Yes' : 'No',
     },
     Vitals: {
-      Staff: isOnsite
-        ? [user.userAirtableId]
-        : member['Health Navigator Assignment Record ID'],
+      Staff: isOnsite ? [user.userAirtableId] : member?.assignedHn?.recordId,
       Date: dayjs().format('YYYY-MM-DD'),
       'Type of Reading': isOnsite ? 'Measured by Antara' : null,
     },
@@ -233,7 +230,7 @@ export const initialFormValues = (
     },
     'Clinical Consultation': {
       'Consulting Clinician': isOnsite ? [user.userAirtableId] : null,
-      Minor: member['Minor?'] === 'Adult' ? 'no' : 'yes',
+      Minor: member?.isMinor ? 'yes' : 'no',
       'Interaction type': isOnsite ? 'In-person' : null,
       'Initial vs FU': isOnsite ? 'Initial consultation' : null,
       'Date of appointment': dayjs().format('YYYY-MM-DD'),
@@ -242,24 +239,24 @@ export const initialFormValues = (
       'Encounter Date': new Date(),
     },
     'Logistics Tasks': {
-      Beneficiary: member['Full Name'],
+      Beneficiary: member?.fullName,
       Status: 'Scheduled',
       Creator: [user.userAirtableId],
     },
   }
 }
 
-export const useInitialFormMeta = (v2Member: any, user: any) => {
+export const useInitialFormMeta = (member: any, user: any) => {
   const initialFormMeta = (
     workflow: TWorkflow | null,
     formValues: any = null
   ) => {
     const prefills = workflow?.prefills || {}
-    if (user && v2Member) {
+    if (user && member) {
       return {
         ...formValues,
         moduleId: dayjs().toISOString(),
-        Member: [v2Member?.airtableRecordId],
+        Member: [member?.airtableRecordId],
         isDraft: true,
         createdBy: {
           email: user?.email,

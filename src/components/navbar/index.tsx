@@ -10,6 +10,8 @@ import analytics from 'src/config/analytics'
 import Tooltip from 'src/components/tooltip'
 import useClickOutside from 'src/hooks/click-outside'
 import FlatLogo from 'src/assets/img/logo/Antara Logo@1x.png'
+import PrimaryButton from 'src/components/buttons/primary'
+import { useRegistrationForm } from 'src/context/member-registration'
 import { useDatabase } from '@nozbe/watermelondb/hooks'
 import TaskMenu from './task-menu/task-menu.component'
 import styles from './navbar.component.css'
@@ -77,6 +79,8 @@ function NavBar() {
     setAnchorEl(null)
   }
 
+  const { setIsFormOpen, isDataLoading } = useRegistrationForm()
+
   return (
     <div className={styles.navWrapper} data-testid="container-calender-btn">
       <CssBaseline />
@@ -99,7 +103,18 @@ function NavBar() {
           open={open}
           handleClose={handleClose}
         />
+
         <SearchInput />
+        <div className="ml-4 flex justify-center items-center">
+          {!isDataLoading && (
+            <PrimaryButton
+              className="normal-case"
+              onClick={() => setIsFormOpen(true)}
+            >
+              Register new member
+            </PrimaryButton>
+          )}
+        </div>
 
         <div className="d-flex flex-align-center flex-justify-end flex-one">
           <Tooltip title="Tasks">

@@ -13,7 +13,7 @@ import { useGetAirtableRecord } from '../services/airtable.api'
 
 export const useFormsData = () => {
   const database = useDatabase()
-  const { v2Member, member } = useMember()
+  const { member } = useMember()
   const user = useUser()
   const [loading, setLoading] = useState<boolean>(false)
   const { getAirtableRecord } = useGetAirtableRecord()
@@ -25,16 +25,16 @@ export const useFormsData = () => {
     formId?: string,
     formData?: any
   ) => {
-    if (v2Member && user) {
+    if (member && user) {
       const initialFormData = initialFormValues(member, user, formName)
       return database.write(async () => {
         const created = await formsCollection.create((form) => {
-          form.member = v2Member?.antaraId
+          form.member = member?.antaraId
           form.name = formName
           form.data = {
             ...initialFormData[formName],
             ...formData,
-            Member: [v2Member?.airtableRecordId],
+            Member: [member?.airtableRecordId],
             createdBy: getUserModelDetails(user),
             updatedBy: getUserModelDetails(user),
           }
@@ -62,17 +62,17 @@ export const useFormsData = () => {
   }
 
   const getForms = async (formIds: string[], formName: string) => {
-    if (v2Member) {
+    if (member) {
       // formIDs maybe an array of local ids or airtable ids from the API
       const query = formIds
         ? formsCollection.query(
-            Q.where('member', v2Member?.antaraId),
+            Q.where('member', member?.antaraId),
             Q.or(
               Q.where('id', Q.oneOf(formIds)),
               Q.where('airtable_id', Q.oneOf(formIds))
             )
           )
-        : formsCollection.query(Q.where('member', v2Member?.antaraId))
+        : formsCollection.query(Q.where('member', member?.antaraId))
       const formsFound = await query.fetch()
 
       if (formsFound.length) {
@@ -86,7 +86,7 @@ export const useFormsData = () => {
         if (Object.keys(fromApi).length > 0) {
           const createdForm = await database.write(async () => {
             const created = await formsCollection.create((form) => {
-              form.member = v2Member?.antaraId
+              form.member = member?.antaraId
               form.name = formName
               form.data = {
                 ...fromApi,
@@ -113,10 +113,10 @@ export const useFormsData = () => {
   }
 
   const deleteAllForms = async () => {
-    if (v2Member) {
+    if (member) {
       await database.write(async () => {
         const query = formsCollection.query(
-          Q.where('member', v2Member?.antaraId),
+          Q.where('member', member?.antaraId),
           Q.where('workflow_id', null)
         )
         const forms = await query.fetch()
@@ -128,10 +128,10 @@ export const useFormsData = () => {
   }
 
   const deleteForm = async (formId: string) => {
-    if (v2Member) {
+    if (member) {
       await database.write(async () => {
         const query = formsCollection.query(
-          Q.where('member', v2Member?.antaraId),
+          Q.where('member', member?.antaraId),
           Q.where('id', formId),
           Q.where('workflow_id', null)
         )

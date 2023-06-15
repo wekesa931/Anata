@@ -72,7 +72,8 @@ function MessageChat() {
   const attachmentUrl = useRef('')
   const messagesEndRef = useRef(null)
   const { member } = useMember()
-  const { recId } = useParams()
+  const { antaraId } = useParams()
+  const recId = member?.airtableRecordId
   const { pushNotification, setPushNotification } = useFcm()
 
   const [getChats, { loading, refetch }] = useLazyQuery(GET_MEMBER_CHATS, {
@@ -95,14 +96,14 @@ function MessageChat() {
   })
 
   useEffect(() => {
-    if (member) {
+    if (antaraId) {
       getChats({
-        variables: { antaraId: member['Antara ID'] },
+        variables: { antaraId },
       })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member])
+  }, [antaraId])
 
   const isSent = (status: string) => status.toLocaleLowerCase() === 'sent'
   const isDelivered = (status: string) =>

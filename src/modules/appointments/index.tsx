@@ -1,6 +1,5 @@
 import dayjs from 'dayjs'
 import React from 'react'
-import { useParams } from 'react-router-dom'
 import AirtableField from 'src/types/airtable-field'
 import { useUser } from 'src/context/user'
 import useAirtableFetch from 'src/hooks/airtable-fetch'
@@ -22,7 +21,8 @@ function Appointments() {
   const [filteredAppointments, setFilteredAppointments] = React.useState<any[]>(
     []
   )
-  const { recId } = useParams()
+  const { member } = useMember()
+  const recId = member?.airtableRecordId
 
   const status = [
     'All',
@@ -87,7 +87,7 @@ function Appointments() {
     {
       name: 'Providers',
       type: 'single-select',
-      options: getAllProviders().map((type) => ({
+      options: getAllProviders().map((type: any) => ({
         label: type.split(':')[1],
         value: type.split(':')[0],
       })),
@@ -116,15 +116,14 @@ function Appointments() {
       type: 'long-text',
     },
   ]
-  const { member, v2Member } = useMember()
   const user = useUser()
   const openCalendar = () => {
-    if (v2Member || member) {
-      const fullName = v2Member?.fullName || member['Full Name']
-      const urlName = fullName?.replaceAll(' ', '%20')
-      const email = v2Member?.email || member['Email 1']
+    if (member) {
+      const fullName = member?.fullName || ''
+      const urlName = fullName?.replace(' ', '%20')
+      const email = member?.email || ''
       const memberEmail = email || 'navigation@antarahealth.com'
-      const memberPhone = v2Member?.phone || member['Phone 1']
+      const memberPhone = member?.phone
 
       const link = `https://calendly.com/antara-health?name=${urlName}&email=${memberEmail}&a1=${memberPhone}&utm_source=src - ${user.name}`
 
