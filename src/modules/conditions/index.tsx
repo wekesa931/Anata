@@ -10,7 +10,6 @@ function Conditions() {
   const [filteredConditions, setFilteredConditions] = useState<any[]>([])
   const allowedFields = [
     'Calculated Date of Diagnosis',
-    'Calculated Key Goal',
     'Condition',
     'Condition Status',
     'Starting clinical status',
@@ -38,6 +37,7 @@ function Conditions() {
       allowedFields
     )}`
   )
+
   React.useEffect(() => {
     if (data) {
       const mappedData = Object.keys(data).map((key) => ({
