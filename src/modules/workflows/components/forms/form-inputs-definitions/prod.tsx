@@ -13063,36 +13063,7 @@ export default [
           return ['True'].includes(values['Asked to make payment'])
         },
       },
-      {
-        id: 'fldc4yCFEefOFkHNS',
-        name: 'On a scale from 1-10, how likely are you to recommend Avenue services to your friends?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Only ask this question when the provider is related to Avenue HealthCare',
-      },
-      {
-        id: 'flda8qzIWDXQcpjwA',
-        name: 'On a scale of 0 to 10, how likely are you to recommend Antara Health to your friends and family based on today’s experience? (0=very unlikely to 10=very likely)',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Only ask this question when the provider is NOT related to Avenue HealthCare',
-      },
+
       {
         id: 'fldBMQDwYQREqTCdA',
         name: 'Feedback',
