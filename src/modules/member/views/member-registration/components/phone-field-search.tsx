@@ -9,7 +9,7 @@ import VerificationLoader from 'src/components/loaders/verification-loader'
 import ErrorFeedback from 'src/components/feedbacks/error'
 
 type PhoneNumberSearchProps = {
-  setResponse: (response: any) => void
+  setResponse: (response: any, phone: string) => void
   setIsEdited: (isEdited: boolean) => void
   showForm: boolean
   setShowForm: (showForm: boolean) => void
@@ -39,11 +39,11 @@ export function PhoneNumberSearch({
       getMemberByPhone(values.phone)
         .then((member) => {
           if (member) {
-            setResponse(member)
+            setResponse(member, values.phone)
             setPhoneFound(true)
           } else {
             setPhoneFound(false)
-            setResponse(null)
+            setResponse(null, values.phone)
           }
 
           setShowForm(true)

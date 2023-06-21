@@ -127,7 +127,7 @@ export const transformInsuranceData = (
 
   return {
     antaraId,
-    employer: member?.employerName || '',
+    employer: member?.employer || '',
     insurances: transformInsurances(insuranceDetails),
   }
 }

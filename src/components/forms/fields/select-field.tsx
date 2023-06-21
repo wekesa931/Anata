@@ -46,51 +46,53 @@ function SelectField(props: OutlinedFieldProps & SelectFieldProps) {
   }
   return (
     <OutlinedField {...props}>
-      {(fieldProps: FieldProps) => (
-        <>
-          <Select
-            {...fieldProps.field}
-            size="small"
-            multiple={props.multiple}
-            onChange={(e) => {
-              handleValueChange(e, fieldProps)
-            }}
-            error={!!fieldProps.meta.error}
-            input={
-              <OutlinedInput
-                placeholder={props.placeholder}
-                error={!!fieldProps.meta.error}
-                size="small"
-              />
-            }
-            onBlur={(e: any) => {
-              handleBlur(e, fieldProps)
-            }}
-            displayEmpty
-            renderValue={(selected: any) => (
-              <ValueRenderer selected={selected} props={props} />
-            )}
-          >
-            {props.options.map((option: any) => (
-              <MenuItem key={option.value} value={option.value}>
-                {props?.multiple && (
-                  <Checkbox
-                    checked={
-                      fieldProps.field?.value?.indexOf(option.value) > -1
-                    }
-                  />
-                )}
-                {option.label}
-              </MenuItem>
-            ))}
-          </Select>
-          <FormHelperText error={!!fieldProps.meta.error}>
-            {!!fieldProps.meta.error && !!fieldProps.meta.error
-              ? fieldProps.meta.error
-              : ' '}
-          </FormHelperText>
-        </>
-      )}
+      {(fieldProps: FieldProps) => {
+        return (
+          <>
+            <Select
+              {...fieldProps.field}
+              size="small"
+              multiple={props.multiple}
+              onChange={(e) => {
+                handleValueChange(e, fieldProps)
+              }}
+              error={!!fieldProps.meta.error}
+              input={
+                <OutlinedInput
+                  placeholder={props.placeholder}
+                  error={!!fieldProps.meta.error}
+                  size="small"
+                />
+              }
+              onBlur={(e: any) => {
+                handleBlur(e, fieldProps)
+              }}
+              displayEmpty
+              renderValue={(selected: any) => (
+                <ValueRenderer selected={selected} props={props} />
+              )}
+            >
+              {props.options.map((option: any) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {props?.multiple && (
+                    <Checkbox
+                      checked={
+                        fieldProps.field?.value?.indexOf(option.value) > -1
+                      }
+                    />
+                  )}
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+            <FormHelperText error={!!fieldProps.meta.error}>
+              {!!fieldProps.meta.error && !!fieldProps.meta.error
+                ? fieldProps.meta.error
+                : ' '}
+            </FormHelperText>
+          </>
+        )
+      }}
     </OutlinedField>
   )
 }

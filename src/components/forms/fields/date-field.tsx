@@ -24,6 +24,8 @@ function DateField(props: OutlinedFieldProps) {
           onChange={(d) => {
             handlValueChange(d, fieldProps)
           }}
+          maxDate={new Date()}
+          openTo="year"
           renderInput={(params) => (
             <TextField
               {...params}

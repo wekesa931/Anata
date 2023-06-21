@@ -15,6 +15,7 @@ import dayjs from 'dayjs'
 import FlexRow from 'src/components/layouts/flex-row'
 import type { BiodataValues } from 'src/modules/member/types'
 import { useRegistrationForm } from 'src/context/member-registration'
+import { isDirty } from 'src/utils/form-validation-methods'
 
 type BioDataFormProps = {
   setIsEdited: (isEdited: boolean) => void
@@ -23,12 +24,12 @@ type BioDataFormProps = {
   isChildRegistration?: boolean
 }
 
-const extractInitialState = (member: Member | null) => {
+const extractInitialState = (member: Member | null, initialPhone?: string) => {
   return {
     firstName: member?.firstName || '',
     middleName: member?.middleName || '',
     lastName: member?.lastName || '',
-    phone: member?.phone || '',
+    phone: member?.phone || initialPhone || '',
     birthDate: member?.birthDate ? dayjs(member?.birthDate).toDate() : null,
     sex: member?.sex || '',
     maritalStatus: member?.maritalStatus || '',
@@ -54,50 +55,60 @@ function BioDataForm({
   const { notify } = useNotifications()
   const { lookupOptions } = useRegistrationForm()
 
-  const parseMemberFromResponse = (response: any) => {
+  const parseMemberFromResponse = (response: any, phone: string) => {
     if (response) {
       createMemberInstance(member, response)
         .then((newMember) => {
-          // update initial values
-          setInitialValues(extractInitialState(newMember))
+          setInitialValues(extractInitialState(newMember, phone))
         })
         .catch((error) => {
           logError(error)
           notify('An error occurred while creating member')
         })
+    } else if (member) {
+      member.reset().then(async () => {
+        await member.setInitialPhone(phone)
+        setInitialValues(extractInitialState(member, phone))
+      })
     }
   }
 
-  const handleSubmit = (values: any) => {
-    if (member) {
-      handleUpdateBioData(member, values)
-        .then(() => {
-          onNext()
-        })
-        .catch((err) => {
-          logError(err)
-          notify('An error occurred while updating member')
-        })
+  const handleSubmit = (values: any, formikBag: any) => {
+    if (isDirty(initialValues, values)) {
+      if (member) {
+        handleUpdateBioData(member, values)
+          .then(() => {
+            onNext()
+          })
+          .catch((err) => {
+            logError(err)
+            notify('An error occurred while updating member')
+          })
+      }
+    } else {
+      formikBag.setSubmitting(false)
+      onNext()
     }
-    // onNext()
   }
 
   return (
     <div className="overflow-scroll">
       <PrimaryForm initialValues={initialValues} handleSubmit={handleSubmit}>
-        {({ isValid }) => {
+        {({ isValid, isSubmitting }) => {
           return (
             <Form>
               <>
-                <PhoneNumberSearch
-                  setResponse={parseMemberFromResponse}
-                  setIsEdited={setIsEdited}
-                  showForm={showForm}
-                  setShowForm={setShowForm}
-                  isFetching={isFetchingMember}
-                  setIsFetching={setIsFetchingMember}
-                />
-                {showForm || !!member?.antaraId ? (
+                {!isChildRegistration ? (
+                  <PhoneNumberSearch
+                    setResponse={parseMemberFromResponse}
+                    setIsEdited={setIsEdited}
+                    showForm={showForm}
+                    setShowForm={setShowForm}
+                    isFetching={isFetchingMember}
+                    setIsFetching={setIsFetchingMember}
+                  />
+                ) : null}
+                {showForm || !!member?.antaraId || isChildRegistration ? (
                   <div className="mb-6 flex flex-col gap-4">
                     <FlexRow>
                       <TextField
@@ -154,13 +165,15 @@ function BioDataForm({
                 <PreviousButton
                   onClick={onPrev}
                   type="button"
-                  disabled={isFetchingMember || loading}
+                  disabled={isFetchingMember || loading || isSubmitting}
                 >
                   {' '}
                   Previous{' '}
                 </PreviousButton>
                 <NextButton
-                  disabled={!isValid || isFetchingMember || loading}
+                  disabled={
+                    !isValid || isFetchingMember || loading || isSubmitting
+                  }
                   type="submit"
                   loading={loading}
                 >

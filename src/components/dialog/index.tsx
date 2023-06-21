@@ -52,7 +52,7 @@ function ConfirmationDialog({
           <PrimaryButton
             variant="contained"
             onClick={onConfirm}
-            kind="error"
+            color="error"
             className="w-full"
           >
             {' '}

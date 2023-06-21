@@ -7,6 +7,10 @@ import {
   DbValueTypes as DbTypes,
 } from 'src/modules/member/types'
 import dayjs from 'dayjs'
+import {
+  transformAddressData,
+  transformInsuranceData,
+} from 'src/modules/member/utils/data-transforms'
 
 type AddressValues = DbTypes.AddressValues
 type InsuranceDetailsValues = DbTypes.InsuranceDetailsValues
@@ -24,6 +28,55 @@ type EmergencyContact = {
 type AssignedStaff = {
   recordId?: string
   name?: string
+}
+
+export const createOrUpdateMember = (
+  member: Member,
+  memberData: V2MemberType
+) => {
+  member.antaraId = memberData?.antaraId
+  member.firstName = memberData?.firstName
+  member.lastName = memberData?.lastName
+  member.middleName = memberData?.middleName
+  member.email = memberData?.email
+  member.phone = memberData?.phone
+  member.phones = memberData.phones
+  member.birthDate = dayjs(memberData.birthDate).format('YYYY-MM-DD')
+  member.tags = memberData.tags
+  member.maritalStatus = memberData.maritalStatus
+  member.emergencyContact = {
+    name: memberData.emergencyContactName,
+    phoneNumber: memberData.phone,
+    relationship: memberData.emergencyContactRelationship,
+  }
+  member.addresses = transformAddressData(
+    memberData.memberAddresses || [],
+    memberData?.antaraId || ''
+  )
+  member.insurances = transformInsuranceData(memberData)
+  member.employer = memberData.employer
+  member.isSynced = true
+  member.primary = memberData?.primary
+  member.dependents = memberData?.dependents
+  member.otherDependents = memberData?.dependents
+  member.sex = memberData?.sex
+  member.displayName = memberData?.displayName
+  member.airtableRecordId = memberData?.airtableRecordId
+  member.intercomUrl = memberData?.intercomUrl
+  member.assignedHn = {
+    recordId: memberData?.assignedHn,
+    name: memberData?.assignedHnFullName,
+  }
+  member.assignedMe = {
+    recordId: memberData?.assignedMe,
+    name: memberData?.assignedMe,
+  }
+
+  member.onboardStage = memberData?.onboardStage
+  member.status = memberData?.status
+  member.lastSyncedAt = new Date().getTime()
+
+  return member
 }
 
 export class Member extends Model {
@@ -146,6 +199,20 @@ export class Member extends Model {
       dayjs().diff(dayjs(this.lastSyncedAt), 'minutes') >= 30 ||
       !this.lastSyncedAt
     )
+  }
+
+  @writer async reset() {
+    // reset all the properties to their default values
+    await this.update((member) => {
+      createOrUpdateMember(member, {} as V2MemberType)
+    })
+  }
+
+  @writer async setInitialPhone(phone: string) {
+    await this.update((member) => {
+      member.phone = phone
+      member.phones = [{ phone, phoneType: 'Unknown', priority: 0 }]
+    })
   }
 }
 

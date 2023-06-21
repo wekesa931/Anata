@@ -2,7 +2,7 @@ import { Formik, FormikProps } from 'formik'
 import React from 'react'
 
 type PrimaryFormProps = {
-  handleSubmit: (values: any) => void
+  handleSubmit: (values: any, formikBag: any) => void
   initialValues: any
   validationSchema?: any
   children: (formikProps: FormikProps<any>) => React.ReactNode

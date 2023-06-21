@@ -92,7 +92,6 @@ function InsuranceSectionItem({
 
 function InsuranceSection() {
   const { member } = useMember()
-
   return member ? (
     <SectionItem>
       {member?.insuranceDetails?.length === 0 ? (

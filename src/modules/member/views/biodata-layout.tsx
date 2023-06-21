@@ -34,18 +34,10 @@ function MemberBiodataLayout() {
         </div>
         <div className="flex flex-col h-full">
           <TabContext value={value}>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center font-rubik font-medium">
               <TabList onChange={handleChange}>
-                <Tab
-                  label="clinical"
-                  className="normal-case"
-                  value="clinical"
-                />
-                <Tab
-                  label="personal"
-                  className="normal-case"
-                  value="personal"
-                />
+                <Tab label="clinical" className="uppercase" value="clinical" />
+                <Tab label="personal" className="uppercase" value="personal" />
               </TabList>
             </div>
             <div>

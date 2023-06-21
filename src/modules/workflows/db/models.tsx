@@ -13,7 +13,7 @@ import {
 
 import { Associations } from '@nozbe/watermelondb/Model'
 import dayjs from 'dayjs'
-import type { Members } from 'src/modules/member/db/models'
+import type { Member } from 'src/modules/member/db/models'
 import { initialFormValues } from '../utils'
 import { CollectionType } from '../../../storage/types'
 
@@ -229,7 +229,7 @@ export class Workflows extends Model {
 
   @writer async synchronizeWorkflowFormData(
     newWorkflow: any,
-    member: Members,
+    member: Member,
     user: any
   ) {
     const prefills = initialFormValues(member, user, newWorkflow.template.name)

@@ -1,38 +1,58 @@
-import { Button, ButtonProps, CircularProgress } from '@mui/material'
 import React from 'react'
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
+import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton'
 
-type PrimaryButtonProps = ButtonProps & {
-  kind?: 'primary' | 'secondary' | 'error'
-  loading?: boolean
+const getClassName = (
+  variant: LoadingButtonProps['variant'],
+  color: LoadingButtonProps['color']
+) => {
+  if (variant === 'contained') {
+    if (color === 'error') {
+      return `bg-red-100 text-white hover:bg-red-btn-hover`
+    }
+  } else if (variant === 'outlined') {
+    if (color === 'primary') {
+      return `border-blue-btn text-blue-btn `
+    }
+    if (color === 'error') {
+      return `border-red-100 text-red-100 hover:bg-red-btn-hover`
+    }
+  } else if (variant === 'text') {
+    if (color === 'primary') {
+      return `text-blue-btn hover:bg-blue-btn-hover`
+    }
+    if (color === 'error') {
+      return `text-red-100 hover:bg-red-btn-hover`
+    }
+  }
+
+  return `bg-blue-btn text-white hover:bg-blue-btn-hover`
 }
 
-function PrimaryButton(props: PrimaryButtonProps) {
+function PrimaryButton(props: LoadingButtonProps) {
+  const { loading, ...rest } = props
+
+  const variant = props?.variant || 'contained'
+  const color = props?.color || 'primary'
+
   return (
-    <Button
-      {...props}
-      variant={props?.variant || 'contained'}
-      className={`${
-        !props?.disabled && props.kind === 'error'
-          ? 'bg-red-100 text-white'
-          : props.variant === 'outlined'
-          ? 'border border-primary-button text-primary-button'
-          : props.variant === 'text'
-          ? 'text-primary-button bg-transparent'
-          : 'bg-primary-button text-white'
-      } py-2 px-4 rounded-md font-rubik font-medium  ${props.className}`}
+    <LoadingButton
+      {...rest}
+      variant={variant}
+      className={`py-2 px-4 rounded-md font-rubik font-medium ${getClassName(
+        variant,
+        color
+      )}  ${props.className}`}
+      loading={loading}
+      color={color}
     >
-      {props.loading ? (
-        <CircularProgress className="h-5 w-5" />
-      ) : (
-        props.children
-      )}
-    </Button>
+      {props.children}
+    </LoadingButton>
   )
 }
 
-export function PreviousButton(props: PrimaryButtonProps) {
+export function PreviousButton(props: LoadingButtonProps) {
   return (
     <PrimaryButton
       {...props}
@@ -42,8 +62,14 @@ export function PreviousButton(props: PrimaryButtonProps) {
   )
 }
 
-export function NextButton(props: PrimaryButtonProps) {
-  return <PrimaryButton {...props} endIcon={<KeyboardDoubleArrowRightIcon />} />
+export function NextButton(props: LoadingButtonProps) {
+  return (
+    <PrimaryButton
+      {...props}
+      endIcon={<KeyboardDoubleArrowRightIcon />}
+      variant="contained"
+    />
+  )
 }
 
 export default PrimaryButton

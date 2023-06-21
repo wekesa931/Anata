@@ -38,6 +38,8 @@ module.exports = {
       'primary-button': '#205284',
       'light-blue': '#e6f3fa',
       'blue-btn': '#205284',
+      'blue-btn-hover': 'rgb(22, 57, 92)',
+      'red-btn-hover': '#c62828',
       'grey-main': '#777',
       purple: '#e0ddf1',
       'orange-main': '#ff9800',

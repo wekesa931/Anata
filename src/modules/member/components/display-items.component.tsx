@@ -1,3 +1,4 @@
+import { Divider } from '@mui/material'
 import React from 'react'
 
 export function ItemTitle({ title }: { title: string }) {
@@ -54,5 +55,10 @@ export function GridItems({
 }
 
 export function SectionItem({ children }: { children: React.ReactNode }) {
-  return <div className="w-full py-4">{children}</div>
+  return (
+    <div className="w-full py-2">
+      {children}
+      <Divider className="my-2" />
+    </div>
+  )
 }

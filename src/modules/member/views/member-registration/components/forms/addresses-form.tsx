@@ -15,6 +15,7 @@ import { logError } from 'src/utils/logging/logger'
 import { useNotifications } from 'src/context/notifications'
 import DeleteFormEntry from 'src/modules/member/components/delete-form-entry'
 import FlexRow from 'src/components/layouts/flex-row'
+import { isDirty } from 'src/utils/form-validation-methods'
 
 type AddressesFormProps = {
   member: Member | null
@@ -48,16 +49,21 @@ function AddressesForm({ member }: AddressesFormProps) {
         antaraId: member?.antaraId || '',
       }
 
-  const handleSubmit = (values: any) => {
-    if (member) {
-      handleUpdateAddresses(member, values)
-        .then(() => {
-          onNext()
-        })
-        .catch((err) => {
-          logError(err)
-          notify('An error occurred while updating member')
-        })
+  const handleSubmit = (values: any, formikBag: any) => {
+    if (isDirty(initialValues, values)) {
+      if (member) {
+        handleUpdateAddresses(member, values)
+          .then(() => {
+            onNext()
+          })
+          .catch((err) => {
+            logError(err)
+            notify('An error occurred while updating member')
+          })
+      }
+    } else {
+      formikBag.setSubmitting(false)
+      onNext()
     }
   }
 
@@ -94,8 +100,8 @@ function AddressesForm({ member }: AddressesFormProps) {
                             name={`addresses.${index}.addressLabel`}
                             placeholder="--Select--"
                             options={[
-                              { value: 'home', label: 'Home' },
-                              { value: 'work', label: 'Work' },
+                              { value: 'Home', label: 'Home' },
+                              { value: 'Office', label: 'Office' },
                             ]}
                           />
                         </FlexRow>

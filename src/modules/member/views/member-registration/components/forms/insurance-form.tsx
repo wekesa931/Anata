@@ -21,6 +21,7 @@ import { useNotifications } from 'src/context/notifications'
 import { useRegistrationForm } from 'src/context/member-registration'
 import { relationshipOptions } from 'src/config/constants'
 import { useNavigate } from 'react-router-dom'
+import { isDirty } from 'src/utils/form-validation-methods'
 
 type InsuranceDetailsValues = DbValueTypes.InsuranceDetailsValues
 
@@ -125,16 +126,23 @@ export default function InsuranceForm({
   }, [verificationStatus, member])
 
   const handleSubmit = (values: any) => {
-    if (member) {
-      handleUpdateInsuranceDetails(member, values)
-        .then(() => {
-          setCompleted(primaryMember || member)
-          navigate(`/member/${member.antaraId}`)
-        })
-        .catch((e) => {
-          logError(e)
-          notify('An error occurred while updating insurance details', 2000)
-        })
+    const completeSubmission = () => {
+      setCompleted(primaryMember || member)
+      if (member?.antaraId) navigate(`/member/${member.antaraId}`)
+    }
+    if (isDirty(initialValues, values)) {
+      if (member) {
+        handleUpdateInsuranceDetails(member, values)
+          .then(() => {
+            completeSubmission()
+          })
+          .catch((e) => {
+            logError(e)
+            notify('An error occurred while updating insurance details', 2000)
+          })
+      }
+    } else {
+      completeSubmission()
     }
   }
 

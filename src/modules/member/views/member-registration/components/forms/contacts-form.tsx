@@ -8,7 +8,7 @@ import { FieldArray, Form } from 'formik'
 import TextField from 'src/components/forms/fields/text'
 import SelectField from 'src/components/forms/fields/select-field'
 import PhoneField from 'src/components/forms/fields/phone-field'
-import { validateEmail } from 'src/utils/form-validation-methods'
+import { isDirty, validateEmail } from 'src/utils/form-validation-methods'
 import PrimaryForm from 'src/components/forms/primary-form'
 import FlexRow from 'src/components/layouts/flex-row'
 import DeleteFormEntry from 'src/modules/member/components/delete-form-entry'
@@ -22,9 +22,10 @@ import { relationshipOptions } from 'src/config/constants'
 
 type ContactsFormProps = {
   member: Member | null
+  isChildRegistration?: boolean
 }
 
-function ContactsForm({ member }: ContactsFormProps) {
+function ContactsForm({ member, isChildRegistration }: ContactsFormProps) {
   const { onNext, onPrev } = useWizardContext()
   const { handleUpdateContactsData, loading } = useRegistrationData()
   const { notify } = useNotifications()
@@ -48,16 +49,21 @@ function ContactsForm({ member }: ContactsFormProps) {
     antaraId: member?.antaraId || '',
   }
 
-  const handleSubmit = (values: any) => {
-    if (member) {
-      handleUpdateContactsData(member, values)
-        .then(() => {
-          onNext()
-        })
-        .catch((err) => {
-          logError(err)
-          notify('An error occurred while updating member')
-        })
+  const handleSubmit = (values: any, formikBag: any) => {
+    if (isDirty(initialValues, values)) {
+      if (member) {
+        handleUpdateContactsData(member, values)
+          .then(() => {
+            onNext()
+          })
+          .catch((err) => {
+            logError(err)
+            notify('An error occurred while updating member')
+          })
+      }
+    } else {
+      formikBag.setSubmitting(false)
+      onNext()
     }
   }
 
@@ -87,7 +93,7 @@ function ContactsForm({ member }: ContactsFormProps) {
                             name={`phones.${index}.phone`}
                             label="Phone Number"
                             placeholder="Enter the phone number"
-                            required
+                            required={!isChildRegistration}
                           />
                           <SelectField
                             name={`phones.${index}.phoneType`}
