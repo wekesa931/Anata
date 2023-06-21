@@ -131,7 +131,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: '',
+        helper:
+          'I just wanted to ask about whether you are having any health issue, right now, that is affecting or concerning you.',
       },
       {
         id: 'fldQLkaDm3DmzIDIj',
@@ -146,7 +147,7 @@ export default [
         foreignTableId: null,
         required: true,
         helper:
-          '"I just wanted to ask about whether you are having any health issue, right now, that is affecting or concerning you."\n\nQuickly make a judgment on the next steps that may need to follow for the particular complaint.\n\nIn case of a complaint that may need visual confirmation, please ask the member what phone they are using and if they can take a photo or even have a WhatsApp video call\n\nThe key here is to determining the following:\nIs the condition acute?\nIs the condition chronic?\nIs the condition a Priority (meaning, does the Member consider the condition to be important)?',
+          'In case of a complaint that may need visual confirmation, please ask the member what phone they are using and if they can take a photo or even have a WhatsApp video call\n\nThe key here is to determining the following:\nIs the condition acute?\nIs the condition chronic?\nIs the condition a Priority (meaning, does the Member consider the condition to be important)?',
         conditionType: '',
         parentKey: 'Current Health Issues',
         parentValues: ['Yes'],
@@ -160,6 +161,20 @@ export default [
         },
       },
       {
+        id: 'fldVTzBcoWVkmSG3H',
+        name: 'PMH',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
         id: 'fldS7BHxKsN4pG2gf',
         name: 'Do you have any significant past medical history not listed above?',
         type: 'text',
@@ -170,8 +185,17 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
+        conditionType: '',
+        parentKey: 'PMH',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values.PMH)) {
+            return ['Yes'].some((r) => values.PMH.includes(r))
+          }
+          return ['Yes'].includes(values.PMH)
+        },
       },
       {
         id: 'fldADJtt1OqdkaRJQ',
@@ -358,7 +382,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
       },
       {
@@ -387,36 +411,6 @@ export default [
         },
       },
       {
-        id: 'fldzJcksuUVBUBo2R',
-        name: 'Systolic Blood Pressure (mmHg)',
-        type: 'number',
-        format: 'integer',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '"Have you ever taken or had someone else take your Blood Pressure? If so, do you remember the last BP reading you had"\n\n(mm/Hg)\nBetter to create a BP intake. please use a form in the guided workflow',
-      },
-      {
-        id: 'fldMBunVl8Fvmy8JB',
-        name: 'Diastolic Blood Pressure (mmHg)',
-        type: 'number',
-        format: 'integer',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '(mm/Hg)\nBetter to create a BP intake. please use a form in the guided workflow',
-      },
-      {
         id: 'fld3GQgj3l991L0sp',
         name: 'Please select the system(s) with a relevant finding',
         type: 'multiSelect',
@@ -429,7 +423,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          '"Are you currently having any complaints or issues that are new or old in the following parts of your body"\n\n[Please use the following as simple descriptions:]\n\nNEUROLOGIC: any issues related to taste, sight, smell, touch or hearing. Any Seizures or issues with your brain\n\nHEENT: any issues realted to your Head, Eyes, Ears, Nose or Throat\n\nCARDIOVASCULAR: any issues related to your heart or blood pressure, veins or arteries\n\nPULMONARY: any issues related to your lungs or breathing\n\nGASTROINTESTINAL: any vomiting or diarrhea, constipation irritable bowels or other issue passing stool\n\nGENITOURINARY: any issues with your genitalia/private parts; any difficulty urinating or problem with sexual performance\n\nEXTREMITIES: any tingling in your fingers or toes, any pain or swelling in your arms or legs, difficulty with your hands or feet\n\nDERMATOLOGIC: any rashes, lumps, bumps, skin color changes or skin problems\n\nMENTAL HEALTH: are you having any mental health issues\n\nHEMATOLOGIC: have you ever been told you are anemic\n\nREPRODUCTIVE: \nMen: any issues with erectile dysfunction, fertility or testicular issues\nFemale: any menstruation related, fertility related or ovarian issues\n\nENDOCRINE: have you ever been told you have an issue with your hormones\n\nNEOPLASTIC: are you currently receiving care for cancer\n\nIMMUNOLOGIC: have you ever been told you have a weakened immune system',
+          '"Are you currently having any complaints or issues that are new or old in the following parts of your body"\n\n[Please use the following as simple descriptions:]\nNEUROLOGIC: any issues related to taste, sight, smell, touch or hearing. Any Seizures or issues with your brain\nHEENT: any issues realted to your Head, Eyes, Ears, Nose or Throat\nCARDIOVASCULAR: any issues related to your heart or blood pressure, veins or arteries\n\nPULMONARY: any issues related to your lungs or breathing\nGASTROINTESTINAL: any vomiting or diarrhea, constipation irritable bowels or other issue passing stool\nGENITOURINARY: any issues with your genitalia/private parts; any difficulty urinating or problem with sexual performance\nEXTREMITIES: any tingling in your fingers or toes, any pain or swelling in your arms or legs, difficulty with your hands or feet\nDERMATOLOGIC: any rashes, lumps, bumps, skin color changes or skin problems\n\nMENTAL HEALTH: are you having any mental health issues\nHEMATOLOGIC: have you ever been told you are anemic\n\nREPRODUCTIVE: \nMen: any issues with erectile dysfunction, fertility or testicular issues\nFemale: any menstruation related, fertility related or ovarian issues\nENDOCRINE: have you ever been told you have an issue with your hormones\nNEOPLASTIC: are you currently receiving care for cancer\nIMMUNOLOGIC: have you ever been told you have a weakened immune system',
       },
       {
         id: 'fldgBi8GSdb3MvKvG',
@@ -442,7 +436,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           '"For example: brain aneurysm, or brain tumor, or not cured of encephalitis or meningitis, or epilepsy/seizure in last 5 years, or multiple sclerosis, or neuropathy, or Parkinson\'s, or stroke, or diagnosed w/fainting and >41, or Transient Ischemic Attack, or subdural hematoma, or traumatic brain injury."',
         conditionType: '',
@@ -536,7 +530,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
@@ -569,7 +563,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
@@ -602,7 +596,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
@@ -635,7 +629,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'For example: heart attack, or atrial fibrilation/flutter, or abnormal heartbeat caused fainting, or taking >2 heart meds, or been advised to test heart periodically with echocardiogram, or advised to have surgery for heart murmur, or doctor said more than 1 episode of pericarditis, or seen doctor in last 6 months for pericarditis, or other.',
         conditionType: '',
@@ -733,7 +727,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
@@ -766,7 +760,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'For example: Sarcoidosis, or COPD, or admitted to hospital /emergency room for asthma in last year, or if >41 and >3 oral steroids in last 12 months, or pulmonary nodule or lung spot, or using CPAP machine, or not sure on resolved bronchitis/pneumonia/tuberculosis, or had other.',
         conditionType: '',
@@ -861,7 +855,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
@@ -894,7 +888,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           "For example: anorectal fistula, or celiac, or colon polyp, or Crohn's disease, or ulcerative colitis, or advised to get liver biopsy, or hepatitis B/C/D, or pancreatitis, or pancreatic abscess, or not sure ulcer resolved, or Barrett's or dysphagia, or weight loss surgery or other\n",
         conditionType: '',
@@ -994,7 +988,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
@@ -1027,7 +1021,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'For example: Glomerulonephritis or nephropathy, or kidney obstruction/infection due to stones, or surgery for stones, or remaining stones, or kidney failure, or dialysis, or urological abnormalities, or Proteinuria, or multiple renal cysts, or other/not sure.',
         conditionType: '',
@@ -1061,7 +1055,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
@@ -1094,7 +1088,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'In Men for Example: testicular torsion, infertility, erectile dysfunction, varicocoele\nIn Women For Example: inability to conceive, history of fibroids, ovarian cysts, endometriosis, hysterectomy, ectopic pregnancy or any other issue you may want to share',
         conditionType: '',
@@ -1128,7 +1122,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
@@ -1161,7 +1155,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
@@ -1194,7 +1188,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
@@ -1227,7 +1221,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'For example: is the member taking arthritis medication, or surgery for scoliosis, or other. ',
         conditionType: '',
@@ -1261,7 +1255,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
@@ -1294,7 +1288,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'For example: \nHemolytic or other anemia, iron deficiency, chronic bleeding, problems with blood clotting, easy or excessive bleeding, coagulation defects(hemophilia), \nenlarged spleen (hypersplenism), low platelet count (thrombocytopenia) or ITP (idiopathic thrombocytopenic purpura)',
         conditionType: '',
@@ -1328,7 +1322,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
@@ -1361,7 +1355,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Does the member have any history of:\nHOSPITALIZATION for Depression, anxiety, psychosis, suicide thoughts or attempts, anorexia or bulimia, post traumatic stress disorder, obsessive compulsive disorder, bipolar disorder, attention deficit hyperactivity disorder (ADHD) or other emotional disorder; or depression not diagnosed as situational only, or memory impairment, or delusion, or eating disorder, or suicide attempt',
         conditionType: '',
@@ -1395,7 +1389,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'At Antara we provide counseling services for our members, are you interested in doing a consultation with our counselor? if the answer is yes, please check with member if you can go ahead and book the consultation or if the member wants to do it at their convenience (in that case, create a member task for them to do it in the app)',
         conditionType: '',
@@ -1429,7 +1423,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'For example: they had or plan to have surgery or a biopsy of the cyst or nodule; or been advised by a member of the medical profession to have scans or imaging procedures of the thyroid that have not yet been completed; or being treated for your hypothyroidism (underactive thyroid) or hyperthyroidism (overactive thyroid); or other.\n',
         conditionType: '',
@@ -1463,7 +1457,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
@@ -1496,7 +1490,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Does the patient have any cancers, such as malignant tumor, skin cancer, leukemia, or melanoma?',
         conditionType: '',
@@ -1593,7 +1587,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Please select the system(s) with a relevant finding',
@@ -1980,9 +1974,9 @@ export default [
         },
       },
       {
-        id: 'fldkcFSAT8oJKkUos',
-        name: 'LMP',
-        type: 'date',
+        id: 'fld3qPhZ0MfkwIlxe',
+        name: 'LMP (Last Menstrual Period)',
+        type: 'select',
         format: '',
         isDateTime: false,
         options: [],
@@ -1990,8 +1984,8 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
-        helper: 'For Minors, only complete if menses has begun',
+        required: true,
+        helper: '',
         conditionType: '',
         parentKey: 'Gender',
         parentValues: ['Female'],
@@ -2000,6 +1994,56 @@ export default [
             return ['Female'].some((r) => values.Gender.includes(r))
           }
           return ['Female'].includes(values.Gender)
+        },
+      },
+      {
+        id: 'fldkcFSAT8oJKkUos',
+        name: 'LMP date',
+        type: 'date',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'For Minors, only complete if menses has begun',
+        conditionType: '',
+        parentKey: 'LMP (Last Menstrual Period)',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['LMP (Last Menstrual Period)'])) {
+            return ['Yes'].some((r) =>
+              values['LMP (Last Menstrual Period)'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['LMP (Last Menstrual Period)'])
+        },
+      },
+      {
+        id: 'fldumaLi5eigSAy12',
+        name: 'No LMP reason',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'LMP (Last Menstrual Period)',
+        parentValues: ['No'],
+        condition: (values: any) => {
+          if (Array.isArray(values['LMP (Last Menstrual Period)'])) {
+            return ['No'].some((r) =>
+              values['LMP (Last Menstrual Period)'].includes(r)
+            )
+          }
+          return ['No'].includes(values['LMP (Last Menstrual Period)'])
         },
       },
       {
@@ -2049,6 +2093,29 @@ export default [
         },
       },
       {
+        id: 'fldNYhasFwIEHcmhk',
+        name: 'No family planning reason',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Family Planning',
+        parentValues: ['No'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Family Planning'])) {
+            return ['No'].some((r) => values['Family Planning'].includes(r))
+          }
+          return ['No'].includes(values['Family Planning'])
+        },
+      },
+      {
         id: 'fldEgYA6Nml0CPzYO',
         name: 'Access to a gym',
         type: 'select',
@@ -2059,7 +2126,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           '"Do you have access to a gym or currently have a gym membership?"',
         conditionType: '',
@@ -2094,6 +2161,21 @@ export default [
           }
           return ['True'].includes(values['Access to a gym'])
         },
+      },
+      {
+        id: 'fldTc7EwOHKhSNTP0',
+        name: 'Activity Description',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          '"What kind of Physical Activity do you like to do? Do you like to walk, run, cycle, swim, go to the gym, play football, rugby or any other activity?"\nIf YES: "How often do you do [activity from above] and typically, how long do you do it for in any given session?\nIf NO: "That\'s okay, let\'s find something you will enjoy and start doing it."',
       },
       {
         id: 'fldYqSg6LyiDiQjAr',
@@ -2279,21 +2361,6 @@ export default [
         },
       },
       {
-        id: 'fldTc7EwOHKhSNTP0',
-        name: 'Activity Description',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '"What kind of Physical Activity do you like to do? Do you like to walk, run, cycle, swim, go to the gym, play football, rugby or any other activity?"\nIf YES: "How often do you do [activity from above] and typically, how long do you do it for in any given session?\nIf NO: "That\'s okay, let\'s find something you will enjoy and start doing it."',
-      },
-      {
         id: 'fldMwmPNsW6aq1mmB',
         name: 'Does the Member have a condition',
         type: 'select',
@@ -2309,19 +2376,18 @@ export default [
           '"Do you currently have, or have you ever been told you have, a chronic condition? That is any condition that has been present for more than 3 months. \n\nExamples of chronic conditions are: high blood pressure, diabetes, arthritis, asthma or high cholesterol."\n\nIf you identify condition(s) please add the condition using a form in the guided workflow.',
       },
       {
-        id: 'fldCruVXj9uiYeelJ',
-        name: 'Is it a Major Condition?',
-        type: 'multiSelect',
+        id: 'fldgMXReFVH1AVE51',
+        name: 'Conditions master list',
+        type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
+        symmetricColumnId: 'fldSwxBB4lSdvx3bU',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblR6LlerAkXAmVnc',
         required: false,
-        helper:
-          '"Do you have or have you ever been told you have any one of these conditions?"',
+        helper: '',
         conditionType: '',
         parentKey: 'Does the Member have a condition',
         parentValues: ['Yes'],
@@ -2403,7 +2469,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Risk factors include a family history, prior abnormal readings, smoking, eating habits etc.\n\nIf the response is yes, please add the condition using a form in the guided workflow.',
       },
@@ -2613,9 +2679,37 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           '"I want to make sure that we communicate using your preferred channel. We can do calls, WhatsApp, SMS or our favorite, the Antara App. Which would you prefer?"\n',
+      },
+      {
+        id: 'fldRPEHtx0tMF6Fbt',
+        name: 'What is your preferred day for communication',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldP92ErxpTC56uJU',
+        name: 'What is your preferred time for communication',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
       },
       {
         id: 'fldJeJ56ChsLf5qoK',
@@ -2658,8 +2752,70 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
+      },
+      {
+        id: 'fldEEoZxly34h3su6',
+        name: 'Does the member has devices?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldm2jfYZ0V5frTh3',
+        name: 'Device selection',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Does the member has devices?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Does the member has devices?'])) {
+            return ['Yes'].some((r) =>
+              values['Does the member has devices?'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Does the member has devices?'])
+        },
+      },
+      {
+        id: 'fldXfA96pgSGeGAMP',
+        name: 'Other devices',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Device selection',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Device selection'])) {
+            return ['Other'].some((r) => values['Device selection'].includes(r))
+          }
+          return ['Other'].includes(values['Device selection'])
+        },
       },
       {
         id: 'fldh6l04sg3mNl1Zf',
