@@ -1,5 +1,5 @@
 import { V2MemberQueryType, V2MemberType } from 'src/modules/member/types'
-import { calcAge } from 'src/utils/date-time/date-formatters'
+import { getAgeFull } from 'src/utils/date-time/helpers'
 
 const getSexAccronym = (sex: string) => {
   if (sex?.toLowerCase() === 'male') return 'M'
@@ -86,13 +86,13 @@ export const parseV2MemberData = (
     }
   }
   const fullName = details?.fullName
-  const age = calcAge(birthDate)
+  const age = getAgeFull(birthDate)
 
   const employerName = status?.employer?.name || ''
 
   const displayName = `${fullName} (${
     memberData?.antaraId
-  }) - ${age} yrs [${getSexAccronym(sex || '')}] - ${employerName}`
+  }) - ${age} [${getSexAccronym(sex || '')}] - ${employerName}`
 
   return {
     ...member,

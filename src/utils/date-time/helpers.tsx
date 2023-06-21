@@ -38,6 +38,19 @@ const formattedDate = (date: string | Date) => {
 
 const isMinor = (birthDate: string) => calcAge(birthDate) < 18
 
+const getAgeFull = (birthDate?: string) => {
+  if (!birthDate) {
+    return ''
+  }
+  const age = calcAge(birthDate)
+  if (age > 1) {
+    return `${age} y`
+  }
+
+  const months = dayjs().diff(birthDate, 'month')
+  return `${months} m`
+}
+
 export {
   dateIsToday,
   dateIsYesterday,
@@ -45,4 +58,5 @@ export {
   dateInPastMonth,
   formattedDate,
   isMinor,
+  getAgeFull,
 }
