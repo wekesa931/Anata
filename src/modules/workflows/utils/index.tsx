@@ -242,6 +242,7 @@ export const initialFormValues = (
     },
     'Interaction log': {
       'Encounter Date': new Date(),
+      'Health Navigator': [user.userAirtableId],
     },
     'Logistics Tasks': {
       Beneficiary: member?.fullName,
