@@ -19,6 +19,7 @@ import useHandleResponses from 'src/utils/airtable/error-handler'
 import useAntaraStaff, {
   mapAssigneeToLookup,
 } from 'src/hooks/antara-staff.hook'
+import { useMember } from 'src/context/member'
 import styles from './tasks.component.css'
 import PrescriptionName from '../components/prescription-name'
 
@@ -175,7 +176,7 @@ function Tasks() {
     'Not Applicable',
     'On Hold',
   ]
-  const { recId } = useParams()
+  const { member } = useMember()
 
   const fields = [
     'Type',
@@ -208,7 +209,7 @@ function Tasks() {
     refresh: refetchTasks,
     isLoading: isAirtableLoading,
     isError: isAirtableError,
-  } = useAirtableFetch(buildAirtableUrl(recId, fields))
+  } = useAirtableFetch(buildAirtableUrl(member?.airtableRecordId, fields))
 
   const { antaraId } = useParams()
 

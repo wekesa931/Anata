@@ -115,6 +115,7 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
               formData={formData}
               setIsEdited={setIsEdited}
               closeForm={() => closeForm(form)}
+              clearSubmissionId={() => setSubmissionId('')}
             />
           </FormsSection>
           <ActionsSection>

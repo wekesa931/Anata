@@ -6,6 +6,7 @@ import { every, isEmpty } from 'lodash'
 import { useAirtableMeta } from 'src/context/airtable-meta'
 import { useNotifications } from 'src/context/notifications'
 import { Forms as TWorkflowForm } from 'src/modules/workflows/db/models'
+import { logError } from 'src/utils/logging/logger'
 import validationRules from './validation-schema'
 import WorkflowFormsFields from './form-fields'
 import CalendlyLink from './calendly-link'
@@ -25,6 +26,7 @@ type WorkflowFormProps = {
   formData: any
   setIsEdited: (isEdited: boolean) => void
   closeForm?: () => void
+  clearSubmissionId: () => void
 }
 
 function WorkflowForm({
@@ -37,6 +39,7 @@ function WorkflowForm({
   formData,
   setIsEdited,
   closeForm,
+  clearSubmissionId,
 }: WorkflowFormProps) {
   const [isFormDraft, setIsFormDraft] = React.useState<boolean>(false)
 
@@ -58,6 +61,7 @@ function WorkflowForm({
     reset,
   } = useForm({
     resolver: yupResolver(validationObject),
+    mode: 'onChange',
   })
 
   const handleOpenForm = (field: any) => {
@@ -77,53 +81,60 @@ function WorkflowForm({
 
   useEffect(() => {
     if (submissionId && canSubmit && form.id === submissionId) {
-      handleSubmit((data: any) => {
-        let formattedPayload = data
-        numberFields.forEach((mt) => {
-          if (formattedPayload[`${mt.name}`]) {
-            if (mt.isPercent) {
-              formattedPayload = {
-                ...formattedPayload,
-                [`${mt.name}`]:
-                  parseFloat(formattedPayload[`${mt.name}`]) / 100,
-              }
-            } else {
-              formattedPayload = {
-                ...formattedPayload,
-                [`${mt.name}`]: parseFloat(formattedPayload[`${mt.name}`]),
+      handleSubmit(
+        (data: any) => {
+          let formattedPayload = data
+          numberFields.forEach((mt: any) => {
+            if (formattedPayload[`${mt.name}`]) {
+              if (mt.isPercent) {
+                formattedPayload = {
+                  ...formattedPayload,
+                  [`${mt.name}`]:
+                    parseFloat(formattedPayload[`${mt.name}`]) / 100,
+                }
+              } else {
+                formattedPayload = {
+                  ...formattedPayload,
+                  [`${mt.name}`]: parseFloat(formattedPayload[`${mt.name}`]),
+                }
               }
             }
-          }
-        })
+          })
 
-        dateFields.forEach((dt) => {
-          if (form?.data[dt] !== 'Invalid Date') {
-            formattedPayload = {
-              ...formattedPayload,
-              [dt]: form?.data[dt],
-            }
-          }
-        })
-        submitForm(form, formSchema, formattedPayload)
-          .then(() => {
-            form.clearDraft().then(() => {
-              setIsFormDraft(false)
-              notify('Form submitted succesfully.')
-              setIsEdited(false)
-              if (!form.workflow.id && closeForm) {
-                closeForm()
+          dateFields.forEach((dt: any) => {
+            if (form?.data[dt] !== 'Invalid Date') {
+              formattedPayload = {
+                ...formattedPayload,
+                [dt]: form?.data[dt],
               }
+            }
+          })
+          submitForm(form, formSchema, formattedPayload)
+            .then(() => {
+              form.clearDraft().then(() => {
+                setIsFormDraft(false)
+                notify('Form submitted succesfully.')
+                setIsEdited(false)
+                if (!form.workflow.id && closeForm) {
+                  closeForm()
+                }
+              })
             })
-          })
-          .catch((err) => {
-            notify(
-              err?.message
-                ? err?.message
-                : 'There was an error submitting your form. Please try again.'
-            )
-            setIsFormDraft(true)
-          })
-      })()
+            .catch((err) => {
+              notify(
+                err?.message
+                  ? err?.message
+                  : 'There was an error submitting your form. Please try again.'
+              )
+              setIsFormDraft(true)
+            })
+        },
+        (e: any) => {
+          logError(e)
+          notify('Your form has some error, please fix and retry.')
+          clearSubmissionId()
+        }
+      )()
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

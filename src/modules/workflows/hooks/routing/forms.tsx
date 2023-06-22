@@ -70,12 +70,12 @@ export const useFormsRouting = () => {
         addFormIdToSearchParams(form.id)
 
         // notify the user that the form was created
-        notify(`Created form: ${formName}`)
+        notify(`Created form: ${formName}`, 1000)
         // navigate to new url with new form id
         navigateToNewUrl()
       }
     } catch (error) {
-      notify(`Failed to create form: ${formName}`)
+      notify(`Failed to create form: ${formName}`, 1000)
     }
   }
 

@@ -424,6 +424,9 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                                   saveInput={handleSaveInput(form, index)}
                                   formData={formsData[index] || {}}
                                   setIsEdited={setIsEdited}
+                                  clearSubmissionId={() =>
+                                    setSubmissionForm(null)
+                                  }
                                 />
                               </AccordionDetails>
                             </Accordion>
@@ -439,6 +442,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                           saveInput={handleSaveInput(activeForms[0], 0)}
                           formData={formsData[0] || {}}
                           setIsEdited={setIsEdited}
+                          clearSubmissionId={() => setSubmissionForm(null)}
                         />
                       )}
                     </>
