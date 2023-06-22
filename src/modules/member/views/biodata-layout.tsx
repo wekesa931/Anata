@@ -5,7 +5,7 @@ import { TabContext, TabList, TabPanel } from '@mui/lab'
 import PersonalSection from 'src/modules/member/views/personal-section'
 import ClinicalSection from 'src/modules/member/views/clinical-section'
 import { TitleSkeleton } from 'src/modules/member/components/skeleton-loaders'
-import {getAgeFull} from 'src/utils/date-time/helpers'
+import { getAgeFull } from 'src/utils/date-time/helpers'
 
 function MemberBiodataLayout() {
   const { member } = useMember()
@@ -21,7 +21,7 @@ function MemberBiodataLayout() {
         <div className="py-2 px-0 bg-white-bg min-h-[48px] flex items-center justify-between">
           {member ? (
             <h3 className="font-rubik font-medium text-xl pl-4 text-dark-blue-100 ">
-              {`${member.fullName} (${getAgeFull(member?.birthDate)})`} 
+              {`${member.fullName} (${getAgeFull(member?.birthDate)})`}
               {member?.sex && (
                 <span className="w-6 h-6 bg-red-50 text-white rounded-[50%] ml-1 py-[2px] px-[6px]">
                   {member?.sex.charAt(0) || ''}

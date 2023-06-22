@@ -146,7 +146,8 @@ export const renameField = (
 }
 
 const isAllowedField = (name: string) => {
-  return name === 'createdBy' || name === 'updatedBy' || name === 'Data Source'
+  const allowedFields = ['createdBy', 'updatedBy', 'Data Source']
+  return allowedFields.includes(name)
 }
 
 export const generatePayload = (
@@ -154,19 +155,23 @@ export const generatePayload = (
   formMeta: any,
   airtableMeta: any
 ) => {
-  const airtableFieldsMap = airtableMeta[formMeta.id].fields
+  const airtableFieldsMap: Record<
+    string,
+    { name: string; id: string; [key: string]: any }
+  > = airtableMeta[formMeta.id].fields
   const erroredFields: string[] = []
   const mappedPayload: any = {}
-  const localFieldsMap: any = {}
-  formMeta?.fields?.forEach((fm: any) => {
-    localFieldsMap[fm?.name] = {
-      id: fm?.id,
-    }
-  })
+
+  const findFieldId = (name: string) => {
+    const allFields = Object.values(airtableFieldsMap)
+    const found = allFields.find((f: any) => f.name === name)
+    return found?.id
+  }
 
   Object.keys(initialPayload)?.forEach((k) => {
-    if (localFieldsMap[k] && airtableFieldsMap[localFieldsMap[k].id]) {
-      mappedPayload[localFieldsMap[k].id] = initialPayload[k]
+    const fieldId = findFieldId(k)
+    if (fieldId) {
+      mappedPayload[fieldId] = initialPayload[k]
     } else if (isAllowedField(k)) {
       mappedPayload[k] = initialPayload[k]
     } else {
@@ -242,6 +247,10 @@ export const initialFormValues = (
       Beneficiary: member?.fullName,
       Status: 'Scheduled',
       Creator: [user.userAirtableId],
+    },
+    Appointments: {
+      'Missed #': 0,
+      'Rescheduled #': 0,
     },
   }
 }
