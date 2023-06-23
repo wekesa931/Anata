@@ -1,19 +1,15 @@
 import React, { ReactNode, useEffect, useState } from 'react'
 import {
-  Button,
-  Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Paper,
   Portal,
   Tooltip,
-  useMediaQuery,
 } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
 import Draggable from 'react-draggable'
 import { Maximize, Maximize2, Minimize, Minimize2, X } from 'react-feather'
+import ConfirmationDialog from 'src/components/dialog'
 
 type PortalWindowTypes = {
   title: string | ReactNode
@@ -24,7 +20,6 @@ type PortalWindowTypes = {
   windowActions?: ReactNode
   isEdited: boolean
   setIsEdited: (value: boolean) => void
-  name?: string
 }
 
 function PortalWindow({
@@ -36,7 +31,6 @@ function PortalWindow({
   windowActions,
   isEdited,
   setIsEdited,
-  name,
 }: PortalWindowTypes) {
   const [isDisabled, setIsDisabled] = useState<boolean>(false)
   const [isHighlighting, setIsHighlighting] = useState<boolean>(true)
@@ -52,8 +46,6 @@ function PortalWindow({
   const containerHeight = `${calloutHeight}%`
 
   const dragClass = isDisabled ? 'draggable-disabled' : 'draggable'
-  const theme = useTheme()
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
 
   const changeCalloutSize = () => {
     const newHeight = isIncreasing ? calloutHeight + 20 : calloutHeight - 20
@@ -159,42 +151,14 @@ function PortalWindow({
           </DialogTitle>
           <DialogContent sx={{ padding: 0, height: '90%' }}>
             {children}
-            <Dialog
+            <ConfirmationDialog
               open={open}
-              onClose={handleLeave}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-              fullScreen={fullScreen}
-            >
-              <DialogTitle
-                id="alert-dialog-title"
-                sx={{ maxHeight: '10%', height: '4rem' }}
-              >
-                {`Are you sure you want to leave ${name}?`}
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  You might lose any changes you have made.
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  color="inherit"
-                  variant="contained"
-                  onClick={() => setOpen(false)}
-                >
-                  Stay
-                </Button>
-                <Button
-                  color="info"
-                  variant="contained"
-                  onClick={handleLeave}
-                  autoFocus
-                >
-                  Leave
-                </Button>
-              </DialogActions>
-            </Dialog>
+              setOpen={setOpen}
+              onConfirm={handleLeave}
+              onReject={() => {
+                setOpen(false)
+              }}
+            />
           </DialogContent>
           {windowActions && (
             <DialogActions sx={{ padding: 2 }}>{windowActions}</DialogActions>
