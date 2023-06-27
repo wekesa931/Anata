@@ -189,8 +189,12 @@ export const useProcessNewWorkflowModule = () => {
     formMeta: any
   ) => {
     const activeForm = ActiveForm(formName)
-    if (!activeForm.isInteractionsLog && !activeForm.isMemberFeedback) {
-      let payload = omitKeys(data, ['moduleId', 'Case ID'])
+    if (
+      !activeForm.isInteractionsLog &&
+      !activeForm.isMemberFeedback &&
+      airtableMeta
+    ) {
+      let payload = omitKeys(data, ['moduleId', 'Case ID', 'isDraft'])
 
       if (activeForm.isHIFMinor || activeForm.isInterventionDataTracking) {
         payload = omitKeys(payload, ['Member'])
@@ -215,9 +219,7 @@ export const useProcessNewWorkflowModule = () => {
       const generatedPayload = generatePayload(payload, formMeta, airtableMeta)
 
       if (activeForm.isHIF) {
-        payload = omitKeys(generatedPayload.fields, ['Member'])
-
-        const hifId = await getHifInfo(generatedPayload?.fields?.Member[0])
+        const hifId = await getHifInfo(member?.airtableRecordId)
         if (hifId) {
           return createHif(hifId, generatedPayload)
         }
@@ -378,7 +380,7 @@ export const useCreateFeedback = () => {
 }
 
 export const useHNOSData = () => {
-  const getHifInfo = async (memberId: string | null) => {
+  const getHifInfo = async (memberId?: string | null) => {
     if (memberId) {
       const hifInfo = await airtableFetch(
         `hif/list?filterByFormula=FIND("${memberId}", {Member Record ID})`

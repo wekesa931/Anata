@@ -127,6 +127,7 @@ function WorkflowForm({
                   : 'There was an error submitting your form. Please try again.'
               )
               setIsFormDraft(true)
+              clearSubmissionId()
             })
         },
         (e: any) => {
