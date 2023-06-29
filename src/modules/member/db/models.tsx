@@ -5,6 +5,7 @@ import {
   PhoneType,
   V2MemberType,
   DbValueTypes as DbTypes,
+  EmployerType,
 } from 'src/modules/member/types'
 import dayjs from 'dayjs'
 import {
@@ -110,7 +111,7 @@ export class Member extends Model {
 
   @json('insurances', identityJson) insurances?: InsuranceDetailsValues
 
-  @text('employer') employer?: string
+  @json('employer', identityJson) employer?: EmployerType
 
   @field('is_synced') isSynced!: boolean
 

@@ -18,6 +18,18 @@ type BenefitUtilizationType = {
   id: string
 }
 
+export type EmployerType = {
+  name?: string
+  businessLocation?: {
+    businessLocationId?: string
+    name?: string
+  }
+  department?: {
+    departmentId?: string
+    name?: string
+  }
+}
+
 export type V2MemberType = {
   antaraId: string
   birthDate: string
@@ -31,7 +43,7 @@ export type V2MemberType = {
   phone?: string
   phoneType?: string
   phones?: PhoneType[]
-  employer?: string
+  employer?: EmployerType
   department?: string
   onboardStage?: string
   status?: string
@@ -121,6 +133,14 @@ export type V2MemberQueryType = {
       onboardStage?: string
     }
     employer?: {
+      name?: string
+    }
+    department?: {
+      departmentId?: string
+      name?: string
+    }
+    businessLocation?: {
+      businessLocationId?: string
       name?: string
     }
     assignedHn?: string
@@ -241,7 +261,7 @@ export type RegistrationFormsNames = 'primary' | 'spouse' | 'child'
 export type LookupOption = {
   label: string
   value: string
-  [key: string]: string
+  [key: string]: string | LookupOption[]
 }
 
 export type LookupOptions = {
@@ -279,7 +299,7 @@ export namespace DbValueTypes {
 
   export type InsuranceDetailsValues = {
     insurances: InsuranceType[]
-    employer?: string
+    employer?: EmployerType
     antaraId: string
   }
 

@@ -49,7 +49,11 @@ export const parseV2MemberData = (
   const { status = {} } = memberData
   member = { ...member, ...status }
 
-  member.employer = status?.employer?.name
+  member.employer = {
+    name: status?.employer?.name,
+    department: status?.department,
+    businessLocation: status?.businessLocation,
+  }
   member.onboardStage = status?.onboardStage?.onboardStage
   member.status = status?.status?.status
   member.assignedMe = status?.assignedMeEmailUsername

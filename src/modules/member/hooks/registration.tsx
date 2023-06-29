@@ -198,6 +198,7 @@ export const useRegistrationData = () => {
       return database.write(async () => {
         return member.update((m) => {
           m.insurances = insuranceDetails
+          m.employer = insuranceDetails.employer
         })
       })
     } catch (error) {

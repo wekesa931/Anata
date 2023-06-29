@@ -92,6 +92,14 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
       employer {
         name
       }
+      businessLocation {
+        businessLocationId
+        name
+      }
+      department {
+        departmentId
+        name
+      }
       assignedHn
       assignedHnFullName
       assignedMe

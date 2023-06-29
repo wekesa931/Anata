@@ -21,6 +21,14 @@ export const LOOKUP_ENTRIES_QUERY = gql`
       edges {
         node {
           name
+          departments {
+            name
+            departmentId
+          }
+          businessLocations {
+            name
+            businessLocationId
+          }
         }
       }
     }

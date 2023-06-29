@@ -232,7 +232,9 @@ export const useUpdateInsuranceDetails = () => {
     const variables = {
       memberStatus: {
         antaraId,
-        employer,
+        employer: employer?.name,
+        departmentId: employer?.department?.departmentId,
+        businessLocationId: employer?.businessLocation?.businessLocationId,
       },
       memberInsurance: {
         antaraId,

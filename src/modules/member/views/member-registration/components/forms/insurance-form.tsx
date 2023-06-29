@@ -14,7 +14,11 @@ import * as yup from 'yup'
 import DeleteFormEntry from 'src/modules/member/components/delete-form-entry'
 import { useRegistrationData } from 'src/modules/member/hooks/registration'
 import VerificationLoader from 'src/components/loaders/verification-loader'
-import type { VerificationStatus, DbValueTypes } from 'src/modules/member/types'
+import type {
+  VerificationStatus,
+  DbValueTypes,
+  LookupOption,
+} from 'src/modules/member/types'
 import ErrorFeedback from 'src/components/feedbacks/error'
 import { logError } from 'src/utils/logging/logger'
 import { useNotifications } from 'src/context/notifications'
@@ -26,7 +30,17 @@ import { isDirty } from 'src/utils/form-validation-methods'
 type InsuranceDetailsValues = DbValueTypes.InsuranceDetailsValues
 
 const validationSchema = yup.object().shape({
-  employer: yup.string().required('Employer is required'),
+  employer: yup.object().shape({
+    name: yup.string().required('Employer name is required'),
+    department: yup.object().shape({
+      name: yup.string(),
+      departmentId: yup.string(),
+    }),
+    businessLocation: yup.object().shape({
+      name: yup.string(),
+      businessLocationId: yup.string(),
+    }),
+  }),
   insurances: yup.array().of(
     yup.object().shape(
       {
@@ -61,7 +75,7 @@ const validationSchema = yup.object().shape({
   ),
 })
 
-type InsuranceFormProps = {
+type InsuranceSectionProps = {
   setCompleted: (completed: any) => void
   member: Member | null
   primaryMember: Member | undefined
@@ -76,7 +90,17 @@ type BooleanStatus = {
 }
 
 const defaultInsurance = (primaryMember: Member | undefined) => ({
-  employer: '',
+  employer: {
+    name: '',
+    department: {
+      departmentId: '',
+      name: '',
+    },
+    businessLocation: {
+      businessLocationId: '',
+      name: '',
+    },
+  },
   insurances: [
     {
       insuranceCompany: '',
@@ -94,12 +118,24 @@ const defaultInsurance = (primaryMember: Member | undefined) => ({
   antaraId: '',
 })
 
-export default function InsuranceForm({
+export default function InsuranceSectionForm(props: InsuranceSectionProps) {
+  const { onPrev } = useWizardContext()
+
+  return <InsuranceForm {...props} onPrev={onPrev} showWizardContols />
+}
+
+type InsuranceFormProps = InsuranceSectionProps & {
+  onPrev?: () => void
+  showWizardContols?: boolean
+}
+
+export function InsuranceForm({
   setCompleted,
   member,
   primaryMember,
+  onPrev,
+  showWizardContols = true,
 }: InsuranceFormProps) {
-  const { onPrev } = useWizardContext()
   const {
     handleVerifyInsuranceDetails,
     isVerifyingInsurance,
@@ -202,156 +238,246 @@ export default function InsuranceForm({
     }
   }
 
+  const getBusinessLocations = (
+    companies: LookupOption[],
+    companyName?: string
+  ) => {
+    if (companyName) {
+      const company = companies.find((c) => c.value === companyName)
+      return (company?.businessLocations || []) as LookupOption[]
+    }
+
+    return []
+  }
+
+  const getBusinessDepartments = (
+    companies: LookupOption[],
+    companyName?: string
+  ) => {
+    if (companyName) {
+      const company = companies.find((c) => c.value === companyName)
+      return (company?.departments || []) as LookupOption[]
+    }
+
+    return []
+  }
+
   return (
     <div className="overflow-scroll">
-      <PrimaryForm
-        initialValues={initialValues}
-        handleSubmit={handleSubmit}
-        validationSchema={validationSchema}
-      >
-        {({ values, touched }: FormikProps<InsuranceDetailsValues>) => {
-          return (
-            <Form>
-              <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
-                {' '}
-                Employer details{' '}
-              </h3>
-              <SelectField
-                label="Employer"
-                name="employer"
-                placeholder="--Select--"
-                options={lookupOptions?.employers || []}
-              />
-              <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
-                {' '}
-                Insurance details{' '}
-              </h3>
-              <FieldArray name="insurances">
-                {({ push, remove }) => (
-                  <>
-                    {values.insurances &&
-                      values.insurances.length > 0 &&
-                      values.insurances.map((p: any, index: number) => (
-                        <div key={index}>
-                          <DeleteFormEntry
-                            title={`Insurance ${index + 1}`}
-                            onDelete={() => remove(index)}
-                            showDeleteButton={values.insurances.length > 1}
-                          />
-                          <SelectField
-                            label="Insurance provider"
-                            placeholder="--Select--"
-                            options={insuranceCompanies || []}
-                            name={`insurances.${index}.insuranceCompany`}
-                            handleBlur={() => {
-                              if (shouldVerifyInsurance(touched, index)) {
-                                verifyInsurance(values, p, index)
-                              }
-                            }}
-                          />
-                          <TextField
-                            label="Insurance ID"
-                            placeholder="Enter insurance ID"
-                            name={`insurances.${index}.insuranceId`}
-                            handleBlur={() => {
-                              if (shouldVerifyInsurance(touched, index)) {
-                                verifyInsurance(values, p, index)
-                              }
-                            }}
-                          />
-                          <>
-                            {hasError[index] ? (
-                              <ErrorFeedback message="An error occured. Please try again." />
-                            ) : (
-                              <>
-                                {isLoading[index] && (
-                                  <VerificationLoader message="One moment while we verify the insurance ID..." />
-                                )}
+      {Object.keys(initialValues).length > 0 && (
+        <PrimaryForm
+          initialValues={initialValues}
+          handleSubmit={handleSubmit}
+          validationSchema={validationSchema}
+        >
+          {({
+            values,
+            touched,
+            setFieldValue,
+          }: FormikProps<InsuranceDetailsValues>) => {
+            return (
+              <Form>
+                <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
+                  {' '}
+                  Employer details{' '}
+                </h3>
+                <SelectField
+                  label="Employer"
+                  name="employer.name"
+                  placeholder="--Select--"
+                  options={lookupOptions?.employers || []}
+                />
+                <SelectField
+                  label="Business Unit/Branch/Wing"
+                  name="employer.businessLocation.businessLocationId"
+                  placeholder="--Select--"
+                  options={getBusinessLocations(
+                    lookupOptions?.employers || [],
+                    values?.employer?.name
+                  )}
+                  handleChange={(e: any) => {
+                    const businessLocation =
+                      getBusinessLocations(
+                        lookupOptions?.employers || [],
+                        values?.employer?.name
+                      )?.find((d) => d.businessLocationId === e.target.value)
+                        ?.label || ''
+                    setFieldValue(
+                      'employer.businessLocation.name',
+                      businessLocation
+                    )
+                  }}
+                  required={false}
+                />
+                <SelectField
+                  label="Department"
+                  name="employer.department.departmentId"
+                  placeholder="--Select--"
+                  options={getBusinessDepartments(
+                    lookupOptions?.employers || [],
+                    values?.employer?.name
+                  )}
+                  handleChange={(e: any) => {
+                    const department =
+                      getBusinessDepartments(
+                        lookupOptions?.employers || [],
+                        values?.employer?.name
+                      )?.find((d) => d.departmentId === e.target.value)
+                        ?.label || ''
+                    setFieldValue('employer.department.name', department)
+                  }}
+                  required={false}
+                />
+                <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
+                  {' '}
+                  Insurance details{' '}
+                </h3>
+                <FieldArray name="insurances">
+                  {({ push, remove }) => (
+                    <>
+                      {values.insurances &&
+                        values.insurances.length > 0 &&
+                        values.insurances.map((p: any, index: number) => (
+                          <div key={index}>
+                            <DeleteFormEntry
+                              title={`Insurance ${index + 1}`}
+                              onDelete={() => remove(index)}
+                              showDeleteButton={values.insurances.length > 1}
+                            />
+                            <SelectField
+                              label="Insurance provider"
+                              placeholder="--Select--"
+                              options={insuranceCompanies || []}
+                              name={`insurances.${index}.insuranceCompany`}
+                              handleBlur={() => {
+                                if (shouldVerifyInsurance(touched, index)) {
+                                  verifyInsurance(values, p, index)
+                                }
+                              }}
+                            />
+                            <TextField
+                              label="Insurance ID"
+                              placeholder="Enter insurance ID"
+                              name={`insurances.${index}.insuranceId`}
+                              handleBlur={() => {
+                                if (shouldVerifyInsurance(touched, index)) {
+                                  verifyInsurance(values, p, index)
+                                }
+                              }}
+                            />
+                            <>
+                              {hasError[index] ? (
+                                <ErrorFeedback message="An error occured. Please try again." />
+                              ) : (
+                                <>
+                                  {isLoading[index] && (
+                                    <VerificationLoader message="One moment while we verify the insurance ID..." />
+                                  )}
 
-                                {verificationStatus[index] === 'verified' && (
-                                  <p className="text-orange-main text-sm font-rubik text-left">
-                                    Insurance ID successfully verified
-                                  </p>
-                                )}
-                                {verificationStatus[index] === 'unverified' && (
-                                  <p className="text-orange-main text-sm font-rubik text-left">
-                                    We are unable to automatically verify this
-                                    insurance ID. Please confirm that it is
-                                    correct then proceed. The verification will
-                                    be manually done later.
-                                  </p>
-                                )}
+                                  {verificationStatus[index] === 'verified' && (
+                                    <p className="text-orange-main text-sm font-rubik text-left">
+                                      Insurance ID successfully verified
+                                    </p>
+                                  )}
+                                  {verificationStatus[index] ===
+                                    'unverified' && (
+                                    <p className="text-orange-main text-sm font-rubik text-left">
+                                      We are unable to automatically verify this
+                                      insurance ID. Please confirm that it is
+                                      correct then proceed. The verification
+                                      will be manually done later.
+                                    </p>
+                                  )}
+                                </>
+                              )}
+                            </>
+
+                            <RadioField
+                              name={`insurances.${index}.isPrincipalMember`}
+                              label={`Is this the principal member in the ${values.insurances[index]?.insuranceCompany} insurance scheme?`}
+                              options={[
+                                { value: 'yes', label: 'Yes' },
+                                { value: 'no', label: 'No' },
+                              ]}
+                              required
+                            />
+
+                            {values.insurances[index]?.isPrincipalMember ===
+                              'no' && (
+                              <>
+                                <TextField
+                                  label="Principal member insurance ID"
+                                  name={`insurances.${index}.principalMemberInsuranceId`}
+                                  placeholder="Enter principal's member insurance ID"
+                                />
+
+                                <SelectField
+                                  label="Relationship to principal member"
+                                  name={`insurances.${index}.relationshipToPrincipalMember`}
+                                  placeholder="--Select--"
+                                  options={relationshipOptions || []}
+                                />
                               </>
                             )}
-                          </>
+                          </div>
+                        ))}
+                      <PrimaryButton
+                        variant="text"
+                        onClick={() => {
+                          const highestPriority = values.insurances.reduce(
+                            (acc: any, curr: any) => {
+                              return acc.priority > curr.priority ? acc : curr
+                            },
+                            { priority: 0 }
+                          )
+                          push({
+                            ...defaultInsurance(primaryMember).insurances[0],
+                            priority: highestPriority.priority + 1,
+                          })
+                        }}
+                        className="normal-case text-sm my-2"
+                        disabled={isVerifyingInsurance}
+                      >
+                        <p className="flex justify-start text-left gap-2 text-xs">
+                          +<span>Add insurance</span>
+                        </p>
+                      </PrimaryButton>
+                    </>
+                  )}
+                </FieldArray>
 
-                          <RadioField
-                            name={`insurances.${index}.isPrincipalMember`}
-                            label={`Is this the principal member in the ${values.insurances[index]?.insuranceCompany} insurance scheme?`}
-                            options={[
-                              { value: 'yes', label: 'Yes' },
-                              { value: 'no', label: 'No' },
-                            ]}
-                            required
-                          />
-
-                          {values.insurances[index]?.isPrincipalMember ===
-                            'no' && (
-                            <>
-                              <TextField
-                                label="Principal member insurance ID"
-                                name={`insurances.${index}.principalMemberInsuranceId`}
-                                placeholder="Enter principal's member insurance ID"
-                              />
-
-                              <SelectField
-                                label="Relationship to principal member"
-                                name={`insurances.${index}.relationshipToPrincipalMember`}
-                                placeholder="--Select--"
-                                options={relationshipOptions || []}
-                              />
-                            </>
-                          )}
-                        </div>
-                      ))}
-                    <PrimaryButton
-                      variant="text"
-                      onClick={() => {
-                        const highestPriority = values.insurances.reduce(
-                          (acc: any, curr: any) => {
-                            return acc.priority > curr.priority ? acc : curr
-                          },
-                          { priority: 0 }
-                        )
-                        push({
-                          ...defaultInsurance(primaryMember).insurances[0],
-                          priority: highestPriority.priority + 1,
-                        })
-                      }}
-                      className="normal-case text-sm my-2"
-                      disabled={isVerifyingInsurance}
+                {showWizardContols ? (
+                  <div className="flex justify-between gap-4 mt-3">
+                    <PreviousButton onClick={onPrev} disabled={loading}>
+                      {' '}
+                      Previous{' '}
+                    </PreviousButton>
+                    <NextButton
+                      type="submit"
+                      loading={loading}
+                      disabled={loading}
                     >
-                      <p className="flex justify-start text-left gap-2 text-xs">
-                        +<span>Add insurance</span>
-                      </p>
+                      Submit
+                    </NextButton>
+                  </div>
+                ) : (
+                  <div className="mt-6">
+                    <PrimaryButton
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      disabled={loading}
+                      loading={loading}
+                    >
+                      Submit
                     </PrimaryButton>
-                  </>
+                  </div>
                 )}
-              </FieldArray>
-
-              <div className="flex justify-between gap-4 mt-3">
-                <PreviousButton onClick={() => onPrev()} disabled={loading}>
-                  {' '}
-                  Previous{' '}
-                </PreviousButton>
-                <NextButton type="submit" loading={loading} disabled={loading}>
-                  Submit
-                </NextButton>
-              </div>
-            </Form>
-          )
-        }}
-      </PrimaryForm>
+              </Form>
+            )
+          }}
+        </PrimaryForm>
+      )}
     </div>
   )
 }

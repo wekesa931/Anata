@@ -43,6 +43,7 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  // console.log(lookupOptions)
 
   const providerValue = React.useMemo(
     () => ({

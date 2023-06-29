@@ -127,7 +127,7 @@ export const transformInsuranceData = (
 
   return {
     antaraId,
-    employer: member?.employer || '',
+    employer: member?.employer,
     insurances: transformInsurances(insuranceDetails),
   }
 }
@@ -182,7 +182,21 @@ export const parseDataToOptions = (data: any, key: string) => {
 }
 
 export const parseLookupEntries = (rawLookupData: any) => {
-  const employers = parseDataToOptions(rawLookupData?.getCompanies, 'name')
+  const employers = rawLookupData?.getCompanies?.edges?.map((e: any) => ({
+    label: e?.node?.name,
+    value: e?.node?.name,
+    departments:
+      e?.node?.departments?.map((d: any) => ({
+        label: d?.name,
+        value: d?.departmentId,
+      })) || [],
+    businessLocations:
+      e?.node?.businessLocations?.map((l: any) => ({
+        label: l?.name,
+        value: l?.businessLocationId,
+      })) || [],
+  }))
+
   const healthPolicies = parseDataToOptions(
     rawLookupData?.healthPolicies,
     'name'

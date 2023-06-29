@@ -6,7 +6,7 @@ function useMemberAirtableHook() {
 
   const optToChronicCare = (isOptedIn: boolean) => {
     return airtableFetch('members', 'post', {
-      id: member.recID,
+      id: member?.airtableRecordId,
       fields: {
         'Chronic Care Consent': isOptedIn ? 'Opted In' : 'Opted Out',
       },

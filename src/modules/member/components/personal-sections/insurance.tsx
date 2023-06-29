@@ -9,7 +9,7 @@ import {
 } from 'src/modules/member/components/display-items.component'
 import { useMember } from 'src/context/member'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
-import { Box } from '@mui/material'
+import { Box, Divider } from '@mui/material'
 import { formatCurreny } from 'src/modules/member/utils'
 import EmptyBlock from 'src/modules/member/components/empty-block'
 
@@ -94,6 +94,16 @@ function InsuranceSection() {
   const { member } = useMember()
   return member ? (
     <SectionItem>
+      <div className="mb-4">
+        <h3 className="text-dark-blue-50 text-base font-rubik">
+          Insurance and Employer
+        </h3>
+      </div>
+      <GridItems>
+        <Item title="Employer" child={member?.employer?.name} />
+        <Item title="Department" child={member?.employer?.department?.name} />
+      </GridItems>
+      <Divider className="my-4" />
       {member?.insuranceDetails?.length === 0 ? (
         <EmptyBlock>
           <h3 className="text-sm text-center">No insurance ID available</h3>

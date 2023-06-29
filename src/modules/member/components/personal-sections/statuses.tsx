@@ -9,26 +9,11 @@ import {
   BlockSekeleton,
   StatusSkeleon,
 } from 'src/modules/member/components/skeleton-loaders'
-import useMemberAirtableHook from 'src/modules/member/services/airtable'
-import logError from 'src/utils/logging/logger'
 import useClinicalSummary from 'src/modules/member/hooks/clinical-summary'
-import { Checkbox } from '@mui/material'
 
 function StatusesSection() {
   const { member } = useMember()
-  const { optToChronicCare } = useMemberAirtableHook()
-  const [consentDisabled, setConsentDisabled] = React.useState<boolean>(false)
   const { careConsent } = useClinicalSummary()
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const isOptedIn = e.target.checked
-    optToChronicCare(isOptedIn)
-      .then(() => {
-        // disable the checkbox if a member opts out
-        setConsentDisabled(!isOptedIn)
-      })
-      .catch(logError)
-  }
 
   return member ? (
     <SectionItem>
@@ -41,24 +26,13 @@ function StatusesSection() {
         <Item title="Member status" child={member?.status} />
       </GridItems>
       {careConsent ? (
-        <div className="flex justify-start gap-8 mb-3">
-          <h3 className="text-dark-blue-50 font-rubik text-base font-normal">
-            Chronic care consent
-          </h3>
-          <Checkbox
-            disabled={careConsent === 'Opted Out' || consentDisabled}
-            color="primary"
-            defaultChecked={careConsent === 'Opted In'}
-            onChange={handleChange}
-            className="p-0"
-          />
-        </div>
+        <GridItems single>
+          <Item title="Chronic care consent" child={careConsent} />
+        </GridItems>
       ) : (
-        <BlockSekeleton height={30} />
+        <BlockSekeleton height={40} />
       )}
-      <GridItems single>
-        <Item title="Employer" child={member?.employer} />
-      </GridItems>
+
       <GridItems single>
         <Item
           title="Tags"

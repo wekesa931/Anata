@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, useCallback } from 'react'
 import { useMember } from 'src/context/member'
 import airtableFetch from 'src/services/airtable/fetch'
-import filterFields from 'src/utils/airtable/field-utils'
 import { logError } from 'src/utils/logging/logger'
 
 const HIF_ALERGY_KEYS = [
@@ -45,7 +44,7 @@ function useClinicalSummary() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [member?.airtableRecordId])
 
   const getRiskScore = useCallback(() => {
     const riskScoreUrl = `hif/list?filterByFormula=FIND("${member?.airtableRecordId}", {Member Record ID})`
@@ -66,31 +65,24 @@ function useClinicalSummary() {
     })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [member?.airtableRecordId])
 
   const getHealthGoalsAndStatus = useCallback(
     () => {
-      const healthGoalsAndStatus = `members/list?filterByFormula=FIND("${
-        member?.airtableRecordId
-      }", {recId})&${filterFields([
-        'Health Goals',
-        'Health Status',
-        'Chronic Care Consent',
-      ])}`
-      airtableFetch(healthGoalsAndStatus).then((response) => {
-        if (response) {
-          const record = response[0]
-          if (record) {
-            setHealthGoals(record['Health Goals'] || [])
-            setHealthStatus(record['Health Status'])
-            setCareConsent(record['Chronic Care Consent'])
+      if (member?.airtableRecordId) {
+        const healthGoalsAndStatus = `members/${member?.airtableRecordId}`
+        airtableFetch(healthGoalsAndStatus).then((response) => {
+          if (response) {
+            setHealthGoals(response['Health Goals'] || [])
+            setHealthStatus(response['Health Status'])
+            setCareConsent(response['Chronic Care Consent'])
           }
-        }
-      })
+        })
+      }
     },
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [member?.airtableRecordId]
   )
 
   useEffect(() => {
@@ -99,9 +91,9 @@ function useClinicalSummary() {
     getHealthGoalsAndStatus()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [member])
 
-  const clinicalSummary = useMemo(() => {
+  const clinicalSummary: any = useMemo(() => {
     const summary = {
       alergies,
       riskFactors,
