@@ -1,5 +1,8 @@
 import { useDatabase } from '@nozbe/watermelondb/hooks'
-import { PhoneType } from 'src/modules/member/types'
+import {
+  PhoneType,
+  InsuranceVerificationStatus,
+} from 'src/modules/member/types'
 import type { Member } from 'src/modules/member/db/models'
 import {
   useCreateMember,
@@ -8,6 +11,8 @@ import {
   useUpdateAddressesData,
   useVerifyInsuranceDetails,
   useUpdateInsuranceDetails,
+  useUpdatePhones,
+  useUpdateBirthdate,
 } from 'src/modules/member/services/member.api'
 import { logError } from 'src/utils/logging/logger'
 import dayjs from 'dayjs'
@@ -37,6 +42,8 @@ export const useRegistrationData = () => {
   const { updateInsuranceDetails, loading: updatingInsuranceDetails } =
     useUpdateInsuranceDetails()
   const { createDefaultMemberInstance, createMemberInstance } = useMembersData()
+  const { updatePhones, loading: updatingPhones } = useUpdatePhones()
+  const { updateBirthdate, loading: updatingBirthdate } = useUpdateBirthdate()
 
   const handleUpdateBioData = async (
     member: Member,
@@ -150,7 +157,8 @@ export const useRegistrationData = () => {
       const insurance = newInsurances.find((i: any) => i.id === insuranceId)
       let verified = false
       if (insurance) {
-        verified = insurance.verificationStatus === 'VERIFIED'
+        verified =
+          insurance.verificationStatus === InsuranceVerificationStatus.VERIFIED
       }
 
       const update = {
@@ -207,6 +215,63 @@ export const useRegistrationData = () => {
     }
   }
 
+  const handleUpdatePhones = async (phones: PhoneType[], member: Member) => {
+    try {
+      const phonesToUpdate = preparePhonesForUpdate(member.phones || [], phones)
+      const payload = {
+        phones: phonesToUpdate,
+        antaraId: member?.antaraId,
+      }
+
+      const { data } = await updatePhones(payload)
+      if (data) {
+        const newPhones = (data?.updateMemberPhones?.data?.phones || []).map(
+          (p: any, index: number) => ({
+            phone: p?.phone,
+            phoneType: p.phoneType?.phoneType,
+            priority: p?.priority || index,
+          })
+        )
+
+        const priority0Phone =
+          newPhones.find((p: any) => p.priority === 0)?.phone || ''
+
+        // write them to db and update member
+        await database.write(async () => {
+          await member.update((m) => {
+            m.phones = newPhones
+            m.phone = priority0Phone
+          })
+        })
+      }
+    } catch (error) {
+      logError(error)
+      throw error
+    }
+  }
+
+  const handleUpdateBirthdate = async (
+    member: Member,
+    birthDate: Date | null
+  ) => {
+    try {
+      const payload = {
+        antaraId: member?.antaraId,
+        birthDate,
+      }
+
+      await updateBirthdate(payload)
+      await database.write(async () => {
+        await member.update((m) => {
+          m.birthDate = dayjs(birthDate).format('YYYY-MM-DD')
+        })
+      })
+    } catch (error) {
+      logError(error)
+      throw error
+    }
+  }
+
   return {
     createMemberInstance,
     handleUpdateBioData,
@@ -221,7 +286,12 @@ export const useRegistrationData = () => {
       updatingContactsData ||
       updatingAddresses ||
       verifyingInsuranceDetails ||
-      updatingInsuranceDetails,
+      updatingInsuranceDetails ||
+      updatingPhones ||
+      updatingBirthdate,
     isVerifyingInsurance: verifyingInsuranceDetails,
+    handleUpdatePhones,
+    isUpdatingPhones: updatingPhones,
+    handleUpdateBirthdate,
   }
 }

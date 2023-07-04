@@ -6,11 +6,13 @@ type PrimaryFormProps = {
   initialValues: any
   validationSchema?: any
   children: (formikProps: FormikProps<any>) => React.ReactNode
+  expanded?: boolean
 }
 
 function PrimaryForm(props: PrimaryFormProps) {
+  const expanded = props.expanded || true
   return (
-    <div className="mt-6">
+    <div className={expanded ? 'mt-6' : 'mt-1'}>
       <Formik
         onSubmit={props.handleSubmit}
         initialValues={props.initialValues}

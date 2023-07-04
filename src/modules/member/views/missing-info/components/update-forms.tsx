@@ -1,0 +1,57 @@
+import React from 'react'
+import Button from 'src/components/buttons/html-button'
+import PortalWindow from 'src/components/portal'
+import EmptyBlock from './empty-block-field'
+
+type ModalChildProps = {
+  handleClose: () => void
+  handleOpen: () => void
+  setIsEdited: (isEdited: boolean) => void
+}
+
+type MissingInfoBlockProps = {
+  children: (modalProps: ModalChildProps) => React.ReactElement
+  title: string
+  modalTitle?: string
+}
+
+function UpdateForm({
+  title,
+  modalTitle = 'Edit member details',
+  children,
+}: MissingInfoBlockProps) {
+  const [open, setOpen] = React.useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+  const [isEdited, setIsEdited] = React.useState(false)
+
+  return (
+    <>
+      <div className="flex items-center justify-between w-full">
+        <EmptyBlock text={title}>
+          <Button
+            className="text-blue-100 mr-2 font-rubik normal-case"
+            onClick={handleOpen}
+          >
+            Add
+          </Button>
+        </EmptyBlock>
+      </div>
+
+      {open && (
+        <PortalWindow
+          closeWindow={handleClose}
+          title={modalTitle}
+          isEdited={isEdited}
+          setIsEdited={setIsEdited}
+        >
+          <div className="p-4">
+            {children({ handleClose, handleOpen, setIsEdited })}
+          </div>
+        </PortalWindow>
+      )}
+    </>
+  )
+}
+
+export default UpdateForm

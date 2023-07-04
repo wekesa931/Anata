@@ -9,7 +9,7 @@ type TextFieldProps = {
 
 function TextField(props: TextFieldProps) {
   const handleValueBlur = (e: any, fieldProps: FieldProps) => {
-    fieldProps.form.setFieldValue(fieldProps.field.name, e.target.value)
+    fieldProps.form.setFieldTouched(fieldProps.field.name, e.target.value)
     if (props.handleBlur) {
       props.handleBlur(e)
     }

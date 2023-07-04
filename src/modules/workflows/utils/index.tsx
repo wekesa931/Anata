@@ -155,13 +155,16 @@ export const generatePayload = (
   formMeta: any,
   airtableMeta: any
 ) => {
-  const airtableFieldsMap: Record<
-    string,
-    { name: string; id: string; [key: string]: any }
-  > = airtableMeta[formMeta.id].fields
+  const airtableFieldsMap: Record<string, any> =
+    airtableMeta[formMeta.id].fields
   const erroredFields: string[] = []
   const mappedPayload: any = {}
-
+  const localFieldsMap: any = {}
+  formMeta?.fields?.forEach((fm: any) => {
+    localFieldsMap[fm?.name] = {
+      id: fm?.id,
+    }
+  })
   const findFieldId = (name: string) => {
     const allFields = Object.values(airtableFieldsMap)
     const found = allFields.find((f: any) => f.name === name)

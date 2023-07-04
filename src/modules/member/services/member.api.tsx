@@ -10,7 +10,12 @@ import {
   GET_MEMBER_BY_PHONE,
   MEMBER_DETAILS_QUERY,
 } from 'src/modules/member/services/gql'
-import type { BiodataValues, ContactValues } from 'src/modules/member/types'
+import type {
+  BiodataValues,
+  ContactValues,
+  UpdatePhoneValues,
+  BirthdateUpdateValues,
+} from 'src/modules/member/types'
 import { composeMutations } from 'src/modules/member/utils/apollo-compose'
 import dayjs from 'dayjs'
 import { parseV2MemberData } from 'src/utils/data-transform'
@@ -129,6 +134,35 @@ export const useUpdateBiodata = () => {
   }
 }
 
+export const useUpdateBirthdate = () => {
+  const [update, { loading, error }] = useMutation(UPDATE_MEMBER_DETAILS, {
+    context: { clientName: 'v2' },
+  })
+
+  const updateBirthdate = async (values: BirthdateUpdateValues) => {
+    const { antaraId } = values
+
+    const variables = {
+      memberDetails: {
+        birthDate: values.birthDate
+          ? dayjs(values.birthDate).format('YYYY-MM-DD')
+          : null,
+        antaraId,
+      },
+    }
+
+    return update({
+      variables,
+    })
+  }
+
+  return {
+    updateBirthdate,
+    loading,
+    error,
+  }
+}
+
 export const useUpdateContactsData = () => {
   const CONTACTS_MUTATION = composeMutations(
     UPDATE_MEMBER_PHONES,
@@ -162,6 +196,33 @@ export const useUpdateContactsData = () => {
 
   return {
     updateContactsData,
+    loading,
+    error,
+  }
+}
+
+export const useUpdatePhones = () => {
+  const [update, { loading, error }] = useMutation(UPDATE_MEMBER_PHONES, {
+    context: { clientName: 'v2' },
+  })
+
+  const updatePhones = async (values: UpdatePhoneValues) => {
+    const { antaraId, phones } = values
+
+    const variables = {
+      memberPhones: {
+        phones,
+        antaraId,
+      },
+    }
+
+    return update({
+      variables,
+    })
+  }
+
+  return {
+    updatePhones,
     loading,
     error,
   }

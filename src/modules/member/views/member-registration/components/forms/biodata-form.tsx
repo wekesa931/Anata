@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { useWizardContext } from 'src/components/wizard'
-import { NextButton, PreviousButton } from 'src/components/buttons/primary'
+import PrimaryButton, {
+  NextButton,
+  PreviousButton,
+} from 'src/components/buttons/primary'
 import { Form } from 'formik'
 import { PhoneNumberSearch } from 'src/modules/member/views/member-registration/components/phone-field-search'
 import TextField from 'src/components/forms/fields/text'
@@ -17,9 +20,9 @@ import type { BiodataValues } from 'src/modules/member/types'
 import { useRegistrationForm } from 'src/context/member-registration'
 import { isDirty } from 'src/utils/form-validation-methods'
 
-type BioDataFormProps = {
+type BioDataSectionProps = {
   setIsEdited: (isEdited: boolean) => void
-  onPrev: () => Promise<void> | void
+  onPrev?: () => Promise<void> | void
   member: Member | null
   isChildRegistration?: boolean
 }
@@ -38,13 +41,24 @@ const extractInitialState = (member: Member | null, initialPhone?: string) => {
   }
 }
 
-function BioDataForm({
+function BioDataFormSection(props: BioDataSectionProps) {
+  const { onNext } = useWizardContext()
+  return <BioDataForm {...props} onNext={onNext} showWizardControls />
+}
+
+type BioDataFormProps = BioDataSectionProps & {
+  onNext: () => Promise<void> | void
+  showWizardControls?: boolean
+}
+
+export function BioDataForm({
   setIsEdited,
   onPrev,
   member,
   isChildRegistration = false,
+  onNext,
+  showWizardControls = true,
 }: BioDataFormProps) {
-  const { onNext } = useWizardContext()
   const [showForm, setShowForm] = useState<boolean>(false)
   const [isFetchingMember, setIsFetchingMember] = useState<boolean>(false)
   const [initialValues, setInitialValues] = useState<BiodataValues>(
@@ -94,7 +108,7 @@ function BioDataForm({
   return (
     <div className="overflow-scroll">
       <PrimaryForm initialValues={initialValues} handleSubmit={handleSubmit}>
-        {({ isValid, isSubmitting }) => {
+        {({ isValid, isSubmitting, values }) => {
           return (
             <Form>
               <>
@@ -106,6 +120,7 @@ function BioDataForm({
                     setShowForm={setShowForm}
                     isFetching={isFetchingMember}
                     setIsFetching={setIsFetchingMember}
+                    phone={values.phone}
                   />
                 ) : null}
                 {showForm || !!member?.antaraId || isChildRegistration ? (
@@ -161,25 +176,37 @@ function BioDataForm({
                   </div>
                 ) : null}
               </>
-              <div className="flex justify-between gap-4 mt-3 grow-0">
-                <PreviousButton
-                  onClick={onPrev}
-                  type="button"
-                  disabled={isFetchingMember || loading || isSubmitting}
-                >
-                  {' '}
-                  Previous{' '}
-                </PreviousButton>
-                <NextButton
+              {showWizardControls ? (
+                <div className="flex justify-between gap-4 mt-3 grow-0">
+                  <PreviousButton
+                    onClick={onPrev}
+                    type="button"
+                    disabled={isFetchingMember || loading || isSubmitting}
+                  >
+                    {' '}
+                    Previous{' '}
+                  </PreviousButton>
+                  <NextButton
+                    disabled={
+                      !isValid || isFetchingMember || loading || isSubmitting
+                    }
+                    type="submit"
+                    loading={loading}
+                  >
+                    Next
+                  </NextButton>
+                </div>
+              ) : (
+                <PrimaryButton
                   disabled={
                     !isValid || isFetchingMember || loading || isSubmitting
                   }
                   type="submit"
                   loading={loading}
                 >
-                  Next
-                </NextButton>
-              </div>
+                  Save
+                </PrimaryButton>
+              )}
             </Form>
           )
         }}
@@ -188,4 +215,4 @@ function BioDataForm({
   )
 }
 
-export default BioDataForm
+export default BioDataFormSection

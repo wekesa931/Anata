@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useWizardContext } from 'src/components/wizard'
 import PrimaryButton, {
   NextButton,
   PreviousButton,
 } from 'src/components/buttons/primary'
-import { FieldArray, Form } from 'formik'
+import { FieldArray, Form, FormikProps } from 'formik'
 import TextField from 'src/components/forms/fields/text'
 import SelectField from 'src/components/forms/fields/select-field'
 import PhoneField from 'src/components/forms/fields/phone-field'
@@ -19,17 +19,41 @@ import { logError } from 'src/utils/logging/logger'
 import { useNotifications } from 'src/context/notifications'
 import { useRegistrationForm } from 'src/context/member-registration'
 import { relationshipOptions } from 'src/config/constants'
+import PhoneNumberSearch from 'src/modules/member/views/member-registration/components/phone-field-search'
+import { BooleanStatus } from 'src/modules/member/types'
 
-type ContactsFormProps = {
+type ContactsSectionProps = {
   member: Member | null
   isChildRegistration?: boolean
+  setIsEdited: (isEdited: boolean) => void
 }
 
-function ContactsForm({ member, isChildRegistration }: ContactsFormProps) {
+export default function ContactsSectionForm(props: ContactsSectionProps) {
   const { onNext, onPrev } = useWizardContext()
+  return (
+    <ContactsForm {...props} onNext={onNext} onPrev={onPrev} showFormControls />
+  )
+}
+
+type ContactsFormProps = ContactsSectionProps & {
+  onNext: () => void
+  onPrev?: () => void
+  showFormControls?: boolean
+}
+
+export function ContactsForm({
+  member,
+  isChildRegistration,
+  onNext,
+  onPrev,
+  showFormControls = true,
+  setIsEdited,
+}: ContactsFormProps) {
   const { handleUpdateContactsData, loading } = useRegistrationData()
   const { notify } = useNotifications()
   const { lookupOptions } = useRegistrationForm()
+  const [showForm, setShowForm] = useState<BooleanStatus>({})
+  const [isFetching, setIsFetching] = useState<BooleanStatus>({})
 
   const phones = member?.phones || [
     {
@@ -70,7 +94,7 @@ function ContactsForm({ member, isChildRegistration }: ContactsFormProps) {
   return (
     <div className="overflow-scroll">
       <PrimaryForm initialValues={initialValues} handleSubmit={handleSubmit}>
-        {({ values }: any) => (
+        {({ values, setFieldValue }: FormikProps<any>) => (
           <Form>
             <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
               {' '}
@@ -89,30 +113,63 @@ function ContactsForm({ member, isChildRegistration }: ContactsFormProps) {
                           showDeleteButton={values.phones.length > 1}
                         />
                         <FlexRow>
-                          <PhoneField
+                          <PhoneNumberSearch
+                            key={index}
+                            setResponse={(response: any) => {
+                              if (response) {
+                                setFieldValue(
+                                  `phones[${index}].phone`,
+                                  response.phone
+                                )
+                              }
+                            }}
+                            setIsEdited={setIsEdited}
                             name={`phones.${index}.phone`}
-                            label="Phone Number"
-                            placeholder="Enter the phone number"
+                            showForm={showForm[index]}
+                            setShowForm={() =>
+                              setShowForm({
+                                ...showForm,
+                                [index]: true,
+                              })
+                            }
+                            isFetching={isFetching[index]}
+                            setIsFetching={(v: boolean) =>
+                              setIsFetching({
+                                ...isFetching,
+                                [index]: v,
+                              })
+                            }
+                            phone={values.phones[index].phone}
+                            fullWidth
                             required={!isChildRegistration}
+                            currentPhones={values.phones
+                              .filter((x: any, i: number) => i !== index)
+                              .map((y: any) => y.phone)}
                           />
-                          <SelectField
-                            name={`phones.${index}.phoneType`}
-                            label="Phone Type"
-                            placeholder="--Select--"
-                            options={lookupOptions?.phoneTypes || []}
-                            required={false}
-                          />
+                          <div className="mb-8 w-full flex self-start">
+                            <SelectField
+                              name={`phones.${index}.phoneType`}
+                              label="Phone Type"
+                              placeholder="--Select--"
+                              options={lookupOptions?.phoneTypes || []}
+                              required={false}
+                            />
+                          </div>
                         </FlexRow>
                       </div>
                     ))}
                   <PrimaryButton
                     variant="text"
-                    onClick={() =>
+                    onClick={() => {
                       push({
                         phone: '',
                         phoneType: '',
+                        priority: values.phones.length || 0,
                       })
-                    }
+                      setShowForm({})
+                      setIsFetching({})
+                    }}
+                    disabled={isFetching[values.phones.length - 1]}
                     className="normal-case text-sm my-2"
                   >
                     <p className="flex justify-start text-left gap-2 text-xs">
@@ -153,20 +210,29 @@ function ContactsForm({ member, isChildRegistration }: ContactsFormProps) {
               />
             </div>
 
-            <div className="flex justify-between gap-4 mt-3">
-              <PreviousButton onClick={() => onPrev()} disabled={loading}>
-                {' '}
-                Previous{' '}
-              </PreviousButton>
-              <NextButton disabled={loading} type="submit" loading={loading}>
-                Next
-              </NextButton>
-            </div>
+            {showFormControls ? (
+              <div className="flex justify-between gap-4 mt-3">
+                <PreviousButton onClick={onPrev} disabled={loading}>
+                  {' '}
+                  Previous{' '}
+                </PreviousButton>
+                <NextButton disabled={loading} type="submit" loading={loading}>
+                  Next
+                </NextButton>
+              </div>
+            ) : (
+              <PrimaryButton
+                type="submit"
+                disabled={loading}
+                loading={loading}
+                className="w-full mt-3"
+              >
+                Save
+              </PrimaryButton>
+            )}
           </Form>
         )}
       </PrimaryForm>
     </div>
   )
 }
-
-export default ContactsForm

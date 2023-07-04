@@ -16,6 +16,13 @@ function DateField(props: OutlinedFieldProps) {
     }
   }
 
+  const handleValueBlur = (e: any, fieldProps: FieldProps) => {
+    fieldProps.form.setFieldTouched(fieldProps.field.name, e.target.value)
+    if (props.handleBlur) {
+      props.handleBlur(e)
+    }
+  }
+
   return (
     <OutlinedField {...props}>
       {(fieldProps: FieldProps) => (
@@ -34,6 +41,7 @@ function DateField(props: OutlinedFieldProps) {
               name={props.name}
               error={!!fieldProps.meta.error}
               helperText={fieldProps.meta.error || ' '}
+              onBlur={(e: any) => handleValueBlur(e, fieldProps)}
             />
           )}
         />

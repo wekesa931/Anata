@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import PhoneField from 'src/components/forms/fields/phone-field'
-import { useFormikContext } from 'formik'
 import { Check, X } from 'react-feather'
 import { isPhoneValid } from 'src/utils/form-validation-methods'
 import { useGetMemberByPhone } from 'src/modules/member/services/member.api'
@@ -15,6 +14,11 @@ type PhoneNumberSearchProps = {
   setShowForm: (showForm: boolean) => void
   isFetching: boolean
   setIsFetching: (isFetching: boolean) => void
+  name?: string
+  phone: string
+  fullWidth?: boolean
+  required?: boolean
+  currentPhones?: string[]
 }
 
 export function PhoneNumberSearch({
@@ -24,26 +28,42 @@ export function PhoneNumberSearch({
   setShowForm,
   isFetching,
   setIsFetching,
+  name = 'phone',
+  phone,
+  fullWidth = false,
+  required = true,
+  currentPhones = [],
 }: PhoneNumberSearchProps) {
-  const { values }: { values: any } = useFormikContext()
   const [phoneFound, setPhoneFound] = useState<boolean | undefined>()
   const { getMemberByPhone } = useGetMemberByPhone()
   const [hasError, setHasError] = useState<boolean>(false)
+  const [feedbackMessage, setFeedbackMessage] = useState<string>('')
 
-  const isValid = isPhoneValid(values.phone)
+  const isValid = isPhoneValid(phone)
 
   const searchMemberByPhone = React.useCallback(async () => {
     setIsFetching(true)
     setHasError(false)
+    setFeedbackMessage('')
     if (isValid) {
-      getMemberByPhone(values.phone)
+      const phoneExists = currentPhones.some((p) => p === phone)
+      if (phoneExists) {
+        setPhoneFound(true)
+        setFeedbackMessage('We have this phone number in the current form.')
+        setResponse(null, phone)
+        setShowForm(true)
+        setIsFetching(false)
+        return
+      }
+      getMemberByPhone(phone)
         .then((member) => {
           if (member) {
-            setResponse(member, values.phone)
+            setResponse(member, phone)
             setPhoneFound(true)
+            setFeedbackMessage('We have a member with this phone number.')
           } else {
             setPhoneFound(false)
-            setResponse(null, values.phone)
+            setResponse(null, phone)
           }
 
           setShowForm(true)
@@ -63,14 +83,14 @@ export function PhoneNumberSearch({
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values.phone])
+  }, [phone])
 
   return (
     <div className="flex flex-col gap-4 w-full">
       <PhoneField
-        name="phone"
+        name={name}
         label="Phone Number"
-        required
+        required={required}
         handleBlur={searchMemberByPhone}
         handleChange={() => {
           setIsEdited(true)
@@ -78,19 +98,22 @@ export function PhoneNumberSearch({
         }}
       />
       {isFetching ? (
-        <VerificationLoader message="Please wait while we check if this phone number already exists in our database..." />
+        <VerificationLoader
+          fullwidth={fullWidth}
+          message="Please wait while we check if this phone number already exists in our database..."
+        />
       ) : (
         <>
           {hasError ? (
             <ErrorFeedback message="Could not verify phone details. Please try again" />
           ) : (
-            <div className="mb-4">
+            <div className={`mb-4 ${fullWidth ? ' w-[200%]' : 'w-full'}`}>
               {phoneFound === false && isValid && showForm && (
                 <div className="p-2 bg-green-10 flex justify-start items-center rounded-lg mb-4 gap-4">
                   <Check className="w-[20px] text-green-100" />
                   <div className="text-dark-blue-100 text-base font-rubik">
                     <h3 className=" font-medium">All Good!</h3>
-                    <p>Please proceed with the rest of the member details</p>
+                    <p>Please proceed.</p>
                   </div>
                 </div>
               )}
@@ -100,10 +123,7 @@ export function PhoneNumberSearch({
                   <X className="w-[20px] text-red-100" />
                   <div className="text-dark-blue-100 text-base font-rubik">
                     <h3 className=" font-medium">Heads up!</h3>
-                    <p>
-                      We have a member with this phone number. Please check
-                      their details below and update them if need be.
-                    </p>
+                    <p>{feedbackMessage}</p>
                   </div>
                 </div>
               )}

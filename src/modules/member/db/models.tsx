@@ -5,6 +5,7 @@ import {
   PhoneType,
   V2MemberType,
   DbValueTypes as DbTypes,
+  InsuranceVerificationStatus,
   EmployerType,
 } from 'src/modules/member/types'
 import dayjs from 'dayjs'
@@ -214,6 +215,19 @@ export class Member extends Model {
       member.phone = phone
       member.phones = [{ phone, phoneType: 'Unknown', priority: 0 }]
     })
+  }
+
+  get hasAnyRejectedInsurance() {
+    return this.insuranceDetails?.some(
+      (insurance) =>
+        insurance?.verificationStatus ===
+          InsuranceVerificationStatus.REJECTED ||
+        insurance?.verificationStatus === InsuranceVerificationStatus.PENDING
+    )
+  }
+
+  get hasMissingPhone() {
+    return !this.phone && !this.phones?.length
   }
 }
 

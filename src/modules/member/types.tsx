@@ -196,27 +196,33 @@ export type InterventionType = {
   milestoneAttainments: string | null
 }
 
-export type BiodataValues = {
+export type BirthdateUpdateValues = {
+  birthDate: Date | null
+  antaraId: string
+}
+
+export type BiodataValues = BirthdateUpdateValues & {
   firstName: string
   middleName: string
   lastName: string
   phone: string
-  birthDate: Date | null
   sex: string
   maritalStatus: string
   tags: string[]
+}
+
+export type UpdatePhoneValues = {
+  phones: PhoneType[]
   antaraId: string
 }
 
-export type ContactValues = {
+export type ContactValues = UpdatePhoneValues & {
   email: string
-  phones: PhoneType[]
   emergencyContact: {
     name?: string
     phoneNumber?: string
     relationship?: string
   }
-  antaraId: string
 }
 
 export type Address = {
@@ -329,4 +335,14 @@ export enum MemberStatuses {
   PROVISIONED = 'PROVISIONED',
   DECEASED = 'DECEASED',
   UNKNOWN = 'UNKNOWN',
+}
+
+export enum InsuranceVerificationStatus {
+  VERIFIED = 'VERIFIED',
+  REJECTED = 'REJECTED',
+  PENDING = 'PENDING',
+}
+
+export type BooleanStatus = {
+  [key: number]: boolean
 }

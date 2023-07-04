@@ -17,12 +17,34 @@ import DeleteFormEntry from 'src/modules/member/components/delete-form-entry'
 import FlexRow from 'src/components/layouts/flex-row'
 import { isDirty } from 'src/utils/form-validation-methods'
 
-type AddressesFormProps = {
+type AddressesSectionProps = {
   member: Member | null
 }
 
-function AddressesForm({ member }: AddressesFormProps) {
+function AddressSectionForm(props: AddressesSectionProps) {
   const { onNext, onPrev } = useWizardContext()
+  return (
+    <AddressesForm
+      {...props}
+      onNext={onNext}
+      onPrev={onPrev}
+      showWizardControls
+    />
+  )
+}
+
+type AddressesFormProps = AddressesSectionProps & {
+  onNext: () => void
+  onPrev?: () => void
+  showWizardControls?: boolean
+}
+
+export function AddressesForm({
+  member,
+  onNext,
+  onPrev,
+  showWizardControls = true,
+}: AddressesFormProps) {
   const { handleUpdateAddresses, loading } = useRegistrationData()
   const { notify } = useNotifications()
 
@@ -132,15 +154,29 @@ function AddressesForm({ member }: AddressesFormProps) {
                 </>
               )}
             </FieldArray>
-            <div className="flex justify-between gap-4 mt-3">
-              <PreviousButton onClick={() => onPrev()} disabled={loading}>
-                {' '}
-                Previous{' '}
-              </PreviousButton>
-              <NextButton type="submit" disabled={loading} loading={loading}>
-                Next
-              </NextButton>
-            </div>
+            {showWizardControls ? (
+              <div className="flex justify-between gap-4 mt-3">
+                <PreviousButton onClick={onPrev} disabled={loading}>
+                  {' '}
+                  Previous{' '}
+                </PreviousButton>
+                <NextButton type="submit" disabled={loading} loading={loading}>
+                  Next
+                </NextButton>
+              </div>
+            ) : (
+              <div className="mt-6">
+                <PrimaryButton
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={loading}
+                  loading={loading}
+                >
+                  Submit
+                </PrimaryButton>
+              </div>
+            )}
           </Form>
         )}
       </PrimaryForm>
@@ -148,4 +184,4 @@ function AddressesForm({ member }: AddressesFormProps) {
   )
 }
 
-export default AddressesForm
+export default AddressSectionForm

@@ -6,9 +6,11 @@ import PersonalSection from 'src/modules/member/views/personal-section'
 import ClinicalSection from 'src/modules/member/views/clinical-section'
 import { TitleSkeleton } from 'src/modules/member/components/skeleton-loaders'
 import { getAgeFull } from 'src/utils/date-time/helpers'
+import MissingInfoBlock from 'src/modules/member/views/missing-info'
 
 function MemberBiodataLayout() {
   const { member } = useMember()
+
   const [value, setValue] = React.useState<string>('personal')
 
   const handleChange = (_: React.SyntheticEvent, newValue: string) => {
@@ -32,6 +34,9 @@ function MemberBiodataLayout() {
             <TitleSkeleton />
           )}
         </div>
+
+        <MissingInfoBlock member={member} />
+
         <div className="flex flex-col h-full">
           <TabContext value={value}>
             <div className="flex justify-between items-center font-rubik font-medium">

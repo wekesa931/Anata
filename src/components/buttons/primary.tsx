@@ -20,7 +20,7 @@ const getClassName = (
     }
   } else if (variant === 'text') {
     if (color === 'primary') {
-      return `text-blue-btn hover:bg-blue-btn-hover`
+      return `text-blue-btn `
     }
     if (color === 'error') {
       return `text-red-100 hover:bg-red-btn-hover`
