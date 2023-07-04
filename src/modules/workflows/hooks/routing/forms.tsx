@@ -55,18 +55,17 @@ export const useFormsRouting = () => {
     }
   }
 
-  const navigateToNewUrl = () => {
+  const navigateToNewUrl = () =>
     navigate({
       pathname: location.pathname,
       search: searchParams.toString(),
     })
-  }
 
   const openForm = async (formName: string, formData?: any) => {
     try {
       const form = await createForm(formName, undefined, formData)
       if (form) {
-        setForms([...forms, form])
+        setForms((prev) => [...prev, form])
         addFormIdToSearchParams(form.id)
 
         // notify the user that the form was created
@@ -116,7 +115,7 @@ export const useFormsRouting = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [searchParams])
 
   return {
     forms,

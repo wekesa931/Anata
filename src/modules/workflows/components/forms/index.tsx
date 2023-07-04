@@ -66,7 +66,7 @@ function WorkflowForm({
 
   const handleOpenForm = (field: any) => {
     const newFormMeta = (FORMS as Array<Record<string, any>>).find(
-      (f: any) => f.formId === field.id
+      (f: any) => f?.formId === field?.formId
     )
     newFormMeta && openForm(newFormMeta.name)
   }
@@ -156,7 +156,7 @@ function WorkflowForm({
                     {field?.formId && (
                       <Button
                         variant="contained"
-                        className="absolute bottom-[60px] z-1000 mb-2.5 font-rubik text-xs capitalize"
+                        className="relative z-1000 mb-2.5 font-rubik text-xs capitalize"
                         onClick={() => handleOpenForm(field)}
                       >
                         {field?.ctlabel || 'Open Form'}
