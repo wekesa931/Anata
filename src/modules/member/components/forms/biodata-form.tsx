@@ -5,7 +5,7 @@ import PrimaryButton, {
   PreviousButton,
 } from 'src/components/buttons/primary'
 import { Form } from 'formik'
-import { PhoneNumberSearch } from 'src/modules/member/views/member-registration/components/phone-field-search'
+import { PhoneNumberSearch } from 'src/modules/member/components/phone-field-search'
 import TextField from 'src/components/forms/fields/text'
 import DateField from 'src/components/forms/fields/date-field'
 import SelectField from 'src/components/forms/fields/select-field'
@@ -49,6 +49,7 @@ function BioDataFormSection(props: BioDataSectionProps) {
 type BioDataFormProps = BioDataSectionProps & {
   onNext: () => Promise<void> | void
   showWizardControls?: boolean
+  showPhoneInput?: boolean
 }
 
 export function BioDataForm({
@@ -58,6 +59,7 @@ export function BioDataForm({
   isChildRegistration = false,
   onNext,
   showWizardControls = true,
+  showPhoneInput = true,
 }: BioDataFormProps) {
   const [showForm, setShowForm] = useState<boolean>(false)
   const [isFetchingMember, setIsFetchingMember] = useState<boolean>(false)
@@ -112,7 +114,7 @@ export function BioDataForm({
           return (
             <Form>
               <>
-                {!isChildRegistration ? (
+                {!isChildRegistration && showPhoneInput ? (
                   <PhoneNumberSearch
                     setResponse={parseMemberFromResponse}
                     setIsEdited={setIsEdited}
@@ -203,6 +205,8 @@ export function BioDataForm({
                   }
                   type="submit"
                   loading={loading}
+                  className="w-full mt-3"
+                  fullWidth
                 >
                   Save
                 </PrimaryButton>

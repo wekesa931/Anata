@@ -9,9 +9,16 @@ type TextFieldProps = {
 
 function TextField(props: TextFieldProps) {
   const handleValueBlur = (e: any, fieldProps: FieldProps) => {
-    fieldProps.form.setFieldTouched(fieldProps.field.name, e.target.value)
+    fieldProps.form.handleBlur(fieldProps.field.name)(e)
     if (props.handleBlur) {
       props.handleBlur(e)
+    }
+  }
+
+  const handleValueChange = (e: any, fieldProps: FieldProps) => {
+    fieldProps.form.handleChange(fieldProps.field.name)(e)
+    if (props.handleChange) {
+      props.handleChange(e)
     }
   }
   return (
@@ -29,6 +36,9 @@ function TextField(props: TextFieldProps) {
             rows={props.textarea ? 4 : undefined}
             onBlur={(e: any) => {
               handleValueBlur(e, fieldProps)
+            }}
+            onChange={(e: any) => {
+              handleValueChange(e, fieldProps)
             }}
           />
           <FormHelperText error={!!fieldProps.meta.error}>

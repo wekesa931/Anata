@@ -59,7 +59,7 @@ function InterventionsSection() {
             {intervention.length > 0 ? (
               <>
                 <ItemTitle title="Active Interventions" />
-                {intervention.map((info, index) => (
+                {intervention.map((info: any, index: number) => (
                   <>
                     <InterventionItem interventions={info} key={index} />
                   </>

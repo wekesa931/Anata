@@ -26,6 +26,7 @@ export const membersTableColumns: ColumnSchema[] = [
   { name: 'intercom_url', type: 'string' },
   { name: 'assigned_hn', type: 'string' },
   { name: 'assigned_me', type: 'string' },
+  { name: 'assigned_nutritionist', type: 'string' },
   { name: 'onboard_stage', type: 'string' },
   { name: 'status', type: 'string' },
   { name: 'last_synced_at', type: 'number' },

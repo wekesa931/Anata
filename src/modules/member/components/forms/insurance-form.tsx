@@ -151,6 +151,8 @@ export function InsuranceForm({
     {} as InsuranceDetailsValues
   )
   const navigate = useNavigate()
+  const [businessLocations, setBusinessLocations] = useState<LookupOption[]>([])
+  const [departments, setDepartments] = useState<LookupOption[]>([])
 
   useEffect(() => {
     const values = member?.insurances?.insurances.length
@@ -286,48 +288,54 @@ export function InsuranceForm({
                   name="employer.name"
                   placeholder="--Select--"
                   options={lookupOptions?.employers || []}
-                />
-                <SelectField
-                  label="Business Unit/Branch/Wing"
-                  name="employer.businessLocation.businessLocationId"
-                  placeholder="--Select--"
-                  options={getBusinessLocations(
-                    lookupOptions?.employers || [],
-                    values?.employer?.name
-                  )}
-                  handleChange={(e: any) => {
-                    const businessLocation =
-                      getBusinessLocations(
-                        lookupOptions?.employers || [],
-                        values?.employer?.name
-                      )?.find((d) => d.businessLocationId === e.target.value)
-                        ?.label || ''
-                    setFieldValue(
-                      'employer.businessLocation.name',
-                      businessLocation
-                    )
-                  }}
-                  required={false}
-                />
-                <SelectField
-                  label="Department"
-                  name="employer.department.departmentId"
-                  placeholder="--Select--"
-                  options={getBusinessDepartments(
-                    lookupOptions?.employers || [],
-                    values?.employer?.name
-                  )}
-                  handleChange={(e: any) => {
-                    const department =
+                  handleChange={(v) => {
+                    const b =
+                      getBusinessLocations(lookupOptions?.employers || [], v) ||
+                      []
+                    const d =
                       getBusinessDepartments(
                         lookupOptions?.employers || [],
-                        values?.employer?.name
-                      )?.find((d) => d.departmentId === e.target.value)
-                        ?.label || ''
-                    setFieldValue('employer.department.name', department)
+                        v
+                      ) || []
+
+                    setBusinessLocations(b)
+                    setDepartments(d)
                   }}
-                  required={false}
                 />
+                {!!businessLocations.length && (
+                  <SelectField
+                    label="Business Unit/Branch/Wing"
+                    name="employer.businessLocation.businessLocationId"
+                    placeholder="--Select--"
+                    options={businessLocations}
+                    handleChange={(v) => {
+                      const businessLocation =
+                        businessLocations?.find(
+                          (d) => d.businessLocationId === v
+                        )?.label || ''
+                      setFieldValue(
+                        'employer.businessLocation.name',
+                        businessLocation
+                      )
+                    }}
+                    required={false}
+                  />
+                )}
+                {!!departments.length && (
+                  <SelectField
+                    label="Department"
+                    name="employer.department.departmentId"
+                    placeholder="--Select--"
+                    options={departments}
+                    handleChange={(v: any) => {
+                      const department =
+                        departments?.find((d) => d.departmentId === v)?.label ||
+                        ''
+                      setFieldValue('employer.department.name', department)
+                    }}
+                    required={false}
+                  />
+                )}
                 <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
                   {' '}
                   Insurance details{' '}

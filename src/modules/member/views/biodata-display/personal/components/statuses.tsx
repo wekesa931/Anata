@@ -1,0 +1,95 @@
+import React from 'react'
+import {
+  SectionItem,
+  Item,
+  GridItems,
+} from 'src/modules/member/components/display-items.component'
+import {
+  BlockSekeleton,
+  StatusSkeleon,
+} from 'src/modules/member/components/skeleton-loaders'
+import useClinicalSummary from 'src/modules/member/hooks/clinical-summary'
+import { PortalForm } from 'src/modules/member/components/update-forms'
+import { StatusForm } from 'src/modules/member/components/forms/statuses-form'
+import type { Member } from 'src/modules/member/db/models'
+
+type StatusesSectionProps = {
+  member: Member | null
+}
+
+function StatusesSection({ member }: StatusesSectionProps) {
+  const { careConsent } = useClinicalSummary()
+  const [showEditForm, setShowEditForm] = React.useState<boolean>(false)
+  const [isEdited, setIsEdited] = React.useState<boolean>(false)
+
+  return member ? (
+    <div>
+      {showEditForm && (
+        <PortalForm
+          modalTitle="Edit statuses and assignees"
+          handleClose={() => setShowEditForm(false)}
+          isEdited={isEdited}
+          setIsEdited={setIsEdited}
+          handleOpen={() => setShowEditForm(true)}
+        >
+          {({ handleClose }) => (
+            <StatusForm
+              member={member}
+              setIsEdited={setIsEdited}
+              onNext={handleClose}
+            />
+          )}
+        </PortalForm>
+      )}
+      <SectionItem
+        title="Statuses & Assignees"
+        editable
+        handleEdit={() => setShowEditForm(true)}
+      >
+        <GridItems>
+          <Item title="Assigned HN" child={member?.assignedHn?.fullName} />
+          <Item title="Assigned ME" child={member?.assignedMe?.fullName} />
+        </GridItems>
+        <GridItems>
+          <Item
+            title="Assigned Nutritionist"
+            child={member?.assignedNutritionist?.fullName}
+          />
+        </GridItems>
+        <GridItems>
+          <Item title="Onboarding stage" child={member?.onboardStage} />
+          <Item title="Member status" child={member?.status} />
+        </GridItems>
+        {careConsent ? (
+          <GridItems single>
+            <Item title="Chronic care consent" child={careConsent} />
+          </GridItems>
+        ) : (
+          <BlockSekeleton height={40} />
+        )}
+
+        <GridItems single>
+          <Item
+            title="Tags"
+            child={
+              <div className="flex flex-wrap gap-2">
+                {(member?.tags || []).map((tag, index) => (
+                  <span
+                    key={index}
+                    className="bg-blue-10 text-center rounded-md text-dark-blue-100 py-1 px-1.5 font-rubik text-sm"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            }
+          />
+        </GridItems>
+      </SectionItem>
+    </div>
+  ) : (
+    <StatusSkeleon />
+  )
+}
+
+export default StatusesSection

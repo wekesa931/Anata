@@ -1,5 +1,5 @@
 /* eslint jsx-a11y/anchor-is-valid: 0 */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { ChevronRight, Phone, X } from 'react-feather'
 import { Input, InputAdornment } from '@mui/material'
 import Icon from 'src/components/icon/svg-icon'
@@ -15,13 +15,6 @@ export interface IProps {
   showPrompt: boolean
 }
 
-const Contacts = [
-  { 'Phone 1': null },
-  { 'Phone 2': null },
-  { 'Emergency 1': null },
-  { 'Emergency 2': null },
-]
-
 function CallsCallout({
   tasksType,
   airtableId,
@@ -29,7 +22,6 @@ function CallsCallout({
   tasksType?: string
   airtableId?: string
 }) {
-  const [memberContacts, setmemberContacts] = React.useState(Contacts)
   const { member } = useMember()
   const [isPhoneChooserOpen, setIsPhoneChooserOpen] = useState<boolean>(false)
   const { callError, setHistoryRecordId, setcallError } = useCall()
@@ -101,7 +93,7 @@ function CallsCallout({
     }
   }
 
-  useEffect(() => {
+  const getMemberPhones = () => {
     if (member) {
       const { allPhones } = member
       const { phones = [], emergencyContactPhone } = allPhones
@@ -141,9 +133,11 @@ function CallsCallout({
 
       const cleanedContacts = allContacts.filter((con) => checkProperties(con))
 
-      setmemberContacts(cleanedContacts)
+      return cleanedContacts
     }
-  }, [member])
+
+    return []
+  }
 
   const setPhonevalidation = (phone: string) => {
     setPhoneNumber(phone)
@@ -197,16 +191,20 @@ function CallsCallout({
               </div>
             )}
             <div>
-              {memberContacts.length > 0 ? (
-                memberContacts.map((con, i) => (
-                  <div className="mb-ten" key={i}>
-                    <ContactList
-                      tasksType={tasksType}
-                      relevantContact={con}
-                      onCallInitiated={onCallInitiated}
-                    />
-                  </div>
-                ))
+              {member ? (
+                getMemberPhones().length > 0 ? (
+                  getMemberPhones()?.map((con, i) => (
+                    <div className="mb-ten" key={i}>
+                      <ContactList
+                        tasksType={tasksType}
+                        relevantContact={con}
+                        onCallInitiated={onCallInitiated}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div />
+                )
               ) : (
                 <div>
                   <Notification

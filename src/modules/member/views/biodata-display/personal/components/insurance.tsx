@@ -7,11 +7,13 @@ import {
   ItemTitle,
   ItemChild,
 } from 'src/modules/member/components/display-items.component'
-import { useMember } from 'src/context/member'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
 import { Box, Divider } from '@mui/material'
 import { formatCurreny } from 'src/modules/member/utils'
-import EmptyBlock from 'src/modules/member/components/empty-block'
+import { PortalForm } from 'src/modules/member/components/update-forms'
+import { InsuranceForm } from 'src/modules/member/components/forms/insurance-form'
+import { useNotifications } from 'src/context/notifications'
+import type { Member } from 'src/modules/member/db/models'
 
 function InsuranceSectionItem({
   insuranceItem,
@@ -90,35 +92,64 @@ function InsuranceSectionItem({
   )
 }
 
-function InsuranceSection() {
-  const { member } = useMember()
+type InsuranceSectionProps = {
+  member: Member | null
+}
+
+function InsuranceSection({ member }: InsuranceSectionProps) {
+  const [showEditForm, setShowEditForm] = React.useState(false)
+  const [isEdited, setIsEdited] = React.useState(false)
+  const { notify } = useNotifications()
+
   return member ? (
-    <SectionItem>
-      <div className="mb-4">
-        <h3 className="text-dark-blue-50 text-base font-rubik">
-          Insurance and Employer
-        </h3>
-      </div>
-      <GridItems>
-        <Item title="Employer" child={member?.employer?.name} />
-        <Item title="Department" child={member?.employer?.department?.name} />
-      </GridItems>
-      <Divider className="my-4" />
-      {member?.insuranceDetails?.length === 0 ? (
-        <EmptyBlock>
-          <h3 className="text-sm text-center">No insurance ID available</h3>
-          <p className="text-xs text-center">
-            Please collect information from member
-          </p>
-        </EmptyBlock>
-      ) : (
-        <>
-          {member?.insuranceDetails?.map((insurance, index) => (
-            <InsuranceSectionItem key={index} insuranceItem={insurance} />
-          ))}
-        </>
+    <div>
+      {showEditForm && (
+        <PortalForm
+          modalTitle="Edit Insurance & Employer"
+          handleClose={() => setShowEditForm(false)}
+          isEdited={isEdited}
+          setIsEdited={setIsEdited}
+          handleOpen={() => setShowEditForm(true)}
+        >
+          {({ handleClose }) => (
+            <InsuranceForm
+              member={member}
+              setCompleted={() => {
+                notify('Insurance info updated')
+                handleClose()
+              }}
+              primaryMember={undefined}
+              showWizardContols={false}
+            />
+          )}
+        </PortalForm>
       )}
-    </SectionItem>
+      <SectionItem
+        title="Insurance & Employer"
+        editable
+        handleEdit={() => setShowEditForm(true)}
+      >
+        <GridItems>
+          <Item title="Employer" child={member?.employer?.name} />
+          <Item title="Department" child={member?.employer?.department?.name} />
+        </GridItems>
+        <Divider className="my-4" />
+        {member?.insuranceDetails?.length === 0 ? (
+          <div className=" h-16 bg-red-20 mx-1 py-2 rounded-lg font-rubik text-dark-blue-100 w-full">
+            <h3 className="text-sm text-center">No insurance ID available</h3>
+            <p className="text-xs text-center">
+              Please collect information from member
+            </p>
+          </div>
+        ) : (
+          <>
+            {member?.insuranceDetails?.map((insurance, index) => (
+              <InsuranceSectionItem key={index} insuranceItem={insurance} />
+            ))}
+          </>
+        )}
+      </SectionItem>
+    </div>
   ) : (
     <BlockSekeleton />
   )

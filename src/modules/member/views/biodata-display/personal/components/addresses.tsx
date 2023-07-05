@@ -5,9 +5,12 @@ import {
   Item,
   GridItems,
 } from 'src/modules/member/components/display-items.component'
-import EmptyBlock from 'src/modules/member/components/empty-block'
-import { useMember } from 'src/context/member'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
+import { Button } from '@mui/material'
+import { PortalForm } from 'src/modules/member/components/update-forms'
+import { AddressesForm } from 'src/modules/member/components/forms/addresses-form'
+import { useNotifications } from 'src/context/notifications'
+import type { Member } from 'src/modules/member/db/models'
 
 function MapLink({
   placeId,
@@ -43,7 +46,7 @@ type ItemProps = {
 
 function AddressItem({ addressItem, label, deliveryInstructions }: ItemProps) {
   return (
-    <SectionItem>
+    <SectionItem editable={false}>
       <GridItems single>
         <Item title={label || 'Home'} child={addressItem?.description} />
       </GridItems>
@@ -69,22 +72,61 @@ function AddressItem({ addressItem, label, deliveryInstructions }: ItemProps) {
   )
 }
 
-function AddressesSection() {
-  const { member } = useMember()
+type Props = {
+  member: Member | null
+}
+
+function AddressesSection({ member }: Props) {
+  const [showEditForm, setShowEditForm] = React.useState<boolean>(false)
+  const [isEdited, setIsEdited] = React.useState<boolean>(false)
 
   const homeAddress = member?.homeAddress || null
   const restAddress = member?.otherAddresses || []
+  const { notify } = useNotifications()
 
   return member ? (
     <>
+      {showEditForm && (
+        <PortalForm
+          modalTitle="Edit addresses"
+          handleClose={() => setShowEditForm(false)}
+          handleOpen={() => setShowEditForm(true)}
+          isEdited={isEdited}
+          setIsEdited={setIsEdited}
+        >
+          {({ handleClose }) => (
+            <AddressesForm
+              member={member}
+              showWizardControls={false}
+              onPrev={handleClose}
+              onNext={() => {
+                notify('Addresses updated successfully')
+                handleClose()
+              }}
+            />
+          )}
+        </PortalForm>
+      )}
+      {member?.hasAddress && (
+        <div className="flex justify-between items-center mr-1 font-rubik mb-2">
+          <h3 className="text-dark-blue-50 text-base">Addresses</h3>
+          <Button
+            variant="text"
+            onClick={() => setShowEditForm(true)}
+            className="text-blue-100 text-sm font-medium normal-case"
+          >
+            Edit
+          </Button>
+        </div>
+      )}
       {!member.hasAddress ? (
         <SectionItem>
-          <EmptyBlock>
+          <div className="h-16 bg-red-20 mx-1 py-2 rounded-lg font-rubik text-dark-blue-100 w-full">
             <h3 className="text-sm text-center">No addresses available</h3>
             <p className="text-xs text-center">
               Please collect information from member
             </p>
-          </EmptyBlock>
+          </div>
         </SectionItem>
       ) : (
         <>

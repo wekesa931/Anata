@@ -10,11 +10,11 @@ import {
 import { useRegistrationData } from 'src/modules/member/hooks/registration'
 import { logError } from 'src/utils/logging/logger'
 import { useNotifications } from 'src/context/notifications'
-import BioDataForm from 'src/modules/member/views/member-registration/components/forms/biodata-form'
-import ContactsForm from 'src/modules/member/views/member-registration/components/forms/contacts-form'
-import AddressesForm from 'src/modules/member/views/member-registration/components/forms/addresses-form'
-import InsuranceForm from 'src/modules/member/views/member-registration/components/forms/insurance-form'
-import PrimaryMemberSearch from 'src/modules/member/views/member-registration/components/primary-member-search'
+import BioDataForm from 'src/modules/member/components/forms/biodata-form'
+import ContactsForm from 'src/modules/member/components/forms/contacts-form'
+import AddressesForm from 'src/modules/member/components/forms/addresses-form'
+import InsuranceForm from 'src/modules/member/components/forms/insurance-form'
+import PrimaryMemberSearch from 'src/modules/member/components/primary-member-search'
 import { RegistrationFormsNames } from 'src/modules/member/types'
 
 type RegistrationFormProps = {

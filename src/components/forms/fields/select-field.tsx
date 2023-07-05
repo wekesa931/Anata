@@ -32,14 +32,14 @@ function ValueRenderer({ selected, props }: any) {
 
 function SelectField(props: OutlinedFieldProps & SelectFieldProps) {
   const handleValueChange = (e: any, fieldProps: FieldProps) => {
-    fieldProps.form.setFieldValue(fieldProps.field.name, e.target.value)
+    fieldProps.form.handleChange(fieldProps.field.name)(e)
     if (props.handleChange) {
       props.handleChange(e.target.value)
     }
   }
 
   const handleBlur = (e: any, fieldProps: FieldProps) => {
-    fieldProps.form.setFieldTouched(fieldProps.field.name, true)
+    fieldProps.form.handleBlur(fieldProps.field.name)(e)
     if (props.handleBlur) {
       props.handleBlur(e)
     }

@@ -19,14 +19,15 @@ const mapAssigneeTeam = (antaraStaff: any[]) => {
 
 export const mapAssigneeToLookup = (allAntaraStaffs: any[]) => {
   return mapAssigneeTeam(allAntaraStaffs).map(
-    ({ fullName, atRecordId }: any) => ({
+    ({ fullName, atRecordId, emailUsername }: any) => ({
       label: fullName,
-      value: atRecordId,
+      value: emailUsername,
+      recordId: atRecordId,
     })
   )
 }
 
-const useAntaraStaff = () => {
+export const useAntaraStaff = () => {
   const [allAntaraStaffs, setAllAntaraStaffs] = useState<any>([])
 
   const [getAntaraStaff, { loading }] = useLazyQuery(GET_ANTARA_STAFF)
@@ -59,6 +60,7 @@ const useAntaraStaff = () => {
       loading,
       antaraHNs: getStaffTeam('HEALTH_NAVIGATOR', allAntaraStaffs),
       antaraMEs: getStaffTeam('MEMBER_EXPERIENCE', allAntaraStaffs),
+      antaraNutritionists: getStaffTeam('NUTRITIONIST', allAntaraStaffs),
     }),
     [loading, allAntaraStaffs]
   )

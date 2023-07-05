@@ -1,12 +1,12 @@
 import React from 'react'
 import { V2MemberType, MemberStatuses } from 'src/modules/member/types'
-import { useMember } from 'src/context/member'
 import {
   SectionItem,
   ItemTitle,
 } from 'src/modules/member/components/display-items.component'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
 import { calcAge } from 'src/utils/date-time/date-formatters'
+import type { Member } from 'src/modules/member/db/models'
 
 const StatusIs = (status: string) => {
   return {
@@ -64,9 +64,11 @@ function DependentItem({
   )
 }
 
-function DependentsSection() {
-  const { member } = useMember()
+type DependentsSectionProps = {
+  member: Member | null
+}
 
+function DependentsSection({ member }: DependentsSectionProps) {
   const allDependents: V2MemberType[] = [
     ...(member?.dependents || []),
     ...(member?.otherDependents || []),

@@ -19,7 +19,7 @@ import { logError } from 'src/utils/logging/logger'
 import { useNotifications } from 'src/context/notifications'
 import { useRegistrationForm } from 'src/context/member-registration'
 import { relationshipOptions } from 'src/config/constants'
-import PhoneNumberSearch from 'src/modules/member/views/member-registration/components/phone-field-search'
+import PhoneNumberSearch from 'src/modules/member/components/phone-field-search'
 import { BooleanStatus } from 'src/modules/member/types'
 
 type ContactsSectionProps = {
@@ -31,14 +31,19 @@ type ContactsSectionProps = {
 export default function ContactsSectionForm(props: ContactsSectionProps) {
   const { onNext, onPrev } = useWizardContext()
   return (
-    <ContactsForm {...props} onNext={onNext} onPrev={onPrev} showFormControls />
+    <ContactsForm
+      {...props}
+      onNext={onNext}
+      onPrev={onPrev}
+      showWizardContols
+    />
   )
 }
 
 type ContactsFormProps = ContactsSectionProps & {
   onNext: () => void
   onPrev?: () => void
-  showFormControls?: boolean
+  showWizardContols?: boolean
 }
 
 export function ContactsForm({
@@ -46,7 +51,7 @@ export function ContactsForm({
   isChildRegistration,
   onNext,
   onPrev,
-  showFormControls = true,
+  showWizardContols = true,
   setIsEdited,
 }: ContactsFormProps) {
   const { handleUpdateContactsData, loading } = useRegistrationData()
@@ -55,20 +60,23 @@ export function ContactsForm({
   const [showForm, setShowForm] = useState<BooleanStatus>({})
   const [isFetching, setIsFetching] = useState<BooleanStatus>({})
 
-  const phones = member?.phones || [
-    {
-      phone: '',
-      phoneType: '',
-      priority: 0,
-    },
-  ]
+  const phones =
+    member?.phones && member?.phones.length > 0
+      ? member.phones
+      : [
+          {
+            phone: '',
+            phoneType: '',
+            priority: 0,
+          },
+        ]
   const initialValues: ContactValues = {
     phones,
     email: member?.email || '',
-    emergencyContact: member?.emergencyContact || {
-      name: '',
-      phoneNumber: '',
-      relationship: '',
+    emergencyContact: {
+      name: member?.emergencyContact?.name || '',
+      phoneNumber: member?.emergencyContact?.phoneNumber || '',
+      relationship: member?.emergencyContact?.relationship || '',
     },
     antaraId: member?.antaraId || '',
   }
@@ -210,7 +218,7 @@ export function ContactsForm({
               />
             </div>
 
-            {showFormControls ? (
+            {showWizardContols ? (
               <div className="flex justify-between gap-4 mt-3">
                 <PreviousButton onClick={onPrev} disabled={loading}>
                   {' '}
@@ -226,6 +234,7 @@ export function ContactsForm({
                 disabled={loading}
                 loading={loading}
                 className="w-full mt-3"
+                fullWidth
               >
                 Save
               </PrimaryButton>

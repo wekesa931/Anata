@@ -13,6 +13,7 @@ import {
   useUpdateInsuranceDetails,
   useUpdatePhones,
   useUpdateBirthdate,
+  useUpdateStatus,
 } from 'src/modules/member/services/member.api'
 import { logError } from 'src/utils/logging/logger'
 import dayjs from 'dayjs'
@@ -44,6 +45,23 @@ export const useRegistrationData = () => {
   const { createDefaultMemberInstance, createMemberInstance } = useMembersData()
   const { updatePhones, loading: updatingPhones } = useUpdatePhones()
   const { updateBirthdate, loading: updatingBirthdate } = useUpdateBirthdate()
+  const { updateStatus, loading: updatingStatus } = useUpdateStatus()
+
+  const transformPhones = (data: any) => {
+    if (data) {
+      const newPhones = (data?.updateMemberPhones?.data?.phones || []).map(
+        (p: any, index: number) => ({
+          phone: p?.phone,
+          phoneType: p.phoneType?.phoneType,
+          priority: p?.priority || index,
+        })
+      )
+
+      return newPhones
+    }
+
+    return []
+  }
 
   const handleUpdateBioData = async (
     member: Member,
@@ -67,6 +85,7 @@ export const useRegistrationData = () => {
           m.sex = biodata.sex
           m.birthDate = dayjs(biodata.birthDate).format('YYYY-MM-DD')
           m.maritalStatus = biodata.maritalStatus
+          m.tags = biodata.tags
         })
       })
     } catch (error) {
@@ -91,15 +110,15 @@ export const useRegistrationData = () => {
       )
       contactsData.phones = phonesToUpdate
 
-      await updateContactsData(contactsData)
-      const remainingPhones = (contactsData.phones || []).map(
-        (phone: PhoneType, index: number) => ({ ...phone, priority: index + 1 })
-      )
+      const { data } = await updateContactsData(contactsData)
+      const phones = transformPhones(data)
+
       return database.write(async () => {
         return member.update((m) => {
-          m.phones = remainingPhones
+          m.phones = phones
           m.email = contactsData.email
           m.emergencyContact = contactsData.emergencyContact
+          m.isSynced = true
         })
       })
     } catch (error) {
@@ -127,6 +146,7 @@ export const useRegistrationData = () => {
       return database.write(async () => {
         return member.update((m) => {
           m.addresses = addressData
+          m.isSynced = true
         })
       })
     } catch (error) {
@@ -170,6 +190,7 @@ export const useRegistrationData = () => {
       await database.write(async () => {
         await member.update((m) => {
           m.insurances = update
+          m.isSynced = true
         })
       })
 
@@ -207,6 +228,7 @@ export const useRegistrationData = () => {
         return member.update((m) => {
           m.insurances = insuranceDetails
           m.employer = insuranceDetails.employer
+          m.isSynced = true
         })
       })
     } catch (error) {
@@ -225,25 +247,20 @@ export const useRegistrationData = () => {
 
       const { data } = await updatePhones(payload)
       if (data) {
-        const newPhones = (data?.updateMemberPhones?.data?.phones || []).map(
-          (p: any, index: number) => ({
-            phone: p?.phone,
-            phoneType: p.phoneType?.phoneType,
-            priority: p?.priority || index,
-          })
-        )
+        const newPhones = transformPhones(data)
 
         const priority0Phone =
           newPhones.find((p: any) => p.priority === 0)?.phone || ''
 
         // write them to db and update member
-        await database.write(async () => {
-          await member.update((m) => {
+        return database.write(async () => {
+          return member.update((m) => {
             m.phones = newPhones
             m.phone = priority0Phone
           })
         })
       }
+      return null
     } catch (error) {
       logError(error)
       throw error
@@ -258,14 +275,47 @@ export const useRegistrationData = () => {
       const payload = {
         antaraId: member?.antaraId,
         birthDate,
+        firstName: member?.firstName || '',
+        lastName: member?.lastName || '',
+        middleName: member?.middleName || '',
       }
 
       await updateBirthdate(payload)
-      await database.write(async () => {
-        await member.update((m) => {
+      return database.write(async () => {
+        return member.update((m) => {
           m.birthDate = dayjs(birthDate).format('YYYY-MM-DD')
         })
       })
+    } catch (error) {
+      logError(error)
+      throw error
+    }
+  }
+
+  const handleUpdateStatus = async (member: Member, values: any) => {
+    try {
+      if (member?.antaraId) {
+        const payload = {
+          antaraId: member?.antaraId,
+          onboardStage: values?.onboardStage || '',
+          status: values?.status || '',
+          assignedMe: values?.assignedMe?.emailUsername || '',
+          assignedHn: values?.assignedHn?.emailUsername || '',
+          assignedNutritionist:
+            values?.assignedNutritionist?.emailUsername || '',
+        }
+
+        await updateStatus(payload)
+        await database.write(async () => {
+          await member.update((m) => {
+            m.onboardStage = values?.onboardStage || ''
+            m.status = values?.status || ''
+            m.assignedMe = values?.assignedMe || {}
+            m.assignedHn = values?.assignedHn || {}
+            m.assignedNutritionist = values?.assignedNutritionist || {}
+          })
+        })
+      }
     } catch (error) {
       logError(error)
       throw error
@@ -288,10 +338,12 @@ export const useRegistrationData = () => {
       verifyingInsuranceDetails ||
       updatingInsuranceDetails ||
       updatingPhones ||
-      updatingBirthdate,
+      updatingBirthdate ||
+      updatingStatus,
     isVerifyingInsurance: verifyingInsuranceDetails,
     handleUpdatePhones,
     isUpdatingPhones: updatingPhones,
     handleUpdateBirthdate,
+    handleUpdateStatus,
   }
 }

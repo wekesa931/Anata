@@ -105,6 +105,21 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
       assignedMe
       assignedHnEmailUsername
       assignedMeEmailUsername
+      assignedMeObject {
+        fullName
+        emailUsername
+        atRecordId
+      }
+      assignedHnObject {
+        fullName
+        emailUsername
+        atRecordId
+      }
+      assignedNutritionistObject {
+        fullName
+        emailUsername
+        atRecordId
+      }
       tags
       status {
         status
@@ -204,7 +219,7 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
 
 export const SEARCH_MEMBERS = gql`
   query memberSearch($query: String!) {
-    membersSearch(query: $query) {
+    membersSearch(query: $query, first: 10) {
       edges {
         node {
           ...MemberDetailsFragment

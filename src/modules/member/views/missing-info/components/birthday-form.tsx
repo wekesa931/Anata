@@ -2,7 +2,7 @@ import { Form } from 'formik'
 import React from 'react'
 import PrimaryForm from 'src/components/forms/primary-form'
 import type { Member } from 'src/modules/member/db/models'
-import UpdateForms from 'src/modules/member/views/missing-info/components/update-forms'
+import UpdateForms from 'src/modules/member/components/update-forms'
 import DateField from 'src/components/forms/fields/date-field'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useRegistrationData } from 'src/modules/member/hooks/registration'
@@ -18,11 +18,14 @@ export default function MissingBirthdateForm({
 }: MissingInfoBlockProps) {
   const { handleUpdateBirthdate } = useRegistrationData()
   const { notify } = useNotifications()
-  const handleSubmit = (values: any) => {
+
+  const handleSubmit = (values: any, props: any) => {
     if (member) {
-      handleUpdateBirthdate(member, values.birthdate)
+      handleUpdateBirthdate(member, values.birthDate)
         .then(() => {
           notify('Birthdate updated successfully')
+          props.setIsEdited(false)
+          props.handleClose()
         })
         .catch((error) => {
           logError(error)
@@ -32,12 +35,17 @@ export default function MissingBirthdateForm({
   }
   return (
     <UpdateForms title="Missing birthdate">
-      {({ setIsEdited }) => (
+      {({ setIsEdited, handleClose }) => (
         <PrimaryForm
           initialValues={{
-            birthdate: member?.birthDate || null,
+            birthDate: member?.birthDate || null,
           }}
-          handleSubmit={handleSubmit}
+          handleSubmit={(values: any) =>
+            handleSubmit(values, {
+              setIsEdited,
+              handleClose,
+            })
+          }
           expanded={false}
         >
           {({ isSubmitting, isValidating }) => (

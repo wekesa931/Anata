@@ -85,5 +85,6 @@ export const useMembersData = () => {
     findMemberByAntaraId,
     hydrateMember,
     loading,
+    membersCollection,
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react'
-import { AddressesForm } from 'src/modules/member/views/member-registration/components/forms/addresses-form'
+import { AddressesForm } from 'src/modules/member/components/forms/addresses-form'
 import type { Member } from 'src/modules/member/db/models'
-import UpdateForms from 'src/modules/member/views/missing-info/components/update-forms'
+import UpdateForms from 'src/modules/member/components/update-forms'
 import { useNotifications } from 'src/context/notifications'
 
 type MissingInfoBlockProps = {
@@ -17,7 +17,7 @@ function MissingAddress({ member }: MissingInfoBlockProps) {
         <AddressesForm
           member={member}
           onNext={() => {
-            notify('Insurance info updated')
+            notify('Address info updated')
             handleClose()
           }}
           showWizardControls={false}

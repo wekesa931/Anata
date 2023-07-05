@@ -3,8 +3,8 @@ import React, { useState } from 'react'
 import PrimaryForm from 'src/components/forms/primary-form'
 import FlexRow from 'src/components/layouts/flex-row'
 import type { Member } from 'src/modules/member/db/models'
-import UpdateForms from 'src/modules/member/views/missing-info/components/update-forms'
-import { PhoneNumberSearch } from 'src/modules/member/views/member-registration/components/phone-field-search'
+import UpdateForms from 'src/modules/member/components/update-forms'
+import { PhoneNumberSearch } from 'src/modules/member/components/phone-field-search'
 import { useRegistrationForm } from 'src/context/member-registration'
 import DeleteFormEntry from 'src/modules/member/components/delete-form-entry'
 import SelectField from 'src/components/forms/fields/select-field'
@@ -25,11 +25,13 @@ export default function MissingPhoneForm({ member }: MissingInfoBlockProps) {
   const { handleUpdatePhones, isUpdatingPhones } = useRegistrationData()
   const { notify } = useNotifications()
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = (values: any, props: any) => {
     if (member) {
       handleUpdatePhones(values.phones, member)
         .then(() => {
           notify('Phone numbers updated')
+          props.setIsEdited(false)
+          props.handleClose()
         })
         .catch((err: any) => {
           logError(err)
@@ -39,18 +41,26 @@ export default function MissingPhoneForm({ member }: MissingInfoBlockProps) {
   }
   return (
     <UpdateForms title="Missing phone info">
-      {({ setIsEdited }) => (
+      {({ setIsEdited, handleClose }) => (
         <PrimaryForm
           initialValues={{
-            phones: member?.phones || [
-              {
-                phone: '',
-                phoneType: '',
-                priority: 0,
-              },
-            ],
+            phones:
+              member?.phones && member?.phones?.length > 0
+                ? member?.phones
+                : [
+                    {
+                      phone: '',
+                      phoneType: '',
+                      priority: 0,
+                    },
+                  ],
           }}
-          handleSubmit={handleSubmit}
+          handleSubmit={(values: any) =>
+            handleSubmit(values, {
+              setIsEdited,
+              handleClose,
+            })
+          }
           expanded={false}
         >
           {({ values, setFieldValue, isSubmitting, isValidating }) => {

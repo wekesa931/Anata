@@ -28,8 +28,17 @@ type EmergencyContact = {
 }
 
 type AssignedStaff = {
-  recordId?: string
-  name?: string
+  fullName?: string
+  emailUsername?: string
+  atRecordId?: string
+}
+
+const getStaff = (data: any): AssignedStaff => {
+  return {
+    fullName: data?.fullName,
+    emailUsername: data?.emailUsername,
+    atRecordId: data?.atRecordId,
+  }
 }
 
 export const createOrUpdateMember = (
@@ -43,12 +52,12 @@ export const createOrUpdateMember = (
   member.email = memberData?.email
   member.phone = memberData?.phone
   member.phones = memberData.phones
-  member.birthDate = dayjs(memberData.birthDate).format('YYYY-MM-DD')
+  member.birthDate = memberData?.birthDate
   member.tags = memberData.tags
   member.maritalStatus = memberData.maritalStatus
   member.emergencyContact = {
     name: memberData.emergencyContactName,
-    phoneNumber: memberData.phone,
+    phoneNumber: memberData.emergencyContactPhone,
     relationship: memberData.emergencyContactRelationship,
   }
   member.addresses = transformAddressData(
@@ -65,14 +74,9 @@ export const createOrUpdateMember = (
   member.displayName = memberData?.displayName
   member.airtableRecordId = memberData?.airtableRecordId
   member.intercomUrl = memberData?.intercomUrl
-  member.assignedHn = {
-    recordId: memberData?.assignedHn,
-    name: memberData?.assignedHnFullName,
-  }
-  member.assignedMe = {
-    recordId: memberData?.assignedMe,
-    name: memberData?.assignedMe,
-  }
+  member.assignedHn = getStaff(memberData?.assignedHnObject)
+  member.assignedMe = getStaff(memberData?.assignedMeObject)
+  member.assignedNutritionist = getStaff(memberData?.assignedNutritionistObject)
 
   member.onboardStage = memberData?.onboardStage
   member.status = memberData?.status
@@ -132,6 +136,9 @@ export class Member extends Model {
 
   @json('assigned_me', identityJson) assignedMe?: AssignedStaff
 
+  @json('assigned_nutritionist', identityJson)
+  assignedNutritionist?: AssignedStaff
+
   @text('onboard_stage') onboardStage?: string
 
   @text('status') status?: string
@@ -153,8 +160,8 @@ export class Member extends Model {
       this.otherDependents?.map((d) => d.phones) || []
 
     return {
-      phones: primaryMemberPhones,
-      primary: currentMemberPhones,
+      phones: currentMemberPhones,
+      primary: primaryMemberPhones,
       otherDependents: otherDependentsPhones,
       emergencyContactPhone: this.emergencyContact?.phoneNumber,
     }
@@ -218,11 +225,12 @@ export class Member extends Model {
   }
 
   get hasAnyRejectedInsurance() {
-    return this.insuranceDetails?.some(
-      (insurance) =>
-        insurance?.verificationStatus ===
-          InsuranceVerificationStatus.REJECTED ||
-        insurance?.verificationStatus === InsuranceVerificationStatus.PENDING
+    return (
+      this.insuranceDetails?.length === 0 ||
+      this.insuranceDetails?.some(
+        (insurance) =>
+          insurance?.verificationStatus === InsuranceVerificationStatus.REJECTED
+      )
     )
   }
 

@@ -11,7 +11,7 @@ type MissingInfoBlockProps = {
 
 export default function MissingInfoBlock({ member }: MissingInfoBlockProps) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 mt-2">
       {member?.hasAnyRejectedInsurance && (
         <div className="w-full">
           <MissingInsurance member={member} />

@@ -8,8 +8,8 @@ function RowSkeleton({ count = 1 }: { count: number }) {
         .fill(0)
         .map((_, i) => (
           <div key={i}>
+            <Skeleton variant="text" width={60} height={30} />
             <Skeleton variant="text" width={100} height={30} />
-            <Skeleton variant="text" width={150} height={30} />
           </div>
         ))}
     </Stack>
@@ -67,4 +67,17 @@ export function StatusSkeleon() {
 
 export function BlockSekeleton({ height = 100 }: { height?: number }) {
   return <Skeleton variant="text" width="100%" height={height} />
+}
+
+export function BiodataSkeleton() {
+  return (
+    <div>
+      <TitleSkeleton />
+      <SummarySkeleton />
+      <ContactsSkeleton />
+      <StatusSkeleon />
+      <BlockSekeleton height={300} />
+      <BlockSekeleton height={300} />
+    </div>
+  )
 }

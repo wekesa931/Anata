@@ -1,7 +1,7 @@
 import React from 'react'
 import Button from 'src/components/buttons/html-button'
 import PortalWindow from 'src/components/portal'
-import EmptyBlock from './empty-block-field'
+import EmptyBlock from 'src/modules/member/components/empty-block'
 
 type ModalChildProps = {
   handleClose: () => void
@@ -39,18 +39,48 @@ function UpdateForm({
       </div>
 
       {open && (
-        <PortalWindow
-          closeWindow={handleClose}
-          title={modalTitle}
+        <PortalForm
+          handleClose={handleClose}
+          modalTitle={modalTitle}
           isEdited={isEdited}
           setIsEdited={setIsEdited}
+          handleOpen={handleOpen}
         >
-          <div className="p-4">
-            {children({ handleClose, handleOpen, setIsEdited })}
-          </div>
-        </PortalWindow>
+          {children}
+        </PortalForm>
       )}
     </>
+  )
+}
+
+type PortalFormProps = {
+  handleClose: () => void
+  handleOpen: () => void
+  setIsEdited: (isEdited: boolean) => void
+  modalTitle?: string
+  isEdited: boolean
+  children: (modalProps: ModalChildProps) => React.ReactElement
+}
+
+export function PortalForm({
+  handleClose,
+  modalTitle = 'Edit member details',
+  isEdited,
+  setIsEdited,
+  children,
+  handleOpen,
+}: PortalFormProps) {
+  return (
+    <PortalWindow
+      closeWindow={handleClose}
+      title={modalTitle}
+      isEdited={isEdited}
+      setIsEdited={setIsEdited}
+    >
+      <div className="p-4">
+        {children({ handleClose, handleOpen, setIsEdited })}
+      </div>
+    </PortalWindow>
   )
 }
 

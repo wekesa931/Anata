@@ -34,7 +34,7 @@ function HNDashboard() {
   const { activeView, activeSubView, prev } = useSidebar()
 
   React.useEffect(() => {
-    document.title = `src Home: ${activeView.name}`
+    document.title = `Scribe Home: ${activeView.name}`
   }, [activeView])
   const view = () => {
     if (activeSubView) {

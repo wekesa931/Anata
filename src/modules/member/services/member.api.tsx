@@ -9,12 +9,14 @@ import {
   UPDATE_MEMBER_STATUS,
   GET_MEMBER_BY_PHONE,
   MEMBER_DETAILS_QUERY,
+  UPDATE_MEMBER_STAFF,
 } from 'src/modules/member/services/gql'
 import type {
   BiodataValues,
   ContactValues,
   UpdatePhoneValues,
   BirthdateUpdateValues,
+  UpdateStatusValues,
 } from 'src/modules/member/types'
 import { composeMutations } from 'src/modules/member/utils/apollo-compose'
 import dayjs from 'dayjs'
@@ -148,6 +150,9 @@ export const useUpdateBirthdate = () => {
           ? dayjs(values.birthDate).format('YYYY-MM-DD')
           : null,
         antaraId,
+        firstName: values.firstName,
+        middleName: values.middleName,
+        lastName: values.lastName,
       },
     }
 
@@ -294,8 +299,12 @@ export const useUpdateInsuranceDetails = () => {
       memberStatus: {
         antaraId,
         employer: employer?.name,
-        departmentId: employer?.department?.departmentId,
-        businessLocationId: employer?.businessLocation?.businessLocationId,
+        ...(!!employer?.department?.departmentId && {
+          departmentId: employer?.department?.departmentId,
+        }),
+        ...(!!employer?.businessLocation?.businessLocationId && {
+          businessLocationId: employer?.businessLocation?.businessLocationId,
+        }),
       },
       memberInsurance: {
         antaraId,
@@ -312,5 +321,44 @@ export const useUpdateInsuranceDetails = () => {
     updateInsuranceDetails,
     loading,
     error,
+  }
+}
+
+export const useUpdateStatus = () => {
+  const CONTACTS_MUTATION = composeMutations(
+    UPDATE_MEMBER_STATUS,
+    UPDATE_MEMBER_STAFF
+  )
+
+  const [update, { loading, error }] = useMutation(CONTACTS_MUTATION, {
+    context: { clientName: 'v2' },
+  })
+
+  const updateStatus = async (values: UpdateStatusValues) => {
+    const { antaraId } = values
+
+    const variables = {
+      memberStatus: {
+        antaraId,
+        onboardStage: values.onboardStage,
+        status: values.status,
+      },
+      memberStaff: {
+        antaraId,
+        assignedHn: values.assignedHn,
+        assignedMe: values.assignedMe,
+        assignedNutritionist: values.assignedNutritionist,
+      },
+    }
+
+    return update({
+      variables,
+    })
+  }
+
+  return {
+    loading,
+    error,
+    updateStatus,
   }
 }

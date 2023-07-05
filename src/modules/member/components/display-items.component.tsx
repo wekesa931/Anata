@@ -1,4 +1,4 @@
-import { Divider } from '@mui/material'
+import { Button, Divider } from '@mui/material'
 import React from 'react'
 
 export function ItemTitle({ title }: { title: string }) {
@@ -54,9 +54,33 @@ export function GridItems({
   )
 }
 
-export function SectionItem({ children }: { children: React.ReactNode }) {
+type SectionProps = {
+  children: React.ReactNode
+  editable?: boolean
+  handleEdit?: () => void
+  title?: string
+}
+
+export function SectionItem({
+  children,
+  editable = false,
+  handleEdit,
+  title,
+}: SectionProps) {
   return (
     <div className="w-full py-2">
+      {editable && (
+        <div className="flex justify-between items-center mr-1 font-rubik mb-2">
+          <h3 className="text-dark-blue-50 text-base">{title}</h3>
+          <Button
+            variant="text"
+            onClick={handleEdit}
+            className="text-blue-100 text-sm font-medium normal-case"
+          >
+            Edit
+          </Button>
+        </div>
+      )}
       {children}
       <Divider className="my-2" />
     </div>

@@ -51,6 +51,21 @@ export type V2MemberType = {
   assignedHnFullName?: string
   assignedMe?: string
   assignedMeFullName?: string
+  assignedMeObject?: {
+    fullName?: string
+    emailUsername?: string
+    atRecordId?: string
+  }
+  assignedHnObject?: {
+    fullName?: string
+    emailUsername?: string
+    atRecordId?: string
+  }
+  assignedNutritionistObject?: {
+    fullName?: string
+    emailUsername?: string
+    atRecordId?: string
+  }
   startDate?: string
   tags?: string[]
   email?: string
@@ -149,6 +164,21 @@ export type V2MemberQueryType = {
     assignedHnEmailUsername?: string
     assignedMe?: string
     assignedMeFullName?: string
+    assignedMeObject?: {
+      fullName?: string
+      emailUsername?: string
+      atRecordId?: string
+    }
+    assignedHnObject?: {
+      fullName?: string
+      emailUsername?: string
+      atRecordId?: string
+    }
+    assignedNutritionistObject?: {
+      fullName?: string
+      emailUsername?: string
+      atRecordId?: string
+    }
     tags?: string[]
     status?: {
       status?: string
@@ -199,12 +229,12 @@ export type InterventionType = {
 export type BirthdateUpdateValues = {
   birthDate: Date | null
   antaraId: string
-}
-
-export type BiodataValues = BirthdateUpdateValues & {
   firstName: string
   middleName: string
   lastName: string
+}
+
+export type BiodataValues = BirthdateUpdateValues & {
   phone: string
   sex: string
   maritalStatus: string
@@ -223,6 +253,15 @@ export type ContactValues = UpdatePhoneValues & {
     phoneNumber?: string
     relationship?: string
   }
+}
+
+export type UpdateStatusValues = {
+  status: string
+  onboardStage: string
+  assignedMe: string
+  assignedHn: string
+  antaraId: string
+  assignedNutritionist: string
 }
 
 export type Address = {

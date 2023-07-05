@@ -19,7 +19,7 @@ function HealthAssessmentSection() {
           title="Health Goals"
           child={
             <div className="flex flex-wrap gap-2">
-              {(healthGoals || []).map((goals, index) => (
+              {(healthGoals || []).map((goals: any, index: number) => (
                 <span
                   key={index}
                   className="bg-blue-10 text-center rounded-md text-dark-blue-100 py-1 px-1.5 font-rubik text-sm"

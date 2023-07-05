@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import useAntaraStaff, {
+  mapAssigneeToLookup,
+} from 'src/hooks/antara-staff.hook'
 import { useGetLookupEntries } from 'src/modules/member/services/lookups'
 import { LookupOption, LookupOptions } from 'src/modules/member/types'
 
@@ -8,6 +11,9 @@ type RegistrationFormContextType = {
   insuranceCompanies: LookupOption[]
   lookupOptions: LookupOptions
   isDataLoading: boolean
+  antaraHNs: LookupOption[]
+  antaraMEs: LookupOption[]
+  antaraNutritionists: LookupOption[]
 }
 
 const RegistrationFormContext =
@@ -17,6 +23,9 @@ const RegistrationFormContext =
     insuranceCompanies: [],
     lookupOptions: {} as LookupOptions,
     isDataLoading: false,
+    antaraHNs: [],
+    antaraMEs: [],
+    antaraNutritionists: [],
   })
 
 function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
@@ -25,6 +34,8 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
   const [insuranceCompanies, setInsuranceCompanies] = useState<LookupOption[]>(
     []
   )
+  const { antaraHNs, antaraMEs, loading, antaraNutritionists } =
+    useAntaraStaff()
   const [lookupOptions, setLookupOptions] = useState<LookupOptions>(
     {} as LookupOptions
   )
@@ -51,10 +62,22 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
       setIsFormOpen,
       insuranceCompanies,
       lookupOptions,
-      isDataLoading,
+      isDataLoading: loading || isDataLoading,
+      antaraHNs: mapAssigneeToLookup(antaraHNs),
+      antaraMEs: mapAssigneeToLookup(antaraMEs),
+      antaraNutritionists: mapAssigneeToLookup(antaraNutritionists),
     }),
 
-    [isFormOpen, insuranceCompanies, lookupOptions, isDataLoading]
+    [
+      isFormOpen,
+      insuranceCompanies,
+      lookupOptions,
+      isDataLoading,
+      loading,
+      antaraMEs,
+      antaraHNs,
+      antaraNutritionists,
+    ]
   )
 
   return (

@@ -2,6 +2,7 @@ import React, { useState, createContext, useContext, useEffect } from 'react'
 import { Member } from 'src/modules/member/db/models'
 import { useMembersData } from 'src/modules/member/hooks/member-data'
 import { logError } from 'src/utils/logging/logger'
+import useForceUpdate from 'src/hooks/force-update'
 
 type MemberContextType = {
   member: Member | null
@@ -25,6 +26,7 @@ export function MemberProvider({ antaraId, children }: Props) {
     findMemberByAntaraId,
     hydrateMember,
   } = useMembersData()
+  const forceUpdate = useForceUpdate()
 
   useEffect(() => {
     if (antaraId) {
@@ -48,12 +50,29 @@ export function MemberProvider({ antaraId, children }: Props) {
         })
         .catch(logError)
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [antaraId])
 
+  useEffect(() => {
+    const memberObserver$ = member?.observe().subscribe((updatedMember) => {
+      setMember(updatedMember)
+      /**
+       * Force the component to re-render when the member is updated
+       * Because we update member properties and react shallow comparison doesn't detect the change
+       */
+      forceUpdate()
+    })
+
+    return () => memberObserver$ && memberObserver$.unsubscribe()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member])
+
   const providerValue = React.useMemo(
-    () => ({ member, isLoading }),
+    () => ({
+      member,
+      isLoading,
+    }),
     [member, isLoading]
   )
 

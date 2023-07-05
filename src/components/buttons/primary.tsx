@@ -5,8 +5,13 @@ import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton'
 
 const getClassName = (
   variant: LoadingButtonProps['variant'],
-  color: LoadingButtonProps['color']
+  color: LoadingButtonProps['color'],
+  disabled: boolean
 ) => {
+  if (disabled) {
+    return `bg-gray-100 text-gray-300`
+  }
+
   if (variant === 'contained') {
     if (color === 'error') {
       return `bg-red-100 text-white hover:bg-red-btn-hover`
@@ -42,7 +47,8 @@ function PrimaryButton(props: LoadingButtonProps) {
       variant={variant}
       className={`py-2 px-4 rounded-md font-rubik font-medium ${getClassName(
         variant,
-        color
+        color,
+        props?.disabled || false
       )}  ${props.className}`}
       loading={loading}
       color={color}

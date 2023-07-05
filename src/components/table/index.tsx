@@ -146,8 +146,10 @@ function Table({
                 >
                   {column.info ? (
                     <Tooltip title={column.info}>
-                      <p className="text-small text-bold">{column.name}</p>
-                      <p className="text-tiny text-bold">{column.format}</p>
+                      <>
+                        <p className="text-small text-bold">{column.name}</p>
+                        <p className="text-tiny text-bold">{column.format}</p>
+                      </>
                     </Tooltip>
                   ) : (
                     <>

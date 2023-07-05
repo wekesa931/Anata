@@ -1,7 +1,7 @@
 import React from 'react'
-import { InsuranceForm } from 'src/modules/member/views/member-registration/components/forms/insurance-form'
+import { InsuranceForm } from 'src/modules/member/components/forms/insurance-form'
 import type { Member } from 'src/modules/member/db/models'
-import UpdateForms from 'src/modules/member/views/missing-info/components/update-forms'
+import UpdateForms from 'src/modules/member/components/update-forms'
 import { useNotifications } from 'src/context/notifications'
 
 type MissingInfoBlockProps = {

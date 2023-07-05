@@ -81,7 +81,7 @@ function Login() {
   }
 
   React.useEffect(() => {
-    document.title = `src: Login`
+    document.title = `Scribe: Login`
   }, [])
 
   return (

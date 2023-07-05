@@ -38,17 +38,17 @@ const formattedDate = (date: string | Date) => {
 
 const isMinor = (birthDate: string) => calcAge(birthDate) < 18
 
-const getAgeFull = (birthDate?: string) => {
+const getAgeFull = (birthDate?: string | null) => {
   if (!birthDate) {
     return ''
   }
   const age = calcAge(birthDate)
   if (age > 1) {
-    return `${age} y`
+    return `(${age} y)`
   }
 
   const months = dayjs().diff(birthDate, 'month')
-  return `${months} m`
+  return `(${months} m)`
 }
 
 export {
