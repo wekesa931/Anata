@@ -26,20 +26,27 @@ import { useRegistrationForm } from 'src/context/member-registration'
 import { relationshipOptions } from 'src/config/constants'
 import { useNavigate } from 'react-router-dom'
 import { isDirty } from 'src/utils/form-validation-methods'
+import { sortAlphabetically } from 'src/utils/sort'
 
 type InsuranceDetailsValues = DbValueTypes.InsuranceDetailsValues
 
 const validationSchema = yup.object().shape({
   employer: yup.object().shape({
     name: yup.string().required('Employer name is required'),
-    department: yup.object().shape({
-      name: yup.string(),
-      departmentId: yup.string(),
-    }),
-    businessLocation: yup.object().shape({
-      name: yup.string(),
-      businessLocationId: yup.string(),
-    }),
+    department: yup
+      .object()
+      .shape({
+        name: yup.string(),
+        departmentId: yup.string(),
+      })
+      .nullable(),
+    businessLocation: yup
+      .object()
+      .shape({
+        name: yup.string(),
+        businessLocationId: yup.string(),
+      })
+      .nullable(),
   }),
   insurances: yup.array().of(
     yup.object().shape(
@@ -276,6 +283,7 @@ export function InsuranceForm({
             values,
             touched,
             setFieldValue,
+            isValid,
           }: FormikProps<InsuranceDetailsValues>) => {
             return (
               <Form>
@@ -287,7 +295,10 @@ export function InsuranceForm({
                   label="Employer"
                   name="employer.name"
                   placeholder="--Select--"
-                  options={lookupOptions?.employers || []}
+                  options={sortAlphabetically(
+                    lookupOptions?.employers || [],
+                    'label'
+                  )}
                   handleChange={(v) => {
                     const b =
                       getBusinessLocations(lookupOptions?.employers || [], v) ||
@@ -456,14 +467,17 @@ export function InsuranceForm({
 
                 {showWizardContols ? (
                   <div className="flex justify-between gap-4 mt-3">
-                    <PreviousButton onClick={onPrev} disabled={loading}>
+                    <PreviousButton
+                      onClick={onPrev}
+                      disabled={loading || !isValid}
+                    >
                       {' '}
                       Previous{' '}
                     </PreviousButton>
                     <NextButton
                       type="submit"
                       loading={loading}
-                      disabled={loading}
+                      disabled={loading || isVerifyingInsurance || !isValid}
                     >
                       Submit
                     </NextButton>
@@ -474,8 +488,15 @@ export function InsuranceForm({
                       type="submit"
                       fullWidth
                       variant="contained"
-                      disabled={loading}
+                      disabled={loading || isVerifyingInsurance || !isValid}
                       loading={loading}
+                      onClick={() => {
+                        if (!isValid) {
+                          notify('Please check the form for errors')
+                        } else {
+                          handleSubmit(values)
+                        }
+                      }}
                     >
                       Submit
                     </PrimaryButton>

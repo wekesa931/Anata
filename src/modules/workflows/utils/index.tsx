@@ -638,23 +638,6 @@ export const getUserModelDetails = (user: User) => ({
   name: user?.name,
 })
 
-type SortableForms = {
-  name: string
-  [key: string]: any
-}
-
-export const sortAlphabetically = (forms: SortableForms[]) => {
-  return forms.sort((a, b) => {
-    if (a.name > b.name) {
-      return 1
-    }
-    if (b.name > a.name) {
-      return -1
-    }
-    return 0
-  })
-}
-
 export const sortByCreatedAt = (workflows: any[]) => {
   // sort from most recent to oldest
   return workflows.sort((a, b) => {

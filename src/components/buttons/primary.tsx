@@ -9,7 +9,7 @@ const getClassName = (
   disabled: boolean
 ) => {
   if (disabled) {
-    return `bg-gray-100 text-gray-300`
+    return `bg-disabled-grey text-white`
   }
 
   if (variant === 'contained') {

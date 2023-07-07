@@ -44,6 +44,7 @@ module.exports = {
       purple: '#e0ddf1',
       'orange-main': '#ff9800',
       'dark-red-100': '#972323',
+      'disabled-grey': '#cccccc',
     },
     zIndex: {
       2000: '2000',

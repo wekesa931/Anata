@@ -4,6 +4,7 @@ import useAntaraStaff, {
 } from 'src/hooks/antara-staff.hook'
 import { useGetLookupEntries } from 'src/modules/member/services/lookups'
 import { LookupOption, LookupOptions } from 'src/modules/member/types'
+import { sortAlphabetically } from 'src/utils/sort'
 
 type RegistrationFormContextType = {
   isFormOpen: boolean
@@ -60,7 +61,7 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
     () => ({
       isFormOpen,
       setIsFormOpen,
-      insuranceCompanies,
+      insuranceCompanies: sortAlphabetically(insuranceCompanies, 'label'),
       lookupOptions,
       isDataLoading: loading || isDataLoading,
       antaraHNs: mapAssigneeToLookup(antaraHNs),
