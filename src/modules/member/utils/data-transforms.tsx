@@ -18,16 +18,27 @@ export const preparePhonesForUpdate = (
     (phone) => !currentPhones.find((p) => p.phone === phone.phone)
   )
 
+  const phonesToUpdate = newPhones.filter((phone) =>
+    currentPhones.find((p) => p.phone === phone.phone)
+  )
+
   let highestPriority = currentPhones.reduce((acc, phone) => {
     return phone.priority > acc ? phone.priority : acc
   }, 0)
+
+  phonesToUpdate.forEach((phone) => {
+    const currentPhone = currentPhones.find((p) => p.phone === phone.phone)
+    if (currentPhone) {
+      phone.priority = currentPhone.priority
+    }
+  })
 
   phonesToAdd.forEach((phone) => {
     highestPriority += 1
     phone.priority = highestPriority
   })
 
-  return [...phonesToDelete, ...phonesToAdd]
+  return [...phonesToDelete, ...phonesToAdd, ...phonesToUpdate]
 }
 
 export const transformAddressData = (

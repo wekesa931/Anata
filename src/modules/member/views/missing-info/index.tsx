@@ -18,7 +18,7 @@ export default function MissingInfoBlock({ member }: MissingInfoBlockProps) {
         </div>
       )}
 
-      {member?.hasMissingPhone && (
+      {member?.hasMissingPhone && !member?.isMinor && (
         <div className="w-full">
           <MissingPhoneForm member={member} />
         </div>
