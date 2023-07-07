@@ -7,7 +7,7 @@ import type { Member } from 'src/modules/member/db/models'
 type SuccesfullRegistrationProps = {
   title: string
   member?: Member
-  formFilled: 'primary' | 'spouse' | 'child'
+  formFilled: 'primary' | 'dependent' | 'child'
   setSelectedForm: (form: any) => void
 }
 
@@ -44,14 +44,14 @@ function SuccesfullRegistration({
               startIcon={<Person2Outlined />}
               onClick={() =>
                 setSelectedForm({
-                  name: 'spouse',
+                  name: 'dependent',
                   member,
                   completed: false,
-                  title: 'Spouse member registration',
+                  title: 'Adult dependent registration',
                 })
               }
             >
-              Add a spouse
+              Add a dependent
             </PrimaryButton>
           )}
           <PrimaryButton

@@ -301,7 +301,7 @@ export type InsuranceDetailsType = {
 
 export type VerificationStatus = 'verified' | 'unverified' | 'pending'
 
-export type RegistrationFormsNames = 'primary' | 'spouse' | 'child'
+export type RegistrationFormsNames = 'primary' | 'dependent' | 'child'
 
 export type LookupOption = {
   label: string

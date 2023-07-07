@@ -80,15 +80,15 @@ function MemberRegistrationForm({ setIsEdited }: MemberRegistrationFormProps) {
               }
             />
             <RegistrationItem
-              title="Spouse"
+              title="Adult Dependent"
               subtitle="This is an adult dependent to the primary member"
               Icon={Person2Outlined}
               handleClick={() =>
                 handleClick({
-                  name: 'spouse',
+                  name: 'dependent',
                   member: undefined,
                   completed: false,
-                  title: 'Spouse member registration',
+                  title: 'Adult dependent registration',
                 })
               }
             />

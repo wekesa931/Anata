@@ -61,7 +61,7 @@ export function ContactsForm({
   const [isFetching, setIsFetching] = useState<BooleanStatus>({})
 
   const phones =
-    member?.phones && member?.phones.length > 0
+    member?.phones && member?.phones?.length > 0
       ? member.phones
       : [
           {
