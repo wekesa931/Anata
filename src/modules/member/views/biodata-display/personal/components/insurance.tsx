@@ -6,7 +6,7 @@ import {
   GridItems,
   ItemTitle,
   ItemChild,
-} from 'src/modules/member/components/display-items.component'
+} from 'src/components/layouts/display-items.component'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
 import { Box, Divider } from '@mui/material'
 import { formatCurreny } from 'src/modules/member/utils'

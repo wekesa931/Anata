@@ -460,13 +460,6 @@ h6,
   border: none !important;
 }
 
-.tippy-popper .tippy-tooltip.tooltip-theme * {
-  background: #fff5d2 !important;
-  color: var(--greyscale-1);
-  font-family: 'Rubik' !important;
-  font-size: 12px;
-  word-wrap: break-word;
-}
 
 /** buttons **/
 button.btn-unstyled {

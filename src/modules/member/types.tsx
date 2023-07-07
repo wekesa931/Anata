@@ -207,25 +207,6 @@ export type V2MemberQueryType = {
   otherDependents: V2MemberQueryType[]
 }
 
-export type HMPType = {
-  hmpSendDate: string | null
-  hmpNumber: string | null
-  hmpDay: number | string | null
-  hmpLink: string | null
-  hmpState: string | null
-  hmpLastReviewDate: string | null
-}
-
-export type ConditionType = {
-  condition: string | null
-  startingClinicalStatus: string | null
-  healthStatus: string | null
-}
-export type InterventionType = {
-  intervention: string | null
-  milestoneAttainments: string | null
-}
-
 export type BirthdateUpdateValues = {
   birthDate: Date | null
   antaraId: string

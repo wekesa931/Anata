@@ -3,7 +3,7 @@ import { V2MemberType, MemberStatuses } from 'src/modules/member/types'
 import {
   SectionItem,
   ItemTitle,
-} from 'src/modules/member/components/display-items.component'
+} from 'src/components/layouts/display-items.component'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
 import { calcAge } from 'src/utils/date-time/date-formatters'
 import type { Member } from 'src/modules/member/db/models'

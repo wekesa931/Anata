@@ -3,7 +3,7 @@ import {
   SectionItem,
   Item,
   GridItems,
-} from 'src/modules/member/components/display-items.component'
+} from 'src/components/layouts/display-items.component'
 
 import { ContactsSkeleton } from 'src/modules/member/components/skeleton-loaders'
 import { PortalForm } from 'src/modules/member/components/update-forms'

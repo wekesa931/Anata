@@ -1,14 +1,10 @@
 import React from 'react'
-import useHmpData from 'src/modules/member/hooks/hmp-data'
-import {
-  SectionItem,
-  GridItems,
-  Item,
-} from 'src/modules/member/components/display-items.component'
-import { HMPType } from 'src/modules/member/types'
+import useHmpData from 'src/modules/hmp/hook/hmp-data'
+import { GridItems, Item } from 'src/components/layouts/display-items.component'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
+import { HMP } from '../db/models'
 
-function HMPItem({ hmp }: { hmp: HMPType }) {
+function HMPItem({ hmp }: { hmp: HMP }) {
   return (
     <div className="block border rounded-lg border-solid border-dark-blue-10 my-1 p-1">
       <div className="flex justify-between items-center">
@@ -40,27 +36,27 @@ function HMPItem({ hmp }: { hmp: HMPType }) {
   )
 }
 function HMPListItem() {
-  const { hmpInfo, loading } = useHmpData()
-  return !loading ? (
-    <SectionItem>
-      <div>
-        {hmpInfo?.length > 0 ? (
-          <>
-            {hmpInfo.map((info, index) => (
-              <>
-                <HMPItem hmp={info} key={index} />
-              </>
-            ))}
-          </>
-        ) : (
-          <p className="font-rubik text-base text-grey-main font-medium">
-            No HMP available
-          </p>
-        )}
-      </div>
-    </SectionItem>
-  ) : (
-    <BlockSekeleton />
+  const { loading, memberHmps } = useHmpData()
+  return (
+    <>
+      {loading ? (
+        <BlockSekeleton height={300} />
+      ) : (
+        <div className="mt-2">
+          {memberHmps?.length > 0 ? (
+            <>
+              {memberHmps.map((hmp: HMP, index: number) => (
+                <HMPItem hmp={hmp} key={index} />
+              ))}
+            </>
+          ) : (
+            <p className="font-rubik text-base text-grey-main font-medium">
+              No HMP available
+            </p>
+          )}
+        </div>
+      )}
+    </>
   )
 }
 

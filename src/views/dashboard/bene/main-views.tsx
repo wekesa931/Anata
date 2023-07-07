@@ -10,12 +10,13 @@ import InteractionLogs from 'src/modules/interactions/components/interaction-log
 import Nutrition from 'src/modules/nutrition'
 import Files from 'src/modules/udm'
 import ErrorBoundary from 'src/components/error-boundary'
-import Conditions from 'src/modules/conditions'
 import MemberTask from 'src/modules/tasks/views/member-tasks'
 import CallLog from 'src/modules/comms/calls/views/call-logs'
 import EngagementDashboard from 'src/modules/engagement'
 import LongitudinalV1 from 'src/modules/longitudinal'
 import { withTabRouter } from 'src/utils/routing/tab-router'
+import ConditionsSection from 'src/modules/conditions/views/condition-details'
+import InterventionSection from 'src/modules/interventions/views/intervention-details'
 import styles from './views.component.css'
 
 function Views({ view, handleChange }: any) {
@@ -38,11 +39,12 @@ function Views({ view, handleChange }: any) {
             aria-label="Clinical Tabs"
           >
             <Tab
-              label="Clinical Summary"
+              label="overview"
               value="clinical"
               classes={{ root: styles.MuiTabRoot }}
             />
             <Tab label="Conditions" value="conditions" />
+            <Tab label="Interventions" value="interventions" />
             <Tab label="Longitudinal" value="longitudinal" />
             <Tab label="Interactions" value="interactions" />
             <Tab label="Call Log" value="call-logs" />
@@ -62,7 +64,12 @@ function Views({ view, handleChange }: any) {
           </TabPanel>
           <TabPanel value="conditions">
             <ErrorBoundary>
-              <Conditions />
+              <ConditionsSection />
+            </ErrorBoundary>
+          </TabPanel>
+          <TabPanel value="interventions">
+            <ErrorBoundary>
+              <InterventionSection />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel value="longitudinal" className={styles.longitud}>

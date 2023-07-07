@@ -1,8 +1,19 @@
 import { appSchema } from '@nozbe/watermelondb'
 import workflowSchemas from 'src/modules/workflows/db/schema'
 import memberSchemas from 'src/modules/member/db/schema'
+import conditionSchema from 'src/modules/conditions/db/schema'
+import interventionSchema from 'src/modules/interventions/db/schema'
+import relationSchema from 'src/storage/indexeddb/watermelon/relation-schema'
+import hmpSchema from 'src/modules/hmp/db/schema'
 
 export default appSchema({
-  version: 2,
-  tables: [...workflowSchemas, ...memberSchemas],
+  version: 6,
+  tables: [
+    ...workflowSchemas,
+    ...memberSchemas,
+    ...conditionSchema,
+    ...interventionSchema,
+    ...relationSchema,
+    ...hmpSchema,
+  ],
 })

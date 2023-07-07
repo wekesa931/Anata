@@ -1,7 +1,7 @@
 import React from 'react'
-import HMPListItem from 'src/modules/member/views/biodata-display/clinical/components/hmp'
-import ConditionsSection from 'src/modules/member/views/biodata-display/clinical/components/conditions'
-import InterventionsSection from 'src/modules/member/views/biodata-display/clinical/components/intervention'
+import HMPListItem from 'src/modules/hmp/views/hmp-details'
+import ConditionsSection from 'src/modules/conditions/views/conditions-summary'
+import InterventionsSection from 'src/modules/interventions/views/intervention-summary'
 import HealthAssessmentSection from 'src/modules/member/views/biodata-display/clinical/components/health-assessment'
 
 function ClinicalSection() {

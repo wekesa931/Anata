@@ -9,7 +9,9 @@ export default function useObservable<T>(
   const [state, setState] = useState(initial)
 
   useEffect(() => {
-    const subscription = observable.subscribe(setState)
+    const subscription = observable.subscribe((c) => {
+      setState(c)
+    })
     return () => subscription.unsubscribe()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
