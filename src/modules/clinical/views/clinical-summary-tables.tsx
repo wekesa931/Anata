@@ -14,8 +14,8 @@ function Clinical() {
   return (
     <div>
       <DateFilterView />
-      <div className="flex-wrap">
-        <div className={styles.containerFlex}>
+      <div className="mt-[6rem]">
+        <div className="flex-1">
           <Consultation />
           <Logistic />
           <Labs />
