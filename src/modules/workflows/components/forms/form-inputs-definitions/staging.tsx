@@ -2207,8 +2207,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper:
-          'PLEASE ENTER TIME IN UTC+0 (Kenya time is UTC+3) - If your meeting is at 3pm on friday, enter 12pm in this form please.',
+        helper: 'Please enter time in UTC+3 (Kenya time zone)',
       },
       {
         id: 'fldLwFGc4Mw46k6I5',
