@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import airtableFetch from 'src/services/airtable/fetch'
 import logError from 'src/utils/logging/logger'
 import useAnalytics from 'src/hooks/analytics'
-import { useParams } from 'react-router-dom'
+import { useMember } from 'src/context/member'
 
 const useLabRequestEvents = () => {
   const { track } = useAnalytics('Lab Request')
@@ -16,7 +16,7 @@ const useLabData = () => {
   const [labData, setLabData] = useState<any[]>([])
 
   const [loading, setLoading] = useState(true)
-  const { antaraId } = useParams()
+  const { member } = useMember()
 
   const { trackLabRequestsOpen } = useLabRequestEvents()
 
@@ -50,12 +50,13 @@ const useLabData = () => {
         setLoading(false)
       }
     }
-    if (antaraId) {
-      getLab(antaraId)
+
+    if (member?.antaraId) {
+      getLab(member?.antaraId)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [antaraId])
+  }, [member?.antaraId])
   return { labData, loading }
 }
 

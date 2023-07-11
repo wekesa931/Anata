@@ -84,16 +84,17 @@ function Appointments() {
 
   useEffect(() => {
     let isCancelled = false
-
-    airtableFetch(
-      `appointments/list?filterByFormula=FIND("${recId}", {Member Record ID})`
-    ).then((response) => {
-      if (!isCancelled) {
-        const apps = Object.keys(response).map((key) => response[key])
-        setAppointments(apps)
-        setLoading(false)
-      }
-    })
+    if (recId) {
+      airtableFetch(
+        `appointments/list?filterByFormula=FIND("${recId}", {Member Record ID})`
+      ).then((response) => {
+        if (!isCancelled) {
+          const apps = Object.keys(response).map((key) => response[key])
+          setAppointments(apps)
+          setLoading(false)
+        }
+      })
+    }
     return () => {
       isCancelled = true
     }

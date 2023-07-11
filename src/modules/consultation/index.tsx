@@ -10,7 +10,6 @@ import LoadingIcon from 'src/assets/img/icons/loading.svg'
 function Consultation() {
   const [consultationData, setconsultationData] = useState<any[]>([])
   const { member } = useMember()
-  const antaraId = member?.antaraId
   const [loading, setLoading] = useState(true)
   const columns = [
     {
@@ -20,12 +19,14 @@ function Consultation() {
     },
     { name: 'Primary Diagnosis', format: '', key: 'Primary Diagnosis' },
   ]
+
   useEffect(() => {
     analytics.track('Clinical Consultation Opened')
+
     const getConsultation = async () => {
       try {
         const memberConsultation = await airtableFetch(
-          `clinicalconsultation/list?&filterByFormula=FIND("${antaraId}", {Antara ID (from Member)})`
+          `clinicalconsultation/list?&filterByFormula=FIND("${member?.antaraId}", {Antara ID (from Member)})`
         )
         const mappedResponses = Object.keys(memberConsultation).map((key) => {
           const parent = memberConsultation[key]
@@ -44,8 +45,13 @@ function Consultation() {
         logError(e)
       }
     }
-    getConsultation()
-  }, [antaraId])
+
+    if(member?.antaraId) {
+      getConsultation()
+    }
+
+  }, [member])
+
   const isReadyToShow = consultationData?.length >= 0 && !loading
 
   return (

@@ -124,9 +124,11 @@ function BloodPressure() {
   }
 
   useEffect(() => {
-    filterData()
+    if (recId) {
+      filterData()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentFilter, selectedValue, dateRange])
+  }, [currentFilter, selectedValue, dateRange, recId])
 
   function CustomToolbar() {
     return (

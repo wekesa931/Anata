@@ -46,6 +46,7 @@ function Medications() {
         <span className={getStatusClassName(med.Status)}>{med.Status}</span>
       )
     }
+
     const renderInfo = (med: any) => {
       return (
         <div className="d-flex flex-justify-space-between">
@@ -56,21 +57,24 @@ function Medications() {
         </div>
       )
     }
-    airtableFetch(
-      `medications/list?filterByFormula=FIND("${recId}", {Member Record ID})`
-    ).then((response) => {
-      const meds = Object.keys(response)
-        .map((key) => ({ id: key, ...response[key] }))
-        .map((data) => ({
-          data,
-          name: renderInfo(data),
-        }))
 
-      if (!isCancelled) {
-        setMedications(meds)
-        setLoading(false)
-      }
-    })
+    if (recId) {
+      airtableFetch(
+        `medications/list?filterByFormula=FIND("${recId}", {Member Record ID})`
+      ).then((response) => {
+        const meds = Object.keys(response)
+          .map((key) => ({ id: key, ...response[key] }))
+          .map((data) => ({
+            data,
+            name: renderInfo(data),
+          }))
+
+        if (!isCancelled) {
+          setMedications(meds)
+          setLoading(false)
+        }
+      })
+    }
 
     return () => {
       isCancelled = true

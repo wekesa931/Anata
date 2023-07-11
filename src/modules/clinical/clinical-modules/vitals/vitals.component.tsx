@@ -47,13 +47,15 @@ function Vitals() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    airtableFetch(
-      `vitals/list?filterByFormula=FIND("${recId}", {Member Record ID})`
-    ).then((response) => {
-      const labResults = Object.keys(response).map((key) => response[key])
-      setVitals(labResults)
-      setLoading(false)
-    })
+    if (recId) {
+      airtableFetch(
+        `vitals/list?filterByFormula=FIND("${recId}", {Member Record ID})`
+      ).then((response) => {
+        const labResults = Object.keys(response).map((key) => response[key])
+        setVitals(labResults)
+        setLoading(false)
+      })
+    }
   }, [recId])
   const isReadyToShow = vitals?.length >= 0 && !loading
 

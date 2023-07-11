@@ -3,6 +3,7 @@ import airtableFetch from 'src/services/airtable/fetch'
 import logError from 'src/utils/logging/logger'
 import useAnalytics from 'src/hooks/analytics'
 import { useParams } from 'react-router-dom'
+import { useMember } from 'src/context/member'
 
 const useLogisticTasksEvents = () => {
   const { track } = useAnalytics('Logistic Tasks')
@@ -14,8 +15,7 @@ const useLogisticTasksEvents = () => {
 
 const useLogisticData = () => {
   const [logisticData, setLogisticData] = useState<any[]>([])
-  const { antaraId } = useParams()
-
+  const { member } = useMember()
   const [loading, setLoading] = useState(true)
   const { trackLogisticsPageOpen } = useLogisticTasksEvents()
 
@@ -52,12 +52,12 @@ const useLogisticData = () => {
       }
     }
 
-    if (antaraId) {
-      getLogisticTasks(antaraId)
+    if (member?.antaraId) {
+      getLogisticTasks(member?.antaraId)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [antaraId])
+  }, [member?.antaraId])
   return { logisticData, loading }
 }
 

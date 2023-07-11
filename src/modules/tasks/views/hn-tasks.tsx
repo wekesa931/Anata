@@ -195,6 +195,10 @@ function Tasks() {
   ]
 
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
+    if (!memberRecordId) {
+      console.error('Missing Airtable ID to load HN Tasks')
+      return '';
+    }
     const sortArg = `sort=[{"field":"Due Date","direction":"asc"}]`
     const filterArg = `filterByFormula=FIND("${memberRecordId}", {Member Record ID})`
 
@@ -211,8 +215,6 @@ function Tasks() {
     isError: isAirtableError,
   } = useAirtableFetch(buildAirtableUrl(member?.airtableRecordId, fields))
 
-  const { antaraId } = useParams()
-
   const { handleResponses } = useHandleResponses('Tasks')
 
   const { allAntaraStaffs, loading: loadingAntaraStaff } = useAntaraStaff()
@@ -225,12 +227,12 @@ function Tasks() {
   const taskFields = getTaskFields(mapAssigneeToLookup(allAntaraStaffs))
 
   useEffect(() => {
-    if (antaraId) {
-      loadTasks({ variables: { antaraId } })
+    if (member?.antaraId) {
+      loadTasks({ variables: { antaraId: member?.antaraId } })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [antaraId])
+  }, [member?.antaraId])
 
   const apiRecords = useTransformedApiRecords(rawApiRecords)
   const mergedRecords = useMergedRecords(airtableRecords, apiRecords)

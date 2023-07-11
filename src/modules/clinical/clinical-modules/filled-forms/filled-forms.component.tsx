@@ -68,96 +68,103 @@ function FilledForms() {
 
   useEffect(() => {
     const recId = member?.airtableRecordId
-    const getFields = (fields: any) => {
-      const keys = Object.keys(fields).filter(
-        (key) => !hiddenFields.includes(key)
-      )
-      const obj = {}
-      keys.forEach((key) => Object.assign(obj, { [key]: fields[key] }))
-      return obj
-    }
-    //
-    const getForm = (form: string) => {
-      return airtableFetch(
-        `${form}/list?filterByFormula=FIND("${recId}",{Member Record ID})&maxRecords=1&sort=[{"field":"created_at", "direction":"desc"}]`
-      ).then((res) => {
-        const result = Object.keys(res).map((key) => res[key])[0]
-        return result ? getFields(result) : result
+    if (recId) {
+      const getFields = (fields: any) => {
+        const keys = Object.keys(fields).filter(
+          (key) => !hiddenFields.includes(key)
+        )
+        const obj = {}
+        keys.forEach((key) => Object.assign(obj, { [key]: fields[key] }))
+        return obj
+      }
+      //
+      const getForm = (form: string) => {
+        console.debug(
+          'Loading Filled Forms For',
+          form,
+          member.fullName,
+          member.antaraId
+        )
+        return airtableFetch(
+          `${form}/list?filterByFormula=FIND("${recId}",{Member Record ID})&maxRecords=1&sort=[{"field":"created_at", "direction":"desc"}]`
+        ).then((res) => {
+          const result = Object.keys(res).map((key) => res[key])[0]
+          return result ? getFields(result) : result
+        })
+      }
+      const promises = forms.map((form) => getForm(form))
+      Promise.all(promises).then((response) => {
+        if (response.every((form) => form === undefined)) {
+          setFilledForms([])
+        } else {
+          const formResponses = [
+            { name: 'Baseline', data: response[forms.indexOf('baseline')] },
+            { name: 'HIF', data: response[forms.indexOf('hif')] },
+            {
+              name: 'Nutritional Consultation',
+              data: response[forms.indexOf('ncf')],
+            },
+            { name: 'Activity', data: response[forms.indexOf('activity')] },
+            { name: 'Minor HIF', data: response[forms.indexOf('minorhif')] },
+            { name: 'HN Tasks', data: response[forms.indexOf('hntasks')] },
+            {
+              name: 'Interactions',
+              data: response[forms.indexOf('interactions')],
+            },
+            { name: 'PAFU', data: response[forms.indexOf('pafu')] },
+            {
+              name: 'Medications',
+              data: response[forms.indexOf('medications')],
+            },
+            {
+              name: 'Appointments',
+              data: response[forms.indexOf('appointments')],
+            },
+            { name: 'Vitals', data: response[forms.indexOf('vitals')] },
+            { name: 'BP Monitoring', data: response[forms.indexOf('bp')] },
+            { name: 'CHL Monitoring', data: response[forms.indexOf('chl')] },
+            {
+              name: 'Diabetes Monitoring',
+              data: response[forms.indexOf('dm')],
+            },
+            { name: 'Conditions', data: response[forms.indexOf('conditions')] },
+            { name: 'HMP', data: response[forms.indexOf('hmp')] },
+            {
+              name: 'Clinical Rounds',
+              data: response[forms.indexOf('clinicalrounds')],
+            },
+            {
+              name: 'Intervention',
+              data: response[forms.indexOf('interventions')],
+            },
+            {
+              name: 'Intervention Tracking',
+              data: response[forms.indexOf('interventions_tracking')],
+            },
+            {
+              name: 'MHC',
+              data: response[forms.indexOf('mhc')],
+            },
+            {
+              name: 'Physiotherapy Consultation',
+              data: response[forms.indexOf('physio')],
+            },
+            {
+              name: 'Minor Health Check',
+              data: response[forms.indexOf('minor_health_check')],
+            },
+            {
+              name: 'Minor HIF v2',
+              data: response[forms.indexOf('minorhifv2')],
+            },
+          ]
+          setFilledForms(formResponses)
+        }
+        setLoading(false)
       })
     }
-    const promises = forms.map((form) => getForm(form))
-    Promise.all(promises).then((response) => {
-      if (response.every((form) => form === undefined)) {
-        setFilledForms([])
-      } else {
-        const formResponses = [
-          { name: 'Baseline', data: response[forms.indexOf('baseline')] },
-          { name: 'HIF', data: response[forms.indexOf('hif')] },
-          {
-            name: 'Nutritional Consultation',
-            data: response[forms.indexOf('ncf')],
-          },
-          { name: 'Activity', data: response[forms.indexOf('activity')] },
-          { name: 'Minor HIF', data: response[forms.indexOf('minorhif')] },
-          { name: 'HN Tasks', data: response[forms.indexOf('hntasks')] },
-          {
-            name: 'Interactions',
-            data: response[forms.indexOf('interactions')],
-          },
-          { name: 'PAFU', data: response[forms.indexOf('pafu')] },
-          {
-            name: 'Medications',
-            data: response[forms.indexOf('medications')],
-          },
-          {
-            name: 'Appointments',
-            data: response[forms.indexOf('appointments')],
-          },
-          { name: 'Vitals', data: response[forms.indexOf('vitals')] },
-          { name: 'BP Monitoring', data: response[forms.indexOf('bp')] },
-          { name: 'CHL Monitoring', data: response[forms.indexOf('chl')] },
-          {
-            name: 'Diabetes Monitoring',
-            data: response[forms.indexOf('dm')],
-          },
-          { name: 'Conditions', data: response[forms.indexOf('conditions')] },
-          { name: 'HMP', data: response[forms.indexOf('hmp')] },
-          {
-            name: 'Clinical Rounds',
-            data: response[forms.indexOf('clinicalrounds')],
-          },
-          {
-            name: 'Intervention',
-            data: response[forms.indexOf('interventions')],
-          },
-          {
-            name: 'Intervention Tracking',
-            data: response[forms.indexOf('interventions_tracking')],
-          },
-          {
-            name: 'MHC',
-            data: response[forms.indexOf('mhc')],
-          },
-          {
-            name: 'Physiotherapy Consultation',
-            data: response[forms.indexOf('physio')],
-          },
-          {
-            name: 'Minor Health Check',
-            data: response[forms.indexOf('minor_health_check')],
-          },
-          {
-            name: 'Minor HIF v2',
-            data: response[forms.indexOf('minorhifv2')],
-          },
-        ]
-        setFilledForms(formResponses)
-        setLoading(false)
-      }
-    })
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [member])
 
   const isReadyToShow = filledForms?.length >= 0 && !loading
 

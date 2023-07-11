@@ -58,13 +58,15 @@ function Lipids() {
   ]
 
   useEffect(() => {
-    airtableFetch(
-      `chl/list?filterByFormula=FIND("${recId}", {Member Record ID})`
-    ).then((response) => {
-      const labResults = Object.keys(response).map((key) => response[key])
-      setLipids(labResults)
-      setLoading(false)
-    })
+    if (recId) {
+      airtableFetch(
+        `chl/list?filterByFormula=FIND("${recId}", {Member Record ID})`
+      ).then((response) => {
+        const labResults = Object.keys(response).map((key) => response[key])
+        setLipids(labResults)
+        setLoading(false)
+      })
+    }
   }, [recId])
   const isReadyToShow = lipids?.length >= 0 && !loading
   return (
@@ -115,13 +117,15 @@ function GlucoseMonitoring() {
   ]
 
   useEffect(() => {
-    airtableFetch(
-      `dm/list?filterByFormula=FIND("${recId}", {Member Record ID})`
-    ).then((response) => {
-      const labResults = Object.keys(response).map((key) => response[key])
-      setGlucose(labResults)
-      setLoading(false)
-    })
+    if (recId) {
+      airtableFetch(
+        `dm/list?filterByFormula=FIND("${recId}", {Member Record ID})`
+      ).then((response) => {
+        const labResults = Object.keys(response).map((key) => response[key])
+        setGlucose(labResults)
+        setLoading(false)
+      })
+    }
   }, [recId])
   const isReadyToShow = glucose?.length >= 0 && !loading
   return (
