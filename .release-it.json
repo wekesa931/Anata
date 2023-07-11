@@ -1,8 +1,7 @@
 {
   "github": {
     "release": true,
-    "releaseName": "Release v${version}",
-    "tokenRef": "NPM_TOKEN"
+    "releaseName": "Release v${version}"
   },
   "git": {
     "commit": true,
