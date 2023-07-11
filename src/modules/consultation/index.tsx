@@ -46,10 +46,9 @@ function Consultation() {
       }
     }
 
-    if(member?.antaraId) {
+    if (member?.antaraId) {
       getConsultation()
     }
-
   }, [member])
 
   const isReadyToShow = consultationData?.length >= 0 && !loading

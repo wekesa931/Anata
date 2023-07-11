@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import airtableFetch from 'src/services/airtable/fetch'
 import logError from 'src/utils/logging/logger'
 import useAnalytics from 'src/hooks/analytics'
-import { useParams } from 'react-router-dom'
 import { useMember } from 'src/context/member'
 
 const useLogisticTasksEvents = () => {

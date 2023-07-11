@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
-import { useParams } from 'react-router-dom'
 import { useLazyQuery } from '@apollo/client'
 import { User, ExternalLink } from 'react-feather'
 import airtableFetch from 'src/services/airtable/fetch'
@@ -197,7 +196,7 @@ function Tasks() {
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
     if (!memberRecordId) {
       console.error('Missing Airtable ID to load HN Tasks')
-      return '';
+      return ''
     }
     const sortArg = `sort=[{"field":"Due Date","direction":"asc"}]`
     const filterArg = `filterByFormula=FIND("${memberRecordId}", {Member Record ID})`
