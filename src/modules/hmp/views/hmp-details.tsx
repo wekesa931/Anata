@@ -14,7 +14,9 @@ function HMPItem({ hmp }: { hmp: HMP }) {
         {hmp.hmpLink && (
           <a
             href={hmp.hmpLink}
+            target="_blank"
             className="text-blue-100 mr-2 font-rubik normal-case justify-end"
+            rel="noreferrer"
           >
             Read
           </a>
