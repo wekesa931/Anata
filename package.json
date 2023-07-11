@@ -21,7 +21,6 @@
     "prebuild": "npm run tailwind:prod && npm run lint && npm run format",
     "build": "webpack --mode production",
     "check-types": "tsc",
-    "heroku-prebuild": "node auth-npm.js",
     "release": "release-it",
     "release:dry": "release-it --dry-run",
     "prepare": "husky install",
