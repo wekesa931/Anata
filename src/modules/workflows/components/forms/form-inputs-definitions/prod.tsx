@@ -8343,14 +8343,14 @@ export default [
         helper: '',
         conditionType: '',
         parentKey: 'Medication',
-        parentValues: ['rec44gHeowdBMS8YA'],
+        parentValues: ['rechmJ9RLO7W8zS5v'],
         condition: (values: any) => {
           if (Array.isArray(values.Medication)) {
-            return ['rec44gHeowdBMS8YA'].some((r) =>
+            return ['rechmJ9RLO7W8zS5v'].some((r) =>
               values.Medication.includes(r)
             )
           }
-          return ['rec44gHeowdBMS8YA'].includes(values.Medication)
+          return ['rechmJ9RLO7W8zS5v'].includes(values.Medication)
         },
       },
       {
@@ -15206,14 +15206,14 @@ export default [
         helper: '',
         conditionType: '',
         parentKey: 'Medication',
-        parentValues: ['rec44gHeowdBMS8YA'],
+        parentValues: ['rechmJ9RLO7W8zS5v'],
         condition: (values: any) => {
           if (Array.isArray(values.Medication)) {
-            return ['rec44gHeowdBMS8YA'].some((r) =>
+            return ['rechmJ9RLO7W8zS5v'].some((r) =>
               values.Medication.includes(r)
             )
           }
-          return ['rec44gHeowdBMS8YA'].includes(values.Medication)
+          return ['rechmJ9RLO7W8zS5v'].includes(values.Medication)
         },
       },
       {
