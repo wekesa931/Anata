@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from 'react'
 import airtableFetch from 'src/services/airtable/fetch'
 
-const useAirtableFetch = (url: string) => {
+const useAirtableFetch = (url: string, initialValue?: any) => {
   const reducer = (
     state: {
       isLoading: boolean
@@ -46,7 +46,7 @@ const useAirtableFetch = (url: string) => {
     isLoading: false,
     isError: false,
     isRefreshing: false,
-    data: {},
+    data: initialValue || {},
   })
   const refresh = () => dispatch({ type: 'REFRESH' })
   useEffect(() => {

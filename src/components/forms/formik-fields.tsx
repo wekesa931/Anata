@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Field, useFormikContext } from 'formik'
+import { Field, FieldProps, useFormikContext } from 'formik'
 import TextareaAutosize from '@mui/material/TextareaAutosize'
 import AirtableField from 'src/types/airtable-field'
 import RemoteSelect from 'src/components/forms/remote-select.field'
 import MultiSelect from 'src/components/forms/multiselect.field'
+import { OPTIMIZED_SEARCH } from 'src/gql/search'
+import { useLazyQuery } from '@apollo/client'
+import SearchField from 'src/components/forms/fields/search'
 
 type CustomFieldProps = AirtableField & {
   disabled: boolean
@@ -18,10 +21,36 @@ function FormField(customField: CustomFieldProps) {
     options = [],
     lookupUrl,
     lookupFieldNames,
+    tableId,
   } = customField
 
   const { setFieldValue, errors, touched } = useFormikContext<any>()
   const [textAreaValue, setTextAreaValue] = useState(value)
+  const [search] = useLazyQuery(OPTIMIZED_SEARCH, {
+    context: {
+      clientName: 'search',
+    },
+  })
+
+  const getUniqueRecords = (records: any[]) => {
+    return records.filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i)
+  }
+
+  const searchQuery = (id: string) => async (keyword: string) => {
+    const { data } = await search({ variables: { keyword, table: id } })
+    const response = data.optimizedSearch.data || {}
+    const displayKey = response?.displayName || 'name'
+    const searchResults = response?.results || []
+    return (
+      getUniqueRecords([
+        ...searchResults.map((rec: any) => ({
+          id: rec.id,
+          name: rec[displayKey],
+          displayName: rec[displayKey],
+        })),
+      ]) || []
+    )
+  }
   useEffect(() => {
     // if field is unmounted, delete its value (comes in handy in dynamic forms)
     return () => {
@@ -117,7 +146,7 @@ function FormField(customField: CustomFieldProps) {
     case 'lookup':
       return (
         <Field name={name} className={fieldClassName} disabled={disabled}>
-          {({ field, form }) => (
+          {({ field, form }: FieldProps) => (
             <RemoteSelect
               lookupUrl={lookupUrl || ''}
               lookupFieldNames={lookupFieldNames || []}
@@ -126,6 +155,24 @@ function FormField(customField: CustomFieldProps) {
               prefetch
               disabled={disabled}
             />
+          )}
+        </Field>
+      )
+    case 'search':
+      return (
+        <Field name={name} disabled={disabled}>
+          {({ field, form }: FieldProps) => (
+            <div className="relative">
+              <SearchField
+                search={searchQuery(tableId || '')}
+                handleChange={(v: any) => {
+                  form.setFieldValue(field.name, v?.id)
+                }}
+                initialValue={value}
+                label=""
+                disabled={disabled}
+              />
+            </div>
           )}
         </Field>
       )

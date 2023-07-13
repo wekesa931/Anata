@@ -1,6 +1,12 @@
 /* eslint-disable radix */
 import { Label, Text } from '@airtable/blocks/ui'
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { Form, Formik } from 'formik'
 import dayjs from 'dayjs'
 import { ChevronLeft, ChevronRight } from 'react-feather'
@@ -109,7 +115,25 @@ function ListModal(props: ListModalProps) {
   }
   const [activeItem, setActiveItem] = useState<any>(getActiveItem())
   const [currentIndex, setCurrentIndex] = useState<number>(0)
-
+  const ref = useRef(null)
+  const conditionalFieldMap = {
+    'Due Date': () => {
+      const reasonForReschedule = {
+        name: 'Reason For Rescheduling',
+        type: 'single-select',
+        options: [
+          'Member unresponsive',
+          'Going on Leave',
+          'Member Request',
+          'Daily interaction limit reached',
+          'New prioritization',
+          'Task backlog',
+          'Missing data',
+        ].map((option) => ({ label: option, value: option })),
+      }
+      return reasonForReschedule
+    },
+  }
   const selectPreviousItem = () => {
     const currentItems = items || []
     const previousIndex = currentIndex - 1
@@ -165,19 +189,38 @@ function ListModal(props: ListModalProps) {
   }
 
   const fieldsToEdit = () => {
+    let currentActiveFields = editableFields || activeItem.data
+    const conditionalField = ref?.current?.values['Due Date']
+    if (!!currentActiveFields && conditionalField) {
+      currentActiveFields = [
+        ...currentActiveFields,
+        conditionalFieldMap['Due Date'](),
+      ]
+    }
+
     if (editableFields) {
-      return editableFields?.map((field, index) => (
+      return currentActiveFields?.map((field, index) => (
         <div key={index} className="d-flex flex-direction-column">
           <Label htmlFor={field.name}>{field.name}</Label>
-          <FormField {...field} disabled={formDisabled} />
+          {field.helperText && (
+            <Text variant="paragraph" color="gray" fontSize="12px">
+              {field.helperText}
+            </Text>
+          )}
+          <FormField {...field} disabled={field.disabled || formDisabled} />
         </div>
       ))
     }
-    return activeItem.data.map((field: any, index: number) => {
+    return currentActiveFields.map((field: any, index: number) => {
       return !field.calculated ? (
         <div key={index} className="d-flex flex-direction-column">
           <Label htmlFor={field.name}>{field.name}</Label>
-          <FormField {...field} disabled={formDisabled} />
+          {field.helperText && (
+            <Text variant="paragraph" color="gray" fontSize="12px">
+              {field.helperText}
+            </Text>
+          )}
+          <FormField {...field} disabled={field.disabled || formDisabled} />
         </div>
       ) : null
     })
@@ -250,7 +293,11 @@ function ListModal(props: ListModalProps) {
       {modalOpen}
       {activeItem.data &&
         (editable ? (
-          <Formik initialValues={getInitialValues()} onSubmit={handleSubmit}>
+          <Formik
+            innerRef={ref}
+            initialValues={getInitialValues()}
+            onSubmit={handleSubmit}
+          >
             {({ isSubmitting }) => (
               <Form key="list-edit-form">
                 {fieldsToEdit()}

@@ -9,10 +9,14 @@ type AirtableField = {
     | 'date'
     | 'long-text'
     | 'datetime'
+    | 'search'
   options?: { label: string; value: string }[]
   lookupUrl?: string
   value?: any
   lookupFieldNames?: string[]
   calculated?: boolean
+  disabled?: boolean
+  helperText?: string
+  tableId?: string
 }
 export default AirtableField

@@ -14,6 +14,11 @@ import useHandleResponses from 'src/utils/airtable/error-handler'
 import useAntaraStaff from 'src/hooks/antara-staff.hook'
 import styles from './appointments.component.css'
 
+const SearchFieldsNameMap: Record<string, string> = {
+  'Facilities from Provider base': 'Facilities name from Provider base',
+  'Specialists from Provider Base': 'Specialist name from Provider base',
+}
+
 function Appointments() {
   const [appointments, setAppointments] = React.useState<any[]>([])
   const [filteredAppointments, setFilteredAppointments] = React.useState<any[]>(
@@ -24,12 +29,12 @@ function Appointments() {
 
   const status = [
     'All',
-    'Completed',
+    'Needed',
     'Scheduled',
+    'Rescheduled by member',
+    'Completed',
     'Cancelled',
     'Missed',
-    'CheckedIn',
-    'Not Started',
   ]
 
   const [selected, setSelected] = React.useState(status[0])
@@ -44,12 +49,17 @@ function Appointments() {
     'Record ID',
     'Assignee',
     'Reasons for missed or rescheduled meeting',
+    'Facilities from Provider base',
+    'Specialists from Provider Base',
+    'Facilities name from Provider base',
+    'Specialist name from Provider base',
   ]
 
   const { data, isLoading, isError, refresh } = useAirtableFetch(
     `appointments/list?filterByFormula=FIND("${recId}", {Member Record ID})
     &sort=[{"field":"start_date_time","direction":"desc"}]
-    &${filterFields(allowedFields)}`
+    &${filterFields(allowedFields)}`,
+    []
   )
 
   const { allAntaraStaffs, loading } = useAntaraStaff()
@@ -80,6 +90,8 @@ function Appointments() {
     },
     {
       name: 'start_date_time',
+      helperText:
+        'PLEASE ENTER TIME IN UTC+0 (Kenya time is UTC+3) - If your meeting is at 3pm on friday, enter 12pm in this form please.',
       type: 'datetime',
     },
     {
@@ -94,14 +106,12 @@ function Appointments() {
       name: 'Status',
       type: 'single-select',
       options: [
-        'Completed',
-        'Scheduled',
-        'Cancelled',
-        'Missed',
-        'CheckedIn',
-        'Not Started',
-        'Rescheduled by member',
         'Needed',
+        'Scheduled',
+        'Rescheduled by member',
+        'Completed',
+        'Missed',
+        'Cancelled',
       ].map((type) => ({ label: type, value: type })),
     },
     {
@@ -115,6 +125,18 @@ function Appointments() {
     {
       name: 'Reasons for missed or rescheduled meeting',
       type: 'long-text',
+    },
+    {
+      name: 'Facilities from Provider base',
+      type: 'search',
+      tableId:
+        process.env.PROD === 'true' ? 'tbltmQuqyuKPc4Ffo' : 'tblU94ZnFmMT7S0o0',
+    },
+    {
+      name: 'Specialists from Provider Base',
+      type: 'search',
+      tableId:
+        process.env.PROD === 'true' ? 'tblsixUe3jfbOUMQP' : 'tblPpf5F81JypdC9k',
     },
   ]
   const user = useUser()
@@ -170,15 +192,34 @@ function Appointments() {
   const includeFieldTypes = (appointment: any) => {
     return Object.keys(appointment).map((key) => {
       const field = APPOINTMENT_FIELDS.find(({ name }) => name === key)
-      return field
-        ? {
-            value:
-              field.type === 'datetime'
-                ? dayjs(appointment[key]).format('YYYY-MM-DDTHH:mm')
-                : appointment[key],
-            ...field,
+
+      // process the search fields (facilities and specialists)
+      if (field) {
+        const searchKeyName = SearchFieldsNameMap[field.name]
+        if (searchKeyName) {
+          const name = appointment[searchKeyName]?.length
+            ? appointment[searchKeyName][0]
+            : ''
+          const value = {
+            id: appointment[key]?.length ? appointment[key][0] : '',
+            name,
+            displayName: name,
           }
-        : appointment
+
+          return {
+            ...field,
+            value,
+          }
+        }
+        return {
+          value:
+            field.type === 'datetime'
+              ? dayjs(appointment[key]).format('YYYY-MM-DDTHH:mm')
+              : appointment[key],
+          ...field,
+        }
+      }
+      return appointment
     })
   }
 
@@ -209,13 +250,13 @@ function Appointments() {
     }
 
     if (data && providersData) {
-      const mappedResponse = Object.keys(data)
-        .map((key) => ({ appointment: data[key], id: key }))
-        .map(({ appointment }) => ({
-          data: includeFieldTypes(appointment),
-          name: getDisplayInfo(appointment),
-          id: appointment['Record ID'],
-        }))
+      const mappedResponse = data?.map((d: any) => {
+        return {
+          data: includeFieldTypes(d),
+          name: getDisplayInfo(d),
+          id: d['Record ID'],
+        }
+      })
 
       setAppointments(mappedResponse)
       setFilteredAppointments(mappedResponse)

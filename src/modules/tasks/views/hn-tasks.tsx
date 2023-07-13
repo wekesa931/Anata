@@ -43,6 +43,7 @@ function useTransformedApiRecords(rawApiRecords: any) {
       },
       lastStatusChangedAt: 'Last Status changed at',
       formUrl: 'Open URL',
+      reasonForRescheduling: 'Reason For Rescheduling',
     }
     // TODO: Replace this with a callback so that this custom hook
     // can be reused for other record types
@@ -84,6 +85,7 @@ function useTransformedApiRecords(rawApiRecords: any) {
         assignee: { fullName: string }
         lastStatusChangedAt: string
         formUrl: string
+        reasonForRescheduling: string
       }
     ) => {
       const mappedResponse = records.memberHnTasks.edges.reduce(
@@ -191,6 +193,7 @@ function Tasks() {
     'Other Prescription Drug Name',
     'Assignee Name',
     'recordid',
+    'Reason For Rescheduling',
   ]
 
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
@@ -224,7 +227,6 @@ function Tasks() {
   ] = useLazyQuery(GET_MEMBER_TASKS, {})
 
   const taskFields = getTaskFields(mapAssigneeToLookup(allAntaraStaffs))
-
   useEffect(() => {
     if (member?.antaraId) {
       loadTasks({ variables: { antaraId: member?.antaraId } })

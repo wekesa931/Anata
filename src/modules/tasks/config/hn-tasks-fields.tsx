@@ -55,6 +55,7 @@ const getTaskFields = (allAntaraStaffs: any[]) => {
       name: 'Type',
       type: 'single-select',
       options: TASK_TYPES.map((type) => ({ label: type, value: type })),
+      disabled: true,
     },
     {
       name: 'Due Date',
@@ -101,6 +102,19 @@ const getTaskFields = (allAntaraStaffs: any[]) => {
       name: 'Assignee Name',
       type: 'lookup',
       calculated: true,
+    },
+    {
+      name: 'Reason For Rescheduling',
+      type: 'single-select',
+      options: [
+        'Member unresponsive',
+        'Going on Leave',
+        'Member Request',
+        'Daily interaction limit reached',
+        'New prioritization',
+        'Task backlog',
+        'Missing data',
+      ].map((option) => ({ label: option, value: option })),
     },
   ]
 

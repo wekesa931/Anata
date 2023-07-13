@@ -19,6 +19,7 @@ type SearchFieldProps<T extends Searchable> = {
   handleChange: (v: T) => void
   label: string
   initialValue?: T
+  disabled?: boolean
 }
 
 export default function SearchField<T extends Searchable>({
@@ -26,6 +27,7 @@ export default function SearchField<T extends Searchable>({
   handleChange,
   label,
   initialValue,
+  disabled,
 }: SearchFieldProps<T>) {
   const [options, setOptions] = useState<T[]>([])
   const [loading, setLoading] = useState(false)
@@ -67,10 +69,12 @@ export default function SearchField<T extends Searchable>({
         loading={loading}
         autoComplete
         filterSelectedOptions
+        disablePortal
         includeInputInList
         getOptionLabel={(option) => option?.displayName || ''}
         size="small"
         value={value}
+        disabled={disabled}
         fullWidth
         onChange={onChange}
         onInputChange={handleSearch}
@@ -96,6 +100,7 @@ export default function SearchField<T extends Searchable>({
             error={!!error}
             placeholder="Type to search"
             helperText={error}
+            disabled={disabled}
             InputProps={{
               ...params.InputProps,
               endAdornment: (
