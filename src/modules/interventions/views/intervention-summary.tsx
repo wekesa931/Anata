@@ -56,13 +56,13 @@ function InterventionsSection() {
   return (
     <SectionItem>
       <>
+        <ItemTitle title="Active Interventions" />
         {loading ? (
-          <BlockSekeleton height={300} />
+          <BlockSekeleton height={100} />
         ) : (
           <div>
             {memberInterventions.length > 0 ? (
               <>
-                <ItemTitle title="Active Interventions" />
                 {memberInterventions.map((info, index) => (
                   <InterventionItem intervention={info} key={index} />
                 ))}

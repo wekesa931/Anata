@@ -2,6 +2,7 @@ import airtableFetch from 'src/services/airtable/fetch'
 import type { Intervention } from 'src/modules/interventions/types'
 import { useMember } from 'src/context/member'
 import { Member } from 'src/modules/member/db/models'
+import { useState } from 'react'
 
 const transformInterventionData = (
   currentIntervention: any,
@@ -29,28 +30,41 @@ const transformInterventionData = (
 
 export const useInterventionsApi = () => {
   const { member } = useMember()
-  const getInterventions = async () => {
-    const interventionUrl = `interventions/list?filterByFormula=FIND("${member?.airtableRecordId}", {Member Record ID})`
-    const response = await airtableFetch(interventionUrl)
-    if (response && Array.isArray(response)) {
-      return response.map((r: any) => transformInterventionData(r, member))
-    }
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    return []
+  const getInterventions = async () => {
+    setIsLoading(true)
+    try {
+      const interventionUrl = `interventions/list?filterByFormula=FIND("${member?.airtableRecordId}", {Member Record ID})`
+      const response = await airtableFetch(interventionUrl)
+      if (response && Array.isArray(response)) {
+        return response.map((r: any) => transformInterventionData(r, member))
+      }
+
+      return []
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const getById = async (interventionId: string) => {
-    const interventionUrl = `interventions/${interventionId}`
-    const response = await airtableFetch(interventionUrl)
+    setIsLoading(true)
+    try {
+      const interventionUrl = `interventions/${interventionId}`
+      const response = await airtableFetch(interventionUrl)
 
-    if (response) {
-      return transformInterventionData(response, member)
+      if (response) {
+        return transformInterventionData(response, member)
+      }
+      throw new Error('Intervention not found')
+    } finally {
+      setIsLoading(false)
     }
-    throw new Error('Intervention not found')
   }
 
   return {
     getInterventions,
     getById,
+    isLoading,
   }
 }

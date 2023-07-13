@@ -73,8 +73,15 @@ function useClinicalSummary() {
         const healthGoalsAndStatus = `members/${member?.airtableRecordId}`
         airtableFetch(healthGoalsAndStatus).then((response) => {
           if (response) {
+            const healthStatusRaw = response['Health Status']
+            // if object type and has error key, set it as error, if it's a string, set it as string
+            if (typeof healthStatusRaw === 'object' && healthStatusRaw?.error) {
+              setHealthStatus('Error')
+            } else if (typeof healthStatusRaw === 'string') {
+              setHealthStatus(healthStatusRaw)
+            }
+
             setHealthGoals(response['Health Goals'] || [])
-            setHealthStatus(response['Health Status'])
             setCareConsent(response['Chronic Care Consent'])
           }
         })

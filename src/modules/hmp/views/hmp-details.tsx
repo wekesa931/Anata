@@ -1,6 +1,10 @@
 import React from 'react'
 import useHmpData from 'src/modules/hmp/hook/hmp-data'
-import { GridItems, Item } from 'src/components/layouts/display-items.component'
+import {
+  GridItems,
+  Item,
+  ItemTitle,
+} from 'src/components/layouts/display-items.component'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
 import { HMP } from '../db/models'
 
@@ -41,8 +45,9 @@ function HMPListItem() {
   const { loading, memberHmps } = useHmpData()
   return (
     <>
+      <ItemTitle title="HMPs" />
       {loading ? (
-        <BlockSekeleton height={300} />
+        <BlockSekeleton height={100} />
       ) : (
         <div className="mt-2">
           {memberHmps?.length > 0 ? (
@@ -52,7 +57,7 @@ function HMPListItem() {
               ))}
             </>
           ) : (
-            <p className="font-rubik text-base text-grey-main font-medium">
+            <p className="font-rubik text-base text-grey-main font-medium mb-4">
               No HMP available
             </p>
           )}

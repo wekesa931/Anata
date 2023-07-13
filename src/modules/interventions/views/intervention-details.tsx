@@ -197,7 +197,7 @@ function InterventionSection() {
     <>
       <InterventionFilter filter={filter} setFilter={setFilter} />
       {loading ? (
-        <BlockSekeleton height={300} />
+        <BlockSekeleton height={200} />
       ) : (
         <div className="mt-2">
           {interventions?.length > 0 ? (

@@ -24,7 +24,7 @@ const buildHmp = (hmp: HMP, data: HMPType) => {
 export const useHmpData = () => {
   const { member } = useMember()
   const [loading, setLoading] = useState<boolean>(false)
-  const { getHmps } = useHmpApi()
+  const { getHmps, isLoading } = useHmpApi()
   const database = useDatabase()
   const [memberHmps, setMemberHmps] = useState<HMP[]>([])
 
@@ -32,16 +32,19 @@ export const useHmpData = () => {
     CollectionType.HMPS
   )
 
-  useEffect(() => {
+  const getHmpsFromDb = async (antaraId: string) => {
     setLoading(true)
+    hmpsCollection
+      .query(Q.where('antaraId', antaraId))
+      .fetch()
+      .then(setMemberHmps)
+      .catch(logError)
+      .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
     if (member) {
-      hmpsCollection
-        .query(Q.where('antaraId', member?.antaraId))
-        .fetch()
-        .then(setMemberHmps)
-        .finally(() => {
-          setLoading(false)
-        })
+      getHmpsFromDb(member?.antaraId)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member])
@@ -125,20 +128,25 @@ export const useHmpData = () => {
   useEffect(() => {
     setLoading(true)
     if (member) {
-      hydrateHmps(member).finally(() => {
-        setLoading(false)
-      })
+      hydrateHmps(member)
+        .then(() => {
+          getHmpsFromDb(member?.antaraId)
+        })
+        .catch(logError)
+        .finally(() => {
+          setLoading(false)
+        })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member])
 
-  useEffect(() => {
-    deleteAllHmps()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  // useEffect(() => {
+  //   deleteAllHmps()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
 
   return {
-    loading,
+    loading: loading || isLoading,
     hydrateHmps,
     deleteAllHmps,
     hmpsCollection,

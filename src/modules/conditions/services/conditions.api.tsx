@@ -2,6 +2,7 @@ import airtableFetch from 'src/services/airtable/fetch'
 import type { Condition } from 'src/modules/conditions/types'
 import type { Member } from 'src/modules/member/db/models'
 import { useMember } from 'src/context/member'
+import { useState } from 'react'
 
 const transformConditionData = (
   currentCondition: any,
@@ -34,27 +35,39 @@ const transformConditionData = (
 
 export const useConditionsApi = () => {
   const { member } = useMember()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const getConditions = async () => {
-    const conditionUrl = `conditions/list?filterByFormula=FIND("${member?.airtableRecordId}", {Member Record ID})`
-    const response = await airtableFetch(conditionUrl)
-    if (response && Array.isArray(response)) {
-      return response.map((r: any) => transformConditionData(r, member))
-    }
+    setIsLoading(true)
+    try {
+      const conditionUrl = `conditions/list?filterByFormula=FIND("${member?.airtableRecordId}", {Member Record ID})`
+      const response = await airtableFetch(conditionUrl)
+      if (response && Array.isArray(response)) {
+        return response.map((r: any) => transformConditionData(r, member))
+      }
 
-    return []
+      return []
+    } finally {
+      setIsLoading(false)
+    }
   }
   const getById = async (conditionId: string) => {
-    const conditionUrl = `conditions/${conditionId}`
-    const response = await airtableFetch(conditionUrl)
+    setIsLoading(true)
+    try {
+      const conditionUrl = `conditions/${conditionId}`
+      const response = await airtableFetch(conditionUrl)
 
-    if (response) {
-      return transformConditionData(response, member)
+      if (response) {
+        return transformConditionData(response, member)
+      }
+      throw new Error('Condition not found')
+    } finally {
+      setIsLoading(false)
     }
-    throw new Error('Condition not found')
   }
 
   return {
     getConditions,
     getById,
+    isLoading,
   }
 }

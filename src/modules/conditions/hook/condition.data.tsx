@@ -38,7 +38,7 @@ const buildCondition = (condition: Condition, data: TCondition) => {
 export const useConditionData = () => {
   const { member } = useMember()
   const [loading, setLoading] = useState<boolean>(false)
-  const { getConditions, getById } = useConditionsApi()
+  const { getConditions, getById, isLoading } = useConditionsApi()
   const database = useDatabase()
   const { findInterventionById } = useInterventionData()
   const [memberConditions, setMemberConditions] = useState<Condition[]>([])
@@ -49,7 +49,7 @@ export const useConditionData = () => {
   const relationCollection: Collection<ConditionInterventions> =
     database.collections.get(CollectionType.CONDITIONS_INTERVENTIONS)
 
-  useEffect(() => {
+  const getAllConditionsFromDb = async () => {
     filterBy({
       acuteVsChronic: AcuteVsChronic.ALL,
       conditionStatus: ConditionStatus.ALL,
@@ -58,6 +58,10 @@ export const useConditionData = () => {
       .catch((err) => {
         logError(err)
       })
+  }
+
+  useEffect(() => {
+    getAllConditionsFromDb()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member])
 
@@ -304,9 +308,12 @@ export const useConditionData = () => {
   useEffect(() => {
     if (member) {
       setLoading(true)
-      hydrateConditions(member).finally(() => {
-        setLoading(false)
-      })
+      hydrateConditions(member)
+        .then(getAllConditionsFromDb)
+        .catch(logError)
+        .finally(() => {
+          setLoading(false)
+        })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member])
@@ -316,7 +323,7 @@ export const useConditionData = () => {
   // }, [])
 
   return {
-    loading,
+    loading: loading || isLoading,
     filterByStatus,
     filterByAcuteVsChronic,
     hydrateConditions,

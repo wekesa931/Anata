@@ -34,7 +34,7 @@ const buildIntervention = (intervention: Intervention, data: TIntervention) => {
 export const useInterventionData = () => {
   const { member } = useMember()
   const [loading, setLoading] = useState<boolean>(false)
-  const { getInterventions, getById } = useInterventionsApi()
+  const { getInterventions, getById, isLoading } = useInterventionsApi()
   const database = useDatabase()
   const [memberInterventions, setMemberInterventions] = useState<
     Intervention[]
@@ -42,7 +42,7 @@ export const useInterventionData = () => {
   const interventionsCollection: Collection<Intervention> =
     database.collections.get(CollectionType.INTERVENTIONS)
 
-  useEffect(() => {
+  const getAllInterventionsFromDb = async () => {
     setLoading(true)
     filterBy({
       attainment: Attainment.ALL,
@@ -55,6 +55,10 @@ export const useInterventionData = () => {
       .finally(() => {
         setLoading(false)
       })
+  }
+
+  useEffect(() => {
+    getAllInterventionsFromDb()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member])
 
@@ -232,6 +236,8 @@ export const useInterventionData = () => {
   useEffect(() => {
     if (member) {
       hydrateInterventions(member)
+        .then(getAllInterventionsFromDb)
+        .catch(logError)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member])
@@ -273,7 +279,7 @@ export const useInterventionData = () => {
   //   }, [])
 
   return {
-    loading,
+    loading: loading || isLoading,
     filterByStatus,
     filterByAttainment,
     hydrateInterventions,

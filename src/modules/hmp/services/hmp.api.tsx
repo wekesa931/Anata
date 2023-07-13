@@ -2,6 +2,7 @@ import airtableFetch from 'src/services/airtable/fetch'
 import type { Member } from 'src/modules/member/db/models'
 import { useMember } from 'src/context/member'
 import { HMPType } from 'src/modules/hmp/types'
+import { useState } from 'react'
 
 const transformHmpData = (currentHmp: any, member: Member | null): HMPType => {
   const hmpDay = currentHmp['HMP Day']
@@ -19,17 +20,24 @@ const transformHmpData = (currentHmp: any, member: Member | null): HMPType => {
 
 export const useHmpApi = () => {
   const { member } = useMember()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const getHmps = async () => {
-    const hmpUrl = `hmp/list?filterByFormula=FIND("${member?.airtableRecordId}", {Member Record ID})`
-    const response = await airtableFetch(hmpUrl)
-    if (response && Array.isArray(response)) {
-      return response.map((r: any) => transformHmpData(r, member))
-    }
+    setIsLoading(true)
+    try {
+      const hmpUrl = `hmp/list?filterByFormula=FIND("${member?.airtableRecordId}", {Member Record ID})`
+      const response = await airtableFetch(hmpUrl)
+      if (response && Array.isArray(response)) {
+        return response.map((r: any) => transformHmpData(r, member))
+      }
 
-    return []
+      return []
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return {
     getHmps,
+    isLoading,
   }
 }

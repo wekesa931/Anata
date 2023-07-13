@@ -63,13 +63,13 @@ function ConditionsSection() {
   return (
     <SectionItem>
       <>
+        <ItemTitle title="Active Conditions" />
         {loading ? (
-          <BlockSekeleton height={300} />
+          <BlockSekeleton height={100} />
         ) : (
           <div>
             {memberConditions?.length > 0 ? (
               <>
-                <ItemTitle title="Active Conditions" />
                 {memberConditions.map((info, index) => (
                   <ConditionItem condition={info} key={index} />
                 ))}
