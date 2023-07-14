@@ -1,6 +1,6 @@
 import LokiJSAdapter from '@nozbe/watermelondb/adapters/lokijs'
 import { Database } from '@nozbe/watermelondb'
-import DatabaseProvider from '@nozbe/watermelondb/DatabaseProvider'
+import { DatabaseProvider } from '@nozbe/watermelondb/DatabaseProvider'
 import React from 'react'
 import storage from 'src/storage/secure-storage'
 import keys from 'src/config/constants'
