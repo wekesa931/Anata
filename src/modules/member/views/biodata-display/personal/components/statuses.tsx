@@ -4,11 +4,7 @@ import {
   Item,
   GridItems,
 } from 'src/components/layouts/display-items.component'
-import {
-  BlockSekeleton,
-  StatusSkeleon,
-} from 'src/modules/member/components/skeleton-loaders'
-import useClinicalSummary from 'src/modules/member/hooks/clinical-summary'
+import { StatusSkeleon } from 'src/modules/member/components/skeleton-loaders'
 import { PortalForm } from 'src/modules/member/components/update-forms'
 import { StatusForm } from 'src/modules/member/components/forms/statuses-form'
 import type { Member } from 'src/modules/member/db/models'
@@ -18,7 +14,6 @@ type StatusesSectionProps = {
 }
 
 function StatusesSection({ member }: StatusesSectionProps) {
-  const { careConsent } = useClinicalSummary()
   const [showEditForm, setShowEditForm] = React.useState<boolean>(false)
   const [isEdited, setIsEdited] = React.useState<boolean>(false)
 
@@ -60,14 +55,6 @@ function StatusesSection({ member }: StatusesSectionProps) {
           <Item title="Onboarding stage" child={member?.onboardStage} />
           <Item title="Member status" child={member?.status} />
         </GridItems>
-        {careConsent ? (
-          <GridItems single>
-            <Item title="Chronic care consent" child={careConsent} />
-          </GridItems>
-        ) : (
-          <BlockSekeleton height={40} />
-        )}
-
         <GridItems single>
           <Item
             title="Tags"

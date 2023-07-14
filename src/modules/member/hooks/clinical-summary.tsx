@@ -21,7 +21,6 @@ function useClinicalSummary() {
   const [riskScore, setRiskScore] = useState<number | string>('')
   const [healthGoals, setHealthGoals] = useState<any[]>([])
   const [healthStatus, setHealthStatus] = useState<string>('')
-  const [careConsent, setCareConsent] = useState<string>('')
 
   const getSummaryFormHIF = useCallback(async () => {
     const hifURL = `hif/list?filterByFormula=FIND("${member?.airtableRecordId}", {Member Record ID})`
@@ -82,7 +81,6 @@ function useClinicalSummary() {
             }
 
             setHealthGoals(response['Health Goals'] || [])
-            setCareConsent(response['Chronic Care Consent'])
           }
         })
       }
@@ -107,10 +105,9 @@ function useClinicalSummary() {
       riskScore,
       healthStatus,
       healthGoals,
-      careConsent,
     }
     return summary
-  }, [riskScore, healthStatus, healthGoals, alergies, riskFactors, careConsent])
+  }, [riskScore, healthStatus, healthGoals, alergies, riskFactors])
 
   return clinicalSummary
 }
