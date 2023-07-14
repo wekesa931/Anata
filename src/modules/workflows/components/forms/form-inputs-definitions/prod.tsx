@@ -2581,18 +2581,51 @@ export default [
         },
       },
       {
+        id: 'fldIqClYI19I32Qn1',
+        name: 'Does the member have a Primary care provider?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
         id: 'fldvuTrj7cPT8p5i0',
         name: 'Primary Doctor',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldJqYmPM2sVpnVT6',
+        symmetricColumnId: 'fldrAqxUYvRH2uWE4',
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblsixUe3jfbOUMQP',
-        required: false,
+        required: true,
         helper: "Fill in member's primary/preferred doctor",
+        conditionType: '',
+        parentKey: 'Does the member have a Primary care provider?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Does the member have a Primary care provider?']
+            )
+          ) {
+            return ['Yes'].some((r) =>
+              values['Does the member have a Primary care provider?'].includes(
+                r
+              )
+            )
+          }
+          return ['Yes'].includes(
+            values['Does the member have a Primary care provider?']
+          )
+        },
       },
       {
         id: 'fldONtdtp66wBVzVU',
@@ -4905,6 +4938,20 @@ export default [
         helper: '',
       },
       {
+        id: 'fldCV54l55rLFB4Tw',
+        name: 'Does the member have a Primary care provider?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
         id: 'fldQD92uu8w68NQja',
         name: 'Primary Doctor',
         type: 'foreignKey',
@@ -4915,8 +4962,27 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblsixUe3jfbOUMQP',
-        required: false,
+        required: true,
         helper: "Fill in member's primary/preferred doctor",
+        conditionType: '',
+        parentKey: 'Does the member have a Primary care provider?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Does the member have a Primary care provider?']
+            )
+          ) {
+            return ['Yes'].some((r) =>
+              values['Does the member have a Primary care provider?'].includes(
+                r
+              )
+            )
+          }
+          return ['Yes'].includes(
+            values['Does the member have a Primary care provider?']
+          )
+        },
       },
       {
         id: 'fldGtNxCqOor6GrAT',
