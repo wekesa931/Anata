@@ -17,12 +17,18 @@ const transformInterventionData = (
     antaraId: member?.antaraId || '',
     startingMeasurement:
       currentIntervention['Starting Measurement - all interventions'],
-    currentMeasurement: currentIntervention['Current Measurement'],
+    currentMeasurement:
+      currentIntervention[
+        'Current measurement - all interventions (from Intervention data tracking)'
+      ],
     startingLevel: currentIntervention['Starting Level - all interventions'],
     currentLevel: currentIntervention['current level'],
     startingMilestone:
       currentIntervention['Milestone Target - all interventions'],
-    currentMilestone: currentIntervention['Current Milestone'],
+    currentMilestone:
+      currentIntervention[
+        'Current Milestone Measurement (from Intervention data tracking)'
+      ],
     result: currentIntervention["Intervention's final result"],
     persona: currentIntervention['Last recorded persona'],
   }

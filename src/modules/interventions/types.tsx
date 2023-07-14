@@ -5,11 +5,11 @@ export type Intervention = {
   id: string
   antaraId: string
   startingMeasurement?: string
-  currentMeasurement?: string
+  currentMeasurement?: string[]
   startingLevel?: string
   currentLevel?: string
   startingMilestone?: string
-  currentMilestone?: string
+  currentMilestone?: string[]
   result?: string
   persona?: string
 }

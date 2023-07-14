@@ -63,9 +63,11 @@ function InterventionsSection() {
           <div>
             {memberInterventions.length > 0 ? (
               <>
-                {memberInterventions.map((info, index) => (
-                  <InterventionItem intervention={info} key={index} />
-                ))}
+                {memberInterventions
+                  .filter((info) => info.interventionStatus === 'Active')
+                  .map((info, index) => (
+                    <InterventionItem intervention={info} key={index} />
+                  ))}
               </>
             ) : (
               <p className="font-rubik text-base text-grey-main font-medium">

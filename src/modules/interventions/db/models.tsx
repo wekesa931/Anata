@@ -1,8 +1,11 @@
 import { Model, Q } from '@nozbe/watermelondb'
-import { text, lazy } from '@nozbe/watermelondb/decorators'
+import { text, lazy, json } from '@nozbe/watermelondb/decorators'
 import { CollectionType } from 'src/storage/types'
 import { Associations } from '@nozbe/watermelondb/Model'
 
+const sanitizeMeasurement = (measurements: any) => {
+  return Array.isArray(measurements) ? measurements.map(String) : []
+}
 export class Intervention extends Model {
   static table = CollectionType.INTERVENTIONS
 
@@ -30,7 +33,8 @@ export class Intervention extends Model {
 
   @text('starting_measurement') startingMeasurement?: string
 
-  @text('current_measurement') currentMeasurement?: string
+  @json('current_measurement', sanitizeMeasurement)
+  currentMeasurement?: string[]
 
   @text('starting_level') startingLevel?: string
 
@@ -38,7 +42,7 @@ export class Intervention extends Model {
 
   @text('starting_milestone') startingMilestone?: string
 
-  @text('current_milestone') currentMilestone?: string
+  @json('current_milestone', sanitizeMeasurement) currentMilestone?: string[]
 
   @text('result') result?: string
 

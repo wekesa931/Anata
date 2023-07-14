@@ -70,9 +70,11 @@ function ConditionsSection() {
           <div>
             {memberConditions?.length > 0 ? (
               <>
-                {memberConditions.map((info, index) => (
-                  <ConditionItem condition={info} key={index} />
-                ))}
+                {memberConditions
+                  .filter((info) => info.conditionStatus === 'Active')
+                  .map((info, index) => (
+                    <ConditionItem condition={info} key={index} />
+                  ))}
               </>
             ) : (
               <p className="font-rubik text-base text-grey-main font-medium">

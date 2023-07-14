@@ -6,6 +6,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Divider,
+  Tooltip,
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
@@ -43,6 +44,8 @@ function InterventionCard({ intervention, activeId }: InterventionCardProps) {
   const statusIs = StatusIs(status || '')
   const attainment = intervention.attainment?.toUpperCase()
   const attainmentIs = AttainmentIs(attainment || '')
+  const currentMeasurement = intervention?.currentMeasurement || []
+  const currentMilestone = intervention?.currentMilestone || []
   const [conditions, setConditions] = useState<any[]>([])
 
   useEffect(() => {
@@ -113,7 +116,15 @@ function InterventionCard({ intervention, activeId }: InterventionCardProps) {
               />
               <Item
                 title="current Measurement"
-                child={intervention?.currentMeasurement}
+                child={currentMeasurement.map(
+                  (measurement: string, index: number) => (
+                    <Tooltip key={index} title={measurement}>
+                      <span className="bg-blue-10 text-center rounded-md text-dark-blue-100 py-1 px-1.5 font-rubik text-sm mx-2">
+                        {measurement}
+                      </span>
+                    </Tooltip>
+                  )
+                )}
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -130,7 +141,15 @@ function InterventionCard({ intervention, activeId }: InterventionCardProps) {
               />
               <Item
                 title="current Milestone"
-                child={intervention?.currentMilestone}
+                child={currentMilestone.map(
+                  (measurement: string, index: number) => (
+                    <Tooltip key={index} title={measurement}>
+                      <span className="bg-blue-10 text-center rounded-md text-dark-blue-100 py-1 px-1.5 font-rubik text-sm mx-2">
+                        {measurement}
+                      </span>
+                    </Tooltip>
+                  )
+                )}
               />
             </div>
             <div className="flex flex-col gap-2">
