@@ -209,7 +209,7 @@ export const useRegistrationData = () => {
         insurances: insurances.length ? insurances : null,
         employer: insuranceDetails.employer || null,
       })
-      if (!!variables.insurances && !!variables.employer) {
+      if (!!variables.insurances || !!variables.employer) {
         await updateInsuranceDetails({
           ...variables,
           antaraId: member.antaraId,
