@@ -6,11 +6,13 @@ import useForceUpdate from 'src/hooks/force-update'
 
 type MemberContextType = {
   member: Member | null
+  memberNotFound: boolean
   isLoading: boolean
 }
 
 const MemberContext = createContext<MemberContextType>({
   member: null,
+  memberNotFound: false,
   isLoading: false,
 })
 
@@ -21,6 +23,7 @@ type Props = {
 
 export function MemberProvider({ antaraId, children }: Props) {
   const [member, setMember] = useState<Member | null>(null)
+  const [memberNotFound, setMemberNotFound] = useState<boolean>(false)
   const {
     loading: isLoading,
     findMemberByAntaraId,
@@ -30,6 +33,7 @@ export function MemberProvider({ antaraId, children }: Props) {
 
   useEffect(() => {
     if (antaraId) {
+      setMemberNotFound(false)
       findMemberByAntaraId(antaraId)
         .then((newMember) => {
           if (newMember) {
@@ -48,7 +52,10 @@ export function MemberProvider({ antaraId, children }: Props) {
             throw new Error(`Member with antaraId ${antaraId} not found`)
           }
         })
-        .catch(logError)
+        .catch((e) => {
+          logError(e)
+          setMemberNotFound(true)
+        })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [antaraId])
@@ -71,9 +78,10 @@ export function MemberProvider({ antaraId, children }: Props) {
   const providerValue = React.useMemo(
     () => ({
       member,
+      memberNotFound,
       isLoading,
     }),
-    [member, isLoading]
+    [member, isLoading, memberNotFound]
   )
 
   return (
