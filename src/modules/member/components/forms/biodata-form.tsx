@@ -21,6 +21,7 @@ import { useRegistrationForm } from 'src/context/member-registration'
 import { isDirty } from 'src/utils/form-validation-methods'
 import * as yup from 'yup'
 import ErrorComponent from 'src/components/feedbacks/error-component'
+import { useNavigate } from 'react-router-dom'
 
 type BioDataSectionProps = {
   setIsEdited: (isEdited: boolean) => void
@@ -165,11 +166,14 @@ export function BioDataForm({
     }
   }
 
+  const navigate = useNavigate()
+
   const handleSubmit = (values: any, formikBag: any) => {
     if (isDirty(initialValues, values)) {
       if (member) {
         handleUpdateBioData(member, values)
           .then(() => {
+            navigate(`/member/${member.antaraId}`)
             onNext()
           })
           .catch((err) => {
