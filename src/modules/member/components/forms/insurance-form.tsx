@@ -170,6 +170,8 @@ export function InsuranceForm({
       ? member?.insurances
       : defaultInsurance(primaryMember)
     setInitialValues(values as InsuranceDetailsValues)
+    const employerName = values?.employer?.name
+    setBusinessLookups(employerName)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [verificationStatus, member])
@@ -302,6 +304,14 @@ export function InsuranceForm({
     return []
   }
 
+  const setBusinessLookups = (v?: string) => {
+    const b = getBusinessLocations(lookupOptions?.employers || [], v) || []
+    const d = getBusinessDepartments(lookupOptions?.employers || [], v) || []
+
+    setBusinessLocations(b)
+    setDepartments(d)
+  }
+
   return (
     <div className="overflow-scroll">
       {Object.keys(initialValues).length > 0 && (
@@ -332,17 +342,9 @@ export function InsuranceForm({
                     'label'
                   )}
                   handleChange={(v) => {
-                    const b =
-                      getBusinessLocations(lookupOptions?.employers || [], v) ||
-                      []
-                    const d =
-                      getBusinessDepartments(
-                        lookupOptions?.employers || [],
-                        v
-                      ) || []
-
-                    setBusinessLocations(b)
-                    setDepartments(d)
+                    setBusinessLookups(v)
+                    setFieldValue('employer.businessLocation', {})
+                    setFieldValue('employer.department', {})
                   }}
                   required={!primaryMember}
                 />
@@ -354,9 +356,8 @@ export function InsuranceForm({
                     options={businessLocations}
                     handleChange={(v) => {
                       const businessLocation =
-                        businessLocations?.find(
-                          (d) => d.businessLocationId === v
-                        )?.label || ''
+                        businessLocations?.find((d) => d.value === v)?.label ||
+                        ''
                       setFieldValue(
                         'employer.businessLocation.name',
                         businessLocation
@@ -373,8 +374,7 @@ export function InsuranceForm({
                     options={departments}
                     handleChange={(v: any) => {
                       const department =
-                        departments?.find((d) => d.departmentId === v)?.label ||
-                        ''
+                        departments?.find((d) => d.value === v)?.label || ''
                       setFieldValue('employer.department.name', department)
                     }}
                     required={false}

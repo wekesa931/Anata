@@ -100,18 +100,16 @@ export const useRegistrationData = () => {
     contactsData: ContactValues
   ) => {
     try {
-      if (!contactsData.antaraId) {
-        const antaraId = await createMember()
-        contactsData.antaraId = antaraId
-      }
-
       const phonesToUpdate = preparePhonesForUpdate(
         member.phones || [],
         contactsData.phones
       )
       contactsData.phones = phonesToUpdate
 
-      const { data } = await updateContactsData(contactsData)
+      const { data } = await updateContactsData({
+        ...contactsData,
+        antaraId: member.antaraId,
+      })
       const phones = transformPhones(data)
 
       return database.write(async () => {
@@ -133,16 +131,14 @@ export const useRegistrationData = () => {
     addressData: DbValueTypes.AddressValues
   ) => {
     try {
-      if (!addressData.antaraId) {
-        const antaraId = await createMember()
-        addressData.antaraId = antaraId
-      }
-
       const addresses = prepareAddressesForUpdate(
         member.addresses || ({} as DbValueTypes.AddressValues),
         addressData
       )
-      await updateAddressesData(addresses)
+      await updateAddressesData({
+        ...addresses,
+        antaraId: member.antaraId,
+      })
 
       return database.write(async () => {
         return member.update((m) => {
@@ -162,11 +158,6 @@ export const useRegistrationData = () => {
     insuranceId: number
   ) => {
     try {
-      if (!insuranceDetails.antaraId) {
-        const antaraId = await createMember()
-        insuranceDetails.antaraId = antaraId
-      }
-
       const insurances = prepareInsurancesForUpdate(
         member.insurances || ({} as DbValueTypes.InsuranceDetailsValues),
         insuranceDetails
@@ -184,7 +175,7 @@ export const useRegistrationData = () => {
 
       const update = {
         insurances: newInsurances,
-        antaraId: insuranceDetails.antaraId,
+        antaraId: member.antaraId,
         employer: insuranceDetails.employer,
       }
 
@@ -210,11 +201,6 @@ export const useRegistrationData = () => {
     insuranceDetails: DbValueTypes.InsuranceDetailsValues
   ) => {
     try {
-      if (!insuranceDetails.antaraId) {
-        const antaraId = await createMember()
-        insuranceDetails.antaraId = antaraId
-      }
-
       const insurances = prepareInsurancesForUpdate(
         member.insurances || ({} as DbValueTypes.InsuranceDetailsValues),
         insuranceDetails
