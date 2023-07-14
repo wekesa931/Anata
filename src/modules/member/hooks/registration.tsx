@@ -27,6 +27,7 @@ import {
   prepareAddressesForUpdate,
   prepareInsurancesForUpdate,
   transformInsurances,
+  removeEmpty,
 } from 'src/modules/member/utils/data-transforms'
 import { useMembersData } from 'src/modules/member/hooks/member-data'
 
@@ -73,7 +74,7 @@ export const useRegistrationData = () => {
         biodata.antaraId = antaraId
       }
 
-      await updateBiodata(biodata)
+      await updateBiodata(removeEmpty(biodata))
       return database.write(async () => {
         return member.update((m) => {
           m.isSynced = true

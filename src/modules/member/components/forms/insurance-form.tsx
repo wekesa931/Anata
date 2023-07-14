@@ -30,57 +30,60 @@ import { sortAlphabetically } from 'src/utils/sort'
 
 type InsuranceDetailsValues = DbValueTypes.InsuranceDetailsValues
 
-const validationSchema = yup.object().shape({
-  employer: yup.object().shape({
-    name: yup.string().required('Employer name is required'),
-    department: yup
-      .object()
-      .shape({
-        name: yup.string(),
-        departmentId: yup.string(),
-      })
-      .nullable(),
-    businessLocation: yup
-      .object()
-      .shape({
-        name: yup.string(),
-        businessLocationId: yup.string(),
-      })
-      .nullable(),
-  }),
-  insurances: yup.array().of(
-    yup.object().shape(
-      {
-        insuranceCompany: yup.string().when('insuranceId', {
-          is: (insuranceId: string) => !!insuranceId,
-          then: yup.string().required('Insurance provider is required'),
-          otherwise: yup.string(),
-        }),
-        insuranceId: yup.string().when('insuranceCompany', {
-          is: (insuranceCompany: string) => !!insuranceCompany,
-          then: yup.string().required('Insurance ID is required'),
-          otherwise: yup.string(),
-        }),
-        isPrincipalMember: yup.string().required('This field is required'),
-        principalMemberInsuranceId: yup.string().when('isJubileeMember', {
-          is: (isJubileeMember: string) => isJubileeMember === 'no',
-          then: yup
-            .string()
-            .required('Principal member insurance ID is required'),
-          otherwise: yup.string(),
-        }),
-        relationshipToPrincipalMember: yup.string().when('isJubileeMember', {
-          is: (isJubileeMember: string) => isJubileeMember === 'no',
-          then: yup
-            .string()
-            .required('Relationship to principal member is required'),
-          otherwise: yup.string(),
-        }),
-      },
-      [['insuranceCompany', 'insuranceId']]
-    )
-  ),
-})
+const validationSchema = (isDependent = false) =>
+  yup.object().shape({
+    employer: yup.object().shape({
+      name: isDependent
+        ? yup.string()
+        : yup.string().required('Employer is required'),
+      department: yup
+        .object()
+        .shape({
+          name: yup.string(),
+          departmentId: yup.string(),
+        })
+        .nullable(),
+      businessLocation: yup
+        .object()
+        .shape({
+          name: yup.string(),
+          businessLocationId: yup.string(),
+        })
+        .nullable(),
+    }),
+    insurances: yup.array().of(
+      yup.object().shape(
+        {
+          insuranceCompany: yup.string().when('insuranceId', {
+            is: (insuranceId: string) => !!insuranceId,
+            then: yup.string().required('Insurance provider is required'),
+            otherwise: yup.string(),
+          }),
+          insuranceId: yup.string().when('insuranceCompany', {
+            is: (insuranceCompany: string) => !!insuranceCompany,
+            then: yup.string().required('Insurance ID is required'),
+            otherwise: yup.string(),
+          }),
+          isPrincipalMember: yup.string().required('This field is required'),
+          principalMemberInsuranceId: yup.string().when('isJubileeMember', {
+            is: (isJubileeMember: string) => isJubileeMember === 'no',
+            then: yup
+              .string()
+              .required('Principal member insurance ID is required'),
+            otherwise: yup.string(),
+          }),
+          relationshipToPrincipalMember: yup.string().when('isJubileeMember', {
+            is: (isJubileeMember: string) => isJubileeMember === 'no',
+            then: yup
+              .string()
+              .required('Relationship to principal member is required'),
+            otherwise: yup.string(),
+          }),
+        },
+        [['insuranceCompany', 'insuranceId']]
+      )
+    ),
+  })
 
 type InsuranceSectionProps = {
   setCompleted: (completed: any) => void
@@ -98,6 +101,7 @@ type BooleanStatus = {
 
 const defaultInsurance = (primaryMember: Member | undefined) => ({
   employer: {
+    isPrimaryMember: !primaryMember,
     name: '',
     department: {
       departmentId: '',
@@ -284,7 +288,7 @@ export function InsuranceForm({
         <PrimaryForm
           initialValues={initialValues}
           handleSubmit={handleSubmit}
-          validationSchema={validationSchema}
+          validationSchema={validationSchema(!!primaryMember)}
         >
           {({
             values,

@@ -25,9 +25,22 @@ type BioDataSectionProps = {
   onPrev?: () => Promise<void> | void
   member: Member | null
   isChildRegistration?: boolean
+  primaryMember?: Member | null
 }
 
-const extractInitialState = (member: Member | null, initialPhone?: string) => {
+type InitialStateProps = {
+  member: Member | null
+  initialPhone?: string | null
+  primaryMember?: Member | null
+  isChildRegistration?: boolean
+}
+
+const extractInitialState = ({
+  member,
+  initialPhone,
+  primaryMember,
+  isChildRegistration,
+}: InitialStateProps) => {
   return {
     firstName: member?.firstName || '',
     middleName: member?.middleName || '',
@@ -38,6 +51,13 @@ const extractInitialState = (member: Member | null, initialPhone?: string) => {
     maritalStatus: member?.maritalStatus || '',
     tags: member?.tags || [],
     antaraId: member?.antaraId || '',
+    primaryMemberAntaraId: primaryMember?.antaraId,
+    // next-line: possible data polution if dependent is an adult child
+    relationshipToPrimary: isChildRegistration
+      ? 'Child'
+      : primaryMember
+      ? 'Spouse'
+      : '',
   }
 }
 
@@ -60,11 +80,16 @@ export function BioDataForm({
   onNext,
   showWizardControls = true,
   showPhoneInput = true,
+  primaryMember,
 }: BioDataFormProps) {
   const [showForm, setShowForm] = useState<boolean>(false)
   const [isFetchingMember, setIsFetchingMember] = useState<boolean>(false)
   const [initialValues, setInitialValues] = useState<BiodataValues>(
-    extractInitialState(member)
+    extractInitialState({
+      member,
+      primaryMember,
+      isChildRegistration,
+    })
   )
   const { createMemberInstance, handleUpdateBioData, loading } =
     useRegistrationData()
@@ -75,7 +100,14 @@ export function BioDataForm({
     if (response) {
       createMemberInstance(member, response)
         .then((newMember) => {
-          setInitialValues(extractInitialState(newMember, phone))
+          setInitialValues(
+            extractInitialState({
+              member: newMember,
+              initialPhone: phone,
+              isChildRegistration,
+              primaryMember,
+            })
+          )
         })
         .catch((error) => {
           logError(error)
@@ -84,7 +116,14 @@ export function BioDataForm({
     } else if (member) {
       member.reset().then(async () => {
         await member.setInitialPhone(phone)
-        setInitialValues(extractInitialState(member, phone))
+        setInitialValues(
+          extractInitialState({
+            member,
+            initialPhone: phone,
+            isChildRegistration,
+            primaryMember,
+          })
+        )
       })
     }
   }

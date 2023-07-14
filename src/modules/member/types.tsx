@@ -218,8 +218,10 @@ export type BirthdateUpdateValues = {
 export type BiodataValues = BirthdateUpdateValues & {
   phone: string
   sex: string
-  maritalStatus: string
+  maritalStatus?: string
   tags: string[]
+  primaryMemberAntaraId?: string
+  relationshipToPrimary?: string
 }
 
 export type UpdatePhoneValues = {

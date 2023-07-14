@@ -117,6 +117,8 @@ export const useUpdateBiodata = () => {
         sex: values.sex,
         maritalStatus: values.maritalStatus,
         antaraId,
+        primaryMemberAntaraId: values.primaryMemberAntaraId,
+        relationshipToPrimary: values.relationshipToPrimary,
       },
       memberStatus: {
         tags: values.tags,

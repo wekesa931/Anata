@@ -100,6 +100,7 @@ function RegistrationForm({
             setIsEdited={setIsEdited}
             member={member}
             isChildRegistration={formName === 'child'}
+            primaryMember={selectedPrimaryMember}
           />
         )}
       </BiodataSection>
