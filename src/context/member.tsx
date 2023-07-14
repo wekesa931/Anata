@@ -86,14 +86,11 @@ export function MemberProvider({ antaraId, children }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member])
 
-  const providerValue = React.useMemo(
-    () => ({
-      member,
-      memberNotFound,
-      isLoading,
-    }),
-    [member, isLoading, memberNotFound]
-  )
+  const providerValue = {
+    member,
+    memberNotFound,
+    isLoading,
+  }
 
   return (
     <MemberContext.Provider value={providerValue}>

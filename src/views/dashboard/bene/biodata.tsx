@@ -1,11 +1,15 @@
 import React from 'react'
 import BioDataSection from 'src/modules/member/views/biodata-layout'
 import ErrorBoundary from 'src/components/error-boundary'
+import type { Member } from 'src/modules/member/db/models'
 
-function BioData() {
+type BioDataProps = {
+  member: Member | null
+}
+function BioData({ member }: BioDataProps) {
   return (
     <ErrorBoundary>
-      <BioDataSection />
+      <BioDataSection member={member} />
     </ErrorBoundary>
   )
 }

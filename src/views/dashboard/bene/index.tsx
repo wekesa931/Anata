@@ -30,7 +30,7 @@ function DashboardContent() {
         <DateFilterProvider>
           <div className="w-full flex justify-between bg-white h-full relative rounded-t-2xl">
             <div className="h-full w-1/4">
-              <BioData />
+              <BioData member={member} />
             </div>
             <div className="w-1/2 flex-1 border-r border-solid border-white">
               <MainViews />

@@ -1,5 +1,4 @@
 import React from 'react'
-import { useMember } from 'src/context/member'
 import { Tab } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import PersonalSection from 'src/modules/member/views/biodata-display/personal'
@@ -11,9 +10,12 @@ import {
 import { getAgeFull } from 'src/utils/date-time/helpers'
 import MissingInfoBlock from 'src/modules/member/views/missing-info'
 
-function MemberBiodataLayout() {
-  const { member } = useMember()
+import type { Member } from 'src/modules/member/db/models'
 
+type MemberBiodataProps = {
+  member: Member | null
+}
+function MemberBiodataLayout({ member }: MemberBiodataProps) {
   const [value, setValue] = React.useState<string>('personal')
 
   const handleChange = (_: React.SyntheticEvent, newValue: string) => {
