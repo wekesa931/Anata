@@ -15725,6 +15725,131 @@ export default [
         helper: 'Please select the type(s) of incident that is reported',
       },
       {
+        id: 'fldTarPA0DtqFaAxc',
+        name: 'Administrative type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Incident type',
+        parentValues: ['Administrative'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Incident type'])) {
+            return ['Administrative'].some((r) =>
+              values['Incident type'].includes(r)
+            )
+          }
+          return ['Administrative'].includes(values['Incident type'])
+        },
+      },
+      {
+        id: 'fldYhSQoSxxm9qU1O',
+        name: 'Service delivery type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Incident type',
+        parentValues: ['Service delivery', 'Supplies'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Incident type'])) {
+            return ['Service delivery', 'Supplies'].some((r) =>
+              values['Incident type'].includes(r)
+            )
+          }
+          return ['Service delivery', 'Supplies'].includes(
+            values['Incident type']
+          )
+        },
+      },
+      {
+        id: 'fldSlVy8LjvBDJKwf',
+        name: 'Clinical treatment type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Incident type',
+        parentValues: ['Clinical treatment'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Incident type'])) {
+            return ['Clinical treatment'].some((r) =>
+              values['Incident type'].includes(r)
+            )
+          }
+          return ['Clinical treatment'].includes(values['Incident type'])
+        },
+      },
+      {
+        id: 'flduJrXOu5HdrOjOf',
+        name: 'Systems type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Incident type',
+        parentValues: ['Systems'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Incident type'])) {
+            return ['Systems'].some((r) => values['Incident type'].includes(r))
+          }
+          return ['Systems'].includes(values['Incident type'])
+        },
+      },
+      {
+        id: 'fldkgfFUlDscJluWi',
+        name: 'Appointment type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Incident type',
+        parentValues: ['Appointment'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Incident type'])) {
+            return ['Appointment'].some((r) =>
+              values['Incident type'].includes(r)
+            )
+          }
+          return ['Appointment'].includes(values['Incident type'])
+        },
+      },
+      {
         id: 'flddapBSjK9HBgf7Z',
         name: 'Other type',
         type: 'text',
