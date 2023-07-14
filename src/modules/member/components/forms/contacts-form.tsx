@@ -8,7 +8,7 @@ import { FieldArray, Form, FormikProps } from 'formik'
 import TextField from 'src/components/forms/fields/text'
 import SelectField from 'src/components/forms/fields/select-field'
 import PhoneField from 'src/components/forms/fields/phone-field'
-import { isDirty, validateEmail } from 'src/utils/form-validation-methods'
+import { validateEmail } from 'src/utils/form-validation-methods'
 import PrimaryForm from 'src/components/forms/primary-form'
 import FlexRow from 'src/components/layouts/flex-row'
 import DeleteFormEntry from 'src/modules/member/components/delete-form-entry'
@@ -111,21 +111,19 @@ export function ContactsForm({
   }
 
   const handleSubmit = (values: any, formikBag: any) => {
-    if (isDirty(initialValues, values)) {
-      if (member) {
-        handleUpdateContactsData(member, values)
-          .then(() => {
-            onNext()
-          })
-          .catch((err) => {
-            logError(err)
-            setUserError(err?.message)
-            notify('An error occurred while updating member')
-          })
-          .finally(() => {
-            formikBag.setSubmitting(false)
-          })
-      }
+    if (member) {
+      handleUpdateContactsData(member, values)
+        .then(() => {
+          onNext()
+        })
+        .catch((err) => {
+          logError(err)
+          setUserError(err?.message)
+          notify('An error occurred while updating member')
+        })
+        .finally(() => {
+          formikBag.setSubmitting(false)
+        })
     } else {
       formikBag.setSubmitting(false)
       onNext()

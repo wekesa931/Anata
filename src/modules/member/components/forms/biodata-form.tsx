@@ -198,7 +198,7 @@ export function BioDataForm({
         handleSubmit={handleSubmit}
         validationSchema={validationSchema(isChildRegistration)}
       >
-        {({ isValid, isSubmitting, values }) => {
+        {({ isSubmitting, values }) => {
           return (
             <Form>
               <>
@@ -285,9 +285,7 @@ export function BioDataForm({
                     Previous{' '}
                   </PreviousButton>
                   <NextButton
-                    disabled={
-                      !isValid || isFetchingMember || loading || isSubmitting
-                    }
+                    disabled={isFetchingMember || loading || isSubmitting}
                     type="submit"
                     loading={loading}
                   >
