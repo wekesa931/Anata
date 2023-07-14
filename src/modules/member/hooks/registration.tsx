@@ -219,19 +219,24 @@ export const useRegistrationData = () => {
         member.insurances || ({} as DbValueTypes.InsuranceDetailsValues),
         insuranceDetails
       )
-      const variables = {
-        insurances,
-        antaraId: insuranceDetails.antaraId,
-        employer: insuranceDetails.employer,
-      }
-      await updateInsuranceDetails(variables)
-      return database.write(async () => {
-        return member.update((m) => {
-          m.insurances = insuranceDetails
-          m.employer = insuranceDetails.employer
-          m.isSynced = true
-        })
+      const variables = removeEmpty({
+        insurances: insurances.length ? insurances : null,
+        employer: insuranceDetails.employer || null,
       })
+      if (!!variables.insurances && !!variables.employer) {
+        await updateInsuranceDetails({
+          ...variables,
+          antaraId: member.antaraId,
+        })
+        return database.write(async () => {
+          return member.update((m) => {
+            m.insurances = insuranceDetails
+            m.employer = insuranceDetails.employer
+            m.isSynced = true
+          })
+        })
+      }
+      return null
     } catch (error) {
       logError(error)
       throw error

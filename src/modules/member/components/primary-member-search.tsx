@@ -22,10 +22,16 @@ export default function PrimaryMemberSearch({
   const { createMemberInstance } = useRegistrationData()
   const { notify } = useNotifications()
   const { member } = useMember()
-  const initialValue = {
-    displayName: member?.displayName,
-    antaraId: member?.antaraId,
-  } as V2MemberType
+
+  const v =
+    member?.isMinor || !!member?.hasPrimary
+      ? {}
+      : {
+          displayName: member?.displayName,
+          antaraId: member?.antaraId,
+        }
+
+  const initialValue = v as V2MemberType
 
   const handleChange = (value: V2MemberType) => {
     if (value) {

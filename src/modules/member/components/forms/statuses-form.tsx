@@ -9,6 +9,7 @@ import PrimaryButton from 'src/components/buttons/primary'
 import * as yup from 'yup'
 import { useNotifications } from 'src/context/notifications'
 import { isDirty } from 'src/utils/form-validation-methods'
+import ErrorComponent from 'src/components/feedbacks/error-component'
 import { useRegistrationData } from '../../hooks/registration'
 
 type StatusFormProps = {
@@ -39,24 +40,33 @@ const defaultValue = {
 }
 
 const validationSchema = yup.object().shape({
-  assignedHn: yup.object().shape({
-    fullName: yup.string().required('Required'),
-    emailUsername: yup.string().required('Required'),
-    atRecordId: yup.string().required('Required'),
-  }),
-  assignedMe: yup.object().shape({
-    fullName: yup.string().required('Required'),
-    emailUsername: yup.string().required('Required'),
-    atRecordId: yup.string().required('Required'),
-  }),
-  assignedNutritionist: yup.object().shape({
-    fullName: yup.string().required('Required'),
-    emailUsername: yup.string().required('Required'),
-    atRecordId: yup.string().required('Required'),
-  }),
-  onboardStage: yup.string().required('Required'),
-  status: yup.string().required('Required'),
-  antaraId: yup.string().required('Required'),
+  assignedHn: yup
+    .object()
+    .shape({
+      fullName: yup.string().required('Required'),
+      emailUsername: yup.string().required('Required'),
+      atRecordId: yup.string().required('Required'),
+    })
+    .nullable(),
+  assignedMe: yup
+    .object()
+    .shape({
+      fullName: yup.string().required('Required'),
+      emailUsername: yup.string().required('Required'),
+      atRecordId: yup.string().required('Required'),
+    })
+    .nullable(),
+  assignedNutritionist: yup
+    .object()
+    .shape({
+      fullName: yup.string().required('Required'),
+      emailUsername: yup.string().required('Required'),
+      atRecordId: yup.string().required('Required'),
+    })
+    .nullable(),
+  onboardStage: yup.string().nullable(),
+  status: yup.string().nullable(),
+  antaraId: yup.string().required(),
 })
 
 export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
@@ -70,6 +80,7 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
   } = useRegistrationForm()
   const { handleUpdateStatus } = useRegistrationData()
   const { notify } = useNotifications()
+  const [userError, setUserError] = useState<string | null>(null)
 
   useEffect(() => {
     if (member) {
@@ -93,8 +104,12 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
             notify('Statuses and assignees updated')
             onNext()
           })
-          .catch(() => {
+          .catch((error) => {
+            setUserError(error?.message)
             notify('Error updating status')
+          })
+          .finally(() => {
+            formikBag.setSubmitting(false)
           })
       }
     } else {
@@ -112,7 +127,7 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
           handleSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
-          {({ isSubmitting, isValidating, setFieldValue }) => {
+          {({ isSubmitting, isValidating, setFieldValue, isValid }) => {
             return (
               <Form>
                 <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
@@ -128,6 +143,7 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
                     handleBlur={() => {
                       setIsEdited(true)
                     }}
+                    required={false}
                   />
                   <SelectField
                     name="onboardStage"
@@ -185,7 +201,10 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
                     const selected = antaraNutritionists.find(
                       (me) => me.value === v
                     )
-                    setFieldValue('assignedNutritionist.name', selected?.label)
+                    setFieldValue(
+                      'assignedNutritionist.fullName',
+                      selected?.label
+                    )
                     setFieldValue(
                       'assignedNutritionist.atRecordId',
                       selected?.recordId
@@ -195,13 +214,18 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
                     setIsEdited(true)
                   }}
                 />
+                {userError && (
+                  <ErrorComponent handleClose={() => setUserError(null)}>
+                    {userError}
+                  </ErrorComponent>
+                )}
 
                 <div className="mt-6">
                   <PrimaryButton
                     type="submit"
                     fullWidth
                     variant="contained"
-                    disabled={isSubmitting || isValidating}
+                    disabled={isSubmitting || isValidating || !isValid}
                     loading={isSubmitting || isValidating}
                   >
                     Submit

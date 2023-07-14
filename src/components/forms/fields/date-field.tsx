@@ -5,7 +5,12 @@ import { TextField } from '@mui/material'
 import dayjs from 'dayjs'
 import OutlinedField, { OutlinedFieldProps } from './outlined-field'
 
-function DateField(props: OutlinedFieldProps) {
+type DateFieldProps = {
+  minDate?: Date
+  maxDate?: Date
+}
+
+function DateField(props: DateFieldProps & OutlinedFieldProps) {
   const handlValueChange = (d: any, fieldProps: FieldProps) => {
     fieldProps.form.setFieldValue(
       fieldProps.field.name,
@@ -31,7 +36,8 @@ function DateField(props: OutlinedFieldProps) {
           onChange={(d) => {
             handlValueChange(d, fieldProps)
           }}
-          maxDate={new Date()}
+          maxDate={props.maxDate || new Date()}
+          minDate={props.minDate}
           openTo="year"
           renderInput={(params) => (
             <TextField

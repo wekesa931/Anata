@@ -19,6 +19,8 @@ import FlexRow from 'src/components/layouts/flex-row'
 import type { BiodataValues } from 'src/modules/member/types'
 import { useRegistrationForm } from 'src/context/member-registration'
 import { isDirty } from 'src/utils/form-validation-methods'
+import * as yup from 'yup'
+import ErrorComponent from 'src/components/feedbacks/error-component'
 
 type BioDataSectionProps = {
   setIsEdited: (isEdited: boolean) => void
@@ -34,6 +36,39 @@ type InitialStateProps = {
   primaryMember?: Member | null
   isChildRegistration?: boolean
 }
+
+const validationSchema = (isChildRegistration = false) =>
+  yup.object().shape({
+    firstName: yup.string().required('First name is required'),
+    lastName: yup.string().required('Last name is required'),
+    middleName: yup.string(),
+    phone: isChildRegistration
+      ? yup
+          .string()
+          .matches(/^\+\d{3}\d{9}$/, 'Invalid phone format')
+          .nullable()
+      : yup
+          .string()
+          .matches(/^\+\d{3}\d{9}$/, 'Invalid phone format')
+          .nullable(),
+    birthDate: isChildRegistration
+      ? yup
+          .date()
+          .typeError('Birth date is required')
+          .min(
+            dayjs().subtract(18, 'years').toDate(),
+            'Must be 18 years or older'
+          )
+          .required('Birth date is required')
+      : yup
+          .date()
+          .typeError('Birth date is required')
+          .required('Birth date is required'),
+    sex: yup.string().required('Sex is required'),
+    maritalStatus: isChildRegistration
+      ? yup.string().nullable()
+      : yup.string().required('Marital status is required'),
+  })
 
 const extractInitialState = ({
   member,
@@ -95,6 +130,7 @@ export function BioDataForm({
     useRegistrationData()
   const { notify } = useNotifications()
   const { lookupOptions } = useRegistrationForm()
+  const [userError, setUserError] = useState<string | null>(null)
 
   const parseMemberFromResponse = (response: any, phone: string) => {
     if (response) {
@@ -111,6 +147,7 @@ export function BioDataForm({
         })
         .catch((error) => {
           logError(error)
+          setUserError(error?.message)
           notify('An error occurred while creating member')
         })
     } else if (member) {
@@ -137,7 +174,11 @@ export function BioDataForm({
           })
           .catch((err) => {
             logError(err)
+            setUserError(err?.message)
             notify('An error occurred while updating member')
+          })
+          .finally(() => {
+            formikBag.setSubmitting(false)
           })
       }
     } else {
@@ -146,9 +187,17 @@ export function BioDataForm({
     }
   }
 
+  const ageMinDate = isChildRegistration
+    ? dayjs().subtract(18, 'year').toDate()
+    : undefined
+
   return (
     <div className="overflow-scroll">
-      <PrimaryForm initialValues={initialValues} handleSubmit={handleSubmit}>
+      <PrimaryForm
+        initialValues={initialValues}
+        handleSubmit={handleSubmit}
+        validationSchema={validationSchema(isChildRegistration)}
+      >
         {({ isValid, isSubmitting, values }) => {
           return (
             <Form>
@@ -189,6 +238,7 @@ export function BioDataForm({
                         name="birthDate"
                         label="Date of Birth"
                         placeholder="Enter the date of birth"
+                        minDate={ageMinDate}
                       />
                       <SelectField
                         name="sex"
@@ -218,6 +268,12 @@ export function BioDataForm({
                   </div>
                 ) : null}
               </>
+              {userError && (
+                <ErrorComponent handleClose={() => setUserError(null)}>
+                  {userError}
+                </ErrorComponent>
+              )}
+
               {showWizardControls ? (
                 <div className="flex justify-between gap-4 mt-3 grow-0">
                   <PreviousButton
@@ -240,9 +296,7 @@ export function BioDataForm({
                 </div>
               ) : (
                 <PrimaryButton
-                  disabled={
-                    !isValid || isFetchingMember || loading || isSubmitting
-                  }
+                  disabled={isFetchingMember || loading || isSubmitting}
                   type="submit"
                   loading={loading}
                   className="w-full mt-3"

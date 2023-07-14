@@ -27,6 +27,7 @@ import { relationshipOptions } from 'src/config/constants'
 import { useNavigate } from 'react-router-dom'
 import { isDirty } from 'src/utils/form-validation-methods'
 import { sortAlphabetically } from 'src/utils/sort'
+import ErrorComponent from 'src/components/feedbacks/error-component'
 
 type InsuranceDetailsValues = DbValueTypes.InsuranceDetailsValues
 
@@ -162,6 +163,7 @@ export function InsuranceForm({
   const navigate = useNavigate()
   const [businessLocations, setBusinessLocations] = useState<LookupOption[]>([])
   const [departments, setDepartments] = useState<LookupOption[]>([])
+  const [userError, setUserError] = useState<string | null>(null)
 
   useEffect(() => {
     const values = member?.insurances?.insurances.length
@@ -172,20 +174,38 @@ export function InsuranceForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [verificationStatus, member])
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = (values: any, formikBag: any) => {
     const completeSubmission = () => {
-      setCompleted(primaryMember || member)
+      setCompleted(member)
       if (member?.antaraId) navigate(`/member/${member.antaraId}`)
     }
+
+    const parseInsuranceData = (insurances: any[]) => {
+      // remove empty insurances or insurances whose insuranceCompany and insuranceId fields are empty
+      const filteredInsurances = insurances.filter((insurance: any) => {
+        const { insuranceCompany, insuranceId } = insurance
+        return insuranceCompany && insuranceId
+      })
+
+      return filteredInsurances
+    }
+
     if (isDirty(initialValues, values)) {
       if (member) {
-        handleUpdateInsuranceDetails(member, values)
+        handleUpdateInsuranceDetails(member, {
+          ...values,
+          insurances: parseInsuranceData(values.insurances),
+        })
           .then(() => {
             completeSubmission()
           })
           .catch((e) => {
             logError(e)
+            setUserError(e?.message)
             notify('An error occurred while updating insurance details', 2000)
+          })
+          .finally(() => {
+            formikBag.setSubmitting(false)
           })
       }
     } else {
@@ -295,6 +315,7 @@ export function InsuranceForm({
             touched,
             setFieldValue,
             isValid,
+            setSubmitting,
           }: FormikProps<InsuranceDetailsValues>) => {
             return (
               <Form>
@@ -487,13 +508,15 @@ export function InsuranceForm({
                     </>
                   )}
                 </FieldArray>
+                {userError && (
+                  <ErrorComponent handleClose={() => setUserError(null)}>
+                    {userError}
+                  </ErrorComponent>
+                )}
 
                 {showWizardContols ? (
                   <div className="flex justify-between gap-4 mt-3">
-                    <PreviousButton
-                      onClick={onPrev}
-                      disabled={loading || !isValid}
-                    >
+                    <PreviousButton onClick={onPrev} disabled={loading}>
                       {' '}
                       Previous{' '}
                     </PreviousButton>
@@ -517,7 +540,7 @@ export function InsuranceForm({
                         if (!isValid) {
                           notify('Please check the form for errors')
                         } else {
-                          handleSubmit(values)
+                          handleSubmit(values, { setSubmitting })
                         }
                       }}
                     >

@@ -21,12 +21,40 @@ import { useRegistrationForm } from 'src/context/member-registration'
 import { relationshipOptions } from 'src/config/constants'
 import PhoneNumberSearch from 'src/modules/member/components/phone-field-search'
 import { BooleanStatus } from 'src/modules/member/types'
+import * as yup from 'yup'
+import ErrorComponent from 'src/components/feedbacks/error-component'
 
 type ContactsSectionProps = {
   member: Member | null
   isChildRegistration?: boolean
   setIsEdited: (isEdited: boolean) => void
 }
+
+const validationSchema = (isChildRegistration = false) =>
+  yup.object().shape({
+    phones: yup.array().of(
+      yup.object().shape({
+        phone: isChildRegistration
+          ? yup
+              .string()
+              .matches(/^\+\d{3}\d{9}$/, 'Invalid phone format')
+              .nullable()
+          : yup
+              .string()
+              .matches(/^\+\d{3}\d{9}$/, 'Invalid phone format')
+              .required('Phone number is required'),
+        phoneType: yup.string().nullable(),
+      })
+    ),
+    email: yup.string(),
+    emergencyContact: yup.object().shape({
+      name: yup.string(),
+      phoneNumber: yup
+        .string()
+        .matches(/^\+\d{3}\d{9}$/, 'Invalid phone format'),
+      relationship: yup.string(),
+    }),
+  })
 
 export default function ContactsSectionForm(props: ContactsSectionProps) {
   const { onNext, onPrev } = useWizardContext()
@@ -59,6 +87,7 @@ export function ContactsForm({
   const { lookupOptions } = useRegistrationForm()
   const [showForm, setShowForm] = useState<BooleanStatus>({})
   const [isFetching, setIsFetching] = useState<BooleanStatus>({})
+  const [userError, setUserError] = useState<string | null>(null)
 
   const phones =
     member?.phones && member?.phones?.length > 0
@@ -90,7 +119,11 @@ export function ContactsForm({
           })
           .catch((err) => {
             logError(err)
+            setUserError(err?.message)
             notify('An error occurred while updating member')
+          })
+          .finally(() => {
+            formikBag.setSubmitting(false)
           })
       }
     } else {
@@ -101,146 +134,164 @@ export function ContactsForm({
 
   return (
     <div className="overflow-scroll">
-      <PrimaryForm initialValues={initialValues} handleSubmit={handleSubmit}>
-        {({ values, setFieldValue }: FormikProps<any>) => (
-          <Form>
-            <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
-              {' '}
-              Personal contact{' '}
-            </h3>
-            <FieldArray name="phones">
-              {({ push, remove }) => (
-                <>
-                  {values.phones &&
-                    values.phones.length > 0 &&
-                    values.phones.map((p: any, index: number) => (
-                      <div key={index}>
-                        <DeleteFormEntry
-                          title={`Phone ${index + 1}`}
-                          onDelete={() => remove(index)}
-                          showDeleteButton={values.phones.length > 1}
-                        />
-                        <FlexRow>
-                          <PhoneNumberSearch
-                            key={index}
-                            setResponse={(response: any) => {
-                              if (response) {
-                                setFieldValue(
-                                  `phones[${index}].phone`,
-                                  response.phone
-                                )
-                              }
-                            }}
-                            setIsEdited={setIsEdited}
-                            name={`phones.${index}.phone`}
-                            showForm={showForm[index]}
-                            setShowForm={() =>
-                              setShowForm({
-                                ...showForm,
-                                [index]: true,
-                              })
-                            }
-                            isFetching={isFetching[index]}
-                            setIsFetching={(v: boolean) =>
-                              setIsFetching({
-                                ...isFetching,
-                                [index]: v,
-                              })
-                            }
-                            phone={values.phones[index].phone}
-                            fullWidth
-                            required={!isChildRegistration}
-                            currentPhones={values.phones
-                              .filter((x: any, i: number) => i !== index)
-                              .map((y: any) => y.phone)}
-                          />
-                          <div className="mb-8 w-full flex self-start">
-                            <SelectField
-                              name={`phones.${index}.phoneType`}
-                              label="Phone Type"
-                              placeholder="--Select--"
-                              options={lookupOptions?.phoneTypes || []}
-                              required={false}
-                            />
-                          </div>
-                        </FlexRow>
-                      </div>
-                    ))}
-                  <PrimaryButton
-                    variant="text"
-                    onClick={() => {
-                      push({
-                        phone: '',
-                        phoneType: '',
-                        priority: values.phones.length || 0,
-                      })
-                      setShowForm({})
-                      setIsFetching({})
-                    }}
-                    disabled={isFetching[values.phones.length - 1]}
-                    className="normal-case text-sm my-2"
-                  >
-                    <p className="flex justify-start text-left gap-2 text-xs">
-                      +<span>Add another phone number</span>
-                    </p>
-                  </PrimaryButton>
-                </>
-              )}
-            </FieldArray>
-            <div className="mt-2">
-              <TextField
-                name="email"
-                label="Email"
-                placeholder="Enter the email address"
-                type="email"
-                required={false}
-                validate={validateEmail}
-              />
+      <PrimaryForm
+        initialValues={initialValues}
+        handleSubmit={handleSubmit}
+        validationSchema={validationSchema(isChildRegistration)}
+      >
+        {({ values, setFieldValue, isValid }: FormikProps<any>) => {
+          return (
+            <Form>
               <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
                 {' '}
-                Emergency contact{' '}
+                Personal contact{' '}
               </h3>
-              <TextField
-                name="emergencyContact.name"
-                label="Full name"
-                placeholder="Emergency contact name"
-              />
-              <PhoneField
-                name="emergencyContact.phoneNumber"
-                label="Phone number"
-                placeholder="Emergency contact phone number"
-              />
-              <SelectField
-                name="emergencyContact.relationship"
-                label="Relationship"
-                placeholder="--Select--"
-                options={relationshipOptions}
-              />
-            </div>
-
-            {showWizardContols ? (
-              <div className="flex justify-between gap-4 mt-3">
-                <PreviousButton onClick={onPrev} disabled={loading}>
+              <FieldArray name="phones">
+                {({ push, remove }) => (
+                  <>
+                    {values.phones &&
+                      values.phones.length > 0 &&
+                      values.phones.map((p: any, index: number) => (
+                        <div key={index}>
+                          <DeleteFormEntry
+                            title={`Phone ${index + 1}`}
+                            onDelete={() => remove(index)}
+                            showDeleteButton={values.phones.length > 1}
+                          />
+                          <FlexRow>
+                            <PhoneNumberSearch
+                              key={index}
+                              setResponse={(response: any) => {
+                                if (response) {
+                                  setFieldValue(
+                                    `phones[${index}].phone`,
+                                    response.phone
+                                  )
+                                }
+                              }}
+                              setIsEdited={setIsEdited}
+                              name={`phones.${index}.phone`}
+                              showForm={showForm[index]}
+                              setShowForm={() =>
+                                setShowForm({
+                                  ...showForm,
+                                  [index]: true,
+                                })
+                              }
+                              isFetching={isFetching[index]}
+                              setIsFetching={(v: boolean) =>
+                                setIsFetching({
+                                  ...isFetching,
+                                  [index]: v,
+                                })
+                              }
+                              phone={values.phones[index].phone}
+                              fullWidth
+                              required={!isChildRegistration}
+                              currentPhones={values.phones
+                                .filter((x: any, i: number) => i !== index)
+                                .map((y: any) => y.phone)}
+                            />
+                            <div className="mb-8 w-full flex self-start">
+                              <SelectField
+                                name={`phones.${index}.phoneType`}
+                                label="Phone Type"
+                                placeholder="--Select--"
+                                options={lookupOptions?.phoneTypes || []}
+                                required={false}
+                              />
+                            </div>
+                          </FlexRow>
+                        </div>
+                      ))}
+                    <PrimaryButton
+                      variant="text"
+                      onClick={() => {
+                        push({
+                          phone: '',
+                          phoneType: '',
+                          priority: values.phones.length || 0,
+                        })
+                        setShowForm({})
+                        setIsFetching({})
+                      }}
+                      disabled={isFetching[values.phones.length - 1]}
+                      className="normal-case text-sm my-2"
+                    >
+                      <p className="flex justify-start text-left gap-2 text-xs">
+                        +<span>Add another phone number</span>
+                      </p>
+                    </PrimaryButton>
+                  </>
+                )}
+              </FieldArray>
+              <div className="mt-2">
+                <TextField
+                  name="email"
+                  label="Email"
+                  placeholder="Enter the email address"
+                  type="email"
+                  required={false}
+                  validate={validateEmail}
+                />
+                <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
                   {' '}
-                  Previous{' '}
-                </PreviousButton>
-                <NextButton disabled={loading} type="submit" loading={loading}>
-                  Next
-                </NextButton>
+                  Emergency contact{' '}
+                </h3>
+                <TextField
+                  name="emergencyContact.name"
+                  label="Full name"
+                  placeholder="Emergency contact name"
+                  required={false}
+                />
+                <PhoneField
+                  name="emergencyContact.phoneNumber"
+                  label="Phone number"
+                  placeholder="Emergency contact phone number"
+                  required={false}
+                />
+                <SelectField
+                  name="emergencyContact.relationship"
+                  label="Relationship"
+                  placeholder="--Select--"
+                  options={relationshipOptions}
+                  required={false}
+                />
               </div>
-            ) : (
-              <PrimaryButton
-                type="submit"
-                disabled={loading}
-                loading={loading}
-                className="w-full mt-3"
-                fullWidth
-              >
-                Save
-              </PrimaryButton>
-            )}
-          </Form>
-        )}
+
+              {userError && (
+                <ErrorComponent handleClose={() => setUserError(null)}>
+                  {userError}
+                </ErrorComponent>
+              )}
+
+              {showWizardContols ? (
+                <div className="flex justify-between gap-4 mt-3">
+                  <PreviousButton onClick={onPrev} disabled={loading}>
+                    Previous
+                  </PreviousButton>
+                  <NextButton
+                    disabled={loading || !isValid}
+                    type="submit"
+                    loading={loading}
+                  >
+                    Next
+                  </NextButton>
+                </div>
+              ) : (
+                <PrimaryButton
+                  type="submit"
+                  disabled={loading || !isValid}
+                  loading={loading}
+                  className="w-full mt-3"
+                  fullWidth
+                >
+                  Save
+                </PrimaryButton>
+              )}
+            </Form>
+          )
+        }}
       </PrimaryForm>
     </div>
   )

@@ -150,7 +150,7 @@ export class Member extends Model {
   }
 
   get fullName() {
-    return `${this.firstName} ${this.middleName} ${this.lastName}`
+    return `${this.firstName} ${this.middleName || ''} ${this.lastName}`
   }
 
   get allPhones() {
@@ -179,6 +179,10 @@ export class Member extends Model {
     return this.addresses?.addresses?.find(
       (address: any) => address?.addressLabel?.toLowerCase() === 'home'
     )
+  }
+
+  get hasPrimary() {
+    return !!this.primary
   }
 
   get otherAddresses() {

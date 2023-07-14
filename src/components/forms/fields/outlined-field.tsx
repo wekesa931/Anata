@@ -37,7 +37,7 @@ function OutlinedField({
         disabled={disabled}
         className="font-rubik font-medium text-grey-main text-base text-left mb-2"
       >
-        {label} {!required && '(Optional)'}{' '}
+        {label}
       </FormLabel>
 
       <Field name={name} validate={validate}>

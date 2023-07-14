@@ -1,7 +1,6 @@
 import React from 'react'
 import MuiPhoneNumber from 'material-ui-phone-number'
 import { FieldProps } from 'formik'
-import { validatePhone } from 'src/utils/form-validation-methods'
 import OutlinedField, { OutlinedFieldProps } from './outlined-field'
 
 function PhoneField({
@@ -26,12 +25,7 @@ function PhoneField({
   }
 
   return (
-    <OutlinedField
-      label={label}
-      required={required}
-      name={name}
-      validate={validatePhone}
-    >
+    <OutlinedField label={label} required={required} name={name}>
       {({ field, meta, form }: FieldProps) => (
         <MuiPhoneNumber
           {...field}

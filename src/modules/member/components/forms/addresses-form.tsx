@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useWizardContext } from 'src/components/wizard'
 import PrimaryButton, {
   NextButton,
   PreviousButton,
 } from 'src/components/buttons/primary'
-import { FieldArray, Form } from 'formik'
+import { FieldArray, Form, FormikProps } from 'formik'
 import TextField from 'src/components/forms/fields/text'
 import SelectField from 'src/components/forms/fields/select-field'
 import PrimaryForm from 'src/components/forms/primary-form'
@@ -16,6 +16,7 @@ import { useNotifications } from 'src/context/notifications'
 import DeleteFormEntry from 'src/modules/member/components/delete-form-entry'
 import FlexRow from 'src/components/layouts/flex-row'
 import { isDirty } from 'src/utils/form-validation-methods'
+import ErrorComponent from 'src/components/feedbacks/error-component'
 
 type AddressesSectionProps = {
   member: Member | null
@@ -47,6 +48,7 @@ export function AddressesForm({
 }: AddressesFormProps) {
   const { handleUpdateAddresses, loading } = useRegistrationData()
   const { notify } = useNotifications()
+  const [userError, setUserError] = useState<string | null>(null)
 
   const defaultAddressObject = {
     description: '',
@@ -80,7 +82,11 @@ export function AddressesForm({
           })
           .catch((err) => {
             logError(err)
+            setUserError(err?.message)
             notify('An error occurred while updating member')
+          })
+          .finally(() => {
+            formikBag.setSubmitting(false)
           })
       }
     } else {
@@ -92,7 +98,7 @@ export function AddressesForm({
   return (
     <div className="overflow-scroll">
       <PrimaryForm initialValues={initialValues} handleSubmit={handleSubmit}>
-        {({ values }: any) => (
+        {({ values, isValid }: FormikProps<any>) => (
           <Form>
             <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
               Address{' '}
@@ -155,13 +161,23 @@ export function AddressesForm({
                 </>
               )}
             </FieldArray>
+            {userError && (
+              <ErrorComponent handleClose={() => setUserError(null)}>
+                {' '}
+                {userError}{' '}
+              </ErrorComponent>
+            )}
             {showWizardControls ? (
               <div className="flex justify-between gap-4 mt-3">
                 <PreviousButton onClick={onPrev} disabled={loading}>
                   {' '}
                   Previous{' '}
                 </PreviousButton>
-                <NextButton type="submit" disabled={loading} loading={loading}>
+                <NextButton
+                  type="submit"
+                  disabled={loading || !isValid}
+                  loading={loading}
+                >
                   Next
                 </NextButton>
               </div>
@@ -171,7 +187,7 @@ export function AddressesForm({
                   type="submit"
                   fullWidth
                   variant="contained"
-                  disabled={loading}
+                  disabled={loading || !isValid}
                   loading={loading}
                 >
                   Submit
