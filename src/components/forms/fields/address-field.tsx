@@ -156,46 +156,44 @@ function FormPlacesField({
     }
 
     // geocode the place_id
-    geocodeByPlaceId(place_id)
-      .then((results) => {
-        const addressComponents = results[0]?.address_components
+    geocodeByPlaceId(place_id).then((results) => {
+      const addressComponents = results[0]?.address_components
 
-        const residentialCountry =
-          addressComponents.find((addressComponent: any) => {
-            return addressComponent?.types?.includes('country')
-          })?.long_name || ''
+      const residentialCountry =
+        addressComponents.find((addressComponent: any) => {
+          return addressComponent?.types?.includes('country')
+        })?.long_name || ''
 
-        const residentialCounty =
-          addressComponents.find((addressComponent: any) => {
-            return addressComponent?.types?.includes(
-              'administrative_area_level_1'
-            )
-          })?.long_name || ''
+      const residentialCounty =
+        addressComponents.find((addressComponent: any) => {
+          return addressComponent?.types?.includes(
+            'administrative_area_level_1'
+          )
+        })?.long_name || ''
 
-        const residentialTown =
-          addressComponents.find((addressComponent: any) => {
-            return addressComponent?.types?.includes('locality')
-          })?.long_name || ''
+      const residentialTown =
+        addressComponents.find((addressComponent: any) => {
+          return addressComponent?.types?.includes('locality')
+        })?.long_name || ''
 
-        // get the lat, lng values
-        const lat = results[0]?.geometry?.location?.lat()
-        const lng = results[0]?.geometry?.location?.lng()
+      // get the lat, lng values
+      const lat = results[0]?.geometry?.location?.lat()
+      const lng = results[0]?.geometry?.location?.lng()
 
-        fullAddress = {
-          ...fullAddress,
-          residentialCountry,
-          residentialCounty,
-          residentialTown,
-          latitude: lat,
-          longitude: lng,
-        }
-      })
-      .finally(() => {
-        form.setFieldValue(name, fullAddress)
-        if (handleChange) {
-          handleChange(fullAddress)
-        }
-      })
+      fullAddress = {
+        ...fullAddress,
+        residentialCountry,
+        residentialCounty,
+        residentialTown,
+        latitude: lat,
+        longitude: lng,
+      }
+
+      form.setFieldValue(name, fullAddress)
+      if (handleChange) {
+        handleChange(fullAddress)
+      }
+    })
   }
 
   return (

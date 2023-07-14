@@ -26,30 +26,44 @@ export function MemberProvider({ antaraId, children }: Props) {
   const [memberNotFound, setMemberNotFound] = useState<boolean>(false)
   const {
     loading: isLoading,
-    findMemberByAntaraId,
+    findMemberByAntaraIdFromLocalCache,
     hydrateMember,
   } = useMembersData()
   const forceUpdate = useForceUpdate()
 
+  const refreshMember = () => {
+    // Load member from server
+    if (antaraId) {
+      hydrateMember(null, antaraId)
+        .then((hydratedMember) => {
+          setMember(hydratedMember)
+        })
+        .catch((err) => {
+          logError(err)
+          throw new Error(`Failed to load member ${antaraId}`)
+        })
+    }
+  }
+
   useEffect(() => {
     if (antaraId) {
-      setMemberNotFound(false)
-      findMemberByAntaraId(antaraId)
+      findMemberByAntaraIdFromLocalCache(antaraId)
         .then((newMember) => {
           if (newMember) {
             setMember(newMember)
-            if (newMember.needsSync) {
-              hydrateMember(newMember, antaraId)
-                .then((hydratedMember) => {
-                  setMember(hydratedMember)
-                })
-                .catch((err) => {
-                  logError(err)
-                  throw new Error(`Failed to hydrate member ${antaraId}`)
-                })
-            }
+          }
+
+          if (newMember?.needsSync) {
+            hydrateMember(newMember, antaraId)
+              .then((hydratedMember) => {
+                setMember(hydratedMember)
+              })
+              .catch((err) => {
+                logError(err)
+                throw new Error(`Failed to hydrate member ${antaraId}`)
+              })
           } else {
-            throw new Error(`Member with antaraId ${antaraId} not found`)
+            refreshMember()
           }
         })
         .catch((e) => {

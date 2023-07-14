@@ -62,7 +62,7 @@ export const useMembersData = () => {
     return null
   }
 
-  const findMemberByAntaraId = async (antaraId: string) => {
+  const findMemberByAntaraIdFromLocalCache = async (antaraId: string) => {
     const currentMember = await membersCollection
       .query(Q.where('antaraId', antaraId), Q.take(1))
       .fetch()
@@ -70,19 +70,13 @@ export const useMembersData = () => {
     if (currentMember.length) {
       return currentMember[0]
     }
-
-    const member = await hydrateMember(null, antaraId)
-    if (member) {
-      return member
-    }
-
     return null
   }
 
   return {
     createMemberInstance,
     createDefaultMemberInstance,
-    findMemberByAntaraId,
+    findMemberByAntaraIdFromLocalCache,
     hydrateMember,
     loading,
     membersCollection,
