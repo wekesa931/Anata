@@ -40,6 +40,7 @@ function TextField(props: TextFieldProps) {
             onChange={(e: any) => {
               handleValueChange(e, fieldProps)
             }}
+            disabled={props.disabled}
           />
           <FormHelperText error={!!fieldProps.meta.error}>
             {!!fieldProps.meta.error && !!fieldProps.meta.error

@@ -113,9 +113,7 @@ const defaultInsurance = (primaryMember: Member | undefined) => ({
       insuranceCompany: '',
       insuranceId: '',
       isPrincipalMember: primaryMember ? 'no' : 'yes',
-      principalMemberInsuranceId: primaryMember?.principalInsuranceId
-        ? ''
-        : undefined,
+      principalMemberInsuranceId: primaryMember?.principalInsuranceId,
       relationshipToPrincipalMember: '',
       priority: 0,
       verificationStatus: 'unverified',
@@ -191,13 +189,22 @@ export function InsuranceForm({
     }
   }
 
-  const shouldVerifyInsurance = (touched: any, index: number) => {
+  const shouldVerifyInsurance = (
+    touched: any,
+    index: number,
+    values: any = {}
+  ) => {
     // check if either insuranceId or insuranceCompany field of a given insurances index object has been touched
+    const hasFilledValues = () => {
+      const insurance = values?.insurances?.[index]
+      return insurance && insurance.insuranceId && insurance.insuranceCompany
+    }
     if (touched.insurances && touched.insurances[index]) {
-      return (
+      const touchedFields =
         touched.insurances[index].insuranceCompany ||
         touched.insurances[index].insuranceId
-      )
+
+      return touchedFields && hasFilledValues()
     }
 
     return false
@@ -312,6 +319,7 @@ export function InsuranceForm({
                     setBusinessLocations(b)
                     setDepartments(d)
                   }}
+                  required={!primaryMember}
                 />
                 {!!businessLocations.length && (
                   <SelectField
@@ -369,20 +377,26 @@ export function InsuranceForm({
                               options={insuranceCompanies || []}
                               name={`insurances.${index}.insuranceCompany`}
                               handleBlur={() => {
-                                if (shouldVerifyInsurance(touched, index)) {
+                                if (
+                                  shouldVerifyInsurance(touched, index, values)
+                                ) {
                                   verifyInsurance(values, p, index)
                                 }
                               }}
+                              required={false}
                             />
                             <TextField
                               label="Insurance ID"
                               placeholder="Enter insurance ID"
                               name={`insurances.${index}.insuranceId`}
                               handleBlur={() => {
-                                if (shouldVerifyInsurance(touched, index)) {
+                                if (
+                                  shouldVerifyInsurance(touched, index, values)
+                                ) {
                                   verifyInsurance(values, p, index)
                                 }
                               }}
+                              required={false}
                             />
                             <>
                               {hasError[index] ? (
@@ -428,6 +442,11 @@ export function InsuranceForm({
                                   label="Principal member insurance ID"
                                   name={`insurances.${index}.principalMemberInsuranceId`}
                                   placeholder="Enter principal's member insurance ID"
+                                  disabled={
+                                    !!primaryMember?.principalInsuranceId &&
+                                    !!values.insurances[index]
+                                      ?.principalMemberInsuranceId
+                                  }
                                 />
 
                                 <SelectField

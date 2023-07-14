@@ -113,9 +113,9 @@ export function AddressesForm({
                           <AddressField
                             label="Address"
                             name={`addresses.${index}.address`}
-                            required
                             initialValue={values.addresses[index].address}
                             id={`address-${index}`}
+                            required={false}
                           />
                           <SelectField
                             label="Address Label"
@@ -125,6 +125,7 @@ export function AddressesForm({
                               { value: 'Home', label: 'Home' },
                               { value: 'Office', label: 'Office' },
                             ]}
+                            required={false}
                           />
                         </FlexRow>
                         <TextField

@@ -212,6 +212,7 @@ function FormPlacesField({
           autoComplete
           includeInputInList
           filterSelectedOptions
+          noOptionsText="Type for suggestions"
           size="small"
           value={value}
           fullWidth

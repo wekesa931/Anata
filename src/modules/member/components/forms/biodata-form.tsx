@@ -172,6 +172,7 @@ export function BioDataForm({
                           options={lookupOptions?.tags || []}
                           placeholder="--Select--"
                           multiple
+                          required={false}
                         />
                       </>
                     ) : null}

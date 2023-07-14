@@ -104,7 +104,11 @@ function RegistrationForm({
         )}
       </BiodataSection>
       <ContactsSection>
-        <ContactsForm member={member} setIsEdited={setIsEdited} />
+        <ContactsForm
+          member={member}
+          setIsEdited={setIsEdited}
+          isChildRegistration={formName === 'child'}
+        />
       </ContactsSection>
       <AddressSection>
         <AddressesForm member={member} />

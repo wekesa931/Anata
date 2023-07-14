@@ -15,6 +15,7 @@ export type OutlinedFieldProps = {
   options?: { label: string; value: string }[] | string[]
   multiple?: boolean
   type?: string
+  disabled?: boolean
 }
 
 type OutlinedFieldPropType = {
@@ -28,10 +29,14 @@ function OutlinedField({
   children,
   name,
   validate,
+  disabled = false,
 }: OutlinedFieldProps & OutlinedFieldPropType) {
   return (
     <FormControl fullWidth={fullWidth} required={required}>
-      <FormLabel className="font-rubik font-medium text-grey-main text-base text-left mb-2">
+      <FormLabel
+        disabled={disabled}
+        className="font-rubik font-medium text-grey-main text-base text-left mb-2"
+      >
         {label} {!required && '(Optional)'}{' '}
       </FormLabel>
 
