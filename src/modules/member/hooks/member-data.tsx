@@ -59,7 +59,7 @@ export const useMembersData = () => {
       return createMemberInstance(member, memberData)
     }
 
-    return null
+    throw new Error(`Failed to load member ${antaraId}`)
   }
 
   const findMemberByAntaraIdFromLocalCache = async (antaraId: string) => {

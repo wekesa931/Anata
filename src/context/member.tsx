@@ -32,7 +32,7 @@ export function MemberProvider({ antaraId, children }: Props) {
   const forceUpdate = useForceUpdate()
 
   const refreshMember = () => {
-    // Load member from server
+    // Load member from server and hydrate local cache
     if (antaraId) {
       hydrateMember(null, antaraId)
         .then((hydratedMember) => {
@@ -40,7 +40,7 @@ export function MemberProvider({ antaraId, children }: Props) {
         })
         .catch((err) => {
           logError(err)
-          throw new Error(`Failed to load member ${antaraId}`)
+          setMemberNotFound(true)
         })
     }
   }
@@ -66,10 +66,7 @@ export function MemberProvider({ antaraId, children }: Props) {
             refreshMember()
           }
         })
-        .catch((e) => {
-          logError(e)
-          setMemberNotFound(true)
-        })
+        .catch(logError)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [antaraId])
