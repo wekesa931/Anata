@@ -63,6 +63,23 @@ function SummarySection({ member }: SummarySectionProps) {
           <Item title="Gender" child={member?.sex} />
           <Item title="Marital status" child={member?.maritalStatus} />
         </GridItems>
+        <GridItems single>
+          <Item
+            title="Tags"
+            child={
+              <div className="flex flex-wrap gap-2">
+                {(member?.tags || []).map((tag, index) => (
+                  <span
+                    key={index}
+                    className="bg-blue-10 text-center rounded-md text-dark-blue-100 py-1 px-1.5 font-rubik text-sm"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            }
+          />
+        </GridItems>
       </SectionItem>
     </div>
   ) : (
