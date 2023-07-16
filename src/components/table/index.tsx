@@ -146,10 +146,10 @@ function Table({
                 >
                   {column.info ? (
                     <Tooltip title={column.info}>
-                      <>
-                        <p className="text-small text-bold">{column.name}</p>
-                        <p className="text-tiny text-bold">{column.format}</p>
-                      </>
+                      <div>
+                          <p className="text-small text-bold">{column.name}</p>
+                          <p className="text-tiny text-bold">{column.format}</p>
+                      </div>
                     </Tooltip>
                   ) : (
                     <>
@@ -179,7 +179,9 @@ function Table({
                     )}
                   >
                     <Tooltip title="Expand Record">
-                      <ExpandIcon />
+                      <div>
+                        <ExpandIcon />
+                      </div>
                     </Tooltip>
                   </td>
                   {columns.map((column, idx) => {
