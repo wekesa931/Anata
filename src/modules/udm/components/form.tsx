@@ -63,7 +63,7 @@ function RefinedFileMetaForm({ uploadStart, uploadDocument, options }: IProps) {
     if (shareChecked && !!shareFolder) {
       meta = {
         ...meta,
-        shareWith: [member['Antara ID']],
+        shareWith: [member?.antaraId],
         folder: shareFolder,
       }
     }
