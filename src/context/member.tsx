@@ -32,6 +32,7 @@ export function MemberProvider({ antaraId, children }: Props) {
   const forceUpdate = useForceUpdate()
 
   const refreshMember = () => {
+    setMemberNotFound(false)
     // Load member from server and hydrate local cache
     if (antaraId) {
       hydrateMember(null, antaraId)
