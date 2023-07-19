@@ -166,7 +166,7 @@ function FormField(customField: CustomFieldProps) {
               <SearchField
                 search={searchQuery(tableId || '')}
                 handleChange={(v: any) => {
-                  form.setFieldValue(field.name, v?.id)
+                  form.setFieldValue(field.name, [v?.id])
                 }}
                 initialValue={value}
                 label=""

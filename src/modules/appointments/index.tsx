@@ -31,7 +31,6 @@ function Appointments() {
     'All',
     'Needed',
     'Scheduled',
-    'Rescheduled by member',
     'Completed',
     'Cancelled',
     'Missed',
@@ -44,7 +43,6 @@ function Appointments() {
     'Status',
     'start_date_time',
     'Comments',
-    'Providers',
     'Calendly Reschedule URL',
     'Record ID',
     'Assignee',
@@ -64,25 +62,6 @@ function Appointments() {
 
   const { allAntaraStaffs, loading } = useAntaraStaff()
 
-  const {
-    data: providersData,
-    isLoading: providersLoading,
-    isError: providersError,
-  } = useAirtableFetch(`providers/list?`)
-
-  const getAllProviders = () => {
-    const providersList: any = []
-    Object.entries(providersData).forEach(([value, obj]) => {
-      // eslint-disable-next-line
-      for (const key in obj) {
-        if (key === 'Specialist Summary') {
-          providersList.push(`${value}: ${obj[key]}`)
-        }
-      }
-    })
-    return providersList
-  }
-
   const APPOINTMENT_FIELDS: AirtableField[] = [
     {
       name: 'Comments',
@@ -90,29 +69,17 @@ function Appointments() {
     },
     {
       name: 'start_date_time',
-      helperText:
-        'PLEASE ENTER TIME IN UTC+0 (Kenya time is UTC+3) - If your meeting is at 3pm on friday, enter 12pm in this form please.',
+      helperText: 'Please enter time in UTC+3 (Kenya time zone)',
       type: 'datetime',
-    },
-    {
-      name: 'Providers',
-      type: 'single-select',
-      options: getAllProviders().map((type: any) => ({
-        label: type.split(':')[1],
-        value: type.split(':')[0],
-      })),
     },
     {
       name: 'Status',
       type: 'single-select',
-      options: [
-        'Needed',
-        'Scheduled',
-        'Rescheduled by member',
-        'Completed',
-        'Missed',
-        'Cancelled',
-      ].map((type) => ({ label: type, value: type })),
+      options: ['Needed', 'Scheduled', 'Completed', 'Missed', 'Cancelled'].map(
+        (type) => ({ label: type, value: type })
+      ),
+      helperText:
+        'Needed: if the appointment has no date and no time and you want our team to schedule it\nScheduled: we know the date and time and it is assigned\nMissed: the member did not pick up the call or picked up but could not do the call without giving a new date and time, we will need to reschedule\nComplete: successful interaction/ consultation has been done (on phone or in person)\nCanceled: we, Antara, decides that the appointment is not relevant anymore.',
     },
     {
       name: 'Assignee',
@@ -161,20 +128,18 @@ function Appointments() {
     id: string
     fields: any
   }) => {
-    const provCheck = appointment.fields.Providers
-      ? [appointment.fields.Providers]
-      : null
     await airtableFetch('appointments', 'post', {
       id: appointment.id,
       fields: {
         ...appointment.fields,
-        start_date_time: dayjs(
-          appointment.fields.start_date_time
-        ).toISOString(),
-        Providers: provCheck,
-        Assignee: appointment.fields.Assignee
-          ? [appointment.fields.Assignee]
-          : [],
+        ...(appointment.fields.start_date_time && {
+          start_date_time: dayjs(
+            appointment.fields.start_date_time
+          ).toISOString(),
+        }),
+        ...(appointment.fields.Assignee && {
+          Assignee: [appointment.fields.Assignee],
+        }),
       },
     })
       .then((res) => {
@@ -190,12 +155,13 @@ function Appointments() {
   }
 
   const includeFieldTypes = (appointment: any) => {
-    return Object.keys(appointment).map((key) => {
+    const parsedFields: any[] = []
+    Object.keys(appointment).forEach((key) => {
       const field = APPOINTMENT_FIELDS.find(({ name }) => name === key)
 
       // process the search fields (facilities and specialists)
       if (field) {
-        const searchKeyName = SearchFieldsNameMap[field.name]
+        const searchKeyName = SearchFieldsNameMap[field.name] // Facilities name from Provider base
         if (searchKeyName) {
           const name = appointment[searchKeyName]?.length
             ? appointment[searchKeyName][0]
@@ -206,21 +172,23 @@ function Appointments() {
             displayName: name,
           }
 
-          return {
+          parsedFields.push({
             ...field,
             value,
-          }
-        }
-        return {
-          value:
-            field.type === 'datetime'
-              ? dayjs(appointment[key]).format('YYYY-MM-DDTHH:mm')
-              : appointment[key],
-          ...field,
+          })
+        } else {
+          parsedFields.push({
+            value:
+              field.type === 'datetime'
+                ? dayjs(appointment[key]).format('YYYY-MM-DDTHH:mm')
+                : appointment[key],
+            ...field,
+          })
         }
       }
-      return appointment
     })
+
+    return parsedFields
   }
 
   React.useEffect(() => {
@@ -249,7 +217,7 @@ function Appointments() {
       )
     }
 
-    if (data && providersData) {
+    if (data) {
       const mappedResponse = data?.map((d: any) => {
         return {
           data: includeFieldTypes(d),
@@ -262,7 +230,7 @@ function Appointments() {
       setFilteredAppointments(mappedResponse)
     }
     // eslint-disable-next-line
-  }, [data, providersData])
+  }, [data])
 
   const getAppointmentDate = (appointment: any) => {
     return dayjs(
@@ -338,13 +306,13 @@ function Appointments() {
           modalTitle="Appointment"
         />
       )}
-      {isLoading && providersLoading && loading && (
+      {isLoading && loading && (
         <div className="d-flex flex-direction-column flex-align-center margin-top-32">
           <Icon name="loading" />
           <p className="text-small">Loading Appointments...</p>
         </div>
       )}
-      {isError && providersError && (
+      {isError && (
         <p className="text-small text-danger margin-top-24">
           An error occurred while fetching appointments, please refresh the
           page.
@@ -355,3 +323,4 @@ function Appointments() {
 }
 
 export default Appointments
+//
