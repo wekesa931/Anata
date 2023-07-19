@@ -187,6 +187,18 @@ export const generatePayload = (
       `The following fields are missing on airtable and have not been saved ${affectedFields}`
     )
   }
+  /**
+   * Remove fields that are not defined in the local schema
+   */
+  const currentFieldOptionsInLocalSchema = Object.values(localFieldsMap).map(
+    (f: any) => f.id
+  )
+  Object.keys(mappedPayload)?.forEach((k) => {
+    if (!currentFieldOptionsInLocalSchema.includes(k)) {
+      delete mappedPayload[k]
+    }
+  })
+
   return {
     fields: mappedPayload,
   }
