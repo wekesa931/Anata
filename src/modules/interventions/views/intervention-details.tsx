@@ -210,7 +210,7 @@ function InterventionSection() {
       setInterventions(intervention)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter, member, interventionsCollection])
+  }, [filter, member, interventionsCollection, loading])
 
   return (
     <>

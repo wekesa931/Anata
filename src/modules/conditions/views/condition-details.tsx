@@ -209,7 +209,7 @@ function ConditionsSection() {
       setConditions(condition)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter, member, conditionsCollection])
+  }, [filter, member, conditionsCollection, loading])
 
   return (
     <>
