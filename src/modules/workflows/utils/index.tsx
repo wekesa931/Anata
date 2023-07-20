@@ -220,6 +220,7 @@ export const initialFormValues = (
   workflow: any = null
 ): Record<string, any> => {
   const isOnsite = workflow === 'Onsite'
+  const homeAddress = member?.homeAddress?.address || null
   return {
     'BP Mon': {
       Date: dayjs().format('YYYY-MM-DD'),
@@ -263,6 +264,8 @@ export const initialFormValues = (
       Beneficiary: member?.fullName,
       Status: 'Scheduled',
       Creator: [user.userAirtableId],
+      Location: homeAddress?.description,
+      Contact: member?.phone,
     },
     Appointments: {
       'Missed #': 0,

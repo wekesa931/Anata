@@ -14,8 +14,20 @@ function Logistic() {
       key: 'Due date',
     },
     { name: 'Type', format: '', key: 'Type' },
-    { name: 'Status', format: '', key: 'Status' },
+    {
+      name: 'Status',
+      format: '',
+      key: 'Status',
+      info: `Needed: no date agreed with member yet, not assigned to a rider yet,
+             Scheduled: date is agreed, no rider assigned yet,
+             Assigned: date is agreed and riders is assigned,
+             Completed: is done by rider,
+             Missed: by member or by rider,
+             Canceled: by antara`,
+    },
     { name: 'Field notes', format: '', key: 'Field notes' },
+    { name: 'Missed #', format: '', key: 'Missed #' },
+    { name: 'Missed by', format: '', key: 'Missed by' },
   ]
 
   return (

@@ -13437,6 +13437,15 @@ export default [
         required: false,
         helper:
           'When the task is not linked to a member, you can add a beneficiary, who is the person that will received or delivered the item associated to the task.',
+        conditionType: '',
+        parentKey: 'Type',
+        parentValues: [''],
+        condition: (values: any) => {
+          if (Array.isArray(values.Type)) {
+            return !['Admin task'].some((r) => values.Type.includes(r))
+          }
+          return !['Admin task'].includes(values.Type)
+        },
       },
       {
         id: 'fldco9YyzkrTZgNad',
@@ -13502,7 +13511,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          "ONLY specify the location of the task when the task should not happen at the member's known address. If this field is empty the member's address will be automatically used by the system as the location to perform the task\n\nKeep empty if you want us to perform the task at member's known location",
+          'Please enter the location where the member wants the task to be completed',
       },
       {
         id: 'fld26RqzUFPlXMSSM',
@@ -13517,7 +13526,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'If the task is linked to one member, the system will automatically fetch the known phone number but it is better to confirm with the member the phone number that can be used on the day of the task.',
+          'Please enter the phone number where we can reach the member on the day of the task',
       },
       {
         id: 'fld0bdmt3Wd6gtpzi',
@@ -13531,7 +13540,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: 'Select "To do" - (you do not have the choice anyway ;) )',
+        helper:
+          'Please only select Needed or Scheduled, the other statuses are managed by the system or by the log admin\n  * Needed: no date agreed with member yet, not assigned to a rider yet\n  * Scheduled: date is agreed, no rider assigned yet\n  * Assigned: date is agreed and riders is assigned\n  * Completed: is done by rider\n  * Missed: by member or by rider\n  * Canceled: by antara',
       },
       {
         id: 'fldy74OAxHa7oZIny',
@@ -13550,7 +13560,7 @@ export default [
       },
       {
         id: 'fldqIcXvtcB2w3D83',
-        name: 'Time (test)',
+        name: 'Time',
         type: 'date',
         format: '',
         isDateTime: true,
