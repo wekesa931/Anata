@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import {
   Route,
-  BrowserRouter,
   Routes as SwitchRoutes,
   Navigate,
   useLocation,
@@ -38,7 +37,7 @@ function ProtectedRoute({ children }: any) {
       <MemberProvider antaraId={recId}>
         <div className="flex h-full">
           <div className="flex flex-col flex-1 overflow-auto bg-white">
-            <NavBar />
+            {!!user.userAirtableId && <NavBar />}
             <div className="bg-white flex-1 h-dashboard-height">{children}</div>
           </div>
           <MemberRegistration />
@@ -69,14 +68,7 @@ function UserNotFound() {
       </p>
 
       <div className="flex justify-center items-center gap-4">
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => window.location.reload()}
-        >
-          Refresh
-        </Button>
-        <Button variant="text" onClick={() => logout()}>
+        <Button variant="contained" onClick={() => logout()}>
           Logout
         </Button>
       </div>
@@ -102,50 +94,48 @@ function PageNotFound() {
 
 function Routes() {
   return (
-    <BrowserRouter>
-      <FcmProvider>
-        <CallProvider>
-          <CallConsole />
-          <SwitchRoutes>
-            <Route path="/login" element={<Login />} />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <MainDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/member"
-              element={
-                <ProtectedRoute>
-                  <MainDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/member/:antaraId"
-              element={
-                <ProtectedRoute>
-                  <BeneDashboard />
-                </ProtectedRoute>
-              }
-            />
+    <FcmProvider>
+      <CallProvider>
+        <CallConsole />
+        <SwitchRoutes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <MainDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/member"
+            element={
+              <ProtectedRoute>
+                <MainDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/member/:antaraId"
+            element={
+              <ProtectedRoute>
+                <BeneDashboard />
+              </ProtectedRoute>
+            }
+          />
 
-            <Route
-              path="/user-not-found"
-              element={
-                <ProtectedRoute>
-                  <UserNotFound />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="*" element={<PageNotFound />} />
-          </SwitchRoutes>
-        </CallProvider>
-      </FcmProvider>
-    </BrowserRouter>
+          <Route
+            path="/user-not-found"
+            element={
+              <ProtectedRoute>
+                <UserNotFound />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<PageNotFound />} />
+        </SwitchRoutes>
+      </CallProvider>
+    </FcmProvider>
   )
 }
 

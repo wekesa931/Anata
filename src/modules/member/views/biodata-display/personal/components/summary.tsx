@@ -50,19 +50,6 @@ function SummarySection({ member }: SummarySectionProps) {
         handleEdit={() => setShowUpdateForm(true)}
         editable
       >
-        <GridItems fullCols>
-          <Item title="First name" child={member?.firstName || '-'} />
-          <Item title="Middle name" child={member?.middleName || '-'} />
-          <Item title="Last name" child={member?.lastName || '-'} />
-        </GridItems>
-        <GridItems fullCols>
-          <Item
-            title="DOB"
-            child={member?.birthDate ? formatDOB(member?.birthDate) : '-'}
-          />
-          <Item title="Gender" child={member?.sex} />
-          <Item title="Marital status" child={member?.maritalStatus} />
-        </GridItems>
         <GridItems single>
           <Item
             title="Tags"
@@ -79,6 +66,19 @@ function SummarySection({ member }: SummarySectionProps) {
               </div>
             }
           />
+        </GridItems>
+        <GridItems fullCols>
+          <Item title="First name" child={member?.firstName || '-'} />
+          <Item title="Middle name" child={member?.middleName || '-'} />
+          <Item title="Last name" child={member?.lastName || '-'} />
+        </GridItems>
+        <GridItems fullCols>
+          <Item
+            title="DOB"
+            child={member?.birthDate ? formatDOB(member?.birthDate) : '-'}
+          />
+          <Item title="Gender" child={member?.sex} />
+          <Item title="Marital status" child={member?.maritalStatus} />
         </GridItems>
       </SectionItem>
     </div>

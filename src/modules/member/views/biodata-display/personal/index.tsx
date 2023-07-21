@@ -14,9 +14,9 @@ type PersonalSectionProps = {
 function PersonalSection({ member }: PersonalSectionProps) {
   return (
     <div className="h-full w-full flex flex-col gap-2 p-2">
+      <StatusesSection member={member} />
       <SummarySection member={member} />
       <ContactsSection member={member} />
-      <StatusesSection member={member} />
       <InsuranceSection member={member} />
       <AddressesSection member={member} />
       <DependentsSection member={member} />

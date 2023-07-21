@@ -7,6 +7,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { StyledEngineProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
+import { BrowserRouter } from 'react-router-dom'
 import Routes from './routes'
 
 function App() {
@@ -16,9 +17,11 @@ function App() {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <ErrorBoundary>
           <div className="bg-neutral-base h-full">
-            <AppContexts>
-              <Routes />
-            </AppContexts>
+            <BrowserRouter>
+              <AppContexts>
+                <Routes />
+              </AppContexts>
+            </BrowserRouter>
           </div>
         </ErrorBoundary>
       </LocalizationProvider>

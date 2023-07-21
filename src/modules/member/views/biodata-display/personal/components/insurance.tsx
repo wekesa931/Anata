@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { DbValueTypes } from 'src/modules/member/types'
 import {
   SectionItem,
@@ -8,12 +8,20 @@ import {
   ItemChild,
 } from 'src/components/layouts/display-items.component'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
-import { Box, Divider } from '@mui/material'
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Divider,
+  Tooltip,
+} from '@mui/material'
 import { formatCurreny } from 'src/modules/member/utils'
 import { PortalForm } from 'src/modules/member/components/update-forms'
 import { InsuranceForm } from 'src/modules/member/components/forms/insurance-form'
 import { useNotifications } from 'src/context/notifications'
 import type { Member } from 'src/modules/member/db/models'
+import { ExpandMoreOutlined } from '@mui/icons-material'
 
 function InsuranceSectionItem({
   insuranceItem,
@@ -21,6 +29,7 @@ function InsuranceSectionItem({
   insuranceItem: DbValueTypes.InsuranceType
 }) {
   const benefits = insuranceItem?.benefits || []
+  const [expanded, setExpanded] = useState<boolean>(false)
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -34,18 +43,28 @@ function InsuranceSectionItem({
           <p className="text-base text-dark-blue-100 text-center font-medium">
             {insuranceItem?.insuranceId}
           </p>
-          <span
-            className={`
-              text-xs font-rubik font-medium text-center rounded-lg p-1 uppercase
-              ${
-                insuranceItem?.verificationStatus === 'VERIFIED'
-                  ? 'text-green-100 bg-green-10'
-                  : 'text-red-100 bg-red-10'
-              }
-            `}
+          <Tooltip
+            title={
+              insuranceItem?.verificationStatus === 'VERIFIED'
+                ? 'This member insurance ID has been verified'
+                : 'We could not find this member insurance ID'
+            }
+            placement="top"
+            arrow
           >
-            {insuranceItem?.verificationStatus}
-          </span>
+            <span
+              className={`
+                text-xs font-rubik font-medium text-center rounded-lg p-1 uppercase
+                ${
+                  insuranceItem?.verificationStatus === 'VERIFIED'
+                    ? 'text-green-100 bg-green-10'
+                    : 'text-red-100 bg-red-10'
+                }
+              `}
+            >
+              {insuranceItem?.verificationStatus}
+            </span>
+          </Tooltip>
         </div>
       </div>
       <GridItems single>
@@ -54,29 +73,52 @@ function InsuranceSectionItem({
           child={insuranceItem?.healthPolicy || '-'}
         />
       </GridItems>
-      <GridItems>
-        <ItemTitle title="Benefit" />
-        <ItemTitle title="Balance" />
-      </GridItems>
+
       {benefits.length === 0 ? (
-        <GridItems>
-          <ItemChild child="-" />
-          <ItemChild child="-" />
-        </GridItems>
-      ) : (
         <>
-          {benefits.map((benefit, index) => (
-            <GridItems key={benefit?.id || index}>
-              <ItemChild child={benefit?.benefit?.name || '-'} />
-              <ItemChild
-                child={formatCurreny(
-                  (benefit?.benefit?.limit || 0) -
-                    (benefit?.utilizedPortion || 0)
-                )}
-              />
-            </GridItems>
-          ))}
+          <GridItems>
+            <ItemTitle title="Benefit" />
+            <ItemTitle title="Balance" />
+          </GridItems>
+          <GridItems>
+            <ItemChild child="-" />
+            <ItemChild child="-" />
+          </GridItems>
         </>
+      ) : (
+        <Accordion
+          expanded={expanded}
+          onChange={() => setExpanded(!expanded)}
+          className="block border rounded-xl border-solid border-dark-blue-10 my-1 mb-4 shadow-none"
+          sx={{
+            '&:before': {
+              display: 'none',
+            },
+          }}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreOutlined />}>
+            <ItemTitle title="Benefits" />
+          </AccordionSummary>
+          <AccordionDetails>
+            <>
+              <GridItems>
+                <ItemTitle title="Benefit" />
+                <ItemTitle title="Balance" />
+              </GridItems>
+              {benefits.map((benefit, index) => (
+                <GridItems key={benefit?.id || index}>
+                  <ItemChild child={benefit?.benefit?.name || '-'} />
+                  <ItemChild
+                    child={formatCurreny(
+                      (benefit?.benefit?.limit || 0) -
+                        (benefit?.utilizedPortion || 0)
+                    )}
+                  />
+                </GridItems>
+              ))}
+            </>
+          </AccordionDetails>
+        </Accordion>
       )}
       <GridItems single>
         <Item

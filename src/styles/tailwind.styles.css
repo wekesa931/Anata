@@ -1484,9 +1484,9 @@ body,
     'Noto Color Emoji' !important;
 }
 
-.text-4xl {
-  font-size: 2.25rem !important;
-  line-height: 2.5rem !important;
+.text-3xl {
+  font-size: 1.875rem !important;
+  line-height: 2.25rem !important;
 }
 
 .text-\[10px\] {
@@ -1520,11 +1520,6 @@ body,
 .text-xs {
   font-size: 0.75rem !important;
   line-height: 1rem !important;
-}
-
-.text-3xl {
-  font-size: 1.875rem !important;
-  line-height: 2.25rem !important;
 }
 
 .font-bold {

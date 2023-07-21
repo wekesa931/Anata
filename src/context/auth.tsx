@@ -7,6 +7,7 @@ import { User } from 'src/types/user'
 import keys from 'src/config/constants'
 import useAntaraStaff from 'src/hooks/antara-staff.hook'
 import { logError } from 'src/utils/logging/logger'
+import { useNavigate } from 'react-router-dom'
 
 dayjs.extend(utc)
 type AuthContextType = {
@@ -44,6 +45,7 @@ function AuthProvider({ user, children }: any) {
   }
 
   const isLoggedIn = () => !!currentUser
+  const navigate = useNavigate()
 
   const providerValue = React.useMemo(
     () => ({
@@ -66,7 +68,7 @@ function AuthProvider({ user, children }: any) {
               userAirtableId: data?.atRecordId,
             })
           } else {
-            window.location.href = '/user-not-found'
+            navigate('/user-not-found')
           }
         })
         .catch((e) => {
