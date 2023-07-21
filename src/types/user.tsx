@@ -8,4 +8,5 @@ export type User = {
   token_type: any
   exp: number
   name: string
+  userAirtableId?: string
 } | null

@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 const GET_ANTARA_STAFF = gql`
-  query {
-    antaraStaff {
+  query getAntaraStaff($email: String) {
+    antaraStaff(email: $email) {
       edges {
         node {
           id

@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { useGoogleLogout } from 'react-google-login'
 import storage from 'src/storage/secure-storage'
 import { User } from 'src/types/user'
 import keys from 'src/config/constants'
+import useAntaraStaff from 'src/hooks/antara-staff.hook'
+import { logError } from 'src/utils/logging/logger'
 
 dayjs.extend(utc)
 type AuthContextType = {
@@ -33,6 +35,7 @@ function AuthProvider({ user, children }: any) {
     loggedInUser = JSON.parse(loggedInUser)
   }
 
+  const { getStaffByUser } = useAntaraStaff()
   const [currentUser, setCurrentUser] = useState(user || loggedInUser)
   const logout = () => {
     storage.removeAll()
@@ -52,6 +55,28 @@ function AuthProvider({ user, children }: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentUser]
   )
+
+  useEffect(() => {
+    if (currentUser && !currentUser.userAirtableId && currentUser.email) {
+      getStaffByUser(currentUser)
+        .then((data) => {
+          if (data) {
+            setCurrentUser({
+              ...currentUser,
+              userAirtableId: data?.atRecordId,
+            })
+          } else {
+            window.location.href = '/user-not-found'
+          }
+        })
+        .catch((e) => {
+          logError(e)
+          logout()
+        })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser])
 
   return (
     <AuthContext.Provider value={providerValue}>

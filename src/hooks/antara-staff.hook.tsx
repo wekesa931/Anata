@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useLazyQuery } from '@apollo/client'
 import { GET_ANTARA_STAFF } from 'src/gql/staff'
 import logError from 'src/utils/logging/logger'
+import { User } from 'src/types/user'
 
 const mapAssigneeTeam = (antaraStaff: any[]) => {
   const teamType = [
@@ -32,21 +33,36 @@ export const useAntaraStaff = () => {
 
   const [getAntaraStaff, { loading }] = useLazyQuery(GET_ANTARA_STAFF)
 
-  const getStaffTeam = (team: string, staffMembers: any[] = []) => {
+  const filterByTeam = (team: string, staffMembers: any[] = []) => {
     return staffMembers.filter((e: any) => e?.team === team)
   }
 
-  const getAllStaff = (staffMembers: any[] = []) => {
+  const extractStaffData = (staffMembers: any[] = []) => {
     return staffMembers.map((staff: any) => ({
       ...staff?.node,
     }))
+  }
+
+  const getStaffByUser = async (user: User) => {
+    if (user && user.email) {
+      const { data } = await getAntaraStaff({
+        variables: {
+          email: user.email,
+        },
+      })
+      if (data?.antaraStaff?.edges?.length > 0) {
+        return data?.antaraStaff?.edges[0]?.node
+      }
+      return null
+    }
+    throw new Error('User not found')
   }
 
   useEffect(() => {
     getAntaraStaff()
       .then(({ data }) => {
         const fetchedData = data?.antaraStaff?.edges
-        setAllAntaraStaffs(getAllStaff(fetchedData))
+        setAllAntaraStaffs(extractStaffData(fetchedData))
       })
       .catch((err) => {
         logError(err)
@@ -58,10 +74,13 @@ export const useAntaraStaff = () => {
     () => ({
       allAntaraStaffs,
       loading,
-      antaraHNs: getStaffTeam('HEALTH_NAVIGATOR', allAntaraStaffs),
-      antaraMEs: getStaffTeam('MEMBER_EXPERIENCE', allAntaraStaffs),
-      antaraNutritionists: getStaffTeam('NUTRITIONIST', allAntaraStaffs),
+      antaraHNs: filterByTeam('HEALTH_NAVIGATOR', allAntaraStaffs),
+      antaraMEs: filterByTeam('MEMBER_EXPERIENCE', allAntaraStaffs),
+      antaraNutritionists: filterByTeam('NUTRITIONIST', allAntaraStaffs),
+      getStaffByUser,
     }),
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [loading, allAntaraStaffs]
   )
 
