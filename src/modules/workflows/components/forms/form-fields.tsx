@@ -987,6 +987,7 @@ function LinkRecordInputDefault({
       'Antara ID',
       'antara_member_id',
       'Antara Member ID',
+      'Antara ID (from Member)',
     ]
     let presentKey = ''
     const metaFields = airtableMeta[field.foreignTableId]?.fields
