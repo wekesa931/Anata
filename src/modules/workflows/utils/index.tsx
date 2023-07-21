@@ -258,7 +258,6 @@ export const initialFormValues = (
     },
     'Interaction log': {
       'Encounter Date': new Date(),
-      'Health Navigator': [user.userAirtableId],
     },
     'Logistics Tasks': {
       Beneficiary: member?.fullName,
@@ -525,7 +524,6 @@ export const interactionlogform = {
 
 const interactionlogMap: any = {
   'Encounter Date': 'interactionStartedAt',
-  'Health Navigator': 'healthNavigator',
   'Interactor Type': 'interactorType',
   'Interactor Name': 'interactorName',
   'Relationship Type': 'relationshipType',

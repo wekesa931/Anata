@@ -285,11 +285,11 @@ export const useCreateInteraction = () => {
   const { member } = useMember()
 
   const createInteraction = async (data: any) => {
-    if (member) {
+    if (member && user) {
       const interactionsData: InteractionsVariables =
         interactionLogPayload(data)
       const outcomeMetadata: any = {
-        creator: user && user.email,
+        creator: user.email,
       }
       const outcome = JSON.stringify(interactionsData.outcome)
       if (interactionsData.reasonForConsultation) {
@@ -303,9 +303,10 @@ export const useCreateInteraction = () => {
           ...interactionsData,
           outcome,
           outcomeMetadata,
-          historyUserIdField: user && user.email,
+          historyUserIdField: user.email,
           member: member.antaraId,
-          healthNavigator: user && extractUsername(user.email),
+          // navigator defaults to current logged in user
+          healthNavigator: extractUsername(user.email),
         },
       }
 
