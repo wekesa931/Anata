@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { useGoogleLogout } from 'react-google-login'
 import storage from 'src/storage/secure-storage'
 import { User } from 'src/types/user'
 import keys from 'src/config/constants'
-import airtableFetch from 'src/services/airtable/fetch'
 
 dayjs.extend(utc)
 type AuthContextType = {
@@ -42,40 +41,6 @@ function AuthProvider({ user, children }: any) {
   }
 
   const isLoggedIn = () => !!currentUser
-  useEffect(() => {
-    if (currentUser) {
-      let userAirtableId: any | null = null
-      airtableFetch(
-        `team/list?filterByFormula=FIND("${currentUser.email}", {Email})&fields[]=Record ID`
-      )
-        .then((res) => {
-          if (Array.isArray(res) && res.length > 0) {
-            userAirtableId = res[0]['Record ID']
-          } else if (
-            typeof res === 'object' &&
-            !Array.isArray(res) &&
-            res !== null
-          ) {
-            Object.keys(res).forEach((key) => {
-              if (/^rec\w+/.test(key)) {
-                userAirtableId = key
-              }
-            })
-          }
-
-          if (userAirtableId) {
-            setCurrentUser({
-              ...currentUser,
-              userAirtableId,
-            })
-          }
-        })
-        .catch(() => {
-          logout()
-        })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const providerValue = React.useMemo(
     () => ({
