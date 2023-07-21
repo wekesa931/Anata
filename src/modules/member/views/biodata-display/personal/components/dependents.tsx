@@ -29,6 +29,7 @@ function DependentItem({
 
   return (
     <a
+      target='_blank'
       href={`/member/${dependent?.antaraId}`}
       className={`block border rounded-lg border-solid border-dark-blue-10 my-1 p-1 ${
         isPrimary ? 'bg-dark-blue-10' : 'bg-white-100'
