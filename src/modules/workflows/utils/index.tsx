@@ -165,11 +165,15 @@ export const generatePayload = (
       id: fm?.id,
     }
   })
-  const findFieldId = (name: string) => {
+
+  const findBy = (key: string, value: string) => {
     const allFields = Object.values(airtableFieldsMap)
-    const found = allFields.find((f: any) => f.name === name)
-    return found?.id
+    const found = allFields.find((f: any) => f[key] === value)
+    return found
   }
+
+  const findFieldId = (name: string) => findBy('name', name)?.id || null
+  const findById = (id: string) => findBy('id', id)?.name || null
 
   Object.keys(initialPayload)?.forEach((k) => {
     const fieldId = findFieldId(k)
@@ -194,7 +198,10 @@ export const generatePayload = (
     (f: any) => f.id
   )
   Object.keys(mappedPayload)?.forEach((k) => {
-    if (!currentFieldOptionsInLocalSchema.includes(k)) {
+    if (
+      !currentFieldOptionsInLocalSchema.includes(k) &&
+      !isAllowedField(findById(k))
+    ) {
       delete mappedPayload[k]
     }
   })

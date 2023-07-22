@@ -174,6 +174,10 @@ export const useWorkflowData = () => {
     formMeta: any,
     formData: any
   ) => {
+    if (!member || !member?.airtableRecordId) {
+      throw new Error("Member or Member's Airtable Record ID is missing")
+    }
+
     const formName = form.name
     const activeForm = ActiveForm(formName)
 
