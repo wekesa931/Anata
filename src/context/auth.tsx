@@ -63,10 +63,12 @@ function AuthProvider({ user, children }: any) {
       getStaffByUser(currentUser)
         .then((data) => {
           if (data) {
-            setCurrentUser({
+            const updatedUser = {
               ...currentUser,
               userAirtableId: data?.atRecordId,
-            })
+            }
+            setCurrentUser(updatedUser)
+            storage.set(keys.USER, JSON.stringify(updatedUser))
           } else {
             navigate('/user-not-found')
           }
