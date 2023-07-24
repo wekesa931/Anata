@@ -1,4 +1,5 @@
 /*eslint-disable */
+import * as rax from 'retry-axios'
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
 import history from 'src/utils/routing/history'
@@ -7,6 +8,7 @@ import storage from 'src/storage/secure-storage'
 import refreshToken from 'src/utils/auth/refresh-token'
 
 const baseUrl = `${process.env.API_URL}/airtable`
+rax.attach()
 
 const getTokenFromLocalStorage = () => {
   const user = storage.get(constants.USER)
@@ -59,6 +61,10 @@ const airtableFetch = async (table: string, method?: any, data = {}) => {
     },
     method: method || 'GET',
     data: method === 'GET' ? null : data,
+    raxConfig: {
+      retry: 5,
+      statusCodesToRetry: [[500, 599]],
+    },
   })
   return response?.data
 }

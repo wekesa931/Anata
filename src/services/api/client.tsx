@@ -12,6 +12,22 @@ import { onError } from '@apollo/client/link/error'
 import constants from 'src/config/constants'
 import storage from 'src/storage/secure-storage'
 import refreshToken from 'src/utils/auth/refresh-token'
+import { RetryLink } from '@apollo/client/link/retry'
+
+const retryLink = new RetryLink({
+  attempts: {
+    retryIf: (error) => {
+      if (error) {
+        const { statusCode } = error as any
+        if (statusCode >= 500) {
+          return true
+        }
+      }
+
+      return false
+    },
+  },
+})
 
 const getTokenFromLocalStorage = () => {
   const user = storage.get(constants.USER)
@@ -95,6 +111,7 @@ const handleErrors = onError(
 
 const apolloClient = new ApolloClient({
   link: ApolloLink.from([
+    retryLink,
     handleErrors,
     authMiddleWare().concat(
       // 3 clients in use, v2, v1 and opensearch all with different endpoints
