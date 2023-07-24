@@ -3,6 +3,7 @@ import { Member } from 'src/modules/member/db/models'
 import { useMembersData } from 'src/modules/member/hooks/member-data'
 import { logError } from 'src/utils/logging/logger'
 import useForceUpdate from 'src/hooks/force-update'
+import MemberNotSyncedToHNOS from 'src/components/feedbacks/member-not-synced'
 
 type MemberContextType = {
   member: Member | null
@@ -29,6 +30,8 @@ export function MemberProvider({ antaraId, children }: Props) {
     findMemberByAntaraIdFromLocalCache,
     hydrateMember,
   } = useMembersData()
+  const memberNotSyncedToHNOS =
+    !!member?.antaraId && !member?.airtableRecordId && !isLoading
   const forceUpdate = useForceUpdate()
 
   const refreshMember = () => {
@@ -98,6 +101,7 @@ export function MemberProvider({ antaraId, children }: Props) {
 
   return (
     <MemberContext.Provider value={providerValue}>
+      {memberNotSyncedToHNOS && <MemberNotSyncedToHNOS />}
       {children}
     </MemberContext.Provider>
   )
