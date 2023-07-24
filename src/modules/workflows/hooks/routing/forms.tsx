@@ -67,6 +67,7 @@ export const useFormsRouting = () => {
       if (form) {
         setForms((prev) => [...prev, form])
         addFormIdToSearchParams(form.id)
+        searchParams.set('action', 'forms')
 
         // notify the user that the form was created
         notify(`Created form: ${formName}`, 1000)
