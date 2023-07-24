@@ -7663,8 +7663,8 @@ export default [
           'Active intervention - it is ongoing\nInactive intervention- not ongoing',
       },
       {
-        id: 'fldiuzCWrbNnP7mgR',
-        name: 'Inactive Status Cause',
+        id: 'fldu4Nwamz7R2ocWm',
+        name: 'Status Cause',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -7673,41 +7673,9 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper:
-          "`Paused` means Antara and/or a member temporarily stop an intervention\n'Stopped' means Antara decided to stop the intervention\n'Opted out' means a member decided to stop the intervention",
-        conditionType: '',
-        parentKey: 'Status',
-        parentValues: ['Inactive'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Status)) {
-            return ['Inactive'].some((r) => values.Status.includes(r))
-          }
-          return ['Inactive'].includes(values.Status)
-        },
-      },
-      {
-        id: 'fldXLcpbyRprmR8md',
-        name: 'Active Status Cause',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Status',
-        parentValues: ['Active'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Status)) {
-            return ['Active'].some((r) => values.Status.includes(r))
-          }
-          return ['Active'].includes(values.Status)
-        },
+          'Paused should be an option under inactive\nSuccessful can either be active or inactive',
       },
       {
         id: 'fldwibgAvaWBZhv3j',
@@ -7723,15 +7691,15 @@ export default [
         required: false,
         helper: 'The date the intervention gets back to effect',
         conditionType: '',
-        parentKey: 'Inactive Status Cause',
-        parentValues: ['Paused'],
+        parentKey: 'Status Cause',
+        parentValues: ['Stopped', 'Paused'],
         condition: (values: any) => {
-          if (Array.isArray(values['Inactive Status Cause'])) {
-            return ['Paused'].some((r) =>
-              values['Inactive Status Cause'].includes(r)
+          if (Array.isArray(values['Status Cause'])) {
+            return ['Stopped', 'Paused'].some((r) =>
+              values['Status Cause'].includes(r)
             )
           }
-          return ['Paused'].includes(values['Inactive Status Cause'])
+          return ['Stopped', 'Paused'].includes(values['Status Cause'])
         },
       },
       {
@@ -14248,6 +14216,46 @@ export default [
         foreignTableId: null,
         required: true,
         helper: 'Please enter the reason that explain the status',
+      },
+      {
+        id: 'fldqAL8R4DCw2IKsL',
+        name: 'Status Cause',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          "If intervention has been completely successful or should stop for any reason and we do not need the member to continue it, please change the status below. \n\n(By entering a new status below, the Intervention status will be automatically changed in Airtable)\n\n`Paused` means Antara and/or bene temporarily stop an intervention\n'Stopped' means Antara decided to stop the intervention\n'Opted out' means beneficiary decided to stop the intervention",
+      },
+      {
+        id: 'fld8oWfNzH0zQwcVX',
+        name: 'Resumption Date',
+        type: 'date',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'The date the intervention gets back to effect',
+        conditionType: '',
+        parentKey: 'Status Cause',
+        parentValues: ['Stopped', 'Paused'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Status Cause'])) {
+            return ['Stopped', 'Paused'].some((r) =>
+              values['Status Cause'].includes(r)
+            )
+          }
+          return ['Stopped', 'Paused'].includes(values['Status Cause'])
+        },
       },
       {
         id: 'fldQzwHoVXf9ure8X',
