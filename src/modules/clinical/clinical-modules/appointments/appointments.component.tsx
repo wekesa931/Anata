@@ -131,6 +131,16 @@ function Appointments() {
       // eslint-disable-next-line react/no-unstable-nested-components
       component: ({ data }: any) => <PafuView data={data} />,
     },
+    {
+      name: 'Missed #',
+      format: '\n',
+      key: 'Missed #',
+    },
+    {
+      name: 'Rescheduled #',
+      format: '\n',
+      key: 'Rescheduled #',
+    },
   ]
   const isReadyToShow = filteredAppointments?.length >= 0 && !loading
   return (
