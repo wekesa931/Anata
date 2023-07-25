@@ -9657,6 +9657,31 @@ export default [
         },
       },
       {
+        id: 'fldIZh3Q8dRNbRYnq',
+        name: 'Testimonial',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Type of feedback',
+        parentValues: ['Testimonial'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Type of feedback'])) {
+            return ['Testimonial'].some((r) =>
+              values['Type of feedback'].includes(r)
+            )
+          }
+          return ['Testimonial'].includes(values['Type of feedback'])
+        },
+      },
+      {
         id: 'fldqzI67eT0Lpt9lZ',
         name: 'What did the member provide feedback for?',
         type: 'multiSelect',
