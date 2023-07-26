@@ -440,23 +440,15 @@ export default [
         helper:
           '"For example: brain aneurysm, or brain tumor, or not cured of encephalitis or meningitis, or epilepsy/seizure in last 5 years, or multiple sclerosis, or neuropathy, or Parkinson\'s, or stroke, or diagnosed w/fainting and >41, or Transient Ischemic Attack, or subdural hematoma, or traumatic brain injury."',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Neurologic'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Neurologic'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Neurologic'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Neurologic'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -533,23 +525,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Neurologic'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Neurologic'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Neurologic'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Neurologic'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -566,23 +550,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['HEENT'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['HEENT'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['HEENT'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['HEENT'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -599,23 +575,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['HEENT'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['HEENT'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['HEENT'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['HEENT'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -633,23 +601,15 @@ export default [
         helper:
           'For example: heart attack, or atrial fibrilation/flutter, or abnormal heartbeat caused fainting, or taking >2 heart meds, or been advised to test heart periodically with echocardiogram, or advised to have surgery for heart murmur, or doctor said more than 1 episode of pericarditis, or seen doctor in last 6 months for pericarditis, or other.',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Cardiovascular '],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Cardiovascular '].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Cardiovascular '].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Cardiovascular '].includes(values['ROS - review of system'])
         },
       },
       {
@@ -730,23 +690,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Cardiovascular '],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Cardiovascular '].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Cardiovascular '].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Cardiovascular '].includes(values['ROS - review of system'])
         },
       },
       {
@@ -764,23 +716,15 @@ export default [
         helper:
           'For example: Sarcoidosis, or COPD, or admitted to hospital /emergency room for asthma in last year, or if >41 and >3 oral steroids in last 12 months, or pulmonary nodule or lung spot, or using CPAP machine, or not sure on resolved bronchitis/pneumonia/tuberculosis, or had other.',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Pulmonary '],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Pulmonary '].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Pulmonary '].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Pulmonary '].includes(values['ROS - review of system'])
         },
       },
       {
@@ -858,23 +802,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Pulmonary '],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Pulmonary '].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Pulmonary '].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Pulmonary '].includes(values['ROS - review of system'])
         },
       },
       {
@@ -892,23 +828,15 @@ export default [
         helper:
           "For example: anorectal fistula, or celiac, or colon polyp, or Crohn's disease, or ulcerative colitis, or advised to get liver biopsy, or hepatitis B/C/D, or pancreatitis, or pancreatic abscess, or not sure ulcer resolved, or Barrett's or dysphagia, or weight loss surgery or other\n",
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Gastrointestinal'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Gastrointestinal'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Gastrointestinal'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Gastrointestinal'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -991,23 +919,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Gastrointestinal'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Gastrointestinal'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Gastrointestinal'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Gastrointestinal'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1025,23 +945,15 @@ export default [
         helper:
           'For example: Glomerulonephritis or nephropathy, or kidney obstruction/infection due to stones, or surgery for stones, or remaining stones, or kidney failure, or dialysis, or urological abnormalities, or Proteinuria, or multiple renal cysts, or other/not sure.',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Genitourinary '],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Genitourinary '].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Genitourinary '].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Genitourinary '].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1058,23 +970,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Genitourinary '],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Genitourinary '].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Genitourinary '].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Genitourinary '].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1092,23 +996,15 @@ export default [
         helper:
           'In Men for Example: testicular torsion, infertility, erectile dysfunction, varicocoele\nIn Women For Example: inability to conceive, history of fibroids, ovarian cysts, endometriosis, hysterectomy, ectopic pregnancy or any other issue you may want to share',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Reproductive'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Reproductive'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Reproductive'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Reproductive'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1125,23 +1021,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Reproductive'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Reproductive'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Reproductive'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Reproductive'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1158,23 +1046,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Extremities '],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Extremities '].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Extremities '].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Extremities '].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1191,23 +1071,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Dermatologic'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Dermatologic'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Dermatologic'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Dermatologic'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1225,23 +1097,15 @@ export default [
         helper:
           'For example: is the member taking arthritis medication, or surgery for scoliosis, or other. ',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Musculoskeletal'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Musculoskeletal'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Musculoskeletal'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Musculoskeletal'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1258,23 +1122,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Musculoskeletal'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Musculoskeletal'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Musculoskeletal'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Musculoskeletal'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1292,23 +1148,15 @@ export default [
         helper:
           'For example: \nHemolytic or other anemia, iron deficiency, chronic bleeding, problems with blood clotting, easy or excessive bleeding, coagulation defects(hemophilia), \nenlarged spleen (hypersplenism), low platelet count (thrombocytopenia) or ITP (idiopathic thrombocytopenic purpura)',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Hematologic'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Hematologic'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Hematologic'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Hematologic'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1325,23 +1173,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Hematologic'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Hematologic'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Hematologic'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Hematologic'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1359,23 +1199,15 @@ export default [
         helper:
           'Does the member have any history of:\nHOSPITALIZATION for Depression, anxiety, psychosis, suicide thoughts or attempts, anorexia or bulimia, post traumatic stress disorder, obsessive compulsive disorder, bipolar disorder, attention deficit hyperactivity disorder (ADHD) or other emotional disorder; or depression not diagnosed as situational only, or memory impairment, or delusion, or eating disorder, or suicide attempt',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Mental Health'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Mental Health'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Mental Health'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Mental Health'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1393,23 +1225,15 @@ export default [
         helper:
           'At Antara we provide counseling services for our members, are you interested in doing a consultation with our counselor? if the answer is yes, please check with member if you can go ahead and book the consultation or if the member wants to do it at their convenience (in that case, create a member task for them to do it in the app)',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Mental Health'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Mental Health'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Mental Health'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Mental Health'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1427,23 +1251,15 @@ export default [
         helper:
           'For example: they had or plan to have surgery or a biopsy of the cyst or nodule; or been advised by a member of the medical profession to have scans or imaging procedures of the thyroid that have not yet been completed; or being treated for your hypothyroidism (underactive thyroid) or hyperthyroidism (overactive thyroid); or other.\n',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Endocrine'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Endocrine'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Endocrine'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Endocrine'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1460,23 +1276,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Endocrine'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Endocrine'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Endocrine'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Endocrine'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1494,23 +1302,15 @@ export default [
         helper:
           'Does the patient have any cancers, such as malignant tumor, skin cancer, leukemia, or melanoma?',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Neoplastic'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Neoplastic'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Neoplastic'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Neoplastic'].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1590,23 +1390,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Please select the system(s) with a relevant finding',
+        parentKey: 'ROS - review of system',
         parentValues: ['Immunologic'],
         condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Please select the system(s) with a relevant finding']
-            )
-          ) {
+          if (Array.isArray(values['ROS - review of system'])) {
             return ['Immunologic'].some((r) =>
-              values[
-                'Please select the system(s) with a relevant finding'
-              ].includes(r)
+              values['ROS - review of system'].includes(r)
             )
           }
-          return ['Immunologic'].includes(
-            values['Please select the system(s) with a relevant finding']
-          )
+          return ['Immunologic'].includes(values['ROS - review of system'])
         },
       },
       {
