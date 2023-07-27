@@ -344,6 +344,7 @@ export const useUpdateStatus = () => {
         antaraId,
         onboardStage: values.onboardStage,
         status: values.status,
+        verificationStatus: values.verificationStatus,
       },
       memberStaff: {
         antaraId,

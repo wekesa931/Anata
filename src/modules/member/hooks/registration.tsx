@@ -290,6 +290,7 @@ export const useRegistrationData = () => {
         const payload = {
           antaraId: member?.antaraId,
           onboardStage: values?.onboardStage || '',
+          verificationStatus: values?.verificationStatus || '',
           status: values?.status || '',
           assignedMe: values?.assignedMe?.emailUsername || '',
           assignedHn: values?.assignedHn?.emailUsername || '',
@@ -301,6 +302,7 @@ export const useRegistrationData = () => {
         await database.write(async () => {
           await member.update((m) => {
             m.onboardStage = values?.onboardStage || ''
+            m.verificationStatus = values?.verificationStatus || ''
             m.status = values?.status || ''
             m.assignedMe = values?.assignedMe || {}
             m.assignedHn = values?.assignedHn || {}

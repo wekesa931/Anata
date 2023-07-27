@@ -89,6 +89,7 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
       onboardStage {
         onboardStage
       }
+      verificationStatus
       employer {
         name
       }

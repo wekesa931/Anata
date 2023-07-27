@@ -55,6 +55,12 @@ function StatusesSection({ member }: StatusesSectionProps) {
           <Item title="Onboarding stage" child={member?.onboardStage} />
           <Item title="Member status" child={member?.status} />
         </GridItems>
+        <GridItems>
+          <Item
+            title="Verification Status"
+            child={member?.verificationStatus}
+          />
+        </GridItems>
       </SectionItem>
     </div>
   ) : (

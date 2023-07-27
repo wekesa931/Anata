@@ -46,6 +46,7 @@ export type V2MemberType = {
   employer?: EmployerType
   department?: string
   onboardStage?: string
+  verificationStatus?: string
   status?: string
   assignedHn?: string
   assignedHnFullName?: string
@@ -245,6 +246,7 @@ export type UpdateStatusValues = {
   assignedHn: string
   antaraId: string
   assignedNutritionist: string
+  verificationStatus: string
 }
 
 export type Address = {

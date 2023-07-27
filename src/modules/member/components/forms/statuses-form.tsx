@@ -37,6 +37,7 @@ const defaultValue = {
   onboardStage: null,
   status: null,
   antaraId: '',
+  verificationStatus: '',
 }
 
 const validationSchema = yup.object().shape({
@@ -67,6 +68,7 @@ const validationSchema = yup.object().shape({
   onboardStage: yup.string().nullable(),
   status: yup.string().nullable(),
   antaraId: yup.string().required(),
+  verificationStatus: yup.string().nullable(),
 })
 
 export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
@@ -92,10 +94,10 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
         onboardStage: member?.onboardStage || defaultValue.onboardStage,
         status: member?.status || defaultValue.status,
         antaraId: member?.antaraId,
+        verificationStatus: member?.verificationStatus,
       })
     }
   }, [member])
-
   const handleSubmit = (values: any, formikBag: any) => {
     if (isDirty(initialValues, values)) {
       if (member) {
@@ -155,6 +157,21 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
                     }}
                   />
                 </FlexRow>
+                <SelectField
+                  name="verificationStatus"
+                  label="Verification Status"
+                  options={[
+                    { label: 'Unknown', value: 'Unknown' },
+                    { label: 'Rejected', value: 'Rejected' },
+                    { label: 'Verified', value: 'Verified' },
+                    { label: 'Pending', value: 'Pending' },
+                  ]}
+                  placeholder="-- Select --"
+                  handleBlur={() => {
+                    setIsEdited(true)
+                  }}
+                  required={false}
+                />
                 <FlexRow>
                   <SelectField
                     name="assignedHn.emailUsername"

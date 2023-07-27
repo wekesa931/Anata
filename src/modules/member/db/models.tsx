@@ -82,6 +82,8 @@ export const createOrUpdateMember = (
   member.status = memberData?.status
   member.lastSyncedAt = new Date().getTime()
 
+  member.verificationStatus = memberData?.verificationStatus
+
   return member
 }
 
@@ -142,6 +144,8 @@ export class Member extends Model {
   @text('onboard_stage') onboardStage?: string
 
   @text('status') status?: string
+
+  @text('verification_status') verificationStatus?: string
 
   @date('last_synced_at') lastSyncedAt?: number
 
