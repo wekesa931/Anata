@@ -11998,7 +11998,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
       },
       {
@@ -12142,6 +12142,31 @@ export default [
         },
       },
       {
+        id: 'fldRoF1EdEceIzzX6',
+        name: 'Reason for Missed Appointments',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Attended appointment?',
+        parentValues: ['Missed'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Attended appointment?'])) {
+            return ['Missed'].some((r) =>
+              values['Attended appointment?'].includes(r)
+            )
+          }
+          return ['Missed'].includes(values['Attended appointment?'])
+        },
+      },
+      {
         id: 'fld5mujINwNYetA1Z',
         name: 'Facilities',
         type: 'foreignKey',
@@ -12153,7 +12178,8 @@ export default [
         relationship: 'one',
         foreignTableId: 'tbltmQuqyuKPc4Ffo',
         required: false,
-        helper: '',
+        helper:
+          'Please select the facility the member was sent to for the appointment',
       },
       {
         id: 'fld9M6Et2Z3zvJcdp',
@@ -12180,44 +12206,6 @@ export default [
         },
       },
       {
-        id: 'fldm1j94N45O3Sjzv',
-        name: 'Facility referred',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldc9uoRNXlbGtK7V',
-        unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tbltmQuqyuKPc4Ffo',
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fld9FOJovz6xQsfAY',
-        name: 'Other Facility Referred',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Fill in the Facility Referred not found in the provider base',
-        parentKey: 'Facility referred',
-        parentValues: ['recuzcwIPr5MYoltq'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Facility referred'])) {
-            return ['recuzcwIPr5MYoltq'].some((r) =>
-              values['Facility referred'].includes(r)
-            )
-          }
-          return ['recuzcwIPr5MYoltq'].includes(values['Facility referred'])
-        },
-      },
-      {
         id: 'fldP9UxdCfKvgAE8u',
         name: 'Specialists',
         type: 'foreignKey',
@@ -12229,7 +12217,19 @@ export default [
         relationship: 'one',
         foreignTableId: 'tblsixUe3jfbOUMQP',
         required: false,
-        helper: '',
+        helper:
+          'Please select the specialist the member was sent to for the appointment',
+        conditionType: '!',
+        parentKey: 'Appointment Type',
+        parentValues: 'Virtual Consultation',
+        condition: (values: any) => {
+          if (Array.isArray(values['Appointment Type'])) {
+            return !['Virtual Consultation'].some(
+              (r) => !values['Appointment Type'].includes(r)
+            )
+          }
+          return !['Virtual Consultation'].includes(values['Appointment Type'])
+        },
       },
       {
         id: 'fldsZjcqBRwDEL8XD',
@@ -12292,7 +12292,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
       },
       {
@@ -12306,7 +12306,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Indicate whether beneficiary received a diagnosis at the clinic/virtual consultation',
         conditionType: '',
@@ -12359,7 +12359,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: 'Indicate if laboratory test was done',
         conditionType: '',
         parentKey: 'Attended appointment?',
@@ -12374,29 +12374,6 @@ export default [
         },
       },
       {
-        id: 'fldB8DB7Iqcd8N35V',
-        name: 'Know lab test purpose',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'If the BN knows what the test was for, select, "true"',
-        conditionType: '',
-        parentKey: 'Had lab test',
-        parentValues: ['True'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Had lab test'])) {
-            return ['True'].some((r) => values['Had lab test'].includes(r))
-          }
-          return ['True'].includes(values['Had lab test'])
-        },
-      },
-      {
         id: 'fldBiSwObftYtsQXU',
         name: 'Lab test purpose',
         type: 'multilineText',
@@ -12407,18 +12384,16 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: 'What does the BN think the lab test was for?',
         conditionType: '',
-        parentKey: 'Know lab test purpose',
+        parentKey: 'Had lab test',
         parentValues: ['True'],
         condition: (values: any) => {
-          if (Array.isArray(values['Know lab test purpose'])) {
-            return ['True'].some((r) =>
-              values['Know lab test purpose'].includes(r)
-            )
+          if (Array.isArray(values['Had lab test'])) {
+            return ['True'].some((r) => values['Had lab test'].includes(r))
           }
-          return ['True'].includes(values['Know lab test purpose'])
+          return ['True'].includes(values['Had lab test'])
         },
       },
       {
@@ -12447,9 +12422,9 @@ export default [
         },
       },
       {
-        id: 'fldZi6SYMWcmp7tQs',
-        name: 'Know imaging purpose',
-        type: 'select',
+        id: 'fldiNEp8hTtXdoMZ2',
+        name: 'Imaging purpose',
+        type: 'multilineText',
         format: '',
         isDateTime: false,
         options: [],
@@ -12458,7 +12433,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: 'Indicate, "true" if the BN knows why they had imaging done',
+        helper: 'Why does the BN think the imaging was done?',
         conditionType: '',
         parentKey: 'Had imaging (Ray, CT Scan, Ultrasound or MRI)',
         parentValues: ['True'],
@@ -12480,31 +12455,6 @@ export default [
         },
       },
       {
-        id: 'fldiNEp8hTtXdoMZ2',
-        name: 'Imaging purpose',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Why does the BN think the imaging was done?',
-        conditionType: '',
-        parentKey: 'Know imaging purpose',
-        parentValues: ['True'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Know imaging purpose'])) {
-            return ['True'].some((r) =>
-              values['Know imaging purpose'].includes(r)
-            )
-          }
-          return ['True'].includes(values['Know imaging purpose'])
-        },
-      },
-      {
         id: 'fldKuQxgNAX9ZD5O7',
         name: 'Received referral',
         type: 'select',
@@ -12517,6 +12467,63 @@ export default [
         foreignTableId: null,
         required: true,
         helper: 'Indicate, "true" if the BN was referred',
+      },
+      {
+        id: 'fldm1j94N45O3Sjzv',
+        name: 'Facility referred',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldc9uoRNXlbGtK7V',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tbltmQuqyuKPc4Ffo',
+        required: false,
+        helper: 'Optional - select the facility the member was referred to',
+        conditionType: '!',
+        parentKey: 'Know imaging purpose',
+        parentValues: ['True'],
+        condition: (values: any) => {
+          const receivedReferralCondition = Array.isArray(
+            values['Received referral']
+          )
+            ? ['True'].some((r) => values['Received referral'].includes(r))
+            : ['True'].includes(values['Received referral'])
+
+          const appointmentTypeCondition = Array.isArray(
+            values['Appointment Type']
+          )
+            ? !['Virtual Consultation'].some((r) =>
+                values['Appointment Type'].includes(r)
+              )
+            : !['Virtual Consultation'].includes(values['Appointment Type'])
+          return receivedReferralCondition && appointmentTypeCondition
+        },
+      },
+      {
+        id: 'fld9FOJovz6xQsfAY',
+        name: 'Other Facility Referred',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Fill in the Facility Referred not found in the provider base',
+        parentKey: 'Facility referred',
+        parentValues: ['recuzcwIPr5MYoltq'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Facility referred'])) {
+            return ['recuzcwIPr5MYoltq'].some((r) =>
+              values['Facility referred'].includes(r)
+            )
+          }
+          return ['recuzcwIPr5MYoltq'].includes(values['Facility referred'])
+        },
       },
       {
         id: 'fldxalPpB7900nBDE',
@@ -12708,7 +12715,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Received medication',
@@ -12737,15 +12744,15 @@ export default [
         helper:
           'Please indicate whether the member has all the medications information to allow you fill in the prescription form. If not available, we will auto create a task for you to collect medications information from them later.',
         conditionType: '',
-        parentKey: 'Received medication',
-        parentValues: ['True'],
+        parentKey: 'Accepted Medications?',
+        parentValues: ['Yes'],
         condition: (values: any) => {
-          if (Array.isArray(values['Received medication'])) {
-            return ['True'].some((r) =>
-              values['Received medication'].includes(r)
+          if (Array.isArray(values['Accepted Medications?'])) {
+            return ['Yes'].some((r) =>
+              values['Accepted Medications?'].includes(r)
             )
           }
-          return ['True'].includes(values['Received medication'])
+          return ['Yes'].includes(values['Accepted Medications?'])
         },
       },
       {
@@ -12810,9 +12817,19 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Describe the BN understanding of why the medication was prescribed',
+        parentKey: 'Medication Information available',
+        parentValues: ['True'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Medication Information available'])) {
+            return ['True'].some((r) =>
+              values['Medication Information available'].includes(r)
+            )
+          }
+          return ['True'].includes(values['Medication Information available'])
+        },
       },
       {
         id: 'fldOwUtLyyufZZfgE',
@@ -12876,9 +12893,36 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Discuss with member and please indicates if the symptom(s) or the condition(s) have been progressing',
+      },
+      {
+        id: 'fldTwoq14mBNFbo2h',
+        name: 'New symptoms',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Symptoms progress',
+        parentValues: ['New Symptoms', 'Worsening Symptoms'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Symptoms progress'])) {
+            return ['New Symptoms', 'Worsening Symptoms'].some((r) =>
+              values['Symptoms progress'].includes(r)
+            )
+          }
+          return ['New Symptoms', 'Worsening Symptoms'].includes(
+            values['Symptoms progress']
+          )
+        },
       },
       {
         id: 'fld3pysmxIi5RPBy6',
@@ -13006,7 +13050,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Asked to make payment',
@@ -13069,31 +13113,6 @@ export default [
             )
           }
           return ['Completed'].includes(values['Attended appointment?'])
-        },
-      },
-      {
-        id: 'fldRoF1EdEceIzzX6',
-        name: 'Reason for Missed Appointments',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Attended appointment?',
-        parentValues: ['Missed'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Attended appointment?'])) {
-            return ['Missed'].some((r) =>
-              values['Attended appointment?'].includes(r)
-            )
-          }
-          return ['Missed'].includes(values['Attended appointment?'])
         },
       },
       {
@@ -13197,15 +13216,6 @@ export default [
         required: false,
         helper:
           'When the task is not linked to a member, you can add a beneficiary, who is the person that will received or delivered the item associated to the task.',
-        conditionType: '',
-        parentKey: 'Type',
-        parentValues: [''],
-        condition: (values: any) => {
-          if (Array.isArray(values.Type)) {
-            return !['Admin task'].some((r) => values.Type.includes(r))
-          }
-          return !['Admin task'].includes(values.Type)
-        },
       },
       {
         id: 'fldco9YyzkrTZgNad',
@@ -13271,7 +13281,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Please enter the location where the member wants the task to be completed',
+          "ONLY specify the location of the task when the task should not happen at the member's known address. If this field is empty the member's address will be automatically used by the system as the location to perform the task\n\nKeep empty if you want us to perform the task at member's known location",
       },
       {
         id: 'fld26RqzUFPlXMSSM',
@@ -13286,7 +13296,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Please enter the phone number where we can reach the member on the day of the task',
+          'If the task is linked to one member, the system will automatically fetch the known phone number but it is better to confirm with the member the phone number that can be used on the day of the task.',
       },
       {
         id: 'fld0bdmt3Wd6gtpzi',
@@ -13300,8 +13310,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper:
-          'Please only select Needed or Scheduled, the other statuses are managed by the system or by the log admin\n  * Needed: no date agreed with member yet, not assigned to a rider yet\n  * Scheduled: date is agreed, no rider assigned yet\n  * Assigned: date is agreed and riders is assigned\n  * Completed: is done by rider\n  * Missed: by member or by rider\n  * Canceled: by antara',
+        helper: 'Select "To do" - (you do not have the choice anyway ;) )',
       },
       {
         id: 'fldy74OAxHa7oZIny',
@@ -13320,7 +13329,7 @@ export default [
       },
       {
         id: 'fldqIcXvtcB2w3D83',
-        name: 'Time',
+        name: 'Time (test)',
         type: 'date',
         format: '',
         isDateTime: true,

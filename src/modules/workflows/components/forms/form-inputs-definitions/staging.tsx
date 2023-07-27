@@ -3609,7 +3609,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
       },
       {
@@ -4164,29 +4164,6 @@ export default [
         },
       },
       {
-        id: 'fld9MUgu0Va97aihx',
-        name: 'Know lab test purpose',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'If the BN knows what the test was for, select, "true"',
-        conditionType: '',
-        parentKey: 'Had lab test',
-        parentValues: ['True'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Had lab test'])) {
-            return ['True'].some((r) => values['Had lab test'].includes(r))
-          }
-          return ['True'].includes(values['Had lab test'])
-        },
-      },
-      {
         id: 'fld9W9bbtKrUsP59w',
         name: 'Lab test purpose',
         type: 'multilineText',
@@ -4234,39 +4211,6 @@ export default [
             )
           }
           return ['Completed'].includes(values['Attended appointment?'])
-        },
-      },
-      {
-        id: 'fldxWnxl4raiouI24',
-        name: 'Know imaging purpose',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: 'Indicate, "true" if the BN knows why they had imaging done',
-        conditionType: '',
-        parentKey: 'Had imaging (Ray, CT Scan, Ultrasound or MRI)',
-        parentValues: ['True'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Had imaging (Ray, CT Scan, Ultrasound or MRI)']
-            )
-          ) {
-            return ['True'].some((r) =>
-              values['Had imaging (Ray, CT Scan, Ultrasound or MRI)'].includes(
-                r
-              )
-            )
-          }
-          return ['True'].includes(
-            values['Had imaging (Ray, CT Scan, Ultrasound or MRI)']
-          )
         },
       },
       {
