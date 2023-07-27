@@ -128,19 +128,29 @@ function Appointments() {
     id: string
     fields: any
   }) => {
+    const transformDataForServer = () => {
+      const payload = appointment.fields
+      Object.keys(appointment.fields).forEach((fieldKey) => {
+        if (fieldKey === 'start_date_time') {
+          payload[fieldKey] = dayjs(
+            appointment.fields.start_date_time
+          ).toISOString()
+        }
+
+        if (fieldKey === 'Assignee') {
+          payload[fieldKey] = [appointment.fields.Assignee]
+        }
+
+        if (Object.keys(SearchFieldsNameMap).includes(fieldKey)) {
+          payload[fieldKey] = [appointment.fields[fieldKey].id]
+        }
+      })
+      return payload
+    }
+
     await airtableFetch('appointments', 'post', {
       id: appointment.id,
-      fields: {
-        ...appointment.fields,
-        ...(appointment.fields.start_date_time && {
-          start_date_time: dayjs(
-            appointment.fields.start_date_time
-          ).toISOString(),
-        }),
-        ...(appointment.fields.Assignee && {
-          Assignee: [appointment.fields.Assignee],
-        }),
-      },
+      fields: transformDataForServer(),
     })
       .then((res) => {
         handleResponses(res)
