@@ -11,6 +11,7 @@ import RegistrationForm from 'src/modules/member/views/member-registration/regis
 
 type MemberRegistrationFormProps = {
   setIsEdited: (isEdited: boolean) => void
+  openForm?: RegistrationFormsNames | null
 }
 
 export type RegistrationItemProps = {
@@ -52,8 +53,33 @@ type RegistrationForms =
     }
   | undefined
 
-function MemberRegistrationForm({ setIsEdited }: MemberRegistrationFormProps) {
-  const [selectedForm, setSelectedForm] = React.useState<RegistrationForms>()
+function MemberRegistrationForm({
+  setIsEdited,
+  openForm,
+}: MemberRegistrationFormProps) {
+  const getTitleFormForm = (formName: RegistrationFormsNames) => {
+    switch (formName) {
+      case 'primary':
+        return 'Primary member registration'
+      case 'dependent':
+        return 'Adult dependent registration'
+      case 'child':
+        return 'Child registration'
+      default:
+        return ''
+    }
+  }
+
+  const [selectedForm, setSelectedForm] = React.useState<RegistrationForms>(
+    openForm
+      ? {
+          name: openForm,
+          member: undefined,
+          completed: false,
+          title: getTitleFormForm(openForm),
+        }
+      : undefined
+  )
 
   const handleClick = (selection: RegistrationForms) => {
     setSelectedForm(selection)
@@ -72,10 +98,10 @@ function MemberRegistrationForm({ setIsEdited }: MemberRegistrationFormProps) {
               Icon={AccountCircleOutlined}
               handleClick={() =>
                 handleClick({
-                  name: 'primary',
+                  name: RegistrationFormsNames.PRIMARY,
                   member: undefined,
                   completed: false,
-                  title: 'Primary member registration',
+                  title: getTitleFormForm(RegistrationFormsNames.PRIMARY),
                 })
               }
             />
@@ -85,10 +111,10 @@ function MemberRegistrationForm({ setIsEdited }: MemberRegistrationFormProps) {
               Icon={Person2Outlined}
               handleClick={() =>
                 handleClick({
-                  name: 'dependent',
+                  name: RegistrationFormsNames.DEPENDENT,
                   member: undefined,
                   completed: false,
-                  title: 'Adult dependent registration',
+                  title: getTitleFormForm(RegistrationFormsNames.DEPENDENT),
                 })
               }
             />
@@ -98,10 +124,10 @@ function MemberRegistrationForm({ setIsEdited }: MemberRegistrationFormProps) {
               subtitle="This is a child dependent to the primary member"
               handleClick={() =>
                 handleClick({
-                  name: 'child',
+                  name: RegistrationFormsNames.CHILD,
                   member: undefined,
                   completed: false,
-                  title: 'Child registration',
+                  title: getTitleFormForm(RegistrationFormsNames.CHILD),
                 })
               }
             />

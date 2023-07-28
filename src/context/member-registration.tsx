@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import useAntaraStaff, {
   mapAssigneeToLookup,
 } from 'src/hooks/antara-staff.hook'
@@ -41,6 +42,32 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
     {} as LookupOptions
   )
   const [isDataLoading, setDataLoading] = useState<boolean>(false)
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const openRegistrationFromSearchParams = Boolean(
+    searchParams.get('register') === 'true'
+  )
+
+  const toggleOpenForm = (isOpen: boolean) => {
+    if (isOpen) {
+      setIsFormOpen(true)
+      searchParams.set('register', 'true')
+    } else {
+      setIsFormOpen(false)
+      searchParams.delete('register')
+      searchParams.delete('registrationForm')
+    }
+
+    setSearchParams(searchParams)
+  }
+
+  useEffect(() => {
+    if (openRegistrationFromSearchParams && !isFormOpen && !loading) {
+      setIsFormOpen(true)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openRegistrationFromSearchParams, loading])
 
   useEffect(() => {
     setDataLoading(true)
@@ -57,29 +84,16 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
   }, [])
   // console.log(lookupOptions)
 
-  const providerValue = React.useMemo(
-    () => ({
-      isFormOpen,
-      setIsFormOpen,
-      insuranceCompanies: sortAlphabetically(insuranceCompanies, 'label'),
-      lookupOptions,
-      isDataLoading: loading || isDataLoading,
-      antaraHNs: mapAssigneeToLookup(antaraHNs),
-      antaraMEs: mapAssigneeToLookup(antaraMEs),
-      antaraNutritionists: mapAssigneeToLookup(antaraNutritionists),
-    }),
-
-    [
-      isFormOpen,
-      insuranceCompanies,
-      lookupOptions,
-      isDataLoading,
-      loading,
-      antaraMEs,
-      antaraHNs,
-      antaraNutritionists,
-    ]
-  )
+  const providerValue = {
+    isFormOpen,
+    setIsFormOpen: toggleOpenForm,
+    insuranceCompanies: sortAlphabetically(insuranceCompanies, 'label'),
+    lookupOptions,
+    isDataLoading: loading || isDataLoading,
+    antaraHNs: mapAssigneeToLookup(antaraHNs),
+    antaraMEs: mapAssigneeToLookup(antaraMEs),
+    antaraNutritionists: mapAssigneeToLookup(antaraNutritionists),
+  }
 
   return (
     <RegistrationFormContext.Provider value={providerValue}>

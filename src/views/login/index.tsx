@@ -74,10 +74,12 @@ function Login() {
         })
       }
     }
-    if (location?.state?.from?.pathname !== '/login') {
-      navigate(location?.state?.from)
+    const redirectUrl = location?.state?.from || '/member'
+    if (redirectUrl && redirectUrl !== '/login') {
+      navigate(redirectUrl)
+    } else {
+      navigate('/member')
     }
-    navigate('/member')
   }
 
   React.useEffect(() => {

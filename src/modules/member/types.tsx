@@ -286,7 +286,11 @@ export type InsuranceDetailsType = {
 
 export type VerificationStatus = 'verified' | 'unverified' | 'pending'
 
-export type RegistrationFormsNames = 'primary' | 'dependent' | 'child'
+export enum RegistrationFormsNames {
+  PRIMARY = 'primary',
+  DEPENDENT = 'dependent',
+  CHILD = 'child',
+}
 
 export type LookupOption = {
   label: string

@@ -32,6 +32,8 @@ function ProtectedRoute({ children }: any) {
     setRecId(params.antaraId)
   }
 
+  const currentPathWithParams = location.pathname + location.search
+
   return user ? (
     <>
       <MemberProvider antaraId={recId}>
@@ -45,7 +47,7 @@ function ProtectedRoute({ children }: any) {
       </MemberProvider>
     </>
   ) : (
-    <Navigate to="/login" state={{ from: location }} />
+    <Navigate to="/login" state={{ from: currentPathWithParams }} />
   )
 }
 
@@ -107,19 +109,21 @@ function Routes() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/member"
-            element={
-              <ProtectedRoute>
-                <MainDashboard />
-              </ProtectedRoute>
-            }
-          />
+
           <Route
             path="/member/:antaraId"
             element={
               <ProtectedRoute>
                 <BeneDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/member"
+            element={
+              <ProtectedRoute>
+                <MainDashboard />
               </ProtectedRoute>
             }
           />
