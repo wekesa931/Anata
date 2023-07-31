@@ -12033,11 +12033,15 @@ export default [
         parentValues: ['Virtual Consultation'],
         condition: (values: any) => {
           if (Array.isArray(values['Appointment Type'])) {
-            return ['Virtual Consultation'].some((r) =>
-              values['Appointment Type'].includes(r)
-            )
+            return [
+              'Virtual Consultation',
+              'Antara Virtual Doctor Consultation',
+            ].some((r) => values['Appointment Type'].includes(r))
           }
-          return ['Virtual Consultation'].includes(values['Appointment Type'])
+          return [
+            'Virtual Consultation',
+            'Antara Virtual Doctor Consultation',
+          ].includes(values['Appointment Type'])
         },
       },
       {

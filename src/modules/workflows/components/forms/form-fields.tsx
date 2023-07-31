@@ -733,8 +733,10 @@ function LinkRecordInput({
 
   useEffect(() => {
     if (linkedValue && linkedRecords.length > 0) {
-      const recordValue = linkedRecords.filter((rec: any) =>
-        linkedValue.some((val: any) => rec.id === val)
+      const recordValue = linkedRecords.filter(
+        (rec: any) =>
+          Array.isArray(linkedValue) &&
+          linkedValue.some((val: any) => rec.id === val)
       )
       if (field.relationship === 'many') {
         setSelectedChoices(recordValue)
