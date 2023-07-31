@@ -5,14 +5,14 @@ import {
 } from 'src/components/layouts/display-items.component'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
 import { useConditionData } from 'src/modules/conditions/hook/condition.data'
-import { StartingClinicalStatus } from 'src/modules/conditions/types'
+import { CurrentClinicalStatus } from 'src/modules/conditions/types'
 import { Condition } from 'src/modules/conditions/db/models'
 import { Link } from 'react-router-dom'
 
 const StatusIs = (status: string) => {
   return {
-    green: status === StartingClinicalStatus.CONTROLLED,
-    red: status === StartingClinicalStatus.UNCONTROLLED,
+    green: status === CurrentClinicalStatus.CONTROLLED,
+    red: status === CurrentClinicalStatus.UNCONTROLLED,
   }
 }
 
@@ -21,7 +21,7 @@ type ConditionItemProps = {
 }
 
 function ConditionItem({ condition }: ConditionItemProps) {
-  const status = condition?.startingClinicalStatus
+  const status = condition?.currentClinicalStatus
   const statusIs = StatusIs(status || '')
 
   return (

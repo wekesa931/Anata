@@ -35,7 +35,7 @@ export type Filter = {
   conditionStatus: ConditionStatus
 }
 
-export enum StartingClinicalStatus {
+export enum CurrentClinicalStatus {
   CONTROLLED = 'Controlled',
   UNCONTROLLED = 'Uncontrolled',
 }
