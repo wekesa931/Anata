@@ -75,7 +75,11 @@ function Login() {
       }
     }
     const redirectUrl = location?.state?.from || '/member'
-    if (redirectUrl && redirectUrl !== '/login') {
+    if (
+      redirectUrl &&
+      redirectUrl !== '/login' &&
+      redirectUrl !== '/user-not-found'
+    ) {
       navigate(redirectUrl)
     } else {
       navigate('/member')
