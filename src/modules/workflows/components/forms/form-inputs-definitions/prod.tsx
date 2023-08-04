@@ -15078,7 +15078,7 @@ export default [
         unreversed: true,
         relationship: 'one',
         foreignTableId: 'tblYzI0t7WX9LGW4h',
-        required: false,
+        required: true,
         helper: '',
       },
       {
