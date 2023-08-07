@@ -27,7 +27,7 @@ const transformInterventionData = (
       currentIntervention['Milestone Target - all interventions'],
     currentMilestone:
       currentIntervention[
-        'Current Milestone Measurement (from Intervention data tracking)'
+        'Next Milestone Target (from Intervention data tracking)'
       ],
     result: currentIntervention["Intervention's final result"],
     persona: currentIntervention['Last recorded persona'],
