@@ -2033,7 +2033,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: 'Fill in the Facility not found in the provider base',
+        helper:
+          'Fill in the Facility not found in the provider base. Enter Other facility name with format Name -Location e.g Antara Health - Lavington',
         parentKey: 'Facilities from Provider base',
         parentValues: ['recT1DtxlC4G9BuUj'],
         condition: (values: any) => {
@@ -2073,7 +2074,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: 'Fill in the Specialist not found in the provider base',
+        helper:
+          'Fill in the Specialist not found in the provider base. Enter Other specialist name with format Name -Location e.g Dr Grace - Antara ',
         parentKey: 'Specialists from Provider Base',
         parentValues: ['reco4phjmLbZai3dD'],
         condition: (values: any) => {
@@ -2928,7 +2930,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: '',
+        helper:
+          'Enter Other facility name with format Name -Location e.g Antara Health - Lavington',
         parentKey: 'Refill facility from Provider base',
         parentValues: ['OTHER'],
         condition: (values: any) => {
@@ -2968,7 +2971,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: '',
+        helper:
+          'Fill in the Prescribing Facility not found in the provider base. Enter Other facility name with format Name -Location e.g Antara Health - Lavington',
         parentKey: 'Prescribing facility from Provider base',
         parentValues: ['OTHER'],
         condition: (values: any) => {
@@ -3507,7 +3511,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: '',
+        helper:
+          'Fill in the Prescribing Facility not found in the provider base. Enter Other facility name with format Name -Location e.g Antara Health - Lavington',
         parentKey: 'Prescribing facility from Provider base',
         parentValues: ['recKyWKUXonDwCbYC'],
         condition: (values: any) => {
@@ -3549,7 +3554,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: '',
+        helper:
+          'Enter Other facility name with format Name -Location e.g Antara Health - Lavington',
         parentKey: 'Refill facility from Provider base',
         parentValues: ['recKyWKUXonDwCbYC'],
         condition: (values: any) => {
@@ -3818,8 +3824,9 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
-        helper: 'Fill in the Facility not found in the provider base',
+        required: true,
+        helper:
+          'Fill in the Facility not found in the provider base. Enter Other facility name with format Name -Location e.g Antara Health - Lavington',
         parentKey: 'Facilities',
         parentValues: ['recT1DtxlC4G9BuUj'],
         condition: (values: any) => {
