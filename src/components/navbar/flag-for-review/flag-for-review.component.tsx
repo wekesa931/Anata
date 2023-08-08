@@ -28,7 +28,7 @@ function FlagForReview() {
   const [interactions, setInteractions] = React.useState([])
   const [assignees, setAssignees] = React.useState<string[]>([])
 
-  const [getInteractions, { loading, error }] = useLazyQuery(
+  const [getInteractions, { loading, error, data }] = useLazyQuery(
     filter === ALL_INTERACTIONS
       ? GET_ALL_INTERACTIONS
       : GET_ALL_FLAGGED_INTERACTIONS,

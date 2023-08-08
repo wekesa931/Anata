@@ -10,11 +10,8 @@ export const GET_ALL_FLAGGED_INTERACTIONS = gql`
       edges {
         node {
           member {
-            antaraMemberId
-            firstName
-            surname
-            middleName
-            atRecordId
+            antaraId
+            fullName
           }
           healthNavigator {
             fullName
@@ -52,11 +49,8 @@ export const GET_ALL_INTERACTIONS = gql`
       edges {
         node {
           member {
-            antaraMemberId
-            firstName
-            surname
-            middleName
-            atRecordId
+            antaraId
+            fullName
           }
           healthNavigator {
             fullName

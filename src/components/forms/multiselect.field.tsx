@@ -27,7 +27,6 @@ function MultiSelect({ form, field, options, onChange, defaultValue }: any) {
     getToggleButtonProps,
     getMenuProps,
     getInputProps,
-    getComboboxProps,
     getItemProps,
   } = useCombobox({
     inputValue: value,
@@ -111,7 +110,7 @@ function MultiSelect({ form, field, options, onChange, defaultValue }: any) {
             </button>
           </span>
         ))}
-        <div {...getComboboxProps()} className={styles.container}>
+        <div {...getMenuProps()} className={styles.container}>
           <input
             {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
             className={`form-control ${
