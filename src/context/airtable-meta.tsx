@@ -32,8 +32,10 @@ export function AirtableMetaProvider({ children }: any) {
     if (airtableMeta === null && user) {
       airtableFetch('tables')
         .then((res) => {
+          const tables = res?.tables || res
           let tableMap: any = {}
-          res?.tables?.forEach((tb: any) => {
+          
+          tables?.forEach((tb: any) => {
             let fields: any = {}
             tb?.fields?.forEach((fl: any) => {
               fields = {
