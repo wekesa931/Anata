@@ -16,7 +16,7 @@ import { logError } from 'src/utils/logging/logger'
 import { useNotifications } from 'src/context/notifications'
 import dayjs from 'dayjs'
 import FlexRow from 'src/components/layouts/flex-row'
-import type { BiodataValues } from 'src/modules/member/types'
+import type { BiodataValues, RosterMemberType } from 'src/modules/member/types'
 import { useRegistrationForm } from 'src/context/member-registration'
 import { isDirty } from 'src/utils/form-validation-methods'
 import * as yup from 'yup'
@@ -29,6 +29,8 @@ type BioDataSectionProps = {
   member: Member | null
   isChildRegistration?: boolean
   primaryMember?: Member | null
+  isRosterMember?: boolean
+  rosterMember?: RosterMemberType
 }
 
 type InitialStateProps = {
@@ -117,6 +119,8 @@ export function BioDataForm({
   showWizardControls = true,
   showPhoneInput = true,
   primaryMember,
+  isRosterMember,
+  rosterMember,
 }: BioDataFormProps) {
   const [showForm, setShowForm] = useState<boolean>(false)
   const [isFetchingMember, setIsFetchingMember] = useState<boolean>(false)
@@ -169,9 +173,9 @@ export function BioDataForm({
   const navigate = useNavigate()
 
   const handleSubmit = (values: any, formikBag: any) => {
-    if (isDirty(initialValues, values)) {
+    if (isDirty(initialValues, values) || !member?.antaraId) {
       if (member) {
-        handleUpdateBioData(member, values)
+        handleUpdateBioData(member, values, rosterMember)
           .then(() => {
             navigate(`/member/${member.antaraId}`)
             onNext()
@@ -195,6 +199,12 @@ export function BioDataForm({
     ? dayjs().subtract(18, 'year').toDate()
     : undefined
 
+  const shouldShowPhoneInput =
+    !isChildRegistration && showPhoneInput && !isRosterMember
+
+  const shouldShowForm =
+    showForm || !!member?.antaraId || isChildRegistration || isRosterMember
+
   return (
     <div className="overflow-scroll">
       <PrimaryForm
@@ -206,7 +216,7 @@ export function BioDataForm({
           return (
             <Form>
               <>
-                {!isChildRegistration && showPhoneInput ? (
+                {shouldShowPhoneInput ? (
                   <PhoneNumberSearch
                     setResponse={parseMemberFromResponse}
                     setIsEdited={setIsEdited}
@@ -217,7 +227,7 @@ export function BioDataForm({
                     phone={values.phone}
                   />
                 ) : null}
-                {showForm || !!member?.antaraId || isChildRegistration ? (
+                {shouldShowForm ? (
                   <div className="mb-6 flex flex-col gap-4">
                     <FlexRow>
                       <TextField

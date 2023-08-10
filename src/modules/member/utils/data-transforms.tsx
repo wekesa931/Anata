@@ -4,6 +4,7 @@ import {
   V2MemberType,
   InsuranceDetailsType,
   DbValueTypes as DbTypes,
+  RosterMemberType,
 } from '../types'
 
 export const preparePhonesForUpdate = (
@@ -142,7 +143,28 @@ export const transformInsuranceData = (
     insurances: transformInsurances(insuranceDetails),
   }
 }
-
+export const transformRosterInsuranceData = (
+  member?: RosterMemberType,
+  primaryInsuranceId?: string
+): DbTypes.InsuranceDetailsValues => {
+  return {
+    antaraId: '',
+    employer: {
+      name: member?.employer?.name,
+    },
+    insurances: [
+      {
+        priority: 0,
+        insuranceId: member?.insuranceId,
+        insuranceCompany: member?.insuranceCompany?.name,
+        insuranceCompanyLogo: member?.insuranceCompany?.logo,
+        isPrincipalMember: 'no',
+        principalMemberInsuranceId: primaryInsuranceId,
+        benefits: [],
+      },
+    ],
+  }
+}
 export const prepareInsurancesForUpdate = (
   currentInsurances: DbTypes.InsuranceDetailsValues,
   newInsurances: DbTypes.InsuranceDetailsValues

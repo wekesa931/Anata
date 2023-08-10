@@ -89,6 +89,8 @@ export const parseV2MemberData = (
       dependents: dependents.map((e: any) => parseV2MemberData(e)),
     }
   }
+  const rosterMember = memberData?.rosterMember
+
   const fullName = details?.fullName
   const age = getAgeFull(birthDate)
 
@@ -105,5 +107,6 @@ export const parseV2MemberData = (
     age,
     employerName,
     airtableRecordId: details?.airtableRecordId,
+    rosterMember,
   }
 }

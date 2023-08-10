@@ -29,6 +29,38 @@ export type EmployerType = {
     name?: string
   }
 }
+export type InsuranceCompanyType = {
+  code?: string
+  name?: string
+  logo?: string
+}
+
+export type RosterMemberType = {
+  rosterMemberId: number
+  antaraStatus?: string
+  birthDate?: string
+  corporateId?: string
+  dependents?: RosterMemberType[]
+  email?: string
+  emergencyContactName?: string
+  emergencyContactPhone?: string
+  emergencyContactRelationship?: string
+  fullName: string
+  insuranceId: string
+  memberBilling: string
+  onboardingStage: string
+  phoneNumber: string
+  principalMember: RosterMemberType
+  principalMemberBranch: string
+  principalMemberDepartment: string
+  insuranceCompany?: InsuranceCompanyType
+  relationshipToPrinciple?: string
+  sex?: string
+  v2Member: V2MemberType
+  employer: {
+    name: string
+  }
+}
 
 export type V2MemberType = {
   antaraId: string
@@ -85,6 +117,7 @@ export type V2MemberType = {
   employerName?: string
   airtableRecordId?: string
   relationshipToPrimary?: string
+  rosterMember: RosterMemberType
 }
 
 type RawPhoneType = {
@@ -206,6 +239,7 @@ export type V2MemberQueryType = {
   insuranceDetails?: RawInsuranceType[]
   primary: V2MemberQueryType
   otherDependents: V2MemberQueryType[]
+  rosterMember: RosterMemberType[]
 }
 
 export type BirthdateUpdateValues = {
@@ -335,6 +369,11 @@ export namespace DbValueTypes {
     insurances: InsuranceType[]
     employer?: EmployerType
     antaraId: string
+  }
+
+  export type RosterInsuranceValues = {
+    insuranceId: string
+    insuranceCompany: InsuranceCompanyType
   }
 
   export type AddressType = {

@@ -1,12 +1,18 @@
 import React from 'react'
-import { V2MemberType, MemberStatuses } from 'src/modules/member/types'
+import {
+  V2MemberType,
+  MemberStatuses,
+  RosterMemberType,
+} from 'src/modules/member/types'
 import {
   SectionItem,
   ItemTitle,
 } from 'src/components/layouts/display-items.component'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
 import { calcAge } from 'src/utils/date-time/date-formatters'
-import type { Member } from 'src/modules/member/db/models'
+import { Member } from 'src/modules/member/db/models'
+import PrimaryButton from 'src/components/buttons/primary'
+import { useRegistrationForm } from 'src/context/member-registration'
 
 const StatusIs = (status: string) => {
   return {
@@ -17,13 +23,63 @@ const StatusIs = (status: string) => {
   }
 }
 
-function DependentItem({
-  dependent,
-  isPrimary = false,
-}: {
+enum DependentSource {
+  V2SCHEMA,
+  ROSTER,
+}
+
+type DependentItemProps = {
+  dependent: V2MemberType | RosterMemberType
+  isPrimary: boolean
+  dependentSource?: DependentSource
+}
+
+type V2DependentItemProps = {
   dependent: V2MemberType
   isPrimary: boolean
-}) {
+}
+
+type RosterDependentItemProps = {
+  dependent: RosterMemberType
+}
+function RosterDependentItem({ dependent }: RosterDependentItemProps) {
+  const { openFormWithParams } = useRegistrationForm()
+  const relationshipToPrinciple =
+    dependent?.relationshipToPrinciple === 'CHILD' ? 'child' : 'dependent'
+
+  return (
+    <div
+      className={`block border rounded-lg border-solid border-dark-blue-10 my-1 p-1 'bg-white-100'`}
+    >
+      <div className="flex justify-between items-center">
+        <div>
+          <h4 className="text-dark-blue-100 text-center font-rubik text-sm">
+            {dependent?.fullName}, {calcAge(dependent?.birthDate)}
+          </h4>
+          <p className="text-xs text-dark-blue-50 ">-</p>
+        </div>
+        <div className="flex justify-between items-center gap-4">
+          <p className="text-xs text-dark-blue-50 ">(Roster)</p>
+          <PrimaryButton
+            variant="text"
+            onClick={() =>
+              openFormWithParams(true, {
+                member: dependent,
+                registrationForm: relationshipToPrinciple,
+              })
+            }
+          >
+            Register
+          </PrimaryButton>
+        </div>
+      </div>
+    </div>
+  )
+}
+function V2DependentItem({
+  dependent,
+  isPrimary = false,
+}: V2DependentItemProps) {
   const status = dependent?.status?.toUpperCase()
   const statusIs = StatusIs(status || '')
 
@@ -65,6 +121,21 @@ function DependentItem({
     </a>
   )
 }
+function DependentItem({
+  dependent,
+  isPrimary,
+  dependentSource = DependentSource.V2SCHEMA,
+}: DependentItemProps) {
+  if (dependentSource === DependentSource.ROSTER) {
+    return <RosterDependentItem dependent={dependent as RosterMemberType} />
+  }
+  return (
+    <V2DependentItem
+      dependent={dependent as V2MemberType}
+      isPrimary={isPrimary}
+    />
+  )
+}
 
 type DependentsSectionProps = {
   member: Member | null
@@ -76,6 +147,10 @@ function DependentsSection({ member }: DependentsSectionProps) {
     ...(member?.otherDependents || []),
   ]
   const primaryDependent: V2MemberType | null = member?.primary || null
+  const roster: RosterMemberType | null = member?.rosterMember || null
+  const filteredDependents = roster?.dependents?.filter(
+    (dependent) => !dependent?.v2Member
+  )
 
   return member ? (
     <SectionItem>
@@ -83,13 +158,15 @@ function DependentsSection({ member }: DependentsSectionProps) {
         <ItemTitle title="Household" />
       </div>
       <>
-        {!primaryDependent && !allDependents.length && (
-          <div className="justify-center items-center flex w-full p-2">
-            <p className="text-dark-blue-50 font-rubik text-center text-xs">
-              No other household member available
-            </p>
-          </div>
-        )}
+        {!primaryDependent &&
+          !allDependents.length &&
+          !roster?.dependents?.length && (
+            <div className="justify-center items-center flex w-full p-2">
+              <p className="text-dark-blue-50 font-rubik text-center text-xs">
+                No other household member available
+              </p>
+            </div>
+          )}
       </>
       {!!primaryDependent && (
         <DependentItem dependent={primaryDependent} isPrimary />
@@ -101,6 +178,18 @@ function DependentsSection({ member }: DependentsSectionProps) {
               dependent={dependent}
               key={index}
               isPrimary={false}
+            />
+          ))}
+        </>
+      )}
+      {!!filteredDependents && (
+        <>
+          {filteredDependents.map((dependent, index) => (
+            <DependentItem
+              dependent={dependent}
+              isPrimary={false}
+              key={index}
+              dependentSource={DependentSource.ROSTER}
             />
           ))}
         </>

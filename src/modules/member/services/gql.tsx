@@ -251,8 +251,8 @@ export const GET_TERMS_CONDITIONS = gql`
 `
 
 export const CREATE_MEMBER = gql`
-  mutation createMember {
-    createMember {
+  mutation createMember($memberRosterId: Int) {
+    createMember(memberRosterId: $memberRosterId) {
       message
       status
       data {

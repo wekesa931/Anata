@@ -7,6 +7,7 @@ import {
   DbValueTypes as DbTypes,
   InsuranceVerificationStatus,
   EmployerType,
+  RosterMemberType,
 } from 'src/modules/member/types'
 import dayjs from 'dayjs'
 import {
@@ -41,6 +42,25 @@ const getStaff = (data: any): AssignedStaff => {
   }
 }
 
+const mergeEmergencyContact = (member: Member, memberData: V2MemberType) => {
+  return {
+    name: memberData.emergencyContactName || member.emergencyContact?.name,
+    phoneNumber:
+      memberData.emergencyContactPhone || member.emergencyContact?.phoneNumber,
+    relationship:
+      memberData.emergencyContactRelationship ||
+      member.emergencyContact?.relationship,
+  }
+}
+
+const mergeInsuranceDetails = (member: Member, memberData: V2MemberType) => {
+  if (memberData?.insuranceDetails?.length) {
+    return transformInsuranceData(memberData)
+  }
+
+  return member.insurances
+}
+
 export const createOrUpdateMember = (
   member: Member,
   memberData: V2MemberType
@@ -49,23 +69,19 @@ export const createOrUpdateMember = (
   member.firstName = memberData?.firstName
   member.lastName = memberData?.lastName
   member.middleName = memberData?.middleName
-  member.email = memberData?.email
-  member.phone = memberData?.phone
-  member.phones = memberData.phones
+  member.email = memberData?.email || member.email
+  member.phone = memberData?.phone || member.phone
+  member.phones = memberData?.phones?.length ? memberData.phones : member.phones
   member.birthDate = memberData?.birthDate
   member.tags = memberData.tags
   member.maritalStatus = memberData.maritalStatus
-  member.emergencyContact = {
-    name: memberData.emergencyContactName,
-    phoneNumber: memberData.emergencyContactPhone,
-    relationship: memberData.emergencyContactRelationship,
-  }
+  member.emergencyContact = mergeEmergencyContact(member, memberData)
   member.addresses = transformAddressData(
     memberData.memberAddresses || [],
     memberData?.antaraId || ''
   )
-  member.insurances = transformInsuranceData(memberData)
-  member.employer = memberData.employer
+  member.insurances = mergeInsuranceDetails(member, memberData)
+  member.employer = memberData.employer || member.employer
   member.isSynced = true
   member.primary = memberData?.primary
   member.dependents = memberData?.dependents
@@ -83,6 +99,7 @@ export const createOrUpdateMember = (
   member.lastSyncedAt = new Date().getTime()
 
   member.verificationStatus = memberData?.verificationStatus
+  member.rosterMember = memberData?.rosterMember
 
   return member
 }
@@ -129,6 +146,8 @@ export class Member extends Model {
   @json('primary', identityJson) primary?: V2MemberType
 
   @json('other_dependents', identityJson) otherDependents?: V2MemberType[]
+
+  @json('roster_member', identityJson) rosterMember?: RosterMemberType
 
   @text('display_name') displayName?: string
 

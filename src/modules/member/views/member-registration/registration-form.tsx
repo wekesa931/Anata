@@ -16,6 +16,8 @@ import AddressesForm from 'src/modules/member/components/forms/addresses-form'
 import InsuranceForm from 'src/modules/member/components/forms/insurance-form'
 import PrimaryMemberSearch from 'src/modules/member/components/primary-member-search'
 import { RegistrationFormsNames } from 'src/modules/member/types'
+import { useRegistrationForm } from 'src/context/member-registration'
+import { useMember } from 'src/context/member'
 
 type RegistrationFormProps = {
   primaryMember?: Member
@@ -40,9 +42,14 @@ function RegistrationForm({
   const { createDefaultMemberInstance } = useRegistrationData()
   const { notify } = useNotifications()
   const [member, setMember] = React.useState<Member | null>(null)
+  const { member: rosterMember } = useRegistrationForm()
+  const { member: currentMember } = useMember()
 
   useEffect(() => {
-    createDefaultMemberInstance()
+    createDefaultMemberInstance(
+      rosterMember,
+      currentMember?.principalInsuranceId
+    )
       .then((newMember) => {
         setMember(newMember)
       })
@@ -101,6 +108,8 @@ function RegistrationForm({
             member={member}
             isChildRegistration={formName === 'child'}
             primaryMember={selectedPrimaryMember}
+            isRosterMember={!!rosterMember}
+            rosterMember={rosterMember}
           />
         )}
       </BiodataSection>

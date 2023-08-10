@@ -79,8 +79,12 @@ export const useCreateMember = () => {
   })
 
   return {
-    createMember: async () => {
-      const res = await createMember()
+    createMember: async (memberRosterId: any) => {
+      const res = await createMember({
+        variables: {
+          memberRosterId,
+        },
+      })
       if (res?.data?.createMember?.status !== 200) {
         const errorMessage = 'Failed to create member'
         throw new Error(errorMessage)

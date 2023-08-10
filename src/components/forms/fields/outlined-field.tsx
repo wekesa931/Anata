@@ -16,6 +16,7 @@ export type OutlinedFieldProps = {
   multiple?: boolean
   type?: string
   disabled?: boolean
+  autoFocus?: boolean
 }
 
 type OutlinedFieldPropType = {

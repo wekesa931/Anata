@@ -21,6 +21,7 @@ import type {
   BiodataValues,
   ContactValues,
   DbValueTypes,
+  RosterMemberType,
 } from 'src/modules/member/types'
 import {
   preparePhonesForUpdate,
@@ -66,11 +67,12 @@ export const useRegistrationData = () => {
 
   const handleUpdateBioData = async (
     member: Member,
-    biodata: BiodataValues
+    biodata: BiodataValues,
+    rosterMember?: RosterMemberType
   ) => {
     try {
       if (!biodata.antaraId) {
-        const antaraId = await createMember()
+        const antaraId = await createMember(rosterMember?.rosterMemberId)
         biodata.antaraId = antaraId
       }
 

@@ -1,5 +1,5 @@
 import { useDatabase } from '@nozbe/watermelondb/hooks'
-import { V2MemberType } from 'src/modules/member/types'
+import { RosterMemberType, V2MemberType } from 'src/modules/member/types'
 import { CollectionType } from 'src/storage/types'
 import { Collection, Q } from '@nozbe/watermelondb'
 import { Member, createOrUpdateMember } from 'src/modules/member/db/models'
@@ -7,6 +7,7 @@ import {
   useGetMemberByAntaraId,
   normalizeMemberDetails,
 } from 'src/modules/member/services/member.api'
+import { transformRosterInsuranceData } from '../utils/data-transforms'
 
 export const useMembersData = () => {
   const database = useDatabase()
@@ -15,12 +16,32 @@ export const useMembersData = () => {
   )
   const { getData, loading } = useGetMemberByAntaraId()
 
-  const createDefaultMemberInstance = async () => {
+  const createDefaultMemberInstance = async (
+    rosterMember?: RosterMemberType,
+    principalInsuranceId?: string
+  ) => {
+    const [firstName, middleName, lastName] =
+      rosterMember?.fullName?.split(' ') || []
+    const insuranceData = transformRosterInsuranceData(
+      rosterMember,
+      principalInsuranceId
+    )
     return database.write(async () => {
       return membersCollection.create((member) => {
-        member.firstName = ''
-        member.lastName = ''
+        member.firstName = firstName || ''
+        member.middleName = middleName || ''
+        member.lastName = lastName || ''
         member.isSynced = false
+        member.birthDate = rosterMember?.birthDate
+        member.email = rosterMember?.email
+        member.emergencyContact = {
+          name: rosterMember?.emergencyContactName,
+          phoneNumber: rosterMember?.emergencyContactPhone,
+          relationship: rosterMember?.emergencyContactRelationship,
+        }
+        member.setInitialPhone(rosterMember?.phoneNumber || '')
+        member.sex = rosterMember?.sex
+        member.insurances = insuranceData
       })
     })
   }

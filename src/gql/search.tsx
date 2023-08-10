@@ -215,6 +215,53 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
         }
       }
     }
+    rosterMember {
+      rosterMemberId
+      antaraStatus
+      birthDate
+      corporateId
+      dependents {
+        rosterMemberId
+        antaraStatus
+        birthDate
+        email
+        fullName
+        relationshipToPrinciple
+        emergencyContactName
+        emergencyContactPhone
+        emergencyContactRelationship
+        employer {
+          name
+        }
+        insuranceId
+        insuranceCompany {
+          name
+        }
+        onboardingStage
+        phoneNumber
+        principalMember {
+          insuranceId
+        }
+        tags
+        v2Member {
+          antaraId
+          birthDate
+        }
+        sex
+      }
+      email
+      v2Member {
+        antaraId
+        birthDate
+      }
+      insuranceCompany {
+        code
+        name
+        phone
+        smartCode
+      }
+      relationshipToPrinciple
+    }
   }
 `
 

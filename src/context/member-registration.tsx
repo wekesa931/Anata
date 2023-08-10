@@ -16,6 +16,13 @@ type RegistrationFormContextType = {
   antaraHNs: LookupOption[]
   antaraMEs: LookupOption[]
   antaraNutritionists: LookupOption[]
+  member: any
+  openFormWithParams: (value: boolean, params?: OpenFormParams) => void
+}
+
+type OpenFormParams = {
+  member?: any
+  registrationForm?: string
 }
 
 const RegistrationFormContext =
@@ -28,6 +35,8 @@ const RegistrationFormContext =
     antaraHNs: [],
     antaraMEs: [],
     antaraNutritionists: [],
+    member: null,
+    openFormWithParams: () => null,
   })
 
 function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
@@ -56,9 +65,20 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
       setIsFormOpen(false)
       searchParams.delete('register')
       searchParams.delete('registrationForm')
+      setMember(null)
     }
 
     setSearchParams(searchParams)
+  }
+
+  const [member, setMember] = useState<any>(null)
+
+  const openFormWithParams = (isOpen: boolean, params?: OpenFormParams) => {
+    setMember(params?.member)
+    if (params?.registrationForm) {
+      searchParams.set('registrationForm', params?.registrationForm)
+    }
+    toggleOpenForm(isOpen)
   }
 
   useEffect(() => {
@@ -93,6 +113,8 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
     antaraHNs: mapAssigneeToLookup(antaraHNs),
     antaraMEs: mapAssigneeToLookup(antaraMEs),
     antaraNutritionists: mapAssigneeToLookup(antaraNutritionists),
+    openFormWithParams,
+    member,
   }
 
   return (
