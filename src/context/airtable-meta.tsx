@@ -3,6 +3,7 @@ import airtableFetch from 'src/services/airtable/fetch'
 import { interactionlogform } from 'src/modules/workflows/utils'
 import logError from 'src/utils/logging/logger'
 import { useUser } from 'src/context/user'
+import { keyBy } from 'lodash'
 
 type AirtableMetaType = {
   airtableMeta: any
@@ -32,27 +33,20 @@ export function AirtableMetaProvider({ children }: any) {
     if (airtableMeta === null && user) {
       airtableFetch('tables')
         .then((res) => {
-          const tables = res?.tables || res
-          let tableMap: any = {}
-          
-          tables?.forEach((tb: any) => {
-            let fields: any = {}
-            tb?.fields?.forEach((fl: any) => {
-              fields = {
-                ...fields,
-                primaryFieldName: tb.fields[0]?.name,
-                [fl.id]: fl,
-              }
-            })
-            tableMap = {
-              ...tableMap,
-              [tb.id]: {
-                ...tb,
-                fields,
-              },
+          // The server sometimes misses the tables key and returns the tables within the response as a flat array.
+          let tables = res?.tables || res
+          tables = tables?.map((tb: any) => {
+            const fieldsById = keyBy(tb?.fields, 'id')
+            return {
+              ...tb,
+              primaryFieldName: fieldsById[tb.primaryFieldId]?.name,
+              fields: fieldsById,
             }
           })
-          setAirtableMeta({ ...tableMap, interactionlogform })
+          const tableMap: any = keyBy(tables, 'id')
+          // interaction log mapping is not part of Airtable tables. We pull the schema from our frontend definition
+          tableMap.interactionlogform = interactionlogform
+          setAirtableMeta(tableMap)
         })
         .catch((e) => logError(e))
         .finally(() => {

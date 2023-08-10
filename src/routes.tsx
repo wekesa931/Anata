@@ -58,7 +58,7 @@ function UserNotFound() {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-2 p-4">
       <p className="text-3xl font-bold text-dark-blue-100">
-        You account does not exist in member db!
+        Your account does not exist in member db!
       </p>
       <NoDataIcon height="30%" />
 
