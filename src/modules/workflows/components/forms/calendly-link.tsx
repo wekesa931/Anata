@@ -45,8 +45,8 @@ const CalendlyLink = ({ field, formPayload }: any) => {
   }
   const calendaUrl = () => {
     let urlString = ''
-    const urlName = member['Full Name']?.replaceAll(' ', '%20')
-    const memberEmail = member['Email 1'] || 'navigation@antarahealth.com'
+    const urlName = member?.fullName?.replace(' ', '%20')
+    const memberEmail = member?.email || 'navigation@antarahealth.com'
     if (calendlyLinkedFields[field.id]) {
       const reasonUrl = formPayload[0][calendlyLinkedFields[field.id].reason]
         ? formPayload[0][calendlyLinkedFields[field.id].reason].replaceAll(
@@ -63,7 +63,7 @@ const CalendlyLink = ({ field, formPayload }: any) => {
       urlString = `https://calendly.com/antara-health/${
         calendlyLinkedFields[field.id].link
       }?name=${urlName}&email=${memberEmail}&a1=${
-        member['Phone 1']
+        member?.phone
       }&a2=${reasonUrl}&a3=${notes}&utm_source=src - ${user?.name}`
       return (
         <Button
