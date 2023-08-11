@@ -8,6 +8,7 @@ import SuccesfullRegistration from 'src/modules/member/views/member-registration
 import type { Member } from 'src/modules/member/db/models'
 import { RegistrationFormsNames } from 'src/modules/member/types'
 import RegistrationForm from 'src/modules/member/views/member-registration/registration-form'
+import { useRegistrationForm } from 'src/context/member-registration'
 
 type MemberRegistrationFormProps = {
   setIsEdited: (isEdited: boolean) => void
@@ -81,6 +82,8 @@ function MemberRegistrationForm({
       : undefined
   )
 
+  const { member: rosterMember } = useRegistrationForm()
+
   const handleClick = (selection: RegistrationForms) => {
     setSelectedForm(selection)
   }
@@ -144,6 +147,7 @@ function MemberRegistrationForm({
                 member={selectedForm.member}
                 formFilled={selectedForm.name}
                 setSelectedForm={setSelectedForm}
+                isRosterMember={!!rosterMember}
               />
             </>
           ) : (

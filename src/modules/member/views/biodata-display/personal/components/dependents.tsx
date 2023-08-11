@@ -23,7 +23,7 @@ const StatusIs = (status: string) => {
   }
 }
 
-enum DependentSource {
+export enum DependentSource {
   V2SCHEMA,
   ROSTER,
 }

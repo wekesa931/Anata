@@ -29,7 +29,6 @@ type BioDataSectionProps = {
   member: Member | null
   isChildRegistration?: boolean
   primaryMember?: Member | null
-  isRosterMember?: boolean
   rosterMember?: RosterMemberType
 }
 
@@ -119,7 +118,6 @@ export function BioDataForm({
   showWizardControls = true,
   showPhoneInput = true,
   primaryMember,
-  isRosterMember,
   rosterMember,
 }: BioDataFormProps) {
   const [showForm, setShowForm] = useState<boolean>(false)
@@ -200,10 +198,10 @@ export function BioDataForm({
     : undefined
 
   const shouldShowPhoneInput =
-    !isChildRegistration && showPhoneInput && !isRosterMember
+    !isChildRegistration && showPhoneInput && !rosterMember
 
   const shouldShowForm =
-    showForm || !!member?.antaraId || isChildRegistration || isRosterMember
+    showForm || !!member?.antaraId || isChildRegistration || !!rosterMember
 
   return (
     <div className="overflow-scroll">

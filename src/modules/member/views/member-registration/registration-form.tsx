@@ -108,7 +108,6 @@ function RegistrationForm({
             member={member}
             isChildRegistration={formName === 'child'}
             primaryMember={selectedPrimaryMember}
-            isRosterMember={!!rosterMember}
             rosterMember={rosterMember}
           />
         )}

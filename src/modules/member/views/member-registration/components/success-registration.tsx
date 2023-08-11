@@ -1,14 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Check } from 'react-feather'
 import PrimaryButton from 'src/components/buttons/primary'
 import { ChildCareOutlined, Person2Outlined } from '@mui/icons-material'
 import type { Member } from 'src/modules/member/db/models'
+import useAnalytics from 'src/hooks/analytics'
 
 type SuccesfullRegistrationProps = {
   title: string
   member?: Member
   formFilled: 'primary' | 'dependent' | 'child'
   setSelectedForm: (form: any) => void
+  isRosterMember: boolean
 }
 
 function SuccesfullRegistration({
@@ -16,7 +18,20 @@ function SuccesfullRegistration({
   member,
   formFilled,
   setSelectedForm,
+  isRosterMember,
 }: SuccesfullRegistrationProps) {
+  const analytics = useAnalytics('Member registration')
+
+  useEffect(() => {
+    analytics.track('Member registered', {
+      source: isRosterMember ? 'Roster' : 'Form',
+      // eslint-disable-next-line no-underscore-dangle
+      member: member?._raw,
+      registrationType: formFilled,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const name = member?.fullName
 
   return (
