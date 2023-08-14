@@ -162,7 +162,7 @@ export default [
       },
       {
         id: 'fldVTzBcoWVkmSG3H',
-        name: 'PMH',
+        name: 'PMH - Past Medical History',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -172,7 +172,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: '',
+        helper:
+          'Ask member of any significant illnesses they have had in the past, the management and if it has resolved or not',
       },
       {
         id: 'fldS7BHxKsN4pG2gf',
@@ -1908,6 +1909,45 @@ export default [
         },
       },
       {
+        id: 'fldm00eF3024fNsZS',
+        name: 'Activity?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Ask if the member is doing any activity. If Yes:describe it in the next field, if no: "That\\\'s okay, let\\\'s find something you will enjoy and start doing it."',
+      },
+      {
+        id: 'fldTc7EwOHKhSNTP0',
+        name: 'Activity Description',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          '"What kind of Physical Activity do you like to do? Do you like to walk, run, cycle, swim, go to the gym, play football, rugby or any other activity?"\n\nIf YES:\n"How often do you do [activity from above] and typically, how long do you do it for in any given session?',
+        conditionType: '',
+        parentKey: 'Activity?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Activity?'])) {
+            return ['Yes'].some((r) => values['Activity?'].includes(r))
+          }
+          return ['Yes'].includes(values['Activity?'])
+        },
+      },
+      {
         id: 'fldEgYA6Nml0CPzYO',
         name: 'Access to a gym',
         type: 'select',
@@ -2189,90 +2229,7 @@ export default [
         foreignTableId: null,
         required: true,
         helper:
-          '"Do you currently have, or have you ever been told you have, a chronic condition? That is any condition that has been present for more than 3 months. \n\nExamples of chronic conditions are: high blood pressure, diabetes, arthritis, asthma or high cholesterol."\n\nIf you identify condition(s) please add the condition using a form in the guided workflow.',
-      },
-      {
-        id: 'fldgMXReFVH1AVE51',
-        name: 'Conditions master list',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldSwxBB4lSdvx3bU',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblR6LlerAkXAmVnc',
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Does the Member have a condition',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Does the Member have a condition'])) {
-            return ['Yes'].some((r) =>
-              values['Does the Member have a condition'].includes(r)
-            )
-          }
-          return ['Yes'].includes(values['Does the Member have a condition'])
-        },
-      },
-      {
-        id: 'fld5dK2E5bx5jwhOH',
-        name: 'Or a Minor Chronic Condition / Acute Condition?',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '"How about any of these conditions?"',
-        conditionType: '',
-        parentKey: 'Does the Member have a condition',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Does the Member have a condition'])) {
-            return ['Yes'].some((r) =>
-              values['Does the Member have a condition'].includes(r)
-            )
-          }
-          return ['Yes'].includes(values['Does the Member have a condition'])
-        },
-      },
-      {
-        id: 'fld700OGRlw77ATAQ',
-        name: 'Other Conditions',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Or a Minor Chronic Condition / Acute Condition?',
-        parentValues: ['Other'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Or a Minor Chronic Condition / Acute Condition?']
-            )
-          ) {
-            return ['Other'].some((r) =>
-              values[
-                'Or a Minor Chronic Condition / Acute Condition?'
-              ].includes(r)
-            )
-          }
-          return ['Other'].includes(
-            values['Or a Minor Chronic Condition / Acute Condition?']
-          )
-        },
+          'Do you currently have, or have you ever been told you have, a chronic condition? That is any condition that has been present for more than 3 months. Examples of chronic conditions are: high blood pressure, diabetes, arthritis, asthma or high cholesterol. Also add any other chronic conditions like anemia, gout etc and acute condition or issue that member has had or is suffering from at that moment. NOTE: If you identify condition(s) please add the condition using a form in the guided workflow',
       },
       {
         id: 'fldISgDp8nGwq7BR1',

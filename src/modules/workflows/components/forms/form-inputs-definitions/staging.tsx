@@ -1560,7 +1560,7 @@ export default [
         foreignTableId: null,
         required: true,
         helper:
-          'A Condition is a diagnosis that has been present for > 3months\n\nMajor conditions: Hypertension, Diabetes, Asthma, Osteoarthritis, Obesity\n\nMinor Conditions: everything else (i.e. gout, gastritis, mental health issues, pregnancy etc.)\n\nIf the response is yes, click here: \n<a href="https://airtable.com/shreJWFrTNVXs6RKW" target="_blank">https://airtable.com/shreJWFrTNVXs6RKW</a> ',
+          'Do you currently have, or have you ever been told you have, a chronic condition? That is any condition that has been present for more than 3 months. Examples of chronic conditions are: high blood pressure, diabetes, arthritis, asthma or high cholesterol. Also add any other chronic conditions like anemia, gout etc and acute condition or issue that member has had or is suffering from at that moment. NOTE: If you identify condition(s) please add the condition using a form in the guided workflow',
       },
       {
         id: 'fldgwxiMqSEspuQ3D',
@@ -1652,8 +1652,8 @@ export default [
         },
       },
       {
-        id: 'fldEUr0nJp6AVuJCu',
-        name: 'Activity',
+        id: 'fldXlJo4VWfd4YC0m',
+        name: 'Activity?',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -1662,9 +1662,9 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper:
-          'IF ADULT\n 0: No/very light activity = Only sitting, watching TV or staying in bed\n1: Light activity = Sitting work with leisure activity; or at least 30 minutes brisk walking 3 days per week; or\nlight weight lifting, yoga, stretching exercises\n2: Moderate activity = Partly standing/walking work; or at least 30 minutes brisk walking 5 days per week; or\nmoderate weight lifting, low impact home exercises (push ups, sit ups, star jumps, dancing, aerobics, zumba), cycling for leisure, jog-walk combination, slow skipping, occasional hiking\n3: Vigorous activity = Mainly standing/walking work; or at least 60 minutes brisk walking 7 days per week; or\nheavy weight lifting, high impact home exercises, cycling to work, jogging, fast skipping, weekend hiking\n4: Daily sports/athlete = Daily strenuous work like heavy lifting, digging, farming, sports cycling, sports training, competitive sports, hiking\n\n\nIF MINOR\n 0: No/very light activity = Only sitting, watching TV or staying in bed\n1: Light activity = At least 60 minutes of running, cycling, jumping, play, sports - once per week\n2: Moderate activity = At least 60 minutes of running, cycling, jumping, play, sports - 3 times per week\n3: Vigorous activity = At least 60 minutes of running, cycling, jumping, play, sports - 5 times per week\n4: Daily sports/athlete = At least 60 minutes of running, cycling, jumping, play, sports - 7 times per week\n',
+          'Ask if the member is doing any activity. If Yes:describe it in the next field, if no: "That\'s okay, let\'s find something you will enjoy and start doing it."',
       },
       {
         id: 'fldrQojT6cIdRa81C',
@@ -1678,7 +1678,17 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper:
+          '"What kind of Physical Activity do you like to do? Do you like to walk, run, cycle, swim, go to the gym, play football, rugby or any other activity?"\n\nIf YES:\n"How often do you do [activity from above] and typically, how long do you do it for in any given session?',
+        conditionType: '',
+        parentKey: 'Activity?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Activity?'])) {
+            return ['Yes'].some((r) => values['Activity?'].includes(r))
+          }
+          return ['Yes'].includes(values['Activity?'])
+        },
       },
       {
         id: 'fldcUfft5RjWBcOaq',
