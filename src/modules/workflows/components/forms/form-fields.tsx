@@ -1287,6 +1287,7 @@ function DateInputField({
                 <DateTimePicker
                   renderInput={(props) => <TextField {...props} />}
                   label={<Label field={field} error={error} />}
+                  inputFormat="dd/MM/yyyy HH:mm"
                   disabled={disabled}
                   value={value}
                   onChange={(newValue: Date | null) => {

@@ -13363,7 +13363,7 @@ export default [
       },
       {
         id: 'fldqIcXvtcB2w3D83',
-        name: 'Time (test)',
+        name: 'Time',
         type: 'date',
         format: '',
         isDateTime: true,
@@ -13374,7 +13374,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'This is a test / work in progress to identify specific time. \nIt is the agreed time with member, please note that Logistic admin might be requesting a reschedule.\nDo not fill if no specific time was agreed with the member.',
+          'This is the agreed time with member, please note that Logistic admin might be requesting a reschedule.\nDo not fill if no specific time was agreed with the member.',
       },
       {
         id: 'fldFiJvTaVC3jK7tT',
