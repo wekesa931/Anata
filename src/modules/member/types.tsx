@@ -60,6 +60,7 @@ export type RosterMemberType = {
   employer: {
     name: string
   }
+  tags: string
 }
 
 export type V2MemberType = {

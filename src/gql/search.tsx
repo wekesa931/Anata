@@ -230,6 +230,8 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
         emergencyContactName
         emergencyContactPhone
         emergencyContactRelationship
+        principalMemberBranch
+        principalMemberDepartment
         employer {
           name
         }

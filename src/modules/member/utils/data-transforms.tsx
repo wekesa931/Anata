@@ -161,6 +161,7 @@ export const transformRosterInsuranceData = (
         isPrincipalMember: 'no',
         principalMemberInsuranceId: primaryInsuranceId,
         benefits: [],
+        relationshipToPrincipalMember: member?.relationshipToPrinciple,
       },
     ],
   }

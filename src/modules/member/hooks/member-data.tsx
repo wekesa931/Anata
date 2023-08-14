@@ -22,6 +22,7 @@ export const useMembersData = () => {
   ) => {
     const [firstName, middleName, lastName] =
       rosterMember?.fullName?.split(' ') || []
+
     const insuranceData = transformRosterInsuranceData(
       rosterMember,
       principalInsuranceId
@@ -42,6 +43,7 @@ export const useMembersData = () => {
         member.setInitialPhone(rosterMember?.phoneNumber || '')
         member.sex = rosterMember?.sex
         member.insurances = insuranceData
+        member.tags = rosterMember?.tags?.split(',')
       })
     })
   }
