@@ -7592,7 +7592,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: 'Calculate starting BMI using the current beneficiary weight',
+        helper:
+          'Stage 1: BMI 25.0 - 29.9\nStage 2: BMI 30.0 - 39.9\nStage 3: BMI =/>40',
         conditionType: '',
         parentKey: 'Intervention',
         parentValues: ['Weight Gain Plan', 'Caloric Reduction Plan'],
@@ -13562,7 +13563,7 @@ export default [
         foreignTableId: null,
         required: true,
         helper:
-          'Calculate current BMI using the new current weight. \nIdentify the difference between previous BMI and current BMI\nEnter the increase or decrease in BMI\nFormula to use: ((current BMI/initial BMI)-1)*100\n\nexample: \ninitial BMI was 24 \ncurrent BMI is 26\nformula: X = ((26/24)-1)*100\nresult = 8.33\nenter: 8.33% increase\n\nexample 2:\ninitial BMI was 25\ncurrent BMI is 23\nformula: X = ((23/25)-1)*100\nresult = -8\nenter: 8% reduction\n\nSome examples:\n3% reduction, 4% increase, 2% reduction, 0%\n',
+          'Stage 1: BMI 25.0 - 29.9\nStage 2: BMI 30.0 - 39.9\nStage 3: BMI =/>40',
         conditionType: '',
         parentKey: 'Intervention type',
         parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
