@@ -968,7 +968,7 @@ function LinkRecordInputDefault({
       const displayFields: any[] = []
       response.forEach((fl: any) => {
         const loadedMeta =
-          fl.fields[airtableMeta[field.foreignTableId].fields.primaryFieldName]
+          fl.fields[airtableMeta[field.foreignTableId].primaryFieldName]
         const loadedValue = loadedMeta && typeof loadedMeta === 'string'
         if (loadedValue) {
           displayFields.push({
@@ -1008,8 +1008,7 @@ function LinkRecordInputDefault({
 
   useEffect(() => {
     if (airtableMeta) {
-      let airtableField =
-        airtableMeta[field.foreignTableId]?.fields?.primaryFieldName
+      let airtableField = airtableMeta[field.foreignTableId]?.primaryFieldName
       let searchParam = ''
       if (
         field.foreignTableId === 'tblHs6JxFnMGAjNNC' &&
