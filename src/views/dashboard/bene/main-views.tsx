@@ -10,13 +10,11 @@ import InteractionLogs from 'src/modules/interactions/components/interaction-log
 import Nutrition from 'src/modules/nutrition'
 import Files from 'src/modules/udm'
 import ErrorBoundary from 'src/components/error-boundary'
-import MemberTask from 'src/modules/tasks/views/member-tasks'
 import CallLog from 'src/modules/comms/calls/views/call-logs'
-import EngagementDashboard from 'src/modules/engagement'
-import LongitudinalV1 from 'src/modules/longitudinal'
 import { withTabRouter } from 'src/utils/routing/tab-router'
 import ConditionsSection from 'src/modules/conditions/views/condition-details'
 import InterventionSection from 'src/modules/interventions/views/intervention-details'
+import MemberTasks from 'src/modules/tasks/components/member-tasks.component'
 import styles from './views.component.css'
 
 function Views({ view, handleChange }: any) {
@@ -45,13 +43,11 @@ function Views({ view, handleChange }: any) {
             />
             <Tab label="Conditions" value="conditions" />
             <Tab label="Interventions" value="interventions" />
-            <Tab label="Longitudinal" value="longitudinal" />
             <Tab label="Interactions" value="interactions" />
             <Tab label="Call Log" value="call-logs" />
             <Tab label="Nutrition" value="nutrition" />
             <Tab label="Docs" value="udm" />
             <Tab label="Member Tasks" value="member-tasks" />
-            <Tab label="Member Engagement" value="engagement" />
           </TabList>
         </Box>
         <div
@@ -70,11 +66,6 @@ function Views({ view, handleChange }: any) {
           <TabPanel value="interventions">
             <ErrorBoundary>
               <InterventionSection />
-            </ErrorBoundary>
-          </TabPanel>
-          <TabPanel value="longitudinal" className={styles.longitud}>
-            <ErrorBoundary>
-              <LongitudinalV1 />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel value="interactions">
@@ -99,12 +90,7 @@ function Views({ view, handleChange }: any) {
           </TabPanel>
           <TabPanel value="member-tasks">
             <ErrorBoundary>
-              <MemberTask />
-            </ErrorBoundary>
-          </TabPanel>
-          <TabPanel value="engagement">
-            <ErrorBoundary>
-              <EngagementDashboard />
+              <MemberTasks />
             </ErrorBoundary>
           </TabPanel>
         </div>

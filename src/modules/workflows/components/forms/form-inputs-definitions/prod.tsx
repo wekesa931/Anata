@@ -1919,7 +1919,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Ask if the member is doing any activity. If Yes:describe it in the next field, if no: "That\\\'s okay, let\\\'s find something you will enjoy and start doing it."',
       },
@@ -1934,7 +1934,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           '"What kind of Physical Activity do you like to do? Do you like to walk, run, cycle, swim, go to the gym, play football, rugby or any other activity?"\n\nIf YES:\n"How often do you do [activity from above] and typically, how long do you do it for in any given session?',
         conditionType: '',
@@ -1995,21 +1995,6 @@ export default [
         },
       },
       {
-        id: 'fldTc7EwOHKhSNTP0',
-        name: 'Activity Description',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          '"What kind of Physical Activity do you like to do? Do you like to walk, run, cycle, swim, go to the gym, play football, rugby or any other activity?"\nIf YES: "How often do you do [activity from above] and typically, how long do you do it for in any given session?\nIf NO: "That\'s okay, let\'s find something you will enjoy and start doing it."',
-      },
-      {
         id: 'fldRozIE8zsPzozuK',
         name: 'Social History',
         type: 'multiSelect',
@@ -2020,7 +2005,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           '"How much a person smokes, drinks or uses recreational drugs can have an important impact on health. That is why we ask. There is no judgement, only concern for your well-being"',
         conditionType: '',
@@ -2031,6 +2016,101 @@ export default [
             return ['No'].some((r) => values['Is the BN a minor'].includes(r))
           }
           return ['No'].includes(values['Is the BN a minor'])
+        },
+      },
+      {
+        id: 'fldUDLKuoyJzNELNM',
+        name: 'Tobacco',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'How many cigarettes do you smoke per day?',
+        conditionType: '',
+        parentKey: 'Social History',
+        parentValues: ['Tobacco'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Social History'])) {
+            return ['Tobacco'].some((r) => values['Social History'].includes(r))
+          }
+          return ['Tobacco'].includes(values['Social History'])
+        },
+      },
+      {
+        id: 'fld1qv5wFWJoAM1nu',
+        name: 'Last smoking date',
+        type: 'date',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'When did you smoke your last cigarette (if you have quit)?',
+        conditionType: '',
+        parentKey: 'Social History',
+        parentValues: ['Tobacco'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Social History'])) {
+            return ['Tobacco'].some((r) => values['Social History'].includes(r))
+          }
+          return ['Tobacco'].includes(values['Social History'])
+        },
+      },
+      {
+        id: 'fldUYKFRJfYPWxsR5',
+        name: 'Alcohol',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'How many drinks do you have per week?',
+        conditionType: '',
+        parentKey: 'Social History',
+        parentValues: ['Alcohol'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Social History'])) {
+            return ['Alcohol'].some((r) => values['Social History'].includes(r))
+          }
+          return ['Alcohol'].includes(values['Social History'])
+        },
+      },
+      {
+        id: 'fldn9k5Z9zQUupwoG',
+        name: 'Recreational Drugs',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          '"Tell us about the type of drugs that you use and how often you use them."',
+        conditionType: '',
+        parentKey: 'Social History',
+        parentValues: ['Recreational drugs'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Social History'])) {
+            return ['Recreational drugs'].some((r) =>
+              values['Social History'].includes(r)
+            )
+          }
+          return ['Recreational drugs'].includes(values['Social History'])
         },
       },
       {

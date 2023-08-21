@@ -238,6 +238,7 @@ export const initialFormValues = (
       'Health Navigator': [user.userAirtableId],
       Gender: member?.sex,
       'Is the BN a minor': member?.isMinor ? 'Yes' : 'No',
+      'Date of baseline': dayjs().format('YYYY-MM-DD'),
     },
     Vitals: {
       Staff: isOnsite ? [user.userAirtableId] : member?.assignedHn?.recordId,

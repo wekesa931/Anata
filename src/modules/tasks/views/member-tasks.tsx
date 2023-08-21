@@ -1,67 +1,42 @@
-import React, { useState } from 'react'
-import useAirtableFetch from 'src/hooks/airtable-fetch'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
-import List from 'src/components/list'
+import { useEffect, useState } from 'react'
+import logError from 'src/utils/logging/logger'
 import { useMember } from 'src/context/member'
+import airtableFetch from 'src/services/airtable/fetch'
 
-function MemberTask() {
+const useMemberTaskData = () => {
+  const [memberTaskData, setmemberTaskData] = useState<any[]>([])
   const { member } = useMember()
-  const [memberTask, setMemberTask] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const { data, isLoading, isError } = useAirtableFetch(
-    `memberTask/list?filterByFormula=FIND("${member?.airtableRecordId}", {Member Record ID})`
-  )
+  useEffect(() => {
+    const getMemberTasks = async (recId: string) => {
+      setLoading(true)
+      try {
+        const memberTask = await airtableFetch(
+          `memberTask/list?filterByFormula=FIND("${recId}", {Member Record ID})`
+        )
 
-  React.useEffect(() => {
-    if (data) {
-      const mappedData = Object.keys(data).map((key) => {
-        return {
-          data: data[key],
-          name: data[key].Name,
-        }
-      })
-      setMemberTask(mappedData)
+        const mappedResponses = memberTask?.map((task: any) => {
+          Object.keys(task).forEach((value) => {
+            if (Array.isArray(value)) task[value] = task[value].join(',')
+          })
+          return task
+        })
+        setmemberTaskData(mappedResponses)
+      } catch (e) {
+        logError(e)
+      } finally {
+        setLoading(false)
+      }
     }
+
+    if (member?.airtableRecordId) {
+      getMemberTasks(member?.airtableRecordId)
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
-  const isReadytoShowTasks = memberTask?.length > 0 && !isLoading && !isError
-
-  const getCreatedDate = (task: any) => {
-    return task.Created
-  }
-  const getStatus = (task: any) => {
-    return task.Status
-  }
-  return (
-    <div className="full-width">
-      {isReadytoShowTasks && (
-        <div data-testid="data-list-1">
-          <List
-            list={memberTask}
-            getTopLeftText={getCreatedDate}
-            getTopRightText={getStatus}
-            modalTitle="Member Task"
-            data-testid="data-list-1"
-            emptyListText="No tasks found."
-            dateColumnKey="task Created At"
-          />
-        </div>
-      )}
-      {isLoading && (
-        <div className="d-flex flex-direction-column flex-align-center margin-top-32">
-          <LoadingIcon />
-          <p className="text-small">Loading Member tasks</p>
-        </div>
-      )}
-
-      {isError && (
-        <p className="text-danger">
-          An error occurred while displaying Member tasks, please refresh the
-          page, if it persists contact help desk.
-        </p>
-      )}
-    </div>
-  )
+  }, [member?.airtableRecordId])
+  return { memberTaskData, loading }
 }
 
-export default MemberTask
+export default useMemberTaskData
