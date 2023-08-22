@@ -62,6 +62,7 @@ function FcmProvider({ children }: any) {
 
       setMemberId(memberPushAtId)
       setLocalPushNotification(incomingPushNotification)
+      setExternalPushNotification(incomingPushNotification)
     } else {
       setExternalPushNotification(incomingPushNotification)
     }

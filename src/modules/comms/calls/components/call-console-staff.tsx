@@ -64,7 +64,10 @@ function HNAndCSList({
           }
         }
       )
-      setantaraStaffData(staffData)
+      const sortedStaffData = staffData.sort((a, b) =>
+        a.fullName.localeCompare(b.fullName)
+      )
+      setantaraStaffData(sortedStaffData)
     },
   })
   const disableTransferButton = !selected
