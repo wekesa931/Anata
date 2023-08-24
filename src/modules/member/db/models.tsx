@@ -100,6 +100,7 @@ export const createOrUpdateMember = (
 
   member.verificationStatus = memberData?.verificationStatus
   member.rosterMember = memberData?.rosterMember
+  member.referralSource = memberData?.referralSource
 
   return member
 }
@@ -167,6 +168,8 @@ export class Member extends Model {
   @text('verification_status') verificationStatus?: string
 
   @date('last_synced_at') lastSyncedAt?: number
+
+  @text('referral_source') referralSource?: string
 
   @writer async destroy() {
     await super.destroyPermanently()

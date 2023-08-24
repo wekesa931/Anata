@@ -119,6 +119,7 @@ export type V2MemberType = {
   airtableRecordId?: string
   relationshipToPrimary?: string
   rosterMember: RosterMemberType
+  referralSource?: string
 }
 
 type RawPhoneType = {
@@ -175,6 +176,7 @@ export type V2MemberQueryType = {
       maritalStatus?: string
     }
     relationshipToPrimary?: string
+    referralSource?: string
   }
   phones?: RawPhoneType[]
   status?: {
@@ -258,6 +260,7 @@ export type BiodataValues = BirthdateUpdateValues & {
   tags: string[]
   primaryMemberAntaraId?: string
   relationshipToPrimary?: string
+  referralSource?: string
 }
 
 export type UpdatePhoneValues = {

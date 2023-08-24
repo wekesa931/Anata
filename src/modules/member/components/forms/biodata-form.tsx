@@ -16,7 +16,11 @@ import { logError } from 'src/utils/logging/logger'
 import { useNotifications } from 'src/context/notifications'
 import dayjs from 'dayjs'
 import FlexRow from 'src/components/layouts/flex-row'
-import type { BiodataValues, RosterMemberType } from 'src/modules/member/types'
+import type {
+  BiodataValues,
+  LookupOption,
+  RosterMemberType,
+} from 'src/modules/member/types'
 import { useRegistrationForm } from 'src/context/member-registration'
 import { isDirty } from 'src/utils/form-validation-methods'
 import * as yup from 'yup'
@@ -95,6 +99,7 @@ const extractInitialState = ({
       : primaryMember
       ? 'Spouse'
       : '',
+    referralSource: member?.referralSource || '',
   }
 }
 
@@ -173,7 +178,19 @@ export function BioDataForm({
   const handleSubmit = (values: any, formikBag: any) => {
     if (isDirty(initialValues, values) || !member?.antaraId) {
       if (member) {
-        handleUpdateBioData(member, values, rosterMember)
+        const { referralSource, otherReferralSource, ...rest } = values
+        let referralSourceValue = referralSource
+        if (referralSource === OTHER_REFERRAL_SOURCE) {
+          referralSourceValue = otherReferralSource
+        }
+        handleUpdateBioData(
+          member,
+          {
+            ...rest,
+            referralSource: referralSourceValue,
+          },
+          rosterMember
+        )
           .then(() => {
             navigate(`/member/${member.antaraId}`)
             onNext()
@@ -202,6 +219,32 @@ export function BioDataForm({
 
   const shouldShowForm =
     showForm || !!member?.antaraId || isChildRegistration || !!rosterMember
+
+  const OTHER_REFERRAL_SOURCE = 'Other'
+
+  const referralSources: LookupOption[] = [
+    {
+      label: 'Registration from Scheduled Interactions with ME Team',
+      value: 'Registration from Scheduled Interactions with ME Team',
+    },
+    {
+      label: 'In-person Activation Event',
+      value: 'In-person Activation Event',
+    },
+    { label: 'Virtual Activation Event', value: 'Virtual Activation Event' },
+    {
+      label: 'Topical / Expert Talks (Health Talks, MHC etc.)',
+      value: 'Topical / Expert Talks (Health Talks, MHC etc.)',
+    },
+    { label: 'Communication Campaign', value: 'Communication Campaign' },
+    {
+      label:
+        'Live Registration during Care Team Consultation (VC, NC, Logistics etc.)',
+      value:
+        'Live Registration during Care Team Consultation (VC, NC, Logistics etc.)',
+    },
+    { label: 'Other', value: OTHER_REFERRAL_SOURCE },
+  ]
 
   return (
     <div className="overflow-scroll">
@@ -277,6 +320,22 @@ export function BioDataForm({
                         />
                       </>
                     ) : null}
+                    <SelectField
+                      name="referralSource"
+                      label="Referral Source"
+                      options={referralSources}
+                      placeholder="--Select--"
+                      required
+                      disabled={!!member?.referralSource}
+                    />
+                    {!member?.referralSource &&
+                      values.referralSource === OTHER_REFERRAL_SOURCE && (
+                        <TextField
+                          name="otherReferralSource"
+                          label="Other Referral Source"
+                          placeholder="Enter other referral source"
+                        />
+                      )}
                   </div>
                 ) : null}
               </>

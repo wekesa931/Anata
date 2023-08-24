@@ -32,6 +32,7 @@ export const membersTableColumns: ColumnSchema[] = [
   { name: 'last_synced_at', type: 'number' },
   { name: 'verification_status', type: 'string' },
   { name: 'roster_member', type: 'string' },
+  { name: 'referral_source', type: 'string' },
 ]
 
 export const MembersSchema = tableSchema({

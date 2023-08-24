@@ -56,6 +56,7 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
       }
       relationshipToPrimary
       primaryMemberAntaraId
+      referralSource
     }
     primary {
       antaraId

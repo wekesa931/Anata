@@ -123,6 +123,7 @@ export const useUpdateBiodata = () => {
         antaraId,
         primaryMemberAntaraId: values.primaryMemberAntaraId,
         relationshipToPrimary: values.relationshipToPrimary,
+        referralSource: values.referralSource,
       },
       memberStatus: {
         tags: values.tags,

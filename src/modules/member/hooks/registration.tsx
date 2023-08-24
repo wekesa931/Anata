@@ -89,6 +89,7 @@ export const useRegistrationData = () => {
           m.birthDate = dayjs(biodata.birthDate).format('YYYY-MM-DD')
           m.maritalStatus = biodata.maritalStatus
           m.tags = biodata.tags
+          m.referralSource = biodata.referralSource
         })
       })
     } catch (error) {
