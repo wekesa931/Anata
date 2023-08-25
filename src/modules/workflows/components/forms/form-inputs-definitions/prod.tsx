@@ -2669,15 +2669,15 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'Does the member has devices?',
+        parentKey: 'Does the member have any devices?',
         parentValues: ['Yes'],
         condition: (values: any) => {
-          if (Array.isArray(values['Does the member has devices?'])) {
+          if (Array.isArray(values['Does the member have any devices?'])) {
             return ['Yes'].some((r) =>
-              values['Does the member has devices?'].includes(r)
+              values['Does the member have any devices?'].includes(r)
             )
           }
-          return ['Yes'].includes(values['Does the member has devices?'])
+          return ['Yes'].includes(values['Does the member have any devices?'])
         },
       },
       {
@@ -4112,7 +4112,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Is this a new diagnosis or was the member aware of it before you spoke today?',
         conditionType: '!',
@@ -4940,9 +4940,20 @@ export default [
         unreversed: true,
         relationship: 'one',
         foreignTableId: 'tblHs6JxFnMGAjNNC',
-        required: false,
+        required: true,
         helper:
           'If you are creating an internal appointment (performed by Antara staff, please assign the meeting to our specialist. If you are creating an external appointment (performed by another facility or specialist, not Antara, please keep the field empty)',
+        conditionType: '',
+        parentKey: 'Internal vs External',
+        parentValues: ['Internal'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Internal vs External'])) {
+            return ['Internal'].some((r) =>
+              values['Internal vs External'].includes(r)
+            )
+          }
+          return ['Internal'].includes(values['Internal vs External'])
+        },
       },
       {
         id: 'fldvTJ7ck1qsPPMou',
@@ -4985,6 +4996,17 @@ export default [
         foreignTableId: 'tbltmQuqyuKPc4Ffo',
         required: false,
         helper: '',
+        conditionType: '',
+        parentKey: 'Internal vs External',
+        parentValues: ['External'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Internal vs External'])) {
+            return ['External'].some((r) =>
+              values['Internal vs External'].includes(r)
+            )
+          }
+          return ['External'].includes(values['Internal vs External'])
+        },
       },
       {
         id: 'fldQa1FYUWaVqeyb8',
@@ -5026,6 +5048,17 @@ export default [
         foreignTableId: 'tblsixUe3jfbOUMQP',
         required: false,
         helper: '',
+        conditionType: '',
+        parentKey: 'Internal vs External',
+        parentValues: ['External'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Internal vs External'])) {
+            return ['External'].some((r) =>
+              values['Internal vs External'].includes(r)
+            )
+          }
+          return ['External'].includes(values['Internal vs External'])
+        },
       },
       {
         id: 'fldbFvsmhiv0GtF5z',
@@ -14458,7 +14491,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           '    * Stage 1: BMI 17.0 - 18.4\n    * Stage 2: BMI 16.0 - 16.9\n    * Stage 3: BMI < 16.0',
         conditionType: '',
@@ -14486,7 +14519,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           '@risk: Sys/DIa <120/80\nElevated BP: 120-130 and <80 mmHg\nStage 1 Hypertension: 130-140 or 80-89 mmHg\nStage 2 Hypertension: >140 or >90mmHg',
         conditionType: '',
@@ -14514,7 +14547,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: 'Acute: < 6 weeks\nChronic > 6 weeks',
         conditionType: '',
         parentKey: 'Condition type',
@@ -14539,7 +14572,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Conditions master list',
@@ -14566,7 +14599,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Acute: symptoms < 4 weeks\nSub-acute: symptoms > 4 weeks & < 12 weeks\nMild chronic: symptoms  >12 weeks; score to be defined\nModerate chronic: symptoms  >12 weeks; score to be defined\nSevere chronic: symptoms  >12 weeks; score to be defined',
         conditionType: '',
@@ -14594,7 +14627,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'At risk if members with previous hx or family hx\n Hypercholesterolemia if TC>200mg/dl\n Hypertriglyceridemia if TG >150mg/dl only done in a fasting state\n Mixed hyperlipidemia if defined as elevated LDL >130mg/dl, TC>200mg/dl and TG>150mg/dl',
         conditionType: '',
@@ -14622,7 +14655,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Conditions master list',
@@ -14649,7 +14682,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Stage 1: Mild intermittent = score of 24-25\nStage 2: Moderate intermittent = score of 21-23\nStage 3: Moderate persistent = score of 16-20\nStage 4: Severe persistent = score of 0-15',
         conditionType: '',
@@ -14677,7 +14710,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Mild: Occasional pain not restricting activities , few veins, number of active ulcers 1, occasional edema\nModerate: Daily moderate activity limitation requiring occasional analgesia use, Multiple veins/torturous, 2 ulcers present, Occasional edema above the level of the ankles\nSevere: Extensive veins, daily pain limiting daily activities, more than 3 ulcers, edema to the level of the knee, severe cellulitis',
         conditionType: '',
@@ -14705,7 +14738,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Asymptomatic: diagnosed during routine visit but not symptomatic\nSymptomatic: associated with menstrual disturbances, anemia, difficulty in conception',
         conditionType: '',
@@ -14733,7 +14766,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'At risk: HB1AC <5.7%\nStage 1: HB1AC > 6.5%\nStage 2: HB1AC >7.5%, FBS >7 mmol/l, only on oral meds\nStage 3: HB1AC >7.5%, FBS >7 mmol/l, on insulin\nPrediabetes: HBA1C 5.7% to 6.4% FBS >6 mmol/l, Positive impaired glucose tolerance test (RBS 7.8-11.1 mmol/l)',
         conditionType: '',
@@ -14761,7 +14794,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Conditions master list',
@@ -14788,7 +14821,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Conditions master list',
@@ -14815,7 +14848,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'To identify the stage, please assess following symptoms: running nose, watery eyes, itchy eyes or nose, sneezing, red eyes.\n\nStages:\nSeasonal: Symptoms triggered seasonally\nIntermittent: Symptoms < 4 days per week or < 4 weeks per year\nPersistent: Symptoms > 4 days per week or > 4 weeks per year',
         conditionType: '',
@@ -14843,7 +14876,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Conditions master list',
@@ -14870,7 +14903,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: 'Stage 1: BMI 25-29.9\nStage 2: BMI 30-39.9\nStage 3: BMI >=40',
         conditionType: '',
         parentKey: 'Conditions master list',
@@ -14897,7 +14930,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Stage 1: Minor wear-and-tear in the joints. Little to no pain in the affected area\nStage 2: Pain score <3 - Mild (some morning stiffness, intermittent pain with NO quality of life impact)\nStage 3: Pain score 4-7 - Moderate (intermittent pain with impact on quality of life)\nStage 4: Pain score >8 - Severe (persistent pain with significant impact on quality of life)',
         conditionType: '',
@@ -14981,7 +15014,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Conditions master list',
@@ -15008,7 +15041,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Conditions master list',
@@ -15035,7 +15068,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Please note that this is the new clinical status of the conditions if it has changed.',
       },
@@ -16119,6 +16152,7 @@ export default [
           'Data input',
           'HMP follow-up',
           'Nutrition follow-up',
+          'HMP check-in call',
           'Other',
         ],
         symmetricColumnId: null,
@@ -16191,6 +16225,7 @@ export default [
           'Chronic consent collection',
           'Nutrition follow up',
           'Chief complaint review',
+          'HMP check-in call',
         ],
         symmetricColumnId: null,
         unreversed: false,

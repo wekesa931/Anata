@@ -6,9 +6,13 @@ const validationRules = (formMeta: any, template: any) => {
   let schema = {}
   formMeta?.fields &&
     formMeta.fields.forEach((fl: any) => {
-      const isWorkflowForm =
-        fl.name !== 'Case ID' && fl.name !== 'Member' && template?.workflowId
-      const isNormalForm = fl.name !== 'Member' && !template?.workflowId
+      // eslint-disable-next-line no-underscore-dangle
+      const isWorkflowForm = fl.name !== 'Member' && template?.workflow?.id
+      const isNormalForm =
+        fl.name !== 'Case ID' &&
+        fl.name !== 'Member' &&
+        // eslint-disable-next-line no-underscore-dangle
+        !template?.workflow?.id
       const fieldName = fl.name
       switch (fl.type) {
         case 'foreignKey':

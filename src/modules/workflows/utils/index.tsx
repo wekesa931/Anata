@@ -278,6 +278,12 @@ export const initialFormValues = (
       'Missed #': 0,
       'Rescheduled #': 0,
     },
+    Conditions: {
+      'Date of Diagnosis/Condition': new Date(),
+    },
+    'Conditions Data tracking': {
+      Date: new Date(),
+    },
   }
 }
 
@@ -430,6 +436,7 @@ export const interactionlogform = {
           { name: 'Data input' },
           { name: 'HMP follow-up' },
           { name: 'Nutrition follow-up' },
+          { name: 'HMP check-in call' },
           { name: 'Other' },
         ],
       },
@@ -457,6 +464,7 @@ export const interactionlogform = {
           { name: 'Chronic consent collection' },
           { name: 'Nutrition follow up' },
           { name: 'Chief complaint review' },
+          { name: 'HMP check-in call' },
         ],
       },
     },

@@ -99,9 +99,11 @@ function WorkflowFormsFields({
     field.name === 'Member' ||
     field.name === 'member' ||
     field.name === 'Members'
-  const isWorkflowForm =
-    field.name !== 'Case ID' && !isMemberField && template?.workflowId
-  const isNormalForm = !isMemberField && !template?.workflowId
+  // eslint-disable-next-line no-underscore-dangle
+  const isWorkflowForm = !isMemberField && template?.workflow?.id
+  const isNormalForm =
+    // eslint-disable-next-line no-underscore-dangle
+    field.name !== 'Case ID' && !isMemberField && !template?.workflow?.id
   switch (field.type) {
     case 'foreignKey':
       if (isWorkflowForm || isNormalForm) {
@@ -1135,8 +1137,7 @@ function CollaboratorInput({
 
   useEffect(() => {
     if (airtableMeta) {
-      const airtableField =
-        airtableMeta[field.foreignTableId]?.fields?.primaryFieldName
+      const airtableField = airtableMeta[field.foreignTableId]?.primaryFieldName
 
       getLinkedRecords({
         variables: {
