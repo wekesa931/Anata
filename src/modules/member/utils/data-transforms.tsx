@@ -251,6 +251,10 @@ export const parseLookupEntries = (rawLookupData: any) => {
   const phoneTypes = parseDataToOptions(rawLookupData?.phoneTypes, 'phoneType')
   const benefits = parseDataToOptions(rawLookupData?.benefits, 'name')
   const tags = parseDataToOptions(rawLookupData?.tags, 'name')
+  const antaraServices = parseDataToOptions(
+    rawLookupData?.antaraServices,
+    'name'
+  )
 
   return {
     employers,
@@ -262,6 +266,7 @@ export const parseLookupEntries = (rawLookupData: any) => {
     phoneTypes,
     benefits,
     tags,
+    antaraServices,
   }
 }
 

@@ -58,6 +58,7 @@ export const parseV2MemberData = (
   member.status = status?.status?.status
   member.assignedMe = status?.assignedMeEmailUsername
   member.assignedHn = status?.assignedHnEmailUsername
+  member.refusedServices = status?.refusedServices
 
   // contacts
   const { contact = {} } = memberData

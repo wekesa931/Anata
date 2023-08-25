@@ -61,6 +61,7 @@ export const UPDATE_MEMBER_STATUS = gql`
           onboardStage
         }
         tags
+        refusedServices
       }
       errors
       message

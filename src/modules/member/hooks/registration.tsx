@@ -90,6 +90,7 @@ export const useRegistrationData = () => {
           m.maritalStatus = biodata.maritalStatus
           m.tags = biodata.tags
           m.referralSource = biodata.referralSource
+          m.refusedServices = biodata.refusedServices
         })
       })
     } catch (error) {

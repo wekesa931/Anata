@@ -21,6 +21,8 @@ type InsuranceDetailsValues = DbTypes.InsuranceDetailsValues
 const identityJson = (data: any) => data
 const sanitizeTags = (data: any) =>
   Array.isArray(data) ? data.map(String) : []
+const sanitizeRefusedServices = (data: any) =>
+  Array.isArray(data) ? data.map(String) : []
 
 type EmergencyContact = {
   name?: string
@@ -74,6 +76,7 @@ export const createOrUpdateMember = (
   member.phones = memberData?.phones?.length ? memberData.phones : member.phones
   member.birthDate = memberData?.birthDate
   member.tags = memberData.tags || member.tags
+  member.refusedServices = memberData.refusedServices || member.refusedServices
   member.maritalStatus = memberData.maritalStatus
   member.emergencyContact = mergeEmergencyContact(member, memberData)
   member.addresses = transformAddressData(
@@ -127,6 +130,8 @@ export class Member extends Model {
   @text('birth_date') birthDate?: string
 
   @json('tags', sanitizeTags) tags?: string[]
+
+  @json('refusedServices', sanitizeRefusedServices) refusedServices?: string[]
 
   @text('marital_status') maritalStatus?: string
 

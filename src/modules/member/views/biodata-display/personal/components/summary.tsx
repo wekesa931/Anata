@@ -67,6 +67,25 @@ function SummarySection({ member }: SummarySectionProps) {
             }
           />
         </GridItems>
+        <GridItems single>
+          <Item
+            title="Refused Services"
+            child={
+              <div className="flex flex-wrap gap-2">
+                {(member?.refusedServices || []).map(
+                  (refusedService, index) => (
+                    <span
+                      key={index}
+                      className="bg-blue-10 text-center rounded-md text-dark-blue-100 py-1 px-1.5 font-rubik text-sm"
+                    >
+                      {refusedService}
+                    </span>
+                  )
+                )}
+              </div>
+            }
+          />
+        </GridItems>
         <GridItems fullCols>
           <Item title="First name" child={member?.firstName || '-'} />
           <Item title="Middle name" child={member?.middleName || '-'} />

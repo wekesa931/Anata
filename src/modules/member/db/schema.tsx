@@ -13,6 +13,7 @@ export const membersTableColumns: ColumnSchema[] = [
   { name: 'sex', type: 'string' },
   { name: 'marital_status', type: 'string' },
   { name: 'tags', type: 'string' },
+  { name: 'refusedServices', type: 'string' },
   { name: 'emergency_contact', type: 'string' },
   { name: 'addresses', type: 'string' },
   { name: 'insurances', type: 'string' },

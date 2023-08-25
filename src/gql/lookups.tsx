@@ -92,5 +92,12 @@ export const LOOKUP_ENTRIES_QUERY = gql`
         }
       }
     }
+    antaraServices {
+      edges {
+        node {
+          name
+        }
+      }
+    }
   }
 `

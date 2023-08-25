@@ -102,6 +102,7 @@ export type V2MemberType = {
   }
   startDate?: string
   tags?: string[]
+  refusedServices?: string[]
   email?: string
   emergencyContactName?: string
   emergencyContactPhone?: string
@@ -217,6 +218,7 @@ export type V2MemberQueryType = {
       atRecordId?: string
     }
     tags?: string[]
+    refusedServices: string[]
     status?: {
       status?: string
     }
@@ -261,6 +263,7 @@ export type BiodataValues = BirthdateUpdateValues & {
   primaryMemberAntaraId?: string
   relationshipToPrimary?: string
   referralSource?: string
+  refusedServices: string[]
 }
 
 export type UpdatePhoneValues = {
@@ -346,6 +349,7 @@ export type LookupOptions = {
   phoneTypes: LookupOption[]
   benefits: LookupOption[]
   tags: LookupOption[]
+  antaraServices: LookupOption[]
 }
 
 export type MemberDetailsQueryVariables = {

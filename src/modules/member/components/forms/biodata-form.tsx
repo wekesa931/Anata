@@ -91,6 +91,7 @@ const extractInitialState = ({
     sex: member?.sex || '',
     maritalStatus: member?.maritalStatus || '',
     tags: member?.tags || [],
+    refusedServices: member?.refusedServices || [],
     antaraId: member?.antaraId || '',
     primaryMemberAntaraId: primaryMember?.antaraId,
     // next-line: possible data polution if dependent is an adult child
@@ -314,6 +315,14 @@ export function BioDataForm({
                           name="tags"
                           label="Tags"
                           options={lookupOptions?.tags || []}
+                          placeholder="--Select--"
+                          multiple
+                          required={false}
+                        />
+                        <SelectField
+                          name="refusedServices"
+                          label="Refused Services"
+                          options={lookupOptions?.antaraServices || []}
                           placeholder="--Select--"
                           multiple
                           required={false}
