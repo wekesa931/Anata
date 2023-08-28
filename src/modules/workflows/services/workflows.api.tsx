@@ -218,16 +218,14 @@ export const useProcessNewWorkflowModule = () => {
 
       const generatedPayload = generatePayload(payload, formMeta, airtableMeta)
 
-      if (activeForm.isHIF) {
-        const hifId = await getHifInfo(member?.airtableRecordId)
-        if (hifId) {
-          return createHif(hifId, generatedPayload)
-        }
-      } else {
-        const tableName = TABLE_ROUTES[formName]
-        if (tableName) {
-          return createTableEntry(tableName, generatedPayload)
-        }
+      const hifId = await getHifInfo(member?.airtableRecordId)
+      const tableName = TABLE_ROUTES[formName]
+
+      if (activeForm.isHIF && hifId) {
+        return createHif(hifId, generatedPayload)
+      }
+      if (tableName) {
+        return createTableEntry(tableName, generatedPayload)
       }
     }
 
