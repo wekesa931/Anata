@@ -9,6 +9,7 @@ import { useMember } from 'src/context/member'
 import analytics from 'src/config/analytics'
 import logError from 'src/utils/logging/logger'
 import { useParams } from 'react-router-dom'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import {
   Input,
   SendButton,
@@ -65,6 +66,8 @@ function ChatInput({ messages, setMessages }: ChatInputProps) {
     setChannel(event.target.value)
   }
 
+  const { trackSMSSent } = useModuleAnalytics()
+
   const sendMessage = () => {
     const sms = {
       id: (Math.random() + Math.random()).toString(),
@@ -118,6 +121,9 @@ function ChatInput({ messages, setMessages }: ChatInputProps) {
             setCharCount(0)
             setSendingSMS(false)
             setMessage('')
+            trackSMSSent(true, sms)
+          } else {
+            trackSMSSent(false, sms)
           }
         })
         .catch((error) => {
@@ -129,6 +135,7 @@ function ChatInput({ messages, setMessages }: ChatInputProps) {
           setSendingSMS(false)
           setMessage('')
           logError(error.message)
+          trackSMSSent(false, sms)
         })
       setSendingSMS(false)
     }

@@ -8,8 +8,9 @@ import SelectField from 'src/components/forms/fields/select-field'
 import PrimaryButton from 'src/components/buttons/primary'
 import * as yup from 'yup'
 import { useNotifications } from 'src/context/notifications'
-import { isDirty } from 'src/utils/form-validation-methods'
+import { getChanges, isDirty } from 'src/utils/form-validation-methods'
 import ErrorComponent from 'src/components/feedbacks/error-component'
+import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 import { useRegistrationData } from '../../hooks/registration'
 
 type StatusFormProps = {
@@ -83,6 +84,7 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
   const { handleUpdateStatus } = useRegistrationData()
   const { notify } = useNotifications()
   const [userError, setUserError] = useState<string | null>(null)
+  const analytics = useMemberAnalytics()
 
   useEffect(() => {
     if (member) {
@@ -103,6 +105,10 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
       if (member) {
         handleUpdateStatus(member, values)
           .then(() => {
+            analytics.trackProfileEdited(
+              'Statuses and assignees updated',
+              getChanges(initialValues, values)
+            )
             notify('Statuses and assignees updated')
             onNext()
           })

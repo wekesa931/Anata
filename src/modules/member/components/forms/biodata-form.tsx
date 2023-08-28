@@ -22,10 +22,11 @@ import type {
   RosterMemberType,
 } from 'src/modules/member/types'
 import { useRegistrationForm } from 'src/context/member-registration'
-import { isDirty } from 'src/utils/form-validation-methods'
+import { getChanges, isDirty } from 'src/utils/form-validation-methods'
 import * as yup from 'yup'
 import ErrorComponent from 'src/components/feedbacks/error-component'
 import { useNavigate } from 'react-router-dom'
+import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 
 type BioDataSectionProps = {
   setIsEdited: (isEdited: boolean) => void
@@ -140,6 +141,7 @@ export function BioDataForm({
   const { notify } = useNotifications()
   const { lookupOptions } = useRegistrationForm()
   const [userError, setUserError] = useState<string | null>(null)
+  const analytics = useMemberAnalytics()
 
   const parseMemberFromResponse = (response: any, phone: string) => {
     if (response) {
@@ -193,6 +195,10 @@ export function BioDataForm({
           rosterMember
         )
           .then(() => {
+            analytics.trackProfileEdited(
+              'Bio data updated',
+              getChanges(initialValues, values)
+            )
             navigate(`/member/${member.antaraId}`)
             onNext()
           })

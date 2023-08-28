@@ -14,6 +14,8 @@ import { useCall } from 'src/context/calls'
 import ErrorBoundary from 'src/components/error-boundary'
 import GuidedWorkflows from 'src/modules/workflows/views/workflows-page'
 import { withTabRouter } from 'src/utils/routing/tab-router'
+import { useModuleAnalytics } from 'src/modules/analytics'
+import _ from 'lodash'
 
 function Actions({ handleChange, view }: any) {
   const { setCounterValue } = useCall()
@@ -22,6 +24,12 @@ function Actions({ handleChange, view }: any) {
     setCounterValue()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  const { trackRightSectionOpened: rightSectionOpened } = useModuleAnalytics()
+
+  const rightSectionHandleChange = (event: any, newValue: string) => {
+    handleChange(event, newValue)
+    rightSectionOpened(`${_.startCase(_.toLower(newValue))} section opened`)
+  }
 
   return (
     <TabContext value={view}>
@@ -35,7 +43,7 @@ function Actions({ handleChange, view }: any) {
         }}
       >
         <TabList
-          onChange={handleChange}
+          onChange={rightSectionHandleChange}
           value={view}
           variant="scrollable"
           scrollButtons="auto"
@@ -52,7 +60,7 @@ function Actions({ handleChange, view }: any) {
               color: view === 'messages' ? '#58a9f3' : '#af9090',
               backgroundColor: view === 'messages' ? '#e7f3fd' : '#e8eaed',
             }}
-            onClick={(e) => handleChange(e, 'messages')}
+            onClick={(e) => rightSectionHandleChange(e, 'messages')}
           >
             <Icon name="message-circle" fill="#efefef" width={16} height={16} />
           </button>

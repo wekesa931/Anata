@@ -8,7 +8,7 @@ import { FieldArray, Form, FormikProps } from 'formik'
 import TextField from 'src/components/forms/fields/text'
 import SelectField from 'src/components/forms/fields/select-field'
 import PhoneField from 'src/components/forms/fields/phone-field'
-import { validateEmail } from 'src/utils/form-validation-methods'
+import { getChanges, validateEmail } from 'src/utils/form-validation-methods'
 import PrimaryForm from 'src/components/forms/primary-form'
 import FlexRow from 'src/components/layouts/flex-row'
 import DeleteFormEntry from 'src/modules/member/components/delete-form-entry'
@@ -23,6 +23,7 @@ import PhoneNumberSearch from 'src/modules/member/components/phone-field-search'
 import { BooleanStatus } from 'src/modules/member/types'
 import * as yup from 'yup'
 import ErrorComponent from 'src/components/feedbacks/error-component'
+import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 
 type ContactsSectionProps = {
   member: Member | null
@@ -88,6 +89,7 @@ export function ContactsForm({
   const [showForm, setShowForm] = useState<BooleanStatus>({})
   const [isFetching, setIsFetching] = useState<BooleanStatus>({})
   const [userError, setUserError] = useState<string | null>(null)
+  const analytics = useMemberAnalytics()
 
   const phones =
     member?.phones && member?.phones?.length > 0
@@ -114,6 +116,10 @@ export function ContactsForm({
     if (member) {
       handleUpdateContactsData(member, values)
         .then(() => {
+          analytics.trackProfileEdited(
+            'Contact details updated',
+            getChanges(initialValues, values)
+          )
           onNext()
         })
         .catch((err) => {

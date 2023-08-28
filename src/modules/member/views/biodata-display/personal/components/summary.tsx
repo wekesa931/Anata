@@ -10,6 +10,7 @@ import { PortalForm } from 'src/modules/member/components/update-forms'
 import { BioDataForm } from 'src/modules/member/components/forms/biodata-form'
 import { useNotifications } from 'src/context/notifications'
 import type { Member } from 'src/modules/member/db/models'
+import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 
 type SummarySectionProps = {
   member: Member | null
@@ -19,14 +20,21 @@ function SummarySection({ member }: SummarySectionProps) {
   const [showUpdateForm, setShowUpdateForm] = React.useState<boolean>(false)
   const [isEdited, setIsEdited] = React.useState<boolean>(false)
   const { notify } = useNotifications()
+  const analytics = useMemberAnalytics()
+
+  const toggleEditForm = (open: boolean) => {
+    setShowUpdateForm(open)
+
+    analytics.trackEditProfile(`Edit bio data ${open ? 'opened' : 'closed'}`)
+  }
 
   return member ? (
     <div>
       {showUpdateForm && (
         <PortalForm
-          handleClose={() => setShowUpdateForm(false)}
+          handleClose={() => toggleEditForm(false)}
           isEdited={isEdited}
-          handleOpen={() => setShowUpdateForm(true)}
+          handleOpen={() => toggleEditForm(true)}
           setIsEdited={setIsEdited}
           modalTitle="Edit bio data"
         >
@@ -47,7 +55,7 @@ function SummarySection({ member }: SummarySectionProps) {
       )}
       <SectionItem
         title="Bio data"
-        handleEdit={() => setShowUpdateForm(true)}
+        handleEdit={() => toggleEditForm(true)}
         editable
       >
         <GridItems single>

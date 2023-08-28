@@ -1,23 +1,24 @@
 import React, { useEffect } from 'react'
-import analytics from 'src/config/analytics'
 import { useMember } from 'src/context/member'
 import { DateFilterProvider } from 'src/context/date-range-filter'
 import CenteredLoader from 'src/components/loaders/centered'
 import MemberNotFound from 'src/components/dialog/member-not-found'
+import useAnalytics from 'src/hooks/analytics'
 import RightViews from './right-views'
 import MainViews from './main-views'
 import BioData from './biodata'
 
 function DashboardContent() {
   const { isLoading, memberNotFound, member } = useMember()
+  const { identifyMember } = useAnalytics('Member Dashboard')
+
   useEffect(() => {
     if (member) {
-      analytics.page('Member Dashboard', {
-        memberId: member.antaraId,
-      })
-
+      identifyMember(member)
       document.title = `Scribe: ${member.fullName}`
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member])
 
   return isLoading ? (

@@ -1,46 +1,43 @@
-import { useEffect, useState } from 'react'
-import dayjs from 'dayjs'
 import analytics from 'src/config/analytics'
-import { useMember } from 'src/context/member'
 import { useUser } from 'src/context/user'
+import { Member } from 'src/modules/member/db/models'
+import { User } from 'src/types/user'
 
 type EventProperties = {
-  user: string
-  member: {
-    antaraId: string
-    fullName: string
-  }
+  staff: any
   eventName?: string
-  timestamp: string
 } & { [key: string]: unknown }
 
-const useAnalytics = (eventCategory: string) => {
+export const useAnalytics = (object?: string) => {
   const user = useUser()
-  const { member } = useMember()
 
-  const [requiredProps, setRequiredProps] = useState<EventProperties | null>(
-    null
-  )
-
-  useEffect(() => {
-    if (user && member) {
-      setRequiredProps({
-        user: user.email,
-        member: {
-          antaraId: member?.antaraId,
-          fullName: member?.fullName,
-        },
-        timestamp: dayjs().format(),
-      })
-    }
-  }, [user, member])
+  const requiredProps: EventProperties | null = user
+    ? {
+        staff: user,
+      }
+    : null
 
   return {
-    track: (eventName: string, properties?: Record<string, unknown>) => {
-      const allProperties = { ...requiredProps, ...properties, eventName }
-      analytics.track(eventCategory, allProperties)
+    track: (action: string, properties?: Record<string, unknown>) => {
+      if (requiredProps) {
+        const allProperties: EventProperties = {
+          ...requiredProps,
+          ...properties,
+        }
+
+        analytics.track(`${object} ${action}`, allProperties)
+      } else {
+        throw new Error('useAnalytics: user is not defined')
+      }
     },
     page: (pageData?: Record<string, unknown>) => analytics.page(pageData),
+
+    // eslint-disable-next-line no-underscore-dangle
+    identifyMember: (member: Member) => {
+      // eslint-disable-next-line no-underscore-dangle
+      analytics.identify(member?.antaraId, member?._raw)
+    },
+    identifyUser: (staff: User) => analytics.identify(staff?.email, staff),
   }
 }
 

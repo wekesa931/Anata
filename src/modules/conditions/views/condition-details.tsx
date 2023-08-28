@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Item, ItemTitle } from 'src/components/layouts/display-items.component'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
-import useConditionData from 'src/modules/conditions/hook/condition.data'
+import useConditionData from 'src/modules/conditions/hooks/condition.data'
 import ConditionFilter from 'src/modules/conditions/components/condition-filter'
 import type { Condition } from 'src/modules/conditions/db/models'
 import {
@@ -19,6 +19,7 @@ import {
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Link, useLocation } from 'react-router-dom'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 const StatusIs = (status: string) => {
   return {
@@ -47,6 +48,7 @@ function ConditionCard({ condition, activeCondition }: ConditionCardProps) {
   const medication = condition?.medication || []
   const [interventions, setInterventions] = useState<any[]>([])
   const [expanded, setExpanded] = useState<boolean>(false)
+  const { trackConditionsDetailsOpened } = useModuleAnalytics()
 
   useEffect(() => {
     setExpanded(activeCondition === condition.id)
@@ -66,7 +68,13 @@ function ConditionCard({ condition, activeCondition }: ConditionCardProps) {
         },
       }}
       expanded={expanded}
-      onChange={() => setExpanded(!expanded)}
+      onChange={() => {
+        if (!expanded) {
+          // eslint-disable-next-line no-underscore-dangle
+          trackConditionsDetailsOpened(condition._raw)
+        }
+        setExpanded(!expanded)
+      }}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
@@ -203,9 +211,11 @@ function ConditionsSection() {
   })
 
   const { state } = useLocation()
+  const { trackConditionsFiltered } = useModuleAnalytics()
 
   useEffect(() => {
     filterBy(filter).then((condition) => {
+      trackConditionsFiltered(JSON.stringify(filter))
       setConditions(condition)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps

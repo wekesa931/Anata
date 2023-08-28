@@ -11,6 +11,7 @@ import { PortalForm } from 'src/modules/member/components/update-forms'
 import { AddressesForm } from 'src/modules/member/components/forms/addresses-form'
 import { useNotifications } from 'src/context/notifications'
 import type { Member } from 'src/modules/member/db/models'
+import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 
 function MapLink({
   placeId,
@@ -83,14 +84,21 @@ function AddressesSection({ member }: Props) {
   const homeAddress = member?.homeAddress || null
   const restAddress = member?.otherAddresses || []
   const { notify } = useNotifications()
+  const analytics = useMemberAnalytics()
+
+  const toggleEditForm = (open: boolean) => {
+    setShowEditForm(open)
+
+    analytics.trackEditProfile(`Edit addresses ${open ? 'opened' : 'closed'}`)
+  }
 
   return member ? (
     <>
       {showEditForm && (
         <PortalForm
           modalTitle="Edit addresses"
-          handleClose={() => setShowEditForm(false)}
-          handleOpen={() => setShowEditForm(true)}
+          handleClose={() => toggleEditForm(false)}
+          handleOpen={() => toggleEditForm(true)}
           isEdited={isEdited}
           setIsEdited={setIsEdited}
         >
@@ -112,7 +120,7 @@ function AddressesSection({ member }: Props) {
           <h3 className="text-dark-blue-50 text-base">Addresses</h3>
           <Button
             variant="text"
-            onClick={() => setShowEditForm(true)}
+            onClick={() => toggleEditForm(true)}
             className="text-blue-100 text-sm font-medium normal-case"
           >
             Edit

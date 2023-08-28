@@ -9,6 +9,7 @@ import {
 } from 'src/modules/member/components/skeleton-loaders'
 import { getAgeFull } from 'src/utils/date-time/helpers'
 import MissingInfoBlock from 'src/modules/member/views/missing-info'
+import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 
 import type { Member } from 'src/modules/member/db/models'
 
@@ -17,6 +18,7 @@ type MemberBiodataProps = {
 }
 function MemberBiodataLayout({ member }: MemberBiodataProps) {
   const [value, setValue] = React.useState<string>('personal')
+  const analytics = useMemberAnalytics()
 
   const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -46,8 +48,18 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
           <TabContext value={value}>
             <div className="flex justify-between items-center font-rubik font-medium">
               <TabList onChange={handleChange}>
-                <Tab label="personal" className="uppercase" value="personal" />
-                <Tab label="clinical" className="uppercase" value="clinical" />
+                <Tab
+                  label="personal"
+                  className="uppercase"
+                  value="personal"
+                  onClick={analytics.trackPersonalSectionAccessed}
+                />
+                <Tab
+                  label="clinical"
+                  className="uppercase"
+                  value="clinical"
+                  onClick={analytics.trackClinicalSectionAccessed}
+                />
               </TabList>
             </div>
             <div>

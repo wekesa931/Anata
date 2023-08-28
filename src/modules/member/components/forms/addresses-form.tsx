@@ -15,8 +15,9 @@ import { logError } from 'src/utils/logging/logger'
 import { useNotifications } from 'src/context/notifications'
 import DeleteFormEntry from 'src/modules/member/components/delete-form-entry'
 import FlexRow from 'src/components/layouts/flex-row'
-import { isDirty } from 'src/utils/form-validation-methods'
+import { getChanges, isDirty } from 'src/utils/form-validation-methods'
 import ErrorComponent from 'src/components/feedbacks/error-component'
+import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 
 type AddressesSectionProps = {
   member: Member | null
@@ -49,6 +50,7 @@ export function AddressesForm({
   const { handleUpdateAddresses, loading } = useRegistrationData()
   const { notify } = useNotifications()
   const [userError, setUserError] = useState<string | null>(null)
+  const analytics = useMemberAnalytics()
 
   const defaultAddressObject = {
     description: '',
@@ -78,6 +80,10 @@ export function AddressesForm({
       if (member) {
         handleUpdateAddresses(member, values)
           .then(() => {
+            analytics.trackProfileEdited(
+              'Addresses updated',
+              getChanges(initialValues, values)
+            )
             onNext()
           })
           .catch((err) => {

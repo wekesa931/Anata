@@ -1,14 +1,16 @@
 import React from 'react'
-import useHmpData from 'src/modules/hmp/hook/hmp-data'
+import useHmpData from 'src/modules/hmp/hooks/hmp-data'
 import {
   GridItems,
   Item,
   ItemTitle,
 } from 'src/components/layouts/display-items.component'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import { HMP } from '../db/models'
 
 function HMPItem({ hmp }: { hmp: HMP }) {
+  const { trackHmpPreviewed } = useModuleAnalytics()
   return (
     <div className="block border rounded-lg border-solid border-dark-blue-10 my-1 p-1">
       <div className="flex justify-between items-center">
@@ -17,10 +19,14 @@ function HMPItem({ hmp }: { hmp: HMP }) {
         </h4>
         {hmp.hmpLink && (
           <a
-            href={hmp.hmpLink}
             target="_blank"
             className="text-blue-100 mr-2 font-rubik normal-case justify-end"
             rel="noreferrer"
+            onClick={() => {
+              // eslint-disable-next-line no-underscore-dangle
+              trackHmpPreviewed(hmp._raw)
+            }}
+            href={hmp.hmpLink}
           >
             Read
           </a>

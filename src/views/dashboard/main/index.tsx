@@ -1,6 +1,8 @@
 import React from 'react'
 import AirtableIframe from 'src/components/iframes/airtable-iframe'
 import { useSidebar } from 'src/context/sidebar'
+import { useUser } from 'src/context/user'
+import useAnalytics from 'src/hooks/analytics'
 
 function AirtableView({ activeView, activeSubView, prev }: any) {
   const subListUrl = process.env.PROD
@@ -32,10 +34,21 @@ function AirtableView({ activeView, activeSubView, prev }: any) {
 
 function HNDashboard() {
   const { activeView, activeSubView, prev } = useSidebar()
+  const { identifyUser } = useAnalytics()
+  const user = useUser()
 
   React.useEffect(() => {
     document.title = `Scribe Home: ${activeView.name}`
   }, [activeView])
+
+  React.useEffect(() => {
+    if (user) {
+      identifyUser(user)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
+
   const view = () => {
     if (activeSubView) {
       return activeSubView.name

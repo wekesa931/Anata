@@ -67,12 +67,12 @@ import { useUser } from 'src/context/user'
 import RefinedFileMetaForm from 'src/modules/udm/components/form'
 import logError from 'src/utils/logging/logger'
 import DropDownComponent from 'src/components/dropdown'
-import analytics from 'src/config/analytics'
 import ToastNotification, {
   defaultToastMessage,
   ToastMessage,
 } from 'src/components/toasts/toast-notification'
 import { useParams } from 'react-router-dom'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import styles from './files.component.css'
 
 // eslint-disable-next-line
@@ -157,6 +157,7 @@ const ShareFileOptions = React.forwardRef(
     const [shareFileMutation, { loading: sharing }] = useMutation(SHARE_FILE)
     const [toastMessage, setToastMessage] =
       useState<ToastMessage>(defaultToastMessage)
+    const { trackDocumentShared } = useModuleAnalytics()
 
     const shareFile = () => {
       shareFileMutation({
@@ -173,6 +174,8 @@ const ShareFileOptions = React.forwardRef(
             ...toastMessage,
             message,
           })
+
+          trackDocumentShared(res?.data?.shareFile?.sharedFile)
         })
         .catch((err) => {
           logError(err)
@@ -403,6 +406,7 @@ function FilterComponent({
       updatedAt_Gte: filterDate,
     },
   })
+  const { trackDocumentSearched: documentSearched } = useModuleAnalytics()
 
   const removeFilters = () => {
     setFileCategory(undefined)
@@ -415,7 +419,16 @@ function FilterComponent({
       const throttleFunc = throttle(
         1000,
         () => {
-          applyFilters()
+          applyFilters().then(() => {
+            const filtersApplied = {
+              search: docTitle || '',
+              mimeType: fileMime || '',
+              fileCategory,
+              filterDate,
+            }
+
+            documentSearched(filtersApplied)
+          })
         },
         { debounceMode: true, noTrailing: true }
       )
@@ -799,6 +812,7 @@ function Files() {
   })
   const [shouldShareFile, setShouldShareFile] = useState(false)
   const [fileIdToShare, setFileIdToShare] = useState(null)
+  const { trackDocumentShared, trackDocumentUploaded } = useModuleAnalytics()
 
   const isValidURL = (url: string) => {
     const res = url.match(
@@ -984,11 +998,11 @@ function Files() {
 
         // track upload and share events
         if (docMeta.shareWith) {
-          analytics.track('File shared with member', {
-            ...input,
-          })
+          trackDocumentShared(input)
         }
       }
+
+      trackDocumentUploaded(res.data.saveFile.status === 200, input)
     })
   }
   const uploadDocument = (docMeta: DocMeta) => {

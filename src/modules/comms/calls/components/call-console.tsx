@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Repeat,
   AlertTriangle,
@@ -18,6 +18,7 @@ import Timer from 'src/components/timer'
 import SearchInput from 'src/components/search'
 import { UPDATE_PHONES } from 'src/modules/comms/services/gql'
 import logError from 'src/utils/logging/logger'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import CallConsoleForms from './call-console-forms'
 import HNAndCSList from './call-console-staff'
 import CallbackHistory, { HistoryLogs } from './callback-history'
@@ -117,6 +118,19 @@ function CallFloatingBox() {
     !isTransfered &&
     !subTitle().includes('Calling') &&
     !isFulfilled
+
+  const { trackMissedCall } = useModuleAnalytics()
+
+  useEffect(() => {
+    if (participantBusy) {
+      trackMissedCall(false, activeCall)
+    }
+    if (staffBusy) {
+      trackMissedCall(true, activeCall)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [participantBusy, staffBusy])
 
   const isMemberContact = (phoneNumber: string) => {
     return activeCall?.memberContacts?.find(

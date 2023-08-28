@@ -15,9 +15,17 @@ import { withTabRouter } from 'src/utils/routing/tab-router'
 import ConditionsSection from 'src/modules/conditions/views/condition-details'
 import InterventionSection from 'src/modules/interventions/views/intervention-details'
 import MemberTasks from 'src/modules/tasks/components/member-tasks.component'
+import { useModuleAnalytics } from 'src/modules/analytics'
+import _ from 'lodash'
 import styles from './views.component.css'
 
 function Views({ view, handleChange }: any) {
+  const { trackMiddleSectionOpened: middleSectionOpened } = useModuleAnalytics()
+
+  const middleSectionHandleChange = (event: any, newValue: string) => {
+    handleChange(event, newValue)
+    middleSectionOpened(`${_.startCase(_.toLower(newValue))} section opened`)
+  }
   return (
     <SortFilterProvider>
       <TabContext value={view}>
@@ -31,7 +39,7 @@ function Views({ view, handleChange }: any) {
           }}
         >
           <TabList
-            onChange={handleChange}
+            onChange={middleSectionHandleChange}
             variant="scrollable"
             scrollButtons="auto"
             aria-label="Clinical Tabs"

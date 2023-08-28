@@ -22,6 +22,7 @@ import { InsuranceForm } from 'src/modules/member/components/forms/insurance-for
 import { useNotifications } from 'src/context/notifications'
 import type { Member } from 'src/modules/member/db/models'
 import { ExpandMoreOutlined } from '@mui/icons-material'
+import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 
 function InsuranceSectionItem({
   insuranceItem,
@@ -142,16 +143,25 @@ function InsuranceSection({ member }: InsuranceSectionProps) {
   const [showEditForm, setShowEditForm] = React.useState(false)
   const [isEdited, setIsEdited] = React.useState(false)
   const { notify } = useNotifications()
+  const analytics = useMemberAnalytics()
+
+  const toggleEditForm = (open: boolean) => {
+    setShowEditForm(open)
+
+    analytics.trackEditProfile(
+      `Edit insurance and employer ${open ? 'opened' : 'closed'}`
+    )
+  }
 
   return member ? (
     <div>
       {showEditForm && (
         <PortalForm
           modalTitle="Edit Insurance & Employer"
-          handleClose={() => setShowEditForm(false)}
+          handleClose={() => toggleEditForm(false)}
           isEdited={isEdited}
           setIsEdited={setIsEdited}
-          handleOpen={() => setShowEditForm(true)}
+          handleOpen={() => toggleEditForm(true)}
         >
           {({ handleClose }) => (
             <InsuranceForm
@@ -169,7 +179,7 @@ function InsuranceSection({ member }: InsuranceSectionProps) {
       <SectionItem
         title="Insurance & Employer"
         editable
-        handleEdit={() => setShowEditForm(true)}
+        handleEdit={() => toggleEditForm(true)}
       >
         <GridItems>
           <Item title="Employer" child={member?.employer?.name} />

@@ -10,7 +10,7 @@ import {
 } from 'src/modules/comms/services/gql'
 import { useFcm } from 'src/context/fcm/fcm.context'
 import { logError } from 'src/utils/logging/logger'
-import type { Members } from 'src/modules/member/db/models'
+import type { Member } from 'src/modules/member/db/models'
 
 export type ILogs = {
   startedAt: string
@@ -110,7 +110,7 @@ const CallContext = React.createContext<ContextType>({
 type InitiateCallInput = {
   callContact: any
   onCallInitiated: (data?: any) => void
-  memberDetails: Members
+  memberDetails: Member
   type?: 'INBOUND' | 'OUTBOUND' | 'CALLBACK'
   dialPadInitiated?: boolean
   memberContacts: any[]
@@ -123,7 +123,7 @@ function CallProvider({ children }: any) {
   const [activeCallContact, setActiveCallContact] =
     useState<CallContact | null>()
   const [counter, setcounter] = useState(0)
-  const [memberData, setMemberData] = useState<Members>()
+  const [memberData, setMemberData] = useState<Member>()
   const [activeCall, setActiveCall] = useState<Call | null>()
   const [callError, setcallError] = useState<string | null>(null)
   const { pushNotification } = useFcm()

@@ -16,6 +16,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { capitalize } from 'lodash'
 import { CallIcon } from 'src/components/icon/calls'
 import { humanize } from 'src/utils/date-time/date-formatters'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import CallView from './details'
 import styles from './styles.component.css'
 
@@ -108,6 +109,7 @@ type CallsTableBodyProps = {
 }
 
 function CallsTableBody({ data, setCallData }: CallsTableBodyProps) {
+  const { trackCallLogDetailsAccessed } = useModuleAnalytics()
   return (
     <>
       {data.length > 0 ? (
@@ -154,6 +156,7 @@ function CallsTableBody({ data, setCallData }: CallsTableBodyProps) {
                       size="small"
                       onClick={() => {
                         setCallData(item)
+                        trackCallLogDetailsAccessed(item)
                       }}
                     >
                       Show

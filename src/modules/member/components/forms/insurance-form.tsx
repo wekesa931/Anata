@@ -25,9 +25,10 @@ import { useNotifications } from 'src/context/notifications'
 import { useRegistrationForm } from 'src/context/member-registration'
 import { relationshipOptions } from 'src/config/constants'
 import { useNavigate } from 'react-router-dom'
-import { isDirty } from 'src/utils/form-validation-methods'
+import { getChanges, isDirty } from 'src/utils/form-validation-methods'
 import { sortAlphabetically } from 'src/utils/sort'
 import ErrorComponent from 'src/components/feedbacks/error-component'
+import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 
 type InsuranceDetailsValues = DbValueTypes.InsuranceDetailsValues
 
@@ -164,6 +165,7 @@ export function InsuranceForm({
   const [businessLocations, setBusinessLocations] = useState<LookupOption[]>([])
   const [departments, setDepartments] = useState<LookupOption[]>([])
   const [userError, setUserError] = useState<string | null>(null)
+  const analytics = useMemberAnalytics()
 
   useEffect(() => {
     const values = member?.insurances?.insurances.length
@@ -199,6 +201,10 @@ export function InsuranceForm({
           insurances: parseInsuranceData(values.insurances),
         })
           .then(() => {
+            analytics.trackProfileEdited(
+              'Insurance and employer details updated',
+              getChanges(initialValues, values)
+            )
             completeSubmission()
           })
           .catch((e) => {

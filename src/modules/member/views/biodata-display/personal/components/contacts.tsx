@@ -10,6 +10,7 @@ import { PortalForm } from 'src/modules/member/components/update-forms'
 import { ContactsForm } from 'src/modules/member/components/forms/contacts-form'
 import { useNotifications } from 'src/context/notifications'
 import type { Member } from 'src/modules/member/db/models'
+import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 
 type ContactsSectionProps = {
   member: Member | null
@@ -18,16 +19,23 @@ function ContactsSection({ member }: ContactsSectionProps) {
   const [showEditForm, setShowEditForm] = React.useState<boolean>(false)
   const [isEdited, setIsEdited] = React.useState<boolean>(false)
   const { notify } = useNotifications()
+  const analytics = useMemberAnalytics()
+
+  const toggleEditForm = (open: boolean) => {
+    setShowEditForm(open)
+
+    analytics.trackEditProfile(`Edit contacts ${open ? 'opened' : 'closed'}`)
+  }
 
   return member ? (
     <div>
       {showEditForm && (
         <PortalForm
-          handleClose={() => setShowEditForm(false)}
+          handleClose={() => toggleEditForm(false)}
           modalTitle="Edit contacts"
           isEdited={isEdited}
           setIsEdited={setIsEdited}
-          handleOpen={() => setShowEditForm(true)}
+          handleOpen={() => toggleEditForm(true)}
         >
           {({ handleClose }) => (
             <ContactsForm
@@ -47,7 +55,7 @@ function ContactsSection({ member }: ContactsSectionProps) {
       <SectionItem
         title="Contacts"
         editable
-        handleEdit={() => setShowEditForm(true)}
+        handleEdit={() => toggleEditForm(true)}
       >
         {member?.phones?.map((phone, index) => (
           <GridItems key={index}>

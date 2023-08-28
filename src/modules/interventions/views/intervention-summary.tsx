@@ -6,6 +6,7 @@ import {
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
 import useInterventionData from 'src/modules/interventions/hooks/intervention.data'
 import { Link } from 'react-router-dom'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import { Intervention } from '../db/models'
 
 const StatusIs = (status: string) => {
@@ -21,9 +22,18 @@ type InterventionItemProps = {
 function InterventionItem({ intervention }: InterventionItemProps) {
   const status = intervention.attainment?.toUpperCase()
   const statusIs = StatusIs(status || '')
+  const { trackInterventionsSummaryOpened: interventionsSummaryOpened } =
+    useModuleAnalytics()
 
   return (
-    <Link to="?view=interventions" state={{ interventionId: intervention.id }}>
+    <Link
+      to="?view=interventions"
+      state={{ interventionId: intervention.id }}
+      onClick={() => {
+        // eslint-disable-next-line no-underscore-dangle
+        interventionsSummaryOpened(intervention._raw)
+      }}
+    >
       <div className="block border rounded-lg border-solid border-dark-blue-10 my-2 p-3">
         <div className="flex justify-between items-center">
           <h4 className="text-dark-blue-100 font-medium font-rubik text-sm">

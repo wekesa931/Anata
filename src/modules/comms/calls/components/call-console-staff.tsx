@@ -7,6 +7,7 @@ import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import logError from 'src/utils/logging/logger'
 import Notification from 'src/components/notification'
 import Modal from 'src/components/modals'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 interface IAntaraStaff {
   emailUsername: string
@@ -71,15 +72,19 @@ function HNAndCSList({
     },
   })
   const disableTransferButton = !selected
+  const { trackCallTransferred } = useModuleAnalytics()
 
   const initiateCallTransfer = (action: string) => {
     displayList(false)
     if (selected) {
+      const transfer = { ...selected, transferAction: action }
       try {
-        initiateTransfer({ ...selected, transferAction: action })
+        initiateTransfer(transfer)
+        trackCallTransferred(true, transfer)
       } catch (e: any) {
         seterror(e?.message)
         logError(e?.message)
+        trackCallTransferred(false, transfer)
       }
     }
   }

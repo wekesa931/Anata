@@ -19,6 +19,7 @@ import useInterventionData from 'src/modules/interventions/hooks/intervention.da
 import InterventionFilter from 'src/modules/interventions/components/intervention-filter'
 import { Item, ItemTitle } from 'src/components/layouts/display-items.component'
 import { Link, useLocation } from 'react-router-dom'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 const StatusIs = (status: string) => {
   return {
@@ -48,6 +49,9 @@ function InterventionCard({ intervention, activeId }: InterventionCardProps) {
   const currentMilestone = intervention?.currentMilestone || []
   const [conditions, setConditions] = useState<any[]>([])
 
+  const { trackInterventionsDetailsOpened: interventionsDetailsOpened } =
+    useModuleAnalytics()
+
   useEffect(() => {
     intervention.conditions.then((i) => {
       setConditions(i)
@@ -67,7 +71,13 @@ function InterventionCard({ intervention, activeId }: InterventionCardProps) {
         },
       }}
       expanded={expanded}
-      onChange={() => setExpanded(!expanded)}
+      onChange={() => {
+        if (!expanded) {
+          // eslint-disable-next-line no-underscore-dangle
+          interventionsDetailsOpened(intervention._raw)
+        }
+        setExpanded(!expanded)
+      }}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
@@ -204,9 +214,12 @@ function InterventionSection() {
   })
 
   const { state } = useLocation()
+  const { trackInterventionsFiltered: interventionsFiltered } =
+    useModuleAnalytics()
 
   useEffect(() => {
     filterBy(filter).then((intervention) => {
+      interventionsFiltered(filter)
       setInterventions(intervention)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps

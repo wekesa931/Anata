@@ -4,10 +4,11 @@ import {
   ItemTitle,
 } from 'src/components/layouts/display-items.component'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
-import { useConditionData } from 'src/modules/conditions/hook/condition.data'
+import { useConditionData } from 'src/modules/conditions/hooks/condition.data'
 import { CurrentClinicalStatus } from 'src/modules/conditions/types'
 import { Condition } from 'src/modules/conditions/db/models'
 import { Link } from 'react-router-dom'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 const StatusIs = (status: string) => {
   return {
@@ -23,9 +24,17 @@ type ConditionItemProps = {
 function ConditionItem({ condition }: ConditionItemProps) {
   const status = condition?.currentClinicalStatus
   const statusIs = StatusIs(status || '')
+  const analytics = useModuleAnalytics()
 
   return (
-    <Link to="?view=conditions" state={{ conditionId: condition.id }}>
+    <Link
+      to="?view=conditions"
+      state={{ conditionId: condition.id }}
+      onClick={() => {
+        // eslint-disable-next-line no-underscore-dangle
+        analytics.trackConditionsSummaryOpened(condition._raw)
+      }}
+    >
       <div className="block border rounded-lg border-solid border-dark-blue-10 my-2 p-3 cursor-pointer">
         <div className="flex justify-between items-center">
           <h4 className="text-dark-blue-100 font-medium font-rubik text-sm">

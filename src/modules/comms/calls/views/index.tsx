@@ -8,6 +8,7 @@ import { useMember } from 'src/context/member'
 import { useCall } from 'src/context/calls'
 import DropDownComponent from 'src/components/dropdown'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import ContactList from '../components/contact-list'
 import styles from './calls.component.css'
 
@@ -34,6 +35,7 @@ function CallsCallout({
     iconColor: '#d1d5db',
     textColor: '#5d6b82',
   })
+  const { trackOutboundCall } = useModuleAnalytics()
 
   const checkProperties = (obj: any) => {
     // eslint-disable-next-line
@@ -43,9 +45,10 @@ function CallsCallout({
     return true
   }
 
-  const onCallInitiated = () => {
+  const onCallInitiated = (outboundCallDetails: any) => {
     setIsPhoneChooserOpen(false)
     setOpen(false)
+    trackOutboundCall(outboundCallDetails)
   }
 
   const handleCallClick = (e: { stopPropagation: () => void }) => {
