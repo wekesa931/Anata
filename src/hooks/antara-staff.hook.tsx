@@ -10,6 +10,7 @@ const mapAssigneeTeam = (antaraStaff: any[]) => {
     'NUTRITIONIST',
     'HEALTH_NAVIGATOR',
     'MEMBER_EXPERIENCE',
+    'LOGISTICS',
   ]
   return antaraStaff
     .filter(({ team }: any) => {
@@ -77,6 +78,7 @@ export const useAntaraStaff = () => {
       antaraHNs: filterByTeam('HEALTH_NAVIGATOR', allAntaraStaffs),
       antaraMEs: filterByTeam('MEMBER_EXPERIENCE', allAntaraStaffs),
       antaraNutritionists: filterByTeam('NUTRITIONIST', allAntaraStaffs),
+      antaraLogistics: filterByTeam('LOGISTICS', allAntaraStaffs),
       getStaffByUser,
     }),
 
