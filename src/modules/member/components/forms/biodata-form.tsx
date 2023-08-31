@@ -114,6 +114,7 @@ type BioDataFormProps = BioDataSectionProps & {
   onNext: () => Promise<void> | void
   showWizardControls?: boolean
   showPhoneInput?: boolean
+  isEditing?: boolean
 }
 
 export function BioDataForm({
@@ -126,6 +127,7 @@ export function BioDataForm({
   showPhoneInput = true,
   primaryMember,
   rosterMember,
+  isEditing = false,
 }: BioDataFormProps) {
   const [showForm, setShowForm] = useState<boolean>(false)
   const [isFetchingMember, setIsFetchingMember] = useState<boolean>(false)
@@ -340,7 +342,7 @@ export function BioDataForm({
                       label="Referral Source"
                       options={referralSources}
                       placeholder="--Select--"
-                      required
+                      required={!isEditing}
                       disabled={!!member?.referralSource}
                     />
                     {!member?.referralSource &&

@@ -49,6 +49,7 @@ function SummarySection({ member }: SummarySectionProps) {
               onPrev={handleClose}
               showPhoneInput={false}
               showWizardControls={false}
+              isEditing
             />
           )}
         </PortalForm>

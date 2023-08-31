@@ -123,7 +123,6 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
         atRecordId
       }
       tags
-      refusedServices
       status {
         status
       }
