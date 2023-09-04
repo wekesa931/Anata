@@ -36,6 +36,9 @@ const formattedDate = (date: string | Date) => {
   return dayjs(date).format('DD-MMM-YY')
 }
 
+const todayFormattedDate = (date: string | Date) => {
+  return dayjs(date).format('YYYY-MM-DD')
+}
 const isMinor = (birthDate: string) => calcAge(birthDate) < 18
 
 const getAgeFull = (birthDate?: string | null) => {
@@ -59,4 +62,5 @@ export {
   formattedDate,
   isMinor,
   getAgeFull,
+  todayFormattedDate,
 }

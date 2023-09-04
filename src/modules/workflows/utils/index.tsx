@@ -5,6 +5,7 @@ import { GroupedWorkflows, TForm, TWorkflow } from 'src/modules/workflows/types'
 import FORMS from 'src/modules/workflows/components/forms/form-inputs-definitions'
 import logError from 'src/utils/logging/logger'
 import { User } from 'src/types/user'
+import { todayFormattedDate } from 'src/utils/date-time/helpers'
 
 dayjs.locale('en')
 
@@ -279,10 +280,10 @@ export const initialFormValues = (
       'Rescheduled #': 0,
     },
     Conditions: {
-      'Date of Diagnosis/Condition': new Date(),
+      'Date of Diagnosis/Condition': todayFormattedDate(new Date()),
     },
     'Conditions Data tracking': {
-      Date: new Date(),
+      Date: todayFormattedDate(new Date()),
     },
   }
 }
