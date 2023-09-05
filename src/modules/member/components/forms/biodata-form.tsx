@@ -52,11 +52,12 @@ const validationSchema = (isChildRegistration = false) =>
     phone: isChildRegistration
       ? yup
           .string()
-          .matches(/^\+\d{3}\d{9}$/, 'Invalid phone format')
+          .matches(/^\+?\d{3}\d{9}$/, 'Invalid phone format')
           .nullable()
+          .optional()
       : yup
           .string()
-          .matches(/^\+\d{3}\d{9}$/, 'Invalid phone format')
+          .matches(/^\+?\d{3}\d{9}$/, 'Invalid phone format')
           .nullable(),
     birthDate: isChildRegistration
       ? yup
