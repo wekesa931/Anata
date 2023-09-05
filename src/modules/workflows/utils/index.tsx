@@ -256,7 +256,7 @@ export const initialFormValues = (
     },
     'Nutritional Consultation': {
       'Date of Consultation': dayjs().format('YYYY-MM-DD'),
-      'Consulting Clinican': isOnsite ? [user.userAirtableId] : null,
+      'Consulting Clinican': [user.userAirtableId],
     },
     'Clinical Consultation': {
       'Consulting Clinician': isOnsite ? [user.userAirtableId] : null,
