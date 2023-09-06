@@ -1,18 +1,17 @@
 import React from 'react'
 import { Link2 } from 'react-feather'
-import { Alert, Button, Snackbar, Tooltip } from '@mui/material'
+import { Alert, Snackbar, Tooltip } from '@mui/material'
 import PortalWindow from 'src/components/portal'
 import {
   WorkflowFormsLayout,
   FormsSection,
-  ActionsSection,
 } from 'src/modules/workflows/components/layout'
 import { useFormsData } from 'src/modules/workflows/hooks/forms-data'
 import { useWorkflowData } from 'src/modules/workflows/hooks/workflow-data'
-import form_schemas from 'src/modules/workflows/components/forms/form-inputs-definitions'
-import WorkflowForm from 'src/modules/workflows/components/forms'
+import { getFormImplementation } from 'src/modules/workflows/components/forms'
 import { useFormsRouting } from 'src/modules/workflows/hooks/routing/forms'
 import { Forms as TWorkflowForm } from 'src/modules/workflows/db/models'
+import { useNotifications } from 'src/context/notifications'
 import { formNames } from '../utils'
 
 type TitleProps = {
@@ -58,15 +57,11 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
   const [copyAlertMessage, setCopyAlertMessage] =
     React.useState<CopyAlertMessage | null>(null)
   const { loading } = useFormsData()
-  const { submitForm, loaderDisplayed } = useWorkflowData()
-  const [submissionId, setSubmissionId] = React.useState<string>('')
-  const { copyFormLink, openForm } = useFormsRouting()
+  const { loaderDisplayed } = useWorkflowData()
+  const { copyFormLink } = useFormsRouting()
   const [isEdited, setIsEdited] = React.useState<boolean>(false)
   const [formData, setFormData] = React.useState<any>(form?.data || {})
-
-  const formSchema: any = (form_schemas as any[]).find(
-    (f: any) => f.name === form.name
-  )
+  const { notify } = useNotifications()
 
   const handleCopy = () => {
     if (!form.isSynced) {
@@ -90,6 +85,24 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
     setFormData({ ...formData, [name]: value })
   }
 
+  const handleSubmissionSuccess = (form: TWorkflowForm) => () => {
+    form.clearDraft().then(() => {
+      notify('Form submitted succesfully.')
+      setIsEdited(false)
+      closeForm(form)
+    })
+  }
+
+  const handleSubmissionError = (err?: any) => {
+    notify(
+      err?.message
+        ? err?.message
+        : 'There was an error submitting your form. Please try again.'
+    )
+  }
+
+  const FormComponent = getFormImplementation(form?.name)
+
   return (
     <>
       <PortalWindow
@@ -105,32 +118,13 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
           isWorkflow={false}
         >
           <FormsSection>
-            <WorkflowForm
+            <FormComponent
               form={form}
-              formSchema={formSchema}
-              submissionId={submissionId}
-              submitForm={submitForm}
-              openForm={openForm}
               saveInput={saveInput}
-              formData={formData}
-              setIsEdited={setIsEdited}
-              closeForm={() => closeForm(form)}
-              clearSubmissionId={() => setSubmissionId('')}
+              handleSubmissionSuccess={handleSubmissionSuccess(form)}
+              handleSubmissionError={handleSubmissionError}
             />
           </FormsSection>
-          <ActionsSection>
-            <div className="flex items-center justify-end">
-              <Button
-                className="rounded-xl bg-blue-100 font-rubik text-sm font-medium normal-case text-white"
-                onClick={() => {
-                  setSubmissionId(form.id)
-                }}
-                disabled={loading || loaderDisplayed || form.isSynced}
-              >
-                Submit form
-              </Button>
-            </div>
-          </ActionsSection>
         </WorkflowFormsLayout>
       </PortalWindow>
       {copyAlertMessage && (

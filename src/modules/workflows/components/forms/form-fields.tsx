@@ -91,7 +91,7 @@ function WorkflowFormsFields({
   disabled,
   control,
   error,
-  template,
+  isWorkflow,
   airtableMeta,
   saveInput,
 }: Form) {
@@ -100,17 +100,16 @@ function WorkflowFormsFields({
     field.name === 'member' ||
     field.name === 'Members'
   // eslint-disable-next-line no-underscore-dangle
-  const isWorkflowForm = !isMemberField && template?.workflow?.id
+  const isWorkflowForm = !isMemberField && isWorkflow
   const isNormalForm =
     // eslint-disable-next-line no-underscore-dangle
-    field.name !== 'Case ID' && !isMemberField && !template?.workflow?.id
+    field.name !== 'Case ID' && !isMemberField && !isWorkflow
   switch (field.type) {
     case 'foreignKey':
       if (isWorkflowForm || isNormalForm) {
         return (
           <LinkRecordInput
             value={value}
-            template={template}
             disabled={disabled}
             field={field}
             airtableMeta={airtableMeta}
@@ -125,7 +124,6 @@ function WorkflowFormsFields({
       return (
         <CollaboratorInput
           value={value}
-          template={template}
           disabled={disabled}
           field={field}
           airtableMeta={airtableMeta}
@@ -679,7 +677,6 @@ function LinkRecordInput({
   value: linkedValue,
   field,
   saveInput,
-  template,
   airtableMeta,
   disabled,
   control,
@@ -761,7 +758,6 @@ function LinkRecordInput({
       disabled={disabled}
       control={control}
       error={error}
-      template={template}
       handleChange={handleChange}
       filterOptions={filterOptions}
       linkedRecords={linkedRecords}
@@ -777,7 +773,6 @@ function LinkRecordInput({
       disabled={disabled}
       control={control}
       error={error}
-      template={template}
       handleChange={handleChange}
       filterOptions={filterOptions}
       linkedRecords={linkedRecords}

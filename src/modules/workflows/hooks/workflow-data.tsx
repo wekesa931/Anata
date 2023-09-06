@@ -523,6 +523,7 @@ export const useWorkflowData = () => {
     completedWorkflows,
     getFormsByName,
     addNewWorkflowModule,
+    submittingForm,
   }
 }
 

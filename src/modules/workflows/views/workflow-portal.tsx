@@ -24,18 +24,17 @@ import {
 import FormsList from 'src/modules/workflows/components/workflows/modules-list'
 import ConfirmButton from 'src/components/buttons/confirm'
 import form_schemas from 'src/modules/workflows/components/forms/form-inputs-definitions'
-import WorkflowForm from 'src/modules/workflows/components/forms'
 import { useWorkflowData } from 'src/modules/workflows/hooks/workflow-data'
 import logError from 'src/utils/logging/logger'
 import { useMember } from 'src/context/member'
 import { useUser } from 'src/context/user'
 import { TAlertMessage } from 'src/components/alerts'
-import { useFormsRouting } from 'src/modules/workflows/hooks/routing/forms'
 import {
   Forms as TWorkflowForm,
   Workflows as TWorkflowModel,
 } from 'src/modules/workflows/db/models'
 import { generateId } from 'src/storage/utils'
+import { getFormImplementation } from 'src/modules/workflows/components/forms'
 import { formNames, duplicates, initialFormValues } from '../utils'
 
 type TitleProps = {
@@ -86,11 +85,8 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
   const [expanded, setExpanded] = useState<string | false>(false)
   const { notify } = useNotifications()
   const [isEdited, setIsEdited] = useState<boolean>(false)
-  const [submissionForm, setSubmissionForm] = useState<any | null>(null)
-  const [formsData, setFormsData] = useState<any>([])
   const [isDraftSaved, setIsDraftSaved] = useState<boolean>(false)
   const {
-    submitForm,
     loaderDisplayed,
     completeWorkflow,
     deleteModuleFromAPI,
@@ -106,7 +102,6 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
   const [alertMessage, setAlertMessage] = useState<TAlertMessage | null>(null)
   const [copyAlertMessage, setCopyAlertMessage] =
     React.useState<CopyAlertMessage | null>(null)
-  const { openForm } = useFormsRouting()
   const [workflowForms, setWorkflowForms] = useState<TWorkflowForm[]>([])
   // const workflowFormsObservable = workflow.forms.observe()
   // const workflowForms = useObservable(workflowFormsObservable, [], [workflow])
@@ -123,9 +118,6 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     setActiveFormName(formName)
     getFormsByName(workflow, formName).then((allActiveForms) => {
       setActiveForms(allActiveForms)
-
-      const allFormsData = allActiveForms.map((form: any) => form?.data || {})
-      setFormsData(allFormsData)
     })
   }
 
@@ -225,15 +217,6 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     return null
   }
 
-  const handleSubmitForm = () => {
-    const submittedForm = getSubmittedForm()
-    if (submittedForm) {
-      setSubmissionForm(submittedForm)
-    } else {
-      notify('Please select a form to submit')
-    }
-  }
-
   const formIsDraft = () => {
     // get the current active form and check if it is a draft
     const activeForm = getSubmittedForm()
@@ -287,16 +270,10 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     }
   }
 
-  const handleSaveInput =
-    (form: any, index: number) => (name: string, value: any) => {
-      setIsEdited(true)
-      form.saveInput(name, value)
-      setFormsData((prev: any) => {
-        const newForms = [...prev]
-        newForms[index] = form.data
-        return newForms
-      })
-    }
+  const handleSaveInput = (form: any) => (name: string, value: any) => {
+    setIsEdited(true)
+    form.saveInput(name, value)
+  }
 
   const handleSaveDraftWorkflow = async () => {
     saveDraftWorkflow(workflow, activeForms)
@@ -308,6 +285,26 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
       .catch(logError)
   }
 
+  const handleSubmissionError = (err?: any) => {
+    notify(
+      err?.message
+        ? err?.message
+        : 'There was an error submitting your form. Please try again.'
+    )
+  }
+
+  const handleSubmissionSuccess = (form: TWorkflowForm) => () => {
+    form
+      .clearDraft()
+      .then(() => {
+        notify('Form submitted succesfully.')
+        setIsEdited(false)
+      })
+      .catch(logError)
+  }
+
+  const DefaultFormComponent = getFormImplementation(activeFormName)
+
   return (
     <>
       <PortalWindow
@@ -316,7 +313,6 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
         isEdited={isEdited}
         setIsEdited={setIsEdited}
         width={50}
-        name={workflow.workflowId}
       >
         <WorkflowFormsLayout
           isWorkflow={isWorkflow}
@@ -379,70 +375,69 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                     <>
                       {activeForms.length > 1 ? (
                         <>
-                          {activeForms.map((form: any, index: number) => (
-                            <Accordion
-                              key={form.id}
-                              expanded={form.id === expanded}
-                              onChange={handleExpand(form.id)}
-                            >
-                              <AccordionSummary
-                                aria-controls="panel1bh-content"
-                                id="panel1bh-header"
-                                expandIcon={<ExpandMoreIcon />}
+                          {activeForms.map((form: any) => {
+                            const FormComponent = getFormImplementation(
+                              form.name
+                            )
+                            return (
+                              <Accordion
+                                key={form.id}
+                                expanded={form.id === expanded}
+                                onChange={handleExpand(form.id)}
                               >
-                                <Typography>
-                                  <div>
-                                    <span>
-                                      <div className="flex items-center">
-                                        <span>-</span>
-                                        <Tooltip title="Delete Module">
-                                          <ConfirmButton
-                                            onConfirm={() => deleteForm(form)}
-                                          />
-                                        </Tooltip>
+                                <AccordionSummary
+                                  aria-controls="panel1bh-content"
+                                  id="panel1bh-header"
+                                  expandIcon={<ExpandMoreIcon />}
+                                >
+                                  <Typography>
+                                    <div>
+                                      <span>
+                                        <div className="flex items-center">
+                                          <span>-</span>
+                                          <Tooltip title="Delete Module">
+                                            <ConfirmButton
+                                              onConfirm={() => deleteForm(form)}
+                                            />
+                                          </Tooltip>
+                                        </div>
+                                      </span>
+                                      <div
+                                        className={`ml-2.5 flex w-[60px] justify-center rounded-[5px] py-[3px] px-[7px] text-[10px] font-bold ${
+                                          form.isDraft
+                                            ? ' bg-yellow-200 text-status'
+                                            : 'bg-green-100 text-white'
+                                        }`}
+                                      >
+                                        {form.isDraft ? 'Pending' : 'Submitted'}
                                       </div>
-                                    </span>
-                                    <div
-                                      className={`ml-2.5 flex w-[60px] justify-center rounded-[5px] py-[3px] px-[7px] text-[10px] font-bold ${
-                                        form.isDraft
-                                          ? ' bg-yellow-200 text-status'
-                                          : 'bg-green-100 text-white'
-                                      }`}
-                                    >
-                                      {form.isDraft ? 'Pending' : 'Submitted'}
                                     </div>
-                                  </div>
-                                </Typography>
-                              </AccordionSummary>
-                              <AccordionDetails>
-                                <WorkflowForm
-                                  form={form}
-                                  formSchema={formSchema}
-                                  submissionId={submissionForm?.id}
-                                  submitForm={submitForm}
-                                  openForm={openForm}
-                                  saveInput={handleSaveInput(form, index)}
-                                  formData={formsData[index] || {}}
-                                  setIsEdited={setIsEdited}
-                                  clearSubmissionId={() =>
-                                    setSubmissionForm(null)
-                                  }
-                                />
-                              </AccordionDetails>
-                            </Accordion>
-                          ))}
+                                  </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  <FormComponent
+                                    form={form}
+                                    saveInput={handleSaveInput(form)}
+                                    handleSubmissionError={
+                                      handleSubmissionError
+                                    }
+                                    handleSubmissionSuccess={handleSubmissionSuccess(
+                                      form
+                                    )}
+                                  />
+                                </AccordionDetails>
+                              </Accordion>
+                            )
+                          })}
                         </>
                       ) : (
-                        <WorkflowForm
+                        <DefaultFormComponent
                           form={activeForms[0]}
-                          formSchema={formSchema}
-                          submissionId={submissionForm?.id}
-                          submitForm={submitForm}
-                          openForm={openForm}
-                          saveInput={handleSaveInput(activeForms[0], 0)}
-                          formData={formsData[0] || {}}
-                          setIsEdited={setIsEdited}
-                          clearSubmissionId={() => setSubmissionForm(null)}
+                          saveInput={handleSaveInput(activeForms[0])}
+                          handleSubmissionError={handleSubmissionError}
+                          handleSubmissionSuccess={handleSubmissionSuccess(
+                            activeForms[0]
+                          )}
                         />
                       )}
                     </>
@@ -494,17 +489,6 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                         onClick={handleSaveDraftWorkflow}
                       >
                         Save draft
-                      </Button>
-                    </Tooltip>
-                    <Tooltip title="Submit form">
-                      <Button
-                        className="rounded-xl bg-blue-100 font-rubik text-sm font-medium normal-case text-white"
-                        disabled={
-                          loaderDisplayed || !getSubmittedForm()?.isDraft
-                        }
-                        onClick={handleSubmitForm}
-                      >
-                        Submit form
                       </Button>
                     </Tooltip>
                   </div>

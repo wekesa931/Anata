@@ -1,18 +1,18 @@
 import * as Yup from 'yup'
 
-const validationRules = (formMeta: any, template: any) => {
+const validationRules = (formMeta: any, isWorkflow: boolean) => {
   let dateFields: string[] = []
   let numberFields: any[] = []
   let schema = {}
   formMeta?.fields &&
     formMeta.fields.forEach((fl: any) => {
       // eslint-disable-next-line no-underscore-dangle
-      const isWorkflowForm = fl.name !== 'Member' && template?.workflow?.id
+      const isWorkflowForm = fl.name !== 'Member' && isWorkflow
       const isNormalForm =
         fl.name !== 'Case ID' &&
         fl.name !== 'Member' &&
         // eslint-disable-next-line no-underscore-dangle
-        !template?.workflow?.id
+        !isWorkflow
       const fieldName = fl.name
       switch (fl.type) {
         case 'foreignKey':

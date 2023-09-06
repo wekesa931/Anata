@@ -1,3 +1,5 @@
+import type { Forms as TWorkflowForm } from 'src/modules/workflows/db/models'
+
 export type TWorkflowTemplateVariables = {
   name: string
   status: 'Active' | 'Inactive'
@@ -139,7 +141,6 @@ export type FormMeta = {
 
 export type Form = {
   value?: any
-  template?: any
   field: FormField
   airtableMeta?: any
   parentTableId?: string
@@ -148,6 +149,7 @@ export type Form = {
   control: any
   error: any
   saveInput: (name: string, value: any) => void
+  isWorkflow?: boolean
 }
 
 export type NotifyFn = (message: string) => void
@@ -161,4 +163,11 @@ export type TForm = {
   name: string
   type?: string
   url?: string
+}
+
+export type FormProps = {
+  form: TWorkflowForm
+  handleSubmissionSuccess: (data?: any) => void
+  handleSubmissionError: (error?: any) => void
+  saveInput: (name: string, value: string) => void
 }

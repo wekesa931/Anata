@@ -278,6 +278,7 @@ export const initialFormValues = (
     Appointments: {
       'Missed #': 0,
       'Rescheduled #': 0,
+      Assignee: [user?.userAirtableId],
     },
     Conditions: {
       'Date of Diagnosis/Condition': todayFormattedDate(new Date()),

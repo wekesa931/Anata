@@ -3,7 +3,12 @@ import React from 'react'
 import { useMember } from 'src/context/member'
 import { useUser } from 'src/context/user'
 
-const CalendlyLink = ({ field, formPayload }: any) => {
+type Props = {
+  fieldId: string
+  formPayload: any
+}
+
+const CalendlyLink = ({ fieldId, formPayload }: Props) => {
   const { member } = useMember()
   const user = useUser()
 
@@ -47,31 +52,27 @@ const CalendlyLink = ({ field, formPayload }: any) => {
     let urlString = ''
     const urlName = member?.fullName?.replace(' ', '%20')
     const memberEmail = member?.email || 'navigation@antarahealth.com'
-    if (calendlyLinkedFields[field.id]) {
-      const reasonUrl = formPayload[0][calendlyLinkedFields[field.id].reason]
-        ? formPayload[0][calendlyLinkedFields[field.id].reason].replaceAll(
+    if (calendlyLinkedFields[fieldId]) {
+      const reasonUrl = formPayload[calendlyLinkedFields[fieldId].reason]
+        ? formPayload[calendlyLinkedFields[fieldId].reason].replaceAll(
             ' ',
             '%20'
           )
         : ''
-      const notes = formPayload[0][calendlyLinkedFields[field.id].notes]
-        ? formPayload[0][calendlyLinkedFields[field.id].notes].replaceAll(
+      const notes = formPayload[calendlyLinkedFields[fieldId].notes]
+        ? formPayload[calendlyLinkedFields[fieldId].notes].replaceAll(
             ' ',
             '%20'
           )
         : ''
-      urlString = `https://calendly.com/antara-health/${
-        calendlyLinkedFields[field.id].link
-      }?name=${urlName}&email=${memberEmail}&a1=${
-        member?.phone
-      }&a2=${reasonUrl}&a3=${notes}&utm_source=src - ${user?.name}`
+      urlString = `https://calendly.com/antara-health/${calendlyLinkedFields[fieldId].link}?name=${urlName}&email=${memberEmail}&a1=${member?.phone}&a2=${reasonUrl}&a3=${notes}&utm_source=src - ${user?.name}`
       return (
         <Button
           variant="outlined"
           className="font-rubik text-xs capitalize"
           onClick={() => openCalendar(urlString)}
         >
-          {calendlyLinkedFields[field.id].ctLabel}
+          {calendlyLinkedFields[fieldId].ctLabel}
         </Button>
       )
     }
