@@ -189,11 +189,7 @@ export const useProcessNewWorkflowModule = () => {
     formMeta: any
   ) => {
     const activeForm = ActiveForm(formName)
-    if (
-      !activeForm.isInteractionsLog &&
-      !activeForm.isMemberFeedback &&
-      airtableMeta
-    ) {
+    if (!activeForm.isInteractionsLog && airtableMeta) {
       let payload = omitKeys(data, ['moduleId', 'Case ID', 'isDraft'])
 
       if (activeForm.isHIFMinor || activeForm.isInterventionDataTracking) {
