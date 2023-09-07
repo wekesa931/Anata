@@ -16248,7 +16248,7 @@ export default [
       {
         id: 'interactionSummaryNotes',
         name: 'Interactor Summary Notes',
-        type: 'multilineText',
+        type: 'richText',
         format: '',
         isDateTime: false,
         options: [],
