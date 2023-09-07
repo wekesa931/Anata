@@ -223,11 +223,15 @@ const validationRules = (formMeta: any, isWorkflow: boolean) => {
                 ...schema,
                 [fieldName]: Yup.string().when(`${fl.parentKey}`, {
                   is: (val) => {
-                    let res = fl?.parentValues?.includes(val)
+                    const isIncluded = Array.isArray(val)
+                      ? val.some((item) => fl?.parentValues?.includes(item))
+                      : fl?.parentValues?.includes(val)
+
                     if (fl?.conditionType === '!') {
-                      res = !fl.parentValues.includes(val)
+                      return !isIncluded
                     }
-                    return res
+
+                    return isIncluded
                   },
                   then: Yup.string().required(),
                   otherwise: Yup.string().nullable().notRequired(),
