@@ -8875,7 +8875,7 @@ export default [
         relationship: 'one',
         foreignTableId: 'tblHs6JxFnMGAjNNC',
         required: true,
-        helper: 'Note: if CS task, please assign it to Effie',
+        helper: '',
       },
       {
         id: 'fld44WK9nOk5ZanUX',
@@ -15420,8 +15420,9 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
-        helper: '',
+        required: false,
+        helper:
+          'Please enter the start date if the member is already taking the medication. If this a new medication, Care team will confirm and update the start date after delivery of the medication.',
       },
       {
         id: 'fldfiJtWgiaX00gXG',

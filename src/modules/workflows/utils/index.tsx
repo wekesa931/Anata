@@ -242,7 +242,7 @@ export const initialFormValues = (
       'Date of baseline': dayjs().format('YYYY-MM-DD'),
     },
     Vitals: {
-      Staff: isOnsite ? [user.userAirtableId] : member?.assignedHn?.recordId,
+      Staff: [user.userAirtableId],
       Date: dayjs().format('YYYY-MM-DD'),
       'Type of Reading': isOnsite ? 'Measured by Antara' : null,
     },
@@ -282,9 +282,19 @@ export const initialFormValues = (
     },
     Conditions: {
       'Date of Diagnosis/Condition': todayFormattedDate(new Date()),
+      'Condition Status': 'Active',
     },
     'Conditions Data tracking': {
       Date: todayFormattedDate(new Date()),
+    },
+    Interventions: {
+      Status: 'Active',
+    },
+    'HN Tasks': {
+      Status: 'Not Started',
+    },
+    'Member tasks': {
+      Status: 'Not Started',
     },
   }
 }
