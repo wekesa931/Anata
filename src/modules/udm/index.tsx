@@ -1,82 +1,54 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { useMutation, useLazyQuery } from '@apollo/client'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import Typography from '@mui/material/Typography'
-import { groupBy, every, isEmpty } from 'lodash'
+import { every, isEmpty } from 'lodash'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined'
 import TableRow from '@mui/material/TableRow'
 import TablePagination from '@mui/material/TablePagination'
 import TableCell from '@mui/material/TableCell'
-import TableSortLabel from '@mui/material/TableSortLabel'
-import { throttle } from 'throttle-debounce'
 import dayjs from 'dayjs'
 import Button from '@mui/material/Button'
 import { useFilePicker } from 'use-file-picker'
 import {
-  Search,
   AlertCircle,
   CheckCircle,
   File,
-  FileText,
-  Image,
-  Link2,
-  Monitor,
   Upload,
   X,
   XCircle,
-  Grid as FeatherGrid,
-  List,
   Share,
 } from 'react-feather'
-import MenuItem from '@mui/material/MenuItem'
-import InputAdornment from '@mui/material/InputAdornment'
-import TextField from '@mui/material/TextField'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
-import TableHead from '@mui/material/TableHead'
 import TableContainer from '@mui/material/TableContainer'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
-import { visuallyHidden } from '@mui/utils'
 import Accordion from '@mui/material/Accordion'
 import Drawer from '@mui/material/Drawer'
-import axios from 'axios'
 import Grid from '@mui/material/Grid'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers'
 import LinearProgress from '@mui/material/LinearProgress'
-import { Divider, IconButton, Popper, Stack, styled } from '@mui/material'
-import { LoadingButton } from '@mui/lab'
-import FormControl from '@mui/material/FormControl'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
-import Tooltip from 'src/components/tooltip'
 import PdfViewer from 'src/modules/udm/components/pdf-viewer.component'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
-import {
-  GET_FILES,
-  UPLOAD_LINK,
-  SAVE_FILE,
-  GET_FOLDERS,
-  SHARE_FILE,
-  GET_FILE_CATEGORIES,
-} from 'src/modules/udm/services/gql'
-import { useMember } from 'src/context/member'
-import { useUser } from 'src/context/user'
 import RefinedFileMetaForm from 'src/modules/udm/components/form'
 import logError from 'src/utils/logging/logger'
-import DropDownComponent from 'src/components/dropdown'
-import ToastNotification, {
-  defaultToastMessage,
-  ToastMessage,
-} from 'src/components/toasts/toast-notification'
 import { useParams } from 'react-router-dom'
-import { useModuleAnalytics } from 'src/modules/analytics'
+import { useNotifications } from 'src/context/notifications'
+import { FilterView } from 'src/modules/udm/views/filter-files'
+import { UploadOptions } from 'src/modules/udm/components/upload-options'
+import { ShareFileView } from 'src/modules/udm/views/share-file'
+import { GRoupedFiles, TFile } from 'src/modules/udm/types'
+import {
+  getComparator,
+  uploadDisabled,
+  getMimeIcon,
+  getSharedAt,
+  stableSortFiles,
+} from 'src/modules/udm/utils'
+import { FileDetails } from 'src/modules/udm/views/file-details'
+import { EnhancedTableHead } from 'src/modules/udm/components/file-table-header'
+import { useUdmData } from './hooks/udm.data'
 import styles from './files.component.css'
-
-// eslint-disable-next-line
-const mime = require('mime-types')
 
 type DocMeta = {
   docType: string
@@ -86,644 +58,6 @@ type DocMeta = {
   folder?: string
 }
 
-type IFiles = {
-  addedBy: string
-  antaraId: string
-  category: string
-  description: string
-  driveUrl: string
-  title: string
-  fileSize: number
-  id: string
-  mimeType: string
-  otherMetadata: any
-  storageKey: string
-  updatedAt: Date
-}
-
-type IGRoupedFiles = {
-  [key: string]: IFiles[]
-}
-
-type IUploadOptions = {
-  open: boolean
-  setOpen: (isOpen: boolean) => void
-  docLink: string
-  setdocLink: (docLink: string | undefined) => void
-  uploadDisabled: () => boolean
-  openFileSelector: () => void
-  setConfirmationDrawerHelper: (confirmationDrawerHelper: boolean) => void
-  clear: () => void
-}
-
-type IFolder = {
-  id: string
-  name: string
-}
-
-type IShareOptions = {
-  open: boolean
-  anchorEl: HTMLElement | null
-  id: string | undefined
-  close: () => void
-  folders: IFolder[]
-  fileId: string
-}
-
-function descendingComparator(a: any, b: any, orderBy: any) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1
-  }
-  return 0
-}
-
-function getComparator(order: any, orderBy: any) {
-  return order === 'desc'
-    ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-    : (a: any, b: any) => -descendingComparator(a, b, orderBy)
-}
-
-const isFileShared = (sharedfileSet: any) => {
-  return !!sharedfileSet?.edges.length
-}
-
-const ShareFileOptions = React.forwardRef(
-  ({ open, anchorEl, id, close, folders, fileId }: IShareOptions) => {
-    const { antaraId } = useParams()
-    const [folder, setFolder] = useState<string>('')
-    const [shareFileMutation, { loading: sharing }] = useMutation(SHARE_FILE)
-    const [toastMessage, setToastMessage] =
-      useState<ToastMessage>(defaultToastMessage)
-    const { trackDocumentShared } = useModuleAnalytics()
-
-    const shareFile = () => {
-      shareFileMutation({
-        variables: {
-          fileId,
-          folderId: folder,
-          antaraId,
-        },
-      })
-        .then((res) => {
-          const message = res?.data?.shareFile?.message
-
-          setToastMessage({
-            ...toastMessage,
-            message,
-          })
-
-          trackDocumentShared(res?.data?.shareFile?.sharedFile)
-        })
-        .catch((err) => {
-          logError(err)
-          setToastMessage({
-            ...toastMessage,
-            message: 'An error occured sharing file',
-          })
-        })
-        .finally(() => {
-          setFolder('')
-          close()
-        })
-    }
-
-    return (
-      <>
-        <ToastNotification
-          message={toastMessage}
-          isOpen={!!toastMessage.message}
-          handleToastClose={() => setToastMessage(defaultToastMessage)}
-        />
-        <Popper open={open} anchorEl={anchorEl} id={id}>
-          <Box
-            className={styles.shareDocModal}
-            sx={{ bgcolor: 'background.paper', p: 3 }}
-          >
-            <h3 className={styles.shareDocTitle}>Send doc to the app</h3>
-
-            <p className={styles.appFolder}>App Folder</p>
-            <FormControl fullWidth sx={{ mt: 2, mb: 2 }}>
-              <Select
-                value={folder}
-                onChange={(e: SelectChangeEvent) =>
-                  setFolder(e.target.value as string)
-                }
-              >
-                {folders.map((f) => (
-                  <MenuItem key={f.id} value={f.id}>
-                    {f.name}{' '}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <Stack spacing={2} direction="row">
-              <button
-                className={`btn ${styles.cancelBtn} ${styles.styledBtn}`}
-                onClick={close}
-              >
-                Cancel
-              </button>
-
-              <LoadingButton
-                className={`${styles.styledBtn} ${styles.shareFileBtn} btn`}
-                onClick={shareFile}
-                loading={sharing}
-                disabled={!folder}
-              >
-                {sharing ? 'Sharing...' : 'Share'}
-              </LoadingButton>
-            </Stack>
-          </Box>
-        </Popper>
-      </>
-    )
-  }
-)
-
-function UploadOptions({
-  open,
-  setOpen,
-  docLink,
-  setdocLink,
-  uploadDisabled,
-  openFileSelector,
-  setConfirmationDrawerHelper,
-  clear,
-}: IUploadOptions) {
-  const [openLinkInput, setOpenLinkInput] = useState(false)
-  const showUploadLink = false
-
-  return (
-    <DropDownComponent isVisible={open} setvisibility={setOpen}>
-      <div className={styles.fileUploadOptions}>
-        <Box
-          sx={{
-            borderBottom: '1px solid #e8eaed',
-            bgcolor: 'background.paper',
-          }}
-        >
-          {openLinkInput ? (
-            <p className={`${styles.upText} ${styles.paste}`}>Paste Link URL</p>
-          ) : (
-            <div>
-              {showUploadLink && (
-                <Button
-                  onClick={() => {
-                    setOpenLinkInput(true)
-                  }}
-                >
-                  <Link2 />
-                  <div className={`d-flex ${styles.uploadText}`}>
-                    <p className={styles.upText}>Upload via Link</p>
-                    <p className={styles.upTextSummary}>
-                      Google Drive, Dropbox
-                    </p>
-                  </div>
-                </Button>
-              )}
-            </div>
-          )}
-        </Box>
-        <Box
-          sx={{
-            borderBottom: '1px solid #e8eaed',
-            bgcolor: 'background.paper',
-          }}
-        >
-          {openLinkInput ? (
-            <>
-              <input
-                className={styles.input}
-                type="text"
-                placeholder="https://drive.google.com/file/d/"
-                value={docLink}
-                onChange={(e) => setdocLink(e.target.value)}
-              />
-              {docLink && uploadDisabled() && (
-                <p className={styles.urlError}>Not a valid url</p>
-              )}
-            </>
-          ) : (
-            <Button
-              onClick={() => {
-                openFileSelector()
-                setOpen(false)
-                setdocLink(undefined)
-              }}
-            >
-              <Monitor />
-              <div className={`d-flex ${styles.uploadText}`}>
-                <p className={styles.upText}>Upload from your computer</p>
-                <p className={styles.upTextSummary}>PDF, DOC, XLS</p>
-              </div>
-            </Button>
-          )}
-        </Box>
-        {openLinkInput && (
-          <Box className="d-flex flex-end" sx={{ bgcolor: 'background.paper' }}>
-            <Button
-              disabled={uploadDisabled()}
-              className={styles.upBtn}
-              onClick={() => {
-                // this is important since the file is not cleared by default after choosing a file, even if they did not upload it
-                clear()
-                setConfirmationDrawerHelper(true)
-                setOpen(false)
-                setOpenLinkInput(false)
-              }}
-            >
-              Upload
-            </Button>
-            <Button
-              className={styles.upBtn}
-              color="error"
-              onClick={() => {
-                setOpen(false)
-                setdocLink(undefined)
-                setOpenLinkInput(false)
-              }}
-            >
-              Cancel
-            </Button>
-          </Box>
-        )}
-      </div>
-    </DropDownComponent>
-  )
-}
-
-function FilterComponent({
-  open,
-  setisOPen,
-  docLink,
-  setdocLink,
-  uploadDisabled,
-  handleUploadClick,
-  openFileSelector,
-  listView,
-  setfiltering,
-  filtered,
-  noFilesForMember,
-  setListView,
-  setConfirmationDrawerHelper,
-  clear,
-  fileTypes,
-}: any) {
-  const [fileCategory, setFileCategory] = useState<string | undefined>(
-    undefined
-  )
-  const [fileMime, setfileMime] = useState<string | undefined>(undefined)
-  const [filterDate, setFilterDate] = useState<Date | null>(null)
-  const [docTitle, setDocTitle] = useState<string | undefined>(undefined)
-  const { antaraId } = useParams()
-
-  const mimeTypes = [
-    'jpg',
-    'image/jpeg',
-    'image/jpg',
-    'application/pdf',
-    'image/png',
-    'text/csv',
-    'gif',
-    'png',
-    'doc',
-    'docx',
-    'txt',
-    'csv',
-    'pdf',
-  ]
-
-  const [applyFilters, { data, loading }] = useLazyQuery(GET_FILES, {
-    variables: {
-      antaraId,
-      search: docTitle || '',
-      mimeType: fileMime || '',
-      fileCategory_Name: fileCategory || '',
-      updatedAt_Gte: filterDate,
-    },
-  })
-  const { trackDocumentSearched: documentSearched } = useModuleAnalytics()
-
-  const removeFilters = () => {
-    setFileCategory(undefined)
-    setfileMime(undefined)
-    setFilterDate(null)
-    setDocTitle(undefined)
-  }
-  useEffect(() => {
-    if (fileCategory || fileMime || filterDate || docTitle) {
-      const throttleFunc = throttle(
-        1000,
-        () => {
-          applyFilters().then(() => {
-            const filtersApplied = {
-              search: docTitle || '',
-              mimeType: fileMime || '',
-              fileCategory,
-              filterDate,
-            }
-
-            documentSearched(filtersApplied)
-          })
-        },
-        { debounceMode: true, noTrailing: true }
-      )
-
-      return throttleFunc()
-    }
-    return undefined
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fileCategory, fileMime, filterDate, docTitle])
-
-  useEffect(() => {
-    setfiltering(loading)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading])
-
-  // update category used
-  useEffect(() => {
-    if (data) {
-      const rawFiles = data.files.edges
-        .map((ed: { node: IFiles }) => ed.node)
-        .map((ed: any) => ({
-          ...ed,
-          shared: isFileShared(ed.sharedfileSet),
-          category: ed?.fileCategory?.name || ed?.category,
-        }))
-
-      const categorizedFiles = groupBy(rawFiles, 'category')
-      filtered(categorizedFiles)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
-
-  return (
-    <div className="filters">
-      <div className={styles.searchContainer}>
-        <div className={styles.search}>
-          <TextField
-            sx={{ fontSize: '13px' }}
-            className={styles.searchInput}
-            id="input-with-icon-textfield"
-            placeholder="Search files"
-            value={docTitle || ''}
-            onChange={(e) => setDocTitle(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search width={18} height={18} />
-                </InputAdornment>
-              ),
-            }}
-            variant="standard"
-          />
-        </div>
-        <div className={styles.viewIcons}>
-          {!noFilesForMember && (
-            <>
-              <Button
-                sx={{ textTransform: 'none', border: '1px solid #0000ff' }}
-                className={styles.scopedUpload}
-                variant="outlined"
-                startIcon={<Upload width={15} height={15} />}
-                onClick={handleUploadClick}
-              >
-                Upload
-              </Button>
-              {open && (
-                <div className={styles.loadedFileUploadOptions}>
-                  <UploadOptions
-                    open={open}
-                    setOpen={setisOPen}
-                    docLink={docLink}
-                    setdocLink={setdocLink}
-                    uploadDisabled={uploadDisabled}
-                    openFileSelector={openFileSelector}
-                    setConfirmationDrawerHelper={setConfirmationDrawerHelper}
-                    clear={clear}
-                  />
-                </div>
-              )}{' '}
-            </>
-          )}
-
-          <Tooltip title="List View">
-            <List
-              color={listView ? '#1084ee' : '#5d6b82'}
-              className={styles.listIcon}
-              onClick={() => {
-                setListView(true)
-              }}
-            />
-          </Tooltip>
-
-          <Tooltip title="Grid View">
-            <FeatherGrid
-              color={listView ? '#5d6b82' : '#1084ee'}
-              className={styles.gridIcon}
-              onClick={() => {
-                setListView(false)
-              }}
-            />
-          </Tooltip>
-        </div>
-      </div>
-      <div className={styles.typeSelection}>
-        <div>
-          <TextField
-            id={styles.outlinedSelectType}
-            className={styles.outlinedTypeSelect}
-            select
-            label="Category"
-            value={fileCategory || ''}
-            onChange={(e) => setFileCategory(e.target.value as string)}
-          >
-            {fileTypes.map((file: any) => (
-              <MenuItem key={file} value={file}>
-                {file}
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
-        <div className={styles.dateSelection}>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <MobileDatePicker
-              label="Date Uploaded"
-              inputFormat="dd/MM/yyyy"
-              toolbarPlaceholder="DD/MM/YYYY"
-              value={filterDate}
-              onChange={(date: Date | null) => setFilterDate(date)}
-              renderInput={(params) => (
-                <TextField id={styles.outlinedSelectDate} {...params} />
-              )}
-            />
-          </LocalizationProvider>
-        </div>
-
-        <div className={`${styles.mimeSelection} ${styles.dateSelection}`}>
-          <TextField
-            id={styles.outlinedSelectType}
-            select
-            label="File type"
-            value={fileMime || ''}
-            onChange={(e) => setfileMime(e.target.value)}
-          >
-            {mimeTypes.map((mimeType) => (
-              <MenuItem key={mimeType} value={mimeType}>
-                {mimeType}
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
-        <Button
-          className={styles.upBtn}
-          sx={{ marginLeft: '5px' }}
-          color="error"
-          variant="contained"
-          value={fileMime}
-          onClick={() => removeFilters()}
-        >
-          Clear Filters
-        </Button>
-      </div>
-    </div>
-  )
-}
-
-const DrawerHeader = styled('div')(({ theme }: any) => ({
-  display: 'flex',
-  alignItems: 'center',
-  ...theme.mixins.toolbar,
-  justifyContent: 'space-between',
-  flexDirection: 'row',
-  paddingLeft: 2,
-}))
-
-type RenderSectionProps = {
-  title: string
-  value: string
-}
-
-function RenderSection({ title, value }: RenderSectionProps) {
-  return (
-    <Box sx={{ mt: 1, mb: 2 }}>
-      <p className={styles.docInfoSubtext}>{title}</p>
-      <p className={styles.docInfoText}>{value}</p>
-    </Box>
-  )
-}
-
-function FileDetails({ file, anchorEl, id, showFile, close, open }: any) {
-  const sharingInfo = file?.sharedfileSet?.edges[0]?.node
-  return (
-    <Popper id={id} open={open} anchorEl={anchorEl}>
-      <Paper
-        sx={{
-          p: 1,
-          width: 300,
-          position: 'relative',
-          bgcolor: 'background.paper',
-        }}
-        elevation={3}
-      >
-        <Box>
-          <DrawerHeader>
-            <Typography variant="h6" component="div">
-              {file?.title}
-            </Typography>
-            <IconButton onClick={close}>
-              <X />
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
-          <RenderSection
-            title="Uploaded at"
-            value={dayjs(file?.createdAt).format("DD MMM' YYYY, HH:mm")}
-          />
-          <RenderSection
-            title="Shared status"
-            value={
-              file?.shared ? 'Shared with member' : 'Not shared with member'
-            }
-          />
-          {file?.shared && (
-            <>
-              <RenderSection title="Shared by" value={sharingInfo?.sharedBy} />
-              <RenderSection
-                title="Member shared folder"
-                value={sharingInfo?.folder?.name}
-              />
-              <RenderSection
-                title="Has member read"
-                value={sharingInfo?.read ? 'Read' : 'Not read'}
-              />
-            </>
-          )}
-          <Button variant="text" onClick={(e) => showFile(e, file)}>
-            View file
-          </Button>
-          {file?.driveUrl?.includes('https://docs.google.com') ? (
-            <Button
-              variant="text"
-              onClick={() => window.open(file?.driveUrl, '_blank').focus()}
-            >
-              Edit File
-            </Button>
-          ) : null}
-        </Box>
-      </Paper>
-    </Popper>
-  )
-}
-
-function EnhancedTableHead(props: any) {
-  const {
-    order: orderVal,
-    orderBy: orderByVal,
-    onRequestSort,
-    headCells,
-  } = props
-  const createSortHandler = (property: any) => (event: any) => {
-    onRequestSort(event, property)
-  }
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox" />
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderByVal === headCell.id ? orderVal : false}
-          >
-            <TableSortLabel
-              active={orderByVal === headCell.id}
-              direction={orderByVal === headCell.id ? orderVal : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderByVal === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {orderVal === 'desc'
-                    ? 'sorted descending'
-                    : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  )
-}
-
 function Files() {
   const [open, setOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -731,26 +65,16 @@ function Files() {
     null
   )
   const [fileDetails, setFileDetails] = useState<null | any>(null)
-
   const [filtering, setfiltering] = useState(false)
-  const [docLink, setdocLink] = useState(undefined)
   const [order, setOrder] = React.useState('asc')
   const [orderBy, setOrderBy] = React.useState('updatedAt')
   const [page, setPage] = React.useState(0)
-  const [fileError, setFileError] = useState('')
   const [activeOpenFile, seActiveOpenFile] = useState(null)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [shouldReplaceFile, setShouldReplaceFile] = useState(false)
-  const [progress, setProgress] = React.useState(0)
-  const [uploadStart, setUploadStart] = useState(false)
-  const [uploadSuccessful, setUploadSuccessful] = useState(false)
-  const [uploadFailed, setUploadFailed] = useState(false)
-  const { member } = useMember()
   const { antaraId } = useParams()
-  const displayForm = !uploadSuccessful && !uploadFailed
-  const user = useUser()
-  const [filteredFiles, setFilteredFiles] = useState<IGRoupedFiles>(
-    {} as IGRoupedFiles
+
+  const [filteredFiles, setFilteredFiles] = useState<GRoupedFiles>(
+    {} as GRoupedFiles
   )
   const [listView, setListView] = useState(true)
   const [
@@ -760,83 +84,89 @@ function Files() {
     accept: '*',
     readAs: 'BinaryString',
   })
-  const [getFiles, { loading, error, refetch }] = useLazyQuery(GET_FILES, {
-    onCompleted: (data) => {
-      if (data) {
-        const rawFiles = data.files.edges
-          .map((ed: { node: IFiles }) => ed.node)
-          .map((ed: any) => ({
-            ...ed,
-            shared: isFileShared(ed.sharedfileSet),
-            category: ed?.fileCategory?.name || ed?.category,
-          }))
 
-        const categorizedFiles = groupBy(rawFiles, 'category')
-        setFilteredFiles(categorizedFiles)
-      }
-    },
-  })
   const [folders, setFolders] = useState([])
   const [fileTypes, setFileTypes] = useState<string[]>([])
 
-  const [getFolders] = useLazyQuery(GET_FOLDERS, {
-    onCompleted: (foldersData) => {
-      if (foldersData) {
-        const rawFolders = foldersData?.folders?.edges
-        setFolders(rawFolders.map(({ node }) => node))
-      }
-    },
-  })
+  const {
+    getFiles,
+    loading,
+    getFolders,
+    getCategories,
+    error,
+    refetch,
+    fileError,
+    loading: gettingUploadLink,
+    setShouldReplaceFile,
+    handleUploadDocument,
+    uploadDone,
+    uploadStart,
+    uploadFailed,
+    uploadSuccessful,
+    docLink,
+    setdocLink,
+    setUploadFailed,
+    progress,
+    setProgress,
+    confirmationDrawerHelper,
+    setConfirmationDrawerHelper,
+    setNetworkError,
+    networkError,
+  } = useUdmData()
 
-  const [getUploadLink, { loading: gettingUploadLink }] =
-    useMutation(UPLOAD_LINK)
-  const [saveFile] = useMutation(SAVE_FILE)
+  const displayForm = !uploadSuccessful && !uploadFailed
+
+  const uploadDocument = (docMeta: DocMeta) => {
+    const fileName = filesContent[0]?.name
+    const shouldUploadByLink = filesContent.length === 0 || !fileName
+    const options = {
+      document: docMeta,
+      filesContent,
+      plainFiles,
+      fileName,
+      shouldUploadByLink,
+      fileSize: plainFiles[0]?.size || 0,
+      file: plainFiles[0],
+    }
+    filesRef.current = docMeta
+    handleUploadDocument(options)
+  }
+
   const uploadErrored = fileError && fileError.length > 0
   const noFilesForMember = !loading && every(filteredFiles, isEmpty)
-  const [confirmationDrawerHelper, setConfirmationDrawerHelper] =
-    useState(false)
   const displayDrawer = confirmationDrawerHelper && !gettingFile
   const isFileUploading = gettingFile || gettingUploadLink
   const isFormVisible = displayForm && !gettingFile && !gettingUploadLink
   const filesRef = useRef()
-  const [networkError, setNetworkError] = useState(false)
-  const [getCategories] = useLazyQuery(GET_FILE_CATEGORIES, {
-    onCompleted: (fileCategoryData) => {
-      if (fileCategoryData) {
-        const rawCategories = fileCategoryData.fileCategories.edges?.map(
-          (f: any) => f.node?.name
-        )
-        setFileTypes(rawCategories)
-      }
-    },
-  })
   const [shouldShareFile, setShouldShareFile] = useState(false)
-  const [fileIdToShare, setFileIdToShare] = useState(null)
-  const { trackDocumentShared, trackDocumentUploaded } = useModuleAnalytics()
+  const [fileIdToShare, setFileIdToShare] = useState<string | undefined>(
+    undefined
+  )
 
-  const isValidURL = (url: string) => {
-    const res = url.match(
-      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g //eslint-disable-line
-    )
-    return res !== null
-  }
-  const uploadDisabled = () => {
-    if (!docLink) {
-      return true
-    }
-    if (!isValidURL(docLink)) {
-      return true
-    }
-    return false
-  }
+  const { notify } = useNotifications()
 
   useEffect(() => {
     if (antaraId) {
-      getFiles({ variables: { antaraId } })
+      getFiles()
+        .then(setFilteredFiles)
+        .catch((err) => {
+          logError(err)
+          notify('An error occured getting files')
+        })
     }
 
     getFolders()
+      .then(setFolders)
+      .catch((err) => {
+        logError(err)
+        notify('An error occured getting folders')
+      })
     getCategories()
+      .then(setFileTypes)
+      .catch((err) => {
+        logError(err)
+        notify('An error occured getting file categories')
+      })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [antaraId])
@@ -845,6 +175,8 @@ function Files() {
     if (gettingFile) {
       setConfirmationDrawerHelper(true)
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gettingFile])
 
   const headCells = [
@@ -883,33 +215,6 @@ function Files() {
     setOpen(true)
   }
 
-  const handleUploadError = (response: any) => {
-    setUploadStart(false)
-    setProgress(0)
-    setUploadFailed(true)
-    logError(response.message)
-  }
-
-  const getMimeIcon = (name: string) => {
-    if (name.includes('pdf')) {
-      return <PictureAsPdfOutlinedIcon className={styles.red} />
-    }
-    if (name.includes('jpg') || name.includes('jpeg') || name.includes('png')) {
-      return <Image className={styles.blue} />
-    }
-    return <FileText className={styles.green} />
-  }
-
-  const getSharedAt = (row: any) => {
-    const sharedAt = row?.sharedfileSet.edges[0]?.node?.updatedAt
-
-    if (sharedAt) {
-      return dayjs(sharedAt).format("DD MMM' YY")
-    }
-
-    return ''
-  }
-
   React.useEffect(() => {
     if (uploadStart) {
       const timer = setInterval(() => {
@@ -927,6 +232,8 @@ function Files() {
       }
     }
     return undefined
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadStart])
 
   const handleRequestSort = (_event: any, property: string) => {
@@ -937,170 +244,10 @@ function Files() {
   const onFileClosed = () => {
     seActiveOpenFile(null)
   }
-  const stableSort = (array: IFiles[], comparator: any) => {
-    const stabilizedThis = array.map((el, index) => [el, index])
-    stabilizedThis.sort((a: any, b: any) => {
-      const val = comparator(a[0], b[0])
-      if (val !== 0) {
-        return val
-      }
-      return a[1] - b[1]
-    })
-    return stabilizedThis.map((el) => el[0])
-  }
 
   const closeFileSharing = () => {
     setAnchorEl(null)
     refetch()
-  }
-  const persistData = (
-    docMeta: DocMeta,
-    storeKey: string,
-    mimeVal: any,
-    fileSize: number,
-    driveLink: any,
-    fileName: any
-  ) => {
-    let input: any = {
-      description: docMeta.description,
-      antaraId,
-      storageKey: storeKey,
-      addedBy: user?.email,
-      mimeType: mimeVal,
-      fileSize,
-      fileCategory: docMeta.docType,
-      driveUrl: driveLink,
-      title: docMeta.title,
-      recordId: member?.airtableRecordId,
-      fileName,
-    }
-
-    if (docMeta.shareWith) {
-      input = {
-        ...input,
-        shareWith: docMeta.shareWith,
-        folder: docMeta.folder,
-      }
-    }
-
-    saveFile({
-      variables: {
-        input,
-      },
-    }).then((res) => {
-      setUploadStart(false)
-      setProgress(100)
-      if (res.data.saveFile.status !== 200) {
-        setUploadFailed(true)
-      } else {
-        setUploadSuccessful(true)
-        refetch()
-
-        // track upload and share events
-        if (docMeta.shareWith) {
-          trackDocumentShared(input)
-        }
-      }
-
-      trackDocumentUploaded(res.data.saveFile.status === 200, input)
-    })
-  }
-  const uploadDocument = (docMeta: DocMeta) => {
-    filesRef.current = docMeta
-    setUploadStart(true)
-    let fileName: any = null
-    let storeKey =
-      filesContent.length > 0
-        ? `${antaraId}/${docMeta.docType}/${filesContent[0].name}`
-        : docLink
-    let fileSize = 0
-    let driveLink: any = null
-    let mimeVal: any = null
-    const formData = new FormData()
-
-    if (filesContent.length === 0) {
-      try {
-        driveLink = docLink
-        fileSize = 0
-        mimeVal = 'doc'
-        fileName = docLink
-        persistData(docMeta, storeKey, mimeVal, fileSize, driveLink, fileName)
-      } catch (err: any) {
-        if (err.name === 'Network Error') {
-          setNetworkError(true)
-        }
-        handleUploadError(err)
-      } finally {
-        // no need to proceed if the doc was uploaded via link
-        // eslint-disable-next-line no-unsafe-finally
-        return
-      }
-    }
-    getUploadLink({
-      variables: {
-        duration: 50000,
-        storageKey: storeKey,
-        forceReplace: shouldReplaceFile,
-      },
-    })
-      .then((res) => {
-        if (res.data.generateUploadLink.errors) {
-          setFileError(res.data.generateUploadLink.message)
-          setShouldReplaceFile(false)
-          throw new Error(res.data.generateUploadLink.message)
-        } else {
-          setShouldReplaceFile(false)
-          return res.data.generateUploadLink
-        }
-      })
-      .then((res) => {
-        Object.keys(res.link.fields).forEach((key) => {
-          formData.append(key, res.link.fields[key])
-        })
-        try {
-          if (filesContent.length > 0 && !docLink) {
-            fileName = filesContent[0].name.split('.')
-            fileName.pop()
-            fileName = fileName.join('.')
-            formData.append('file', plainFiles[0])
-            storeKey = `${antaraId}/${docMeta.docType}/${filesContent[0].name}`
-            mimeVal = mime.lookup(filesContent[0].name)
-            fileSize = plainFiles[0].size
-            const config = {
-              onUploadProgress: (progressEvent: any) => {
-                const percentCompleted = Math.round(
-                  (progressEvent.loaded * 100) / progressEvent.total
-                )
-                setProgress(percentCompleted - 10)
-              },
-            }
-            axios
-              .post(`${res.link.url}`, formData, {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                  Accept: 'application/json',
-                },
-                ...config,
-              })
-              .then(() => {
-                persistData(
-                  docMeta,
-                  storeKey,
-                  mimeVal,
-                  fileSize,
-                  driveLink,
-                  fileName
-                )
-              })
-          }
-        } catch (err: any) {
-          if (err.name === 'Network Error') {
-            setNetworkError(true)
-          }
-          handleUploadError(err)
-        }
-      })
-      .catch((e) => logError(e))
   }
 
   const handleClick = (_event: any, file: any) => {
@@ -1116,14 +263,6 @@ function Files() {
     setPage(0)
   }
 
-  const uploadDone = () => {
-    setProgress(0)
-    setFileError('')
-    setUploadSuccessful(false)
-    setUploadFailed(false)
-    setdocLink(undefined)
-    setConfirmationDrawerHelper(false)
-  }
   const progressColor = (): 'error' | 'primary' | 'success' => {
     let color: 'error' | 'primary' | 'success' = 'primary'
     if (uploadSuccessful) {
@@ -1189,7 +328,7 @@ function Files() {
       style={{ paddingLeft: '16px' }}
     >
       {!uploadErrored && (
-        <FilterComponent
+        <FilterView
           open={open}
           docLink={docLink}
           setdocLink={setdocLink}
@@ -1332,8 +471,8 @@ function Files() {
                   className={`${styles.uploadMessage} ${styles.tryAgain}`}
                   variant="contained"
                   onClick={() => {
-                    uploadDocument(filesRef.current)
-                    setUploadFailed(false)
+                    uploadDocument(filesRef.current as unknown as DocMeta)
+                    setUploadFailed()
                     setNetworkError(false)
                   }}
                 >
@@ -1363,8 +502,8 @@ function Files() {
         </div>
       )}
 
-      {shouldShareFile && (
-        <ShareFileOptions
+      {shouldShareFile && fileIdToShare && (
+        <ShareFileView
           anchorEl={anchorEl}
           open={!!anchorEl}
           id={anchorEl ? 'folder-popup' : undefined}
@@ -1412,7 +551,7 @@ function Files() {
                                     headCells={headCells}
                                   />
                                   <TableBody>
-                                    {stableSort(
+                                    {stableSortFiles(
                                       filteredFiles[key],
                                       getComparator(order, orderBy)
                                     )
@@ -1420,8 +559,9 @@ function Files() {
                                         page * rowsPerPage,
                                         page * rowsPerPage + rowsPerPage
                                       )
-                                      .map((row, index) => {
+                                      .map((items, index) => {
                                         const labelId = `enhanced-table-checkbox-${index}`
+                                        const row = items as TFile
 
                                         return (
                                           <TableRow

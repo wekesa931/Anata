@@ -85,11 +85,11 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
     setFormData({ ...formData, [name]: value })
   }
 
-  const handleSubmissionSuccess = (form: TWorkflowForm) => () => {
-    form.clearDraft().then(() => {
+  const handleSubmissionSuccess = (f: TWorkflowForm) => () => {
+    f.clearDraft().then(() => {
       notify('Form submitted succesfully.')
       setIsEdited(false)
-      closeForm(form)
+      closeForm(f)
     })
   }
 
