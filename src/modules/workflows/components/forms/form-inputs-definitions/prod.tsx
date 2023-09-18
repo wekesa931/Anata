@@ -4889,6 +4889,21 @@ export default [
         helper: '',
       },
       {
+        id: 'fldQlXe2zComT4i3P',
+        name: 'Status',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Needed: if the appointment has no date and no time and you want our team to schedule it\nScheduled: we know the date and time and it is assigned\nMissed: the member did not pick up the call or picked up but could not do the call without giving a new date and time, we will need to reschedule\nComplete: successful interaction/ consultation has been done (on phone or in person)\nCanceled: we, Antara, decides that the appointment is not relevant anymore.',
+      },
+      {
         id: 'fldzq9nKvEgOpuKpy',
         name: 'Internal vs External',
         type: 'select',
@@ -4916,17 +4931,23 @@ export default [
         foreignTableId: 'tblHs6JxFnMGAjNNC',
         required: true,
         helper:
-          'If you are creating an internal appointment (performed by Antara staff, please assign the meeting to our specialist. If you are creating an external appointment (performed by another facility or specialist, not Antara, please keep the field empty)',
+          'If the appointment is internal, please select who will perform the appointment in our team',
         conditionType: '',
-        parentKey: 'Internal vs External',
-        parentValues: ['Internal'],
+        parentKey: ['Internal vs External', 'Status'],
+        parentValues: [
+          'Internal',
+          'Scheduled',
+          'Completed',
+          'Missed',
+          'Cancelled',
+        ],
         condition: (values: any) => {
-          if (Array.isArray(values['Internal vs External'])) {
-            return ['Internal'].some((r) =>
-              values['Internal vs External'].includes(r)
+          return (
+            ['Internal'].includes(values['Internal vs External']) ||
+            ['Scheduled', 'Completed', 'Missed', 'Cancelled'].includes(
+              values.Status
             )
-          }
-          return ['Internal'].includes(values['Internal vs External'])
+          )
         },
       },
       {
@@ -4942,6 +4963,19 @@ export default [
         foreignTableId: null,
         required: true,
         helper: 'Please enter time in UTC+3 (Kenya time zone)',
+        conditionType: '',
+        parentKey: 'Status',
+        parentValues: ['Scheduled', 'Completed', 'Missed', 'Cancelled'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Status)) {
+            return ['Scheduled', 'Completed', 'Missed', 'Cancelled'].some((r) =>
+              values.Status.includes(r)
+            )
+          }
+          return ['Scheduled', 'Completed', 'Missed', 'Cancelled'].includes(
+            values.Status
+          )
+        },
       },
       {
         id: 'flddSo1PMhy87XRwt',
@@ -5060,21 +5094,6 @@ export default [
             values['Specialists from Provider Base']
           )
         },
-      },
-      {
-        id: 'fldQlXe2zComT4i3P',
-        name: 'Status',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'Needed: if the appointment has no date and no time and you want our team to schedule it\nScheduled: we know the date and time and it is assigned\nMissed: the member did not pick up the call or picked up but could not do the call without giving a new date and time, we will need to reschedule\nComplete: successful interaction/ consultation has been done (on phone or in person)\nCanceled: we, Antara, decides that the appointment is not relevant anymore.',
       },
       {
         id: 'fldv8QwCKoLRuYmRm',

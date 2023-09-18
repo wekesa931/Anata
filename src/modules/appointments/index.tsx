@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import React from 'react'
+import React, { useEffect } from 'react'
 import AirtableField from 'src/types/airtable-field'
 import { useUser } from 'src/context/user'
 import useAirtableFetch from 'src/hooks/airtable-fetch'
@@ -12,6 +12,7 @@ import { useMember } from 'src/context/member'
 import logError from 'src/utils/logging/logger'
 import useHandleResponses from 'src/utils/airtable/error-handler'
 import useAntaraStaff from 'src/hooks/antara-staff.hook'
+import { User } from 'react-feather'
 import styles from './appointments.component.css'
 
 const SearchFieldsNameMap: Record<string, string> = {
@@ -21,20 +22,10 @@ const SearchFieldsNameMap: Record<string, string> = {
 
 function Appointments() {
   const [appointments, setAppointments] = React.useState<any[]>([])
-  const [filteredAppointments, setFilteredAppointments] = React.useState<any[]>(
-    []
-  )
   const { member } = useMember()
   const recId = member?.airtableRecordId
 
-  const status = [
-    'All',
-    'Needed',
-    'Scheduled',
-    'Completed',
-    'Cancelled',
-    'Missed',
-  ]
+  const status = ['All', 'Completed', 'Cancelled', 'Missed']
 
   const [selected, setSelected] = React.useState(status[0])
 
@@ -51,6 +42,7 @@ function Appointments() {
     'Specialists from Provider Base',
     'Facilities name from Provider base',
     'Specialist name from Provider base',
+    'Assignee Name',
   ]
 
   const { data, isLoading, isError, refresh } = useAirtableFetch(
@@ -75,9 +67,15 @@ function Appointments() {
     {
       name: 'Status',
       type: 'single-select',
-      options: ['Needed', 'Scheduled', 'Completed', 'Missed', 'Cancelled'].map(
-        (type) => ({ label: type, value: type })
-      ),
+      options: [
+        'Needed',
+        'Scheduled',
+        'Completed',
+        'Missed',
+        'Cancelled',
+        'Proposed',
+        'Suggested',
+      ].map((type) => ({ label: type, value: type })),
       helperText:
         'Needed: if the appointment has no date and no time and you want our team to schedule it\nScheduled: we know the date and time and it is assigned\nMissed: the member did not pick up the call or picked up but could not do the call without giving a new date and time, we will need to reschedule\nComplete: successful interaction/ consultation has been done (on phone or in person)\nCanceled: we, Antara, decides that the appointment is not relevant anymore.',
     },
@@ -88,6 +86,11 @@ function Appointments() {
         label: staff.fullName,
         value: staff.atRecordId,
       })),
+    },
+    {
+      name: 'Assignee Name',
+      type: 'lookup',
+      calculated: true,
     },
     {
       name: 'Reasons for missed or rescheduled meeting',
@@ -200,28 +203,59 @@ function Appointments() {
     return parsedFields
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
+    function getAssigneeName(assigned: string | { fullName: string }) {
+      return typeof assigned === 'string' ? assigned : assigned?.fullName || ''
+    }
     const getDisplayInfo = (appointment: any) => {
       return (
-        <div className="d-flex flex-justify-space-between">
-          <span>{appointment.Service}</span>
-          <span>
-            <Tooltip title="Reschedule">
-              <a
-                href={appointment['Calendly Reschedule URL']}
-                target="__blank"
-                className="btn-unstyled"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Icon
-                  name="external-link"
-                  fill="var(--blue-base)"
-                  width={16}
-                  height={16}
-                />
-              </a>
-            </Tooltip>
-          </span>
+        <div className="d-flex justify-center w-full items-start flex-col">
+          <div className="font-medium text-base text-dark-blue-100 flex-col w-full">
+            <div className="flex justify-between">
+              <div className="flex-col">
+                <span>{appointment.Service}</span>
+                {appointment.Assignee && (
+                  <div className="text-gray-400 text-sm flex items-center">
+                    <User width={14} height={14} />
+                    {Array.isArray(appointment['Assignee Name']) &&
+                      appointment['Assignee Name'].map(
+                        (
+                          assigned: string | { fullName: string },
+                          index: number
+                        ) => (
+                          <span key={index} className="ml-1">
+                            {getAssigneeName(assigned)}
+                          </span>
+                        )
+                      )}
+                  </div>
+                )}
+              </div>
+              <span>
+                <Tooltip title="Reschedule">
+                  <a
+                    href={appointment['Calendly Reschedule URL']}
+                    target="__blank"
+                    className="btn-unstyled"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Icon
+                      name="external-link"
+                      fill="var(--blue-base)"
+                      width={16}
+                      height={16}
+                    />
+                  </a>
+                </Tooltip>
+              </span>
+            </div>
+          </div>
+          <div className="font-medium text-sm text-gray-400 flex justify-between w-full items-center">
+            <span className="status">{appointment.Status}</span>
+            <span>
+              {dayjs(appointment.start_date_time).format("DD MMM 'YY HH:mmA")}
+            </span>
+          </div>
         </div>
       )
     }
@@ -234,33 +268,34 @@ function Appointments() {
           id: d['Record ID'],
         }
       })
-
       setAppointments(mappedResponse)
-      setFilteredAppointments(mappedResponse)
     }
     // eslint-disable-next-line
   }, [data])
 
-  const getAppointmentDate = (appointment: any) => {
-    return dayjs(
-      appointment.reduce(
-        (obj, { name, value }) => ({ ...obj, [name]: value }),
-        {}
-      ).start_date_time
-    ).format("DD MMM 'YY HH:mmA")
+  const getPastAppointments = (pastAppointments: any[]): any[] => {
+    return pastAppointments.filter((appointment: any) => {
+      return ['Missed', 'Cancelled', 'Completed'].includes(
+        appointment.data.find(({ name }: any) => name === 'Status')?.value
+      )
+    })
   }
 
-  const getAppointmentsStatus = (appointment) =>
-    appointment.reduce(
-      (obj, { name, value }) => ({ ...obj, [name]: value }),
-      {}
-    ).Status
+  const getNextAppointments = (nextAppointments: any[]): any[] => {
+    return nextAppointments.filter((appointment: any) => {
+      return ['Scheduled', 'Needed', 'Proposed', 'Suggested'].includes(
+        appointment.data.find(({ name }: any) => name === 'Status')?.value
+      )
+    })
+  }
 
   const filterByStatus = (val: string) => {
     if (val === 'All') {
       return appointments.filter((appointment) =>
         appointment.data.find(
-          ({ name, value }: any) => name === 'Status' && value !== 'Complete'
+          ({ name, value }: any) =>
+            name === 'Status' &&
+            ['Missed', 'Cancelled', 'Completed'].includes(value)
         )
       )
     }
@@ -274,19 +309,34 @@ function Appointments() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
     setSelected(value)
-    setFilteredAppointments(filterByStatus(value))
   }
+
+  const isReadytoShowAppt = !isLoading && !loading
 
   return (
     <div>
       <button className={styles.appointment} onClick={openCalendar}>
         Book Appointment
       </button>
+      <div className="margin-top-0">
+        {isReadytoShowAppt && (
+          <>
+            <h4 className="mt-5">Up next</h4>
+            <List
+              list={getNextAppointments(appointments)}
+              emptyListText="No Appointment found for this member"
+              editable
+              onEdit={updateAppointment}
+              modalTitle="Appointment"
+            />
+          </>
+        )}
+      </div>
       <div
-        className="d-flex flex-align-center"
+        className="d-flex flex-align-center mt-5"
         style={{ justifyContent: 'space-between' }}
       >
-        <h4>Appointments</h4>
+        <h4>Past Appointments</h4>
 
         <div>
           <select
@@ -304,16 +354,16 @@ function Appointments() {
           </select>
         </div>
       </div>
-      {filteredAppointments && !isLoading && !loading && (
-        <List
-          list={filteredAppointments}
-          getTopLeftText={getAppointmentDate}
-          getTopRightText={getAppointmentsStatus}
-          emptyListText="No Appointments found for this member"
-          editable
-          onEdit={updateAppointment}
-          modalTitle="Appointment"
-        />
+      {isReadytoShowAppt && (
+        <div>
+          <List
+            list={getPastAppointments(filterByStatus(selected))}
+            emptyListText="No Appointment found for this member"
+            editable
+            onEdit={updateAppointment}
+            modalTitle="Appointment"
+          />
+        </div>
       )}
       {isLoading && loading && (
         <div className="d-flex flex-direction-column flex-align-center margin-top-32">
@@ -332,4 +382,3 @@ function Appointments() {
 }
 
 export default Appointments
-//
