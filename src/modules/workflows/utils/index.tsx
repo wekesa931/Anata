@@ -401,8 +401,8 @@ export const formNames: Record<string, string> = {
   'Incident reports': 'Incident reports',
   'Interaction log': 'Interaction log',
   'Member Feedback': 'Member Feedback',
-  'Minor Health Check': 'Minor Health Check',
-  'Minor HIF v2': 'Minor HIF v2',
+  'Minor Health Check': 'Minor Health Check (0 to 5)',
+  'Minor HIF v2': 'Minor HIF (6 to 18)',
 }
 
 export const interactionlogform = {

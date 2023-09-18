@@ -3,24 +3,38 @@ import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import { Search } from 'react-feather'
 import { TForm } from 'src/modules/workflows/types'
-import FORMS from 'src/modules/workflows/components/forms/form-inputs-definitions'
+import form_schemas from 'src/modules/workflows/components/forms/form-inputs-definitions'
 import AirtableIframe from 'src/components/iframes/airtable-iframe'
 import PortalWindow from 'src/components/portal'
 import { useFormsRouting } from 'src/modules/workflows/hooks/routing/forms'
 import { Forms as TWorkflowForm } from 'src/modules/workflows/db/models'
 import { sortAlphabetically } from 'src/utils/sort'
+import { useMember } from 'src/context/member'
 import FormPortal from './forms-portal'
 import { formNames } from '../utils'
+
+const FORMS = [
+  ...form_schemas,
+  {
+    name: 'Minor HIF',
+    type: 'airtableForm',
+    url: 'https://antara.formstack.com/forms/minor_hif_2023',
+  },
+]
 
 function Forms() {
   const [airtableForm, setAirtableForm] = useState<TForm | null>(null)
   const [isEdited, setIsEdited] = useState(false)
   const { openForm, closeForm, forms } = useFormsRouting()
   const [searchForm, setSearchForm] = useState<any[]>(FORMS)
+  const { member } = useMember()
 
   const openFormHandler = (form: TForm) => {
     if (form.type === 'airtableForm') {
-      setAirtableForm(form)
+      setAirtableForm({
+        ...form,
+        url: `${form.url}?ANTARA ID=${member?.antaraId}`,
+      })
     } else {
       openForm(form.name)
     }
@@ -66,7 +80,7 @@ function Forms() {
               className="full-width btn btn-secondary form-btns"
               key={form.name}
             >
-              {formNames[form.name]}
+              {formNames[form.name] || form.name}
             </button>
           ))}
         </div>
