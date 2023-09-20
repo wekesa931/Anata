@@ -195,7 +195,7 @@ const processHba1cProgress = (data: Progress) => {
 }
 
 const humanizeChl = (measurements: any) => {
-  const { timestamp, data } = measurements
+  const { timestamp, data={} } = measurements
   const { hdl, ldl, triglycerides, total_cholesterol } = data
   const formattedTime = timestamp ? formatTime(timestamp) : ''
 
