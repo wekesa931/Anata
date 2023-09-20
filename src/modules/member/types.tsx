@@ -63,6 +63,14 @@ export type RosterMemberType = {
   tags: string
 }
 
+export type PayorType = {
+  name?: string
+  key?: string
+  phone?: string
+  type?: string
+  status?: string
+}
+
 export type V2MemberType = {
   antaraId: string
   birthDate: string
@@ -121,6 +129,8 @@ export type V2MemberType = {
   relationshipToPrimary?: string
   rosterMember: RosterMemberType
   referralSource?: string
+  payor?: PayorType
+  kenyaNationalId?: string
 }
 
 type RawPhoneType = {
@@ -157,6 +167,18 @@ type RawInsuranceType = {
       limit?: string
     }
   }[]
+}
+
+export type PayorQueryType = {
+  payorName?: string
+  payorKey?: string
+  payorPhone?: string
+  payorType?: {
+    payorType?: string
+  }
+  payorStatus?: {
+    payorStatus?: string
+  }
 }
 
 export type V2MemberQueryType = {
@@ -245,6 +267,7 @@ export type V2MemberQueryType = {
   primary: V2MemberQueryType
   otherDependents: V2MemberQueryType[]
   rosterMember: RosterMemberType[]
+  payor: PayorQueryType
 }
 
 export type BirthdateUpdateValues = {

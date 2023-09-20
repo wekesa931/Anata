@@ -8,11 +8,12 @@ import { conditionColumns } from 'src/modules/conditions/db/schema'
 import { interventionColumns } from 'src/modules/interventions/db/schema'
 import { conditionsInterventionsColumn } from 'src/storage/indexeddb/watermelon/relation-schema'
 import { hmpColumns } from 'src/modules/hmp/db/schema'
+import { vitalsTableColumns } from 'src/modules/vitals/db/schema'
 
 export default schemaMigrations({
   migrations: [
     {
-      toVersion: 6,
+      toVersion: 8,
       steps: [
         createTable({
           name: CollectionType.MEMBERS,
@@ -33,6 +34,10 @@ export default schemaMigrations({
         createTable({
           name: CollectionType.HMPS,
           columns: hmpColumns,
+        }),
+        createTable({
+          name: CollectionType.VITALS,
+          columns: vitalsTableColumns,
         }),
       ],
     },

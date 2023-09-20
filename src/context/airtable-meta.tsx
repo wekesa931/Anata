@@ -15,8 +15,13 @@ const AirtableMetaContext = React.createContext<AirtableMetaType>({
   loading: false,
 })
 
-export function AirtableMetaProvider({ children }: any) {
-  const [airtableMeta, setAirtableMeta] = React.useState<any>(null)
+type Props = {
+  children: React.ReactNode
+  meta?: any
+}
+
+export function AirtableMetaProvider({ children, meta }: Props) {
+  const [airtableMeta, setAirtableMeta] = React.useState<any>(meta || null)
   const [loading, setLoading] = React.useState<boolean>(false)
   const user = useUser()
 

@@ -79,12 +79,6 @@ function FilledForms() {
       }
       //
       const getForm = (form: string) => {
-        console.debug(
-          'Loading Filled Forms For',
-          form,
-          member.fullName,
-          member.antaraId
-        )
         return airtableFetch(
           `${form}/list?filterByFormula=FIND("${recId}",{Member Record ID})&maxRecords=1&sort=[{"field":"created_at", "direction":"desc"}]`
         ).then((res) => {

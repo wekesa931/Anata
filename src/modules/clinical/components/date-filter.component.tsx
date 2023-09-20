@@ -53,7 +53,7 @@ function DateFilterView() {
   }, [currentFilter])
 
   return (
-    <div className="absolute w-1/2 left-1/4 z-1 p-1 bg-white shadow-sm top-[3rem]">
+    <div className="absolute w-1/2 left-1/4 z-1000 p-1 bg-white shadow-sm top-[3rem]">
       <CssBaseline />
       <p className={styles.title}>Filter all tables</p>
       <div className={styles.container}>

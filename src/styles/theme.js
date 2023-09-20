@@ -45,6 +45,9 @@ module.exports = {
       'orange-main': '#ff9800',
       'dark-red-100': '#972323',
       'disabled-grey': '#cccccc',
+      'table-col-grey': '#F8F8F8',
+      'blue-light': 'var(--blue-light)',
+      'neutral-light': 'var(--neutral-light)',
     },
     zIndex: {
       2000: '2000',
@@ -69,6 +72,9 @@ module.exports = {
     minWidth: {
       '1/2': '50%',
       '1/4': '25%',
+    },
+    fontSize: {
+      '2xs': '.5rem',
     },
   },
 }

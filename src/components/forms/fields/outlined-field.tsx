@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormControl, FormLabel } from '@mui/material'
 import { Field, FieldProps } from 'formik'
+import parse from 'html-react-parser'
 
 export type OutlinedFieldProps = {
   helperText?: string
@@ -18,6 +19,7 @@ export type OutlinedFieldProps = {
   type?: string
   disabled?: boolean
   autoFocus?: boolean
+  saveInput?: (name: string, value: any) => void // enable save input to a different source on change
   EmptyOptionBtn?: React.ReactNode
 }
 
@@ -33,6 +35,7 @@ function OutlinedField({
   name,
   validate,
   disabled = false,
+  helperText,
 }: OutlinedFieldProps & OutlinedFieldPropType) {
   return (
     <FormControl fullWidth={fullWidth} required={required}>
@@ -42,6 +45,11 @@ function OutlinedField({
       >
         {label}
       </FormLabel>
+      {helperText && (
+        <p className="mb-2.5 whitespace-pre-line font-rubik text-xs text-dark-blue-100">
+          {parse(helperText)}
+        </p>
+      )}
 
       <Field name={name} validate={validate}>
         {(fieldProps: FieldProps) => <>{children(fieldProps)}</>}

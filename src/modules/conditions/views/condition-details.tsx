@@ -20,6 +20,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Link, useLocation } from 'react-router-dom'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import VitalsDisplay from 'src/modules/vitals/views/displays'
 
 const StatusIs = (status: string) => {
   return {
@@ -194,6 +195,9 @@ function ConditionCard({ condition, activeCondition }: ConditionCardProps) {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="mt-4">
+            <VitalsDisplay />
           </div>
         </div>
       </AccordionDetails>

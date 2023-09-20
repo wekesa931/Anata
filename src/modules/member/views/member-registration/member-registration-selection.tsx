@@ -87,6 +87,7 @@ function MemberRegistrationForm({
   const handleClick = (selection: RegistrationForms) => {
     setSelectedForm(selection)
   }
+  const name = selectedForm?.member?.fullName
   return (
     <div className="w-full font-rubik">
       {!selectedForm && (
@@ -148,6 +149,9 @@ function MemberRegistrationForm({
                 formFilled={selectedForm.name}
                 setSelectedForm={setSelectedForm}
                 isRosterMember={!!rosterMember}
+                successMessage={`${name} has been successfully registered`}
+                headerMessage="Add a dependent to this member?"
+                customMessage={`The dependent you register will be automatically linked to ${name}`}
               />
             </>
           ) : (

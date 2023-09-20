@@ -15,6 +15,7 @@ import {
 import { logError } from 'src/utils/logging/logger'
 import type { ConditionInterventions } from 'src/storage/indexeddb/watermelon/relations-models'
 import { useInterventionData } from 'src/modules/interventions/hooks/intervention.data'
+import { diffRecordsById } from 'src/utils/diff'
 
 const buildCondition = (condition: Condition, data: TCondition) => {
   condition.antaraId = data.antaraId
@@ -181,29 +182,11 @@ export const useConditionData = () => {
             .query(Q.where('antaraId', currentMember?.antaraId))
             .fetch()) || []
 
-        // conditions to be deleted
-        const toBeDeleted = cachedConditions.filter((cachedCondition) => {
-          const found = conditions.find((condition) => {
-            return condition.id === cachedCondition.id
-          })
-          return !found
-        })
-
-        // conditions to be added
-        const toBeAdded = conditions.filter((condition) => {
-          const found = cachedConditions.find((cachedCondition) => {
-            return condition.id === cachedCondition.id
-          })
-          return !found
-        })
-
-        // conditions to be updated
-        const toBeUpdated = conditions.filter((condition) => {
-          const found = cachedConditions.find((cachedCondition) => {
-            return condition.id === cachedCondition.id
-          })
-          return found
-        })
+        const {
+          deleted: toBeDeleted,
+          created: toBeAdded,
+          updated: toBeUpdated,
+        } = diffRecordsById(cachedConditions, conditions)
 
         // delete conditions
         await Promise.all(

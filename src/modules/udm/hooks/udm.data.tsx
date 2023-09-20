@@ -196,55 +196,54 @@ export const useUdmData = () => {
 
       const formData = new FormData()
       if (shouldUploadByLink) {
-        await uploadByLink(document, storeKey)
-      } else {
-        getUploadLink(storeKey)
-          .then((uploadLink: any) => {
-            Object.keys(uploadLink.link.fields).forEach((key) => {
-              formData.append(key, uploadLink.link.fields[key])
-            })
-            formData.append('file', file)
-            try {
-              if (!shouldUploadByLink && !docLink) {
-                // remove the extension from the file name
-                const fileNameParts = fileName?.split('.')
-                fileNameParts.pop()
-                const fName = fileNameParts.join('.')
-
-                const mimeVal = mime.lookup(fileName)
-                const config = {
-                  onUploadProgress: (progressEvent: any) => {
-                    const percentCompleted = Math.round(
-                      (progressEvent.loaded * 100) / progressEvent.total
-                    )
-                    setProgress(percentCompleted - 10)
-                  },
-                }
-
-                uploadFileFormData(
-                  uploadLink?.link?.url,
-                  formData,
-                  config
-                ).then(() => {
-                  handlePersistFile({
-                    docMeta: document,
-                    storeKey: `${member?.antaraId}/${document.docType}/${fileName}`,
-                    mimeVal,
-                    fileSize,
-                    driveLink,
-                    fileName: fName,
-                  })
-                })
-              }
-            } catch (err: any) {
-              if (err.name === 'Network Error') {
-                setNetworkError(true)
-              }
-              handleUploadError(err)
-            }
-          })
-          .catch(logError)
+        return uploadByLink(document, storeKey)
       }
+      return getUploadLink(storeKey)
+        .then((uploadLink: any) => {
+          Object.keys(uploadLink.link.fields).forEach((key) => {
+            formData.append(key, uploadLink.link.fields[key])
+          })
+          formData.append('file', file)
+          try {
+            if (!shouldUploadByLink && !docLink) {
+              // remove the extension from the file name
+              const fileNameParts = fileName?.split('.')
+              fileNameParts.pop()
+              const fName = fileNameParts.join('.')
+
+              const mimeVal = mime.lookup(fileName)
+              const config = {
+                onUploadProgress: (progressEvent: any) => {
+                  const percentCompleted = Math.round(
+                    (progressEvent.loaded * 100) / progressEvent.total
+                  )
+                  setProgress(percentCompleted - 10)
+                },
+              }
+
+              return uploadFileFormData(
+                uploadLink?.link?.url,
+                formData,
+                config
+              ).then(() => {
+                return handlePersistFile({
+                  docMeta: document,
+                  storeKey: `${member?.antaraId}/${document.docType}/${fileName}`,
+                  mimeVal,
+                  fileSize,
+                  driveLink,
+                  fileName: fName,
+                })
+              })
+            }
+          } catch (err: any) {
+            if (err.name === 'Network Error') {
+              setNetworkError(true)
+            }
+            handleUploadError(err)
+          }
+        })
+        .catch(logError)
     }
   }
 

@@ -34,8 +34,6 @@ export type DocMeta = {
 
 export type UploadDocumentOptions = {
   document: DocMeta
-  filesContent: any[]
-  plainFiles: any[]
   fileName: string
   fileSize: number
   shouldUploadByLink: boolean
@@ -61,7 +59,7 @@ export type Folder = {
 
 export type ShareFileOptions = {
   fileId: string
-  folderId?: string
+  folderId: string
   antaraId: string
 }
 
@@ -78,4 +76,15 @@ export type PersistDataOptions = {
   fileSize: number
   driveLink: any
   fileName: any
+}
+
+export type TableColumn = {
+  name: string
+  key: string
+}
+
+export type TableProps = {
+  title: string
+  columns: TableColumn[]
+  data: any[]
 }

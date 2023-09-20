@@ -23,12 +23,15 @@ function RadioField(props: RadioFieldProps) {
               control={
                 <Radio
                   name={fieldProps.field.name}
-                  onChange={() =>
+                  onChange={() => {
                     fieldProps.form.setFieldValue(
                       fieldProps.field.name,
                       option.value
                     )
-                  }
+                    if (props.saveInput) {
+                      props.saveInput(fieldProps.field.name, option.value)
+                    }
+                  }}
                 />
               }
               labelPlacement={props.labelPlacement || 'end'}

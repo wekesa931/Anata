@@ -98,8 +98,8 @@ function Table({
     }
   }
 
-  const dateFormat = (unixms: number) => {
-    return dayjs(unixms).format("DD MMM 'YY")
+  const dateFormat = (dt: string) => {
+    return isNaN(Date.parse(dt)) ? dt : dayjs(dt).format("DD MMM 'YY")
   }
 
   const format = (_dt: any) => {
@@ -109,7 +109,7 @@ function Table({
         return _dt % 1 === 0 ? _dt : _dt.toFixed(2)
       case 'string':
         //
-        return isNaN(parseInt(_dt)) ? _dt : dateFormat(Date.parse(_dt))
+        return isNaN(parseInt(_dt)) ? _dt : dateFormat(_dt)
       default:
         return _dt
     }

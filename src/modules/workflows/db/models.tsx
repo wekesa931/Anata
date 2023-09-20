@@ -319,4 +319,4 @@ export class Workflows extends Model {
   }
 }
 
-export default [Templates, Forms, Workflows]
+export default [Templates, Workflows, Forms]

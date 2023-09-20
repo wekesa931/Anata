@@ -37,6 +37,16 @@ export const useDocumentsReadApi = () => {
     const { data } = await getFolders()
     return data
   }
+  const findFolderByName = async (folderName: string) => {
+    const folders = await getFolders()
+    const foundFolder = folders?.data?.folders?.edges?.find(
+      (folder: any) => folder?.node?.name === folderName
+    )
+    if (foundFolder) {
+      return foundFolder
+    }
+    return null
+  }
 
   const getAllFileCategories = async () => {
     const { data } = await getFileCategories()
@@ -50,6 +60,7 @@ export const useDocumentsReadApi = () => {
     error,
     getAllFolders,
     getAllFileCategories,
+    findFolderByName,
   }
 }
 

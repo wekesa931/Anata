@@ -4,9 +4,12 @@ import { DatabaseProvider } from '@nozbe/watermelondb/DatabaseProvider'
 import React from 'react'
 import storage from 'src/storage/secure-storage'
 import keys from 'src/config/constants'
+import logger from '@nozbe/watermelondb/utils/common/logger'
 import schema from './schema'
 import migrations from './migrations'
 import models from './models'
+
+logger.silence()
 
 const checkIfUserIsLoggedIn = () => {
   let loggedInUser = storage.get(keys.USER)

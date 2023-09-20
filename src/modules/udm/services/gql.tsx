@@ -34,6 +34,7 @@ const GET_FILES = gql`
             name
           }
           createdAt
+          updatedAt
           sharedfileSet {
             edges {
               node {

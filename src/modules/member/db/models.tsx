@@ -8,12 +8,14 @@ import {
   InsuranceVerificationStatus,
   EmployerType,
   RosterMemberType,
+  PayorType,
 } from 'src/modules/member/types'
 import dayjs from 'dayjs'
 import {
   transformAddressData,
   transformInsuranceData,
 } from 'src/modules/member/utils/data-transforms'
+import { calcAge } from 'src/utils/date-time/date-formatters'
 
 type AddressValues = DbTypes.AddressValues
 type InsuranceDetailsValues = DbTypes.InsuranceDetailsValues
@@ -104,6 +106,8 @@ export const createOrUpdateMember = (
   member.verificationStatus = memberData?.verificationStatus
   member.rosterMember = memberData?.rosterMember
   member.referralSource = memberData?.referralSource
+  member.payor = memberData?.payor
+  member.kenyaNationalId = memberData?.kenyaNationalId
 
   return member
 }
@@ -176,6 +180,10 @@ export class Member extends Model {
 
   @text('referral_source') referralSource?: string
 
+  @json('payor', identityJson) payor?: PayorType
+
+  @text('kenya_national_id') kenyaNationalId?: string
+
   @writer async destroy() {
     await super.destroyPermanently()
   }
@@ -243,6 +251,10 @@ export class Member extends Model {
       dayjs().diff(dayjs(this.lastSyncedAt), 'minutes') >= 30 ||
       !this.lastSyncedAt
     )
+  }
+
+  get ageFull() {
+    return calcAge(this.birthDate) || []
   }
 
   @writer async reset() {

@@ -11,9 +11,6 @@ import {
 import {
   useCreateCase,
   useSaveWorkflow,
-  useCreateInteraction,
-  useCreateFeedback,
-  useProcessNewWorkflowModule,
   useSaveModuleData,
   useLoadWorkflows,
   normalizeWorkflowData,
@@ -23,9 +20,9 @@ import {
 } from 'src/modules/workflows/services/workflows.api'
 import { useUser } from 'src/context/user'
 import { TWorkflow, CreateCaseVariables } from 'src/modules/workflows/types'
-import { ActiveForm } from 'src/modules/workflows/utils'
 import logError from 'src/utils/logging/logger'
 import useObservable from 'src/hooks/observable'
+import { useFormHandlers } from 'src/modules/workflows/hooks/form-handlers'
 import { useWorkflowAnalytics } from './analytics'
 
 export type WorkflowDataApi = ReturnType<typeof useWorkflowData>
@@ -36,10 +33,7 @@ export const useWorkflowData = () => {
   const user = useUser()
   const { createCase, updateCase, loading: creatingCase } = useCreateCase()
   const { saveWorkflow, loading: savingWorkflow } = useSaveWorkflow()
-  const { createInteraction, loading: creatingInteraction } =
-    useCreateInteraction()
-  const { createFeedback, loading: creatingFeedback } = useCreateFeedback()
-  const { processNewWorkflowData } = useProcessNewWorkflowModule()
+  const { getFormHandler, loading: savingData } = useFormHandlers()
   const { saveModuleData, loading: savingModuleData } = useSaveModuleData()
   const {
     trackWorkflowCreated,
@@ -51,6 +45,7 @@ export const useWorkflowData = () => {
   const { removeModule, loading: removingModule } = useRemoveModule()
   const { removeWorkflow, loading: removingWorkflow } = useRemoveWorkflow()
   const { addModule, loading: addingWorkflowModule } = useAddWorkflowModule()
+  const [submittingForm, setSubmittingForm] = useState<boolean>(false)
 
   const formsCollection: Collection<TWorkflowForm> =
     database.collections.get('forms')
@@ -87,8 +82,6 @@ export const useWorkflowData = () => {
     const forms = await workflow.forms.fetch()
     return forms.filter((form: TWorkflowForm) => form.name === name)
   }
-
-  const [submittingForm, setSubmittingForm] = useState<boolean>(false)
   const [shouldRefetch, setShouldRefetch] = useState<boolean>(false)
 
   const deleteAllWorkflows = async (memberId: string) => {
@@ -169,93 +162,6 @@ export const useWorkflowData = () => {
     return caseId
   }
 
-  const handleSubmitForm = async (
-    form: TWorkflowForm,
-    formMeta: any,
-    formData: any
-  ) => {
-    if (!member || !member?.airtableRecordId) {
-      throw new Error("Member or Member's Airtable Record ID is missing")
-    }
-
-    const formName = form.name
-    const activeForm = ActiveForm(formName)
-
-    if (activeForm.isInteractionsLog) {
-      await createInteraction(formData)
-      await form.markAsCompleted()
-    } else if (activeForm.isMemberFeedback) {
-      await createFeedback(formData)
-      await form.markAsCompleted()
-    }
-
-    // grab the workflow associated with this form
-    let workflow: TWorkflowModel | null = null
-    let payload = formData
-
-    if (form.workflow.id) {
-      workflow = await workflowsCollection.find(form.workflow.id)
-      if (workflow) {
-        payload = {
-          ...payload,
-          'Case ID': workflow.airtableId
-            ? [workflow.airtableId]
-            : [await getNewCaseId(workflow)],
-          'Data Source': 'Guided Workflow',
-        }
-      }
-    }
-
-    payload = {
-      ...payload,
-      'Data Source': form.workflow.id ? 'Guided Workflow' : 'Scribe form',
-    }
-
-    return processNewWorkflowData(payload, formName, formMeta)
-      .then(async (res: any) => {
-        let isModulesDraft = false
-        if (workflow) {
-          const forms = await workflow.forms.fetch()
-          const formsWithSameName = forms.filter(
-            (f: Forms) => f.name === formName
-          )
-          // if there are forms with the same name, check if any of them isDraft
-          if (formsWithSameName.length > 0) {
-            isModulesDraft = formsWithSameName.some((f: Forms) => f.isDraft)
-          }
-          const allFormsData = formsWithSameName.map((f: Forms) => ({
-            ...f.data,
-            isDraft: false,
-          }))
-
-          saveModuleData({
-            workflowId: workflow?.workflowId,
-            moduleName: formName,
-            data: allFormsData,
-            draft: isModulesDraft,
-          }).then(() => {
-            form.markAsCompleted(res?.id).then(async () => {
-              trackAirtableSaveSucceeded(
-                workflow?.workflowObject,
-                formName,
-                formData
-              )
-            })
-          })
-        }
-      })
-      .catch((err: any) => {
-        logError(err)
-        if (workflow) {
-          trackAirtableSaveFailed(workflow?.workflowObject, formName, formData)
-        }
-        throw err
-      })
-      .finally(() => {
-        setSubmittingForm(false)
-      })
-  }
-
   const syncWorkflow = async (workflow: TWorkflowModel) => {
     if (member && user) {
       const airtableCase = await createCase({
@@ -279,22 +185,104 @@ export const useWorkflowData = () => {
     throw new Error('Member or user not found')
   }
 
+  const handleFormSubmission = async (
+    form: TWorkflowForm,
+    formMeta: any,
+    formData: any
+  ) => {
+    const formHandler = getFormHandler(form)
+    return formHandler(form, formData, formMeta)
+  }
+
+  const handleWorkflowFormSubmission = async (
+    form: TWorkflowForm,
+    formMeta: any,
+    formData: any
+  ) => {
+    let caseId
+    const workflow = await workflowsCollection.find(form.workflow.id)
+    if (workflow) {
+      caseId = workflow?.airtableId
+        ? [workflow.airtableId]
+        : await getNewCaseId(workflow)
+
+      handleFormSubmission(form, formMeta, {
+        ...formData,
+        'Case ID': caseId,
+        'Data Source': 'Guided Workflow',
+      })
+        .then(async () => {
+          let isModulesDraft = false
+          const forms = await workflow.forms.fetch()
+          const formsWithSameName = forms.filter(
+            (f: Forms) => f.name === form.name
+          )
+          // if there are forms with the same name, check if any of them isDraft
+          if (formsWithSameName.length > 0) {
+            isModulesDraft = formsWithSameName.some((f: Forms) => f.isDraft)
+          }
+
+          // grab all form data with same nae
+          const allFormsData = formsWithSameName.map((f: Forms) => f.data)
+          saveModuleData({
+            workflowId: workflow?.workflowId,
+            moduleName: form.name,
+            data: allFormsData,
+            draft: isModulesDraft,
+          }).then(() => {
+            trackAirtableSaveSucceeded(
+              workflow?.workflowObject,
+              form.name,
+              formData
+            )
+          })
+        })
+        .catch((err: any) => {
+          logError(err)
+          if (workflow) {
+            trackAirtableSaveFailed(
+              workflow?.workflowObject,
+              form.name,
+              formData
+            )
+          }
+          throw err
+        })
+    } else {
+      throw new Error(`Workflow ${form.workflow?.id} not found in the cache`)
+    }
+  }
+
+  const handleSubmitForm = async (
+    form: TWorkflowForm,
+    formMeta: any,
+    formData: any
+  ) => {
+    if (member && user) {
+      if (form.workflow.id) {
+        return handleWorkflowFormSubmission(form, formMeta, formData)
+      }
+      return handleFormSubmission(form, formMeta, formData)
+    }
+    throw new Error('Member or User not found')
+  }
+
   const submitForm = async (form: any, formMeta: any, formData: any) => {
     setSubmittingForm(true)
     if (form.workflow.id) {
       const workflow = await workflowsCollection.find(form.workflow.id)
       if (!workflow?.isSynced) {
-        return syncWorkflow(workflow)
-          .then(() => {
-            trackWorkflowCreated(workflow.workflowObject)
-            return handleSubmitForm(form, formMeta, formData)
-          })
-          .finally(() => {
+        return syncWorkflow(workflow).then(() => {
+          trackWorkflowCreated(workflow.workflowObject)
+          return handleSubmitForm(form, formMeta, formData).finally(() => {
             setSubmittingForm(false)
           })
+        })
       }
     }
-    return handleSubmitForm(form, formMeta, formData)
+    return handleSubmitForm(form, formMeta, formData).finally(() => {
+      setSubmittingForm(false)
+    })
   }
 
   const handleCompleteWorkflow = async (workflow: TWorkflowModel) => {
@@ -441,7 +429,9 @@ export const useWorkflowData = () => {
   }
 
   const findWorkflow = async (workflowId: string) => {
-    return workflowsCollection.find(workflowId)
+    return database.read(async () => {
+      return workflowsCollection.find(workflowId)
+    })
   }
 
   const handleSaveDraftWorkflow = async (
@@ -497,13 +487,11 @@ export const useWorkflowData = () => {
   const loaderDisplayed =
     creatingCase ||
     savingWorkflow ||
-    submittingForm ||
-    creatingInteraction ||
-    creatingFeedback ||
     savingModuleData ||
     removingModule ||
     removingWorkflow ||
-    addingWorkflowModule
+    addingWorkflowModule ||
+    savingData
 
   return {
     deleteAllWorkflows, // delete all workflows from the DB

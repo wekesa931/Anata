@@ -14,12 +14,13 @@ import ConfirmationDialog from 'src/components/dialog'
 type PortalWindowTypes = {
   title: string | ReactNode
   width?: number
+  height?: number
   index?: number
   closeWindow: () => void
   children: ReactNode
   windowActions?: ReactNode
-  isEdited: boolean
-  setIsEdited: (value: boolean) => void
+  isEdited?: boolean
+  setIsEdited?: (value: boolean) => void
 }
 
 function PortalWindow({
@@ -31,6 +32,7 @@ function PortalWindow({
   windowActions,
   isEdited,
   setIsEdited,
+  height = 66,
 }: PortalWindowTypes) {
   const [isDisabled, setIsDisabled] = useState<boolean>(false)
   const [isHighlighting, setIsHighlighting] = useState<boolean>(true)
@@ -38,7 +40,7 @@ function PortalWindow({
     undefined
   )
 
-  const [calloutHeight, setcalloutHeight] = useState<number>(66)
+  const [calloutHeight, setcalloutHeight] = useState<number>(height)
   const [isIncreasing, setIsIncreasing] = useState<boolean>(true)
   const [open, setOpen] = useState(false)
 

@@ -198,7 +198,6 @@ function Tasks() {
 
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
     if (!memberRecordId) {
-      console.error('Missing Airtable ID to load HN Tasks')
       return ''
     }
     const sortArg = `sort=[{"field":"Due Date","direction":"asc"}]`

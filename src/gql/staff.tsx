@@ -8,9 +8,6 @@ const GET_ANTARA_STAFF = gql`
           id
           fullName
           emailUsername
-          historyUserIdField
-          slackId
-          phone
           team
           atRecordId
         }

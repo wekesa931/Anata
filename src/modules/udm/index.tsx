@@ -66,7 +66,7 @@ function Files() {
   )
   const [fileDetails, setFileDetails] = useState<null | any>(null)
   const [filtering, setfiltering] = useState(false)
-  const [order, setOrder] = React.useState('asc')
+  const [order, setOrder] = React.useState('desc')
   const [orderBy, setOrderBy] = React.useState('updatedAt')
   const [page, setPage] = React.useState(0)
   const [activeOpenFile, seActiveOpenFile] = useState(null)
@@ -87,6 +87,7 @@ function Files() {
 
   const [folders, setFolders] = useState([])
   const [fileTypes, setFileTypes] = useState<string[]>([])
+  console.log(filteredFiles)
 
   const {
     getFiles,
@@ -121,8 +122,6 @@ function Files() {
     const shouldUploadByLink = filesContent.length === 0 || !fileName
     const options = {
       document: docMeta,
-      filesContent,
-      plainFiles,
       fileName,
       shouldUploadByLink,
       fileSize: plainFiles[0]?.size || 0,

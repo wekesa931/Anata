@@ -60,7 +60,6 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
   const { loaderDisplayed } = useWorkflowData()
   const { copyFormLink } = useFormsRouting()
   const [isEdited, setIsEdited] = React.useState<boolean>(false)
-  const [formData, setFormData] = React.useState<any>(form?.data || {})
   const { notify } = useNotifications()
 
   const handleCopy = () => {
@@ -82,7 +81,6 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
   const saveInput = async (name: string, value: any) => {
     setIsEdited(true)
     form.saveInput(name, value)
-    setFormData({ ...formData, [name]: value })
   }
 
   const handleSubmissionSuccess = (f: TWorkflowForm) => () => {

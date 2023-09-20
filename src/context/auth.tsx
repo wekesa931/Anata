@@ -26,7 +26,12 @@ const AuthContext = React.createContext<AuthContextType>({
   isLoggedIn: () => false,
 })
 
-function AuthProvider({ user, children }: any) {
+type Props = {
+  user?: User
+  children: React.ReactNode
+}
+
+function AuthProvider({ user, children }: Props) {
   let loggedInUser = storage.get(keys.USER)
   const { signOut } = useGoogleLogout({
     clientId: process.env.GOOGLE_CLIENT_ID || '',

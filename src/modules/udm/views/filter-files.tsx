@@ -12,6 +12,7 @@ import styles from 'src/modules/udm/files.component.css'
 import { useUdmData } from 'src/modules/udm/hooks/udm.data'
 import Tooltip from 'src/components/tooltip'
 import { UploadOptions } from 'src/modules/udm/components/upload-options'
+import ReportGenerator from 'src/modules/udm/views/reports/index'
 
 export function FilterView({
   open,
@@ -113,6 +114,7 @@ export function FilterView({
           />
         </div>
         <div className={styles.viewIcons}>
+          <ReportGenerator />
           {!noFilesForMember && (
             <>
               <Button

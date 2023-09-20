@@ -172,15 +172,6 @@ export const SAVE_MODULE_DATA = gql`
   }
 `
 
-export const CREATE_INTERACTION = gql`
-  mutation createInteraction($input: InteractionsInput!) {
-    createInteraction(input: $input) {
-      status
-      message
-    }
-  }
-`
-
 export const CREATE_MEMBER_FEEDBACK = gql`
   mutation createMemberFeedback($input: MemberFeedbackInput!) {
     memberFeedback(input: $input) {

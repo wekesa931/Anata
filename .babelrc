@@ -10,17 +10,37 @@
     }
   },
   "plugins": [
-    ["@babel/plugin-proposal-decorators", {"version": "legacy"}],
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+        "version": "legacy"
+      }
+    ],
     "@babel/proposal-object-rest-spread",
-    ["@babel/plugin-proposal-class-properties", { "loose": true }],
-    ["@babel/plugin-proposal-private-methods", { "loose": true }],
-    ["@babel/plugin-proposal-private-property-in-object", { "loose": true }],
+    [
+      "@babel/plugin-proposal-class-properties",
+      {
+        "loose": true
+      }
+    ],
+    [
+      "@babel/plugin-proposal-private-methods",
+      {
+        "loose": true
+      }
+    ],
+    [
+      "@babel/plugin-proposal-private-property-in-object",
+      {
+        "loose": true
+      }
+    ],
     [
       "@babel/plugin-transform-runtime",
-       {
-         "helpers": true,
-         "regenerator": true
-       }
+      {
+        "helpers": true,
+        "regenerator": true
+      }
     ]
   ]
 }

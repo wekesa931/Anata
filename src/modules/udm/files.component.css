@@ -528,6 +528,24 @@
   margin-right: 5px !important;
   font: 12px !important;
 }
+.docs {
+  height: 50px;
+  padding-left: 0px !important;
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .listIcon {
   margin-right: 5px;

@@ -1,4 +1,4 @@
-import { User } from '../old_src/types/user'
+import { User } from '../src/types/user'
 
 const mockUser: User = {
   accessToken: 'accessToken',
@@ -9,6 +9,8 @@ const mockUser: User = {
   id_token: 'idtoken_dummy',
   token_type: 'offline',
   exp: 3599,
+  name: 'Peter Kamau',
+  userAirtableId: 'userAirtableId',
 }
 
 export default mockUser

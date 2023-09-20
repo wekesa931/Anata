@@ -22,8 +22,8 @@ export const useFormsData = () => {
 
   const createForm = async (
     formName: string,
-    formId?: string,
-    formData?: any
+    formData: any = {},
+    formId = ''
   ) => {
     if (member && user) {
       const initialFormData = initialFormValues(member, user, formName)

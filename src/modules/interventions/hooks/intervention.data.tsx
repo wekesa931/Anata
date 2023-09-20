@@ -13,6 +13,7 @@ import {
 } from 'src/modules/interventions/types'
 import { logError } from 'src/utils/logging/logger'
 import { useInterventionsApi } from 'src/modules/interventions/services/interventions.api'
+import { diffRecordsById } from 'src/utils/diff'
 
 const buildIntervention = (intervention: Intervention, data: TIntervention) => {
   intervention.interventionType = data?.interventionType
@@ -179,26 +180,11 @@ export const useInterventionData = () => {
             .query(Q.where('antaraId', currentMember?.antaraId))
             .fetch()) || []
 
-        const toBeDeleted = cachedInterventions.filter((cachedIntervention) => {
-          const found = interventions.find((intervention) => {
-            return intervention.id === cachedIntervention.id
-          })
-          return !found
-        })
-
-        const toBeAdded = interventions.filter((intervention) => {
-          const found = cachedInterventions.find((cachedIntervention) => {
-            return intervention.id === cachedIntervention.id
-          })
-          return !found
-        })
-
-        const toBeUpdated = interventions.filter((intervention) => {
-          const found = cachedInterventions.find((cachedIntervention) => {
-            return intervention.id === cachedIntervention.id
-          })
-          return found
-        })
+        const {
+          deleted: toBeDeleted,
+          created: toBeAdded,
+          updated: toBeUpdated,
+        } = diffRecordsById(cachedInterventions, interventions)
 
         await Promise.all(
           toBeDeleted.map(async (intervention) => {

@@ -76,6 +76,10 @@ export const ActiveForm = (activeForm: string) => {
     isInteractionsLog: activeForm === 'Interaction log',
     isMemberFeedback: activeForm === 'Member Feedback',
     isInterventionDataTracking: activeForm === 'Intervention Data Tracking',
+    isVitals: activeForm === 'Vitals',
+    isBp: activeForm === 'BP Mon',
+    isChl: activeForm === 'CHL Mon',
+    isDm: activeForm === 'DM Mon',
   }
 }
 
@@ -242,7 +246,9 @@ export const initialFormValues = (
       'Date of baseline': dayjs().format('YYYY-MM-DD'),
     },
     Vitals: {
-      Staff: [user.userAirtableId],
+      Staff: isOnsite
+        ? [user.userAirtableId]
+        : [member?.assignedHn?.atRecordId],
       Date: dayjs().format('YYYY-MM-DD'),
       'Type of Reading': isOnsite ? 'Measured by Antara' : null,
     },

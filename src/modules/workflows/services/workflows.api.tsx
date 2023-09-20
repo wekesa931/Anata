@@ -1,40 +1,23 @@
 import { useMutation } from '@apollo/client'
 import { useState } from 'react'
 import logError from 'src/utils/logging/logger'
-import { useMember } from 'src/context/member'
-import { useUser } from 'src/context/user'
 import airtableFetch from 'src/services/airtable/fetch'
 import {
   CreateWorkflowVariables,
   CreateCaseVariables,
   UpdateCaseVariables,
   SaveWorkflowVariables,
-  InteractionsVariables,
-  FeedbackVariables,
   SaveModuleData,
   TWorkflow,
   WorkflowVariables,
   DeleteModuleVariables,
   DeleteWorkflowVariables,
 } from 'src/modules/workflows/types'
-import {
-  ActiveForm,
-  extractUsername,
-  feedbackPayload,
-  generatePayload,
-  interactionLogPayload,
-  omitKeys,
-  renameField,
-} from 'src/modules/workflows/utils'
-import TABLE_ROUTES from 'src/config/airtable-tables'
-import { useAirtableMeta } from 'src/context/airtable-meta'
 import { useLazyDataSource, NormalizeDataFn } from 'src/services/api/utils'
 import { generateId } from 'src/storage/utils'
 import {
   CREATE_WORKFLOW,
   SAVE_WORKFLOW,
-  CREATE_INTERACTION,
-  CREATE_MEMBER_FEEDBACK,
   SAVE_MODULE_DATA,
   GET_WORKFLOWS,
   REMOVE_MODULE,
@@ -178,61 +161,6 @@ export const useCreateCase = () => {
   }
 }
 
-export const useProcessNewWorkflowModule = () => {
-  const { getHifInfo, createHif, createTableEntry } = useHNOSData()
-  const { airtableMeta } = useAirtableMeta()
-  const { member } = useMember()
-
-  const processNewWorkflowData = async (
-    data: any,
-    formName: string,
-    formMeta: any
-  ) => {
-    const activeForm = ActiveForm(formName)
-    if (!activeForm.isInteractionsLog && airtableMeta) {
-      let payload = omitKeys(data, ['moduleId', 'Case ID', 'isDraft'])
-
-      if (activeForm.isHIFMinor || activeForm.isInterventionDataTracking) {
-        payload = omitKeys(payload, ['Member'])
-      }
-
-      if (activeForm.isPhysio) {
-        payload = renameField(payload, 'Member', 'member')
-      }
-
-      if (activeForm.isLogisticsTasks || activeForm.isIncidentReports) {
-        payload = renameField(payload, 'Member', 'Members')
-      }
-
-      if (activeForm.isHIF) {
-        payload = {
-          ...payload,
-          'HIF Completed': true,
-          'Antara ID': member?.antaraId,
-        }
-      }
-
-      const generatedPayload = generatePayload(payload, formMeta, airtableMeta)
-
-      const hifId = await getHifInfo(member?.airtableRecordId)
-      const tableName = TABLE_ROUTES[formName]
-
-      if (activeForm.isHIF && hifId) {
-        return createHif(hifId, generatedPayload)
-      }
-      if (tableName) {
-        return createTableEntry(tableName, generatedPayload)
-      }
-    }
-
-    return null
-  }
-
-  return {
-    processNewWorkflowData,
-  }
-}
-
 export const useAddWorkflowModule = () => {
   const [mutate, { loading, error }] = useMutation(ADD_MODULE_TO_WORKFLOW)
 
@@ -268,107 +196,6 @@ export const useSaveWorkflow = () => {
 
       return res?.data?.updateWorkflow?.workflow
     },
-    loading,
-    error,
-  }
-}
-
-export const useCreateInteraction = () => {
-  const [mutate, { loading, error }] = useMutation(CREATE_INTERACTION)
-  const user = useUser()
-  const { member } = useMember()
-
-  const createInteraction = async (data: any) => {
-    if (member && user) {
-      const interactionsData: InteractionsVariables =
-        interactionLogPayload(data)
-      const outcomeMetadata: any = {
-        creator: user.email,
-      }
-      const outcome = JSON.stringify(interactionsData.outcome)
-      if (interactionsData.reasonForConsultation) {
-        outcomeMetadata.reasonForConsultation =
-          interactionsData.reasonForConsultation
-        delete interactionsData.reasonForConsultation
-      }
-
-      const variables = {
-        input: {
-          ...interactionsData,
-          outcome,
-          outcomeMetadata,
-          historyUserIdField: user.email,
-          member: member.antaraId,
-          // navigator defaults to current logged in user
-          healthNavigator: extractUsername(user.email),
-        },
-      }
-
-      const res = await mutate({
-        variables,
-      })
-
-      if (res?.data?.createInteraction?.status !== 200) {
-        const errorMessage = 'Failed to save interaction log data'
-        logError(res)
-        throw new Error(errorMessage)
-      }
-
-      return res?.data?.createInteraction
-    }
-
-    return null
-  }
-
-  return {
-    createInteraction,
-    loading,
-    error,
-  }
-}
-
-export const useCreateFeedback = () => {
-  const [mutate, { loading, error }] = useMutation(CREATE_MEMBER_FEEDBACK, {
-    context: {
-      clientName: 'v2',
-    },
-  })
-  const user = useUser()
-  const { member } = useMember()
-
-  const createFeedback = async (data: any) => {
-    if (member) {
-      const feedbackData: FeedbackVariables = feedbackPayload(data)
-      const feedback = feedbackData.feedback && feedbackData.feedback === 'Yes'
-      const createdBy = user && user.email
-      const variables = {
-        input: {
-          ...feedbackData,
-          feedback,
-          createdBy,
-          memberAntaraId: member.antaraId,
-          source: feedbackData?.source[0],
-        },
-      }
-
-      const res = await mutate({
-        variables,
-      })
-
-      if (res?.data?.memberFeedback?.status !== 200) {
-        const errorMessage = 'Failed to save feedback data'
-        logError(res)
-        throw new Error(errorMessage)
-      }
-
-      return res?.data?.memberFeedback
-    }
-
-    return null
-  }
-
-  return {
-    createFeedback,
     loading,
     error,
   }

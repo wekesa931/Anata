@@ -1,10 +1,25 @@
-import { V2MemberQueryType, V2MemberType } from 'src/modules/member/types'
+import {
+  V2MemberQueryType,
+  V2MemberType,
+  PayorQueryType,
+  PayorType,
+} from 'src/modules/member/types'
 import { getAgeFull } from 'src/utils/date-time/helpers'
 
 const getSexAccronym = (sex: string) => {
   if (sex?.toLowerCase() === 'male') return 'M'
   if (sex?.toLowerCase() === 'female') return 'F'
   return ''
+}
+
+const parsePayor = (payor: PayorQueryType): PayorType => {
+  return {
+    name: payor?.payorName,
+    key: payor?.payorKey,
+    phone: payor?.payorPhone,
+    type: payor?.payorType?.payorType,
+    status: payor?.payorStatus?.payorStatus,
+  }
 }
 
 /**
@@ -46,7 +61,7 @@ export const parseV2MemberData = (
   }))
 
   // status
-  const { status = {} } = memberData
+  const status: any = memberData?.status || {}
   member = { ...member, ...status }
 
   member.employer = {
@@ -101,6 +116,8 @@ export const parseV2MemberData = (
     memberData?.antaraId
   }) - ${age} [${getSexAccronym(sex || '')}] - ${employerName}`
 
+  const payor: PayorQueryType = memberData?.payor || {}
+
   return {
     ...member,
     displayName,
@@ -109,5 +126,15 @@ export const parseV2MemberData = (
     employerName,
     airtableRecordId: details?.airtableRecordId,
     rosterMember,
+    payor: parsePayor(payor),
   }
+}
+
+export const removeEmptyValues = (obj: any) => {
+  Object.keys(obj).forEach((key) => {
+    if (obj[key] && typeof obj[key] === 'object') removeEmptyValues(obj[key])
+    else if (obj[key] === undefined || obj[key] === null || obj[key] === '')
+      delete obj[key]
+  })
+  return obj
 }

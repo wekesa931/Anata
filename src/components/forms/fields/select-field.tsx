@@ -36,6 +36,10 @@ function SelectField(props: OutlinedFieldProps & SelectFieldProps) {
     if (props.handleChange) {
       props.handleChange(e.target.value)
     }
+
+    if (props.saveInput) {
+      props.saveInput(fieldProps.field.name, e.target.value)
+    }
   }
 
   const handleBlur = (e: any, fieldProps: FieldProps) => {

@@ -1,7 +1,12 @@
 import React from 'react'
 import styled from '@emotion/styled'
 
-function Loading({ color, message = 'Loading' }: any) {
+type Props = {
+  color?: string
+  message?: string
+}
+
+function Loading({ color, message = 'Loading' }: Props) {
   const Loader = styled.div`
     border: 5px solid #f3f3f3;
     border-top: 5px solid ${color ? '#205284' : '#ff9800'};

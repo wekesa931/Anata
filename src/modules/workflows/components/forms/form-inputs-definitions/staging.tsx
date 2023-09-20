@@ -9217,31 +9217,6 @@ export default [
         },
       },
       {
-        id: 'otherCategoryOutbound',
-        name: 'Other Category (Outbound)',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Outbound Interaction Category',
-        parentValues: ['Other'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Outbound Interaction Category'])) {
-            return ['Other'].some((r) =>
-              values['Outbound Interaction Category'].includes(r)
-            )
-          }
-          return ['Other'].includes(values['Outbound Interaction Category'])
-        },
-      },
-      {
         id: 'reasonForConsultation',
         name: 'Reasons for Consultation',
         type: 'multilineText',

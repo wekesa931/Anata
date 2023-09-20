@@ -3,7 +3,7 @@ import React from 'react'
 import { FileText, Image } from 'react-feather'
 import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined'
 import dayjs from 'dayjs'
-import { TFile } from 'src/modules/udm/types'
+import type { TFile } from 'src/modules/udm/types'
 
 export const isFileShared = (sharedfileSet: any) => {
   return !!sharedfileSet?.edges.length
@@ -71,4 +71,59 @@ export const stableSortFiles = (array: TFile[], comparator: any) => {
     return a[1] - b[1]
   })
   return stabilizedThis.map((el) => el[0])
+}
+
+const VITALS_METRICS = [
+  { metric: 'bmi', units: 'kg/m2' },
+  { metric: 'height', units: 'm' },
+  { metric: 'weight', units: 'kg' },
+  { metric: 'bp', units: 'mmHg' },
+  { metric: 'temperature', units: '°C' },
+  { metric: 'rr', units: 'bpm' },
+  { metric: 'spo2', units: '%' },
+  { metric: 'muscleMass', units: '%' },
+  { metric: 'bodyFat', units: '%' },
+  { metric: 'waistHipRatio' },
+]
+
+const LABS_METRICS = [
+  { metric: 'rbs', units: 'mmol/l' },
+  { metric: 'fbs', units: 'mmol/l' },
+  { metric: 'hba1c', units: '%' },
+  { metric: 'hdl', units: 'mg/dL' },
+  { metric: 'ldl', units: 'mg/dL' },
+  { metric: 'totalCholestrol', units: 'mg/dL' },
+  { metric: 'triglycerides', units: 'mg/dL' },
+]
+
+export const categorizeMedicalCampData = (
+  data: any[],
+  metrics: { metric: string; units?: string }[]
+): any[] => {
+  const categorizedItems: any[] = []
+  // eslint-disable-next-line array-callback-return
+  metrics.map((metric) => {
+    const item = data?.find((d) => d.metric === metric?.metric)
+    if (item) {
+      const normalRange = item['Normal Range']
+      categorizedItems.push({
+        ...item,
+        'Actual Reading': `${item['Actual Reading']} ${metric.units}`,
+        'Normal Range':
+          normalRange !== 'N/A'
+            ? `${item['Normal Range']} ${metric.units}`
+            : normalRange,
+      })
+    }
+  })
+
+  return categorizedItems
+}
+
+export const getVitalsMedicalData = (data: any[]): any[] => {
+  return categorizeMedicalCampData(data, VITALS_METRICS)
+}
+
+export const getLabsMedicalData = (data: any[]): any[] => {
+  return categorizeMedicalCampData(data, LABS_METRICS)
 }

@@ -57,6 +57,7 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
       relationshipToPrimary
       primaryMemberAntaraId
       referralSource
+      kenyaNationalId
     }
     primary {
       antaraId
@@ -214,6 +215,17 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
           api
           limit
         }
+      }
+    }
+    payor {
+      payorName
+      payorKey
+      payorPhone
+      payorType {
+        payorType
+      }
+      payorStatus {
+        payorStatus
       }
     }
     rosterMember {

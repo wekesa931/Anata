@@ -12,7 +12,7 @@ type PrimaryFormProps = {
 function PrimaryForm(props: PrimaryFormProps) {
   const expanded = props.expanded || true
   return (
-    <div className={expanded ? 'mt-6' : 'mt-1'}>
+    <div className={`overflow-scroll ${expanded ? 'mt-6' : 'mt-1'}`}>
       <Formik
         onSubmit={props.handleSubmit}
         initialValues={props.initialValues}

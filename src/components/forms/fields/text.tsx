@@ -20,6 +20,10 @@ function TextField(props: TextFieldProps) {
     if (props.handleChange) {
       props.handleChange(e)
     }
+
+    if (props.saveInput) {
+      props.saveInput(fieldProps.field.name, e.target.value)
+    }
   }
   return (
     <OutlinedField {...props}>

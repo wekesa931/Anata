@@ -8,6 +8,11 @@
   box-sizing: border-box;
 }
 
+.recharts-legend-item-text {
+  font-size: 12px !important;
+  color: var(--dark-blue-50) !important;
+}
+
 :root {
   /* colors */
   --dark-blue-70: #5d6b82;
@@ -459,7 +464,6 @@ h6,
 .border-none {
   border: none !important;
 }
-
 
 /** buttons **/
 button.btn-unstyled {
