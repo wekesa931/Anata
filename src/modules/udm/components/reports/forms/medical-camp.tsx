@@ -54,7 +54,7 @@ function MedicalCampForm({
       {({ isValidating }: any) => (
         <Form>
           {error && (
-            <div className="bg-red-10 p-4 flex items-center">
+            <div className="bg-red-10 p-4 flex items-center mb-[5%]">
               <X
                 className="w-16 h-16 text-red-100 mr-2"
                 style={{ fontWeight: 'bold' }}
