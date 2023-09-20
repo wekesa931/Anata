@@ -153,7 +153,7 @@ const humanizeBs = (bs: any) => {
   return {
     'RBS (mmol/l)':
       formattedTime && randomBloodGlucose
-        ? `${randomBloodGlucose} on (${formattedTime})`
+        ? `${parseInt(randomBloodGlucose)} on (${formattedTime})`
         : '',
     'FBS (mmol/l)':
       formattedTime && fastingBloodGlucose
