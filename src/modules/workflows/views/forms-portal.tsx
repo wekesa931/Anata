@@ -93,7 +93,7 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
 
   const handleSubmissionError = (err?: any) => {
     notify(
-      err?.message
+      err?.message && typeof err?.message === 'string'
         ? err?.message
         : 'There was an error submitting your form. Please try again.'
     )

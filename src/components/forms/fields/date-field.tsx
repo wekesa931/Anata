@@ -96,6 +96,7 @@ export function DateTimeField(props: DateFieldProps & OutlinedFieldProps) {
           onChange={(d) => {
             handleValueChange(d, fieldProps)
           }}
+          maxDateTime={props.maxDate || new Date()}
           renderInput={(params) => (
             <TextField
               {...params}
