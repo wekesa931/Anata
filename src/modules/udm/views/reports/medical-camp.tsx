@@ -12,6 +12,7 @@ type Props = {
   loading?: boolean
   closeModal: () => void
   getDocMeta: (date?: Date | string) => DocMeta
+  title: string
 }
 
 const isMedicalCampDataEmpty = (medicalCampData: any) => {
@@ -19,7 +20,7 @@ const isMedicalCampDataEmpty = (medicalCampData: any) => {
   return labs.length < 3 && vitals.length < 3
 }
 
-function MedicalCampComponent({ closeModal, getDocMeta }: Props) {
+function MedicalCampComponent({ closeModal, getDocMeta, title }: Props) {
   const [showPdfPreview, setShowPdfPreview] = useState(false)
   const initialMedicalCampData = {
     medicalCampDate: '',
@@ -80,9 +81,9 @@ function MedicalCampComponent({ closeModal, getDocMeta }: Props) {
   return (
     <PortalWindow
       closeWindow={() => closeModal()}
-      aria-labelledby="health-report-generation"
-      aria-describedby="health-report-generation"
-      title="Health report generation"
+      aria-labelledby="medical-camp"
+      aria-describedby="medical-camp"
+      title={title}
       height={60}
     >
       <div className="p-6">

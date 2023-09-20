@@ -72,6 +72,20 @@ function ReportGenerator() {
     setOpenPortal(!isPortalOpen)
     setDocType(type)
   }
+  const getTitle = () => {
+    switch (docType) {
+      case DocTypes.MEDICAL_CAMP:
+        return 'Medical Camp Report'
+      case DocTypes.OP_GENERAL:
+        return 'OP General Report'
+      case DocTypes.IN_PATIENT:
+        return 'In Patient Report'
+      case DocTypes.SPECIALIST:
+        return 'Specialist Report'
+      default:
+        return 'Health Report Generate'
+    }
+  }
 
   return (
     <>
@@ -129,12 +143,14 @@ function ReportGenerator() {
               <MedicalCampComponent
                 closeModal={closeModal}
                 getDocMeta={getDocMeta}
+                title={getTitle()}
               />
             ) : (
               <OPGeneralComponent
                 closeModal={closeModal}
                 isInPatient={docType === DocTypes.IN_PATIENT}
                 getDocMeta={getDocMeta}
+                title={getTitle()}
               />
             )}
           </>

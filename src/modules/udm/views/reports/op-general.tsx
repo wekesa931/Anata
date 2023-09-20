@@ -15,6 +15,7 @@ type Props = {
   closeModal: () => void
   isInPatient?: boolean
   getDocMeta: (date?: Date | string) => DocMeta
+  title: string
 }
 
 const isMedicalCampDataEmpty = (medicalCampData: any) => {
@@ -26,6 +27,7 @@ function OpGeneralComponent({
   closeModal,
   isInPatient = false,
   getDocMeta,
+  title,
 }: Props) {
   const [showPdfPreview, setShowPdfPreview] = useState(false)
   const initialMedicalCampData = {
@@ -108,7 +110,7 @@ function OpGeneralComponent({
       closeWindow={() => closeModal()}
       aria-labelledby="health-report-generation"
       aria-describedby="health-report-generation"
-      title="Health report generation"
+      title={title}
       height={60}
     >
       <div className="p-6">
