@@ -190,7 +190,7 @@ function PdfPreview({
         <PortalWindow
           closeWindow={handleClosePortalWindow}
           title="Health report generation"
-          height={30}
+          height={40}
         >
           <div className="px-4">
             <SuccessPrompt
