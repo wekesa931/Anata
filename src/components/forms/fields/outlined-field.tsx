@@ -10,6 +10,7 @@ export type OutlinedFieldProps = {
   placeholder?: string
   handleBlur?: (e: any) => void
   handleChange?: (e: any) => void
+  handleInputChange?: (e: any) => void
   fullWidth?: boolean
   validate?: (value: any) => string | undefined
   options?: { label: string; value: string }[] | string[]
@@ -17,6 +18,7 @@ export type OutlinedFieldProps = {
   type?: string
   disabled?: boolean
   autoFocus?: boolean
+  EmptyOptionBtn?: React.ReactNode
 }
 
 type OutlinedFieldPropType = {

@@ -232,7 +232,6 @@ export const useRegistrationData = () => {
       throw error
     }
   }
-
   const handleUpdatePhones = async (phones: PhoneType[], member: Member) => {
     try {
       const phonesToUpdate = preparePhonesForUpdate(member.phones || [], phones)

@@ -178,6 +178,21 @@ export const UPDATE_MEMBER_PHONES = gql`
     }
   }
 `
+export const CREATE_COMPANY = gql`
+  mutation createCompany($input: CompanyInput!) {
+    createCompany(input: $input) {
+      data {
+        companyCategory {
+          category
+        }
+        name
+      }
+      message
+      status
+      errors
+    }
+  }
+`
 
 export const UPDATE_MEMBER = composeMutations(
   UPDATE_MEMBER_ADDRESSES,

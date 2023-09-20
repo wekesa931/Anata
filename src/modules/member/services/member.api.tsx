@@ -10,6 +10,7 @@ import {
   GET_MEMBER_BY_PHONE,
   MEMBER_DETAILS_QUERY,
   UPDATE_MEMBER_STAFF,
+  CREATE_COMPANY,
 } from 'src/modules/member/services/gql'
 import type {
   BiodataValues,
@@ -92,6 +93,36 @@ export const useCreateMember = () => {
 
       return res?.data?.createMember?.data?.antaraId
     },
+    loading,
+    error,
+  }
+}
+
+export const useCreateCompany = () => {
+  const [mutate, { loading, error }] = useMutation(CREATE_COMPANY, {
+    context: {
+      clientName: 'v2',
+    },
+  })
+
+  const createCompany = async (name: any) => {
+    const res = await mutate({
+      variables: {
+        input: {
+          name,
+        },
+      },
+    })
+    if (res?.data?.createCompany?.status !== 200) {
+      const errorMessage = 'Failed to create company'
+      throw new Error(errorMessage)
+    }
+
+    return res
+  }
+
+  return {
+    createCompany,
     loading,
     error,
   }

@@ -7,6 +7,7 @@ import PrimaryButton, {
 import { FieldArray, Form, FormikProps } from 'formik'
 import TextField from 'src/components/forms/fields/text'
 import SelectField from 'src/components/forms/fields/select-field'
+import GroupedSearchField from 'src/components/forms/fields/grouped-search-field'
 import PrimaryForm from 'src/components/forms/primary-form'
 import type { Member } from 'src/modules/member/db/models'
 import RadioField from 'src/components/forms/fields/radio-field'
@@ -29,6 +30,7 @@ import { getChanges, isDirty } from 'src/utils/form-validation-methods'
 import { sortAlphabetically } from 'src/utils/sort'
 import ErrorComponent from 'src/components/feedbacks/error-component'
 import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
+import CreateMissingCompany from 'src/modules/member/components/forms/company-create-form'
 
 type InsuranceDetailsValues = DbValueTypes.InsuranceDetailsValues
 
@@ -161,11 +163,15 @@ export function InsuranceForm({
   const [initialValues, setInitialValues] = useState<InsuranceDetailsValues>(
     {} as InsuranceDetailsValues
   )
+  const [employers, setEmployers] = useState<LookupOption[]>(
+    lookupOptions?.employers
+  )
   const navigate = useNavigate()
   const [businessLocations, setBusinessLocations] = useState<LookupOption[]>([])
   const [departments, setDepartments] = useState<LookupOption[]>([])
   const [userError, setUserError] = useState<string | null>(null)
   const analytics = useMemberAnalytics()
+  const [employer, setEmployer] = useState<string>('')
 
   useEffect(() => {
     const values = member?.insurances?.insurances.length
@@ -313,7 +319,6 @@ export function InsuranceForm({
   const setBusinessLookups = (v?: string) => {
     const b = getBusinessLocations(lookupOptions?.employers || [], v) || []
     const d = getBusinessDepartments(lookupOptions?.employers || [], v) || []
-
     setBusinessLocations(b)
     setDepartments(d)
   }
@@ -339,20 +344,33 @@ export function InsuranceForm({
                   {' '}
                   Employer details{' '}
                 </h3>
-                <SelectField
+
+                <GroupedSearchField
                   label="Employer"
                   name="employer.name"
                   placeholder="--Select--"
-                  options={sortAlphabetically(
-                    lookupOptions?.employers || [],
-                    'label'
-                  )}
+                  options={sortAlphabetically(employers || [], 'label')}
                   handleChange={(v) => {
                     setBusinessLookups(v)
                     setFieldValue('employer.businessLocation', {})
                     setFieldValue('employer.department', {})
                   }}
+                  handleInputChange={(v) => {
+                    setEmployer(v)
+                  }}
                   required={!primaryMember}
+                  EmptyOptionBtn={
+                    <CreateMissingCompany
+                      missingEmployer={employer}
+                      onMissingCompanySaved={(companyName: string) => {
+                        setFieldValue('employer.name', companyName)
+                        setEmployers((prev) => [
+                          ...prev,
+                          { label: companyName, value: companyName },
+                        ])
+                      }}
+                    />
+                  }
                 />
                 {!!businessLocations.length && (
                   <SelectField
