@@ -121,13 +121,6 @@ function MedicalCampTemplate({
                   </View>
 
                   <View style={headerStyles.item}>
-                    <Text style={headerStyles.title}>National ID: </Text>
-                    <Text style={headerStyles.text}>
-                      {member?.kenyaNationalId}
-                    </Text>
-                  </View>
-
-                  <View style={headerStyles.item}>
                     <Text style={headerStyles.title}>Insurance ID: </Text>
                     <Text style={headerStyles.text}>
                       {member?.principalInsuranceId}
