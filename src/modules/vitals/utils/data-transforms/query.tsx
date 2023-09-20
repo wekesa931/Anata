@@ -152,7 +152,7 @@ export const transformChlMeasurements = (chl: { node: any }[]): any[] => {
   return chl?.map((item: any) => {
     const { node } = item
 
-    const { timestamp, nodeData } = node
+    const { timestamp, data: nodeData } = node
     const dataPoint: any = {
       timestamp,
       day: dayjs(timestamp).format('DD MMM YYYY'),
