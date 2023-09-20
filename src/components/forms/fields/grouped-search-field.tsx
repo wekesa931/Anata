@@ -140,11 +140,11 @@ function GroupedSearchField(props: OutlinedFieldProps & SelectFieldProps) {
                     // eslint-disable-next-line
                     InputProps={{
                       ...params.InputProps,
-                      startAdornment: (
+                      startAdornment: !fieldProps?.field?.value ? (
                         <IconButton size="small">
                           <SearchOutlined />
                         </IconButton>
-                      ),
+                      ) : null,
                     }}
                     size="small"
                   />
