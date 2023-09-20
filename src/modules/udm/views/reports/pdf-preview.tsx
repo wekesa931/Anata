@@ -24,6 +24,7 @@ type Props = {
   isEmpty?: boolean
   children: React.ReactElement<any>
   isInPatient?: boolean
+  closeWindow: () => void
 }
 
 function PdfPreview({
@@ -33,6 +34,7 @@ function PdfPreview({
   isEmpty = false,
   children,
   isInPatient = false,
+  closeWindow,
 }: Props) {
   const { member } = useMember()
 
@@ -49,6 +51,7 @@ function PdfPreview({
 
   const handleClosePortalWindow = () => {
     setOpen(false)
+    closeWindow()
   }
 
   const { handleUploadDocument } = useUdmData()

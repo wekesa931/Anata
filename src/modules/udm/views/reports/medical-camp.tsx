@@ -68,6 +68,7 @@ function MedicalCampComponent({ closeModal, getDocMeta, title }: Props) {
         setShowPdfPreview={setShowPdfPreview}
         docMeta={getDocMeta(formData?.medicalCampDate)}
         isEmpty={isMedicalCampDataEmpty(medicalCampData)}
+        closeWindow={handleClose}
       >
         <MedicalCampPDFTemplate
           member={member}

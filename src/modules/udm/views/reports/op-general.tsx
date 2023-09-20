@@ -91,6 +91,7 @@ function OpGeneralComponent({
         docMeta={getDocMeta()}
         isEmpty={isMedicalCampDataEmpty(labsAndVitalsData)}
         isInPatient={isInPatient}
+        closeWindow={handleClose}
       >
         <OpGeneralPDFTemplate
           member={member}
