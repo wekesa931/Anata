@@ -87,7 +87,6 @@ function Files() {
 
   const [folders, setFolders] = useState([])
   const [fileTypes, setFileTypes] = useState<string[]>([])
-  console.log(filteredFiles)
 
   const {
     getFiles,

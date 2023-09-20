@@ -1,11 +1,8 @@
 import { ChildCareOutlined, Person2Outlined } from '@mui/icons-material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Check, Share, X } from 'react-feather'
 import PrimaryButton from 'src/components/buttons/primary'
-import ToastNotification, {
-  defaultToastMessage,
-  ToastMessage,
-} from 'src/components/toasts/toast-notification'
+import { useNotifications } from 'src/context/notifications'
 import useAnalytics from 'src/hooks/analytics'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import { Member } from 'src/modules/member/db/models'
@@ -53,9 +50,8 @@ function SuccessPrompt({
   }, [])
   const { handleShareFile, sharingFile: sharing } = useUdmData()
   const { findFolderByName } = useDocumentsReadApi()
-  const [toastMessage, setToastMessage] =
-    useState<ToastMessage>(defaultToastMessage)
   const { trackDocumentShared } = useModuleAnalytics()
+  const { notify } = useNotifications()
 
   const shareFile = () => {
     findFolderByName('Health Reports').then((res) => {
@@ -63,18 +59,12 @@ function SuccessPrompt({
       handleShareFile(fileId, folderId)
         .then((response) => {
           const message = response?.message
-          setToastMessage({
-            ...toastMessage,
-            message,
-          })
+          notify(message)
           trackDocumentShared(response?.sharedFile)
         })
         .catch((err) => {
           logError(err)
-          setToastMessage({
-            ...toastMessage,
-            message: 'An error occurred while sharing the file',
-          })
+          notify('An error occurred while sharing the file')
         })
         .finally(() => {
           handleClose && handleClose()
@@ -132,11 +122,6 @@ function SuccessPrompt({
           )}
           {formFilled === 'pdfGenerate' && (
             <>
-              <ToastNotification
-                message={toastMessage}
-                isOpen={!!toastMessage.message}
-                handleToastClose={() => setToastMessage(defaultToastMessage)}
-              />
               <PrimaryButton
                 fullWidth
                 variant="outlined"
