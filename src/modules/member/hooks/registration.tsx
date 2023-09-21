@@ -31,6 +31,7 @@ import {
   removeEmpty,
 } from 'src/modules/member/utils/data-transforms'
 import { useMembersData } from 'src/modules/member/hooks/member-data'
+import { toTitleCase } from 'src/modules/member/utils'
 
 export const useRegistrationData = () => {
   const database = useDatabase()
@@ -67,10 +68,17 @@ export const useRegistrationData = () => {
 
   const handleUpdateBioData = async (
     member: Member,
-    biodata: BiodataValues,
+    data: BiodataValues,
     rosterMember?: RosterMemberType
   ) => {
     try {
+      const { firstName, middleName, lastName, ...rest } = data
+      const biodata = {
+        ...rest,
+        firstName: toTitleCase(firstName),
+        middleName: toTitleCase(middleName),
+        lastName: toTitleCase(lastName),
+      }
       if (!biodata.antaraId) {
         const antaraId = await createMember(rosterMember?.rosterMemberId)
         biodata.antaraId = antaraId

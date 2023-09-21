@@ -16,6 +16,7 @@ import {
   transformInsuranceData,
 } from 'src/modules/member/utils/data-transforms'
 import { calcAge } from 'src/utils/date-time/date-formatters'
+import { toTitleCase } from 'src/modules/member/utils'
 
 type AddressValues = DbTypes.AddressValues
 type InsuranceDetailsValues = DbTypes.InsuranceDetailsValues
@@ -70,9 +71,9 @@ export const createOrUpdateMember = (
   memberData: V2MemberType
 ) => {
   member.antaraId = memberData?.antaraId
-  member.firstName = memberData?.firstName
-  member.lastName = memberData?.lastName
-  member.middleName = memberData?.middleName
+  member.firstName = toTitleCase(memberData?.firstName)
+  member.lastName = toTitleCase(memberData?.lastName)
+  member.middleName = toTitleCase(memberData?.middleName)
   member.email = memberData?.email || member.email
   member.phone = memberData?.phone || member.phone
   member.phones = memberData?.phones?.length ? memberData.phones : member.phones
