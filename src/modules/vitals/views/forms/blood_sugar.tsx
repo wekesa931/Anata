@@ -1,5 +1,5 @@
 import { Form } from 'formik'
-import React from 'react'
+import React, { useEffect } from 'react'
 import PrimaryForm from 'src/components/forms/primary-form'
 import { DateTimeField } from 'src/components/forms/fields/date-field'
 import TextField from 'src/components/forms/fields/text'
@@ -24,6 +24,16 @@ const validationSchema = yup.object().shape({
   hba1c: yup.number().nullable(),
 })
 
+const getInitialValues = (data: any) => {
+  return {
+    timestamp: data?.timestamp,
+    preprandialBloodGlucose: data?.preprandialBloodGlucose,
+    postprandialBloodGlucose: data?.postprandialBloodGlucose,
+    fastingBloodGlucose: data?.fastingBloodGlucose,
+    hba1c: data?.hba1c,
+  }
+}
+
 function DMMonitoring({
   form,
   handleSubmissionError,
@@ -39,11 +49,17 @@ function DMMonitoring({
     hba1c: '',
   })
 
+  useEffect(() => {
+    if (form?.data) {
+      setInitialValues(getInitialValues(form.data))
+    }
+  }, [form])
+
   const onSubmit = (values: any) => {
     handleCreateDMReading(values)
       .then(async () => {
         await form.markAsCompleted()
-        handleSubmissionSuccess()
+        handleSubmissionSuccess(false)
       })
       .catch((error) => {
         handleSubmissionError(error)
@@ -66,6 +82,7 @@ function DMMonitoring({
             saveInput={saveInput}
             placeholder="Enter preprandial blood glucose"
             required={false}
+            disabled={!form?.data?.isDraft}
           />
           <TextField
             name="postprandialBloodGlucose"
@@ -73,6 +90,7 @@ function DMMonitoring({
             saveInput={saveInput}
             placeholder="Enter postprandial blood glucose"
             required={false}
+            disabled={!form?.data?.isDraft}
           />
           <TextField
             name="fastingBloodGlucose"
@@ -91,6 +109,7 @@ function DMMonitoring({
             
             Target for Diabetics: <7 mmol/l
             `}
+            disabled={!form?.data?.isDraft}
           />
           <TextField
             name="hba1c"
@@ -107,9 +126,14 @@ function DMMonitoring({
             
             Target Level for Diabetics: <7.5%
             `}
+            disabled={!form?.data?.isDraft}
           />
           <div className="flex justify-end">
-            <PrimaryButton type="submit" disabled={loading} loading={loading}>
+            <PrimaryButton
+              type="submit"
+              disabled={loading || !form?.data?.isDraft}
+              loading={loading}
+            >
               Save
             </PrimaryButton>
           </div>

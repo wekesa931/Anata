@@ -8,6 +8,7 @@ import {
   generateId,
   getUserModelDetails,
 } from 'src/modules/workflows/utils'
+import dayjs from 'dayjs'
 import { Forms } from '../db/models'
 import { useGetAirtableRecord } from '../services/airtable.api'
 
@@ -32,6 +33,7 @@ export const useFormsData = () => {
           form.member = member?.antaraId
           form.name = formName
           form.data = {
+            timestamp: dayjs().toDate(),
             ...initialFormData[formName],
             ...formData,
             Member: [member?.airtableRecordId],

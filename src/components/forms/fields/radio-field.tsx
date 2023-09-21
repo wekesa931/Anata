@@ -20,6 +20,7 @@ function RadioField(props: RadioFieldProps) {
             <FormControlLabel
               key={option.value}
               value={option.value}
+              disabled={props.disabled}
               control={
                 <Radio
                   name={fieldProps.field.name}

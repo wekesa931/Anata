@@ -167,7 +167,7 @@ export type TForm = {
 
 export type FormProps = {
   form: TWorkflowForm
-  handleSubmissionSuccess: (data?: any) => void
+  handleSubmissionSuccess: (hasSyncedData?: boolean, data?: any) => void
   handleSubmissionError: (error?: any) => void
   saveInput: (name: string, value: string) => void
   formData?: Record<string, any>

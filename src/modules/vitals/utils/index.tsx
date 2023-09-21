@@ -47,7 +47,7 @@ export const possiblyUndefinedEval = <T extends object, K extends keyof T>(
 export const convertToNumberIfDefined = (value: any): number | undefined => {
   if (!value || value === '' || value === undefined) return undefined
   const numericValue = Number(value)
-  return isNaN(numericValue) ? undefined : numericValue
+  return isNaN(numericValue) ? value : numericValue
 }
 
 export const getTickCount = (

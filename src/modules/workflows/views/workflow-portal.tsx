@@ -167,6 +167,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
           Member: [member?.airtableRecordId],
           moduleId: generateId(),
           isDraft: true,
+          timestamp: new Date().toISOString(),
         })
         .then(() => {
           setFormStates(addedFormName)
@@ -284,10 +285,12 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
       })
     }
 
-  const handleSaveDraftWorkflow = async () => {
+  const handleSaveDraftWorkflow = async (ignoreNotification?: boolean) => {
     saveDraftWorkflow(workflow, activeForms)
       .then(() => {
-        notify('Draft saved successfully')
+        if (!ignoreNotification) {
+          notify('Draft saved successfully')
+        }
         setIsDraftSaved(true)
         setIsEdited(false)
       })
@@ -302,15 +305,36 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     )
   }
 
-  const handleSubmissionSuccess = (form: TWorkflowForm) => () => {
-    form
-      .clearDraft()
-      .then(() => {
-        notify('Form submitted succesfully.')
-        setIsEdited(false)
-      })
-      .catch(logError)
+  const notifySubmissionSuccess = () => {
+    notify('Form submitted succesfully.')
+    setIsEdited(false)
   }
+
+  const handleSubmissionSuccess =
+    (form: TWorkflowForm) =>
+    (hasSavedWorkflowData = true) => {
+      form
+        .clearDraft()
+        .then(() => {
+          if (!hasSavedWorkflowData) {
+            handleSaveDraftWorkflow(true)
+              .then(() => {
+                notifySubmissionSuccess()
+              })
+              .catch((err) => {
+                notify(
+                  err?.message && typeof err?.message === 'string'
+                    ? err?.message
+                    : 'An error occured while saving workflow data. Please try again'
+                )
+                logError(err)
+              })
+          } else {
+            notifySubmissionSuccess()
+          }
+        })
+        .catch(logError)
+    }
 
   const DefaultFormComponent = getFormImplementation(activeFormName)
 
@@ -497,7 +521,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                           loaderDisplayed || !getSubmittedForm()?.isDraft
                         }
                         className="rounded-xl bg-white-100 font-rubik font-medium normal-case text-blue-100"
-                        onClick={handleSaveDraftWorkflow}
+                        onClick={() => handleSaveDraftWorkflow()}
                       >
                         Save draft
                       </Button>

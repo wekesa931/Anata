@@ -1,5 +1,5 @@
 import { Form } from 'formik'
-import React from 'react'
+import React, { useEffect } from 'react'
 import PrimaryForm from 'src/components/forms/primary-form'
 import { DateTimeField } from 'src/components/forms/fields/date-field'
 import TextField from 'src/components/forms/fields/text'
@@ -18,6 +18,17 @@ const validationSchema = yup.object().shape({
   totalCholesterol: yup.number().nullable(),
   triglyceride: yup.number().nullable(),
 })
+
+const getInitialValues = (data: any) => {
+  return {
+    timestamp: data?.timestamp,
+    lipidPanelTestType: data?.lipidPanelTestType,
+    hdl: data?.hdl,
+    ldl: data?.ldl,
+    totalCholesterol: data?.totalCholesterol,
+    triglyceride: data?.triglyceride,
+  }
+}
 
 function CHLForm({
   form,
@@ -39,13 +50,19 @@ function CHLForm({
     handleCreateCholesterolReading(values)
       .then(async () => {
         await form.markAsCompleted()
-        handleSubmissionSuccess()
+        handleSubmissionSuccess(false)
       })
       .catch((error) => {
         setInitialValues(values)
         handleSubmissionError(error)
       })
   }
+
+  useEffect(() => {
+    if (form?.data) {
+      setInitialValues(getInitialValues(form.data))
+    }
+  }, [form])
 
   return (
     <PrimaryForm
@@ -64,6 +81,7 @@ function CHLForm({
               { label: 'Non fasting', value: 'Non fasting' },
             ]}
             saveInput={saveInput}
+            disabled={!form?.data?.isDraft}
           />
           <TextField
             name="hdl"
@@ -77,6 +95,7 @@ function CHLForm({
               40-59 mg/dL: Better
               > 60 mg/dL: Best`}
             required={false}
+            disabled={!form?.data?.isDraft}
           />
           <TextField
             name="ldl"
@@ -91,6 +110,7 @@ function CHLForm({
               160-189 mg/dL: High
               > 190 mg/dL: Very high`}
             required={false}
+            disabled={!form?.data?.isDraft}
           />
           <TextField
             name="totalCholesterol"
@@ -103,6 +123,7 @@ function CHLForm({
               200-239 mg/dL: Borderline high
               > 240 mg/dL: High`}
             required={false}
+            disabled={!form?.data?.isDraft}
           />
           <TextField
             name="triglyceride"
@@ -116,10 +137,15 @@ function CHLForm({
               200-499 mg/dL: High
               > 500 mg/dL: Very high`}
             required={false}
+            disabled={!form?.data?.isDraft}
           />
 
           <div className="flex justify-end">
-            <PrimaryButton loading={loading} type="submit">
+            <PrimaryButton
+              loading={loading}
+              disabled={loading || !form?.data?.isDraft}
+              type="submit"
+            >
               Save
             </PrimaryButton>
           </div>

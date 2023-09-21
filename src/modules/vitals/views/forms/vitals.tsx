@@ -1,5 +1,5 @@
 import { Form } from 'formik'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PrimaryForm from 'src/components/forms/primary-form'
 import { DateTimeField } from 'src/components/forms/fields/date-field'
 import TextField from 'src/components/forms/fields/text'
@@ -27,6 +27,26 @@ const validationSchema = yup.object().shape({
   midUpperArmCircumference: yup.number().nullable(),
   sixLeadEcgFindings: yup.string().nullable(),
 })
+
+const getInitialValues = (data: any) => {
+  return {
+    timestamp: data?.timestamp,
+    temperature: data?.temperature,
+    respiratoryRate: data?.respiratoryRate,
+    oxygenSaturation: data?.oxygenSaturation,
+    height: data?.height,
+    weight: data?.weight,
+    muscleMass: data?.muscleMass,
+    bodyFat: data?.bodyFat,
+    visceralFat: data?.visceralFat,
+    waistCircumference: data?.waistCircumference,
+    hipCircumference: data?.hipCircumference,
+    boneDensity: data?.boneDensity,
+    waterContent: data?.waterContent,
+    midUpperArmCircumference: data?.midUpperArmCircumference,
+    sixLeadEcgFindings: data?.sixLeadEcgFindings,
+  }
+}
 
 function VitalsCollection({
   saveInput,
@@ -57,13 +77,19 @@ function VitalsCollection({
     handleCreateVitalsReading(values)
       .then(async () => {
         await form.markAsCompleted()
-        handleSubmissionSuccess()
+        handleSubmissionSuccess(false)
       })
       .catch((error) => {
         setInitialValues(values)
         handleSubmissionError(error)
       })
   }
+
+  useEffect(() => {
+    if (form?.data) {
+      setInitialValues(getInitialValues(form.data))
+    }
+  }, [form])
 
   return (
     <PrimaryForm
@@ -81,6 +107,7 @@ function VitalsCollection({
             required={false}
             helperText="(°C)"
             placeholder="Temperature"
+            disabled={!form?.data?.isDraft}
           />
           <TextField
             name="respiratoryRate"
@@ -89,6 +116,7 @@ function VitalsCollection({
             required={false}
             helperText="BPM"
             placeholder="RR"
+            disabled={!form?.data?.isDraft}
           />
           <TextField
             name="oxygenSaturation"
@@ -97,6 +125,7 @@ function VitalsCollection({
             required={false}
             helperText="%"
             placeholder="SPO2"
+            disabled={!form?.data?.isDraft}
           />
 
           <TextField
@@ -106,6 +135,7 @@ function VitalsCollection({
             required={false}
             helperText="(m) - examples: 1.5m 1.8m 1.75m"
             placeholder="Height"
+            disabled={!form?.data?.isDraft}
           />
 
           <TextField
@@ -115,6 +145,7 @@ function VitalsCollection({
             required={false}
             helperText="(kg)"
             placeholder="Weight"
+            disabled={!form?.data?.isDraft}
           />
 
           <TextField
@@ -127,6 +158,7 @@ function VitalsCollection({
             (if decimals, use a . not a ,)
             `}
             placeholder="Muscle Mass"
+            disabled={!form?.data?.isDraft}
           />
 
           <TextField
@@ -140,6 +172,7 @@ function VitalsCollection({
             (if decimals, use a . not a ,)
             `}
             placeholder="Body Fat"
+            disabled={!form?.data?.isDraft}
           />
 
           <TextField
@@ -154,6 +187,7 @@ function VitalsCollection({
             15 and above: Very high
             `}
             placeholder="Visceral fat"
+            disabled={!form?.data?.isDraft}
           />
 
           <TextField
@@ -166,6 +200,7 @@ function VitalsCollection({
             Women: <80 cm is healthy, 80-87 cm is at Risk, >88 cm is at High Risk
             `}
             placeholder="Waist circumference"
+            disabled={!form?.data?.isDraft}
           />
 
           <TextField
@@ -175,6 +210,7 @@ function VitalsCollection({
             required={false}
             helperText="(cm)"
             placeholder="Hip circumference"
+            disabled={!form?.data?.isDraft}
           />
 
           <TextField
@@ -187,6 +223,7 @@ function VitalsCollection({
             Normal values for Women: 2.4 kgs to 2.6 kgs
             `}
             placeholder="Bone density"
+            disabled={!form?.data?.isDraft}
           />
 
           <TextField
@@ -199,6 +236,7 @@ function VitalsCollection({
             Normal values for Women: 45% to 60%
             `}
             placeholder="Water content"
+            disabled={!form?.data?.isDraft}
           />
           <TextField
             name="midUpperArmCircumference"
@@ -212,6 +250,7 @@ function VitalsCollection({
               11.5 - 12.5 cm - moderately undernourished
               >12.5 cm - healthy
             `}
+            disabled={!form?.data?.isDraft}
           />
           <RadioField
             name="sixLeadEcgFindings"
@@ -222,10 +261,15 @@ function VitalsCollection({
               { label: 'Normal rhythm', value: 'Normal rhythm' },
               { label: 'Abnormal rhythm', value: 'Abnormal rhythm' },
             ]}
+            disabled={!form?.data?.isDraft}
           />
 
           <div className="flex justify-end">
-            <PrimaryButton loading={loading} disabled={loading} type="submit">
+            <PrimaryButton
+              loading={loading}
+              disabled={loading || !form?.data?.isDraft}
+              type="submit"
+            >
               Submit
             </PrimaryButton>
           </div>

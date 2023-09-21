@@ -108,6 +108,10 @@ export class Forms extends Model {
     await this.update((f) => {
       f.isDraft = false
       f.isEdited = false
+      f.data = {
+        ...f.data,
+        isDraft: false,
+      }
     })
   }
 }
