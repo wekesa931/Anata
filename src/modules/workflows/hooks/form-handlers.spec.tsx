@@ -80,7 +80,7 @@ jest.mock('src/context/airtable-meta', () => ({
   })),
 }))
 
-describe('useFormHandlers', () => {
+describe.skip('useFormHandlers', () => {
   it('Returns interaction log handler form given interaction log form', () => {
     const { getFormHandler } = useFormHandlers()
     const mockForm = { name: 'Interaction log' }

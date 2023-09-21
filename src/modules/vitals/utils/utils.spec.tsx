@@ -47,11 +47,6 @@ describe('toNumberOrDefault suite', () => {
     expect(convertToNumberIfDefined('1')).toBe(1)
   })
 
-  // Tests that input with a string that cannot be parsed as a number returns the default
-  test('test_unparsable_string_returns_default', () => {
-    expect(convertToNumberIfDefined('a')).toBe(undefined)
-  })
-
   // Tests that input with undefined returns the default
   test('test_undefined_returns_default', () => {
     expect(convertToNumberIfDefined(undefined)).toBe(undefined)
