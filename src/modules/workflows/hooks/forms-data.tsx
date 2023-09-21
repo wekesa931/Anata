@@ -34,6 +34,7 @@ export const useFormsData = () => {
           form.name = formName
           form.data = {
             timestamp: dayjs().toDate(),
+            isDraft: true,
             ...initialFormData[formName],
             ...formData,
             Member: [member?.airtableRecordId],
