@@ -20,6 +20,7 @@ export const options = [
   'Sibling',
   'Sister',
   'Son',
+  'Daughter',
   'Spouse',
   'Uncle',
   'Wife',

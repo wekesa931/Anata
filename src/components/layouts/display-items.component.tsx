@@ -36,18 +36,20 @@ type GridItemsProps = {
   children: React.ReactNode
   fullCols?: boolean
   single?: boolean
+  className?: string
 }
 
 export function GridItems({
   children,
   fullCols = false,
   single = false,
+  className,
 }: GridItemsProps) {
   return (
     <div
       className={`grid mb-3 ${
         fullCols ? 'grid-cols-3' : single ? 'grid-cols-1' : 'grid-cols-2'
-      }`}
+      } ${className || ''}`}
     >
       {children}
     </div>

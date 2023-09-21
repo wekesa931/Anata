@@ -9,9 +9,40 @@ import { PortalForm } from 'src/modules/member/components/update-forms'
 import { StatusForm } from 'src/modules/member/components/forms/statuses-form'
 import type { Member } from 'src/modules/member/db/models'
 import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
+import _ from 'lodash'
 
 type StatusesSectionProps = {
   member: Member | null
+}
+
+const toTitleCase = (str?: string) => {
+  if (!str) return str
+  const trimmedStr = str.trim()
+  return _.startCase(_.toLower(trimmedStr))
+}
+
+function MemberStatus({ status }: { status?: string }) {
+  const getBg = () => {
+    switch (status) {
+      case 'Active':
+        return 'bg-status-active'
+      case 'Deceased':
+        return 'bg-status-terminated'
+      case 'Terminated':
+        return 'bg-status-terminated'
+      case 'Provisioned':
+        return 'bg-status-provisioned'
+      default:
+        return 'bg-dark-blue-50'
+    }
+  }
+  return (
+    <div
+      className={`font-rubik rounded-2xl flex justify-center items-center ${getBg()} mt-1`}
+    >
+      <p className="text-sm text-white font-medium">{status}</p>
+    </div>
+  )
 }
 
 function StatusesSection({ member }: StatusesSectionProps) {
@@ -63,12 +94,15 @@ function StatusesSection({ member }: StatusesSectionProps) {
         </GridItems>
         <GridItems>
           <Item title="Onboarding stage" child={member?.onboardStage} />
-          <Item title="Member status" child={member?.status} />
+          <Item
+            title="Member status"
+            child={<MemberStatus status={member?.status} />}
+          />
         </GridItems>
         <GridItems>
           <Item
             title="Verification Status"
-            child={member?.verificationStatus}
+            child={toTitleCase(member?.verificationStatus)}
           />
         </GridItems>
       </SectionItem>

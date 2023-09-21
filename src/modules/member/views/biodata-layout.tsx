@@ -27,7 +27,7 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
   return member ? (
     <div className="flex flex-col h-full">
       <div className="flex-1 bg-white-100 flex justify-start flex-col overflow-y-auto border-l border-2 border-solid border-dark-blue-10 border-b-0">
-        <div className="py-2 px-0 bg-white-bg min-h-[48px] flex items-center justify-between">
+        <div className="py-2 px-0 bg-white-bg min-h-[48px] flex items-center justify-between sticky top-0 w-full z-10">
           {member ? (
             <h3 className="font-rubik font-medium text-xl pl-4 text-dark-blue-100 ">
               {`${member.fullName} ${getAgeFull(member?.birthDate)}`}

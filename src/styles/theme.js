@@ -48,6 +48,9 @@ module.exports = {
       'table-col-grey': '#F8F8F8',
       'blue-light': 'var(--blue-light)',
       'neutral-light': 'var(--neutral-light)',
+      'status-active': 'var(--green-100)',
+      'status-terminated': '#CB314B',
+      'status-provisioned': '#608EB6',
     },
     zIndex: {
       2000: '2000',

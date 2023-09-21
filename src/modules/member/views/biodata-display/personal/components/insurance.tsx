@@ -12,7 +12,6 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Box,
   Divider,
   Tooltip,
 } from '@mui/material'
@@ -34,12 +33,10 @@ function InsuranceSectionItem({
   return (
     <div>
       <div className="flex justify-between items-center">
-        <Box
-          className="h-8 w-25"
-          component="img"
-          src={insuranceItem?.insuranceCompanyLogo || ''}
-          alt={insuranceItem?.insuranceCompany || ''}
-        />
+        <p className="text-base text-dark-blue-100 text-center font-medium">
+          {' '}
+          {insuranceItem?.insuranceCompany || 'Unknown'}
+        </p>
         <div className="flex gap-3 justify-start items-center">
           <p className="text-base text-dark-blue-100 text-center font-medium">
             {insuranceItem?.insuranceId}
@@ -68,7 +65,7 @@ function InsuranceSectionItem({
           </Tooltip>
         </div>
       </div>
-      <GridItems single>
+      <GridItems className="mt-2" single>
         <Item
           title="Health policy"
           child={insuranceItem?.healthPolicy || '-'}
