@@ -114,7 +114,7 @@ function OpGeneralComponent({
       title={title}
       height={60}
     >
-      <div className="p-6">
+      <div className="p-4">
         <MedicalCampForm
           handleShowPdfPreview={handleShowPdfPreview}
           handleClose={handleClose}

@@ -50,11 +50,12 @@ function MedicalCampForm({
       initialValues={initialData}
       handleSubmit={handleSubmit}
       validationSchema={validationSchema}
+      expanded={false}
     >
       {({ isValidating }: any) => (
         <Form>
           {error && (
-            <div className="bg-red-10 p-4 flex items-center mb-[5%]">
+            <div className="bg-red-10 p-4 flex items-center mb-4">
               <X
                 className="w-16 h-16 text-red-100 mr-2"
                 style={{ fontWeight: 'bold' }}

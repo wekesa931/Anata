@@ -23,7 +23,7 @@ const isMedicalCampDataEmpty = (medicalCampData: any) => {
 function MedicalCampComponent({ closeModal, getDocMeta, title }: Props) {
   const [showPdfPreview, setShowPdfPreview] = useState(false)
   const initialMedicalCampData = {
-    medicalCampDate: '',
+    medicalCampDate: new Date(),
     nextActions: '',
     additionalInsights: '',
   }
@@ -87,7 +87,7 @@ function MedicalCampComponent({ closeModal, getDocMeta, title }: Props) {
       title={title}
       height={60}
     >
-      <div className="p-6">
+      <div className="p-4">
         <MedicalCampForm
           handleShowPdfPreview={handleShowPdfPreview}
           handleClose={handleClose}

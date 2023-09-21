@@ -9,8 +9,7 @@ type PrimaryFormProps = {
   expanded?: boolean
 }
 
-function PrimaryForm(props: PrimaryFormProps) {
-  const expanded = props.expanded || true
+function PrimaryForm({ expanded, ...props }: PrimaryFormProps) {
   return (
     <div className={`overflow-scroll ${expanded ? 'mt-6' : 'mt-1'}`}>
       <Formik

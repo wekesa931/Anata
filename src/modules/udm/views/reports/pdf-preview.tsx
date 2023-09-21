@@ -151,7 +151,7 @@ function PdfPreview({
           <DialogContent dividers>
             <div className="h-full w-full">
               {error && (
-                <div className="bg-red-10 p-2 flex items-center mb-[5%]">
+                <div className="bg-red-10 p-2 flex items-center mb-4">
                   <X className="w-16 h-16 text-red-100 mr-2 font-bold" />
                   <div>
                     <h2 className="text-lg font-semibold mb-2">
