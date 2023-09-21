@@ -77,6 +77,8 @@ export class Forms extends Model {
 
   @field('is_synced') isSynced!: boolean
 
+  @date('created_at') createdAt!: number
+
   @writer async saveInput(key: string, data: any) {
     // update the data object with the new data [key]: data
     await this.update((f) => {
@@ -181,6 +183,7 @@ export class Workflows extends Model {
       f.isSynced = false
       f.createdBy = this.createdBy
       f.updatedBy = this.updatedBy
+      f.createdAt = dayjs().valueOf()
     })
     return form
   }
@@ -262,6 +265,9 @@ export class Workflows extends Model {
             f.data = formData
             f.isDraft = nf.isDraft
             f.isSynced = hasAnyFormData
+            if (nf.createdAt) {
+              f.createdAt = dayjs(nf.createdAt).valueOf()
+            }
           })
         }
 
@@ -282,6 +288,9 @@ export class Workflows extends Model {
             f.isSynced = hasAnyFormData
             f.createdBy = this.createdBy
             f.updatedBy = this.updatedBy
+            if (nf.createdAt) {
+              f.createdAt = dayjs(nf.createdAt).valueOf()
+            }
           })
 
           return form

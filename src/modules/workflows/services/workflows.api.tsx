@@ -30,6 +30,7 @@ type RawForm = {
   moduleId: string
   isDraft: boolean
   data: Record<string, any>
+  createdAt?: string
 }
 
 const isFormDraft = (workflow: TWorkflow, formData: any, formName: string) => {
@@ -82,6 +83,7 @@ const transformWorkflow = (workflow: TWorkflow) => {
             ...values,
             moduleId: formModuleId,
           },
+          createdAt: moduleData[moduleName]?.created_at,
         })
       })
     }

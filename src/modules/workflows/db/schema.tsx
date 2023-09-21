@@ -30,6 +30,7 @@ export const FormSchema = tableSchema({
     { name: 'updatedBy', type: 'string' },
     { name: 'is_synced', type: 'boolean' },
     { name: 'airtableId', type: 'string', isOptional: true },
+    { name: 'created_at', type: 'number' },
   ],
 })
 

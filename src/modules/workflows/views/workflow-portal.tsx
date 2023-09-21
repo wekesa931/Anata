@@ -35,6 +35,7 @@ import {
 } from 'src/modules/workflows/db/models'
 import { generateId } from 'src/storage/utils'
 import { getFormImplementation } from 'src/modules/workflows/components/forms'
+import dayjs from 'dayjs'
 import { formNames, duplicates, initialFormValues } from '../utils'
 
 type TitleProps = {
@@ -336,7 +337,19 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
         .catch(logError)
     }
 
-  const DefaultFormComponent = getFormImplementation(activeFormName)
+  const shouldUseOldLabsAndVitals = (form: TWorkflowForm) => {
+    // forms with missing createdAt field should use old labs and vitals
+    if (!dayjs(form?.createdAt).valueOf()) return true
+    return (
+      dayjs(form?.createdAt).toDate() <
+      dayjs('2023-09-21T21:00:00.798+03:00').toDate()
+    )
+  }
+
+  const DefaultFormComponent = getFormImplementation(
+    activeFormName,
+    shouldUseOldLabsAndVitals(getSubmittedForm())
+  )
 
   return (
     <>
@@ -408,61 +421,68 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                     <>
                       {activeForms.length > 1 ? (
                         <>
-                          {activeForms.map((form: any, index: number) => {
-                            const FormComponent = getFormImplementation(
-                              form.name
-                            )
-                            return (
-                              <Accordion
-                                key={form.id}
-                                expanded={form.id === expanded}
-                                onChange={handleExpand(form.id)}
-                              >
-                                <AccordionSummary
-                                  aria-controls="panel1bh-content"
-                                  id="panel1bh-header"
-                                  expandIcon={<ExpandMoreIcon />}
+                          {activeForms.map(
+                            (form: TWorkflowForm, index: number) => {
+                              const FormComponent = getFormImplementation(
+                                form.name,
+                                shouldUseOldLabsAndVitals(form)
+                              )
+                              return (
+                                <Accordion
+                                  key={form.id}
+                                  expanded={form.id === expanded}
+                                  onChange={handleExpand(form.id)}
                                 >
-                                  <Typography>
-                                    <div>
-                                      <span>
-                                        <div className="flex items-center">
-                                          <span>-</span>
-                                          <Tooltip title="Delete Module">
-                                            <ConfirmButton
-                                              onConfirm={() => deleteForm(form)}
-                                            />
-                                          </Tooltip>
+                                  <AccordionSummary
+                                    aria-controls="panel1bh-content"
+                                    id="panel1bh-header"
+                                    expandIcon={<ExpandMoreIcon />}
+                                  >
+                                    <Typography>
+                                      <div>
+                                        <span>
+                                          <div className="flex items-center">
+                                            <span>-</span>
+                                            <Tooltip title="Delete Module">
+                                              <ConfirmButton
+                                                onConfirm={() =>
+                                                  deleteForm(form)
+                                                }
+                                              />
+                                            </Tooltip>
+                                          </div>
+                                        </span>
+                                        <div
+                                          className={`ml-2.5 flex w-[60px] justify-center rounded-[5px] py-[3px] px-[7px] text-[10px] font-bold ${
+                                            form.isDraft
+                                              ? ' bg-yellow-200 text-status'
+                                              : 'bg-green-100 text-white'
+                                          }`}
+                                        >
+                                          {form.isDraft
+                                            ? 'Pending'
+                                            : 'Submitted'}
                                         </div>
-                                      </span>
-                                      <div
-                                        className={`ml-2.5 flex w-[60px] justify-center rounded-[5px] py-[3px] px-[7px] text-[10px] font-bold ${
-                                          form.isDraft
-                                            ? ' bg-yellow-200 text-status'
-                                            : 'bg-green-100 text-white'
-                                        }`}
-                                      >
-                                        {form.isDraft ? 'Pending' : 'Submitted'}
                                       </div>
-                                    </div>
-                                  </Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                  <FormComponent
-                                    form={form}
-                                    saveInput={handleSaveInput(form, index)}
-                                    handleSubmissionError={
-                                      handleSubmissionError
-                                    }
-                                    handleSubmissionSuccess={handleSubmissionSuccess(
-                                      form
-                                    )}
-                                    formData={formsData[index] || {}}
-                                  />
-                                </AccordionDetails>
-                              </Accordion>
-                            )
-                          })}
+                                    </Typography>
+                                  </AccordionSummary>
+                                  <AccordionDetails>
+                                    <FormComponent
+                                      form={form}
+                                      saveInput={handleSaveInput(form, index)}
+                                      handleSubmissionError={
+                                        handleSubmissionError
+                                      }
+                                      handleSubmissionSuccess={handleSubmissionSuccess(
+                                        form
+                                      )}
+                                      formData={formsData[index] || {}}
+                                    />
+                                  </AccordionDetails>
+                                </Accordion>
+                              )
+                            }
+                          )}
                         </>
                       ) : (
                         <DefaultFormComponent

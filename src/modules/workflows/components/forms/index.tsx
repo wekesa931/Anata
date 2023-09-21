@@ -13,8 +13,13 @@ enum FormNames {
 }
 
 export const getFormImplementation = (
-  formName: string
+  formName: string,
+  shouldUseOldLabsAndVitals = false
 ): React.FC<FormProps> => {
+  if (shouldUseOldLabsAndVitals) {
+    return AirtableBasedForm
+  }
+
   switch (formName) {
     case FormNames.BP_MON:
       return BpMon

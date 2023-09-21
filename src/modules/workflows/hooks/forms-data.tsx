@@ -49,6 +49,7 @@ export const useFormsData = () => {
           form.isSynced = false
           form.isDraft = true
           form.isEdited = false
+          form.createdAt = dayjs().valueOf()
         })
         return created
       })
