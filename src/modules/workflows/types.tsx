@@ -170,4 +170,5 @@ export type FormProps = {
   handleSubmissionSuccess: (data?: any) => void
   handleSubmissionError: (error?: any) => void
   saveInput: (name: string, value: string) => void
+  formData?: Record<string, any>
 }

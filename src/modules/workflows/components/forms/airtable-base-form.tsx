@@ -18,6 +18,7 @@ function AirtableBasedForm({
   handleSubmissionError,
   handleSubmissionSuccess,
   saveInput,
+  formData,
 }: FormProps) {
   const formSchema = (FORM_DEFINITIONS as any).find(
     (f: any) => f?.name === form.name
@@ -36,10 +37,17 @@ function AirtableBasedForm({
     formState: { errors, isSubmitting },
     getValues,
     handleSubmit,
+    reset,
   } = useForm({
     resolver: yupResolver(validationObject),
-    defaultValues: form?.data || {},
+    defaultValues: formData || {},
   })
+
+  useEffect(() => {
+    reset(formData)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.name, formData])
 
   const { submitForm, submittingForm } = useWorkflowData()
   const canSubmitForm = every(errors, isEmpty)

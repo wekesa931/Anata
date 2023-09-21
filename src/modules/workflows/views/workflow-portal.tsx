@@ -103,8 +103,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
   const [copyAlertMessage, setCopyAlertMessage] =
     React.useState<CopyAlertMessage | null>(null)
   const [workflowForms, setWorkflowForms] = useState<TWorkflowForm[]>([])
-  // const workflowFormsObservable = workflow.forms.observe()
-  // const workflowForms = useObservable(workflowFormsObservable, [], [workflow])
+  const [formsData, setFormsData] = useState<any>([])
 
   // can only delete workflow is the workflow is not completed
   // or if any of the workflow forms is not edited and is a draft,
@@ -118,6 +117,9 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     setActiveFormName(formName)
     getFormsByName(workflow, formName).then((allActiveForms) => {
       setActiveForms(allActiveForms)
+
+      const allFormsData = allActiveForms.map((form: any) => form?.data || {})
+      setFormsData(allFormsData)
     })
   }
 
@@ -270,10 +272,17 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     }
   }
 
-  const handleSaveInput = (form: any) => (name: string, value: any) => {
-    setIsEdited(true)
-    form.saveInput(name, value)
-  }
+  const handleSaveInput =
+    (form: any, index: number) => (name: string, value: any) => {
+      setIsEdited(true)
+      form.saveInput(name, value)
+
+      setFormsData((prev: any) => {
+        const newForms = [...prev]
+        newForms[index] = form.data
+        return newForms
+      })
+    }
 
   const handleSaveDraftWorkflow = async () => {
     saveDraftWorkflow(workflow, activeForms)
@@ -375,7 +384,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                     <>
                       {activeForms.length > 1 ? (
                         <>
-                          {activeForms.map((form: any) => {
+                          {activeForms.map((form: any, index: number) => {
                             const FormComponent = getFormImplementation(
                               form.name
                             )
@@ -417,13 +426,14 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                                 <AccordionDetails>
                                   <FormComponent
                                     form={form}
-                                    saveInput={handleSaveInput(form)}
+                                    saveInput={handleSaveInput(form, index)}
                                     handleSubmissionError={
                                       handleSubmissionError
                                     }
                                     handleSubmissionSuccess={handleSubmissionSuccess(
                                       form
                                     )}
+                                    formData={formsData[index] || {}}
                                   />
                                 </AccordionDetails>
                               </Accordion>
@@ -433,11 +443,12 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                       ) : (
                         <DefaultFormComponent
                           form={activeForms[0]}
-                          saveInput={handleSaveInput(activeForms[0])}
+                          saveInput={handleSaveInput(activeForms[0], 0)}
                           handleSubmissionError={handleSubmissionError}
                           handleSubmissionSuccess={handleSubmissionSuccess(
                             activeForms[0]
                           )}
+                          formData={formsData[0] || {}}
                         />
                       )}
                     </>
