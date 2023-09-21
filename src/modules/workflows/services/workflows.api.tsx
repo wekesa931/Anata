@@ -83,7 +83,7 @@ const transformWorkflow = (workflow: TWorkflow) => {
             ...values,
             moduleId: formModuleId,
           },
-          createdAt: moduleData[moduleName]?.created_at,
+          createdAt: moduleValue?.timestamp,
         })
       })
     }
