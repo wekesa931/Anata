@@ -42,10 +42,6 @@ function PdfPreview({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  const handleClose = () => {
-    setOpen(false)
-  }
-
   const [showSuccess, setShowSuccess] = useState(false)
   const [fileId, setFileId] = useState<string>('')
 
@@ -93,7 +89,7 @@ function PdfPreview({
       {!showSuccess && (
         <Dialog
           open={open}
-          onClose={handleClose}
+          onClose={handleClosePortalWindow}
           scroll="paper"
           className="pdf-dialog w-1/2"
           fullWidth
@@ -143,7 +139,7 @@ function PdfPreview({
                   )}
                 </Button>
               )}
-              <Button autoFocus onClick={handleClose}>
+              <Button autoFocus onClick={handleClosePortalWindow}>
                 <X className="file-close-btn" />
               </Button>
             </DialogActions>
