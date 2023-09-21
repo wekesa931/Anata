@@ -2574,6 +2574,39 @@ export default [
           '"How often would you like me to be in touch?\nAntara always has new things on offer, communications around seasonal health issues, things of this nature. Plus, as your Health Navigator, I like to check in personally to see how you’re doing and if there is anything I can do to help. \nWeekly, Monthly, Quarterly or never?"\nIf they say never, let them know they will receive the routine Antara All-Member updates that go out at least once per quarter.\n"Which of those options would you prefer?"',
       },
       {
+        id: 'fld9EHpwQR3aFk62b',
+        name: 'Frequency of communication (Other)',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'What would be the ideal frequency of communication?',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['What would be the ideal frequency of communication?']
+            )
+          ) {
+            return ['Other'].some((r) =>
+              values[
+                'What would be the ideal frequency of communication?'
+              ].includes(r)
+            )
+          }
+          return ['Other'].includes(
+            values['What would be the ideal frequency of communication?']
+          )
+        },
+      },
+      {
         id: 'fldRPEHtx0tMF6Fbt',
         name: 'What is your preferred day for communication',
         type: 'multiSelect',
