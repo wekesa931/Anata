@@ -119,7 +119,7 @@
     "@mui/utils": "^5.14.9",
     "@mui/x-data-grid": "^5.17.26",
     "@mui/x-date-pickers": "^5.0.20",
-    "@nozbe/watermelondb": "^v0.27.0-6",
+    "@nozbe/watermelondb": "^0.27.0",
     "@react-pdf/renderer": "^3.1.12",
     "@sentry/react": "^7.70.0",
     "@sentry/tracing": "^7.70.0",
