@@ -35,6 +35,7 @@ function CHLForm({
   saveInput,
   handleSubmissionError,
   handleSubmissionSuccess,
+  isWorkflowComplete = false,
 }: FormProps) {
   const { loading, handleCreateCholesterolReading } = useVitalsUpdate()
   const [initialValues, setInitialValues] = React.useState<any>({
@@ -64,6 +65,8 @@ function CHLForm({
     }
   }, [form])
 
+  const disabled = !form?.data?.isDraft || isWorkflowComplete
+
   return (
     <PrimaryForm
       initialValues={initialValues}
@@ -81,7 +84,7 @@ function CHLForm({
               { label: 'Non fasting', value: 'Non fasting' },
             ]}
             saveInput={saveInput}
-            disabled={!form?.data?.isDraft}
+            disabled={disabled}
           />
           <TextField
             name="hdl"
@@ -95,7 +98,7 @@ function CHLForm({
               40-59 mg/dL: Better
               > 60 mg/dL: Best`}
             required={false}
-            disabled={!form?.data?.isDraft}
+            disabled={disabled}
           />
           <TextField
             name="ldl"
@@ -110,7 +113,7 @@ function CHLForm({
               160-189 mg/dL: High
               > 190 mg/dL: Very high`}
             required={false}
-            disabled={!form?.data?.isDraft}
+            disabled={disabled}
           />
           <TextField
             name="totalCholesterol"
@@ -123,7 +126,7 @@ function CHLForm({
               200-239 mg/dL: Borderline high
               > 240 mg/dL: High`}
             required={false}
-            disabled={!form?.data?.isDraft}
+            disabled={disabled}
           />
           <TextField
             name="triglyceride"
@@ -137,13 +140,13 @@ function CHLForm({
               200-499 mg/dL: High
               > 500 mg/dL: Very high`}
             required={false}
-            disabled={!form?.data?.isDraft}
+            disabled={disabled}
           />
 
           <div className="flex justify-end">
             <PrimaryButton
               loading={loading}
-              disabled={loading || !form?.data?.isDraft}
+              disabled={loading || disabled}
               type="submit"
             >
               Save

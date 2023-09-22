@@ -171,4 +171,5 @@ export type FormProps = {
   handleSubmissionError: (error?: any) => void
   saveInput: (name: string, value: string) => void
   formData?: Record<string, any>
+  isWorkflowComplete?: boolean
 }

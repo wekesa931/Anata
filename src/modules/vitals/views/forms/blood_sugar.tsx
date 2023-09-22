@@ -39,6 +39,7 @@ function DMMonitoring({
   handleSubmissionError,
   handleSubmissionSuccess,
   saveInput,
+  isWorkflowComplete,
 }: FormProps) {
   const { handleCreateDMReading, loading } = useVitalsUpdate()
   const [initialValues, setInitialValues] = React.useState<any>({
@@ -67,6 +68,8 @@ function DMMonitoring({
       })
   }
 
+  const disabled = !form?.data?.isDraft || isWorkflowComplete
+
   return (
     <PrimaryForm
       initialValues={initialValues}
@@ -82,7 +85,7 @@ function DMMonitoring({
             saveInput={saveInput}
             placeholder="Enter preprandial blood glucose"
             required={false}
-            disabled={!form?.data?.isDraft}
+            disabled={disabled}
           />
           <TextField
             name="postprandialBloodGlucose"
@@ -90,7 +93,7 @@ function DMMonitoring({
             saveInput={saveInput}
             placeholder="Enter postprandial blood glucose"
             required={false}
-            disabled={!form?.data?.isDraft}
+            disabled={disabled}
           />
           <TextField
             name="fastingBloodGlucose"
@@ -109,7 +112,7 @@ function DMMonitoring({
             
             Target for Diabetics: <7 mmol/l
             `}
-            disabled={!form?.data?.isDraft}
+            disabled={disabled}
           />
           <TextField
             name="hba1c"
@@ -126,12 +129,12 @@ function DMMonitoring({
             
             Target Level for Diabetics: <7.5%
             `}
-            disabled={!form?.data?.isDraft}
+            disabled={disabled}
           />
           <div className="flex justify-end">
             <PrimaryButton
               type="submit"
-              disabled={loading || !form?.data?.isDraft}
+              disabled={loading || disabled}
               loading={loading}
             >
               Save

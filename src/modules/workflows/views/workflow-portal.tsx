@@ -379,6 +379,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
               forms={workflowForms}
               addForm={addForm}
               showIncompleteForms={showIncompleteForms}
+              isWorkflowComplete={workflow?.isCompleted}
             />
           </ModulesSection>
           <FormsSection>
@@ -477,6 +478,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                                         form
                                       )}
                                       formData={formsData[index] || {}}
+                                      isWorkflowComplete={workflow?.isCompleted}
                                     />
                                   </AccordionDetails>
                                 </Accordion>
@@ -493,6 +495,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                             activeForms[0]
                           )}
                           formData={formsData[0] || {}}
+                          isWorkflowComplete={workflow?.isCompleted}
                         />
                       )}
                     </>

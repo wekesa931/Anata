@@ -32,6 +32,7 @@ function BPReadingForm({
   handleSubmissionSuccess,
   saveInput,
   form,
+  isWorkflowComplete = false,
 }: FormProps) {
   const { handleCreateBloodPressureReading, loading } = useVitalsUpdate()
   const [initialValues, setInitialValues] = React.useState<any>({
@@ -60,6 +61,8 @@ function BPReadingForm({
       })
   }
 
+  const disabled = !form?.data?.isDraft || isWorkflowComplete
+
   return (
     <PrimaryForm
       initialValues={initialValues}
@@ -73,7 +76,7 @@ function BPReadingForm({
               name="timestamp"
               label="Date"
               saveInput={saveInput}
-              disabled={!form?.data?.isDraft}
+              disabled={disabled}
             />
             <SelectField
               name="bpReadingType"
@@ -95,21 +98,21 @@ function BPReadingForm({
                 },
                 { label: 'App data collection', value: 'App data collection' },
               ]}
-              disabled={!form?.data?.isDraft}
+              disabled={disabled}
             />
             <TextField
               name="systolic"
               label="Systolic"
               saveInput={saveInput}
               placeholder="Systolic"
-              disabled={!form?.data?.isDraft}
+              disabled={disabled}
             />
             <TextField
               name="diastolic"
               label="Diastolic"
               placeholder="Diastolic"
               saveInput={saveInput}
-              disabled={!form?.data?.isDraft}
+              disabled={disabled}
             />
             <TextField
               name="pulse"
@@ -117,13 +120,13 @@ function BPReadingForm({
               placeholder="Pulse"
               saveInput={saveInput}
               required={false}
-              disabled={!form?.data?.isDraft}
+              disabled={disabled}
             />
 
             <div className="flex justify-end items-center gap-4 mt-3">
               <PrimaryButton
                 loading={loading}
-                disabled={loading || !form?.data?.isDraft}
+                disabled={loading || disabled}
                 type="submit"
               >
                 Save

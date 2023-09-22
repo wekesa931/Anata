@@ -16,6 +16,7 @@ function FormsListRaw({
   forms,
   activeForm,
   showIncompleteForms,
+  isWorkflowComplete = false,
 }: any) {
   const [open, setOpen] = useState<boolean>(false)
 
@@ -74,6 +75,7 @@ function FormsListRaw({
         className="flex w-full justify-start text-left font-rubik text-sm font-medium normal-case text-blue-100"
         startIcon={<Add />}
         onClick={() => setOpen(true)}
+        disabled={isWorkflowComplete}
       >
         Add Form
       </Button>

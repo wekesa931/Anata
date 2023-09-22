@@ -19,6 +19,7 @@ function AirtableBasedForm({
   handleSubmissionSuccess,
   saveInput,
   formData,
+  isWorkflowComplete = false,
 }: FormProps) {
   const formSchema = (FORM_DEFINITIONS as any).find(
     (f: any) => f?.name === form.name
@@ -59,8 +60,8 @@ function AirtableBasedForm({
     setIsFormDraft(form.isDraft)
   }, [form?.isDraft])
 
-  const onSubmit = (values: any) => {
-    let formattedPayload = values
+  const onSubmit = () => {
+    let formattedPayload = form?.data
     numberFields.forEach((mt: any) => {
       if (formattedPayload[`${mt.name}`]) {
         if (mt.isPercent) {
@@ -78,10 +79,10 @@ function AirtableBasedForm({
     })
 
     dateFields.forEach((dt: any) => {
-      if (values[dt] !== 'Invalid Date') {
+      if (form?.data[dt] !== 'Invalid Date') {
         formattedPayload = {
           ...formattedPayload,
-          [dt]: values[dt],
+          [dt]: form?.data[dt],
         }
       }
     })
@@ -98,7 +99,7 @@ function AirtableBasedForm({
   }
 
   const disabled =
-    form.isSynced || isSubmitting || submittingForm || !canSubmitForm
+    isSubmitting || submittingForm || !canSubmitForm || isWorkflowComplete
 
   return (
     <div>
