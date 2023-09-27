@@ -1,24 +1,48 @@
 export default [
   {
     name: 'Baseline',
-    id: 'tbl6iXhH0hhoblIaV',
+    id: 'tblQKOtAe0RqE5KFn',
     fields: [
       {
-        id: 'fldPJoaGOzHtu1I6q',
+        id: 'fldzbfmz2ihvXLKBS',
         name: 'Member',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldi0jedZbWPi7OBP',
+        symmetricColumnId: 'fld2saq6dUwRLRQ6h',
         unreversed: true,
         relationship: 'one',
-        foreignTableId: 'tblQRToQAT8BRlLHW',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
         required: true,
         helper: '',
       },
       {
-        id: 'fldNYtMVYiqqLPHFP',
+        id: 'fldyS5Iub9fZ22VM5',
+        name: 'Conditions master list',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldaCFsRAzqbXEkSY',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tbl9cTcuXOSV2tc4g',
+        required: false,
+        helper: '',
+        parentKey: 'Does the Member have a condition',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Does the Member have a condition'])) {
+            return ['Yes'].some((r) =>
+              values['Does the Member have a condition'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Does the Member have a condition'])
+        },
+      },
+      {
+        id: 'fldxqkYOc10sezJah',
         name: 'Gender',
         type: 'select',
         format: '',
@@ -32,7 +56,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldmhTbzxztxTNIzr',
+        id: 'fld6JKnsLi3zmxK4T',
         name: 'Is the BN a minor',
         type: 'select',
         format: '',
@@ -42,53 +66,25 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
       },
       {
-        id: 'flddthJJWOvGrCCmd',
+        id: 'fldXV8VCax5IUmERF',
         name: 'Health Navigator',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldvz2PTN4yrJJgEZ',
+        symmetricColumnId: 'fldf1T1M1N8tcti9r',
         unreversed: true,
         relationship: 'one',
-        foreignTableId: 'tblf6noUXSKCzG2Ze',
+        foreignTableId: 'tblZyeANbBkE2q4uG',
         required: true,
         helper: '',
       },
       {
-        id: 'fldAK0GhcyST64haO',
-        name: 'Patient Name (First)',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldDrMiLhSLB3nJu0',
-        name: 'Patient Name (Last)',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldK6iBJoC9u8UYvX',
+        id: 'flduy9NCClJwBE00p',
         name: 'Interaction type',
         type: 'select',
         format: '',
@@ -102,7 +98,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldajrcHXuNhugbUc',
+        id: 'fldULioAbdnjX0dpE',
         name: 'Date of baseline',
         type: 'date',
         format: '',
@@ -116,9 +112,9 @@ export default [
         helper: '',
       },
       {
-        id: 'fldopBP0EyBiy5SUV',
-        name: 'Current Health Issues?',
-        type: 'richText',
+        id: 'fld7v7FLIh0G5ewk7',
+        name: 'Current Health Issues',
+        type: 'select',
         format: '',
         isDateTime: false,
         options: [],
@@ -130,7 +126,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldH5D0IzIW3IgqFP',
+        id: 'fldrxucBNrw5b0sah',
         name: 'HIF updates?',
         type: 'multilineText',
         format: '',
@@ -144,7 +140,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fld8h08Qjjo9jx6Vs',
+        id: 'fldSJRkJx2YbMh8qU',
         name: 'Vaccination Status',
         type: 'select',
         format: '',
@@ -168,7 +164,7 @@ export default [
         },
       },
       {
-        id: 'fld3JEihgueOJcKGe',
+        id: 'fldNbvuaudOQcWMbG',
         name: 'Copy of Vaccination Card',
         type: 'multipleAttachment',
         format: '',
@@ -191,7 +187,7 @@ export default [
         },
       },
       {
-        id: 'fld8QGCNuFADm9ErI',
+        id: 'fldSixOGIoaFPTGWa',
         name: 'Developmental History',
         type: 'select',
         format: '',
@@ -203,7 +199,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Click here to see a table of normal pediatric development: <a href="https://www.cdc.gov/ncbddd/actearly/pdf/checklists/Checklists-with-Tips_Reader_508.pdf" target="_blank">https://www.cdc.gov/ncbddd/actearly/pdf/checklists/Checklists-with-Tips_Reader_508.pdf</a> \n',
+          '"We are just going to ask a few questions about, [child\'s name] development to check on his/her developmental progress"\n\n[Click on the link below to open the CDC developmental milestones table.\nIf any abnormality is identified, DO NOT, say anything to the parent just yet. Continue the baseline and then make sure that a consultation with a VC is made.]\n\n[Click here to see a table of normal pediatric development: <a href="https://www.cdc.gov/ncbddd/actearly/pdf/checklists/Checklists-with-Tips_Reader_508.pdf" target="_blank">https://www.cdc.gov/ncbddd/actearly/pdf/checklists/Checklists-with-Tips_Reader_508.pdf</a>\n',
         conditionType: '',
         parentKey: 'Is the BN a minor',
         parentValues: ['Yes'],
@@ -215,7 +211,7 @@ export default [
         },
       },
       {
-        id: 'fldWmdQD3jPL8zCJf',
+        id: 'fldGO42wh2pNBjEeH',
         name: 'Describe Developmental Delay',
         type: 'multilineText',
         format: '',
@@ -226,7 +222,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper:
+          '"If, [child\'s name] has not begun to do, [delayed activity], could you describe what he/she is doing."',
         conditionType: '!',
         parentKey: 'Developmental History',
         parentValues: ['Developmentally Delayed', 'Other'],
@@ -237,7 +234,7 @@ export default [
         },
       },
       {
-        id: 'fldTZDUFmOAvWSkU1',
+        id: 'fldDru6yAxaxpCmpt',
         name: 'Educational Status',
         type: 'select',
         format: '',
@@ -248,7 +245,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper: '"Is, [child\'s name] in school? ',
         conditionType: '',
         parentKey: 'Is the BN a minor',
         parentValues: ['Yes'],
@@ -260,7 +257,7 @@ export default [
         },
       },
       {
-        id: 'fldkv4NwTWmjYOFnQ',
+        id: 'fld4XVZp7FWlryHSi',
         name: 'Grade',
         type: 'text',
         format: '',
@@ -271,7 +268,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper: '"What grade is, [child\'s name] in?"',
         conditionType: '',
         parentKey: 'Educational Status',
         parentValues: ['In school'],
@@ -285,7 +282,7 @@ export default [
         },
       },
       {
-        id: 'fldjNAcfvyPlZvAFs',
+        id: 'fld3fro8JhpnsfCaU',
         name: 'Reason out of school',
         type: 'richText',
         format: '',
@@ -296,7 +293,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper: '"Why is, [child\'s name] not in school at this time?"',
         conditionType: '',
         parentKey: 'Educational Status',
         parentValues: ['Out of school'],
@@ -310,35 +307,7 @@ export default [
         },
       },
       {
-        id: 'fldLMv6ehGyMTW1HS',
-        name: 'Height (m)',
-        type: 'number',
-        format: 'decimal',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '(m) examples: 1.5 or 1.8 or 1.55',
-      },
-      {
-        id: 'fld8Sawij1LQWl0wV',
-        name: 'Weight (kg)',
-        type: 'number',
-        format: 'decimal',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '(kg) examples: 60 or 75 or 85',
-      },
-      {
-        id: 'fld7ntZPMpTxTYDet',
+        id: 'fldRPkbI08tzmIFJV',
         name: 'Systolic Blood Pressure (mmHg)',
         type: 'number',
         format: 'integer',
@@ -349,10 +318,11 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '(mm/Hg)',
+        helper:
+          '""Have you ever taken or had someone else take your Blood Pressure? If so, do you remember the last BP reading you had"\n\n(mm/Hg)\nBetter to create a BP intake here: <a href="https://airtable.com/shrJo1OLcSNVTTA0w" target="_blank">https://airtable.com/shrJo1OLcSNVTTA0w</a>"',
       },
       {
-        id: 'fldkfL2iDDDrlVnVd',
+        id: 'fld4HCebRmdtOFpqF',
         name: 'Diastolic Blood Pressure (mmHg)',
         type: 'number',
         format: 'integer',
@@ -363,24 +333,11 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '(mm/Hg)',
+        helper:
+          '"(mm/Hg)\nBetter to create a BP intake here: <a href="https://airtable.com/shrJo1OLcSNVTTA0w" target="_blank">https://airtable.com/shrJo1OLcSNVTTA0w</a>"',
       },
       {
-        id: 'fld45jhVgRdyZwC4C',
-        name: 'Temperature (C)',
-        type: 'number',
-        format: 'decimal',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '(℃)',
-      },
-      {
-        id: 'fldBk7VGlQ7508fE1',
+        id: 'fldlMY7zzzH7tSh9t',
         name: 'ROS - review of system',
         type: 'multiSelect',
         format: '',
@@ -391,10 +348,11 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper:
+          '"Are you currently having any complaints or issues that are new or old in the following parts of your body"\n\n[Please use the following as simple descriptions:]\nNEUROLOGIC: any issues related to taste, sight, smell, touch or hearing. Any Seizures or issues with your brain\nHEENT: any issues realted to your Head, Eyes, Ears, Nose or Throat\nCARDIOVASCULAR: any issues related to your heart or blood pressure, veins or arteries\n\nPULMONARY: any issues related to your lungs or breathing\nGASTROINTESTINAL: any vomiting or diarrhea, constipation irritable bowels or other issue passing stool\nGENITOURINARY: any issues with your genitalia/private parts; any difficulty urinating or problem with sexual performance\nEXTREMITIES: any tingling in your fingers or toes, any pain or swelling in your arms or legs, difficulty with your hands or feet\nDERMATOLOGIC: any rashes, lumps, bumps, skin color changes or skin problems\n\nMENTAL HEALTH: are you having any mental health issues\nHEMATOLOGIC: have you ever been told you are anemic\n\nREPRODUCTIVE: \nMen: any issues with erectile dysfunction, fertility or testicular issues\nFemale: any menstruation related, fertility related or ovarian issues\nENDOCRINE: have you ever been told you have an issue with your hormones\nNEOPLASTIC: are you currently receiving care for cancer\nIMMUNOLOGIC: have you ever been told you have a weakened immune system',
       },
       {
-        id: 'fldOfzN3aI9ZLSZHi',
+        id: 'fldlMY7zzzH7tSh9t',
         name: 'Is this a serious condition',
         type: 'select',
         format: '',
@@ -406,7 +364,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          "For example: brain aneurysm, or brain tumor, or not cured of encephalitis or meningitis, or epilepsy/seizure in last 5 years, or multiple sclerosis, or neuropathy, or Parkinson's, or stroke, or diagnosed w/fainting and >41, or Transient Ischemic Attack, or subdural hematoma, or traumatic brain injury.",
+          '"For example: brain aneurysm, or brain tumor, or not cured of encephalitis or meningitis, or epilepsy/seizure in last 5 years, or multiple sclerosis, or neuropathy, or Parkinson\'s, or stroke, or diagnosed w/fainting and >41, or Transient Ischemic Attack, or subdural hematoma, or traumatic brain injury."',
         conditionType: '',
         parentKey: 'ROS - review of system',
         parentValues: ['Neurologic'],
@@ -420,7 +378,7 @@ export default [
         },
       },
       {
-        id: 'fldgnb8NsgbMFjn5M',
+        id: 'fld0P2kGGZLO83pAe',
         name: 'Date of last seizure',
         type: 'date',
         format: '',
@@ -432,7 +390,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'If BN has a seizure disorder, please enter the date of LAST seizure',
+          '"Do you remember the date of the LAST seizure [member\'s name] had?"\n\n[If BN has a seizure disorder, please enter the date of LAST seizure]',
         conditionType: '',
         parentKey: 'Is this a serious condition',
         parentValues: ['Yes'],
@@ -446,7 +404,7 @@ export default [
         },
       },
       {
-        id: 'flddPepm8rJAcBDTZ',
+        id: 'fldXh5BfmajCFlFor',
         name: 'ROS: Please describe the NEUROLOGIC findings',
         type: 'multilineText',
         format: '',
@@ -471,7 +429,7 @@ export default [
         },
       },
       {
-        id: 'fldTA1xmDpmYRJhHw',
+        id: 'fldD2SJfR8W0ktjcY',
         name: 'Is this a serious HEENT condition',
         type: 'select',
         format: '',
@@ -496,7 +454,7 @@ export default [
         },
       },
       {
-        id: 'fld6CT9GWtXbAEobe',
+        id: 'fldQ4Klzacxd3oqGG',
         name: 'ROS: Please describe the HEENT findings',
         type: 'multilineText',
         format: '',
@@ -521,7 +479,7 @@ export default [
         },
       },
       {
-        id: 'fldDiXUyCODK8CwJd',
+        id: 'fldnKO6rQxdMBmyeF',
         name: 'Is this a serious CARDIOVASCULAR condition',
         type: 'select',
         format: '',
@@ -547,7 +505,7 @@ export default [
         },
       },
       {
-        id: 'fldbZSI72sdqn7wf4',
+        id: 'fldVrJU0gbNsQRyKw',
         name: 'How many heart medications is the patient taking?',
         type: 'number',
         format: 'integer',
@@ -577,7 +535,7 @@ export default [
         },
       },
       {
-        id: 'fldFF025LSYyErbro',
+        id: 'fldp7ReYZByA7bdWQ',
         name: 'ROS: Please describe the CARDIOVASCULAR findings',
         type: 'multilineText',
         format: '',
@@ -602,7 +560,7 @@ export default [
         },
       },
       {
-        id: 'fldjr8sRpDUDRBy9i',
+        id: 'fld3TZEKDmuFklAEK',
         name: 'Is this a serious PULMONARY condition',
         type: 'select',
         format: '',
@@ -612,23 +570,23 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'For example: Sarcoidosis, or COPD, or admitted to hospital /emergency room for asthma in last year, or if >41 and >3 oral steroids in last 12 months, or pulmonary nodule or lung spot, or using CPAP machine, or not sure on resolved bronchitis/pneumonia/tuberculosis, or had other.',
         conditionType: '',
         parentKey: 'ROS - review of system',
-        parentValues: ['Pulmonary'],
+        parentValues: ['Pulmonary '],
         condition: (values: any) => {
           if (Array.isArray(values['ROS - review of system'])) {
-            return ['Pulmonary'].some((r) =>
+            return ['Pulmonary '].some((r) =>
               values['ROS - review of system'].includes(r)
             )
           }
-          return ['Pulmonary'].includes(values['ROS - review of system'])
+          return ['Pulmonary '].includes(values['ROS - review of system'])
         },
       },
       {
-        id: 'fldNl5zHehLLea0m5',
+        id: 'fldxNWLAs0lNHU2Rx',
         name: 'If admitted for pulmonary reasons in the last year, what was the date',
         type: 'date',
         format: '',
@@ -642,20 +600,54 @@ export default [
         helper: '',
         conditionType: '',
         parentKey: 'Is this a serious PULMONARY condition',
-        parentValues: ['Yes'],
+        parentValues: [
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+        ],
         condition: (values: any) => {
           if (Array.isArray(values['Is this a serious PULMONARY condition'])) {
-            return ['Yes'].some((r) =>
+            return [
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+            ].some((r) =>
               values['Is this a serious PULMONARY condition'].includes(r)
             )
           }
-          return ['Yes'].includes(
-            values['Is this a serious PULMONARY condition']
-          )
+          return [
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+          ].includes(values['Is this a serious PULMONARY condition'])
         },
       },
       {
-        id: 'flddYO4hpATXpcl5S',
+        id: 'fldXqFgaDjtZSWnAk',
         name: 'ROS: Please describe the PULMONARY findings',
         type: 'multilineText',
         format: '',
@@ -680,7 +672,7 @@ export default [
         },
       },
       {
-        id: 'fldKOWzeJgBn1z2rK',
+        id: 'fldugNL7XZbpuj4Wc',
         name: 'Is this a serious GASTROINTESTINAL condition',
         type: 'select',
         format: '',
@@ -706,7 +698,7 @@ export default [
         },
       },
       {
-        id: 'fldr9MuCLLuVXR6Dd',
+        id: 'fldbBDGvZu4XqB88F',
         name: 'Date of diverticulitis flare or ulcer treatment',
         type: 'date',
         format: '',
@@ -718,27 +710,61 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'If the BN has diverticulitis or ulcers, please enter the date of last flare or treatment respectively',
+          '[If the BN has diverticulitis or ulcers, please enter the date of last flare or treatment respectively]',
         conditionType: '',
         parentKey: 'Is this a serious GASTROINTESTINAL condition',
-        parentValues: ['Yes'],
+        parentValues: [
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+        ],
         condition: (values: any) => {
           if (
             Array.isArray(
               values['Is this a serious GASTROINTESTINAL condition']
             )
           ) {
-            return ['Yes'].some((r) =>
+            return [
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+            ].some((r) =>
               values['Is this a serious GASTROINTESTINAL condition'].includes(r)
             )
           }
-          return ['Yes'].includes(
-            values['Is this a serious GASTROINTESTINAL condition']
-          )
+          return [
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+          ].includes(values['Is this a serious GASTROINTESTINAL condition'])
         },
       },
       {
-        id: 'fld36cwAODFJNj1yv',
+        id: 'fldNy3It2mfLg333X',
         name: 'ROS: Please describe the GASTROINTESTINAL findings',
         type: 'multilineText',
         format: '',
@@ -763,7 +789,7 @@ export default [
         },
       },
       {
-        id: 'fldlffIruumrS0Nib',
+        id: 'fld5H6UkIdWtlKPND',
         name: 'Is this a serious GENITOURINARY condition',
         type: 'select',
         format: '',
@@ -789,7 +815,7 @@ export default [
         },
       },
       {
-        id: 'fldFsOx5yqsxlmVwt',
+        id: 'fldpUFJYM92zO6X1V',
         name: 'ROS: Please describe the GU findings',
         type: 'multilineText',
         format: '',
@@ -814,7 +840,7 @@ export default [
         },
       },
       {
-        id: 'fldSNs8wZEix1tZnD',
+        id: 'fldCfjkpdnSzud1S5',
         name: 'Is this a serious REPRODUCTIVE condition',
         type: 'select',
         format: '',
@@ -825,7 +851,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper:
+          'In Men for Example: testicular torsion, infertility, erectile dysfunction, varicocoele\nIn Women For Example: inability to conceive, history of fibroids, ovarian cysts, endometriosis, hysterectomy, ectopic pregnancy or any other issue you may want to share',
         conditionType: '',
         parentKey: 'ROS - review of system',
         parentValues: ['Reproductive'],
@@ -839,7 +866,7 @@ export default [
         },
       },
       {
-        id: 'fldFtwNZjruAjHqc3',
+        id: 'fldpVnZSxa4CMrsHv',
         name: 'ROS: Please describe the REPRODUCTIVE findings',
         type: 'multilineText',
         format: '',
@@ -864,7 +891,7 @@ export default [
         },
       },
       {
-        id: 'flddYaS98hx8mRIbP',
+        id: 'fldXq142m07aPBKGh',
         name: 'Please describe the EXTREMITIES findings ',
         type: 'multilineText',
         format: '',
@@ -889,7 +916,7 @@ export default [
         },
       },
       {
-        id: 'fldQs69hFFb5JBG3J',
+        id: 'fldAUXlaToL7clIyb',
         name: 'ROS: Please describe the DERMATOLOGIC findings',
         type: 'multilineText',
         format: '',
@@ -914,7 +941,7 @@ export default [
         },
       },
       {
-        id: 'fld5CNYeL1fRxr0OA',
+        id: 'fldP4Ea7ZKPT0b2j2',
         name: 'ROS: Please describe the MUSCULOSKELETAL findings',
         type: 'multilineText',
         format: '',
@@ -990,7 +1017,7 @@ export default [
         },
       },
       {
-        id: 'fldCgv2EIzWPs0yIU',
+        id: 'fldmImexWiwRVKAdm',
         name: 'Is this a serious HEMATOLOGIC condition',
         type: 'select',
         format: '',
@@ -1017,7 +1044,7 @@ export default [
       },
 
       {
-        id: 'fldhy8RxRfTq4xHCX',
+        id: 'fld10Z3q5YtsxhJ7p',
         name: 'Is this a serious MENTAL HEALTH condition?',
         type: 'select',
         format: '',
@@ -1029,7 +1056,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Any history of HOSPITALIZATION for Depression, anxiety, psychosis, suicide thoughts or attempts, anorexia or bulimia, post traumatic stress disorder, obsessive compulsive disorder, bipolar disorder, attention deficit hyperactivity disorder (ADHD) or other emotional disorder; or depression not diagnosed as situational only, or memory impairment, or delusion, or eating disorder, or suicide attempt',
+          'Does the member have any history of:\nHOSPITALIZATION for Depression, anxiety, psychosis, suicide thoughts or attempts, anorexia or bulimia, post traumatic stress disorder, obsessive compulsive disorder, bipolar disorder, attention deficit hyperactivity disorder (ADHD) or other emotional disorder; or depression not diagnosed as situational only, or memory impairment, or delusion, or eating disorder, or suicide attempt',
         conditionType: '',
         parentKey: 'ROS - review of system',
         parentValues: ['Mental Health'],
@@ -1043,7 +1070,7 @@ export default [
         },
       },
       {
-        id: 'fld5Ox7rlkAYraHeC',
+        id: 'fldPgojkz3a0UUJJ4',
         name: 'ROS: Please describe the MENTAL HEALTH findings',
         type: 'multilineText',
         format: '',
@@ -1068,7 +1095,7 @@ export default [
         },
       },
       {
-        id: 'fld1qpZQdWyi4Qm29',
+        id: 'fldLSgbJrF8kxAoxB',
         name: 'Is this a serious ENDOCRINE condition?',
         type: 'select',
         format: '',
@@ -1094,7 +1121,7 @@ export default [
         },
       },
       {
-        id: 'fld8ETKxIqexhOYd7',
+        id: 'fldS6KWqW9OzKy0Iz',
         name: 'ROS: Please describe the ENDOCRINE findings',
         type: 'multilineText',
         format: '',
@@ -1119,7 +1146,7 @@ export default [
         },
       },
       {
-        id: 'fldWiQotekBZosE5l',
+        id: 'fldGKHAms3b1RcGAN',
         name: 'Is this a serious NEOPLASTIC condition?',
         type: 'select',
         format: '',
@@ -1145,7 +1172,7 @@ export default [
         },
       },
       {
-        id: 'fldxTMHZ5QugXQZrC',
+        id: 'fldhlDTSjz4iqA1W4',
         name: 'ROS: Please describe the NEOPLASTIC findings',
         type: 'multilineText',
         format: '',
@@ -1170,7 +1197,7 @@ export default [
         },
       },
       {
-        id: 'fldZm7I5pu3WIb5hK',
+        id: 'fldJOYUYDdDYbV7Mc',
         name: 'Please describe the IMMUNOLOGIC findings',
         type: 'multilineText',
         format: '',
@@ -1195,7 +1222,7 @@ export default [
         },
       },
       {
-        id: 'fldNXZgrcKF83Z2Hm',
+        id: 'fldxpQskqtfawJ4cO',
         name: 'Please upload any relevant images or files here',
         type: 'multipleAttachment',
         format: '',
@@ -1209,7 +1236,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldFGqFmCiVi0yWHv',
+        id: 'fldp8hRfQ1vktiYcX',
         name: 'Physical Exam Findings',
         type: 'multiSelect',
         format: '',
@@ -1221,9 +1248,20 @@ export default [
         foreignTableId: null,
         required: true,
         helper: '',
+        conditionType: '',
+        parentKey: 'Interaction type',
+        parentValues: ['In-person'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Interaction type'])) {
+            return ['In-person'].some((r) =>
+              values['Interaction type'].includes(r)
+            )
+          }
+          return ['In-person'].includes(values['Interaction type'])
+        },
       },
       {
-        id: 'fldoRQ8EZ0b4HzMUN',
+        id: 'fld8jHkxdJL6ajOpf',
         name: 'PE: Please select the system(s) with a relevant finding',
         type: 'multiSelect',
         format: '',
@@ -1251,7 +1289,7 @@ export default [
         },
       },
       {
-        id: 'fld58BUcmnC1NaVFi',
+        id: 'fldPAs65A6c3gUXaK',
         name: 'PE: Please describe the NEUROLOGIC findings',
         type: 'multilineText',
         format: '',
@@ -1284,7 +1322,7 @@ export default [
         },
       },
       {
-        id: 'fldKUXFiPOkSuzqtp',
+        id: 'fldumORb3xUUXjsYR',
         name: 'PE: Please describe the NECK findings',
         type: 'multilineText',
         format: '',
@@ -1317,7 +1355,7 @@ export default [
         },
       },
       {
-        id: 'fldRbBeBIasG581TG',
+        id: 'fldBDsquWT2IyS3o8',
         name: 'PE: Please describe the CARDIOVASCULAR findings',
         type: 'multilineText',
         format: '',
@@ -1350,7 +1388,7 @@ export default [
         },
       },
       {
-        id: 'fldJdNQ2I3RjvqHFI',
+        id: 'fldtFE2VWMrlYaJaa',
         name: 'PE: Please describe the PULMONARY findings',
         type: 'multilineText',
         format: '',
@@ -1383,7 +1421,7 @@ export default [
         },
       },
       {
-        id: 'fldvpjQRvZyuqkOdJ',
+        id: 'fldfRa2KJI8wT4QIb',
         name: 'PE: Please describe the ABDOMINAL findings',
         type: 'multilineText',
         format: '',
@@ -1416,7 +1454,7 @@ export default [
         },
       },
       {
-        id: 'fldg6a1nHKudUwfxG',
+        id: 'fld0y1dgVt4fngh28',
         name: 'PE: Please describe the GU findings',
         type: 'multilineText',
         format: '',
@@ -1449,7 +1487,7 @@ export default [
         },
       },
       {
-        id: 'fld34k85t1MX3youe',
+        id: 'fldNwbkYHKmZwiqZG',
         name: 'PE: Please describe the EXTREMITIES findings',
         type: 'multilineText',
         format: '',
@@ -1482,7 +1520,7 @@ export default [
         },
       },
       {
-        id: 'fld7caw8KrvI7RRz7',
+        id: 'fldRE1I1Ya5KABT4z',
         name: 'PE: Please describe the DERMATOLOGIC findings',
         type: 'multilineText',
         format: '',
@@ -1515,7 +1553,7 @@ export default [
         },
       },
       {
-        id: 'fld0ckzV84xo4verE',
+        id: 'fldKEbLOmN7qxfgW6',
         name: 'PE: Please describe the OTHER finding',
         type: 'multilineText',
         format: '',
@@ -1548,7 +1586,7 @@ export default [
         },
       },
       {
-        id: 'fldkaDuaKr46poByd',
+        id: 'fld4CuG3YaE8S8D3F',
         name: 'Does the Member have a condition',
         type: 'select',
         format: '',
@@ -1563,7 +1601,7 @@ export default [
           'Do you currently have, or have you ever been told you have, a chronic condition? That is any condition that has been present for more than 3 months. Examples of chronic conditions are: high blood pressure, diabetes, arthritis, asthma or high cholesterol. Also add any other chronic conditions like anemia, gout etc and acute condition or issue that member has had or is suffering from at that moment. NOTE: If you identify condition(s) please add the condition using a form in the guided workflow',
       },
       {
-        id: 'fldgwxiMqSEspuQ3D',
+        id: 'fld0YouFEBeuSeSy5',
         name: 'Is the Member @ risk of a condition?',
         type: 'select',
         format: '',
@@ -1578,7 +1616,7 @@ export default [
           'Risk factors include a family history, prior abnormal readings, smoking, eating habits etc.\n\nIf the response is yes, click here: \n<a href="https://airtable.com/shreJWFrTNVXs6RKW" target="_blank">https://airtable.com/shreJWFrTNVXs6RKW</a> ',
       },
       {
-        id: 'fldmqQ1MYCDwif8eH',
+        id: 'fld6SHdFcldyLZaJ9',
         name: 'Does the BN have their own machine or the ability to purchase one?',
         type: 'select',
         format: '',
@@ -1592,8 +1630,8 @@ export default [
         helper: '',
       },
       {
-        id: 'fldSQWxXbDmFJH9A4',
-        name: 'LMP',
+        id: 'fldCiNJQpmWHcrb5w',
+        name: 'LMP date',
         type: 'date',
         format: '',
         isDateTime: false,
@@ -1604,9 +1642,20 @@ export default [
         foreignTableId: null,
         required: false,
         helper: 'For Minors, only complete if menses has begun',
+        conditionType: '',
+        parentKey: 'LMP (Last Menstrual Period)',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['LMP (Last Menstrual Period)'])) {
+            return ['Yes'].some((r) =>
+              values['LMP (Last Menstrual Period)'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['LMP (Last Menstrual Period)'])
+        },
       },
       {
-        id: 'fld6aHecIplpjCLoE',
+        id: 'fldQCyq5W8VrMmNT6',
         name: 'Family Planning',
         type: 'select',
         format: '',
@@ -1629,7 +1678,7 @@ export default [
         },
       },
       {
-        id: 'fldviyn9Cj0WF935V',
+        id: 'fldfKpz2Q2AY8T5An',
         name: 'Family Planning Description',
         type: 'multilineText',
         format: '',
@@ -1652,7 +1701,7 @@ export default [
         },
       },
       {
-        id: 'fldXlJo4VWfd4YC0m',
+        id: 'fldE685VzeA2HUJGW',
         name: 'Activity?',
         type: 'select',
         format: '',
@@ -1667,7 +1716,7 @@ export default [
           'Ask if the member is doing any activity. If Yes:describe it in the next field, if no: "That\'s okay, let\'s find something you will enjoy and start doing it."',
       },
       {
-        id: 'fldrQojT6cIdRa81C',
+        id: 'fldbifvMkVifkUaw4',
         name: 'Activity Description',
         type: 'text',
         format: '',
@@ -1691,7 +1740,7 @@ export default [
         },
       },
       {
-        id: 'fldcUfft5RjWBcOaq',
+        id: 'fldWm6rmjATY4WQFS',
         name: 'Access to a gym',
         type: 'select',
         format: '',
@@ -1714,7 +1763,7 @@ export default [
         },
       },
       {
-        id: 'fldMYj4XvkcwbMJLl',
+        id: 'fldwqagQJ3MyEwLgN',
         name: 'Transportation Options',
         type: 'select',
         format: '',
@@ -1737,32 +1786,7 @@ export default [
         },
       },
       {
-        id: 'fldvCvTecxsVNlfWq',
-        name: 'Other Transportation Options',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Transportation Options',
-        parentValues: ['Other'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Transportation Options'])) {
-            return ['Other'].some((r) =>
-              values['Transportation Options'].includes(r)
-            )
-          }
-          return ['Other'].includes(values['Transportation Options'])
-        },
-      },
-      {
-        id: 'fldp2Qn1q4qLyLOGm',
+        id: 'fld9uHzUEN0N1vQbO',
         name: 'Social History',
         type: 'multiSelect',
         format: '',
@@ -1773,7 +1797,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper:
+          '"How much a person smokes, drinks or uses recreational drugs can have an important impact on health. That is why we ask. There is no judgement, only concern for your well-being"',
         conditionType: '',
         parentKey: 'Is the BN a minor',
         parentValues: ['No'],
@@ -1785,7 +1810,7 @@ export default [
         },
       },
       {
-        id: 'fldsh2pRG3HvM10Zo',
+        id: 'fldcJTBKUMhxfL2uQ',
         name: 'Tobacco',
         type: 'number',
         format: 'integer',
@@ -1808,7 +1833,7 @@ export default [
         },
       },
       {
-        id: 'fldz4MKTXrHkz9gz6',
+        id: 'fldjwDWMbahm2Ti4y',
         name: 'Last smoking date',
         type: 'date',
         format: '',
@@ -1831,7 +1856,7 @@ export default [
         },
       },
       {
-        id: 'fldsC1ke1KWLVUH3H',
+        id: 'fldc4Sw7ftwNoEJy9',
         name: 'Alcohol',
         type: 'text',
         format: '',
@@ -1854,7 +1879,7 @@ export default [
         },
       },
       {
-        id: 'fldVNBKmr4OQtMLAi',
+        id: 'fldFfsWfFNoSWwN5K',
         name: 'Recreational Drugs',
         type: 'multilineText',
         format: '',
@@ -1879,7 +1904,7 @@ export default [
         },
       },
       {
-        id: 'fldxiSVCmtx75hqrp',
+        id: 'fldhKJ7vAc79y1sWR',
         name: 'Does the beneficiary require Ancillary services?',
         type: 'select',
         format: '',
@@ -1890,10 +1915,11 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: '',
+        helper:
+          'HN makes a determination regarding the need for additional services on the basis of the responses to prior questions',
       },
       {
-        id: 'fldjCr0yS7zL8yHAy',
+        id: 'fld34icr6Q9NBiJ50',
         name: 'Ancillary Services',
         type: 'multiSelect',
         format: '',
@@ -1927,7 +1953,7 @@ export default [
         },
       },
       {
-        id: 'fldaWuIHrhPElb5FM',
+        id: 'fldUolUAF0pGOV7ae',
         name: 'Please jot down any notes you would like to keep in the record',
         type: 'richText',
         format: '',
