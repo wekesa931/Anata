@@ -82,6 +82,7 @@ export function CustomDot(props: Props) {
         r={getDisplaySize().r}
         fill={color}
         stroke={isOneMonth ? stroke : ''}
+        style={{ colorInterpolation: 'linearRGB' }}
       />
       {!isOneMonth && (
         <text
@@ -90,7 +91,11 @@ export function CustomDot(props: Props) {
           fill={textColor}
           textAnchor="middle"
           dy=".3em"
-          style={{ fontSize: getDisplaySize().fontSize }}
+          style={{
+            fontSize: getDisplaySize().fontSize,
+            fontWeight: 500,
+            colorInterpolation: 'linearRGB',
+          }}
         >
           {value}
         </text>

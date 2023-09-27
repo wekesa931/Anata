@@ -137,7 +137,7 @@ export const transformAggregateMeasurements = (
         ...item,
         measurements,
         timestamp: dayjs(item?.endDate).valueOf(),
-        mean: parseInt(item?.mean || 0),
+        mean: parseFloat(item?.mean || 0).toFixed(2),
       }
     }
   )
@@ -178,7 +178,7 @@ const parseIndividualBsItemMeasurements = (item: any) => {
     ...item,
     measurements,
     timestamp: dayjs(item?.endDate).valueOf(),
-    mean: parseInt(item?.mean || 0),
+    mean: parseFloat(item?.mean || 0).toFixed(2),
   }
 }
 

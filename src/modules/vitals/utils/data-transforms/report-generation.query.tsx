@@ -11,7 +11,7 @@ export const transformMedicalCampData = (data: any): CampMetric[] => {
   let metrics: CampMetric[] = Object.entries(data).map(
     ([k, v]: [k: string, v: any]) => {
       let value = v?.healthMetric?.mean
-      value = isNaN(value) ? value : parseInt(value)
+      value = isNaN(value) ? value : toFixed(value)
 
       const normalRange = v?.normalRange
       const name = v?.healthMetricName || normalRange?.healthMetric?.name || k
@@ -78,6 +78,10 @@ const formatTime = (time: string) => {
   return dayjs(time).format('DD MMM YYYY')
 }
 
+const toFixed = (value: any) => {
+  return parseFloat(value).toFixed(2)
+}
+
 const humanizeBp = (bp: any) => {
   const systolic = bp?.systolic
   const diastolic = bp?.diastolic
@@ -114,7 +118,7 @@ const humanizeVitals = (vitals: any) => {
       formattedTime && weight ? `${weight} on (${formattedTime})` : '',
     'Height (kg)':
       formattedTime && height ? `${height} on (${formattedTime})` : '',
-    BMI: formattedTime && bmi ? `${parseInt(bmi)} on (${formattedTime})` : '',
+    BMI: formattedTime && bmi ? `${toFixed(bmi)} on (${formattedTime})` : '',
     RR:
       formattedTime && respiratoryRate
         ? `${respiratoryRate} on (${formattedTime})`
@@ -153,7 +157,7 @@ const humanizeBs = (bs: any) => {
   return {
     'RBS (mmol/l)':
       formattedTime && randomBloodGlucose
-        ? `${parseInt(randomBloodGlucose)} on (${formattedTime})`
+        ? `${toFixed(randomBloodGlucose)} on (${formattedTime})`
         : '',
     'FBS (mmol/l)':
       formattedTime && fastingBloodGlucose

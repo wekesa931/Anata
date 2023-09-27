@@ -95,7 +95,13 @@ export default function LineSeriesChat<T>({
           />
           <Legend iconType="plainline" />
           {referenceRanges.map(({ minimum, maximum, color }, index) => (
-            <ReferenceArea key={index} y1={minimum} y2={maximum} fill={color} />
+            <ReferenceArea
+              key={index}
+              y1={minimum}
+              y2={maximum}
+              fill={color}
+              fillOpacity={1}
+            />
           ))}
           {yAxisDataKeys.map(({ key, name, color }, index) => (
             <Line
