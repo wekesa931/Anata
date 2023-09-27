@@ -256,6 +256,7 @@ function Table({
                     backgroundColor="whitesmoke"
                     padding="8px"
                     borderRadius="4px"
+                    style={{ wordWrap: 'break-word' }}
                   >
                     {typeof clickedRow[info] === 'object'
                       ? /* eslint-disable no-useless-escape */
