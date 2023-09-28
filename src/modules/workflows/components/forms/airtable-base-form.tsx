@@ -41,7 +41,7 @@ function AirtableBasedForm({
     reset,
   } = useForm({
     resolver: yupResolver(validationObject),
-    defaultValues: formData || {},
+    defaultValues: form?.data || {},
   })
 
   useEffect(() => {
