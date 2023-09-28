@@ -159,165 +159,8 @@ export default [
         helper: '',
       },
       {
-        id: 'fldiCb2egrjuvp9wF',
-        name: 'Have you ever had surgery',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldlMY7zzzH7tSh9t',
-        name: 'ROS - review of system',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '"Are you currently having any complaints or issues that are new or old in the following parts of your body"\n\n[Please use the following as simple descriptions:]\nNEUROLOGIC: any issues related to taste, sight, smell, touch or hearing. Any Seizures or issues with your brain\nHEENT: any issues realted to your Head, Eyes, Ears, Nose or Throat\nCARDIOVASCULAR: any issues related to your heart or blood pressure, veins or arteries\n\nPULMONARY: any issues related to your lungs or breathing\nGASTROINTESTINAL: any vomiting or diarrhea, constipation irritable bowels or other issue passing stool\nGENITOURINARY: any issues with your genitalia/private parts; any difficulty urinating or problem with sexual performance\nEXTREMITIES: any tingling in your fingers or toes, any pain or swelling in your arms or legs, difficulty with your hands or feet\nDERMATOLOGIC: any rashes, lumps, bumps, skin color changes or skin problems\n\nMENTAL HEALTH: are you having any mental health issues\nHEMATOLOGIC: have you ever been told you are anemic\n\nREPRODUCTIVE: \nMen: any issues with erectile dysfunction, fertility or testicular issues\nFemale: any menstruation related, fertility related or ovarian issues\nENDOCRINE: have you ever been told you have an issue with your hormones\nNEOPLASTIC: are you currently receiving care for cancer\nIMMUNOLOGIC: have you ever been told you have a weakened immune system',
-      },
-      {
-        id: 'fldE685VzeA2HUJGW',
-        name: 'Activity?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Ask if the member is doing any activity. If Yes:describe it in the next field, if no: "That\'s okay, let\'s find something you will enjoy and start doing it."',
-      },
-      {
-        id: 'fldbifvMkVifkUaw4',
-        name: 'Activity Description',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '"What kind of Physical Activity do you like to do? Do you like to walk, run, cycle, swim, go to the gym, play football, rugby or any other activity?"\n\nIf YES:\n"How often do you do [activity from above] and typically, how long do you do it for in any given session?',
-        conditionType: '',
-        parentKey: 'Activity?',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Activity?'])) {
-            return ['Yes'].some((r) => values['Activity?'].includes(r))
-          }
-          return ['Yes'].includes(values['Activity?'])
-        },
-      },
-      {
-        id: 'fldgw07mhMQBKXAhv',
-        name: 'On average how many hours of uninterrupted sleep do you get every night?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'Please fill in the numbers of hours of sleep between 0 to 10. Quality of sleep is uninterrupted 7 - 9 hours of sleep where one wakes up feeling refreshed and rejuvenated (recommended 8 hours) if anyone is sleeping less than 5 hours of sleep, it is important to refer for MH Counseling',
-      },
-      {
-        id: 'fldjyyHxmid8lVkJs',
-        name: 'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'NOTE: A " yes " response to use of alcohol or substance  is a red flag that requires referral for MHC. \n',
-      },
-      {
-        id: 'fld4CuG3YaE8S8D3F',
-        name: 'Does the Member have a condition',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'Do you currently have, or have you ever been told you have, a chronic condition? That is any condition that has been present for more than 3 months. Examples of chronic conditions are: high blood pressure, diabetes, arthritis, asthma or high cholesterol. Also add any other chronic conditions like anemia, gout etc and acute condition or issue that member has had or is suffering from at that moment. NOTE: If you identify condition(s) please add the condition using a form in the guided workflow',
-      },
-      {
-        id: 'fld0YouFEBeuSeSy5',
-        name: 'Is the Member @ risk of a condition?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Risk factors include a family history, prior abnormal readings, smoking, eating habits etc.\n\nIf the response is yes, click here: \n<a href="https://airtable.com/shreJWFrTNVXs6RKW" target="_blank">https://airtable.com/shreJWFrTNVXs6RKW</a> ',
-      },
-      {
-        id: 'fldh6jX8FztBouh0T',
-        name: 'If you could work on one aspect of your health?',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'IF NOT PRE-FILLED:\n"Have you ever thought about personal health goals? \nDo you have any?\nIs there any aspect of your health that you’d like to work on or work towards?  \nIt’s okay if you don’t have an answer right now. If something comes to mind, you can always reach out to me and we can talk about how I can help."\n\nIF PRE-FILLED:\n"It is great that you want to work on [insert health goal]. \nHave you already started to work towards, [insert health goal]?\nWere you able to achieve the goal? \nWhat was it like trying to reach that goal?"\n\nIF SUCCEEDED: \n"Do you have any new goals you would like to achieve now?\nWonderful, let’s work together on that"\n\nIF FAILED:\n"Would you like to keep trying with my support?"\n\nIf it is a nutritional goal, tell the member you will set up an appointment with the nutritionist.\nIf fitness, sell the virtues of the Nike app if non-gym type. If gym type, find out what they would like to achieve and walk them through how you will support them to achieve the goal. ',
-      },
-      {
-        id: 'fld0wKceefHGv9745',
-        name: 'Does the member have a Primary care provider?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldAxV875t3dDatQF',
-        name: 'Other health goals',
+        id: 'fldadJyNgGl2RNjXj',
+        name: 'Do you have any significant past medical history not listed above?',
         type: 'text',
         format: '',
         isDateTime: false,
@@ -329,109 +172,14 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'If you could work on one aspect of your health?',
-        parentValues: ['Other'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['If you could work on one aspect of your health?']
-            )
-          ) {
-            return ['Other'].some((r) =>
-              values[
-                'If you could work on one aspect of your health?'
-              ].includes(r)
-            )
-          }
-          return ['Other'].includes(
-            values['If you could work on one aspect of your health?']
-          )
-        },
-      },
-      {
-        id: 'fldItCS0HwbcDsXC6',
-        name: 'Does the BN have their own machine or the ability to purchase one? 2',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldyS5Iub9fZ22VM5',
-        name: 'Conditions master list',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldaCFsRAzqbXEkSY',
-        unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tbl9cTcuXOSV2tc4g',
-        required: false,
-        helper: '',
-        parentKey: 'Does the Member have a condition',
+        parentKey: 'PMH',
         parentValues: ['Yes'],
         condition: (values: any) => {
-          if (Array.isArray(values['Does the Member have a condition'])) {
-            return ['Yes'].some((r) =>
-              values['Does the Member have a condition'].includes(r)
-            )
+          if (Array.isArray(values.PMH)) {
+            return ['Yes'].some((r) => values.PMH.includes(r))
           }
-          return ['Yes'].includes(values['Does the Member have a condition'])
+          return ['Yes'].includes(values.PMH)
         },
-      },
-      {
-        id: 'fldNA1izDqnRAwmZ4',
-        name: 'Primary Doctor',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldJGyoauJpFuBdl8',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblKoFLuzxN9g13xT',
-        required: true,
-        helper: "Fill in member's primary/preferred doctor",
-        conditionType: '',
-        parentKey: 'Does the member have a Primary care provider?',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Does the member have a Primary care provider?']
-            )
-          ) {
-            return ['Yes'].some((r) =>
-              values['Does the member have a Primary care provider?'].includes(
-                r
-              )
-            )
-          }
-          return ['Yes'].includes(
-            values['Does the member have a Primary care provider?']
-          )
-        },
-      },
-      {
-        id: 'fldrxucBNrw5b0sah',
-        name: 'HIF updates?',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
       },
       {
         id: 'fldSJRkJx2YbMh8qU',
@@ -576,6 +324,31 @@ export default [
         },
       },
       {
+        id: 'fldL9jxSd3Rp08ltQ',
+        name: 'Reason out of school',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '"Why is, [child\'s name] not in school at this time?"',
+        conditionType: '',
+        parentKey: 'Educational Status',
+        parentValues: ['Out of school'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Educational Status'])) {
+            return ['Out of school'].some((r) =>
+              values['Educational Status'].includes(r)
+            )
+          }
+          return ['Out of school'].includes(values['Educational Status'])
+        },
+      },
+      {
         id: 'fld3fro8JhpnsfCaU',
         name: 'Reason out of school',
         type: 'richText',
@@ -601,38 +374,8 @@ export default [
         },
       },
       {
-        id: 'fldRPkbI08tzmIFJV',
-        name: 'Systolic Blood Pressure (mmHg)',
-        type: 'number',
-        format: 'integer',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '""Have you ever taken or had someone else take your Blood Pressure? If so, do you remember the last BP reading you had"\n\n(mm/Hg)\nBetter to create a BP intake here: <a href="https://airtable.com/shrJo1OLcSNVTTA0w" target="_blank">https://airtable.com/shrJo1OLcSNVTTA0w</a>"',
-      },
-      {
-        id: 'fld4HCebRmdtOFpqF',
-        name: 'Diastolic Blood Pressure (mmHg)',
-        type: 'number',
-        format: 'integer',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '"(mm/Hg)\nBetter to create a BP intake here: <a href="https://airtable.com/shrJo1OLcSNVTTA0w" target="_blank">https://airtable.com/shrJo1OLcSNVTTA0w</a>"',
-      },
-      {
-        id: 'fldlwX8fw0NiYPCei',
-        name: 'LMP (Last Menstrual Period)',
+        id: 'fldiCb2egrjuvp9wF',
+        name: 'Have you ever had surgery',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -643,18 +386,49 @@ export default [
         foreignTableId: null,
         required: true,
         helper: '',
+      },
+      {
+        id: 'fldgx2GVBMeyYC4h5',
+        name: 'Please describe any surgeries you may have had?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
         conditionType: '',
-        parentKey: 'Gender',
-        parentValues: ['Female'],
+        parentKey: 'Have you ever had surgery',
+        parentValues: ['Yes'],
         condition: (values: any) => {
-          if (Array.isArray(values.Gender)) {
-            return ['Female'].some((r) => values.Gender.includes(r))
+          if (Array.isArray(values['Have you ever had surgery'])) {
+            return ['Yes'].some((r) =>
+              values['Have you ever had surgery'].includes(r)
+            )
           }
-          return ['Female'].includes(values.Gender)
+          return ['Yes'].includes(values['Have you ever had surgery'])
         },
       },
       {
         id: 'fldlMY7zzzH7tSh9t',
+        name: 'ROS - review of system',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          '"Are you currently having any complaints or issues that are new or old in the following parts of your body"\n\n[Please use the following as simple descriptions:]\nNEUROLOGIC: any issues related to taste, sight, smell, touch or hearing. Any Seizures or issues with your brain\nHEENT: any issues realted to your Head, Eyes, Ears, Nose or Throat\nCARDIOVASCULAR: any issues related to your heart or blood pressure, veins or arteries\n\nPULMONARY: any issues related to your lungs or breathing\nGASTROINTESTINAL: any vomiting or diarrhea, constipation irritable bowels or other issue passing stool\nGENITOURINARY: any issues with your genitalia/private parts; any difficulty urinating or problem with sexual performance\nEXTREMITIES: any tingling in your fingers or toes, any pain or swelling in your arms or legs, difficulty with your hands or feet\nDERMATOLOGIC: any rashes, lumps, bumps, skin color changes or skin problems\n\nMENTAL HEALTH: are you having any mental health issues\nHEMATOLOGIC: have you ever been told you are anemic\n\nREPRODUCTIVE: \nMen: any issues with erectile dysfunction, fertility or testicular issues\nFemale: any menstruation related, fertility related or ovarian issues\nENDOCRINE: have you ever been told you have an issue with your hormones\nNEOPLASTIC: are you currently receiving care for cancer\nIMMUNOLOGIC: have you ever been told you have a weakened immune system',
+      },
+      {
+        id: 'fldyHqZWorJ1eC1cK',
         name: 'Is this a serious condition',
         type: 'select',
         format: '',
@@ -695,14 +469,48 @@ export default [
           '"Do you remember the date of the LAST seizure [member\'s name] had?"\n\n[If BN has a seizure disorder, please enter the date of LAST seizure]',
         conditionType: '',
         parentKey: 'Is this a serious condition',
-        parentValues: ['Yes'],
+        parentValues: [
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+        ],
         condition: (values: any) => {
           if (Array.isArray(values['Is this a serious condition'])) {
-            return ['Yes'].some((r) =>
-              values['Is this a serious condition'].includes(r)
-            )
+            return [
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+            ].some((r) => values['Is this a serious condition'].includes(r))
           }
-          return ['Yes'].includes(values['Is this a serious condition'])
+          return [
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+          ].includes(values['Is this a serious condition'])
         },
       },
       {
@@ -796,14 +604,14 @@ export default [
           'For example: heart attack, or atrial fibrilation/flutter, or abnormal heartbeat caused fainting, or taking >2 heart meds, or been advised to test heart periodically with echocardiogram, or advised to have surgery for heart murmur, or doctor said more than 1 episode of pericarditis, or seen doctor in last 6 months for pericarditis, or other.',
         conditionType: '',
         parentKey: 'ROS - review of system',
-        parentValues: ['Cardiovascular'],
+        parentValues: ['Cardiovascular '],
         condition: (values: any) => {
           if (Array.isArray(values['ROS - review of system'])) {
-            return ['Cardiovascular'].some((r) =>
+            return ['Cardiovascular '].some((r) =>
               values['ROS - review of system'].includes(r)
             )
           }
-          return ['Cardiovascular'].includes(values['ROS - review of system'])
+          return ['Cardiovascular '].includes(values['ROS - review of system'])
         },
       },
       {
@@ -822,18 +630,52 @@ export default [
           'Please click here to enter the medications: <a href="https://airtable.com/shrH0jDDogdH2ySWr" target="_blank">https://airtable.com/shrH0jDDogdH2ySWr</a> ',
         conditionType: '',
         parentKey: 'Is this a serious CARDIOVASCULAR condition',
-        parentValues: ['Yes'],
+        parentValues: [
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+        ],
         condition: (values: any) => {
           if (
             Array.isArray(values['Is this a serious CARDIOVASCULAR condition'])
           ) {
-            return ['Yes'].some((r) =>
+            return [
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+            ].some((r) =>
               values['Is this a serious CARDIOVASCULAR condition'].includes(r)
             )
           }
-          return ['Yes'].includes(
-            values['Is this a serious CARDIOVASCULAR condition']
-          )
+          return [
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+          ].includes(values['Is this a serious CARDIOVASCULAR condition'])
         },
       },
       {
@@ -851,14 +693,14 @@ export default [
         helper: '',
         conditionType: '',
         parentKey: 'ROS - review of system',
-        parentValues: ['Cardiovascular'],
+        parentValues: ['Cardiovascular '],
         condition: (values: any) => {
           if (Array.isArray(values['ROS - review of system'])) {
-            return ['Cardiovascular'].some((r) =>
+            return ['Cardiovascular '].some((r) =>
               values['ROS - review of system'].includes(r)
             )
           }
-          return ['Cardiovascular'].includes(values['ROS - review of system'])
+          return ['Cardiovascular '].includes(values['ROS - review of system'])
         },
       },
       {
@@ -872,7 +714,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper:
           'For example: Sarcoidosis, or COPD, or admitted to hospital /emergency room for asthma in last year, or if >41 and >3 oral steroids in last 12 months, or pulmonary nodule or lung spot, or using CPAP machine, or not sure on resolved bronchitis/pneumonia/tuberculosis, or had other.',
         conditionType: '',
@@ -963,14 +805,14 @@ export default [
         helper: '',
         conditionType: '',
         parentKey: 'ROS - review of system',
-        parentValues: ['Pulmonary'],
+        parentValues: ['Pulmonary '],
         condition: (values: any) => {
           if (Array.isArray(values['ROS - review of system'])) {
-            return ['Pulmonary'].some((r) =>
+            return ['Pulmonary '].some((r) =>
               values['ROS - review of system'].includes(r)
             )
           }
-          return ['Pulmonary'].includes(values['ROS - review of system'])
+          return ['Pulmonary '].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1106,14 +948,14 @@ export default [
           'For example: Glomerulonephritis or nephropathy, or kidney obstruction/infection due to stones, or surgery for stones, or remaining stones, or kidney failure, or dialysis, or urological abnormalities, or Proteinuria, or multiple renal cysts, or other/not sure.',
         conditionType: '',
         parentKey: 'ROS - review of system',
-        parentValues: ['Genitourinary'],
+        parentValues: ['Genitourinary '],
         condition: (values: any) => {
           if (Array.isArray(values['ROS - review of system'])) {
-            return ['Genitourinary'].some((r) =>
+            return ['Genitourinary '].some((r) =>
               values['ROS - review of system'].includes(r)
             )
           }
-          return ['Genitourinary'].includes(values['ROS - review of system'])
+          return ['Genitourinary '].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1131,14 +973,14 @@ export default [
         helper: '',
         conditionType: '',
         parentKey: 'ROS - review of system',
-        parentValues: ['Genitourinary'],
+        parentValues: ['Genitourinary '],
         condition: (values: any) => {
           if (Array.isArray(values['ROS - review of system'])) {
-            return ['Genitourinary'].some((r) =>
+            return ['Genitourinary '].some((r) =>
               values['ROS - review of system'].includes(r)
             )
           }
-          return ['Genitourinary'].includes(values['ROS - review of system'])
+          return ['Genitourinary '].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1207,14 +1049,14 @@ export default [
         helper: '',
         conditionType: '',
         parentKey: 'ROS - review of system',
-        parentValues: ['Extremities'],
+        parentValues: ['Extremities '],
         condition: (values: any) => {
           if (Array.isArray(values['ROS - review of system'])) {
-            return ['Extremities'].some((r) =>
+            return ['Extremities '].some((r) =>
               values['ROS - review of system'].includes(r)
             )
           }
-          return ['Extremities'].includes(values['ROS - review of system'])
+          return ['Extremities '].includes(values['ROS - review of system'])
         },
       },
       {
@@ -1243,6 +1085,32 @@ export default [
         },
       },
       {
+        id: 'fldj4yOSHLdklwZ8P',
+        name: 'Is this a serious MUSCULOSKELETAL condition',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'For example: is the member taking arthritis medication, or surgery for scoliosis, or other. ',
+        conditionType: '',
+        parentKey: 'ROS - review of system',
+        parentValues: ['Musculoskeletal'],
+        condition: (values: any) => {
+          if (Array.isArray(values['ROS - review of system'])) {
+            return ['Musculoskeletal'].some((r) =>
+              values['ROS - review of system'].includes(r)
+            )
+          }
+          return ['Musculoskeletal'].includes(values['ROS - review of system'])
+        },
+      },
+      {
         id: 'fldP4Ea7ZKPT0b2j2',
         name: 'ROS: Please describe the MUSCULOSKELETAL findings',
         type: 'multilineText',
@@ -1267,57 +1135,7 @@ export default [
           return ['Musculoskeletal'].includes(values['ROS - review of system'])
         },
       },
-      {
-        id: 'fldzCHCZt2DiSMXDn',
-        name: 'Is this a serious MUSCULOSKELETAL condition',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'For example: taking arthritis medication, or surgery for scoliosis, or other. ',
-        conditionType: '',
-        parentKey: 'ROS - review of system',
-        parentValues: ['Musculoskeletal'],
-        condition: (values: any) => {
-          if (Array.isArray(values['ROS - review of system'])) {
-            return ['Musculoskeletal'].some((r) =>
-              values['ROS - review of system'].includes(r)
-            )
-          }
-          return ['Musculoskeletal'].includes(values['ROS - review of system'])
-        },
-      },
-      {
-        id: 'fldNlaWGGvUsAwePS',
-        name: 'ROS: Please describe the HEMATOLOGY findings',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'ROS - review of system',
-        parentValues: ['Hematology'],
-        condition: (values: any) => {
-          if (Array.isArray(values['ROS - review of system'])) {
-            return ['Hematology'].some((r) =>
-              values['ROS - review of system'].includes(r)
-            )
-          }
-          return ['Hematology'].includes(values['ROS - review of system'])
-        },
-      },
+
       {
         id: 'fldmImexWiwRVKAdm',
         name: 'Is this a serious HEMATOLOGIC condition',
@@ -1334,17 +1152,41 @@ export default [
           'For example: \nHemolytic or other anemia, iron deficiency, chronic bleeding, problems with blood clotting, easy or excessive bleeding, coagulation defects(hemophilia), \nenlarged spleen (hypersplenism), low platelet count (thrombocytopenia) or ITP (idiopathic thrombocytopenic purpura)',
         conditionType: '',
         parentKey: 'ROS - review of system',
-        parentValues: ['Hematology'],
+        parentValues: ['Hematologic'],
         condition: (values: any) => {
           if (Array.isArray(values['ROS - review of system'])) {
-            return ['Hematology'].some((r) =>
+            return ['Hematologic'].some((r) =>
               values['ROS - review of system'].includes(r)
             )
           }
-          return ['Hematology'].includes(values['ROS - review of system'])
+          return ['Hematologic'].includes(values['ROS - review of system'])
         },
       },
-
+      {
+        id: 'fldxN18zUeuu3ggkk',
+        name: 'ROS: Please describe the HEMATOLOGY findings',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'ROS - review of system',
+        parentValues: ['Hematologic'],
+        condition: (values: any) => {
+          if (Array.isArray(values['ROS - review of system'])) {
+            return ['Hematologic'].some((r) =>
+              values['ROS - review of system'].includes(r)
+            )
+          }
+          return ['Hematologic'].includes(values['ROS - review of system'])
+        },
+      },
       {
         id: 'fld10Z3q5YtsxhJ7p',
         name: 'Is this a serious MENTAL HEALTH condition?',
@@ -1487,15 +1329,53 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: 'ROS - review of system',
-        parentValues: ['Neoplastic'],
+        parentKey: 'Is this a serious NEOPLASTIC condition?',
+        parentValues: [
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+          'Yes',
+        ],
         condition: (values: any) => {
-          if (Array.isArray(values['ROS - review of system'])) {
-            return ['Neoplastic'].some((r) =>
-              values['ROS - review of system'].includes(r)
+          if (
+            Array.isArray(values['Is this a serious NEOPLASTIC condition?'])
+          ) {
+            return [
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+              'Yes',
+            ].some((r) =>
+              values['Is this a serious NEOPLASTIC condition?'].includes(r)
             )
           }
-          return ['Neoplastic'].includes(values['ROS - review of system'])
+          return [
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+            'Yes',
+          ].includes(values['Is this a serious NEOPLASTIC condition?'])
         },
       },
       {
@@ -1575,7 +1455,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'If this is a virtual Baseline, please note any self-reported physical exam findings or any observed findings using video or photographic tools',
+          '[If this is a virtual Baseline, please note any self-reported physical exam findings or any observed findings using video or photographic tools]',
         conditionType: '',
         parentKey: 'Physical Exam Findings',
         parentValues: ['Relevant Exam findings'],
@@ -1888,8 +1768,8 @@ export default [
         },
       },
       {
-        id: 'fld6SHdFcldyLZaJ9',
-        name: 'Does the BN have their own machine or the ability to purchase one?',
+        id: 'fldlwX8fw0NiYPCei',
+        name: 'LMP (Last Menstrual Period)',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -1898,8 +1778,17 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
+        conditionType: '',
+        parentKey: 'Gender',
+        parentValues: ['Female'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Gender)) {
+            return ['Female'].some((r) => values.Gender.includes(r))
+          }
+          return ['Female'].includes(values.Gender)
+        },
       },
       {
         id: 'fldCiNJQpmWHcrb5w',
@@ -1912,7 +1801,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: 'For Minors, only complete if menses has begun',
         conditionType: '',
         parentKey: 'LMP (Last Menstrual Period)',
@@ -1924,6 +1813,31 @@ export default [
             )
           }
           return ['Yes'].includes(values['LMP (Last Menstrual Period)'])
+        },
+      },
+      {
+        id: 'fldMsiCyBsQekHPI6',
+        name: 'No LMP reason',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'LMP (Last Menstrual Period)',
+        parentValues: ['No'],
+        condition: (values: any) => {
+          if (Array.isArray(values['LMP (Last Menstrual Period)'])) {
+            return ['No'].some((r) =>
+              values['LMP (Last Menstrual Period)'].includes(r)
+            )
+          }
+          return ['No'].includes(values['LMP (Last Menstrual Period)'])
         },
       },
       {
@@ -1960,7 +1874,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Family Planning',
@@ -1970,6 +1884,68 @@ export default [
             return ['Yes'].some((r) => values['Family Planning'].includes(r))
           }
           return ['Yes'].includes(values['Family Planning'])
+        },
+      },
+      {
+        id: 'fld54p1IbKgC9jDYo',
+        name: 'No family planning reason',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Family Planning',
+        parentValues: ['No'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Family Planning'])) {
+            return ['No'].some((r) => values['Family Planning'].includes(r))
+          }
+          return ['No'].includes(values['Family Planning'])
+        },
+      },
+      {
+        id: 'fldE685VzeA2HUJGW',
+        name: 'Activity?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Ask if the member is doing any activity. If Yes:describe it in the next field, if no: "That\\\'s okay, let\\\'s find something you will enjoy and start doing it."',
+      },
+      {
+        id: 'fldbifvMkVifkUaw4',
+        name: 'Activity Description',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          '"What kind of Physical Activity do you like to do? Do you like to walk, run, cycle, swim, go to the gym, play football, rugby or any other activity?"\n\nIf YES:\n"How often do you do [activity from above] and typically, how long do you do it for in any given session?',
+        conditionType: '',
+        parentKey: 'Activity?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Activity?'])) {
+            return ['Yes'].some((r) => values['Activity?'].includes(r))
+          }
+          return ['Yes'].includes(values['Activity?'])
         },
       },
       {
@@ -1984,7 +1960,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper:
+          '"Do you have access to a gym or currently have a gym membership?"',
         conditionType: '',
         parentKey: 'Is the BN a minor',
         parentValues: ['No'],
@@ -1996,8 +1973,8 @@ export default [
         },
       },
       {
-        id: 'fldwqagQJ3MyEwLgN',
-        name: 'Transportation Options',
+        id: 'fldMTns5CJz3iLFUM',
+        name: 'Gym usage',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -2006,16 +1983,16 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
-        helper: '',
+        required: true,
+        helper: 'Are you using to the gym?',
         conditionType: '',
-        parentKey: 'Is the BN a minor',
-        parentValues: ['No'],
+        parentKey: 'Access to a gym',
+        parentValues: ['True'],
         condition: (values: any) => {
-          if (Array.isArray(values['Is the BN a minor'])) {
-            return ['No'].some((r) => values['Is the BN a minor'].includes(r))
+          if (Array.isArray(values['Access to a gym'])) {
+            return ['True'].some((r) => values['Access to a gym'].includes(r))
           }
-          return ['No'].includes(values['Is the BN a minor'])
+          return ['True'].includes(values['Access to a gym'])
         },
       },
       {
@@ -2123,7 +2100,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper:
+          '"Tell us about the type of drugs that you use and how often you use them."',
         conditionType: '',
         parentKey: 'Social History',
         parentValues: ['Recreational drugs'],
@@ -2135,6 +2113,361 @@ export default [
           }
           return ['Recreational drugs'].includes(values['Social History'])
         },
+      },
+      {
+        id: 'fldgw07mhMQBKXAhv',
+        name: 'On average how many hours of uninterrupted sleep do you get every night?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Please fill in the numbers of hours of sleep between 0 to 10. Quality of sleep is uninterrupted 7 - 9 hours of sleep where one wakes up feeling refreshed and rejuvenated (recommended 8 hours) if anyone is sleeping less than 5 hours of sleep, it is important to refer for MH Counseling',
+      },
+      {
+        id: 'fldjyyHxmid8lVkJs',
+        name: 'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'NOTE: A " yes " response to use of alcohol or substance  is a red flag that requires referral for MHC. \n',
+      },
+      {
+        id: 'fld7XVJcl0TXXfBLE',
+        name: 'Medication',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?',
+        parentValues: ['Medication'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ]
+            )
+          ) {
+            return ['Medication'].some((r) =>
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ].includes(r)
+            )
+          }
+          return ['Medication'].includes(
+            values[
+              'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldUYKFRJfYPWxsR5',
+        name: 'Alcohol',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'please enter quantity of alcohol per day',
+        conditionType: '',
+        parentKey:
+          'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?',
+        parentValues: ['Alcohol'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ]
+            )
+          ) {
+            return ['Alcohol'].some((r) =>
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ].includes(r)
+            )
+          }
+          return ['Alcohol'].includes(
+            values[
+              'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldUDLKuoyJzNELNM',
+        name: 'Tobacco',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'please enter number of stick per day',
+        conditionType: '',
+        parentKey:
+          'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?',
+        parentValues: ['Smoke'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ]
+            )
+          ) {
+            return ['Smoke'].some((r) =>
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ].includes(r)
+            )
+          }
+          return ['Smoke'].includes(
+            values[
+              'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldNo7olDusR7yu5k',
+        name: 'Substances',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'please enter the substances that the member is taking like drugs or other and the frequency',
+        conditionType: '',
+        parentKey:
+          'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?',
+        parentValues: ['Other substance'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ]
+            )
+          ) {
+            return ['Other substance'].some((r) =>
+              values[
+                'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+              ].includes(r)
+            )
+          }
+          return ['Other substance'].includes(
+            values[
+              'Do you take any medication, alcohol, smoke or any other substance in order for you to sleep?'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fld4CuG3YaE8S8D3F',
+        name: 'Does the Member have a condition',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          '"Do you currently have, or have you ever been told you have, a chronic condition? That is any condition that has been present for more than 3 months. \n\nExamples of chronic conditions are: high blood pressure, diabetes, arthritis, asthma or high cholesterol."\n\nIf you identify condition(s) please enter them here: <a href="https://airtable.com/shreJWFrTNVXs6RKW" target="_blank">https://airtable.com/shreJWFrTNVXs6RKW</a>',
+      },
+      {
+        id: 'fld0YouFEBeuSeSy5',
+        name: 'Is the Member @ risk of a condition?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Risk factors include a family history, prior abnormal readings, smoking, eating habits etc.\n\nIf the response is yes, click here: \n<a href="https://airtable.com/shreJWFrTNVXs6RKW" target="_blank">https://airtable.com/shreJWFrTNVXs6RKW</a> ',
+      },
+      {
+        id: 'fldh6jX8FztBouh0T',
+        name: 'If you could work on one aspect of your health?',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'IF NOT PRE-FILLED:\n"Have you ever thought about personal health goals? \nDo you have any?\nIs there any aspect of your health that you’d like to work on or work towards?  \nIt’s okay if you don’t have an answer right now. If something comes to mind, you can always reach out to me and we can talk about how I can help."\n\nIF PRE-FILLED:\n"It is great that you want to work on [insert health goal]. \nHave you already started to work towards, [insert health goal]?\nWere you able to achieve the goal? \nWhat was it like trying to reach that goal?"\n\nIF SUCCEEDED: \n"Do you have any new goals you would like to achieve now?\nWonderful, let’s work together on that"\n\nIF FAILED:\n"Would you like to keep trying with my support?"\n\nIf it is a nutritional goal, tell the member you will set up an appointment with the nutritionist.\nIf fitness, sell the virtues of the Nike app if non-gym type. If gym type, find out what they would like to achieve and walk them through how you will support them to achieve the goal. ',
+      },
+      {
+        id: 'fldAxV875t3dDatQF',
+        name: 'Other health goals',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'If you could work on one aspect of your health?',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['If you could work on one aspect of your health?']
+            )
+          ) {
+            return ['Other'].some((r) =>
+              values[
+                'If you could work on one aspect of your health?'
+              ].includes(r)
+            )
+          }
+          return ['Other'].includes(
+            values['If you could work on one aspect of your health?']
+          )
+        },
+      },
+      {
+        id: 'fldencAWEJaRGxdCh',
+        name: 'Mental Health Phase',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Or a Minor Chronic Condition / Acute Condition?',
+        parentValues: ['Mental Health'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Or a Minor Chronic Condition / Acute Condition?']
+            )
+          ) {
+            return ['Mental Health'].some((r) =>
+              values[
+                'Or a Minor Chronic Condition / Acute Condition?'
+              ].includes(r)
+            )
+          }
+          return ['Mental Health'].includes(
+            values['Or a Minor Chronic Condition / Acute Condition?']
+          )
+        },
+      },
+      {
+        id: 'fld0wKceefHGv9745',
+        name: 'Does the member have a Primary care provider?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldNA1izDqnRAwmZ4',
+        name: 'Primary Doctor',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldJGyoauJpFuBdl8',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblKoFLuzxN9g13xT',
+        required: true,
+        helper: "Fill in member's primary/preferred doctor",
+        conditionType: '',
+        parentKey: 'Does the member have a Primary care provider?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Does the member have a Primary care provider?']
+            )
+          ) {
+            return ['Yes'].some((r) =>
+              values['Does the member have a Primary care provider?'].includes(
+                r
+              )
+            )
+          }
+          return ['Yes'].includes(
+            values['Does the member have a Primary care provider?']
+          )
+        },
+      },
+      {
+        id: 'fld6TB4JVkEu32QCY',
+        name: 'Others',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Fill in the Primary doctor not found',
       },
       {
         id: 'fldhKJ7vAc79y1sWR',
@@ -2164,7 +2497,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'If a nutrition consultation is required, please open this form:  <a href="https://calendly.com/antara-health/nutrition-consultation" target="_blank">https://calendly.com/antara-health/nutrition-consultation</a> ',
+          '[If you need to book any appointments with Antara (Nutrition, Mental Health, Virtual Consult, Physio...) please go to the members view in Scribe and use the Calendly links (buttons)]',
         conditionType: '',
         parentKey: 'Does the beneficiary require Ancillary services?',
         parentValues: ['Yes'],
@@ -2199,34 +2532,6 @@ export default [
         required: true,
         helper:
           '"I want to make sure that we communicate using your preferred channel. We can do calls, WhatsApp, SMS or our favorite, the Antara App. Which would you prefer?"\n',
-      },
-      {
-        id: 'fld9VMyJ3e1K7dWSx',
-        name: 'What is your preferred day for communication',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fld7favH3DrAxdLqY',
-        name: 'What is your preferred time for communication',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
       },
       {
         id: 'fld1kRWm8v0JHcH5O',
@@ -2292,6 +2597,48 @@ export default [
         },
       },
       {
+        id: 'fld9VMyJ3e1K7dWSx',
+        name: 'What is your preferred day for communication',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fld7favH3DrAxdLqY',
+        name: 'What is your preferred time for communication',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fld3YXedBQKWsZpw3',
+        name: 'How to share your plan?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
         id: 'fldWKwQNRMB2JaJba',
         name: 'Does the member has devices?',
         type: 'select',
@@ -2304,6 +2651,31 @@ export default [
         foreignTableId: null,
         required: true,
         helper: '',
+      },
+      {
+        id: 'fldE8r6evet3HyaY7',
+        name: 'Device selection',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Does the member has devices?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Does the member has devices?'])) {
+            return ['Yes'].some((r) =>
+              values['Does the member has devices?'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Does the member has devices?'])
+        },
       },
       {
         id: 'fldzctRkYuBkfsiGj',
@@ -7874,20 +8246,6 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
-      },
-      {
-        id: 'fldsSRHtAe7rcqHhU',
-        name: 'What is your preferred channel of communication?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
         helper: '',
       },
       {
