@@ -10075,24 +10075,25 @@ export default [
   },
   {
     name: 'Member Feedback',
-    id: 'tblsXSQW4ubiXtlS3',
+    id: 'tbl40C1VZlK5ZZUwK',
+    formId: 'shrfE9xB0KuLFDMjL',
     fields: [
       {
-        id: 'fldi5yoXHU6Ykq6pE',
+        id: 'fldF5CpUTmT34nVjs',
         name: 'Member',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldUAD8DgmVoS9gvY',
+        symmetricColumnId: 'fld3JVPPiEdDxNXd3',
         unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblQRToQAT8BRlLHW',
-        required: true,
+        relationship: 'many',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
+        required: false,
         helper: '',
       },
       {
-        id: 'fldC0guRUMFcN06lt',
+        id: 'fld7CMcIqud6eEiNJ',
         name: 'Did the member provide any feedback?',
         type: 'select',
         format: '',
@@ -10106,7 +10107,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldsJUQWoJNKakVBm',
+        id: 'fldVfA7wLLgfGAqbT',
         name: 'Type of feedback',
         type: 'multiSelect',
         format: '',
@@ -10133,7 +10134,7 @@ export default [
         },
       },
       {
-        id: 'fldIZh3Q8dRNbRYnq',
+        id: 'fld5IHU0ii0Bd5uwW',
         name: 'Testimonial',
         type: 'multilineText',
         format: '',
@@ -10158,7 +10159,7 @@ export default [
         },
       },
       {
-        id: 'fldqzI67eT0Lpt9lZ',
+        id: 'fldlqbNS1JQAImbip',
         name: 'What did the member provide feedback for?',
         type: 'multiSelect',
         format: '',
@@ -10185,7 +10186,7 @@ export default [
         },
       },
       {
-        id: 'fldMVwmxgBraZPsLG',
+        id: 'fldxDsVY2sNAPBFT1',
         name: 'Feedback',
         type: 'richText',
         format: '',
@@ -10212,7 +10213,7 @@ export default [
         },
       },
       {
-        id: 'fldJJZgUzKDW4SDbb',
+        id: 'fld4EqFY0uiQVgTSL',
         name: 'Source',
         type: 'multiSelect',
         format: '',
