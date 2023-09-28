@@ -5389,24 +5389,54 @@ export default [
   },
   {
     name: 'Nutritional Consultation',
-    id: 'tblh2rdeVCvM2qFBt',
+    id: 'tbl1uip79l5OvaH6V',
+    formId: 'shrjafP0tceKOu86T',
     fields: [
       {
-        id: 'fldv99UGw0QQ4wwAX',
+        id: 'fldrdSNvc4kjrlRA7',
+        name: 'Case ID',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldMpwsPNV5Vwv9vx',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblpQpVJrFonBQuBg',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldfB06zKJqSxgy5p',
         name: 'Member',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldBHAcVYSIKPH4sp',
+        symmetricColumnId: 'fldl9roOcBiMir6XR',
         unreversed: true,
         relationship: 'one',
-        foreignTableId: 'tblQRToQAT8BRlLHW',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
         required: true,
         helper: '',
       },
       {
-        id: 'fldRpjVcns4VoewQ0',
+        id: 'fldJcGoPH99sJ75jG',
+        name: 'Appointments',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld5qr79qT5zPm4Eb',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblhHcP4VrFV9atFx',
+        required: false,
+        helper:
+          'Please select the appointment so that the system can automatically update the status after your consultation',
+      },
+      {
+        id: 'fldBRa75BbEXRYyls',
         name: 'Date of Consultation',
         type: 'date',
         format: '',
@@ -5420,7 +5450,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldB7S3PBeGePacdh',
+        id: 'fldlzJfIPXggiUeIJ',
         name: 'Nutritional Consultation #',
         type: 'number',
         format: 'integer',
@@ -5434,7 +5464,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldoPciXs5k3loaFX',
+        id: 'fld8h3uQGOU5O8cap',
         name: 'Source of NC request',
         type: 'select',
         format: '',
@@ -5448,7 +5478,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldBxVz6SeEXgEoSW',
+        id: 'flde70Q4lkeZtuPJF',
         name: 'Assessment Type',
         type: 'multiSelect',
         format: '',
@@ -5462,7 +5492,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldDt7fIfR0vFrAPy',
+        id: 'fldnVYrBtAAx8bCk0',
         name: 'Do you have any of the following conditions?',
         type: 'multiSelect',
         format: '',
@@ -5476,7 +5506,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldFQEVNIQGPaZG3f',
+        id: 'fldpiv7GWzgRDJIyH',
         name: 'Describe Other Condition',
         type: 'multilineText',
         format: '',
@@ -5507,7 +5537,49 @@ export default [
         },
       },
       {
-        id: 'fldzg9Omd2bbRPmaT',
+        id: 'fldJmfqKRRSYBKrAD',
+        name: 'Conditions',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldEaRBrBR8U7GWFg',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblgYVivvXVxFZN3B',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldy3ssqBIMPoStio',
+        name: 'HMP',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldjZwhPmedCdX2Rq',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tbl4QEwsZ5wu35YXx',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldUHkKAsRQpgzIrA',
+        name: 'Consulting Clinican',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldmAAmU0nzNRj4of',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblZyeANbBkE2q4uG',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldjI00frLLdkzoFl',
         name: 'Breakfast',
         type: 'richText',
         format: '',
@@ -5521,7 +5593,7 @@ export default [
         helper: 'Describe your typical meal here',
       },
       {
-        id: 'fldckR7PWNAH6NGlO',
+        id: 'fldWMIjIawaJzxIQg',
         name: 'Lunch',
         type: 'richText',
         format: '',
@@ -5535,7 +5607,7 @@ export default [
         helper: 'Describe your typical meal here',
       },
       {
-        id: 'fldMVPPlLlKvoielu',
+        id: 'fldwnG1eZ4kxR2gQW',
         name: 'Dinner',
         type: 'richText',
         format: '',
@@ -5549,7 +5621,7 @@ export default [
         helper: 'Describe your typical meal here',
       },
       {
-        id: 'fldu7YjgkmW1oj59n',
+        id: 'fldezPv9y5w3R37EP',
         name: 'Snacks',
         type: 'richText',
         format: '',
@@ -5563,7 +5635,7 @@ export default [
         helper: 'Describe your typical snacks here',
       },
       {
-        id: 'fldXv7JoFCTpbeJ4D',
+        id: 'fldHXYVhTltrEYLz5',
         name: 'How many glasses of water do you take in a day?',
         type: 'number',
         format: 'integer',
@@ -5577,7 +5649,7 @@ export default [
         helper: '',
       },
       {
-        id: 'flduvTsRl3UgAkIfO',
+        id: 'fldeXKEKzMui34KKg',
         name: 'High Salt Foods (Packaged salty snacks like crisps, salted nuts, popcorn or salty biscuits/crackers)',
         type: 'number',
         format: 'decimal',
@@ -5608,7 +5680,7 @@ export default [
         },
       },
       {
-        id: 'fldcHeYg5oJE6HWRb',
+        id: 'fldW95a9j7jGzrYmD',
         name: 'High Salt Foods (Cold Cuts or Processed Meats like sausage, bacon, ham, or smokie)',
         type: 'number',
         format: 'decimal',
@@ -5639,7 +5711,7 @@ export default [
         },
       },
       {
-        id: 'fldUTFtkwZttuR71N',
+        id: 'fldElwFdKI3vXB9wf',
         name: 'High Salt Foods (Fast food like chips, bhajia, pizza, deep-fried chicken, or cheesy foods)',
         type: 'number',
         format: 'decimal',
@@ -5670,7 +5742,7 @@ export default [
         },
       },
       {
-        id: 'fldA9UAATDag1aiGF',
+        id: 'fldkBLMt7mKiuUkb7',
         name: 'High Salt Foods (Canned foods like baked beans, maize, corn, peas, or tomatoes)',
         type: 'number',
         format: 'decimal',
@@ -5701,7 +5773,7 @@ export default [
         },
       },
       {
-        id: 'fldshSHAUlXiPAI3c',
+        id: 'fldcJJTt84xkikKyE',
         name: 'High Salt Foods (Condiments like tomato sauce, ketchup, chili sauce or mustard)',
         type: 'number',
         format: 'decimal',
@@ -5732,7 +5804,7 @@ export default [
         },
       },
       {
-        id: 'fldrKNPGQUREm049i',
+        id: 'fldbcE1z4DrGPK6EK',
         name: 'High Salt Foods (Seasoning like Royco, Maggi cubes, Soy sauce, Tomato Paste)',
         type: 'number',
         format: 'decimal',
@@ -5763,7 +5835,7 @@ export default [
         },
       },
       {
-        id: 'fldoi8HzyDfvvi81e',
+        id: 'fld8KZTsMmPxY2awG',
         name: 'High Salt Foods (Table Salt)',
         type: 'number',
         format: 'decimal',
@@ -5794,7 +5866,7 @@ export default [
         },
       },
       {
-        id: 'fldGzVk5wxc0OQFFv',
+        id: 'fldq1MwYKgM2hAHaX',
         name: 'Is salt added to your food when cooked?',
         type: 'select',
         format: '',
@@ -5825,7 +5897,7 @@ export default [
         },
       },
       {
-        id: 'fldm6yi770BOUVOAR',
+        id: 'fld6ypu0lJbQnFQ5j',
         name: 'Basal Daily Sodium',
         type: 'number',
         format: 'integer',
@@ -5856,7 +5928,7 @@ export default [
         },
       },
       {
-        id: 'fldp2NAkM3yYazEVY',
+        id: 'fld9uEMd0M80DjGqq',
         name: 'Estimated daily sodium intake',
         type: 'number',
         format: 'decimal',
@@ -5888,7 +5960,7 @@ export default [
         },
       },
       {
-        id: 'fldOs2a5VWlIbo8ks',
+        id: 'fldyUTmY9FVKE8aPU',
         name: 'High Potassium Foods (Dark green leafy or traditional/kienyeji vegetables)',
         type: 'number',
         format: 'decimal',
@@ -5919,7 +5991,7 @@ export default [
         },
       },
       {
-        id: 'fldP5IcnQs7MYwPLn',
+        id: 'fldzxzog4bHOrgRgP',
         name: 'High Potassium Foods (Ripe bananas)',
         type: 'number',
         format: 'decimal',
@@ -5950,7 +6022,7 @@ export default [
         },
       },
       {
-        id: 'fldZEJVOvVnKHlOw3',
+        id: 'fldJ6A7HJEXMa5Q1v',
         name: 'High Potassium Foods (Cooked plantains/ green bananas)',
         type: 'number',
         format: 'decimal',
@@ -5981,7 +6053,7 @@ export default [
         },
       },
       {
-        id: 'fldEv3Q8bwLFY0CVB',
+        id: 'fldoXU21pflHrKEq3',
         name: 'High Potassium Foods (Unsalted nuts)',
         type: 'number',
         format: 'decimal',
@@ -6012,7 +6084,7 @@ export default [
         },
       },
       {
-        id: 'fldGWLeuKLs5hQp1O',
+        id: 'fldqoCqnYu27KArwg',
         name: 'High Potassium Foods (Root vegetables like beetroot, sweet potatoes, arrow roots or yams)',
         type: 'number',
         format: 'decimal',
@@ -6043,7 +6115,7 @@ export default [
         },
       },
       {
-        id: 'fldXJRa3baEgMFlZF',
+        id: 'fldHbImWpTeifpnu7',
         name: 'Basal Daily Potassium',
         type: 'number',
         format: 'integer',
@@ -6074,7 +6146,7 @@ export default [
         },
       },
       {
-        id: 'fldLy2tLxLFrQ79jC',
+        id: 'fldv0TFELuftjRbO4',
         name: 'Estimated Daily Potassium Intake',
         type: 'number',
         format: 'decimal',
@@ -6106,7 +6178,7 @@ export default [
         },
       },
       {
-        id: 'fldjsfIqbr6cNbzmp',
+        id: 'fld3U6UjpaGegVBRR',
         name: 'Basal Metabolic Rate',
         type: 'number',
         format: 'decimal',
@@ -6137,7 +6209,7 @@ export default [
         },
       },
       {
-        id: 'fldhM8MbUmR7ySEjC',
+        id: 'fld1eZY485r91CGO4',
         name: 'Estimated Daily Caloric Intake',
         type: 'number',
         format: 'decimal',
@@ -6168,7 +6240,7 @@ export default [
         },
       },
       {
-        id: 'fldKp8fieyPYwRcxC',
+        id: 'flduRZrbshp0ZBe24',
         name: 'Estimated Caloric Needs',
         type: 'number',
         format: 'decimal',
@@ -6199,7 +6271,7 @@ export default [
         },
       },
       {
-        id: 'fldZ1Cn9kIMBT8wPs',
+        id: 'fldJttz2yrmDmSykU',
         name: 'Breakfast Glycemic Load',
         type: 'number',
         format: 'decimal',
@@ -6230,7 +6302,7 @@ export default [
         },
       },
       {
-        id: 'fldmUNZnhMU4AI7Mq',
+        id: 'fld6mEbgvvu63s9hS',
         name: 'Lunch Glycemic Load',
         type: 'number',
         format: 'decimal',
@@ -6261,7 +6333,7 @@ export default [
         },
       },
       {
-        id: 'fldUOcW6V1rWorcPn',
+        id: 'fldEg38Z9K1YRbekP',
         name: 'Snacks Glycemic Load',
         type: 'number',
         format: 'decimal',
@@ -6292,7 +6364,7 @@ export default [
         },
       },
       {
-        id: 'fldVvbx8aHJ9JEjFs',
+        id: 'fldFX2J1oqjbcolaU',
         name: 'Dinner Glycemic Load',
         type: 'number',
         format: 'decimal',
@@ -6323,7 +6395,7 @@ export default [
         },
       },
       {
-        id: 'fldHxGGanGM5WWVaZ',
+        id: 'fldrZxS3Bpm7pGXFr',
         name: 'Total Daily Glycemic Load',
         type: 'number',
         format: 'decimal',
@@ -6355,7 +6427,7 @@ export default [
         },
       },
       {
-        id: 'fldB6jgVM8hDbSZI4',
+        id: 'fldlyasO0RRFEC1dw',
         name: 'Eggs',
         type: 'number',
         format: 'decimal',
@@ -6386,7 +6458,7 @@ export default [
         },
       },
       {
-        id: 'fldY5VJaxbcw7382E',
+        id: 'fldIxMV3LUMyANax6',
         name: 'Solid Cooking Fats',
         type: 'number',
         format: 'decimal',
@@ -6417,7 +6489,7 @@ export default [
         },
       },
       {
-        id: 'fld2xyFuJTHuqnRRd',
+        id: 'fldMZpRnXChwT7TmF',
         name: 'Deep Fried',
         type: 'number',
         format: 'decimal',
@@ -6448,7 +6520,7 @@ export default [
         },
       },
       {
-        id: 'fldkvDy85qGEiXlSf',
+        id: 'fld4XuK1j9gGLHnnH',
         name: 'Fast Food',
         type: 'number',
         format: 'decimal',
@@ -6479,7 +6551,7 @@ export default [
         },
       },
       {
-        id: 'fldjtB0t3fcAF4ej8',
+        id: 'fld3VscmhYMC8OgOA',
         name: 'Cold Cuts',
         type: 'number',
         format: 'decimal',
@@ -6510,7 +6582,7 @@ export default [
         },
       },
       {
-        id: 'fldfIQuww5cUmzbGJ',
+        id: 'fldZaHGpKOMWPjdbb',
         name: 'Daily estimated cholesterol intake',
         type: 'number',
         format: 'decimal',
@@ -6542,7 +6614,7 @@ export default [
         },
       },
       {
-        id: 'fldHsTxV14FA65qhQ',
+        id: 'fldrUKJOfNfCzPsMi',
         name: 'Current dietary challenges',
         type: 'multiSelect',
         format: '',
@@ -6553,10 +6625,10 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: '',
+        helper: 'What dietary challenges is the member facing currently?',
       },
       {
-        id: 'fldAOy5erydoGVdGj',
+        id: 'fldkgph7FhNq9FfbL',
         name: 'Describe current dietary challenges',
         type: 'multilineText',
         format: '',
@@ -6566,7 +6638,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper: '',
         condition: (values: any) => {
           if (Array.isArray(values['Current dietary challenges'])) {
@@ -6578,7 +6650,7 @@ export default [
         },
       },
       {
-        id: 'fldIcue614f7rF1Nn',
+        id: 'fld0nbknUMzmdaxnd',
         name: 'Future dietary challenges',
         type: 'multiSelect',
         format: '',
@@ -6589,10 +6661,10 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: '',
+        helper: 'What dietary challenges does the member anticipate?',
       },
       {
-        id: 'fldBQdbmpOaqperuo',
+        id: 'flds6jlFRuqUYGjAa',
         name: 'Describe future dietary challenges',
         type: 'multilineText',
         format: '',
@@ -6602,7 +6674,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper: '',
         condition: (values: any) => {
           if (Array.isArray(values['Future dietary challenges'])) {
@@ -6614,7 +6686,7 @@ export default [
         },
       },
       {
-        id: 'fldwPNCZq5tqPwqkS',
+        id: 'fldghEOSEO3sigsPk',
         name: 'Assessment',
         type: 'richText',
         format: '',
@@ -6629,7 +6701,46 @@ export default [
           'A summary of the nutrition diagnosis, diet type, meal portions & dietary behaviours',
       },
       {
-        id: 'fld6Bxq0sWKugpdGk',
+        id: 'fld1MQSQdi8jDKBNs',
+        name: 'Nutrition consultation outcomes',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldgrDYUT0WNo7aIR',
+        name: 'Other outcomes',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Nutrition consultation outcomes',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Nutrition consultation outcomes'])) {
+            return ['Other'].some((r) =>
+              values['Nutrition consultation outcomes'].includes(r)
+            )
+          }
+          return ['Other'].includes(values['Nutrition consultation outcomes'])
+        },
+      },
+      {
+        id: 'fldQ3oCTGFkwJ9fbM',
         name: 'Recommendation',
         type: 'richText',
         format: '',
@@ -6644,7 +6755,7 @@ export default [
           'A summary of the recommended HMP template, diet plan & dietary milestones\nClick here to track the dietary interventions: <a href="https://airtable.com/app5syOvwU86ByWD8/tblTmMtBgwT76JrQN/viw7Lol2O4HIYTFJS?blocks=hide" target="_blank">https://airtable.com/app5syOvwU86ByWD8/tblTmMtBgwT76JrQN/viw7Lol2O4HIYTFJS?blocks=hide</a> ',
       },
       {
-        id: 'fldIfVdTln663nVD0',
+        id: 'fldsHMpMz6G8w7X8s',
         name: 'Date of next Nutritional Consultation',
         type: 'date',
         format: '',
@@ -6656,26 +6767,12 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Please book, the next appointment with the member using calendly and enter the date here in the form (please note that is if the date is in more than 10 days a task for ME will be created so that they confirm the availability of the member)',
+          'Please book the next appointment with the member using calendly now if less than 10 days from today and enter the date here in the form (note that if the date is more than 10 days, a task for ME will be created so that they confirm the availability of the member)',
       },
       {
-        id: 'fldb7m7CM4PbjBKjs',
+        id: 'fldVzdjv0NpdMlMOU',
         name: 'Put anything else you want to share here!',
         type: 'richText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldh7UVRqcAFBRTE2',
-        name: 'Relevant for CSAT?',
-        type: 'checkbox',
         format: '',
         isDateTime: false,
         options: [],
