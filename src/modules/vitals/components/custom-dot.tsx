@@ -101,8 +101,8 @@ export function CustomDot(props: Props) {
         </text>
       )}
 
-      <Popper open={Boolean(anchorEl)} anchorEl={anchorEl}>
-        <Paper className="p-2 font-rubik text-left text-dark-blue-50 min-w-[250px]">
+      <Popper open={Boolean(anchorEl)} anchorEl={anchorEl} className="z-20">
+        <Paper className="p-2 font-rubik text-left text-dark-blue-50 min-w-[250px] z-20">
           <p className="text-sm uppercase ">
             {isOneMonth ? 'Daily readings' : 'Monitoring Period'}
           </p>
