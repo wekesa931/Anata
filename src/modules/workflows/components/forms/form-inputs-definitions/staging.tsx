@@ -11902,4 +11902,434 @@ export default [
       },
     ],
   },
+  {
+    name: 'Mental Health Consultation',
+    id: 'tbl8haFPGOP0YlVJU',
+    formId: 'shruwb65aP6cOGfZ2',
+    fields: [
+      {
+        id: 'fldQ3TirnH7na8abf',
+        name: 'Case ID',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld51Plp0uKVHEXLt',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblpQpVJrFonBQuBg',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldZqm1PQ7w6m3eVr',
+        name: 'Member',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldcGkPoRNesu7W61',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldGHpvG6qKMEPAZ3',
+        name: 'Consulting Clinician',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld9A6bsoRp7IPz7m',
+        name: 'Date',
+        type: 'date',
+        format: '',
+        isDateTime: true,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld8Nve4QuGywAvPp',
+        name: 'Appointments',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldC5KDxgApwl1zGN',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblhHcP4VrFV9atFx',
+        required: false,
+        helper:
+          'Please select the appointment record so that we can update the status at the end of your consultation',
+      },
+      {
+        id: 'fldadSLvHJSEg88Le',
+        name: 'Referral source',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldkIAR6tyuKT9dyl',
+        name: 'Interaction type',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldVrQ8n4IWUsayDf',
+        name: 'Counseling type',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldqfESQgHyxXW9SP',
+        name: 'Counseling type details',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Counseling type',
+        parentValues: ['Family', 'Group'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Counseling type'])) {
+            return ['Family', 'Group'].some((r) =>
+              values['Counseling type'].includes(r)
+            )
+          }
+          return ['Family', 'Group'].includes(values['Counseling type'])
+        },
+      },
+      {
+        id: 'fldFMhCEO2Wwl1Vk8',
+        name: 'Consultation type',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldzyUo4bkRMYZ9hZ',
+        name: 'Psychiatric history',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Specify disorder',
+        conditionType: '!',
+        parentKey: 'Consultation type',
+        parentValues: ['Follow up'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Consultation type'])) {
+            return ['Follow up'].some(
+              (r) => !values['Consultation type'].includes(r)
+            )
+          }
+          return !['Follow up'].includes(values['Consultation type'])
+        },
+      },
+      {
+        id: 'fldBaAB1GuP94p92e',
+        name: 'On medication?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '!',
+        parentKey: 'Consultation type',
+        parentValues: ['Follow up'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Consultation type'])) {
+            return ['Follow up'].some(
+              (r) => !values['Consultation type'].includes(r)
+            )
+          }
+          return !['Follow up'].includes(values['Consultation type'])
+        },
+      },
+      {
+        id: 'fldTfRKctzWZ5Lxd2',
+        name: 'Which medication?',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'On medication?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['On medication?'])) {
+            return ['Yes'].some((r) => values['On medication?'].includes(r))
+          }
+          return ['Yes'].includes(values['On medication?'])
+        },
+      },
+      {
+        id: 'fldIsACZVEQFx0cD5',
+        name: 'Psychological assessment & evaluation type',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '!',
+        parentKey: 'Consultation type',
+        parentValues: ['Follow up'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Consultation type'])) {
+            return ['Follow up'].some(
+              (r) => !values['Consultation type'].includes(r)
+            )
+          }
+          return !['Follow up'].includes(values['Consultation type'])
+        },
+      },
+      {
+        id: 'fldIh1esupqQ1f5og',
+        name: 'Which tool?',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Psychological assessment & evaluation type',
+        parentValues: ['Test / Screen'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(values['Psychological assessment & evaluation type'])
+          ) {
+            return ['Test / Screen'].some((r) =>
+              values['Psychological assessment & evaluation type'].includes(r)
+            )
+          }
+          return ['Test / Screen'].includes(
+            values['Psychological assessment & evaluation type']
+          )
+        },
+      },
+      {
+        id: 'fldzQR61wAnx8FqAb',
+        name: 'Mental status examination',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Psychological assessment & evaluation type',
+        parentValues: ['Interview / Mental health examination'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(values['Psychological assessment & evaluation type'])
+          ) {
+            return ['Interview / Mental health examination'].some((r) =>
+              values['Psychological assessment & evaluation type'].includes(r)
+            )
+          }
+          return ['Interview / Mental health examination'].includes(
+            values['Psychological assessment & evaluation type']
+          )
+        },
+      },
+      {
+        id: 'fldaTOcGWpJAjHyLQ',
+        name: 'Provisional Diagnosis',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '!',
+        parentKey: 'Consultation type',
+        parentValues: ['Follow up'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Consultation type'])) {
+            return ['Follow up'].some(
+              (r) => !values['Consultation type'].includes(r)
+            )
+          }
+          return !['Follow up'].includes(values['Consultation type'])
+        },
+      },
+      {
+        id: 'fldwWKybBVTBElJCQ',
+        name: 'Confirmed Diagnosis using DSM-5 criteria',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '!',
+        parentKey: 'Consultation type',
+        parentValues: ['Follow up'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Consultation type'])) {
+            return ['Follow up'].some(
+              (r) => !values['Consultation type'].includes(r)
+            )
+          }
+          return !['Follow up'].includes(values['Consultation type'])
+        },
+      },
+      {
+        id: 'fldKYD8mJ9hPLBMHg',
+        name: 'Plan',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldPLDY8k9aF3Q7qT',
+        name: 'Providers',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldO6y4V1gbrqiME5',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tbl6t7enrCGLBDQ4V',
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Plan',
+        parentValues: ['Referral'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Plan)) {
+            return ['Referral'].some((r) => values.Plan.includes(r))
+          }
+          return ['Referral'].includes(values.Plan)
+        },
+      },
+      {
+        id: 'fldUZ5nkVoNVyWLws',
+        name: 'Next appointment',
+        type: 'date',
+        format: '',
+        isDateTime: true,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fld9FtNEFwLJ15XpC',
+        name: 'Notes',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+    ],
+  },
 ]
