@@ -6453,10 +6453,40 @@ export default [
   },
   {
     name: 'Logistics Tasks',
-    id: 'tblh0Fv3an0rkvJlS',
+    id: 'tbl1swHWo6AtNfLQk',
+    formId: 'shrTgTLN7tg5rb8Kr',
     fields: [
       {
-        id: 'fldfduM3lFPGUpNxA',
+        id: 'fldbPee7Bi6bTX9FV',
+        name: 'Case ID',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldrKCCHdlw1QB6XH',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblpQpVJrFonBQuBg',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldxhZrx5NLA4S1Wp',
+        name: 'Members',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldkapwX9kmQvwk1I',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
+        required: false,
+        helper:
+          'Please insert the member if the task concerns a specific member',
+      },
+      {
+        id: 'fldZFlYWzopIn9P22',
         name: 'Type',
         type: 'multiSelect',
         format: '',
@@ -6470,7 +6500,7 @@ export default [
         helper: 'What is the task yo want to assign to the team',
       },
       {
-        id: 'fldtNR1QbbieJe5n4',
+        id: 'flddfIdJpUSgcY7Sw',
         name: 'Other task type',
         type: 'text',
         format: '',
@@ -6493,82 +6523,7 @@ export default [
         },
       },
       {
-        id: 'fldNP8fER4byB8ZrX',
-        name: 'Members',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldAIyk4VBMO2Miwg',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblQRToQAT8BRlLHW',
-        required: false,
-        helper:
-          'Please insert the member if the task concerns a specific member',
-        conditionType: '',
-        parentKey: 'Type',
-        parentValues: [
-          'Admin task',
-          'Blood Pressure measurement',
-          'BP device delivery',
-          'BP device pick up',
-          'Card delivery',
-          'Glucometer delivery',
-          'Glucometer pick up',
-          'HB1AC measurement',
-          'Height measurement',
-          'Lipid panel measurement',
-          'Medication delivery',
-          'Other',
-          'Oxygen saturation measurement',
-          'Random Blood sugar measurement',
-          'Temperature measurement',
-          'Weight measurement',
-        ],
-        condition: (values: any) => {
-          if (Array.isArray(values.Type)) {
-            return [
-              'Admin task',
-              'Blood Pressure measurement',
-              'BP device delivery',
-              'BP device pick up',
-              'Card delivery',
-              'Glucometer delivery',
-              'Glucometer pick up',
-              'HB1AC measurement',
-              'Height measurement',
-              'Lipid panel measurement',
-              'Medication delivery',
-              'Other',
-              'Oxygen saturation measurement',
-              'Random Blood sugar measurement',
-              'Temperature measurement',
-              'Weight measurement',
-            ].some((r) => values.Type.includes(r))
-          }
-          return [
-            'Admin task',
-            'Blood Pressure measurement',
-            'BP device delivery',
-            'BP device pick up',
-            'Card delivery',
-            'Glucometer delivery',
-            'Glucometer pick up',
-            'HB1AC measurement',
-            'Height measurement',
-            'Lipid panel measurement',
-            'Medication delivery',
-            'Other',
-            'Oxygen saturation measurement',
-            'Random Blood sugar measurement',
-            'Temperature measurement',
-            'Weight measurement',
-          ].includes(values.Type)
-        },
-      },
-      {
-        id: 'fldHFYNiBhhb7Nk62',
+        id: 'fldr7PZbP0RdAxmBu',
         name: 'Beneficiary',
         type: 'text',
         format: '',
@@ -6583,7 +6538,58 @@ export default [
           'When the task is not linked to a member, you can add a beneficiary, who is the person that will received or delivered the item associated to the task.',
       },
       {
-        id: 'fldiOovDdrlcaoCfm',
+        id: 'flduuhPO5yZRrn4Rh',
+        name: 'Prescriptions',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldf7q4Bbmoiko7pO',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblloJNPu9uCRk20i',
+        required: false,
+        helper:
+          'Please add all the prescriptions records that will be delivered',
+        conditionType: '',
+        parentKey: 'Type',
+        parentValues: ['Medication delivery', 'Medication pick up'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Type)) {
+            return ['Medication delivery', 'Medication pick up'].some((r) =>
+              values.Type.includes(r)
+            )
+          }
+          return ['Medication delivery', 'Medication pick up'].includes(
+            values.Type
+          )
+        },
+      },
+      {
+        id: 'fld6yW27z7N2WqPGa',
+        name: 'Pharmacy provider (Facility from Provider base)',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldcZgAESWh1n1deC',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblLsYlG4IiNEbWWs',
+        required: false,
+        helper: 'Please select the pharmacy that will deliver the medication',
+        conditionType: '',
+        parentKey: 'Type',
+        parentValues: ['Medication pick up'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Type)) {
+            return ['Medication pick up'].some((r) => values.Type.includes(r))
+          }
+          return ['Medication pick up'].includes(values.Type)
+        },
+      },
+      {
+        id: 'fld2gfHwraVeD8EKO',
         name: 'Location',
         type: 'text',
         format: '',
@@ -6598,7 +6604,7 @@ export default [
           "ONLY specify the location of the task when the task should not happen at the member's known address. If this field is empty the member's address will be automatically used by the system as the location to perform the task\n\nKeep empty if you want us to perform the task at member's known location",
       },
       {
-        id: 'fldAK85WcaNhW974o',
+        id: 'fldkcZhPqTnjpT9zQ',
         name: 'Contact',
         type: 'text',
         format: '',
@@ -6613,7 +6619,7 @@ export default [
           'Please specify the phone number to call when logistic team member reach the place. If the task is linked to one member, the system will automatically fetch the known phone number.',
       },
       {
-        id: 'fldyPu1Qlrb2fQELU',
+        id: 'fldihldJzaL4IAGgm',
         name: 'Status',
         type: 'select',
         format: '',
@@ -6627,7 +6633,7 @@ export default [
         helper: 'Select "To do" - (you do not have the choice anyway ;) )',
       },
       {
-        id: 'fld6LltXPc83nmXza',
+        id: 'fldQdcFQ3VI5Q6Z4C',
         name: 'Due date',
         type: 'date',
         format: '',
@@ -6642,7 +6648,22 @@ export default [
           'Tasks will be done as soon as possible, please enter the latest possible date at which you want the task to be performed.',
       },
       {
-        id: 'flddW0agsqAZi7mFv',
+        id: 'fldIOkOLZq90YaUP7',
+        name: 'Time',
+        type: 'date',
+        format: '',
+        isDateTime: true,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'This is a test / work in progress to identify specific time. \nIt is the agreed time with member, please note that Logistic admin might be requesting a reschedule.\nDo not fill if no specific time was agreed with the member.',
+      },
+      {
+        id: 'fldXoRm9G9a1LRoaX',
         name: 'Priority',
         type: 'select',
         format: '',
@@ -6656,7 +6677,7 @@ export default [
         helper: '! Critical tasks will be done before any other tasks !',
       },
       {
-        id: 'fldXX5LCCZDGqQkNo',
+        id: 'fldHpWXvQIdITAmiQ',
         name: 'Notes',
         type: 'multilineText',
         format: '',
@@ -6671,16 +6692,16 @@ export default [
           'Any additional notes - especially list of medications when the task is medication pick up or delivery\n\nPlease meke sure to give all information about the due time for the task is the member requested something specific',
       },
       {
-        id: 'fldRUpYJAJ3P3Pycj',
+        id: 'fldBmgaCOsDRwzAHL',
         name: 'Creator',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldG4FH180lDhx7jt',
+        symmetricColumnId: 'fldqwwTUmJVFKh9OV',
         unreversed: true,
         relationship: 'one',
-        foreignTableId: 'tblf6noUXSKCzG2Ze',
+        foreignTableId: 'tblZyeANbBkE2q4uG',
         required: true,
         helper:
           'Select your ID here, you will be able to receive a notification when the task is completed',
