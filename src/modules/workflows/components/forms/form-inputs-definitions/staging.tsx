@@ -2360,25 +2360,39 @@ export default [
   },
   {
     name: 'Appointments',
-    id: 'tblxflDbHI5TGqra5',
+    id: 'tblhHcP4VrFV9atFx',
+    formId: 'shrOn4TQvlY78detU',
     fields: [
       {
-        id: 'fld5smgdxaNGjFl1P',
-        name: 'Member',
+        id: 'fldslTLtnS1T1goHa',
+        name: 'Case ID',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldUAD8DgmVoS9gvY',
+        symmetricColumnId: 'fldE4yuo7lWhvgDZL',
         unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblQRToQAT8BRlLHW',
+        relationship: 'many',
+        foreignTableId: 'tblpQpVJrFonBQuBg',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fld8r55i5QWklbzKT',
+        name: 'Status',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
         required: true,
         helper: '',
       },
-
       {
-        id: 'fldGHTFjfMxVmmQep',
+        id: 'fldRwhe01SOMRB16C',
         name: 'Internal vs External',
         type: 'select',
         format: '',
@@ -2393,21 +2407,33 @@ export default [
           'Please select Internal if the appointment will be performed by Antara. If not, select External',
       },
       {
-        id: 'fld3x0MzCwooOc1A6',
-        name: 'start_date_time',
-        type: 'date',
+        id: 'fldN7WoEj7tHbcsPv',
+        name: 'Assignee',
+        type: 'foreignKey',
         format: '',
-        isDateTime: true,
+        isDateTime: false,
         options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: 'Please enter time in UTC+3 (Kenya time zone)',
+        symmetricColumnId: 'fldq67jg4Y13oNqvi',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblZyeANbBkE2q4uG',
+        required: false,
+        helper:
+          'If the appointment is internal, please select who will perform the appointment in our team',
+        conditionType: '',
+        parentKey: 'Internal vs External',
+        parentValues: ['Internal'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Internal vs External'])) {
+            return ['Internal'].some((r) =>
+              values['Internal vs External'].includes(r)
+            )
+          }
+          return ['Internal'].includes(values['Internal vs External'])
+        },
       },
       {
-        id: 'fldLwFGc4Mw46k6I5',
+        id: 'fldvYwS5iv66z48dx',
         name: 'Service',
         type: 'select',
         format: '',
@@ -2421,21 +2447,21 @@ export default [
         helper: '',
       },
       {
-        id: 'fldNKv1UvsAHQtjJ7',
-        name: 'Facilities from Provider base',
+        id: 'fldslTLtnS1T1goHa',
+        name: 'Case ID',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fld7a0xDiFGwtl0AP',
+        symmetricColumnId: 'fldkC6ueqmW6xII0t',
         unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblU94ZnFmMT7S0o0',
+        relationship: 'many',
+        foreignTableId: 'tblLsYlG4IiNEbWWs',
         required: false,
         helper: '',
       },
       {
-        id: 'fldb62TqEvIfNgSMx',
+        id: 'fld8g9weqaITSlPSc',
         name: 'Other Facility',
         type: 'text',
         format: '',
@@ -2445,38 +2471,25 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
-        helper:
-          'Fill in the Facility not found in the provider base. Enter Other facility name with format Name -Location e.g Antara Health - Lavington',
-        parentKey: 'Facilities from Provider base',
-        parentValues: ['recT1DtxlC4G9BuUj'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Facilities from Provider base'])) {
-            return ['recT1DtxlC4G9BuUj'].some((r) =>
-              values['Facilities from Provider base'].includes(r)
-            )
-          }
-          return ['recT1DtxlC4G9BuUj'].includes(
-            values['Facilities from Provider base']
-          )
-        },
+        required: false,
+        helper: 'Fill in the Facility not found in the provider base',
       },
       {
-        id: 'fldIGh0a3iL16e4GI',
+        id: 'fldifm7QJvriQU4d0',
         name: 'Specialists from Provider Base',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldqLEmeE6Q11L1tW',
+        symmetricColumnId: 'fldtRyYFcRPdHLnjZ',
         unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblPpf5F81JypdC9k',
+        relationship: 'many',
+        foreignTableId: 'tblKoFLuzxN9g13xT',
         required: false,
         helper: '',
       },
       {
-        id: 'fldeCfGYt1fSZ1uTY',
+        id: 'fldtLDjCNw3Y8AWMD',
         name: 'Other Specialist',
         type: 'text',
         format: '',
@@ -2486,52 +2499,11 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
-        helper:
-          'Fill in the Specialist not found in the provider base. Enter Other specialist name with format Name -Location e.g Dr Grace - Antara ',
-        parentKey: 'Specialists from Provider Base',
-        parentValues: ['reco4phjmLbZai3dD'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Specialists from Provider Base'])) {
-            return ['reco4phjmLbZai3dD'].some((r) =>
-              values['Specialists from Provider Base'].includes(r)
-            )
-          }
-          return ['reco4phjmLbZai3dD'].includes(
-            values['Specialists from Provider Base']
-          )
-        },
-      },
-      {
-        id: 'fldM5JtlRk1GiUnAZ',
-        name: 'Location (Other)',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
         required: false,
-        helper: '',
+        helper: 'Fill in the Specialist not found in the provider base',
       },
       {
-        id: 'fldoZeTpR7miSrxfr',
-        name: 'Status',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fld3M7bZ2TJNtlB3Y',
+        id: 'fldNeYnSgCjPW5Dyq',
         name: 'Comments',
         type: 'multilineText',
         format: '',
