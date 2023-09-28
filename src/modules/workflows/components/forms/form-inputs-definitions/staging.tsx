@@ -9500,4 +9500,1679 @@ export default [
       },
     ],
   },
+  {
+    name: 'Clinical Consultation',
+    id: 'tbl3nTYifMQxibPTg',
+    formId: 'shr9Q23J6pB5oDd8p',
+    fields: [
+      {
+        id: 'fldGUtKdLV6l0xyWi',
+        name: 'Case ID',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldiD8F6x8CXMqz06',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblpQpVJrFonBQuBg',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldHMUJTXtjHLTZs0',
+        name: 'Member',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld5Gl2TqMXA9rt78',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldlGzwwaM6E43pF7',
+        name: 'Consulting Clinician',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldNVqvgPWL5hKoCH',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblZyeANbBkE2q4uG',
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldz8s3R0AhoBlrt5',
+        name: 'Minor',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fld8AENftXr6bS0kv',
+        name: 'Interaction type',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld3KPooMgghiZf5L',
+        name: 'Initial vs FU',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fld8yrGuPubhvMPoo',
+        name: 'Appointments',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldRdD6gOKLyScRb0',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblhHcP4VrFV9atFx',
+        required: true,
+        helper:
+          'Please add the appointment record here. If you do not, the appointment will not be automatically marked as completed',
+      },
+      {
+        id: 'fldFUezkqIOSrnIQG',
+        name: 'Conditions',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld8QZgDrk4DuSnlK',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblgYVivvXVxFZN3B',
+        required: false,
+        helper:
+          'Please link this consultation form to the condition(s) that was reviewed or discussed or diagnosed during this consultation',
+      },
+      {
+        id: 'fldpvigLPXfHFbZpL',
+        name: 'Date of appointment',
+        type: 'date',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldqebHfsmZ0SMgXI',
+        name: 'Visit Type',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldYwGfD33b39skoN',
+        name: 'Chief Complaint',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldRBUdz3d86wMx1R',
+        name: 'Milestone attainment',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Minor',
+        parentValues: ['yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Minor)) {
+            return ['yes'].some((r) => values.Minor.includes(r))
+          }
+          return ['yes'].includes(values.Minor)
+        },
+      },
+      {
+        id: 'fldxX0WOa5ZH5Yi7w',
+        name: 'Vaccination status',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Minor',
+        parentValues: ['yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Minor)) {
+            return ['yes'].some((r) => values.Minor.includes(r))
+          }
+          return ['yes'].includes(values.Minor)
+        },
+      },
+      {
+        id: 'fld5wRL8iTlnYoRrF',
+        name: 'PMH',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldlyNbvWUwAJ9vPS',
+        name: 'Any Medication Allergies',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld69INt2gJowHdz3',
+        name: 'Please specify the Allergy',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Any Medication Allergies',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Any Medication Allergies'])) {
+            return ['Yes'].some((r) =>
+              values['Any Medication Allergies'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Any Medication Allergies'])
+        },
+      },
+      {
+        id: 'fldjLrSvkQJZqrlQ7',
+        name: 'Temperature (C)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldVgLAu4qeFDq9To',
+        name: 'Please select the system(s) with a relevant finding',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Please select the system(s) with a relevant finding',
+      },
+      {
+        id: 'fld7M4GfxZYu1dR65',
+        name: 'Please describe the NEUROLOGIC findings',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Please select the system(s) with a relevant finding',
+        parentValues: ['Neurologic'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Please select the system(s) with a relevant finding']
+            )
+          ) {
+            return ['Neurologic'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant finding'
+              ].includes(r)
+            )
+          }
+          return ['Neurologic'].includes(
+            values['Please select the system(s) with a relevant finding']
+          )
+        },
+      },
+      {
+        id: 'fldsS67UqhXgQ3Fvp',
+        name: 'Please describe the HEENT findings',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Please select the system(s) with a relevant finding',
+        parentValues: ['HEENT'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Please select the system(s) with a relevant finding']
+            )
+          ) {
+            return ['HEENT'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant finding'
+              ].includes(r)
+            )
+          }
+          return ['HEENT'].includes(
+            values['Please select the system(s) with a relevant finding']
+          )
+        },
+      },
+      {
+        id: 'fldr48cJL6R8WStfN',
+        name: 'Please describe the CARDIOVASCULAR findings ',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Please select the system(s) with a relevant finding',
+        parentValues: ['Cardiovascular'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Please select the system(s) with a relevant finding']
+            )
+          ) {
+            return ['Cardiovascular'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant finding'
+              ].includes(r)
+            )
+          }
+          return ['Cardiovascular'].includes(
+            values['Please select the system(s) with a relevant finding']
+          )
+        },
+      },
+      {
+        id: 'fldHrUEb8tcZzjseU',
+        name: 'Please describe the PULMONARY findings',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Please select the system(s) with a relevant finding',
+        parentValues: ['Pulmonary'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Please select the system(s) with a relevant finding']
+            )
+          ) {
+            return ['Pulmonary'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant finding'
+              ].includes(r)
+            )
+          }
+          return ['Pulmonary'].includes(
+            values['Please select the system(s) with a relevant finding']
+          )
+        },
+      },
+      {
+        id: 'fldIKVkxWVbDH2Mvw',
+        name: 'Please describe the GASTROINTESTINAL findings',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Please select the system(s) with a relevant finding',
+        parentValues: ['Gastrointestinal'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Please select the system(s) with a relevant finding']
+            )
+          ) {
+            return ['Gastrointestinal'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant finding'
+              ].includes(r)
+            )
+          }
+          return ['Gastrointestinal'].includes(
+            values['Please select the system(s) with a relevant finding']
+          )
+        },
+      },
+      {
+        id: 'fldpdLSqu3qkulpPJ',
+        name: 'Please describe the GU findings',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Please select the system(s) with a relevant finding',
+        parentValues: ['GU'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Please select the system(s) with a relevant finding']
+            )
+          ) {
+            return ['GU'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant finding'
+              ].includes(r)
+            )
+          }
+          return ['GU'].includes(
+            values['Please select the system(s) with a relevant finding']
+          )
+        },
+      },
+      {
+        id: 'fldBhMWoN4Pst2gut',
+        name: 'ROS Neck',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Please select the system(s) with a relevant finding',
+        parentValues: ['Neck'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Please select the system(s) with a relevant finding']
+            )
+          ) {
+            return ['Neck'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant finding'
+              ].includes(r)
+            )
+          }
+          return ['Neck'].includes(
+            values['Please select the system(s) with a relevant finding']
+          )
+        },
+      },
+      {
+        id: 'fldu9Tfb1SFMHjxeY',
+        name: 'Please describe the EXTREMITIES findings ',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Please select the system(s) with a relevant finding',
+        parentValues: ['Extremities'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Please select the system(s) with a relevant finding']
+            )
+          ) {
+            return ['Extremities'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant finding'
+              ].includes(r)
+            )
+          }
+          return ['Extremities'].includes(
+            values['Please select the system(s) with a relevant finding']
+          )
+        },
+      },
+      {
+        id: 'fldtnPz20a0BN0DXX',
+        name: 'Please describe the DERMATOLOGIC findings',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Please select the system(s) with a relevant finding',
+        parentValues: ['Dermatologic'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Please select the system(s) with a relevant finding']
+            )
+          ) {
+            return ['Dermatologic'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant finding'
+              ].includes(r)
+            )
+          }
+          return ['Dermatologic'].includes(
+            values['Please select the system(s) with a relevant finding']
+          )
+        },
+      },
+      {
+        id: 'fldHiJneiEALIGAnE',
+        name: 'Please describe the OTHER systems findings',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Please select the system(s) with a relevant finding',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Please select the system(s) with a relevant finding']
+            )
+          ) {
+            return ['Other'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant finding'
+              ].includes(r)
+            )
+          }
+          return ['Other'].includes(
+            values['Please select the system(s) with a relevant finding']
+          )
+        },
+      },
+      {
+        id: 'fldK9D44eTnEmPFpC',
+        name: 'Please upload any relevant images or files here',
+        type: 'multipleAttachment',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: true,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldNyQHe9DqMakHYH',
+        name: 'LMP',
+        type: 'date',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldAD9psObsSDVZ85',
+        name: 'Were you able to conduct a Physical Examination?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldhNv2G3GLH1qNWX',
+        name: 'Type of Physical Examination',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Were you able to conduct a Physical Examination?',
+        parentValues: ['Yes', 'In-person'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Were you able to conduct a Physical Examination?']
+            )
+          ) {
+            return ['Yes', 'In-person'].some((r) =>
+              values[
+                'Were you able to conduct a Physical Examination?'
+              ].includes(r)
+            )
+          }
+          return ['Yes', 'In-person'].includes(
+            values['Were you able to conduct a Physical Examination?']
+          )
+        },
+      },
+      {
+        id: 'fldsxh6AtiD9jghw9',
+        name: 'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldyiSBjlaByi0yYj',
+        name: 'PE NEUROLOGIC findings',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding',
+        parentValues: ['Neuro'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ]
+            )
+          ) {
+            return ['Neuro'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ].includes(r)
+            )
+          }
+          return ['Neuro'].includes(
+            values[
+              'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fld9BBDI4x5emMHww',
+        name: 'PE HEENT findings',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding',
+        parentValues: ['HEENT'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ]
+            )
+          ) {
+            return ['HEENT'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ].includes(r)
+            )
+          }
+          return ['HEENT'].includes(
+            values[
+              'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldhcDEGEak8vfM1g',
+        name: 'PE CARDIOVASCULAR findings',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding',
+        parentValues: ['Cardiovascular'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ]
+            )
+          ) {
+            return ['Cardiovascular'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ].includes(r)
+            )
+          }
+          return ['Cardiovascular'].includes(
+            values[
+              'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldY9osEU6HTdggTO',
+        name: 'PE PULMONARY findings',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding',
+        parentValues: ['Pulmonary'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ]
+            )
+          ) {
+            return ['Pulmonary'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ].includes(r)
+            )
+          }
+          return ['Pulmonary'].includes(
+            values[
+              'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldLnxuouC9et23AD',
+        name: 'PE GASTROINTESTINAL findings',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding',
+        parentValues: ['Gastrointestinal'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ]
+            )
+          ) {
+            return ['Gastrointestinal'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ].includes(r)
+            )
+          }
+          return ['Gastrointestinal'].includes(
+            values[
+              'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldyNgm3QbvVEyTxD',
+        name: 'PE GU findings',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding',
+        parentValues: ['GU'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ]
+            )
+          ) {
+            return ['GU'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ].includes(r)
+            )
+          }
+          return ['GU'].includes(
+            values[
+              'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldAGyq257NobDPhO',
+        name: 'PE EXTREMITIES findings',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding',
+        parentValues: ['Extremities'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ]
+            )
+          ) {
+            return ['Extremities'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ].includes(r)
+            )
+          }
+          return ['Extremities'].includes(
+            values[
+              'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fld9Xh3EnSrMOhqzx',
+        name: 'PE DERMATOLOGIC findings',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding',
+        parentValues: ['Dermatologic'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ]
+            )
+          ) {
+            return ['Dermatologic'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ].includes(r)
+            )
+          }
+          return ['Dermatologic'].includes(
+            values[
+              'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldYmzY0OBMS9teh2',
+        name: 'PE OTHER findings',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ]
+            )
+          ) {
+            return ['Other'].some((r) =>
+              values[
+                'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+              ].includes(r)
+            )
+          }
+          return ['Other'].includes(
+            values[
+              'Please select the system(s) with a relevant PHYSICAL EXAMINATION finding'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldDnVjzXEmorP5M5',
+        name: 'Primary Diagnosis',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'If you identify a new condition: <a href="https://airtable.com/shrduoUdDObJnDFTj" target="_blank">https://airtable.com/shrduoUdDObJnDFTj</a>',
+      },
+      {
+        id: 'fld8aOkqRFd3cBD1f',
+        name: 'Secondary Diagnosis',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldAmbaxjnJoHsWIy',
+        name: 'Consultation Type',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldZgSOhzvnfUIZLd',
+        name: 'Assessment',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Please summarize what you think is going on with the patient here',
+      },
+      {
+        id: 'fldnsHDuFR9utA5EV',
+        name: 'Plan',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Select the next steps in the care of this patient',
+      },
+      {
+        id: 'fld5IOVGQJn36xT95',
+        name: 'Lab/imaging management',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldwXTM9HtvpkCXsE',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblYOGN4iEGRc3Mjm',
+        required: false,
+        helper:
+          'When requesting for lab or imaging, if the the request already exist in our system, please select it in the dropdown so that we can update the status automatically. If it is a new request, the lab/imaging record will automatically be created in our system once you submit this form',
+        conditionType: '',
+        parentKey: 'Plan',
+        parentValues: ['Order Labs', 'Order Radiologic Examinations'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Plan)) {
+            return ['Order Labs', 'Order Radiologic Examinations'].some((r) =>
+              values.Plan.includes(r)
+            )
+          }
+          return ['Order Labs', 'Order Radiologic Examinations'].includes(
+            values.Plan
+          )
+        },
+      },
+      {
+        id: 'fldxC8zd9Km5rbITc',
+        name: 'Providers coordination notes',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Please add as many information as possible for each providers (specialist and facility) for the different plan. If several plan, add information for each provider as well. Information can be about preferred practician, location, etc... This data will be shared with ME for appointment coordination',
+        conditionType: '',
+        parentKey: 'Plan',
+        parentValues: [
+          'Order Labs',
+          'Order Radiologic Examinations',
+          'Refer for in-person Consultation',
+          'Refer to a Specialist',
+        ],
+        condition: (values: any) => {
+          if (Array.isArray(values.Plan)) {
+            return [
+              'Order Labs',
+              'Order Radiologic Examinations',
+              'Refer for in-person Consultation',
+              'Refer to a Specialist',
+            ].some((r) => values.Plan.includes(r))
+          }
+          return [
+            'Order Labs',
+            'Order Radiologic Examinations',
+            'Refer for in-person Consultation',
+            'Refer to a Specialist',
+          ].includes(values.Plan)
+        },
+      },
+      {
+        id: 'fldPfE9xm45Bd6sPw',
+        name: 'Other plan?',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Plan',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Plan)) {
+            return ['Other'].some((r) => values.Plan.includes(r))
+          }
+          return ['Other'].includes(values.Plan)
+        },
+      },
+      {
+        id: 'flddrURzgX3BnmKj7',
+        name: 'Reason for referral',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Plan',
+        parentValues: [
+          'Refer to a Specialist',
+          'Refer for in-person Consultation',
+        ],
+        condition: (values: any) => {
+          if (Array.isArray(values.Plan)) {
+            return [
+              'Refer to a Specialist',
+              'Refer for in-person Consultation',
+            ].some((r) => values.Plan.includes(r))
+          }
+          return [
+            'Refer to a Specialist',
+            'Refer for in-person Consultation',
+          ].includes(values.Plan)
+        },
+      },
+      {
+        id: 'fldIm1MgrlUbN9ZVo',
+        name: 'Type of radiology test',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Plan',
+        parentValues: ['Order Radiologic Examinations'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Plan)) {
+            return ['Order Radiologic Examinations'].some((r) =>
+              values.Plan.includes(r)
+            )
+          }
+          return ['Order Radiologic Examinations'].includes(values.Plan)
+        },
+      },
+      {
+        id: 'fldPYc0UXNXw9aATM',
+        name: 'Type of X-Ray',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Type of radiology test',
+        parentValues: ['X-Ray'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Type of radiology test'])) {
+            return ['X-Ray'].some((r) =>
+              values['Type of radiology test'].includes(r)
+            )
+          }
+          return ['X-Ray'].includes(values['Type of radiology test'])
+        },
+      },
+      {
+        id: 'fldvHx7mUnX3Qwayt',
+        name: 'Type of Ultrasound',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Type of radiology test',
+        parentValues: ['Ultrasound'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Type of radiology test'])) {
+            return ['Ultrasound'].some((r) =>
+              values['Type of radiology test'].includes(r)
+            )
+          }
+          return ['Ultrasound'].includes(values['Type of radiology test'])
+        },
+      },
+      {
+        id: 'fldKieyqIGBfVofYY',
+        name: 'Type of CT Scan',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Type of radiology test',
+        parentValues: ['CT Scan'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Type of radiology test'])) {
+            return ['CT Scan'].some((r) =>
+              values['Type of radiology test'].includes(r)
+            )
+          }
+          return ['CT Scan'].includes(values['Type of radiology test'])
+        },
+      },
+      {
+        id: 'fldzxsURh4yWUaOXB',
+        name: 'Type of MRI',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Type of radiology test',
+        parentValues: ['MRI'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Type of radiology test'])) {
+            return ['MRI'].some((r) =>
+              values['Type of radiology test'].includes(r)
+            )
+          }
+          return ['MRI'].includes(values['Type of radiology test'])
+        },
+      },
+      {
+        id: 'fld5m4zrHmP31e0uv',
+        name: 'Other Radiology test',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: [
+          'Type of X-Ray',
+          'Type of MRI',
+          'Type of Ultrasound',
+          'Type of CT Scan',
+          'Echocardiogram',
+        ],
+        parentValues: ['Other:'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Type of X-Ray'])) {
+            return ['Other:'].some((r) => values['Type of X-Ray'].includes(r))
+          }
+          if (Array.isArray(values['Type of MRI'])) {
+            return ['Other:'].some((r) => values['Type of MRI'].includes(r))
+          }
+          if (Array.isArray(values['Type of Ultrasound'])) {
+            return ['Other:'].some((r) =>
+              values['Type of Ultrasound'].includes(r)
+            )
+          }
+          if (Array.isArray(values['Type of CT Scan'])) {
+            return ['Other:'].some((r) => values['Type of CT Scan'].includes(r))
+          }
+          if (Array.isArray(values.Echocardiogram)) {
+            return ['Other:'].some((r) => values.Echocardiogram.includes(r))
+          }
+          return ['Other:'].includes(values['Type of X-Ray'])
+        },
+      },
+      {
+        id: 'fldsNwD20slDl4Dg1',
+        name: 'Other lab test',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'What lab tests would you like to order?',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(values['What lab tests would you like to order?'])
+          ) {
+            return ['Other'].some((r) =>
+              values['What lab tests would you like to order?'].includes(r)
+            )
+          }
+          return ['Other'].includes(
+            values['What lab tests would you like to order?']
+          )
+        },
+      },
+      {
+        id: 'fldJRvi9GdbW31PYc',
+        name: 'Previous imaging result',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Plan',
+        parentValues: ['Order Radiologic Examinations'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Plan)) {
+            return ['Order Radiologic Examinations'].some((r) =>
+              values.Plan.includes(r)
+            )
+          }
+          return ['Order Radiologic Examinations'].includes(values.Plan)
+        },
+      },
+      {
+        id: 'fldC1uCP4mTcA6SRn',
+        name: 'Medication',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'if you prescribe a medication, please add the it using a form in the guided workflow',
+        conditionType: '',
+        parentKey: 'Plan',
+        parentValues: ['Prescribe Medications'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Plan)) {
+            return ['Prescribe Medications'].some((r) =>
+              values.Plan.includes(r)
+            )
+          }
+          return ['Prescribe Medications'].includes(values.Plan)
+        },
+      },
+      {
+        id: 'fldCGPhs57PkHkaWh',
+        name: 'Sick days required',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'The member needs sick days?',
+      },
+      {
+        id: 'fldn4t3Jv9RheLWZU',
+        name: 'Sick days number',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Enter the number of sick days required',
+        conditionType: '',
+        parentKey: 'Sick days required',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Sick days required'])) {
+            return ['Yes'].some((r) => values['Sick days required'].includes(r))
+          }
+          return ['Yes'].includes(values['Sick days required'])
+        },
+      },
+      {
+        id: 'fldyhbgCf5UfYvfRc',
+        name: 'Next appointment',
+        type: 'date',
+        format: '',
+        isDateTime: true,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Please book the next appointment with the member using calendly now if less than 10 days from today and enter the date here in the form (note that if the date is more than 10 days, a task for ME will be created so that they confirm the availability of the member)',
+      },
+      {
+        id: 'fldJox8Ev5bVBd0fH',
+        name: 'Please write in any additional comments or observation you think are important',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'This is the place you can write anything you want to document about the patient\n Need to create a task for the HN team? Please add a HN task using the form',
+      },
+      {
+        id: 'fld7JWe6A3Xd6bnD2',
+        name: 'Consultation type - billing',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Only for billing purpose. \nAll Blue options are billable.\nAll Yellow Options are not billable.',
+      },
+      {
+        id: 'fldL6X27UQfsfs8xO',
+        name: 'Date of first diagnosis of this condition',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: "This field is used to fill in GA's claim form.",
+        conditionType: '',
+        parentKey: 'Insurance Provider',
+        parentValues: ['GA insurance'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Insurance Provider'])) {
+            return ['GA insurance'].some((r) =>
+              values['Insurance Provider'].includes(r)
+            )
+          }
+          return ['GA insurance'].includes(values['Insurance Provider'])
+        },
+      },
+      {
+        id: 'fld266ZMLYKJLahbD',
+        name: 'Has the patient suffered from this complaint previously?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: "This field is used to fill in GA's claim form.",
+        conditionType: '',
+        parentKey: 'Insurance Provider',
+        parentValues: ['GA insurance'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Insurance Provider'])) {
+            return ['GA insurance'].some((r) =>
+              values['Insurance Provider'].includes(r)
+            )
+          }
+          return ['GA insurance'].includes(values['Insurance Provider'])
+        },
+      },
+      {
+        id: 'fldoCRXun8dC87Yit',
+        name: 'Date they suffered from the complaint',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: "This field is used to fill in GA's claim form.",
+        conditionType: '',
+        parentKey: 'Insurance Provider',
+        parentValues: ['GA insurance'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Insurance Provider'])) {
+            return ['GA insurance'].some((r) =>
+              values['Insurance Provider'].includes(r)
+            )
+          }
+          return ['GA insurance'].includes(values['Insurance Provider'])
+        },
+      },
+      {
+        id: 'fldshRE6TSHucsN0B',
+        name: 'Name of the treatment and drug prescribed',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: "This field is used to fill in GA's claim form.",
+        conditionType: '',
+        parentKey: 'Insurance Provider',
+        parentValues: ['GA insurance'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Insurance Provider'])) {
+            return ['GA insurance'].some((r) =>
+              values['Insurance Provider'].includes(r)
+            )
+          }
+          return ['GA insurance'].includes(values['Insurance Provider'])
+        },
+      },
+    ],
+  },
 ]
