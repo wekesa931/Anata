@@ -16674,7 +16674,7 @@ export default [
     fields: [
       {
         id: 'fldsQoD6p93Nwu8cg',
-        name: "Child's name",
+        name: 'Full name',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
@@ -16688,7 +16688,7 @@ export default [
       },
       {
         id: 'fldzMqzMyS6VJRWJJ',
-        name: "Child's age",
+        name: 'Age',
         type: 'number',
         format: 'integer',
         isDateTime: false,
@@ -16731,7 +16731,7 @@ export default [
       },
       {
         id: 'fldMSK1BkvmhUhRai',
-        name: "Do you know your child's height/length (m)",
+        name: 'Do you know your child height/length (m)',
         type: 'number',
         format: 'decimal',
         isDateTime: false,
@@ -16745,7 +16745,7 @@ export default [
       },
       {
         id: 'fldgmrkKSfvFG3k5l',
-        name: "Do you know your child's weight (kg)",
+        name: 'Do you know your child weight (kg)',
         type: 'number',
         format: 'decimal',
         isDateTime: false,
@@ -16759,7 +16759,7 @@ export default [
       },
       {
         id: 'flduj8fsllBhxZZgp',
-        name: "Do you have any concerns about your child's health today?",
+        name: 'Do you have any concerns about your child health today?',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -16785,30 +16785,28 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: "Do you have any concerns about your child's health today?",
+        parentKey: 'Do you have any concerns about your child health today?',
         parentValues: ['Yes'],
         condition: (values: any) => {
           if (
             Array.isArray(
-              values[
-                "Do you have any concerns about your child's health today?"
-              ]
+              values['Do you have any concerns about your child health today?']
             )
           ) {
             return ['Yes'].some((r) =>
               values[
-                "Do you have any concerns about your child's health today?"
+                'Do you have any concerns about your child health today?'
               ].includes(r)
             )
           }
           return ['Yes'].includes(
-            values["Do you have any concerns about your child's health today?"]
+            values['Do you have any concerns about your child health today?']
           )
         },
       },
       {
         id: 'fldzozelSvBfeeaWJ',
-        name: "Do you know whether your child's vaccines are up to date?",
+        name: 'Do you know whether your child vaccines are up to date?',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -17063,13 +17061,13 @@ export default [
         required: false,
         helper: 'If No, schedule a pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['6'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['6'].some((r) => values.Age.includes(r))
           }
-          return ['6'].includes(values["Child's age"])
+          return ['6'].includes(values.Age)
         },
       },
       {
@@ -17086,13 +17084,13 @@ export default [
         required: false,
         helper: 'If No, schedule a pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['6'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['6'].some((r) => values.Age.includes(r))
           }
-          return ['6'].includes(values["Child's age"])
+          return ['6'].includes(values.Age)
         },
       },
       {
@@ -17109,13 +17107,13 @@ export default [
         required: false,
         helper: 'If No, schedule a pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['6'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['6'].some((r) => values.Age.includes(r))
           }
-          return ['6'].includes(values["Child's age"])
+          return ['6'].includes(values.Age)
         },
       },
       {
@@ -17132,13 +17130,13 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['6'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['6'].some((r) => values.Age.includes(r))
           }
-          return ['6'].includes(values["Child's age"])
+          return ['6'].includes(values.Age)
         },
       },
       {
@@ -17155,13 +17153,13 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['6'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['6'].some((r) => values.Age.includes(r))
           }
-          return ['6'].includes(values["Child's age"])
+          return ['6'].includes(values.Age)
         },
       },
       {
@@ -17178,13 +17176,13 @@ export default [
         required: false,
         helper: 'If Yes, schedule a pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['7', '8'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['7', '8'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['7', '8'].some((r) => values.Age.includes(r))
           }
-          return ['7', '8'].includes(values["Child's age"])
+          return ['7', '8'].includes(values.Age)
         },
       },
       {
@@ -17201,13 +17199,13 @@ export default [
         required: false,
         helper: 'If Yes, schedule a pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['7', '8'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['7', '8'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['7', '8'].some((r) => values.Age.includes(r))
           }
-          return ['7', '8'].includes(values["Child's age"])
+          return ['7', '8'].includes(values.Age)
         },
       },
       {
@@ -17224,18 +17222,18 @@ export default [
         required: false,
         helper: 'If No, schedule a pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['7', '8'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['7', '8'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['7', '8'].some((r) => values.Age.includes(r))
           }
-          return ['7', '8'].includes(values["Child's age"])
+          return ['7', '8'].includes(values.Age)
         },
       },
       {
         id: 'fldV6Cx1LnJayz1gP',
-        name: 'Are you concerned about your child’s interaction with peers at school?',
+        name: 'Are you concerned about your child interaction with peers at school?',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -17247,15 +17245,15 @@ export default [
         required: false,
         helper: 'If Yes, schedule a pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['7', '8', '9', '10', '11'].includes(values["Child's age"])
+          return ['7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17272,13 +17270,13 @@ export default [
         required: false,
         helper: 'If No, schedule a pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['7', '8'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['7', '8'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['7', '8'].some((r) => values.Age.includes(r))
           }
-          return ['7', '8'].includes(values["Child's age"])
+          return ['7', '8'].includes(values.Age)
         },
       },
       {
@@ -17295,15 +17293,13 @@ export default [
         required: false,
         helper: 'If Yes, schedule a peadiatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
-            )
+          if (Array.isArray(values.Age)) {
+            return ['9', '10', '11'].some((r) => values.Age.includes(r))
           }
-          return ['9', '10', '11'].includes(values["Child's age"])
+          return ['9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17320,15 +17316,13 @@ export default [
         required: false,
         helper: 'If Yes, schedule a pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
-            )
+          if (Array.isArray(values.Age)) {
+            return ['9', '10', '11'].some((r) => values.Age.includes(r))
           }
-          return ['9', '10', '11'].includes(values["Child's age"])
+          return ['9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17345,15 +17339,13 @@ export default [
         required: false,
         helper: 'If No, schedule a HN consult meeting',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
-            )
+          if (Array.isArray(values.Age)) {
+            return ['9', '10', '11'].some((r) => values.Age.includes(r))
           }
-          return ['9', '10', '11'].includes(values["Child's age"])
+          return ['9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17370,15 +17362,13 @@ export default [
         required: false,
         helper: 'If No, schedule a pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
-            )
+          if (Array.isArray(values.Age)) {
+            return ['9', '10', '11'].some((r) => values.Age.includes(r))
           }
-          return ['9', '10', '11'].includes(values["Child's age"])
+          return ['9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17395,15 +17385,13 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
-            )
+          if (Array.isArray(values.Age)) {
+            return ['9', '10', '11'].some((r) => values.Age.includes(r))
           }
-          return ['9', '10', '11'].includes(values["Child's age"])
+          return ['9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17420,17 +17408,15 @@ export default [
         required: false,
         helper: 'If Yes, schedule a Virtual consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -17447,17 +17433,15 @@ export default [
         required: false,
         helper: 'If not age appropriate, schedule Health Check',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17474,17 +17458,15 @@ export default [
         required: false,
         helper: 'If No, schedule a VCD consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17501,22 +17483,20 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
         id: 'fld3PRkXvYO8xC91P',
-        name: 'What are your child’s interests and goals?',
+        name: 'What are your child interests and goals?',
         type: 'text',
         format: '',
         isDateTime: false,
@@ -17528,17 +17508,15 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17555,17 +17533,15 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -17582,17 +17558,15 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -17609,17 +17583,15 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -17636,17 +17608,15 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -17663,22 +17633,20 @@ export default [
         required: false,
         helper: 'If above 4 hours, automate content ',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
         id: 'fldh5rXuATuayEz6y',
-        name: "How much dairy does your child drink (cow's milk, goat milk, camel milk, soy milk, yoghurt) per day?",
+        name: 'How much dairy does your child drink (cow milk, goat milk, camel milk, soy milk, yoghurt) per day?',
         type: 'number',
         format: 'decimal',
         isDateTime: false,
@@ -17690,17 +17658,15 @@ export default [
         required: false,
         helper: 'Enter in cups. If less than 1 cup, send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17717,17 +17683,15 @@ export default [
         required: false,
         helper: 'If Yes, schedule a nutrition consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17744,17 +17708,15 @@ export default [
         required: false,
         helper: 'If No, send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17771,17 +17733,15 @@ export default [
         required: false,
         helper: 'If No, send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17798,17 +17758,15 @@ export default [
         required: false,
         helper: 'Enter in cups. If more than 2 cups, send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17825,17 +17783,15 @@ export default [
         required: false,
         helper: 'If Yes, schedule a nutrition consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -17852,22 +17808,20 @@ export default [
         required: false,
         helper: 'If Yes, schedule a nutrition consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
         id: 'fldbbISzKbEPoOf1c',
-        name: "How much dairy do you drink (cow's milk, goat milk, camel milk, soy milk, yoghurt) per day?",
+        name: 'How much dairy do you drink (cow milk, goat milk, camel milk, soy milk, yoghurt) per day?',
         type: 'number',
         format: 'decimal',
         isDateTime: false,
@@ -17879,17 +17833,15 @@ export default [
         required: false,
         helper: 'Enter in cups. If less than 1 cup, send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -17906,17 +17858,15 @@ export default [
         required: false,
         helper: 'Enter in cups. If more than 2 cups, send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -17933,17 +17883,15 @@ export default [
         required: false,
         helper: 'Enter in cups. If more than 2 cups, send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -17960,17 +17908,15 @@ export default [
         required: false,
         helper: 'If No, send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -17987,17 +17933,15 @@ export default [
         required: false,
         helper: 'If Yes, send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18014,17 +17958,15 @@ export default [
         required: false,
         helper: 'If Yes, send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18041,17 +17983,15 @@ export default [
         required: false,
         helper: 'If Yes, schedule a nutrition consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18068,17 +18008,15 @@ export default [
         required: false,
         helper: 'If Yes, schedule a nutrition consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18110,17 +18048,15 @@ export default [
         helper:
           'If No and Age is between 8 and 11, automate content push\nIf No and Age= 6 and Age=7 , schedule HN consultation meeting',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18137,15 +18073,13 @@ export default [
         required: false,
         helper: 'If Yes, schedule a Virtual Consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
-            )
+          if (Array.isArray(values.Age)) {
+            return ['8', '9', '10', '11'].some((r) => values.Age.includes(r))
           }
-          return ['8', '9', '10', '11'].includes(values["Child's age"])
+          return ['8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18162,15 +18096,13 @@ export default [
         required: false,
         helper: 'If Yes, schedule a pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
-            )
+          if (Array.isArray(values.Age)) {
+            return ['8', '9', '10', '11'].some((r) => values.Age.includes(r))
           }
-          return ['8', '9', '10', '11'].includes(values["Child's age"])
+          return ['8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18187,17 +18119,15 @@ export default [
         required: false,
         helper: 'If No, automate content push',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18214,17 +18144,15 @@ export default [
         required: false,
         helper: 'If Yes, schedule a VCD consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18241,17 +18169,15 @@ export default [
         required: false,
         helper: 'If Yes, schedule a VCD consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18268,17 +18194,15 @@ export default [
         required: false,
         helper: 'If Yes, schedule a VCD consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18295,17 +18219,15 @@ export default [
         required: false,
         helper: 'If Yes, schedule a VCD consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18322,17 +18244,15 @@ export default [
         required: false,
         helper: 'If No, create a task to send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18349,17 +18269,15 @@ export default [
         required: false,
         helper: 'If No, automate content push',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18376,17 +18294,15 @@ export default [
         required: false,
         helper: 'If No, automate content push',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18403,17 +18319,15 @@ export default [
         required: false,
         helper: 'If No, automate content push',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18430,17 +18344,15 @@ export default [
         required: false,
         helper: 'If below 6 hrs, schedule a mental health consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18457,17 +18369,15 @@ export default [
         required: false,
         helper: 'If Yes, schedule health check',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18484,17 +18394,15 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18511,17 +18419,15 @@ export default [
         required: false,
         helper: 'If No, schedule a mental health consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18538,22 +18444,20 @@ export default [
         required: false,
         helper: 'If Yes, create a task to send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
         id: 'fld31tEw8LLs6ErYy',
-        name: 'Is there a television or computer in your child’s bedroom?',
+        name: 'Is there a television or computer in your child bedroom?',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -18565,22 +18469,20 @@ export default [
         required: false,
         helper: 'If Yes, automate content push',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
         id: 'fldRqmkPd2mUQi24h',
-        name: 'Do you monitor your child’s television and internet use?',
+        name: 'Do you monitor your child television and internet use?',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -18592,17 +18494,15 @@ export default [
         required: false,
         helper: 'If No, automate content push',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18619,17 +18519,15 @@ export default [
         required: false,
         helper: 'If No, automate content push',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18646,17 +18544,15 @@ export default [
         required: false,
         helper: 'If No, automate content push',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18673,17 +18569,15 @@ export default [
         required: false,
         helper: 'If Yes, automate content push',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18700,17 +18594,15 @@ export default [
         required: false,
         helper: 'If Yes, Schedule MHC consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18727,17 +18619,15 @@ export default [
         required: false,
         helper: 'If Yes, Schedule MHC consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18754,17 +18644,15 @@ export default [
         required: false,
         helper: 'If Yes, schedule a VCD consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6', '7', '8', '9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['6', '7', '8', '9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['6', '7', '8', '9', '10', '11'].includes(
-            values["Child's age"]
-          )
+          return ['6', '7', '8', '9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18781,15 +18669,13 @@ export default [
         required: false,
         helper: 'If Yes, schedule a VCD consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
-            )
+          if (Array.isArray(values.Age)) {
+            return ['9', '10', '11'].some((r) => values.Age.includes(r))
           }
-          return ['9', '10', '11'].includes(values["Child's age"])
+          return ['9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18806,15 +18692,13 @@ export default [
         required: false,
         helper: 'If Yes, schedule a VCD consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
-            )
+          if (Array.isArray(values.Age)) {
+            return ['9', '10', '11'].some((r) => values.Age.includes(r))
           }
-          return ['9', '10', '11'].includes(values["Child's age"])
+          return ['9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18831,15 +18715,13 @@ export default [
         required: false,
         helper: 'If Yes, schedule a VCD consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['9', '10', '11'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['9', '10', '11'].some((r) =>
-              values["Child's age"].includes(r)
-            )
+          if (Array.isArray(values.Age)) {
+            return ['9', '10', '11'].some((r) => values.Age.includes(r))
           }
-          return ['9', '10', '11'].includes(values["Child's age"])
+          return ['9', '10', '11'].includes(values.Age)
         },
       },
       {
@@ -18856,17 +18738,15 @@ export default [
         required: false,
         helper: 'If No, automate content push',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18883,17 +18763,15 @@ export default [
         required: false,
         helper: 'If Yes, schedule a VCD consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18910,17 +18788,15 @@ export default [
         required: false,
         helper: 'If Yes, schedule a VCD consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
+          if (Array.isArray(values.Age)) {
             return ['12', '13', '14', '15', '16', '17'].some((r) =>
-              values["Child's age"].includes(r)
+              values.Age.includes(r)
             )
           }
-          return ['12', '13', '14', '15', '16', '17'].includes(
-            values["Child's age"]
-          )
+          return ['12', '13', '14', '15', '16', '17'].includes(values.Age)
         },
       },
       {
@@ -18937,13 +18813,12 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: ['Gender', "Child's age"],
+        parentKey: ['Gender', 'Age'],
         parentValues: ['Female', '12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
           return (
-            ['12', '13', '14', '15', '16', '17'].includes(
-              values["Child's age"]
-            ) && ['Female'].includes(values.Gender)
+            ['12', '13', '14', '15', '16', '17'].includes(values.Age) &&
+            ['Female'].includes(values.Gender)
           )
         },
       },
@@ -18986,13 +18861,12 @@ export default [
         required: false,
         helper: 'If Yes, schedule a VC',
         conditionType: '',
-        parentKey: ['Gender', "Child's age"],
+        parentKey: ['Gender', 'Age'],
         parentValues: ['Female', '12', '13', '14', '15', '16', '17'],
         condition: (values: any) => {
           return (
-            ['12', '13', '14', '15', '16', '17'].includes(
-              values["Child's age"]
-            ) && ['Female'].includes(values.Gender)
+            ['12', '13', '14', '15', '16', '17'].includes(values.Age) &&
+            ['Female'].includes(values.Gender)
           )
         },
       },
@@ -19006,7 +18880,7 @@ export default [
     fields: [
       {
         id: 'fldw4qcGpVJHk29BJ',
-        name: "Child's name",
+        name: 'Full name',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
@@ -19062,7 +18936,7 @@ export default [
       },
       {
         id: 'fldD0s8myEMPxpX8c',
-        name: "Child's age",
+        name: 'Age',
         type: 'number',
         format: 'integer',
         isDateTime: false,
@@ -19090,7 +18964,7 @@ export default [
       },
       {
         id: 'fldQ6MAbkh2bIPSzL',
-        name: "Do you know your child's height/length (m)",
+        name: 'Do you know your child height/length (m)',
         type: 'number',
         format: 'decimal',
         isDateTime: false,
@@ -19102,18 +18976,18 @@ export default [
         required: true,
         helper: 'Please enter the height/ length in meters',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['6'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['6'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['6'].some((r) => values.Age.includes(r))
           }
-          return ['6'].includes(values["Child's age"])
+          return ['6'].includes(values.Age)
         },
       },
       {
         id: 'fldkAtTkS1bzuBluO',
-        name: "Do you know your child's weight (kg)",
+        name: 'Do you know your child weight (kg)',
         type: 'number',
         format: 'decimal',
         isDateTime: false,
@@ -19127,7 +19001,7 @@ export default [
       },
       {
         id: 'fldyxaO2l7hblx0FS',
-        name: "Do you have any concerns about your child's health today?",
+        name: 'Do you have any concerns about your child health today?',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -19154,24 +19028,22 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: "Do you have any concerns about your child's health today?",
+        parentKey: 'Do you have any concerns about your child health today?',
         parentValues: ['Yes'],
         condition: (values: any) => {
           if (
             Array.isArray(
-              values[
-                "Do you have any concerns about your child's health today?"
-              ]
+              values['Do you have any concerns about your child health today?']
             )
           ) {
             return ['Yes'].some((r) =>
               values[
-                "Do you have any concerns about your child's health today?"
+                'Do you have any concerns about your child health today?'
               ].includes(r)
             )
           }
           return ['Yes'].includes(
-            values["Do you have any concerns about your child's health today?"]
+            values['Do you have any concerns about your child health today?']
           )
         },
       },
@@ -19224,7 +19096,7 @@ export default [
       },
       {
         id: 'fldDCBNVShh92Mblc',
-        name: "Do you know whether your child's vaccines are up to date?",
+        name: 'Do you know whether your child vaccines are up to date?',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -20146,7 +20018,7 @@ export default [
       },
       {
         id: 'fldNTPsWHwsLgfhGu',
-        name: 'Does your baby say “words” that you don’t understand (jargoning)?',
+        name: 'Does your baby say “words” that you dont understand (jargoning)?',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -20452,13 +20324,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['2'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['2'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['2'].some((r) => values.Age.includes(r))
           }
-          return ['2'].includes(values["Child's age"])
+          return ['2'].includes(values.Age)
         },
       },
       {
@@ -20475,13 +20347,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['2'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['2'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['2'].some((r) => values.Age.includes(r))
           }
-          return ['2'].includes(values["Child's age"])
+          return ['2'].includes(values.Age)
         },
       },
       {
@@ -20498,13 +20370,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['2'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['2'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['2'].some((r) => values.Age.includes(r))
           }
-          return ['2'].includes(values["Child's age"])
+          return ['2'].includes(values.Age)
         },
       },
       {
@@ -20521,13 +20393,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['2'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['2'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['2'].some((r) => values.Age.includes(r))
           }
-          return ['2'].includes(values["Child's age"])
+          return ['2'].includes(values.Age)
         },
       },
       {
@@ -20544,13 +20416,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['2'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['2'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['2'].some((r) => values.Age.includes(r))
           }
-          return ['2'].includes(values["Child's age"])
+          return ['2'].includes(values.Age)
         },
       },
       {
@@ -20567,13 +20439,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['2'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['2'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['2'].some((r) => values.Age.includes(r))
           }
-          return ['2'].includes(values["Child's age"])
+          return ['2'].includes(values.Age)
         },
       },
       {
@@ -20590,13 +20462,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['2'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['2'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['2'].some((r) => values.Age.includes(r))
           }
-          return ['2'].includes(values["Child's age"])
+          return ['2'].includes(values.Age)
         },
       },
       {
@@ -20613,13 +20485,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['2'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['2'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['2'].some((r) => values.Age.includes(r))
           }
-          return ['2'].includes(values["Child's age"])
+          return ['2'].includes(values.Age)
         },
       },
       {
@@ -20636,13 +20508,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['2'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['2'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['2'].some((r) => values.Age.includes(r))
           }
-          return ['2'].includes(values["Child's age"])
+          return ['2'].includes(values.Age)
         },
       },
       {
@@ -20659,13 +20531,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['2'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['2'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['2'].some((r) => values.Age.includes(r))
           }
-          return ['2'].includes(values["Child's age"])
+          return ['2'].includes(values.Age)
         },
       },
       {
@@ -20682,13 +20554,13 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['2'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['2'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['2'].some((r) => values.Age.includes(r))
           }
-          return ['2'].includes(values["Child's age"])
+          return ['2'].includes(values.Age)
         },
       },
       {
@@ -20705,13 +20577,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['3'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['3'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['3'].some((r) => values.Age.includes(r))
           }
-          return ['3'].includes(values["Child's age"])
+          return ['3'].includes(values.Age)
         },
       },
       {
@@ -20728,13 +20600,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['3'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['3'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['3'].some((r) => values.Age.includes(r))
           }
-          return ['3'].includes(values["Child's age"])
+          return ['3'].includes(values.Age)
         },
       },
       {
@@ -20751,13 +20623,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['3'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['3'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['3'].some((r) => values.Age.includes(r))
           }
-          return ['3'].includes(values["Child's age"])
+          return ['3'].includes(values.Age)
         },
       },
       {
@@ -20774,13 +20646,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['3'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['3'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['3'].some((r) => values.Age.includes(r))
           }
-          return ['3'].includes(values["Child's age"])
+          return ['3'].includes(values.Age)
         },
       },
       {
@@ -20797,13 +20669,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['3'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['3'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['3'].some((r) => values.Age.includes(r))
           }
-          return ['3'].includes(values["Child's age"])
+          return ['3'].includes(values.Age)
         },
       },
       {
@@ -20820,13 +20692,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['3'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['3'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['3'].some((r) => values.Age.includes(r))
           }
-          return ['3'].includes(values["Child's age"])
+          return ['3'].includes(values.Age)
         },
       },
       {
@@ -20844,10 +20716,10 @@ export default [
         helper:
           'If No and age= 3, schedule pediatric consultation\nIf No and age= 4 or 5, create a task to send content',
         conditionType: '',
-        parentKey: ["Child's age"],
+        parentKey: ['Age'],
         parentValues: ['3', '4', '5'],
         condition: (values: any) => {
-          return ['3', '4', '5'].includes(values["Child's age"])
+          return ['3', '4', '5'].includes(values.Age)
         },
       },
       {
@@ -20864,13 +20736,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['3'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['3'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['3'].some((r) => values.Age.includes(r))
           }
-          return ['3'].includes(values["Child's age"])
+          return ['3'].includes(values.Age)
         },
       },
       {
@@ -20887,13 +20759,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['3'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['3'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['3'].some((r) => values.Age.includes(r))
           }
-          return ['3'].includes(values["Child's age"])
+          return ['3'].includes(values.Age)
         },
       },
       {
@@ -20910,13 +20782,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['3'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['3'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['3'].some((r) => values.Age.includes(r))
           }
-          return ['3'].includes(values["Child's age"])
+          return ['3'].includes(values.Age)
         },
       },
       {
@@ -20933,13 +20805,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['4'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['4'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['4'].some((r) => values.Age.includes(r))
           }
-          return ['4'].includes(values["Child's age"])
+          return ['4'].includes(values.Age)
         },
       },
       {
@@ -20956,13 +20828,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['4'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['4'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['4'].some((r) => values.Age.includes(r))
           }
-          return ['4'].includes(values["Child's age"])
+          return ['4'].includes(values.Age)
         },
       },
       {
@@ -20979,13 +20851,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['4'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['4'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['4'].some((r) => values.Age.includes(r))
           }
-          return ['4'].includes(values["Child's age"])
+          return ['4'].includes(values.Age)
         },
       },
       {
@@ -21002,13 +20874,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['4'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['4'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['4'].some((r) => values.Age.includes(r))
           }
-          return ['4'].includes(values["Child's age"])
+          return ['4'].includes(values.Age)
         },
       },
       {
@@ -21025,13 +20897,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['4'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['4'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['4'].some((r) => values.Age.includes(r))
           }
-          return ['4'].includes(values["Child's age"])
+          return ['4'].includes(values.Age)
         },
       },
       {
@@ -21048,13 +20920,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['4'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['4'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['4'].some((r) => values.Age.includes(r))
           }
-          return ['4'].includes(values["Child's age"])
+          return ['4'].includes(values.Age)
         },
       },
       {
@@ -21071,13 +20943,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['4'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['4'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['4'].some((r) => values.Age.includes(r))
           }
-          return ['4'].includes(values["Child's age"])
+          return ['4'].includes(values.Age)
         },
       },
       {
@@ -21094,13 +20966,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['4'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['4'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['4'].some((r) => values.Age.includes(r))
           }
-          return ['4'].includes(values["Child's age"])
+          return ['4'].includes(values.Age)
         },
       },
       {
@@ -21117,10 +20989,10 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: ["Child's age"],
+        parentKey: ['Age'],
         parentValues: ['3', '4'],
         condition: (values: any) => {
-          return ['3', '4'].includes(values["Child's age"])
+          return ['3', '4'].includes(values.Age)
         },
       },
       {
@@ -21137,13 +21009,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -21160,13 +21032,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -21183,13 +21055,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -21206,13 +21078,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -21229,13 +21101,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -21252,13 +21124,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -21275,13 +21147,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -21298,13 +21170,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -21321,13 +21193,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -21344,13 +21216,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -21367,13 +21239,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -21390,13 +21262,13 @@ export default [
         required: false,
         helper: 'If No, schedule pediatric consultation',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -21413,13 +21285,13 @@ export default [
         required: false,
         helper: 'If not age appropriate, schedule HC',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -21477,18 +21349,18 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: "child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["child's age"])) {
-            return ['5'].some((r) => values["child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
         id: 'fld73TTxvKu2laaqi',
-        name: 'What are your child’s interests and goals?',
+        name: 'What are your child interests and goals?',
         type: 'text',
         format: '',
         isDateTime: false,
@@ -21500,13 +21372,13 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: "child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["child's age"])) {
-            return ['5'].some((r) => values["child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -21532,7 +21404,7 @@ export default [
       },
       {
         id: 'fldkGTaGI5UWjswFW',
-        name: 'Do you have any concerns about your baby’s feeding or weight?',
+        name: 'Do you have any concerns about your baby feeding or weight?',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -21574,7 +21446,7 @@ export default [
       },
       {
         id: 'fldljtw4AFa4mcAv1',
-        name: "How much dairy does your child drink (cow's milk, goat milk, camel milk, soy milk, yoghurt) per day?",
+        name: 'How much dairy does your child drink (cow milk, goat milk, camel milk, soy milk, yoghurt) per day?',
         type: 'number',
         format: 'decimal',
         isDateTime: false,
@@ -21943,13 +21815,13 @@ export default [
         required: false,
         helper: 'If No, schedule health check',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -22113,15 +21985,13 @@ export default [
         required: false,
         helper: 'Enter in hours',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['2', '3', '4', '5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['2', '3', '4', '5'].some((r) =>
-              values["Child's age"].includes(r)
-            )
+          if (Array.isArray(values.Age)) {
+            return ['2', '3', '4', '5'].some((r) => values.Age.includes(r))
           }
-          return ['2', '3', '4', '5'].includes(values["Child's age"])
+          return ['2', '3', '4', '5'].includes(values.Age)
         },
       },
       {
@@ -22138,15 +22008,13 @@ export default [
         required: false,
         helper: 'Enter in minutes',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['2', '3', '4', '5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['2', '3', '4', '5'].some((r) =>
-              values["Child's age"].includes(r)
-            )
+          if (Array.isArray(values.Age)) {
+            return ['2', '3', '4', '5'].some((r) => values.Age.includes(r))
           }
-          return ['2', '3', '4', '5'].includes(values["Child's age"])
+          return ['2', '3', '4', '5'].includes(values.Age)
         },
       },
       {
@@ -22163,13 +22031,13 @@ export default [
         required: false,
         helper: 'If Yes, schedule health check',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -22333,13 +22201,13 @@ export default [
         required: false,
         helper: 'If Yes, create a task to send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['3', '4'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['3', '4'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['3', '4'].some((r) => values.Age.includes(r))
           }
-          return ['3', '4'].includes(values["Child's age"])
+          return ['3', '4'].includes(values.Age)
         },
       },
       {
@@ -22356,13 +22224,13 @@ export default [
         required: false,
         helper: 'If Yes, create a task to send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['5'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
           }
-          return ['5'].includes(values["Child's age"])
+          return ['5'].includes(values.Age)
         },
       },
       {
@@ -22451,7 +22319,7 @@ export default [
       },
       {
         id: 'fldb9ZY30WkTa3gf7',
-        name: "Is your child's car seat appropriately sized, rear-facing, and in the back seat?",
+        name: 'Is your child car seat appropriately sized, rear-facing, and in the back seat?',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -22514,7 +22382,7 @@ export default [
       },
       {
         id: 'fldNHB4RMdn3juPNb',
-        name: 'Do you brush your child’s teeth daily?',
+        name: 'Do you brush your child teeth daily?',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -22547,13 +22415,13 @@ export default [
         required: false,
         helper: 'If No, create a task to send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['2'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['2'].some((r) => values["Child's age"].includes(r))
+          if (Array.isArray(values.Age)) {
+            return ['2'].some((r) => values.Age.includes(r))
           }
-          return ['2'].includes(values["Child's age"])
+          return ['2'].includes(values.Age)
         },
       },
       {
@@ -22570,15 +22438,13 @@ export default [
         required: false,
         helper: 'If No, create a task to send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['3', '4', '5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['3', '4', '5'].some((r) =>
-              values["Child's age"].includes(r)
-            )
+          if (Array.isArray(values.Age)) {
+            return ['3', '4', '5'].some((r) => values.Age.includes(r))
           }
-          return ['3', '4', '5'].includes(values["Child's age"])
+          return ['3', '4', '5'].includes(values.Age)
         },
       },
       {
@@ -22595,15 +22461,13 @@ export default [
         required: false,
         helper: 'If No, create a task to send content',
         conditionType: '',
-        parentKey: "Child's age",
+        parentKey: 'Age',
         parentValues: ['3', '4', '5'],
         condition: (values: any) => {
-          if (Array.isArray(values["Child's age"])) {
-            return ['3', '4', '5'].some((r) =>
-              values["Child's age"].includes(r)
-            )
+          if (Array.isArray(values.Age)) {
+            return ['3', '4', '5'].some((r) => values.Age.includes(r))
           }
-          return ['3', '4', '5'].includes(values["Child's age"])
+          return ['3', '4', '5'].includes(values.Age)
         },
       },
     ],
