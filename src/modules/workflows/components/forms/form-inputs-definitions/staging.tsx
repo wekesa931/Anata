@@ -8888,24 +8888,27 @@ export default [
   },
   {
     name: 'Intervention Data Tracking',
-    id: 'tblRO1pr4sx3Lwocg',
+    id: 'tblBgSBkib75egqHI',
+    formId: 'shrKSeWm890KAwJES',
+    helper:
+      'This form should be used to collect data about a bene intervention progress',
     fields: [
       {
-        id: 'fldBl0LiaUUNOhG9g',
+        id: 'fldlNRXboDuPh1IEI',
         name: 'Member Intervention',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldchjuJF5h2f4jPP',
+        symmetricColumnId: 'fldWJaGCTOR4IOlkh',
         unreversed: true,
         relationship: 'one',
-        foreignTableId: 'tblr038Yy1R356G2p',
+        foreignTableId: 'tblbsUkRMKr5yQIxR',
         required: true,
         helper: '',
       },
       {
-        id: 'flda7LZq1QPppbU9a',
+        id: 'fldUzCbjfzprSVWEC',
         name: 'Date',
         type: 'date',
         format: '',
@@ -8919,7 +8922,7 @@ export default [
         helper: 'Date that the data was collected',
       },
       {
-        id: 'fldg7GLIpyVuneuuA',
+        id: 'fld0zxXBDhvwQYwZ2',
         name: 'HMP Number',
         type: 'select',
         format: '',
@@ -8933,7 +8936,7 @@ export default [
         helper: 'Please enter the CURRENT HMP#',
       },
       {
-        id: 'fld0B9VPkVVUyZJPC',
+        id: 'fldK307IyEvW1JLk4',
         name: 'Intervention type',
         type: 'select',
         format: '',
@@ -8948,7 +8951,7 @@ export default [
           'This type selection will allow the form to ask the right questions for this intervention',
       },
       {
-        id: 'fldZgFKfl8IGOOHVP',
+        id: 'fldJIwW8zRiIhyJqh',
         name: 'Current activity - description',
         type: 'multilineText',
         format: '',
@@ -8974,7 +8977,7 @@ export default [
         },
       },
       {
-        id: 'fldziNnHO2gJAneG7',
+        id: 'fldjKEzA2LQL37gbz',
         name: 'Current activity measurement',
         type: 'text',
         format: '',
@@ -8986,7 +8989,7 @@ export default [
         foreignTableId: null,
         required: true,
         helper:
-          'Please go to this view <a href="https://airtable.com/tblTCHo0WAfWgEF6J/viwUPC7gUPA1NiQyV?blocks=hide" target="_blank">https://airtable.com/tblTCHo0WAfWgEF6J/viwUPC7gUPA1NiQyV?blocks=hide</a> to identify the MET-Min/week (total of MET-Min/week of each activity)\nExample: 500 or 550',
+          'Please go to this view <a href="https://coda.io/d/Clinical-Hub_dLO3YmEbw6e/Activity-METs-calculator_suNvx#_luc_1" target="_blank">https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Activity-METs-calculator_sudrw#_luOZM</a> to identify the MET-Min/week (total of MET-Min/week of each activity)\nExample: 500 or 550',
         conditionType: '',
         parentKey: 'Intervention type',
         parentValues: ['Activity Plan', 'Fitness Plan'],
@@ -9002,7 +9005,7 @@ export default [
         },
       },
       {
-        id: 'fldaj57DXm2pgMQE6',
+        id: 'fldULWjwb5CrJwS9y',
         name: 'Current asthma score',
         type: 'text',
         format: '',
@@ -9028,7 +9031,7 @@ export default [
         },
       },
       {
-        id: 'fldYLL9TNzQAfDxox',
+        id: 'fldIdClM1iqCInzTZ',
         name: 'Current salt measurement',
         type: 'text',
         format: '',
@@ -9054,8 +9057,8 @@ export default [
         },
       },
       {
-        id: 'fldwuJrpvMH9gkczI',
-        name: 'Current BMI reduction measurement',
+        id: 'fldgWADiJvhbJ4e4a',
+        name: 'Current BMI change measurement',
         type: 'text',
         format: '',
         isDateTime: false,
@@ -9066,23 +9069,23 @@ export default [
         foreignTableId: null,
         required: true,
         helper:
-          'Calculate current BMI using the new current weight. \nIdentify the difference between previous BMI and current BMI\nEnter the increase or decrease in BMI\nFormula to use: ((current BMI/initial BMI)-1)*100\n\nexample: \ninitial BMI was 24 \ncurrent BMI is 26\nformula: X = ((26/24)-1)*100\nresult = 8.33\nenter: 8.33% increase\n\nexample 2:\ninitial BMI was 25\ncurrent BMI is 23\nformula: X = ((23/25)-1)*100\nresult = -8\nenter: 8% reduction\n\nSome examples:\n3% reduction, 4% increase, 2% reduction, 0%\n',
+          'Stage 1: BMI 25.0 - 29.9\nStage 2: BMI 30.0 - 39.9\nStage 3: BMI =/>40',
         conditionType: '',
         parentKey: 'Intervention type',
-        parentValues: ['Caloric Reduction Plan'],
+        parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
         condition: (values: any) => {
           if (Array.isArray(values['Intervention type'])) {
-            return ['Caloric Reduction Plan'].some((r) =>
+            return ['Caloric Reduction Plan', 'Weight Gain Plan'].some((r) =>
               values['Intervention type'].includes(r)
             )
           }
-          return ['Caloric Reduction Plan'].includes(
+          return ['Caloric Reduction Plan', 'Weight Gain Plan'].includes(
             values['Intervention type']
           )
         },
       },
       {
-        id: 'fldNjNMHKx7qTXFJz',
+        id: 'fldxLEYAYgHsmHHe1',
         name: 'Current glycemix index',
         type: 'text',
         format: '',
@@ -9107,7 +9110,7 @@ export default [
         },
       },
       {
-        id: 'fldyeSnvGWHn8kjq4',
+        id: 'fldiGJzoUFhpB4lVw',
         name: 'current cholesterol measurement',
         type: 'text',
         format: '',
@@ -9133,7 +9136,7 @@ export default [
         },
       },
       {
-        id: 'fld2okRIvSuXvH46u',
+        id: 'fldMQb3BJB4ZYr6BW',
         name: 'Current potassium measurement',
         type: 'text',
         format: '',
@@ -9161,9 +9164,9 @@ export default [
         },
       },
       {
-        id: 'fldIS6EfIlPBHbYma',
+        id: 'fldskXQ8W4pDaV0RC',
         name: 'Current asthma trigger measurement',
-        type: 'text',
+        type: 'multiSelect',
         format: '',
         isDateTime: false,
         options: [],
@@ -9172,7 +9175,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: 'Please enter the daily number of triggers\nExample: 5 or 10',
+        helper: 'Please select the type of trigger',
         conditionType: '',
         parentKey: 'Intervention type',
         parentValues: ['Asthma trigger management'],
@@ -9188,7 +9191,7 @@ export default [
         },
       },
       {
-        id: 'fldkUZ6kPYlBfnTkB',
+        id: 'fld4mQid3HVDI7VP3',
         name: 'Current activity level',
         type: 'select',
         format: '',
@@ -9214,7 +9217,7 @@ export default [
         },
       },
       {
-        id: 'fldaq0biaj612Ctd4',
+        id: 'fldUSRnbo2G3vmvIw',
         name: 'Current asthma level',
         type: 'select',
         format: '',
@@ -9240,8 +9243,8 @@ export default [
         },
       },
       {
-        id: 'fldWdZAhR8jRT1gu4',
-        name: 'Current caloric level',
+        id: 'fldGFQMa5RTTmLiZw',
+        name: 'Current BMI level',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -9254,20 +9257,20 @@ export default [
         helper: '1: BMI 25-30\n2: BMI 31-40\n3: BMI >40',
         conditionType: '',
         parentKey: 'Intervention type',
-        parentValues: ['Caloric Reduction Plan'],
+        parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
         condition: (values: any) => {
           if (Array.isArray(values['Intervention type'])) {
-            return ['Caloric Reduction Plan'].some((r) =>
+            return ['Caloric Reduction Plan', 'Weight Gain Plan'].some((r) =>
               values['Intervention type'].includes(r)
             )
           }
-          return ['Caloric Reduction Plan'].includes(
+          return ['Caloric Reduction Plan', 'Weight Gain Plan'].includes(
             values['Intervention type']
           )
         },
       },
       {
-        id: 'fldUjGUANTokqsqwM',
+        id: 'fldELx6t1CYmTcs1e',
         name: 'Current salt level',
         type: 'select',
         format: '',
@@ -9293,7 +9296,7 @@ export default [
         },
       },
       {
-        id: 'fldYpCsB6W1pXClQe',
+        id: 'fldIRtEukFBrqmnlG',
         name: 'Current potassium level',
         type: 'select',
         format: '',
@@ -9321,7 +9324,7 @@ export default [
         },
       },
       {
-        id: 'fldbOZH6ey1Y3Ryou',
+        id: 'fldVgQTZshB0wBATW',
         name: 'Current cholesterol level',
         type: 'select',
         format: '',
@@ -9347,7 +9350,7 @@ export default [
         },
       },
       {
-        id: 'fldRZ12Nm4DQ7RjlS',
+        id: 'fldBrSeGANdSABlQk',
         name: 'Current diabetic level',
         type: 'select',
         format: '',
@@ -9373,7 +9376,35 @@ export default [
         },
       },
       {
-        id: 'fldUJoTyk6Y8MGDz6',
+        id: 'fld3U5Sn5jeA2ZWvA',
+        name: 'Current Milestone Target',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          "What was the BN's Milestone Target at LAST HMP\n\nCaloric Reduction BMI Target: \nIf Stage 1:\n1-month: 1% reduction\n3-month: 2% reduction\n6-month: 2% reduction\n \nIf Stage 2:\n1-month: 2% reduction\n3-month: 2% reduction\n6-month: 3% reduction\n\nIf Stage 3:\n1-month: 2% reduction\n3-month: 3% reduction\n6-month: 5% reduction\n\nSalt:\nLevel 0: <1500mg (Recommended for hypertensives)\nLevel 1: 1500-2500mg (Normal)\nLevel 2: 2500-3500mg (High)\nLevel 3: 3500-4500mg (Very High)\nLevel 4: >4500mg (Excessively High)\n\nGlycemic Index:\nStage 0: 80-180 (At Risk)\nStage 1: <80 (Newly dx)\nStage 2: <100 (1st line meds)\nStage 3: <180 (2nd line meds)\n\nActivity:\nLevel 1: 7-10 km per week\nLevel 2: 10-15km brisk walking per week\nLevel 3: 15-20km brisk walking per week\nLevel 4: Daily exercise/Athlete\n\nCholesterol:\nLevel [0]: <200mg (Recommended for those with heart disease)\nLevel 1: 200-300mg (Normal)\nLevel 2: 300-500mg (High)\nLevel 3: >500mg (Very High)\n\nAsthma:\nStage 1: Mild intermittent\nStage 2: Moderate intermittent\nStage 3: Moderate persistent\nStage 4: Severe persistent\n\nIf BMI 17.0 - 18.4:\n1-month: 1% increase\n3-month: 1% increase\n6-month: 1% increase\nIf BMI 16.0 - 16.9:\n1-month: 1% increase\n3-month: 2% increase\n6-month: 2% increase\nIf BMI < 16.0:\n1-month: 2% increase\n3-month: 2% increase\n6-month: 3% increase",
+        conditionType: '',
+        parentKey: 'Intervention type',
+        parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Intervention type'])) {
+            return ['Caloric Reduction Plan', 'Weight Gain Plan'].some((r) =>
+              values['Intervention type'].includes(r)
+            )
+          }
+          return ['Caloric Reduction Plan', 'Weight Gain Plan'].includes(
+            values['Intervention type']
+          )
+        },
+      },
+      {
+        id: 'fldEbf5ryPyafqF4y',
         name: 'Current Milestone Attainment',
         type: 'select',
         format: '',
@@ -9384,11 +9415,13 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
+        formId: 'shrFefBCXsPCUxo2o',
+        ctlabel: 'Fill in condition',
         helper:
-          'Is the patient exceeding, on track, off track, or regressing on their goal?\n\nExceeding: the beneficiary has already reach the target level and will likely reach another level before the target date\n\nOn track: the beneficiary is not yet there but will likely succeed into reaching the target milestone\n\nOff track: the beneficiary is not yet there and will unlikely succeed into reaching the target milestone\n\nRegressing: the beneficiary is struggling with the milestone and we will likely have to refine another milestone or approach\n\nThe current progress of the intervention leads to a required update of the condition (new stage or new status)? click here: <a href="https://airtable.com/shrFefBCXsPCUxo2o" target="_blank">https://airtable.com/shrFefBCXsPCUxo2o</a>',
+          'Is the patient exceeding, on track, off track, or regressing on their goal?\n\nExceeding: the beneficiary has already reach the target level and will likely reach another level before the target date\n\nOn track: the beneficiary is not yet there but will likely succeed into reaching the target milestone\n\nOff track: the beneficiary is not yet there and will unlikely succeed into reaching the target milestone\n\nRegressing: the beneficiary is struggling with the milestone and we will likely have to refine another milestone or approach\n\nThe current progress of the intervention leads to a required update of the condition (new stage or new status)? click the button.',
       },
       {
-        id: 'fld0EmgumuzdsZ86x',
+        id: 'fldK6dsnAd9fVJaBZ',
         name: 'Is the member doing what we want them to be doing in this intervention?',
         type: 'select',
         format: '',
@@ -9416,7 +9449,7 @@ export default [
         },
       },
       {
-        id: 'fld9gi4Zq1eKrxbNv',
+        id: 'fldTI9gSEKOMUhdiX',
         name: 'Does the member want to be doing what we want them to do in this intervention?',
         type: 'select',
         format: '',
@@ -9455,8 +9488,37 @@ export default [
         },
       },
       {
-        id: 'fld56k3boCeqOn4PA',
+        id: 'fldPybf4ClOsh76k2',
         name: 'Status update',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Select the status: Active : intervention is ongoing \n Paused: the member decided to stop for now or you decide to pause it to focus on another intervention \n Completed: intervention is done \n Canceled: the intervention will not apply anymore',
+      },
+      {
+        id: 'fld2EPBx111Ov38Gn',
+        name: 'Reason for status update',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Please enter the reason that explain the status',
+      },
+      {
+        id: 'fldIGTZ7ARauuP19P',
+        name: 'Status Cause',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -9470,9 +9532,9 @@ export default [
           "If intervention has been completely successful or should stop for any reason and we do not need the member to continue it, please change the status below. \n\n(By entering a new status below, the Intervention status will be automatically changed in Airtable)\n\n`Paused` means Antara and/or bene temporarily stop an intervention\n'Stopped' means Antara decided to stop the intervention\n'Opted out' means beneficiary decided to stop the intervention",
       },
       {
-        id: 'fldicYpENirM2j6bV',
-        name: 'Reason for status update',
-        type: 'multilineText',
+        id: 'fldqu4635VyxiDtC1',
+        name: 'Resumption Date',
+        type: 'date',
         format: '',
         isDateTime: false,
         options: [],
@@ -9481,25 +9543,22 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: 'Please enter the reason why the status changed',
+        helper: 'The date the intervention gets back to effect',
+        conditionType: '',
+        parentKey: 'Status Cause',
+        parentValues: ['Stopped', 'Paused'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Status Cause'])) {
+            return ['Stopped', 'Paused'].some((r) =>
+              values['Status Cause'].includes(r)
+            )
+          }
+          return ['Stopped', 'Paused'].includes(values['Status Cause'])
+        },
       },
       {
-        id: 'fldN0Hj6ngfjYSR6Y',
-        name: 'Status Cause',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldodNmLdsd5tOtkz',
-        name: "Intervention's result",
+        id: 'fld8FEyErbN7WyvP1',
+        name: 'Intervention result',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -9510,21 +9569,10 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Since you have stopped the intervention, please enter here if it has been successful or not.',
-        conditionType: '',
-        parentKey: 'Status update',
-        parentValues: ['Opted out', 'Stopped'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Status update'])) {
-            return ['Opted out', 'Stopped'].some((r) =>
-              values['Status update'].includes(r)
-            )
-          }
-          return ['Opted out', 'Stopped'].includes(values['Status update'])
-        },
+          'If you are doing this update at the end of a HMP cycle, please capture the result of the intervention',
       },
       {
-        id: 'fldh0nicvKJVeL06i',
+        id: 'fld1seu5JtjXHv2BK',
         name: 'Other result',
         type: 'text',
         format: '',
@@ -9537,19 +9585,19 @@ export default [
         required: false,
         helper: 'Please enter the other result',
         conditionType: '',
-        parentKey: "Intervention's result",
+        parentKey: 'Intervention result',
         parentValues: ['Other'],
         condition: (values: any) => {
-          if (Array.isArray(values["Intervention's result"])) {
+          if (Array.isArray(values['Intervention result'])) {
             return ['Other'].some((r) =>
-              values["Intervention's result"].includes(r)
+              values['Intervention result'].includes(r)
             )
           }
-          return ['Other'].includes(values["Intervention's result"])
+          return ['Other'].includes(values['Intervention result'])
         },
       },
       {
-        id: 'fldN1nzVyYfi5v66J',
+        id: 'fldxteLOMHPkyf8Bb',
         name: 'Next activity milestone target',
         type: 'select',
         format: '',
@@ -9575,7 +9623,7 @@ export default [
         },
       },
       {
-        id: 'flduuNKYGgA0mHLa2',
+        id: 'fldeWEWRUZa2PrNFu',
         name: 'Next asthma milestone target',
         type: 'select',
         format: '',
@@ -9601,7 +9649,7 @@ export default [
         },
       },
       {
-        id: 'fldWhhjkg6Y5V2Upr',
+        id: 'fldGJ8vduPy7oMWUT',
         name: 'Next diabetic milestone',
         type: 'select',
         format: '',
@@ -9627,7 +9675,7 @@ export default [
         },
       },
       {
-        id: 'fldVTOc15uQM3L4IG',
+        id: 'fldFlFoUjdqOwv6d8',
         name: 'Next potassium rich diet milestone',
         type: 'select',
         format: '',
@@ -9654,8 +9702,8 @@ export default [
         },
       },
       {
-        id: 'fld2OzdLyTVMPr3XJ',
-        name: 'Next caloric reduction milestone',
+        id: 'fldMgqpEMCvOib5sb',
+        name: 'Next BMI milestone',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -9666,23 +9714,23 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Optional unless you want to change the current milestone\n\nIf Stage 1:\n1-month: 2% reduction\n3-month: 3% reduction\n6-month: 5% reduction\n\nIf Stage 2:\n1-month: 3% reduction\n3-month: 5% reduction\n6-month: 7% reduction\n\nIf Stage 3:\n1-month: 3% reduction\n3-month: 5% reduction\n6-month: 7% reduction',
+          'Optional unless you want to change the current milestone\n\nIf Stage 1:\n1-month: 1% reduction\n3-month: 2% reduction\n6-month: 2% reduction\n \nIf Stage 2:\n1-month: 2% reduction\n3-month: 2% reduction\n6-month: 3% reduction\n\nIf Stage 3:\n1-month: 2% reduction\n3-month: 3% reduction\n6-month: 5% reduction\n\nIf BMI 17.0 - 18.4:\n1-month: 1% increase\n3-month: 1% increase\n6-month: 1% increase\nIf BMI 16.0 - 16.9:\n1-month: 1% increase\n3-month: 2% increase\n6-month: 2% increase\nIf BMI < 16.0:\n1-month: 2% increase\n3-month: 2% increase\n6-month: 3% increase',
         conditionType: '',
         parentKey: 'Intervention type',
-        parentValues: ['Caloric Reduction Plan'],
+        parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
         condition: (values: any) => {
           if (Array.isArray(values['Intervention type'])) {
-            return ['Caloric Reduction Plan'].some((r) =>
+            return ['Caloric Reduction Plan', 'Weight Gain Plan'].some((r) =>
               values['Intervention type'].includes(r)
             )
           }
-          return ['Caloric Reduction Plan'].includes(
+          return ['Caloric Reduction Plan', 'Weight Gain Plan'].includes(
             values['Intervention type']
           )
         },
       },
       {
-        id: 'fldimvrumKiQbFGPX',
+        id: 'fld2OmDnAtSSEpIkp',
         name: 'Next salt reduction milestone',
         type: 'select',
         format: '',
@@ -9708,7 +9756,7 @@ export default [
         },
       },
       {
-        id: 'fldoOr83dhlF8lB7j',
+        id: 'fld8gikWr0VHB5DCL',
         name: 'Next cholesterol reduction milestone',
         type: 'select',
         format: '',
@@ -9734,7 +9782,7 @@ export default [
         },
       },
       {
-        id: 'fldlNiJ7MorPMT23V',
+        id: 'fld5f9V0071RfD4yn',
         name: 'Source of data',
         type: 'select',
         format: '',
@@ -9748,7 +9796,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldhao48P6onk2Jpe',
+        id: 'fld1Cfg13PYpNMLUG',
         name: 'Notes',
         type: 'multilineText',
         format: '',
