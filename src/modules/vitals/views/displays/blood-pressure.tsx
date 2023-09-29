@@ -8,6 +8,7 @@ import { useClustersData } from 'src/modules/vitals/hooks/clusters.data.hook'
 import Loading from 'src/components/loaders/centered'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import { HealthMetricNames } from 'src/modules/vitals/types/clusters.types'
+import { getTimeFormat } from 'src/modules/vitals/utils'
 
 dayjs.extend(advancedFormat)
 
@@ -43,19 +44,6 @@ function BloodPressureView() {
 
   const CustomBpDot = withCustomBpDot({ filter: currentTimeFilter })
 
-  const xAxisFormatter = (key: string) => {
-    switch (currentTimeFilter) {
-      case TimeFilters.TWELVE_MONTHS:
-        return dayjs(key).format('MMM')
-      case TimeFilters.THREE_MONTHS:
-        return `${dayjs(key).startOf('week').format('Do')} - ${dayjs(key)
-          .endOf('week')
-          .format('Do')}`
-      default:
-        return dayjs(key).format('Do MMM')
-    }
-  }
-
   return (
     <div>
       <TimeRangeFilter onRangeChange={handleTimeRangeChange} />
@@ -73,8 +61,8 @@ function BloodPressureView() {
             <LineSeriesChat
               data={bpClusters}
               xAxisDataKey={{
+                formatter: getTimeFormat(currentTimeFilter),
                 key: 'timestamp',
-                formatter: xAxisFormatter,
               }}
               yAxisDataKeys={[
                 {

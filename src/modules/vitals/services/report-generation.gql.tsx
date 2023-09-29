@@ -249,6 +249,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "BMI"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -265,6 +266,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Height"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -281,6 +283,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Weight"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -297,6 +300,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Systolic"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -313,6 +317,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Diastolic"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -329,6 +334,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Temperature"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -345,6 +351,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Respiratory Rate"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -361,6 +368,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Oxygen Saturation"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -377,6 +385,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Waisthip Ratio"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -393,6 +402,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Muscle Mass"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -409,6 +419,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Body fat"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -425,6 +436,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Random Blood Glucose"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -441,6 +453,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Fasting Blood Glucose"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -457,6 +470,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "HbA1c"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -473,6 +487,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Hdl"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -489,6 +504,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Ldl"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -505,6 +521,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Total Cholesterol"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {
@@ -521,6 +538,7 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
       healthMetric: "Triglyceride"
       sex: $sex
       ageInMonths: $ageInMonths
+      isDesired: true
     ) {
       edges {
         node {

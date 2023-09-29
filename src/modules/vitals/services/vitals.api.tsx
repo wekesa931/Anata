@@ -5,6 +5,8 @@ import {
   CREATE_CHOLESTROL_READING,
   CREATE_DM_READING,
   GET_ALL_VITALS,
+  CREATE_BLOOD_GLUCOSE_READING,
+  CREATE_HBA1C_READING,
 } from 'src/modules/vitals/services/gql'
 import {
   VitalsReading,
@@ -177,26 +179,76 @@ export const useCreateDMReadingApi = () => {
     },
   })
 
-  const createDMReadings = async (input: DMMonitoringFormInputs) => {
+  const isObjectEmpty = (obj: any) => {
+    return Object.keys(obj).length === 0
+  }
+
+  const parseDMReadings = (input: DMMonitoringFormInputs) => {
     const { antaraId, hba1c, timestamp, ...bloodGlucose } = input
-    const variables = {
-      bloodGlucose: {
-        ...bloodGlucose,
-        antaraId,
-        timestamp,
-      },
-      hba1c: {
-        hba1c,
-        antaraId,
-        timestamp,
-      },
+    return {
+      ...(!isObjectEmpty(bloodGlucose) && {
+        bloodGlucose: {
+          ...bloodGlucose,
+          antaraId,
+          timestamp,
+        },
+      }),
+      ...(hba1c && {
+        hba1c: {
+          hba1c,
+          antaraId,
+          timestamp,
+        },
+      }),
     }
+  }
+
+  const selectMutation = (input: { bloodGlucose?: any; hba1c?: any }) => {
+    if (input.bloodGlucose && input.hba1c) {
+      return CREATE_DM_READING
+    }
+    if (input.bloodGlucose) {
+      return CREATE_BLOOD_GLUCOSE_READING
+    }
+    if (input.hba1c) {
+      return CREATE_HBA1C_READING
+    }
+
+    throw new Error('Neither blood glucose nor hba1c is present')
+  }
+
+  const selectVariables = (input: { bloodGlucose?: any; hba1c?: any }) => {
+    if (input.bloodGlucose && input.hba1c) {
+      return input
+    }
+    if (input.bloodGlucose) {
+      return {
+        input: input.bloodGlucose,
+      }
+    }
+    if (input.hba1c) {
+      return {
+        input: input.hba1c,
+      }
+    }
+
+    throw new Error('Neither blood glucose nor hba1c is present')
+  }
+
+  const createDMReadings = async (input: DMMonitoringFormInputs) => {
+    const variables = parseDMReadings(input)
+    if (isObjectEmpty(variables)) {
+      throw new Error('No data to upload')
+    }
+
     const { data } = await mutate({
-      variables,
+      mutation: selectMutation(variables),
+      variables: selectVariables(variables),
     })
 
     if (
-      data?.uploadBloodGlucoseReading?.errors ||
+      (data?.uploadBloodGlucoseReading &&
+        data?.uploadBloodGlucoseReading?.errors) ||
       data?.uploadBloodGlucoseReading?.status !== 200
     ) {
       throw new Error(
@@ -205,7 +257,7 @@ export const useCreateDMReadingApi = () => {
       )
     }
 
-    return data?.uploadBloodGlucoseReading
+    return data
   }
 
   return {
