@@ -7908,10 +7908,13 @@ export default [
   },
   {
     name: 'HIF',
-    id: 'tbljLsPEEihy4vGQO',
+    formId: 'shr0Qz4EzYZzNzk6W',
+    id: 'tbl3dj1xS1RAxfIlg',
+    helper:
+      'Please use this to complete Beneficiary information for those Beneficiaries that were not able to complete their HIFs before the Baseline',
     fields: [
       {
-        id: 'fldajEFsH6PdXqdfD',
+        id: 'fldULvRlVPpfqafK5',
         name: 'Date/Time',
         type: 'date',
         format: '',
@@ -7921,119 +7924,25 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
       },
       {
-        id: 'fldSejbDAWEom0szW',
+        id: 'fldCGanwOFeqPKu4o',
         name: 'Member',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fld2gTi6E2EqUI01U',
+        symmetricColumnId: 'fldMIKuZSLesns2wm',
         unreversed: true,
         relationship: 'one',
-        foreignTableId: 'tblQRToQAT8BRlLHW',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
         required: true,
         helper: '',
       },
       {
-        id: 'fldm5UmzsyFV06vEL',
-        name: 'What is your Blood Type?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'flde4NuwIBI1erTDP',
-        name: 'Do you have any medication allergies?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldQjEnWg0UgbO34q',
-        name: 'Which medications are you allergic to?',
-        type: 'richText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Do you have any medication allergies?',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Do you have any medication allergies?'])) {
-            return ['Yes'].some((r) =>
-              values['Do you have any medication allergies?'].includes(r)
-            )
-          }
-          return ['Yes'].includes(
-            values['Do you have any medication allergies?']
-          )
-        },
-      },
-      {
-        id: 'fldmIf9yEu0Fv3HHF',
-        name: 'Do you have any food allergies?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldRtTngN3lzaCkMF',
-        name: 'Which food are you allergic to?',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Do you have any food allergies?',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Do you have any food allergies?'])) {
-            return ['Yes'].some((r) =>
-              values['Do you have any food allergies?'].includes(r)
-            )
-          }
-          return ['Yes'].includes(values['Do you have any food allergies?'])
-        },
-      },
-      {
-        id: 'fldqvQoWeJqO6wcXb',
+        id: 'fldaXHAPss0QzgesD',
         name: 'Do you have any of the following conditions?',
         type: 'multiSelect',
         format: '',
@@ -8043,13 +7952,188 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
       },
       {
-        id: 'fldI9DJcn3R0OKMPP',
-        name: 'Do you have any significant past medical history not listed above?',
+        id: 'fldTKl0BfDsVyK3wi',
+        name: 'Other current conditions',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['Others'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['Others'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['Others'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fld7UD1EFQw2w8fsH',
+        name: 'Have you had any of the following conditions?',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldex3zvkUROEuyxe',
+        name: 'Other past conditions',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Have you had any of the following conditions?',
+        parentValues: ['Others'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Have you had any of the following conditions?']
+            )
+          ) {
+            return ['Others'].some((r) =>
+              values['Have you had any of the following conditions?'].includes(
+                r
+              )
+            )
+          }
+          return ['Others'].includes(
+            values['Have you had any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldQeJhP4qn1iXhY5',
+        name: 'Have you ever been told you are at risk for any of the following conditions?',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldu3O5jPB1d0kByI',
+        name: 'Do your parents, siblings or grandparents, have any of the following conditions',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'If member has already given this information during screening or PSPB or HIF phase, please see it in the hif filled form',
+      },
+      {
+        id: 'fldjCIi1tDYPTQGtv',
+        name: 'Is there any other family health history you think we should know about?',
         type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Do your parents, siblings or grandparents, have any of the following conditions',
+        parentValues: ['Others'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Do your parents, siblings or grandparents, have any of the following conditions'
+              ]
+            )
+          ) {
+            return ['Others'].some((r) =>
+              values[
+                'Do your parents, siblings or grandparents, have any of the following conditions'
+              ].includes(r)
+            )
+          }
+          return ['Others'].includes(
+            values[
+              'Do your parents, siblings or grandparents, have any of the following conditions'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldDly3zjU11AMt0H',
+        name: 'What is Your Weight?',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          '"How much do you weigh"\n\n(kg) examples: 60 or 75 or 85\n(If member has already given this information during screening or PSPB or HIF phase and if you can see it on Vitals section on src, please skip this step)',
+      },
+      {
+        id: 'fldbWsDSKqj9MqQ8V',
+        name: 'What is Your Height?',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          '"Do you know how tall you are? Even if you have a vague memory of your height in Meters, let us know."\n\n(m) examples: 1.5 or 1.8 or 1.55\n(If member has already given this information during screening or PSPB or HIF phase, please see the height in the filled form)\n\nYou need to enter vitals? Please fill the vitals form in Guided workflow form',
+      },
+      {
+        id: 'fldwJJH8FplI4qlLE',
+        name: 'HIF Completed',
+        type: 'checkbox-hidden',
         format: '',
         isDateTime: false,
         options: [],
@@ -8061,7 +8145,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldDMDgyGYu7kufGb',
+        id: 'fldneusrUH49NehbD',
         name: 'Are you currently taking any medications?',
         type: 'select',
         format: '',
@@ -8075,7 +8159,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldAWf8gAiFSTzK65',
+        id: 'fldko6k9O1fUmjMBx',
         name: 'What medications are you taking?',
         type: 'text',
         format: '',
@@ -8104,317 +8188,9 @@ export default [
         },
       },
       {
-        id: 'fld5ViXoPlqbh59WM',
-        name: 'Have you ever had surgery?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldTNbQEx3QgZHGMu',
-        name: 'Please describe any surgeries you may have had',
-        type: 'richText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Have you ever had surgery?',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Have you ever had surgery?'])) {
-            return ['Yes'].some((r) =>
-              values['Have you ever had surgery?'].includes(r)
-            )
-          }
-          return ['Yes'].includes(values['Have you ever had surgery?'])
-        },
-      },
-      {
-        id: 'fldGOh4BjmzTMRcgV',
-        name: 'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Blood Pressure?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldnulMqxVJIwsdel',
-        name: 'Please Describe FH of HTN',
-        type: 'richText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey:
-          'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Blood Pressure?',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values[
-                'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Blood Pressure?'
-              ]
-            )
-          ) {
-            return ['Yes'].some((r) =>
-              values[
-                'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Blood Pressure?'
-              ].includes(r)
-            )
-          }
-          return ['Yes'].includes(
-            values[
-              'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Blood Pressure?'
-            ]
-          )
-        },
-      },
-      {
-        id: 'fldLjELjocDc2OS2J',
-        name: 'Does anyone in your immediate family (Grandparents, Parents, Siblings) have Diabetes?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldSYrq5HCRhi6Wgj',
-        name: 'Please Describe FH of DM',
-        type: 'richText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey:
-          'Does anyone in your immediate family (Grandparents, Parents, Siblings) have Diabetes?',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values[
-                'Does anyone in your immediate family (Grandparents, Parents, Siblings) have Diabetes?'
-              ]
-            )
-          ) {
-            return ['Yes'].some((r) =>
-              values[
-                'Does anyone in your immediate family (Grandparents, Parents, Siblings) have Diabetes?'
-              ].includes(r)
-            )
-          }
-          return ['Yes'].includes(
-            values[
-              'Does anyone in your immediate family (Grandparents, Parents, Siblings) have Diabetes?'
-            ]
-          )
-        },
-      },
-      {
-        id: 'fldKrmWjFaofW1M98',
-        name: 'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Cholesterol Levels?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fld0mInE04eBR9EeH',
-        name: 'Please Describe FH of High Cholesterol',
-        type: 'richText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey:
-          'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Cholesterol Levels?',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values[
-                'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Cholesterol Levels?'
-              ]
-            )
-          ) {
-            return ['Yes'].some((r) =>
-              values[
-                'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Cholesterol Levels?'
-              ].includes(r)
-            )
-          }
-          return ['Yes'].includes(
-            values[
-              'Does anyone in your immediate family (Grandparents, Parents, Siblings) have High Cholesterol Levels?'
-            ]
-          )
-        },
-      },
-      {
-        id: 'fldcDVn92Tttd6Unv',
-        name: 'Is there anyone in your immediate family (Grandparents, Parents, Siblings) that has had a cardiovascular disease event (heart attack or stroke) before age 55?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldmcK0HDuRv3ohDp',
-        name: 'Please Describe FH of Cardiovascular events',
-        type: 'richText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey:
-          'Is there anyone in your immediate family (Grandparents, Parents, Siblings) that has had a cardiovascular disease event (heart attack or stroke) before age 55?',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values[
-                'Is there anyone in your immediate family (Grandparents, Parents, Siblings) that has had a cardiovascular disease event (heart attack or stroke) before age 55?'
-              ]
-            )
-          ) {
-            return ['Yes'].some((r) =>
-              values[
-                'Is there anyone in your immediate family (Grandparents, Parents, Siblings) that has had a cardiovascular disease event (heart attack or stroke) before age 55?'
-              ].includes(r)
-            )
-          }
-          return ['Yes'].includes(
-            values[
-              'Is there anyone in your immediate family (Grandparents, Parents, Siblings) that has had a cardiovascular disease event (heart attack or stroke) before age 55?'
-            ]
-          )
-        },
-      },
-      {
-        id: 'fldzaR68fUoNq6EY3',
-        name: 'Is there any other family health history you think we should know about?',
-        type: 'richText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldJXaoqfycIrqeWq',
-        name: 'HIF Completed',
-        type: 'checkbox-hidden',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fld2TgRhYaeajD3Zt',
-        name: 'email address',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'What is your preferred channel of communication?',
-        parentValues: ['Email'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['What is your preferred channel of communication?']
-            )
-          ) {
-            return ['Email'].some((r) =>
-              values[
-                'What is your preferred channel of communication?'
-              ].includes(r)
-            )
-          }
-          return ['Email'].includes(
-            values['What is your preferred channel of communication?']
-          )
-        },
-      },
-      {
-        id: 'fldVClryzCx7hDBoz',
-        name: 'What is your secondary channel of communication?',
-        type: 'select',
+        id: 'fldiiEOfz7S9Twrh6',
+        name: 'If you could work on one aspect of your health, what would it be?',
+        type: 'multiSelect',
         format: '',
         isDateTime: false,
         options: [],
@@ -8426,22 +8202,8 @@ export default [
         helper: '',
       },
       {
-        id: 'fldPDCjViIdSGTyZG',
-        name: 'What would be the ideal frequency of communication?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldvXseyv87Bm4SPw',
-        name: 'If you could work on one aspect of your health, what would it be?(retired)',
+        id: 'fldapreuXlPCjuII1',
+        name: 'Other health goal?',
         type: 'multilineText',
         format: '',
         isDateTime: false,
@@ -8450,11 +8212,181 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'If you could work on one aspect of your health, what would it be?',
+        parentValues: ['Others'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'If you could work on one aspect of your health, what would it be?'
+              ]
+            )
+          ) {
+            return ['Others'].some((r) =>
+              values[
+                'If you could work on one aspect of your health, what would it be?'
+              ].includes(r)
+            )
+          }
+          return ['Others'].includes(
+            values[
+              'If you could work on one aspect of your health, what would it be?'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldkDW0rtQgUrbL3o',
+        name: 'Are you currently concerned about any aspect of your health?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
         helper: '',
       },
       {
-        id: 'fldXLDk5mGjTII9HR',
+        id: 'fldNJJJWttThKEDiW',
+        name: 'What aspect of your health are you concerned about?',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Are you currently concerned about any aspect of your health?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Are you currently concerned about any aspect of your health?'
+              ]
+            )
+          ) {
+            return ['Yes'].some((r) =>
+              values[
+                'Are you currently concerned about any aspect of your health?'
+              ].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values[
+              'Are you currently concerned about any aspect of your health?'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fld6xLysGhfXtQx9d',
+        name: 'What is your Blood Type?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldYwEGpWki3HbV8h',
+        name: 'Do you have any medication allergies?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldALvzPuJuiEy5zS',
+        name: 'Which medications are you allergic to?',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any medication allergies?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Do you have any medication allergies?'])) {
+            return ['Yes'].some((r) =>
+              values['Do you have any medication allergies?'].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values['Do you have any medication allergies?']
+          )
+        },
+      },
+      {
+        id: 'fld6a6lrSdAHYNJc7',
+        name: 'Do you have any food allergies?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldBVKz91MVBDmmh7',
+        name: 'Which food are you allergic to?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any food allergies?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Do you have any food allergies?'])) {
+            return ['Yes'].some((r) =>
+              values['Do you have any food allergies?'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Do you have any food allergies?'])
+        },
+      },
+      {
+        id: 'fldHduwYApTVbsbcj',
         name: 'On a scale of 0-5, how Important is your health to you at this time?',
         type: 'number',
         format: 'integer',
@@ -8464,61 +8396,8 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
-        helper: 'Insert a number from 0-5',
-      },
-      {
-        id: 'fld6cMnwK0PJzEc9L',
-        name: 'Other reasons for wanting to be healthier',
-        type: 'richText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
         required: false,
-        helper: '',
-        conditionType: '',
-        parentKey:
-          "We'd like to better understand the reasons why you want to be healthier. This will help us better support you. Here are some common options; please choose up to two (2):",
-        parentValues: ['“Another reason"'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values[
-                "We'd like to better understand the reasons why you want to be healthier. This will help us better support you. Here are some common options; please choose up to two (2):"
-              ]
-            )
-          ) {
-            return ['“Another reason"'].some((r) =>
-              values[
-                "We'd like to better understand the reasons why you want to be healthier. This will help us better support you. Here are some common options; please choose up to two (2):"
-              ].includes(r)
-            )
-          }
-          return ['“Another reason"'].includes(
-            values[
-              "We'd like to better understand the reasons why you want to be healthier. This will help us better support you. Here are some common options; please choose up to two (2):"
-            ]
-          )
-        },
-      },
-      {
-        id: 'fldU6euNxqscPMXta',
-        name: "We'd like to learn more about how you approach a challenge or problem in your life.",
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          "We've learned that some people like to take things head-on right from the start, with all their energy. Others tend to prefer a slow and steady approach and don't like to take everything on all at once. With that in mind, which of the following best describes you:",
+        helper: 'Insert a number from 0 to 5',
       },
     ],
   },
