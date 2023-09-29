@@ -246,17 +246,6 @@ export const useCreateDMReadingApi = () => {
       variables: selectVariables(variables),
     })
 
-    if (
-      (data?.uploadBloodGlucoseReading &&
-        data?.uploadBloodGlucoseReading?.errors) ||
-      data?.uploadBloodGlucoseReading?.status !== 200
-    ) {
-      throw new Error(
-        data?.uploadBloodGlucoseReading?.errors ||
-          'Failed to create blood glucose reading'
-      )
-    }
-
     return data
   }
 
