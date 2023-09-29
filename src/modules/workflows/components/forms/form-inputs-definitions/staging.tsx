@@ -3940,38 +3940,54 @@ export default [
   },
   {
     name: 'Prescriptions',
-    id: 'tblBWSBWgqUAoA0vQ',
+    id: 'tblloJNPu9uCRk20i',
+    formId: 'shrYktkrywbdose8D',
+    helper: 'Only for usage of HN, Doctor should use the VC Prescription form',
     fields: [
       {
-        id: 'fldJHjWtYL8rJX6uF',
+        id: 'fldAH9ZBaMVy1wxHx',
+        name: 'Case ID',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldIs2xON8rAeuId3',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblpQpVJrFonBQuBg',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldt9a8mcuItcH8Z7',
         name: 'Member',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldmUtfxiygq88qTj',
+        symmetricColumnId: 'fld6mkrqwhQsBSsoL',
         unreversed: true,
         relationship: 'many',
-        foreignTableId: 'tblQRToQAT8BRlLHW',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
         required: false,
         helper: '',
       },
       {
-        id: 'fldoevgEChhLDunJH',
+        id: 'fldSFXuoKUuqspy0J',
         name: 'Medication',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldA1nOQHM3lw2dt5',
+        symmetricColumnId: 'fldTirxSODMVsrxNw',
         unreversed: true,
         relationship: 'one',
-        foreignTableId: 'tblglBRVOue24usUH',
+        foreignTableId: 'tblgFQRJDav7dNdLl',
         required: true,
         helper: '',
       },
       {
-        id: 'fld0s3iqAtaDRVMEL',
+        id: 'fldsOMD3iYcHSyxs9',
         name: 'Other Medication',
         type: 'text',
         format: '',
@@ -3983,33 +3999,34 @@ export default [
         foreignTableId: null,
         required: false,
         helper: '',
+        conditionType: '',
         parentKey: 'Medication',
-        parentValues: ['recZ4ZsdaFQHReh72'],
+        parentValues: ['rechmJ9RLO7W8zS5v'],
         condition: (values: any) => {
           if (Array.isArray(values.Medication)) {
-            return ['recZ4ZsdaFQHReh72'].some((r) =>
+            return ['rechmJ9RLO7W8zS5v'].some((r) =>
               values.Medication.includes(r)
             )
           }
-          return ['recZ4ZsdaFQHReh72'].includes(values.Medication)
+          return ['rechmJ9RLO7W8zS5v'].includes(values.Medication)
         },
       },
       {
-        id: 'fldjxfJKm1LWXUN3d',
+        id: 'fld3Z6VDAKlYqEPyF',
         name: 'Associated condition(s)',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldHJSlAeFsHTBTgn',
+        symmetricColumnId: 'fldrbJxtso2JmlVLP',
         unreversed: true,
         relationship: 'many',
-        foreignTableId: 'tblww46ChelvcfLy9',
+        foreignTableId: 'tblgYVivvXVxFZN3B',
         required: false,
         helper: '',
       },
       {
-        id: 'fldP34IWp4rHYG4YO',
+        id: 'fldzvVUPDN1Jrq6tg',
         name: 'Dose',
         type: 'text',
         format: '',
@@ -4024,7 +4041,7 @@ export default [
           'You can skip this field if the medication name includes the dosage',
       },
       {
-        id: 'flde32FPPbpMYLIx3',
+        id: 'fldYvTRI3UZOrvK2v',
         name: 'Dosage Unit',
         type: 'select',
         format: '',
@@ -4038,7 +4055,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldUUW2FmQ2bCmtCh',
+        id: 'fldEmNeyAzCd56v7J',
         name: 'Frequency',
         type: 'select',
         format: '',
@@ -4052,7 +4069,7 @@ export default [
         helper: 'How often should this be taken?',
       },
       {
-        id: 'fld1ev2gKj5OK7bQG',
+        id: 'fldLGme9Y2FQdRdl8',
         name: 'Other frequency',
         type: 'text',
         format: '',
@@ -4075,7 +4092,7 @@ export default [
         },
       },
       {
-        id: 'fldbFrjJKHrKgUd74',
+        id: 'fldV7ivCYq1MJEfCw',
         name: 'Route',
         type: 'select',
         format: '',
@@ -4089,7 +4106,7 @@ export default [
         helper: 'How is this administered?\n',
       },
       {
-        id: 'fld9frxQXjAcH5b4t',
+        id: 'fldTHiJJb2aeaPdzV',
         name: 'Other route',
         type: 'text',
         format: '',
@@ -4112,7 +4129,7 @@ export default [
         },
       },
       {
-        id: 'fldYMJHNDWb4QapSB',
+        id: 'fldIeATGRFL6jUrn3',
         name: 'Duration',
         type: 'number',
         format: 'integer',
@@ -4126,7 +4143,7 @@ export default [
         helper: 'Enter the number of days the medication is to be taken ',
       },
       {
-        id: 'fldEAAll13mUitW3i',
+        id: 'fldo2rxefMWWLdYyK',
         name: 'Quantity',
         type: 'number',
         format: 'decimal',
@@ -4141,7 +4158,7 @@ export default [
           'Enter the number of tabs, capsules or mL of liquid  taken per instance here',
       },
       {
-        id: 'fldHP4aY1SAztxAU7',
+        id: 'fldrhVmRfBaBWhCpz',
         name: 'Quantity Units',
         type: 'select',
         format: '',
@@ -4155,7 +4172,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldSnPeVQd0hpa4Pu',
+        id: 'fldCPGqO4WAjSU6kW',
         name: 'Start Date',
         type: 'date',
         format: '',
@@ -4169,7 +4186,7 @@ export default [
         helper: '',
       },
       {
-        id: 'flda0FVl4EUTDKRCb',
+        id: 'fldUsw7einuV6uT7D',
         name: 'Scripts',
         type: 'multipleAttachment',
         format: '',
@@ -4183,7 +4200,7 @@ export default [
         helper: 'Please upload any prescription that should be on file',
       },
       {
-        id: 'fldNW08jyN8TZnv9i',
+        id: 'fldxoRkcMwIVs7xEK',
         name: 'Refillable',
         type: 'select',
         format: '',
@@ -4197,7 +4214,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldtlHRKIW4sYKxEh',
+        id: 'flddNy3DWFEuruz9J',
         name: 'Instructions',
         type: 'select',
         format: '',
@@ -4211,7 +4228,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldebis29suSo59hs',
+        id: 'fldYD9EVnb4URPbMU',
         name: 'Additional Instructions',
         type: 'multilineText',
         format: '',
@@ -4234,7 +4251,7 @@ export default [
         },
       },
       {
-        id: 'flduuWCt8GrlRnpbL',
+        id: 'fldeWNOmmp1nk7rGd',
         name: 'Notes',
         type: 'multilineText',
         format: '',
@@ -4248,7 +4265,7 @@ export default [
         helper: 'Please log any notes here that are important',
       },
       {
-        id: 'fld7VtJkDl8riWIEy',
+        id: 'fldRnkVdR4ItLGK90',
         name: 'Prescription Refills',
         type: 'foreignKey',
         format: '',
@@ -4257,26 +4274,26 @@ export default [
         symmetricColumnId: null,
         unreversed: true,
         relationship: 'many',
-        foreignTableId: 'tblBWSBWgqUAoA0vQ',
+        foreignTableId: 'tblloJNPu9uCRk20i',
         required: false,
         helper: '',
       },
       {
-        id: 'fldLG9PUQxV3rbiPz',
+        id: 'fld65y5Bb0y13SBm0',
         name: 'Prescribing facility from Provider base',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldKz9n3g1RE3macs',
+        symmetricColumnId: 'fldK8Ss0i92uLeD0w',
         unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblU94ZnFmMT7S0o0',
+        relationship: 'many',
+        foreignTableId: 'tblLsYlG4IiNEbWWs',
         required: true,
         helper: '',
       },
       {
-        id: 'fldMg2J8OnyeH8DpA',
+        id: 'fldwITV1268gaSFU2',
         name: 'Other prescribing facility',
         type: 'text',
         format: '',
@@ -4287,39 +4304,24 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper:
-          'Fill in the Prescribing Facility not found in the provider base. Enter Other facility name with format Name -Location e.g Antara Health - Lavington',
-        parentKey: 'Prescribing facility from Provider base',
-        parentValues: ['recKyWKUXonDwCbYC'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(values['Prescribing facility from Provider base'])
-          ) {
-            return ['recKyWKUXonDwCbYC'].some((r) =>
-              values['Prescribing facility from Provider base'].includes(r)
-            )
-          }
-          return ['recKyWKUXonDwCbYC'].includes(
-            values['Prescribing facility from Provider base']
-          )
-        },
+        helper: '',
       },
       {
-        id: 'fldNaBGUBnt0vfVvk',
+        id: 'fldIe5i3N2AvlkbUL',
         name: 'Refill facility from Provider base',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldCRGwZg7SgcW1sq',
+        symmetricColumnId: 'fld5EvKgWJbGsuIda',
         unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblU94ZnFmMT7S0o0',
+        relationship: 'many',
+        foreignTableId: 'tblLsYlG4IiNEbWWs',
         required: false,
         helper: '',
       },
       {
-        id: 'fldnBDiS3bvcOOweC',
+        id: 'fld73uuLhU5ehyyJ4',
         name: 'Other refill facility',
         type: 'text',
         format: '',
@@ -4330,23 +4332,10 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper:
-          'Enter Other facility name with format Name -Location e.g Antara Health - Lavington',
-        parentKey: 'Refill facility from Provider base',
-        parentValues: ['recKyWKUXonDwCbYC'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Refill facility from Provider base'])) {
-            return ['recKyWKUXonDwCbYC'].some((r) =>
-              values['Refill facility from Provider base'].includes(r)
-            )
-          }
-          return ['recKyWKUXonDwCbYC'].includes(
-            values['Refill facility from Provider base']
-          )
-        },
+        helper: '',
       },
       {
-        id: 'fld0lcI7zArWPPw7m',
+        id: 'fldKN3U0Nj1YizyCO',
         name: 'Change of medication',
         type: 'select',
         format: '',
