@@ -8392,24 +8392,24 @@ export default [
   },
   {
     name: 'DM Mon',
-    id: 'tblrJDNUshRaeFGov',
+    id: 'tblbbuZNG0rcHpITX',
     fields: [
       {
-        id: 'fldbAmGBWtd0nmxRY',
+        id: 'fldV2dSuacN2Q6zmq',
         name: 'Member',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fld8PyvWg4KObOO76',
+        symmetricColumnId: 'fldShpHPuNkQEyQCy',
         unreversed: true,
         relationship: 'one',
-        foreignTableId: 'tblQRToQAT8BRlLHW',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
         required: true,
         helper: '',
       },
       {
-        id: 'fldN8dbyvXJtWIlbO',
+        id: 'fldxA4nrJGjvpsnGg',
         name: 'Test Date',
         type: 'date',
         format: '',
@@ -8423,7 +8423,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldXKOQUOoSzUQm2g',
+        id: 'fldHcF2N27sBnAoxI',
         name: 'Morning BS timing',
         type: 'select',
         format: '',
@@ -8438,7 +8438,7 @@ export default [
           'Preprandial morning blood sugar indicates a fasting Blood sugar reading. \n\nIf it is post-prandial then it is not a fasting glucose',
       },
       {
-        id: 'fldFgQqddXBFwVbJQ',
+        id: 'fldpIHC6rGbHZFdei',
         name: 'Fasting Blood Sugar',
         type: 'number',
         format: 'decimal',
@@ -8466,7 +8466,7 @@ export default [
         },
       },
       {
-        id: 'fldginXynF2HTC6OR',
+        id: 'fld0Ke9rBoCJmm8jj',
         name: 'Morning postprandial BS',
         type: 'number',
         format: 'decimal',
@@ -8499,7 +8499,7 @@ export default [
         },
       },
       {
-        id: 'fldDE3q9HtvpXJZnN',
+        id: 'fldn6UC2Vc5rqt1Sf',
         name: 'Afternoon BS timing',
         type: 'select',
         format: '',
@@ -8513,7 +8513,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldVoyBuI71rsOfII',
+        id: 'fldFQpNnWQBtVyhda',
         name: 'Afternoon preprandial BS',
         type: 'number',
         format: 'decimal',
@@ -8540,7 +8540,7 @@ export default [
         },
       },
       {
-        id: 'fldvy5nBh89J6MzMk',
+        id: 'fldf0WzuvRJLzwBhM',
         name: 'Afternoon postprandial BS',
         type: 'number',
         format: 'decimal',
@@ -8573,7 +8573,7 @@ export default [
         },
       },
       {
-        id: 'fld9OFyZedYh53eaL',
+        id: 'fldTgwKSsWyjyNgFd',
         name: 'Evening BS timing',
         type: 'select',
         format: '',
@@ -8587,7 +8587,7 @@ export default [
         helper: '',
       },
       {
-        id: 'fldxgEYdszhYlnEsn',
+        id: 'fldhIva6GiR0O7GXP',
         name: 'Evening preprandial BS',
         type: 'number',
         format: 'decimal',
@@ -8614,7 +8614,7 @@ export default [
         },
       },
       {
-        id: 'fldIup5eYAejhWG42',
+        id: 'fldsWgh7cjOlKGIzu',
         name: 'Evening postprandial BS',
         type: 'number',
         format: 'decimal',
@@ -8647,7 +8647,7 @@ export default [
         },
       },
       {
-        id: 'fldsvCISLNYbUnTne',
+        id: 'fldcXtULZwydn7VSG',
         name: 'HbA1c',
         type: 'number',
         format: 'decimal',
