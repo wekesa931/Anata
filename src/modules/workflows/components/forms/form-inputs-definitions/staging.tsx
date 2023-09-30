@@ -7360,608 +7360,6 @@ export default [
     ],
   },
   {
-    name: 'Conditions Data tracking',
-    id: 'tbl94gOfSWSm1NaWo',
-    fields: [
-      {
-        id: 'fldgLoXNRaCgMuQ42',
-        name: 'Date',
-        type: 'date',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldLHKbkUhV88yhme',
-        name: 'Member',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldWdidc5MyE0DGnj',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblQRToQAT8BRlLHW',
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldZFRmZWU7xJCYmi',
-        name: 'Member Conditions',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldBYz19RE0LdTpd2',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblww46ChelvcfLy9',
-        required: true,
-        helper:
-          'Please note that "current stage" in the condition name is the last recorded current stage. In this form you will be tracking the new current stage',
-      },
-      {
-        id: 'fldK9ruwhDJqfqDRm',
-        name: 'Condition type',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'WIP (we are still adding conditions on a monthly basis)\nThis field is used to provide you with the appropriate questions',
-      },
-      {
-        id: 'fldbqmuOMDJHx8jhz',
-        name: 'Update hypertension stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '@risk: Sys/DIa <120/80\nElevated BP: 120-130 and <80 mmHg\nStage 1 Hypertension: 130-140 or 80-89 mmHg\nStage 2 Hypertension: >140 or >90mmHg',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Hypertension'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Hypertension'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Hypertension'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldBGd4XrfA61aF6H',
-        name: 'Update gastritis stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Acute: < 6 weeks\nChronic > 6 weeks',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Gastritis'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Gastritis'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Gastritis'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldEUWUHkG77sUs0i',
-        name: 'Update gastritis Hpylori stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Gastritis H.Pylori-associated'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Gastritis H.Pylori-associated'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Gastritis H.Pylori-associated'].includes(
-            values['Condition type']
-          )
-        },
-      },
-      {
-        id: 'fldgWe9hfu0fjmmBG',
-        name: 'Update lower back pain stage',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Acute: symptoms < 4 weeks\nSub-acute: symptoms > 4 weeks & < 12 weeks\nMild chronic: symptoms  >12 weeks; score to be defined\nModerate chronic: symptoms  >12 weeks; score to be defined\nSevere chronic: symptoms  >12 weeks; score to be defined',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Lower back pain'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Lower back pain'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Lower back pain'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldah6rk4xoQWp6cO',
-        name: 'Update Hyperlipidemia stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'At risk if members with previous hx or family hx\n Hypercholesterolemia if TC>200mg/dl\n Hypertriglyceridemia if TG >150mg/dl only done in a fasting state\n Mixed hyperlipidemia if defined as elevated LDL >130mg/dl, TC>200mg/dl and TG>150mg/dl',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Hyperlipidemia'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Hyperlipidemia'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Hyperlipidemia'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldcDxphocZY888Sg',
-        name: 'Update other condition stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Other'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Other'].some((r) => values['Condition type'].includes(r))
-          }
-          return ['Other'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldFMvuvMpdLALscP',
-        name: 'Update asthma stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Stage 1: Mild intermittent = score of 24-25\nStage 2: Moderate intermittent = score of 21-23\nStage 3: Moderate persistent = score of 16-20\nStage 4: Severe persistent = score of 0-15',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Asthma'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Asthma'].some((r) => values['Condition type'].includes(r))
-          }
-          return ['Asthma'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldexDRYPAFBPeAdg',
-        name: 'Update varicose veins stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Mild: Occasional pain not restricting activities , few veins, number of active ulcers 1, occasional edema\nModerate: Daily moderate activity limitation requiring occasional analgesia use, Multiple veins/torturous, 2 ulcers present, Occasional edema above the level of the ankles\nSevere: Extensive veins, daily pain limiting daily activities, more than 3 ulcers, edema to the level of the knee, severe cellulitis',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Varicose veins'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Varicose veins'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Varicose veins'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldVkHorWLLT37fLf',
-        name: 'Update fibroid stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Asymptomatic: diagnosed during routine visit but not symptomatic\nSymptomatic: associated with menstrual disturbances, anemia, difficulty in conception',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Fibroid (leiomyoma)'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Fibroid (leiomyoma)'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Fibroid (leiomyoma)'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldsA9q6QZtakPYy5',
-        name: 'Update diabetes 2 stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'At risk: HB1AC <5.7%\nStage 1: HB1AC > 6.5%\nStage 2: HB1AC >7.5%, FBS >7 mmol/l, only on oral meds\nStage 3: HB1AC >7.5%, FBS >7 mmol/l, on insulin\nPrediabetes: HBA1C 5.7% to 6.4% FBS >6 mmol/l, Positive impaired glucose tolerance test (RBS 7.8-11.1 mmol/l)',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Diabetes 2'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Diabetes 2'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Diabetes 2'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldGg100jHptFI0rk',
-        name: 'Update diabetes 1 stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Diabetes 1'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Diabetes 1'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Diabetes 1'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldv6Hvt9fH3oGSdk',
-        name: 'Update diabetes gestational stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Diabetes, Gestational'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Diabetes, Gestational'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Diabetes, Gestational'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldEmdGtkEh7wKWkN',
-        name: 'Update Allergic Rhinitis stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'To identify the stage, please assess following symptoms: running nose, watery eyes, itchy eyes or nose, sneezing, red eyes.\n\nStages:\nSeasonal: Symptoms triggered seasonally\nIntermittent: Symptoms < 4 days per week or < 4 weeks per year\nPersistent: Symptoms > 4 days per week or > 4 weeks per year',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Allergic rhinitis'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Allergic rhinitis'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Allergic rhinitis'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldPJ2kLuz4Le4Rf6',
-        name: 'Update hemorrhoids stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Hemorrhoids'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Hemorrhoids'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Hemorrhoids'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldXtQK1rSgW5aGLA',
-        name: 'Update overweight stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Stage 1: BMI 25-29.9\nStage 2: BMI 30-39.9\nStage 3: BMI >=40',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Overweight'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Overweight'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Overweight'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldcCFFR41pX3Glg4',
-        name: 'Update osteoarthritis stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Stage 1: Minor wear-and-tear in the joints. Little to no pain in the affected area\nStage 2: Pain score <3 - Mild (some morning stiffness, intermittent pain with NO quality of life impact)\nStage 3: Pain score 4-7 - Moderate (intermittent pain with impact on quality of life)\nStage 4: Pain score >8 - Severe (persistent pain with significant impact on quality of life)',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Osteoarthritis'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Osteoarthritis'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Osteoarthritis'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldvQLkGQCYU2dSmp',
-        name: 'Osteoarthritis current pain score',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Please score the pain of the member using this website: <a href="https://www.researchgate.net/figure/The-Universal-Pain-Assessment-Tool-UPAT-that-has-been-used-to-identify-functional-TMJ_fig1_311158988" target="_blank">https://www.researchgate.net/figure/The-Universal-Pain-Assessment-Tool-UPAT-that-has-been-used-to-identify-functional-TMJ_fig1_311158988</a> ',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Osteoarthritis'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Osteoarthritis'].some((r) =>
-              values['Condition type'].includes(r)
-            )
-          }
-          return ['Osteoarthritis'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldnWG87BDAftBz35',
-        name: 'Update GERD stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['GERD'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['GERD'].some((r) => values['Condition type'].includes(r))
-          }
-          return ['GERD'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldXAlDyuABiwEKBV',
-        name: 'Update eczema stage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Condition type',
-        parentValues: ['Eczema'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Condition type'])) {
-            return ['Eczema'].some((r) => values['Condition type'].includes(r))
-          }
-          return ['Eczema'].includes(values['Condition type'])
-        },
-      },
-      {
-        id: 'fldlUrVUS1T1GflbH',
-        name: 'Update clinical status',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Please note that this is the new clinical status of the conditions if it has changed.',
-      },
-      {
-        id: 'fldvynb2FLB1Mawhj',
-        name: 'Update condition status',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'Please note that this is the new status of the conditions if it has changed. Since you are tracking data for active conditions, this should change to Inactive when the member does not have the condition anymore',
-      },
-      {
-        id: 'fldVS7I3thyMvD1zE',
-        name: 'Acute vs Chronic',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Please note that this state (acute or chronic) will be pushed to the condition table as the last known status',
-      },
-      {
-        id: 'fld2fol8oyZ5A1U64',
-        name: 'Notes',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-    ],
-  },
-  {
     name: 'HIF',
     formId: 'shr0Qz4EzYZzNzk6W',
     id: 'tbl3dj1xS1RAxfIlg',
@@ -12419,6 +11817,706 @@ export default [
         id: 'fld9FtNEFwLJ15XpC',
         name: 'Notes',
         type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+    ],
+  },
+  {
+    name: 'Conditions Data tracking',
+    id: 'tblTw7086FsouxcrQ',
+    formId: 'shrFdrXBS2PxcpyhC',
+    fields: [
+      {
+        id: 'fld0df9G5TcifeSzu',
+        name: 'Date',
+        type: 'date',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldv9Bnd80vaBijRG',
+        name: 'Member',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldGF9p5jv8GtnISL',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldJ7IySaDHzcm0RK',
+        name: 'Member Conditions',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldlqqd25nANGDrIu',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblgYVivvXVxFZN3B',
+        required: true,
+        helper:
+          'Please note that "current stage" in the condition name is the last recorded current stage. In this form you will be tracking the new current stage',
+      },
+      {
+        id: 'fldbTT8xBKQaBN6L3',
+        name: 'Conditions master list',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldSuX30P8l6XRaAC',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tbl9cTcuXOSV2tc4g',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldi4GdE0YSu9X8F5',
+        name: 'Update Underweight stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          '    * Stage 1: BMI 17.0 - 18.4\n    * Stage 2: BMI 16.0 - 16.9\n    * Stage 3: BMI < 16.0',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recpKWliH8DpATqAW'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recpKWliH8DpATqAW'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recpKWliH8DpATqAW'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldVSdGH0mjJ0SlM1',
+        name: 'Update hypertension stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          '@risk: Sys/DIa <120/80\nElevated BP: 120-130 and <80 mmHg\nStage 1 Hypertension: 130-140 or 80-89 mmHg\nStage 2 Hypertension: >140 or >90mmHg',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recfOQjJ8Yo2oiVD6'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recfOQjJ8Yo2oiVD6'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recfOQjJ8Yo2oiVD6'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldl84gQFYa8uUHB9',
+        name: 'Update gastritis stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Acute: < 6 weeks\nChronic > 6 weeks',
+        conditionType: '',
+        parentKey: 'Condition type',
+        parentValues: ['recjHCg4fZrqtuim3'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Condition type'])) {
+            return ['recjHCg4fZrqtuim3'].some((r) =>
+              values['Condition type'].includes(r)
+            )
+          }
+          return ['recjHCg4fZrqtuim3'].includes(values['Condition type'])
+        },
+      },
+      {
+        id: 'fldomN6AypH9VEuvK',
+        name: 'Update gastritis Hpylori stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recauBAdwn9QuqRRs'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recauBAdwn9QuqRRs'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recauBAdwn9QuqRRs'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fld0o5latdAhM6o68',
+        name: 'Update lower back pain stage',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Acute: symptoms < 4 weeks\nSub-acute: symptoms > 4 weeks & < 12 weeks\nMild chronic: symptoms  >12 weeks; score to be defined\nModerate chronic: symptoms  >12 weeks; score to be defined\nSevere chronic: symptoms  >12 weeks; score to be defined',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recVlgx6cf6Fw3gzn'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recVlgx6cf6Fw3gzn'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recVlgx6cf6Fw3gzn'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldUJXDdigYSp98Hg',
+        name: 'Update Hyperlipidemia stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'At risk if members with previous hx or family hx\n Hypercholesterolemia if TC>200mg/dl\n Hypertriglyceridemia if TG >150mg/dl only done in a fasting state\n Mixed hyperlipidemia if defined as elevated LDL >130mg/dl, TC>200mg/dl and TG>150mg/dl',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recLdUqB94LuWsfpj'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recLdUqB94LuWsfpj'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recLdUqB94LuWsfpj'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldW5oBaCVz0BSanI',
+        name: 'Update other condition stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recfNbsZGueaHQUto'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recfNbsZGueaHQUto'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recfNbsZGueaHQUto'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldpemGo08NN3vuHh',
+        name: 'Update asthma stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Stage 1: Mild intermittent = score of 24-25\nStage 2: Moderate intermittent = score of 21-23\nStage 3: Moderate persistent = score of 16-20\nStage 4: Severe persistent = score of 0-15',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recsYfjhmamvUbgM7'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recsYfjhmamvUbgM7'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recsYfjhmamvUbgM7'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldYZu3R3jfDiYCII',
+        name: 'Update varicose veins stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Mild: Occasional pain not restricting activities , few veins, number of active ulcers 1, occasional edema\nModerate: Daily moderate activity limitation requiring occasional analgesia use, Multiple veins/torturous, 2 ulcers present, Occasional edema above the level of the ankles\nSevere: Extensive veins, daily pain limiting daily activities, more than 3 ulcers, edema to the level of the knee, severe cellulitis',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['rec1yyeyxkQxZtIsD'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['rec1yyeyxkQxZtIsD'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['rec1yyeyxkQxZtIsD'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldFMyAkaulVwRhgH',
+        name: 'Update fibroid stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Asymptomatic: diagnosed during routine visit but not symptomatic\nSymptomatic: associated with menstrual disturbances, anemia, difficulty in conception',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['rec9GJtCUjz54voue'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['rec9GJtCUjz54voue'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['rec9GJtCUjz54voue'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldc20CZ4I3cNz03x',
+        name: 'Update diabetes 2 stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'At risk: HB1AC <5.7%\nStage 1: HB1AC > 6.5%\nStage 2: HB1AC >7.5%, FBS >7 mmol/l, only on oral meds\nStage 3: HB1AC >7.5%, FBS >7 mmol/l, on insulin\nPrediabetes: HBA1C 5.7% to 6.4% FBS >6 mmol/l, Positive impaired glucose tolerance test (RBS 7.8-11.1 mmol/l)',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recR916dEtATKYuvw'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recR916dEtATKYuvw'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recR916dEtATKYuvw'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldqIScTxqZv8s2WM',
+        name: 'Update diabetes 1 stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['receXizGwFWI5igxn'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['receXizGwFWI5igxn'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['receXizGwFWI5igxn'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldfyyHmnYh5RqUIM',
+        name: 'Update diabetes gestational stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recQPGTOSPnwjyPPA'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recQPGTOSPnwjyPPA'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recQPGTOSPnwjyPPA'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldoO4SmynR9ZuYPf',
+        name: 'Update Allergic Rhinitis stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'To identify the stage, please assess following symptoms: running nose, watery eyes, itchy eyes or nose, sneezing, red eyes.\n\nStages:\nSeasonal: Symptoms triggered seasonally\nIntermittent: Symptoms < 4 days per week or < 4 weeks per year\nPersistent: Symptoms > 4 days per week or > 4 weeks per year',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recFEGuc9JL0Tajlb'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recFEGuc9JL0Tajlb'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recFEGuc9JL0Tajlb'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldzbTwEIiENHOTKy',
+        name: 'Update hemorrhoids stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recpLfyAirbx5OlFS'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recpLfyAirbx5OlFS'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recpLfyAirbx5OlFS'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldHVHWUFBQYyUIg2',
+        name: 'Update overweight stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Stage 1: BMI 25-29.9\nStage 2: BMI 30-39.9\nStage 3: BMI >=40',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recwoDtKd1B4ztytB'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recwoDtKd1B4ztytB'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recwoDtKd1B4ztytB'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldW4wRKiKZZwqnLw',
+        name: 'Update osteoarthritis stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Stage 1: Minor wear-and-tear in the joints. Little to no pain in the affected area\nStage 2: Pain score <3 - Mild (some morning stiffness, intermittent pain with NO quality of life impact)\nStage 3: Pain score 4-7 - Moderate (intermittent pain with impact on quality of life)\nStage 4: Pain score >8 - Severe (persistent pain with significant impact on quality of life)',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: [
+          'recZETSYK81fAKYEy',
+          'recCvj1vrZI7QJTJT',
+          'rec976C51ukYbVEZP',
+          'recatck1FWNN5RmWe',
+          'recZ36sY8T3Yungmo',
+        ],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return [
+              'recZETSYK81fAKYEy',
+              'recCvj1vrZI7QJTJT',
+              'rec976C51ukYbVEZP',
+              'recatck1FWNN5RmWe',
+              'recZ36sY8T3Yungmo',
+            ].some((r) => values['Conditions master list'].includes(r))
+          }
+          return [
+            'recZETSYK81fAKYEy',
+            'recCvj1vrZI7QJTJT',
+            'rec976C51ukYbVEZP',
+            'recatck1FWNN5RmWe',
+            'recZ36sY8T3Yungmo',
+          ].includes(values['Conditions master list'])
+        },
+      },
+      {
+        id: 'fld5QCoGedeLCfmB7',
+        name: 'Osteoarthritis current pain score',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Please score the pain of the member using this website: <a href="https://www.researchgate.net/figure/The-Universal-Pain-Assessment-Tool-UPAT-that-has-been-used-to-identify-functional-TMJ_fig1_311158988" target="_blank">https://www.researchgate.net/figure/The-Universal-Pain-Assessment-Tool-UPAT-that-has-been-used-to-identify-functional-TMJ_fig1_311158988</a> ',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: [
+          'recZETSYK81fAKYEy',
+          'recCvj1vrZI7QJTJT',
+          'rec976C51ukYbVEZP',
+          'recatck1FWNN5RmWe',
+          'recZ36sY8T3Yungmo',
+        ],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return [
+              'recZETSYK81fAKYEy',
+              'recCvj1vrZI7QJTJT',
+              'rec976C51ukYbVEZP',
+              'recatck1FWNN5RmWe',
+              'recZ36sY8T3Yungmo',
+            ].some((r) => values['Conditions master list'].includes(r))
+          }
+          return [
+            'recZETSYK81fAKYEy',
+            'recCvj1vrZI7QJTJT',
+            'rec976C51ukYbVEZP',
+            'recatck1FWNN5RmWe',
+            'recZ36sY8T3Yungmo',
+          ].includes(values['Conditions master list'])
+        },
+      },
+      {
+        id: 'fld7oxk0PmahWlByx',
+        name: 'Update GERD stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recLpbGIM06FnDBN4'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recLpbGIM06FnDBN4'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recLpbGIM06FnDBN4'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fldH2cPrIjbkZoM6n',
+        name: 'Update eczema stage',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['rechQ6Cvl5WeVP6tI'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['rechQ6Cvl5WeVP6tI'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['rechQ6Cvl5WeVP6tI'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
+        id: 'fld5mi7N6Kt39ZnG9',
+        name: 'Update clinical status',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Please note that this is the new clinical status of the conditions if it has changed.',
+      },
+      {
+        id: 'fldf0enVTub3fUyML',
+        name: 'Update condition status',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Please note that this is the new status of the conditions if it has changed. Since you are tracking data for active conditions, this should change to Inactive when the member does not have the condition anymore',
+      },
+      {
+        id: 'fldFkYUWH08OYn346',
+        name: 'Acute vs Chronic',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Please note that this state (acute or chronic) will be pushed to the condition table as the last known status',
+      },
+      {
+        id: 'fldMHfx1Chz73LWBw',
+        name: 'Notes',
+        type: 'multilineText',
         format: '',
         isDateTime: false,
         options: [],
