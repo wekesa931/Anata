@@ -4404,24 +4404,25 @@ export default [
   },
   {
     name: 'PAFU',
-    id: 'tbl5pe6QE5eb20iJL',
+    id: 'tblPR5iJSOOdvKked',
+    formId: 'shrdigxXEIvLGYwq0',
     fields: [
       {
-        id: 'fldAbooaAwHYVzcKf',
+        id: 'fldkDfA3Ofh0ojefH',
         name: 'Member',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldGPACBm1WoDHtUL',
+        symmetricColumnId: 'fldqhrOuAKwq6rvpd',
         unreversed: true,
         relationship: 'one',
-        foreignTableId: 'tblQRToQAT8BRlLHW',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
         required: true,
         helper: '',
       },
       {
-        id: 'fldnZzqQWBXgRMBY2',
+        id: 'fld7rqCJakxikwDtu',
         name: 'Appointment Type',
         type: 'select',
         format: '',
@@ -4435,44 +4436,31 @@ export default [
         helper: '',
       },
       {
-        id: 'fld9lhf88MaWEh5TH',
+        id: 'fldTN8r1mvKY717o9',
         name: 'Appointment',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldfA5d72P7tT7E5I',
+        symmetricColumnId: 'fldZ2Wp0gyHvmRGAa',
         unreversed: true,
         relationship: 'one',
-        foreignTableId: 'tblxflDbHI5TGqra5',
+        foreignTableId: 'tblhHcP4VrFV9atFx',
         required: true,
         helper: '',
-        conditionType: '',
-        parentKey: 'Appointment Type',
-        parentValues: ['Inpatient', 'Outpatient'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Appointment Type'])) {
-            return ['Inpatient', 'Outpatient'].some((r) =>
-              values['Appointment Type'].includes(r)
-            )
-          }
-          return ['Inpatient', 'Outpatient'].includes(
-            values['Appointment Type']
-          )
-        },
       },
       {
-        id: 'fld0DInEtw2U9Bdn7',
+        id: 'fldAl8ZmNFI4X63be',
         name: 'Clinical Consultation',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldAdBgvity5HJFhh',
+        symmetricColumnId: 'fldI5Yzpm3243RYYK',
         unreversed: true,
         relationship: 'many',
-        foreignTableId: 'tbljV2Mp13gvPrNoO',
-        required: false,
+        foreignTableId: 'tbl3nTYifMQxibPTg',
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Appointment Type',
@@ -4487,7 +4475,7 @@ export default [
         },
       },
       {
-        id: 'fldyZmHrsa2tB25jw',
+        id: 'fldirdTkGTCv4M7OY',
         name: 'Reason for admission',
         type: 'richText',
         format: '',
@@ -4497,7 +4485,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Appointment Type',
@@ -4512,7 +4500,7 @@ export default [
         },
       },
       {
-        id: 'fldSinh8ErWu1WHaB',
+        id: 'fldCKet1SawwuGJF3',
         name: 'Date of Admission',
         type: 'date',
         format: '',
@@ -4522,7 +4510,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Appointment Type',
@@ -4537,7 +4525,7 @@ export default [
         },
       },
       {
-        id: 'fldvWQF6b0bkeOdRP',
+        id: 'fldfoHRZpJLmHyfmh',
         name: 'Date of Discharge',
         type: 'date',
         format: '',
@@ -4547,7 +4535,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
         conditionType: '',
         parentKey: 'Appointment Type',
@@ -4562,7 +4550,7 @@ export default [
         },
       },
       {
-        id: 'fldWGtEk0lOdkxe2a',
+        id: 'fldG8kQde4ofNhgxC',
         name: 'Attended appointment?',
         type: 'select',
         format: '',
@@ -4577,20 +4565,18 @@ export default [
           'If the appointment has been missed, please update the status of the appointment accordingly. Please also create a task for ME team to coordinate the new appointment.',
         conditionType: '',
         parentKey: 'Appointment Type',
-        parentValues: ['Outpatient', 'Virtual Consultation'],
+        parentValues: ['Outpatient'],
         condition: (values: any) => {
           if (Array.isArray(values['Appointment Type'])) {
-            return ['Outpatient', 'Virtual Consultation'].some((r) =>
+            return ['Outpatient'].some((r) =>
               values['Appointment Type'].includes(r)
             )
           }
-          return ['Outpatient', 'Virtual Consultation'].includes(
-            values['Appointment Type']
-          )
+          return ['Outpatient'].includes(values['Appointment Type'])
         },
       },
       {
-        id: 'fldp2WG1v9aaHWO9I',
+        id: 'fld9uNSUJSKcaGQEa',
         name: 'Reason for Missed Appointments',
         type: 'text',
         format: '',
@@ -4615,22 +4601,22 @@ export default [
         },
       },
       {
-        id: 'fldbRKbHmngZwGSbG',
+        id: 'fldnsCaYjKlWGARI3',
         name: 'Facilities',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldyrj7ShQ0EZfnm9',
+        symmetricColumnId: 'fld6yWsviNn95U9nm',
         unreversed: true,
         relationship: 'many',
-        foreignTableId: 'tblU94ZnFmMT7S0o0',
+        foreignTableId: 'tblLsYlG4IiNEbWWs',
         required: false,
         helper:
           'Please select the facility the member was sent to for the appointment',
       },
       {
-        id: 'fldskA3Lwge073XV3',
+        id: 'fld9M6Et2Z3zvJcdp',
         name: 'Other Facility',
         type: 'text',
         format: '',
@@ -4644,253 +4630,44 @@ export default [
         helper:
           'Fill in the Facility not found in the provider base. Enter Other facility name with format Name -Location e.g Antara Health - Lavington',
         parentKey: 'Facilities',
-        parentValues: ['recT1DtxlC4G9BuUj'],
+        parentValues: ['recuzcwIPr5MYoltq'],
         condition: (values: any) => {
           if (Array.isArray(values.Facilities)) {
-            return ['recT1DtxlC4G9BuUj'].some((r) =>
+            return ['recuzcwIPr5MYoltq'].some((r) =>
               values.Facilities.includes(r)
             )
           }
-          return ['recT1DtxlC4G9BuUj'].includes(values.Facilities)
+          return ['recuzcwIPr5MYoltq'].includes(values.Facilities)
         },
       },
       {
-        id: 'fldlKityzjREz70y5',
+        id: 'fld7f2ot8titIHVPy',
         name: 'Specialists',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldfE6RxLw5jVTB46',
+        symmetricColumnId: 'fldM56CIS52Ui6tKG',
         unreversed: true,
         relationship: 'many',
-        foreignTableId: 'tblPpf5F81JypdC9k',
+        foreignTableId: 'tblKoFLuzxN9g13xT',
         required: false,
         helper:
           'Please select the specialist the member was sent to for the appointment',
-      },
-      {
-        id: 'fldiJcYY2QADhhu02',
-        name: 'Other Specialist',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        parentKey: 'Specialists',
-        parentValues: ['reco4phjmLbZai3dD'],
+        conditionType: '!',
+        parentKey: 'Appointment Type',
+        parentValues: 'Virtual Consultation',
         condition: (values: any) => {
-          if (Array.isArray(values.Specialists)) {
-            return ['reco4phjmLbZai3dD'].some((r) =>
-              values.Specialists.includes(r)
+          if (Array.isArray(values['Appointment Type'])) {
+            return !['Virtual Consultation'].some(
+              (r) => !values['Appointment Type'].includes(r)
             )
           }
-          return ['reco4phjmLbZai3dD'].includes(values.Specialists)
+          return !['Virtual Consultation'].includes(values['Appointment Type'])
         },
       },
       {
-        id: 'fldIbRUpV4Cx37gZt',
-        name: 'Antara awareness',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldi87cD55V5Y0k0J',
-        name: 'Received referral',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: 'Select yes if the member has received one or many referral',
-      },
-      {
-        id: 'fldIn0buWHI6lxSau',
-        name: 'Referral appointment booked?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'optional - if date is already known by member please say yes',
-        conditionType: '',
-        parentKey: 'Received referral',
-        parentValues: ['True'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Received referral'])) {
-            return ['True'].some((r) => values['Received referral'].includes(r))
-          }
-          return ['True'].includes(values['Received referral'])
-        },
-      },
-      {
-        id: 'fldLwvzXOXcSCs3Zh',
-        name: 'Referral Date',
-        type: 'date',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Mandatory - create a new appointment using a form\nOptional - please enter the date of the appointment ',
-        conditionType: '',
-        parentKey: 'Referral appointment booked?',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Referral appointment booked?'])) {
-            return ['Yes'].some((r) =>
-              values['Referral appointment booked?'].includes(r)
-            )
-          }
-          return ['Yes'].includes(values['Referral appointment booked?'])
-        },
-      },
-      {
-        id: 'fld4tpEgIpYxBTlKt',
-        name: 'Facility referred',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldgzsE6mmZuw5Z0w',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblU94ZnFmMT7S0o0',
-        required: false,
-        helper: 'Optional - select the facility the member was referred to',
-        conditionType: '',
-        parentKey: 'Received referral',
-        parentValues: ['True'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Received referral'])) {
-            return ['True'].some((r) => values['Received referral'].includes(r))
-          }
-          return ['True'].includes(values['Received referral'])
-        },
-      },
-      {
-        id: 'fldTxRkTQ7exaoOk2',
-        name: 'Other Facility Referred',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Fill in the Facility Referred not found in the provider base',
-        parentKey: 'Facility referred',
-        parentValues: ['OTHER'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Facility referred'])) {
-            return ['OTHER'].some((r) =>
-              values['Facility referred'].includes(r)
-            )
-          }
-          return ['OTHER'].includes(values['Facility referred'])
-        },
-      },
-      {
-        id: 'fldgnVeeCoT8BgKNe',
-        name: 'Specialist referred',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldES6cFyBUmKG1kZ',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblPpf5F81JypdC9k',
-        required: false,
-        helper: 'Optional - select the specialist the member was referred to',
-        conditionType: '',
-        parentKey: 'Received referral',
-        parentValues: ['True'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Received referral'])) {
-            return ['True'].some((r) => values['Received referral'].includes(r))
-          }
-          return ['True'].includes(values['Received referral'])
-        },
-      },
-      {
-        id: 'fldxbGB4ZFrDq2Kvo',
-        name: 'Other Specialist Referred',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Fill in the Specialist Referred not found in the provider base',
-        parentKey: 'Specialist referred',
-        parentValues: ['reco4phjmLbZai3dD'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Specialist referred'])) {
-            return ['reco4phjmLbZai3dD'].some((r) =>
-              values['Specialist referred'].includes(r)
-            )
-          }
-          return ['reco4phjmLbZai3dD'].includes(values['Specialist referred'])
-        },
-      },
-      {
-        id: 'fldQ9xcHStzJyzU7Z',
-        name: 'Reason for Referral',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Please enter all the details about the referral(s) so that ME can coordinate or confirm later (including reason for referral, preferred specialist or facility...)',
-        conditionType: '',
-        parentKey: 'Received referral',
-        parentValues: ['True'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Received referral'])) {
-            return ['True'].some((r) => values['Received referral'].includes(r))
-          }
-          return ['True'].includes(values['Received referral'])
-        },
-      },
-      {
-        id: 'fldFPyNQaTOAuVvTc',
+        id: 'fldphpZJoCoCXFxoE',
         name: 'Received reminder',
         type: 'select',
         format: '',
@@ -4904,17 +4681,33 @@ export default [
         helper:
           'Select yes if the member was reminded to go to the appointment by Antara',
         conditionType: '',
-        parentKey: ['Appointment Type', 'Antara awareness'],
-        parentValues: ['Outpatient', 'Yes'],
+        parentKey: 'Appointment Type',
+        parentValues: ['Outpatient'],
         condition: (values: any) => {
-          return (
-            ['Outpatient'].includes(values['Appointment Type']) &&
-            ['Yes'].includes(values['Antara awareness'])
-          )
+          if (Array.isArray(values['Appointment Type'])) {
+            return ['Outpatient'].some((r) =>
+              values['Appointment Type'].includes(r)
+            )
+          }
+          return ['Outpatient'].includes(values['Appointment Type'])
         },
       },
       {
-        id: 'fldpHamGaOQWpzBeF',
+        id: 'fldsDI6i9NczwRiuV',
+        name: 'Antara awareness',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fld991yzoxqYSjDJ7',
         name: 'Received diagnosis',
         type: 'select',
         format: '',
@@ -4940,7 +4733,7 @@ export default [
         },
       },
       {
-        id: 'fldOEFEG1sWksJkJA',
+        id: 'fldy6wQzfbwmVtme2',
         name: 'Diagnosis',
         type: 'text',
         format: '',
@@ -4952,19 +4745,21 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'To enter the diagnosis, please click here: <a href="https://airtable.com/shreJWFrTNVXs6RKW" target="_blank">https://airtable.com/shreJWFrTNVXs6RKW</a> ',
+          'To enter a new condition diagnosed, please click here: <a href="https://airtable.com/shreJWFrTNVXs6RKW" target="_blank">https://airtable.com/shreJWFrTNVXs6RKW</a> ',
         conditionType: '',
-        parentKey: ['Attended appointment?', 'Received diagnosis'],
-        parentValues: ['Completed', 'True'],
+        parentKey: 'Received diagnosis',
+        parentValues: ['True'],
         condition: (values: any) => {
-          return (
-            ['Completed'].includes(values['Attended appointment?']) &&
-            ['True'].includes(values['Received diagnosis'])
-          )
+          if (Array.isArray(values['Received diagnosis'])) {
+            return ['True'].some((r) =>
+              values['Received diagnosis'].includes(r)
+            )
+          }
+          return ['True'].includes(values['Received diagnosis'])
         },
       },
       {
-        id: 'fldNcn4Fwjhg4i1xm',
+        id: 'fldxEegyK2Rix232O',
         name: 'Had lab test',
         type: 'select',
         format: '',
@@ -4977,17 +4772,19 @@ export default [
         required: false,
         helper: 'Indicate if laboratory test was done',
         conditionType: '',
-        parentKey: ['Attended appointment?', 'Appointment Type'],
-        parentValues: ['Completed', 'Outpatient'],
+        parentKey: 'Appointment Type',
+        parentValues: ['Outpatient'],
         condition: (values: any) => {
-          return (
-            ['Outpatient'].includes(values['Appointment Type']) &&
-            ['Completed'].includes(values['Attended appointment?'])
-          )
+          if (Array.isArray(values['Appointment Type'])) {
+            return ['Outpatient'].some((r) =>
+              values['Appointment Type'].includes(r)
+            )
+          }
+          return ['Outpatient'].includes(values['Appointment Type'])
         },
       },
       {
-        id: 'fld9W9bbtKrUsP59w',
+        id: 'fldTo0n4Ht1WVz7EY',
         name: 'Lab test purpose',
         type: 'multilineText',
         format: '',
@@ -5012,7 +4809,7 @@ export default [
         },
       },
       {
-        id: 'fldvFnBr2WESlIf5W',
+        id: 'fldf7eNkgFeUOshAo',
         name: 'Had imaging (Ray, CT Scan, Ultrasound or MRI)',
         type: 'select',
         format: '',
@@ -5037,7 +4834,7 @@ export default [
         },
       },
       {
-        id: 'fldQrV4vzorTcL1bE',
+        id: 'fldATMgoN71VFv3G6',
         name: 'Imaging purpose',
         type: 'multilineText',
         format: '',
@@ -5062,7 +4859,167 @@ export default [
         },
       },
       {
-        id: 'fldto6lccetf2bgt4',
+        id: 'fld2AYowjOv7rKmvb',
+        name: 'Received referral',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Select yes if the member has received one or many referral',
+      },
+      {
+        id: 'fldE7r0kjiDMvZAgz',
+        name: 'Facility referred',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldufCf7jbT98A1OZ',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblLsYlG4IiNEbWWs',
+        required: false,
+        helper: 'Optional - select the facility the member was referred to',
+        conditionType: '!',
+        parentKey: 'Know imaging purpose',
+        parentValues: ['True'],
+        condition: (values: any) => {
+          const receivedReferralCondition = Array.isArray(
+            values['Received referral']
+          )
+            ? ['True'].some((r) => values['Received referral'].includes(r))
+            : ['True'].includes(values['Received referral'])
+
+          const appointmentTypeCondition = Array.isArray(
+            values['Appointment Type']
+          )
+            ? !['Virtual Consultation'].some((r) =>
+                values['Appointment Type'].includes(r)
+              )
+            : !['Virtual Consultation'].includes(values['Appointment Type'])
+          return receivedReferralCondition && appointmentTypeCondition
+        },
+      },
+      {
+        id: 'fldrLWAE1NEvizwh2',
+        name: 'Other Facility Referred',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Fill in the Facility Referred not found in the provider base',
+        parentKey: 'Facility referred',
+        parentValues: ['recuzcwIPr5MYoltq'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Facility referred'])) {
+            return ['recuzcwIPr5MYoltq'].some((r) =>
+              values['Facility referred'].includes(r)
+            )
+          }
+          return ['recuzcwIPr5MYoltq'].includes(values['Facility referred'])
+        },
+      },
+      {
+        id: 'fldXE4C0uhChFmV2R',
+        name: 'Specialist referred',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldIjvrEeec8fry98',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblKoFLuzxN9g13xT',
+        required: false,
+        helper: 'Optional - select the specialist the member was referred to',
+        conditionType: '',
+        parentKey: 'Referral appointment booked?',
+        parentValues: ['No'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Referral appointment booked?'])) {
+            return ['No'].some((r) =>
+              values['Referral appointment booked?'].includes(r)
+            )
+          }
+          return ['No'].includes(values['Referral appointment booked?'])
+        },
+      },
+      {
+        id: 'fldVjjZ9IMJ4DM9LK',
+        name: 'Other Specialist Referred',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Fill in the Specialist Referred not found in the provider base',
+        parentKey: 'Specialist referred',
+        parentValues: ['rec0n79m4zKaXuZJD'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Specialist referred'])) {
+            return ['rec0n79m4zKaXuZJD'].some((r) =>
+              values['Specialist referred'].includes(r)
+            )
+          }
+          return ['rec0n79m4zKaXuZJD'].includes(values['Specialist referred'])
+        },
+      },
+      {
+        id: 'fldQJ7gewM0npFgYZ',
+        name: 'Referral appointment booked?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Please Yes if the member already have a date and time for this appointment',
+      },
+      {
+        id: 'fldABooA6c9L1jWCr',
+        name: 'Reason for Referral',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'IPlease enter all the details about the referral(s) so that ME can coordinate or confirm later (including reason for referral, preferred specialist or facility...)',
+        conditionType: '',
+        parentKey: 'Received referral',
+        parentValues: ['True'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Received referral'])) {
+            return ['True'].some((r) => values['Received referral'].includes(r))
+          }
+          return ['True'].includes(values['Received referral'])
+        },
+      },
+      {
+        id: 'flddQXx5qX3hvViYw',
         name: 'Received medication',
         type: 'select',
         format: '',
@@ -5087,7 +5044,7 @@ export default [
         },
       },
       {
-        id: 'fldGPGLtxsESqesII',
+        id: 'fldJtWxoUarzOK4Ra',
         name: 'Accepted Medications?',
         type: 'select',
         format: '',
@@ -5112,7 +5069,7 @@ export default [
         },
       },
       {
-        id: 'flds3yICT2fNQCzlq',
+        id: 'fldcvpUv7LPPjmBQS',
         name: 'Medication Information available',
         type: 'select',
         format: '',
@@ -5138,7 +5095,7 @@ export default [
         },
       },
       {
-        id: 'fldMYhGOaNooejl6B',
+        id: 'fldwq8SHowYqH3nB3',
         name: 'Medication',
         type: 'text',
         format: '',
@@ -5152,22 +5109,19 @@ export default [
         helper:
           'Use this link to fill in the medication <a href="https://airtable.com/shrH0jDDogdH2ySWr" target="_blank">https://airtable.com/shrH0jDDogdH2ySWr</a>',
         conditionType: '',
-        parentKey: [
-          'Received medication',
-          'Medication Information available',
-          'Appointment Type',
-        ],
-        parentValues: ['True', 'Virtual Consultation'],
+        parentKey: 'Received medication',
+        parentValues: ['True'],
         condition: (values: any) => {
-          return (
-            ['Virtual Consultation'].includes(values['Appointment Type']) &&
-            ['True'].includes(values['Received medication']) &&
-            ['True'].includes(values['Medication Information available'])
-          )
+          if (Array.isArray(values['Received medication'])) {
+            return ['True'].some((r) =>
+              values['Received medication'].includes(r)
+            )
+          }
+          return ['True'].includes(values['Received medication'])
         },
       },
       {
-        id: 'fldiMAv4TTBPhWVbM',
+        id: 'fld2erHX7CbRKGXGe',
         name: 'Know medication purpose',
         type: 'select',
         format: '',
@@ -5178,7 +5132,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
+        helper:
+          "If the member doesn't know the medication purpose please educate them ",
         conditionType: '',
         parentKey: 'Received medication',
         parentValues: ['True'],
@@ -5192,7 +5147,7 @@ export default [
         },
       },
       {
-        id: 'fldCjVbaQXiOvunah',
+        id: 'fldmLMn34GSQYepFJ',
         name: 'Medication purpose',
         type: 'richText',
         format: '',
@@ -5205,9 +5160,19 @@ export default [
         required: false,
         helper:
           'Describe the BN understanding of why the medication was prescribed',
+        parentKey: 'Medication Information available',
+        parentValues: ['True'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Medication Information available'])) {
+            return ['True'].some((r) =>
+              values['Medication Information available'].includes(r)
+            )
+          }
+          return ['True'].includes(values['Medication Information available'])
+        },
       },
       {
-        id: 'fldmab88Q3sbYmusg',
+        id: 'fld6C2k14M2dr6wXI',
         name: 'Health management plan',
         type: 'select',
         format: '',
@@ -5233,7 +5198,7 @@ export default [
         },
       },
       {
-        id: 'fldM1JB6ybaFUV5xb',
+        id: 'fldwtANZMUKHnF72D',
         name: 'Health management plan description',
         type: 'richText',
         format: '',
@@ -5258,7 +5223,7 @@ export default [
         },
       },
       {
-        id: 'fldY9groMtezIv0e5',
+        id: 'fldxpUgumBE4E9SGl',
         name: 'Symptoms progress',
         type: 'select',
         format: '',
@@ -5268,12 +5233,39 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Discuss with member and please indicates if the symptom(s) or the condition(s) have been progressing',
       },
       {
-        id: 'fldB3P7JPdg1QcQKI',
+        id: 'fldbCwhhAA9L7iFJl',
+        name: 'New symptoms',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Symptoms progress',
+        parentValues: ['New Symptoms', 'Worsening Symptoms'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Symptoms progress'])) {
+            return ['New Symptoms', 'Worsening Symptoms'].some((r) =>
+              values['Symptoms progress'].includes(r)
+            )
+          }
+          return ['New Symptoms', 'Worsening Symptoms'].includes(
+            values['Symptoms progress']
+          )
+        },
+      },
+      {
+        id: 'fldlvGjC3WQ3jWSfa',
         name: 'Additional information',
         type: 'richText',
         format: '',
@@ -5287,7 +5279,7 @@ export default [
         helper: 'Please add any other relevant information here',
       },
       {
-        id: 'fldq0rF9iD1g1UZLR',
+        id: 'fldasiR2wmBiuE1gj',
         name: 'Received next appointment',
         type: 'select',
         format: '',
@@ -5298,19 +5290,22 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: '',
+        helper:
+          'Please select Yes if the member needs to have a follow-up for this appointment',
         conditionType: '',
-        parentKey: ['Appointment Type', 'Attended appointment?'],
-        parentValues: ['Inpatient', 'Outpatient', 'Completed'],
+        parentKey: 'Attended appointment?',
+        parentValues: ['Completed'],
         condition: (values: any) => {
-          return (
-            ['Inpatient', 'Outpatient'].includes(values['Appointment Type']) &&
-            ['Completed'].includes(values['Attended appointment?'])
-          )
+          if (Array.isArray(values['Attended appointment?'])) {
+            return ['Completed'].some((r) =>
+              values['Attended appointment?'].includes(r)
+            )
+          }
+          return ['Completed'].includes(values['Attended appointment?'])
         },
       },
       {
-        id: 'fldcj9xtfvEwDJB4c',
+        id: 'fldMuDZWt9Q50JTQ5',
         name: 'Requires a VC follow-up?',
         type: 'select',
         format: '',
@@ -5336,7 +5331,7 @@ export default [
         },
       },
       {
-        id: 'fldqTb1YqxEES55pE',
+        id: 'fldal2dREgeGlP7U6',
         name: 'Next appointment date',
         type: 'date',
         format: '',
@@ -5348,19 +5343,21 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'If external appointment\nIf the follow up appointment is already booked (external), please create the appointment using the form in src.\nIf not booked, please create a task to coordinate\n\nIf Virtual Consult\nbook it using calendly link',
+          'If external appointment\nIf the follow up appointment is already booked (external), please create the appointment using the form in scribe.\nIf not booked, please create a task to coordinate\n\nIf Virtual Consult\nbook it using calendly link',
         conditionType: '',
-        parentKey: ['Received next appointment', 'Requires a VC follow-up?'],
-        parentValues: ['True', 'Yes'],
+        parentKey: 'Received next appointment',
+        parentValues: ['True'],
         condition: (values: any) => {
-          return (
-            ['True'].includes(values['Received next appointment']) &&
-            ['Yes'].includes(values['Requires a VC follow-up?'])
-          )
+          if (Array.isArray(values['Received next appointment'])) {
+            return ['True'].some((r) =>
+              values['Received next appointment'].includes(r)
+            )
+          }
+          return ['True'].includes(values['Received next appointment'])
         },
       },
       {
-        id: 'fldrOJZ7kdceB7wMM',
+        id: 'fldbgAb0yWMg4Ryhe',
         name: 'Asked to make payment',
         type: 'select',
         format: '',
@@ -5373,17 +5370,19 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: ['Appointment Type', 'Attended appointment?'],
-        parentValues: ['Virtual Consultation', 'Completed'],
+        parentKey: 'Attended appointment?',
+        parentValues: ['Completed'],
         condition: (values: any) => {
-          return (
-            ['Virtual Consultation'].includes(values['Appointment Type']) &&
-            ['Completed'].includes(values['Attended appointment?'])
-          )
+          if (Array.isArray(values['Attended appointment?'])) {
+            return ['Completed'].some((r) =>
+              values['Attended appointment?'].includes(r)
+            )
+          }
+          return ['Completed'].includes(values['Attended appointment?'])
         },
       },
       {
-        id: 'fld7lGpwffSNxovlE',
+        id: 'fldRNxBptYsP08xQ6',
         name: 'Payment purpose',
         type: 'multilineText',
         format: '',
@@ -5396,17 +5395,19 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: ['Appointment Type', 'Asked to make payment'],
-        parentValues: ['Virtual Consultation', 'True'],
+        parentKey: 'Asked to make payment',
+        parentValues: ['True'],
         condition: (values: any) => {
-          return (
-            ['Virtual Consultation'].includes(values['Appointment Type']) &&
-            ['True'].includes(values['Asked to make payment'])
-          )
+          if (Array.isArray(values['Asked to make payment'])) {
+            return ['True'].some((r) =>
+              values['Asked to make payment'].includes(r)
+            )
+          }
+          return ['True'].includes(values['Asked to make payment'])
         },
       },
       {
-        id: 'fldlkXCrwDWlEwd9z',
+        id: 'fld5MOOkKmwn7gfE1',
         name: 'Payment amount',
         type: 'number',
         format: 'currency',
@@ -5431,7 +5432,7 @@ export default [
         },
       },
       {
-        id: 'fldWPDwz7t1aPkRNw',
+        id: 'fldGhuIslcBci4TiY',
         name: 'Flag for review',
         type: 'checkbox',
         format: '',
