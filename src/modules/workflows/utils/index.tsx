@@ -302,6 +302,9 @@ export const initialFormValues = (
     'Member tasks': {
       Status: 'Not Started',
     },
+    'Prescriptions VC': {
+      'Start Date': todayFormattedDate(new Date()),
+    },
   }
 }
 

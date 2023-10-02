@@ -15472,7 +15472,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Please enter the start date if the member is already taking the medication. If this a new medication, Care team will confirm and update the start date after delivery of the medication.',
       },
