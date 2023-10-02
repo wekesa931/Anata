@@ -13277,4 +13277,490 @@ export default [
       },
     ],
   },
+  {
+    name: 'Incident reports',
+    id: 'tblOKEWpQrXfonvdm',
+    formId: 'shrD8ZlyRD64mJ33t',
+    fields: [
+      {
+        id: 'fldam4Ntr05mRshCW',
+        name: 'Members',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldzYqc6s9U8hcgFr',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
+        required: true,
+        helper: '(Should be automatically filled by SCRIBE)',
+      },
+      {
+        id: 'fldwwRC5hxm7pTe4y',
+        name: 'Channel of discovery',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldlIxIjFvuEPRehJ',
+        name: 'Other channel',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Channel of discovery',
+        parentValues: ['Other', 'Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Channel of discovery'])) {
+            return ['Other', 'Other'].some((r) =>
+              values['Channel of discovery'].includes(r)
+            )
+          }
+          return ['Other', 'Other'].includes(values['Channel of discovery'])
+        },
+      },
+      {
+        id: 'fldtS7is8OYz6Sn7S',
+        name: 'Source',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldaTOh5RfypGC2CH',
+        name: 'Other source',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Source',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Source)) {
+            return ['Other'].some((r) => values.Source.includes(r))
+          }
+          return ['Other'].includes(values.Source)
+        },
+      },
+      {
+        id: 'fldJjtMqiefwLIsu5',
+        name: 'Source name',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Please enter the name of the source (example: Jubilee, Dr John, Rebecca...)',
+      },
+      {
+        id: 'fldAeQcDSLIwvBvjh',
+        name: 'Responsible party',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld65xusXKI2rZTr4',
+        name: 'External responsible party',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Responsible party',
+        parentValues: ['External', 'Clinical diagnosis', 'Prescribing'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Responsible party'])) {
+            return ['External', 'Clinical diagnosis', 'Prescribing'].some((r) =>
+              values['Responsible party'].includes(r)
+            )
+          }
+          return ['External', 'Clinical diagnosis', 'Prescribing'].includes(
+            values['Responsible party']
+          )
+        },
+      },
+      {
+        id: 'fldzgYYkjPZsmjbq2',
+        name: 'Date of report',
+        type: 'date',
+        format: '',
+        isDateTime: true,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Please enter the date when the incident happened (not the time you are reporting it)',
+      },
+      {
+        id: 'fldkPdRnArHnqNFR4',
+        name: 'Incident location',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Where did it happen?',
+      },
+      {
+        id: 'fld1EqHHpGh5CS2ew',
+        name: 'Incident type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Please select the type(s) of incident that is reported',
+      },
+      {
+        id: 'fldbgzGQwR1o7hReg',
+        name: 'Administrative type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Incident type',
+        parentValues: ['Administrative'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Incident type'])) {
+            return ['Administrative'].some((r) =>
+              values['Incident type'].includes(r)
+            )
+          }
+          return ['Administrative'].includes(values['Incident type'])
+        },
+      },
+      {
+        id: 'fldgn0HEoL5kBxbIS',
+        name: 'Service delivery type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Incident type',
+        parentValues: ['Service delivery', 'Supplies'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Incident type'])) {
+            return ['Service delivery', 'Supplies'].some((r) =>
+              values['Incident type'].includes(r)
+            )
+          }
+          return ['Service delivery', 'Supplies'].includes(
+            values['Incident type']
+          )
+        },
+      },
+      {
+        id: 'fldar3pohx3z5Q1dj',
+        name: 'Clinical treatment type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Incident type',
+        parentValues: ['Clinical treatment'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Incident type'])) {
+            return ['Clinical treatment'].some((r) =>
+              values['Incident type'].includes(r)
+            )
+          }
+          return ['Clinical treatment'].includes(values['Incident type'])
+        },
+      },
+      {
+        id: 'fldMPzO40jfbTVAvj',
+        name: 'Systems type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Incident type',
+        parentValues: ['Systems'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Incident type'])) {
+            return ['Systems'].some((r) => values['Incident type'].includes(r))
+          }
+          return ['Systems'].includes(values['Incident type'])
+        },
+      },
+      {
+        id: 'fldCmnwaRR0absLDm',
+        name: 'Appointment type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Incident type',
+        parentValues: ['Appointment'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Incident type'])) {
+            return ['Appointment'].some((r) =>
+              values['Incident type'].includes(r)
+            )
+          }
+          return ['Appointment'].includes(values['Incident type'])
+        },
+      },
+      {
+        id: 'fldvgxs8PYHF3nwO3',
+        name: 'Other type',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Please enter a type (not the full description)',
+        conditionType: '',
+        parentKey: 'Incident type',
+        parentValues: ['Other', 'Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Incident type'])) {
+            return ['Other', 'Other'].some((r) =>
+              values['Incident type'].includes(r)
+            )
+          }
+          return ['Other', 'Other'].includes(values['Incident type'])
+        },
+      },
+      {
+        id: 'fldUgoSj8JeSbGCgr',
+        name: 'Incident medication type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Incident type',
+        parentValues: ['Antara', 'Medication error', 'Administration'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Incident type'])) {
+            return ['Antara', 'Medication error', 'Administration'].some((r) =>
+              values['Incident type'].includes(r)
+            )
+          }
+          return ['Antara', 'Medication error', 'Administration'].includes(
+            values['Incident type']
+          )
+        },
+      },
+      {
+        id: 'fldnU90I6zNr5y4OC',
+        name: 'Other medication type',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Incident medication type',
+        parentValues: ['Other', 'Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Incident medication type'])) {
+            return ['Other', 'Other'].some((r) =>
+              values['Incident medication type'].includes(r)
+            )
+          }
+          return ['Other', 'Other'].includes(values['Incident medication type'])
+        },
+      },
+      {
+        id: 'fldgfD1bu2iFd32Dv',
+        name: 'Antara Staff Involved',
+        type: 'collaborator',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: 'tblHs6JxFnMGAjNNC',
+        required: false,
+        helper:
+          'Please tag the staff member who was in charge of the member or who was linked to the incident',
+      },
+      {
+        id: 'fldPryFGCNKcM0iAL',
+        name: 'Incident Description',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Give details of what transpired, making clear all parties involved, both at Antara and elsewhere as applicable, and dates/time during which the event transpired',
+      },
+      {
+        id: 'fldavFcG6c99QE9EK',
+        name: 'Patient outcomes',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Please indicate the severity of the incident for the member',
+      },
+      {
+        id: 'fld7VDvLBJxQrFEjk',
+        name: 'Action Taken',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Give details of what action you took to escalate/resolve the incident',
+      },
+      {
+        id: 'fldxIeLSWfQW0ry2n',
+        name: 'Next steps',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Details any follow up taken/needs to be taken to fully resolve the issue',
+      },
+      {
+        id: 'fldrZKsYbjyfS9Nmt',
+        name: 'Status',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+    ],
+  },
 ]
