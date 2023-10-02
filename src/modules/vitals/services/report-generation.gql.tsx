@@ -149,6 +149,20 @@ export const GET_REPORT_GEN_MEASUREMENTS = gql`
         }
       }
     }
+    muscleMass: healthMetricAggregatedMeasurements(
+      healthMetric: "Muscle Mass"
+      startDateOffset: $startDateOffset
+      antaraId: $antaraId
+      stopDateOffset: $stopDateOffset
+      granularity: "day"
+    ) {
+      edges {
+        node {
+          aggregates
+        }
+      }
+    }
+
     rbs: healthMetricAggregatedMeasurements(
       healthMetric: "Random Blood Glucose"
       startDateOffset: $startDateOffset
@@ -417,6 +431,23 @@ export const GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES = gql`
     }
     bodyFat: referenceRanges(
       healthMetric: "Body fat"
+      sex: $sex
+      ageInMonths: $ageInMonths
+      isDesired: true
+    ) {
+      edges {
+        node {
+          name
+          minimumValue
+          maximumValue
+          healthMetric {
+            name
+          }
+        }
+      }
+    }
+    muscleMass: referenceRanges(
+      healthMetric: "Muscle Mass"
       sex: $sex
       ageInMonths: $ageInMonths
       isDesired: true

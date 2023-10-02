@@ -101,7 +101,7 @@ const processBpProgress = (data: Progress) => {
   }
 }
 
-const humanizeVitals = (vitals: any) => {
+const humanizeVitals = (vitals: any = {}) => {
   const {
     timestamp,
     weight,
@@ -110,6 +110,7 @@ const humanizeVitals = (vitals: any) => {
     respiratoryRate,
     oxygenSaturation,
     temperature,
+    muscleMass,
   } = vitals
   const formattedTime = timestamp ? formatTime(timestamp) : ''
 
@@ -131,6 +132,8 @@ const humanizeVitals = (vitals: any) => {
       formattedTime && temperature
         ? `${temperature} on (${formattedTime})`
         : '',
+    'Muscle Mass':
+      formattedTime && muscleMass ? `${muscleMass} on (${formattedTime})` : '',
   }
 }
 
