@@ -702,10 +702,10 @@ function LinkRecordInput({
     tbltmQuqyuKPc4Ffo: 'tbltmQuqyuKPc4Ffo', // Facilities from Provider base
     tblsixUe3jfbOUMQP: 'tblsixUe3jfbOUMQP', // Specialists from Provider Base
     // staging
-    tblglBRVOue24usUH: 'tblgFQRJDav7dNdLl', // medication
-    tblm1g2udT6J8TOzt: 'tblU94ZnFmMT7S0o0', // Providers
-    tblU94ZnFmMT7S0o0: 'tblU94ZnFmMT7S0o0', // Facilities from Provider base
-    tblPpf5F81JypdC9k: 'tblPpf5F81JypdC9k', // Specialists from Provider Base
+    tblgFQRJDav7dNdLl: 'tblgFQRJDav7dNdLl', // medications
+    tblLsYlG4IiNEbWWs: 'tblLsYlG4IiNEbWWs', // facilities from provider base
+    tblKoFLuzxN9g13xT: 'tblKoFLuzxN9g13xT', // specialist
+    tbl6t7enrCGLBDQ4V: 'tblLsYlG4IiNEbWWs', // providers
   }
 
   const isInSearchSchema = Object.keys(IndexTable).includes(
