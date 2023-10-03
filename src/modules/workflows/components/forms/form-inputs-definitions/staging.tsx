@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 export default [
   {
     name: 'Baseline',
@@ -16255,6 +16257,1844 @@ export default [
           return ['Yes'].includes(
             values['Does the member have a Primary care provider?']
           )
+        },
+      },
+    ],
+  },
+  {
+    name: 'Minor Health Check',
+    id: 'tblcShvXs3WINoqL7',
+    helper:
+      'Please fill this form only if minor is younger than 5 years old, if not, delete the form from the workflow',
+    fields: [
+      {
+        id: 'fldOay3WV9hFM9qiN',
+        name: 'Full name',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldobP0EzP2Gx9axj',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldHB1IInfsrI1c4Y',
+        name: 'Health Navigator',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldtRTJPTRig7FH0H',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblZyeANbBkE2q4uG',
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld91GhKtaf7ZOqHV',
+        name: 'Appointments',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld8uolKKtWpQe4wX',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblhHcP4VrFV9atFx',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldRC0qHocnP5PxlC',
+        name: 'Date Of Birth',
+        type: 'date',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldV6AZC4SkNZwePg',
+        name: 'Age',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Put 1 if less than a year and if not prefilled',
+      },
+      {
+        id: 'fldJR92At1vlWNVsz',
+        name: 'Gender',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld8cUrrQvA9aW9gP',
+        name: 'Do you know your child height/length (m)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Please enter the height/ length in meters',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['6'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['6'].some((r) => values.Age.includes(r))
+          }
+          return ['6'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fldCGBKAofJxWICbS',
+        name: 'Do you know your child weight (kg)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Please enter the weight in kgs',
+      },
+      {
+        id: 'fldQDiFiRlP9NEhmW',
+        name: 'Do you have any concerns about your child health today?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Schedule a pediatric consult if symptoms have persisted for the last 7 days',
+      },
+      {
+        id: 'fldjrs68DYNw6Urf2',
+        name: 'What are your concerns?',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any concerns about your child health today?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any concerns about your child health today?']
+            )
+          ) {
+            return ['Yes'].some((r) =>
+              values[
+                'Do you have any concerns about your child health today?'
+              ].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values['Do you have any concerns about your child health today?']
+          )
+        },
+      },
+      {
+        id: 'fldK6Pw4r3JTN0T4H',
+        name: 'Does your child currently have a medical condition?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If Yes, Schedule a VCD consultation',
+      },
+      {
+        id: 'fld1BLcMBtXd2T66A',
+        name: 'Please tell us the condition',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Does your child currently have a medical condition?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Does your child currently have a medical condition?']
+            )
+          ) {
+            return ['Yes'].some((r) =>
+              values[
+                'Does your child currently have a medical condition?'
+              ].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values['Does your child currently have a medical condition?']
+          )
+        },
+      },
+      {
+        id: 'fldVIJEbovP7uTs2g',
+        name: 'Do you know whether your child vaccines are up to date?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldDRgNy9WLdNE50T',
+        name: 'Has your child had any reactions to vaccinations in the past?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld7909NcT0utku0D',
+        name: 'If yes, what reactions did your child get?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Has your child had any reactions to vaccinations in the past?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Has your child had any reactions to vaccinations in the past?'
+              ]
+            )
+          ) {
+            return ['Yes'].some((r) =>
+              values[
+                'Has your child had any reactions to vaccinations in the past?'
+              ].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values[
+              'Has your child had any reactions to vaccinations in the past?'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldXQsuhruCnrLhoc',
+        name: 'Does your child have any  food allergies?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fld5ccnftbAlXQy9l',
+        name: 'If yes, what are the food allergies?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Does your child have any  food allergies?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(values['Does your child have any  food allergies?'])
+          ) {
+            return ['Yes'].some((r) =>
+              values['Does your child have any  food allergies?'].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values['Does your child have any  food allergies?']
+          )
+        },
+      },
+      {
+        id: 'fldjzdHiKqlaaYdNA',
+        name: 'Does your child have any medication allergies?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'flduAcSHBZKPqwo73',
+        name: 'If yes, what are the allergies?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Does your child have any medication allergies?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Does your child have any medication allergies?']
+            )
+          ) {
+            return ['Yes'].some((r) =>
+              values['Does your child have any medication allergies?'].includes(
+                r
+              )
+            )
+          }
+          return ['Yes'].includes(
+            values['Does your child have any medication allergies?']
+          )
+        },
+      },
+      {
+        id: 'fldBt3zEIgNmjOyRi',
+        name: 'Is your child currently taking any medications or supplements?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldqNqeZw8XKHvcrL',
+        name: 'If yes, what are the medication/supplement details?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Please enter the medications in the HN prescription form if all details are available or create a task for HN to collect data and add a new Rx in the scribe for the member.',
+        conditionType: '',
+        parentKey:
+          'Is your child currently taking any medications or supplements?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Is your child currently taking any medications or supplements?'
+              ]
+            )
+          ) {
+            return ['Yes'].some((r) =>
+              values[
+                'Is your child currently taking any medications or supplements?'
+              ].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values[
+              'Is your child currently taking any medications or supplements?'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldL23z2iF4ZQ7Gkn',
+        name: 'Has your child had any surgeries before?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If yes, schedule a VCD consultation',
+      },
+      {
+        id: 'fldchEViWqXGqs0Mx',
+        name: 'Please describe any surgeries your child might have had',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Has your child had any surgeries before?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(values['Has your child had any surgeries before?'])
+          ) {
+            return ['Yes'].some((r) =>
+              values['Has your child had any surgeries before?'].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values['Has your child had any surgeries before?']
+          )
+        },
+      },
+      {
+        id: 'fldpswZKEcE5JbUWE',
+        name: 'Has your child ever been hospitalized',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If yes, schedule a VCD consultation',
+      },
+      {
+        id: 'fldcXE5e05APGdXcf',
+        name: 'Please tell us for what and when that was',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Has your child ever been hospitalized',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Has your child ever been hospitalized'])) {
+            return ['Yes'].some((r) =>
+              values['Has your child ever been hospitalized'].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values['Has your child ever been hospitalized']
+          )
+        },
+      },
+      {
+        id: 'fld4UUq57qxEiCn1C',
+        name: 'Has your child ever had been diagnosed with a condition that lasted longer than 3 months',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If yes, schedule a VCD consultation',
+      },
+      {
+        id: 'fldzSfEVwD1npEOY2',
+        name: 'Is your child doing grade-level work at school/ able to keep up with school work?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule pediatric consultation',
+      },
+      {
+        id: 'fldxLQ6XrJzqsgrNG',
+        name: 'Please tell us what the condition was',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Has your child ever had been diagnosed with a condition that lasted longer than 3 months',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Has your child ever had been diagnosed with a condition that lasted longer than 3 months'
+              ]
+            )
+          ) {
+            return ['Yes'].some((r) =>
+              values[
+                'Has your child ever had been diagnosed with a condition that lasted longer than 3 months'
+              ].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values[
+              'Has your child ever had been diagnosed with a condition that lasted longer than 3 months'
+            ]
+          )
+        },
+      },
+      {
+        id: 'fldQDVCqv6GIkaBLn',
+        name: 'Does your child speak clearly?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule pediatric consultation',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['6'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['6'].some((r) => values.Age.includes(r))
+          }
+          return ['6'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fldQUaOflcrUm5wx2',
+        name: 'Does your child tell stories?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule pediatric consultation',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['5'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
+          }
+          return ['5'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fldzQ8cvkUt77Ss5C',
+        name: 'Does your child stay dry all day and night?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule pediatric consultation',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['5'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
+          }
+          return ['5'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fldprBxdnK1GuqzLc',
+        name: 'What grade level is your child in school?  ',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If not age appropriate, schedule HC',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['5'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
+          }
+          return ['5'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fldNqO2XMOEdcGowt',
+        name: 'Where?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'What grade level is your child in school?  ',
+        condition: (values: any) => {
+          if (
+            Object.prototype.hasOwnProperty.call(
+              values,
+              'What grade level is your child in school?  '
+            )
+          ) {
+            return values['What grade level is your child in school?  '] !== ''
+          }
+          return false
+        },
+      },
+      {
+        id: 'fldYgWcRL4KIHza1F',
+        name: 'Other activities (music/arts/sports/other)?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['5'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
+          }
+          return ['5'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fldp91KN1Y20Nhr7m',
+        name: 'What are your child’s interests and goals?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['5'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
+          }
+          return ['5'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fldLqVPe27niyzKsf',
+        name: 'Do you give your baby a bottle of anything other than formula or breast milk?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If Yes, schedule a Nutrition consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 14 && diff <= 150
+        },
+      },
+      {
+        id: 'fldCM11WejsULzNm0',
+        name: 'Do you have any concerns about your baby’s feeding or weight?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If Yes, schedule a Nutrition consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 14 && diff <= 150
+        },
+      },
+      {
+        id: 'fldA8XabAxDxf652d',
+        name: 'If breastfeeding, does your baby have any latching problem?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If Yes, schedule nutrition consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 14 && diff <= 150
+        },
+      },
+      {
+        id: 'fldDpBnk6TI2OjRc5',
+        name: 'How much dairy does your child drink (cow milk, goat milk, camel milk, soy milk, yoghurt) per day?',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Enter in cups. If less than 1 cup, schedule a Nutrition consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 180 && diff <= 1800
+        },
+      },
+      {
+        id: 'fldoT7xpSerEuGLHO',
+        name: 'Does your baby eat calcium-rich foods daily? (milk, yoghurt, beans, soya, spinach, etc)',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule a nutrition consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 180 && diff <= 360
+        },
+      },
+      {
+        id: 'fldaIgHN42YmiekMq',
+        name: 'Is your child eating a variety of fruits and vegetables daily?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule a nutrition consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 180 && diff <= 360
+        },
+      },
+      {
+        id: 'fldG590cyY6bM03QM',
+        name: 'Does your child eat iron-rich foods (meat/iron-fortified cereal, beans) daily?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule a nutrition consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 180 && diff <= 360
+        },
+      },
+      {
+        id: 'fldWkOfUK9snvybvJ',
+        name: 'Do you give your baby any other beverages except formula, milk, water or fresh fruit juice?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If Yes, schedule a nutrition consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 180 && diff <= 360
+        },
+      },
+      {
+        id: 'fldmz8qM4kJq55w3N',
+        name: 'Does your child get 3 servings of calcium-rich foods (milk, yoghurt, beans, soya, spinach, etc) daily?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule a nutrition consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 390 && diff <= 1800
+        },
+      },
+      {
+        id: 'fldaChEg8aicw8gov',
+        name: 'Does your child eat iron-rich foods (meat, iron fortified cereal, beans) daily?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule a nutrition consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 390 && diff <= 1800
+        },
+      },
+      {
+        id: 'fldmqV0rEQB32qG25',
+        name: 'How much juice or other sweet beverage does your child drink per day?',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Enter in cups. If more than 1 cup, schedule an NC.',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 390 && diff <= 1800
+        },
+      },
+      {
+        id: 'fldrJ6kJvRZvbsTmh',
+        name: 'Does your child eat junk/fast food (crisps, biscuits, sweet, chocolate, pizza, chips, burgers) more than twice per week?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If Yes, schedule a nutrition consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 390 && diff <= 1800
+        },
+      },
+      {
+        id: 'fldMUfOKFpbEFCQ54',
+        name: 'Does your child have any dietary restrictions (like food allergies or intolerances)?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If Yes, schedule a nutrition consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 390 && diff <= 1800
+        },
+      },
+      {
+        id: 'fldoHVvSOf6hTSqzs',
+        name: 'Does your child take any dietary supplements?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If Yes, schedule a nutrition consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 390 && diff <= 1800
+        },
+      },
+      {
+        id: 'fldK6r7Qu8puh0AgQ',
+        name: 'Does your baby have at least 6-8 wet diapers in 24 hours? ',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule a nutrition consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff === 14
+        },
+      },
+      {
+        id: 'fldlKuiWiXiQnVSbQ',
+        name: 'Does your baby have a strong urine stream?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule pediatric consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff === 14
+        },
+      },
+      {
+        id: 'fldJmrkcbFU62VIka',
+        name: 'Does your baby have soft, yellow poops?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule a VCD',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff === 14
+        },
+      },
+      {
+        id: 'fldfJCeAImTsaGqbR',
+        name: 'Does your baby have daily poops with a soft/loose consistency?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule a VCD',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 30 && diff <= 180
+        },
+      },
+      {
+        id: 'fldK7FGvIiQXmeVSp',
+        name: 'Are there any problems with pooping or peeing?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes, schedule VCD',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 210 && diff <= 1800
+        },
+      },
+      {
+        id: 'fld1JtCuGqniC6G7m',
+        name: 'Does your child play actively most days of the week?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If no, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 240 && diff <= 940
+        },
+      },
+      {
+        id: 'fldjYPcwXcdNpnVLv',
+        name: 'Does your child exercise or play sports most days of the week?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule health check',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['5'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
+          }
+          return ['5'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fldDd40RrueB0NXe8',
+        name: 'What is the longest time your baby sleeps at night without feeding?',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Enter in hours',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return (!isNaN(parseFloat(diff)) && diff >= 14) || diff <= 60
+        },
+      },
+      {
+        id: 'fldk3rl2CeMclQiEG',
+        name: 'Do you always put your baby to sleep on her/his back?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return (!isNaN(parseFloat(diff)) && diff >= 14) || diff <= 60
+        },
+      },
+      {
+        id: 'fldhpqbPAc49qM8Ne',
+        name: 'Where does your baby sleep?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return (!isNaN(parseFloat(diff)) && diff >= 14) || diff <= 60
+        },
+      },
+      {
+        id: 'fldwgQQaiUNP4H2qt',
+        name: 'How long does your child sleep at night without awakening?    ',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Enter in hours',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 270 && diff <= 540
+        },
+      },
+      {
+        id: 'fldLQW4hJQ6HvDJjp',
+        name: 'How long does your child nap throughout the day?',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Enter in minutes',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 270 && diff <= 540
+        },
+      },
+      {
+        id: 'fldIeCuul6Yku3gzW',
+        name: 'Can they self-soothe? ',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 270 && diff <= 540
+        },
+      },
+      {
+        id: 'fld713nXvko65Ojsn',
+        name: 'Where does your child sleep?',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 270 && diff <= 540
+        },
+      },
+      {
+        id: 'fld8DpbfErxoYyBQm',
+        name: 'How long does your child sleep at night?   ',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Enter in hours',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['2', '3', '4', '5'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['2', '3', '4', '5'].some((r) => values.Age.includes(r))
+          }
+          return ['2', '3', '4', '5'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fld50Qi2eQGyiyeYz',
+        name: 'How long does your child nap?  ',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Enter in minutes',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['2', '3', '4', '5'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['2', '3', '4', '5'].some((r) => values.Age.includes(r))
+          }
+          return ['2', '3', '4', '5'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fldPeCnA24S5oX7yE',
+        name: 'Does your child snore on a regular basis?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If Yes, schedule health check',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['5'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
+          }
+          return ['5'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fldo4NDREHYJ6r7JZ',
+        name: 'Do you always place your baby in a rear-facing car seat in the back seat?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff === 14
+        },
+      },
+      {
+        id: 'fldNUoMdNlnFhOb6q',
+        name: 'Is your car seat the right one for the age and size of your baby?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff === 14
+        },
+      },
+      {
+        id: 'fldLeCk31Farel4yO',
+        name: 'Does your baby get any screen time?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If Yes, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff === 60
+        },
+      },
+      {
+        id: 'fldbLNi5vxtKSNYTF',
+        name: 'Does your baby spend time with anyone who smokes or vapes?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If Yes, schedule pediatric consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && (diff === 14 || diff === 60)
+        },
+      },
+      {
+        id: 'fldd4EmVapvFNVSW7',
+        name: 'Do you always stay with your baby when she/he is in the bathtub?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, schedule pediatric consultation',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff === 60
+        },
+      },
+      {
+        id: 'fldcF10Ru5HzPDNMF',
+        name: 'Does your child use a car seat when travelling in cars?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff === 60
+        },
+      },
+      {
+        id: 'fldl43uDvXxoeiDfr',
+        name: 'Does your child get any screen time?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If Yes, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 270 && diff <= 750
+        },
+      },
+      {
+        id: 'fldMH511D6rZS7h7m',
+        name: 'Does your child get screen time more than 1 hour per day?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If Yes, create a task to send content',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['3', '4'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['3', '4'].some((r) => values.Age.includes(r))
+          }
+          return ['3', '4'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fldyjGcFO0r1GDgAg',
+        name: 'Does your child get screen time more than 2 hours per day?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If Yes, create a task to send content',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['5'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['5'].some((r) => values.Age.includes(r))
+          }
+          return ['5'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fldytOIYREvfPEo5c',
+        name: 'Is your child always supervised when near water, including the bathtub?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 240 && diff <= 1800
+        },
+      },
+      {
+        id: 'fldF29aj5wFYj7xR8',
+        name: 'Do you have safety guards on upper floor windows and gates for the stairs?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 240 && diff <= 1800
+        },
+      },
+      {
+        id: 'fldv6Y1FBxRHLDbkq',
+        name: 'Does your home have cleaning supplies/medicines/matches locked away?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 240 && diff <= 1800
+        },
+      },
+      {
+        id: 'fldo31NS1xu1gTIMp',
+        name: 'Is your child learning how to swim?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 240 && diff <= 1800
+        },
+      },
+      {
+        id: 'fldtf7PjwaSRCaxWb',
+        name: 'Is your child car seat appropriately sized, rear-facing, and in the back seat?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 240 && diff <= 1800
+        },
+      },
+      {
+        id: 'fldB37e20xnZQXQUi',
+        name: 'Do you always check for children before backing your car out?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 240 && diff <= 1800
+        },
+      },
+      {
+        id: 'fldHVI1AS1Vf3gPiJ',
+        name: 'Does your child wear a helmet when riding anything with wheels?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 240 && diff <= 1800
+        },
+      },
+      {
+        id: 'fld5NJV7irV1LB6uf',
+        name: 'Do you brush your child’s teeth daily?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Date Of Birth ',
+        condition: (values: any) => {
+          const birthDate = dayjs(values['Date Of Birth'])
+          const diff = dayjs().diff(birthDate, 'day')
+          return !isNaN(parseFloat(diff)) && diff >= 240 && diff <= 540
+        },
+      },
+      {
+        id: 'fldaXvtJvBUq2Btud',
+        name: 'Does your child see a dentist annually (once a year)?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['2'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['2'].some((r) => values.Age.includes(r))
+          }
+          return ['2'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fldf02QtUxbirulxT',
+        name: 'Does your child see a dentist every 6 months?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['3', '4', '5'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['3', '4', '5'].some((r) => values.Age.includes(r))
+          }
+          return ['3', '4', '5'].includes(values.Age)
+        },
+      },
+      {
+        id: 'fldXlci1W3R2STR6M',
+        name: 'Does your child (with your help) brush his/her teeth daily?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'If No, create a task to send content',
+        conditionType: '',
+        parentKey: 'Age',
+        parentValues: ['3', '4', '5'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Age)) {
+            return ['3', '4', '5'].some((r) => values.Age.includes(r))
+          }
+          return ['3', '4', '5'].includes(values.Age)
         },
       },
     ],
