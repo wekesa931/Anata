@@ -90,7 +90,7 @@ const validationSchema = (isDependent = false) =>
   })
 
 type InsuranceSectionProps = {
-  setCompleted: (completed: any) => void
+  setCompleted: (completed: any, primaryMember?: any) => void
   member: Member | null
   primaryMember: Member | undefined
 }
@@ -118,10 +118,10 @@ const defaultInsurance = (primaryMember: Member | undefined) => ({
   },
   insurances: [
     {
-      insuranceCompany: '',
+      insuranceCompany: primaryMember?.primaryInsuranceCompany || '',
       insuranceId: '',
       isPrincipalMember: primaryMember ? 'no' : 'yes',
-      principalMemberInsuranceId: primaryMember?.principalInsuranceId,
+      principalMemberInsuranceId: primaryMember?.primaryInsuranceId,
       relationshipToPrincipalMember: '',
       priority: 0,
       verificationStatus: 'unverified',
@@ -174,19 +174,20 @@ export function InsuranceForm({
   const [employer, setEmployer] = useState<string>('')
 
   useEffect(() => {
-    const values = member?.insurances?.insurances.length
-      ? member?.insurances
-      : defaultInsurance(primaryMember)
+    // console.log("Caling this ", member?.insurances?.insurances)
+    const values = member?.needsInsurancePreffil
+      ? defaultInsurance(primaryMember)
+      : member?.insurances
     setInitialValues(values as InsuranceDetailsValues)
     const employerName = values?.employer?.name
     setBusinessLookups(employerName)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [verificationStatus, member])
+  }, [verificationStatus, member, primaryMember])
 
   const handleSubmit = (values: any, formikBag: any) => {
     const completeSubmission = () => {
-      setCompleted(member)
+      setCompleted(member, primaryMember)
       if (member?.antaraId) navigate(`/member/${member.antaraId}`)
     }
 
@@ -433,6 +434,7 @@ export function InsuranceForm({
                                 }
                               }}
                               required={false}
+                              autoFocus={index === 0}
                             />
                             <TextField
                               label="Insurance ID"
@@ -492,7 +494,7 @@ export function InsuranceForm({
                                   name={`insurances.${index}.principalMemberInsuranceId`}
                                   placeholder="Enter principal's member insurance ID"
                                   disabled={
-                                    !!primaryMember?.principalInsuranceId &&
+                                    !!primaryMember?.primaryInsuranceId &&
                                     !!values.insurances[index]
                                       ?.principalMemberInsuranceId
                                   }

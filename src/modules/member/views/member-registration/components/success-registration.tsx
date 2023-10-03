@@ -21,6 +21,7 @@ type SuccessfulProps = {
   customMessage: string
   handleClose?: () => void
   fileId?: string
+  primaryMember?: Member
 }
 
 function SuccessPrompt({
@@ -34,6 +35,7 @@ function SuccessPrompt({
   customMessage,
   handleClose,
   fileId,
+  primaryMember,
 }: SuccessfulProps) {
   const analytics = useAnalytics('Member registration')
 
@@ -95,7 +97,7 @@ function SuccessPrompt({
               onClick={() =>
                 setSelectedForm({
                   name: 'dependent',
-                  member,
+                  member: primaryMember || member,
                   completed: false,
                   title: 'Adult dependent registration',
                 })
@@ -111,7 +113,7 @@ function SuccessPrompt({
               onClick={() =>
                 setSelectedForm({
                   name: 'child',
-                  member,
+                  member: primaryMember || member,
                   completed: false,
                   title: 'Child registration',
                 })

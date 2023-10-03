@@ -123,7 +123,7 @@ function MedicalCampTemplate({
                   <View style={headerStyles.item}>
                     <Text style={headerStyles.title}>Insurance ID: </Text>
                     <Text style={headerStyles.text}>
-                      {member?.principalInsuranceId}
+                      {member?.primaryInsuranceId}
                     </Text>
                   </View>
 

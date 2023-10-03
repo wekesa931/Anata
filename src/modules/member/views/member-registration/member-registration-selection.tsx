@@ -51,6 +51,7 @@ type RegistrationForms =
       member?: Member
       completed: boolean
       title: string
+      primaryMember?: Member
     }
   | undefined
 
@@ -147,6 +148,7 @@ function MemberRegistrationForm({
                 title={selectedForm.title}
                 member={selectedForm.member}
                 formFilled={selectedForm.name}
+                primaryMember={selectedForm.primaryMember}
                 setSelectedForm={setSelectedForm}
                 isRosterMember={!!rosterMember}
                 successMessage={`${name} has been successfully registered`}
@@ -158,11 +160,12 @@ function MemberRegistrationForm({
             <RegistrationForm
               closeForm={() => setSelectedForm(undefined)}
               setIsEdited={setIsEdited}
-              setCompleted={(member: any) =>
+              setCompleted={(member?: Member, primaryMember?: Member) =>
                 setSelectedForm({
                   ...selectedForm,
                   member,
                   completed: true,
+                  primaryMember,
                 })
               }
               formName={selectedForm.name}

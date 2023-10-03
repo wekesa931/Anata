@@ -241,9 +241,18 @@ export class Member extends Model {
     }, ${this.emergencyContact?.relationship || '-'}`
   }
 
-  get principalInsuranceId() {
+  get primaryInsuranceId() {
     return this.insuranceDetails?.find((insurance) => insurance?.priority === 0)
       ?.insuranceId
+  }
+
+  get primaryInsuranceCompany() {
+    return this.insuranceDetails?.find((insurance) => insurance?.priority === 0)
+      ?.insuranceCompany
+  }
+
+  get needsInsurancePreffil() {
+    return !this.primaryInsuranceCompany
   }
 
   get needsSync() {

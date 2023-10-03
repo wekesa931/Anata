@@ -76,6 +76,7 @@ function SelectField(props: OutlinedFieldProps & SelectFieldProps) {
                 <ValueRenderer selected={selected} props={props} />
               )}
               disabled={props.disabled}
+              autoFocus={props.autoFocus}
             >
               {props.options.map((option: any) => (
                 <MenuItem key={option.value} value={option.value}>

@@ -23,7 +23,7 @@ type RegistrationFormProps = {
   primaryMember?: Member
   closeForm: () => void
   setIsEdited: (value: boolean) => void
-  setCompleted: (member?: Member) => void
+  setCompleted: (member?: Member, primaryMember?: Member) => void
   formName: RegistrationFormsNames
   title: string
 }
@@ -46,10 +46,7 @@ function RegistrationForm({
   const { member: currentMember } = useMember()
 
   useEffect(() => {
-    createDefaultMemberInstance(
-      rosterMember,
-      currentMember?.principalInsuranceId
-    )
+    createDefaultMemberInstance(rosterMember, currentMember?.primaryInsuranceId)
       .then((newMember) => {
         setMember(newMember)
       })
