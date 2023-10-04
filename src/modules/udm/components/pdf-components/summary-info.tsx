@@ -27,8 +27,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginRight: 5,
     fontSize: 14,
-    width: '150pt',
+    width: '120pt',
     textAlign: 'left',
+  },
+  textContainer: {
+    flex: 1,
+    whiteSpace: 'wrap',
   },
   text: {
     fontSize: 14,
@@ -48,13 +52,17 @@ export function SummaryInfo({ additionalInsights, nextActions }: Props) {
           {additionalInsights && (
             <View style={styles.summaryItem}>
               <Text style={styles.infoLabel}>Additional Insights:</Text>
-              <Text style={styles.text}>{additionalInsights}</Text>
+              <View style={styles.textContainer}>
+                <Text style={styles.text}>{additionalInsights}</Text>
+              </View>
             </View>
           )}
           {nextActions && (
             <View style={styles.summaryItem}>
               <Text style={styles.infoLabel}>Next Actions:</Text>
-              <Text style={styles.text}>{nextActions}</Text>
+              <View style={styles.textContainer}>
+                <Text style={styles.text}>{nextActions}</Text>
+              </View>
             </View>
           )}
         </View>
