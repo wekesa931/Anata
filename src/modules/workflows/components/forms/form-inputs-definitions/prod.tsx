@@ -12155,7 +12155,10 @@ export default [
         helper: '',
         conditionType: '',
         parentKey: 'Appointment Type',
-        parentValues: ['Virtual Consultation'],
+        parentValues: [
+          'Virtual Consultation',
+          'Antara Virtual Doctor Consultation',
+        ],
         condition: (values: any) => {
           if (Array.isArray(values['Appointment Type'])) {
             return [
@@ -12258,16 +12261,24 @@ export default [
         required: true,
         conditionType: '',
         parentKey: 'Appointment Type',
-        parentValues: ['Outpatient', 'Virtual Consultation'],
+        parentValues: [
+          'Outpatient',
+          'Virtual Consultation',
+          'Antara Virtual Doctor Consultation',
+        ],
         condition: (values: any) => {
           if (Array.isArray(values['Appointment Type'])) {
-            return ['Outpatient', 'Virtual Consultation'].some((r) =>
-              values['Appointment Type'].includes(r)
-            )
+            return [
+              'Outpatient',
+              'Virtual Consultation',
+              'Antara Virtual Doctor Consultation',
+            ].some((r) => values['Appointment Type'].includes(r))
           }
-          return ['Outpatient', 'Virtual Consultation'].includes(
-            values['Appointment Type']
-          )
+          return [
+            'Outpatient',
+            'Virtual Consultation',
+            'Antara Virtual Doctor Consultation',
+          ].includes(values['Appointment Type'])
         },
       },
       {
@@ -12351,14 +12362,21 @@ export default [
           'Please select the specialist the member was sent to for the appointment',
         conditionType: '!',
         parentKey: 'Appointment Type',
-        parentValues: 'Virtual Consultation',
+        parentValues: [
+          'Virtual Consultation',
+          'Antara Virtual Doctor Consultation',
+        ],
         condition: (values: any) => {
           if (Array.isArray(values['Appointment Type'])) {
-            return !['Virtual Consultation'].some(
-              (r) => !values['Appointment Type'].includes(r)
-            )
+            return ![
+              'Virtual Consultation',
+              'Antara Virtual Doctor Consultation',
+            ].some((r) => !values['Appointment Type'].includes(r))
           }
-          return !['Virtual Consultation'].includes(values['Appointment Type'])
+          return ![
+            'Virtual Consultation',
+            'Antara Virtual Doctor Consultation',
+          ].includes(values['Appointment Type'])
         },
       },
       {
@@ -12625,10 +12643,14 @@ export default [
           const appointmentTypeCondition = Array.isArray(
             values['Appointment Type']
           )
-            ? !['Virtual Consultation'].some((r) =>
-                values['Appointment Type'].includes(r)
-              )
-            : !['Virtual Consultation'].includes(values['Appointment Type'])
+            ? ![
+                'Virtual Consultation',
+                'Antara Virtual Doctor Consultation',
+              ].some((r) => values['Appointment Type'].includes(r))
+            : ![
+                'Virtual Consultation',
+                'Antara Virtual Doctor Consultation',
+              ].includes(values['Appointment Type'])
           return receivedReferralCondition && appointmentTypeCondition
         },
       },
@@ -13110,14 +13132,21 @@ export default [
           'If the Virtual Consultation requires a follow-up, please book the follow-up with our Virtual Doctor',
         conditionType: '',
         parentKey: 'Appointment Type',
-        parentValues: ['Virtual Consultation'],
+        parentValues: [
+          'Virtual Consultation',
+          'Antara Virtual Doctor Consultation',
+        ],
         condition: (values: any) => {
           if (Array.isArray(values['Appointment Type'])) {
-            return ['Virtual Consultation'].some((r) =>
-              values['Appointment Type'].includes(r)
-            )
+            return [
+              'Virtual Consultation',
+              'Antara Virtual Doctor Consultation',
+            ].some((r) => values['Appointment Type'].includes(r))
           }
-          return ['Virtual Consultation'].includes(values['Appointment Type'])
+          return [
+            'Virtual Consultation',
+            'Antara Virtual Doctor Consultation',
+          ].includes(values['Appointment Type'])
         },
       },
       {

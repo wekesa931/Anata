@@ -253,7 +253,7 @@ function Tasks() {
       return {}
     }
 
-    const re = /prefill_(?<key>[A-Za-z+]*)=(?<value>[A-Za-z0-9%20 ]*)/gm
+    const re = /prefill_(?<key>[A-Za-z+]*)=(?<value>[A-Za-z0-9%20+ ]*)/gm
     const matches: MatchType[] = [...url.matchAll(re)].map((r) => r.groups)
 
     // parse the matches
@@ -262,15 +262,25 @@ function Tasks() {
       let { key, value } = m
 
       key = key.replace(/\+/g, ' ')
-      value = decodeURI(value)
+      value = decodeURIComponent(decodeURI(value))
+        .replace(/^\[|\]$/g, '')
+        .replace(/^'|"|'$/g, '')
+        .replace(/\+/g, ' ')
 
       if (typeof value === 'string' && value.startsWith('rec')) {
         value = [value]
       }
 
-      data = {
-        ...data,
-        [key]: value === '' ? null : value,
+      if (key === 'Received diagnosis') {
+        data = {
+          ...data,
+          [key]: value !== 'none' && value !== 'False' ? 'True' : 'False',
+        }
+      } else {
+        data = {
+          ...data,
+          [key]: value === '' ? null : value,
+        }
       }
     })
 
