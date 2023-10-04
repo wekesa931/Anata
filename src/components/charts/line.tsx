@@ -112,6 +112,7 @@ export default function LineSeriesChat<T>({
               strokeDasharray={index === 0 ? undefined : '5 3'}
               dot={<CustomDot />}
               isAnimationActive={false}
+              key={index}
             />
           ))}
         </LineChart>

@@ -7,6 +7,7 @@ import {
   GET_ALL_VITALS,
   CREATE_BLOOD_GLUCOSE_READING,
   CREATE_HBA1C_READING,
+  GET_VITALS,
 } from 'src/modules/vitals/services/gql'
 import {
   VitalsReading,
@@ -16,13 +17,45 @@ import {
 } from 'src/modules/vitals/types'
 
 export const useGetVitalsReadingApi = () => {
+  const context = {
+    clientName: 'v2',
+  }
   const [getData, { loading, error }] = useLazyQuery(GET_ALL_VITALS, {
-    context: {
-      clientName: 'v2',
-    },
+    context,
+  })
+
+  const [
+    getVitalsData,
+    { loading: vitalsLoading, error: vitalsError, refetch },
+  ] = useLazyQuery(GET_VITALS, {
+    context,
   })
 
   const getVitalsReadings = async (antaraId: string) => {
+    if (!antaraId) throw new Error('Antara ID is required')
+
+    const { data } = await getVitalsData({
+      variables: {
+        antaraId,
+      },
+    })
+
+    return data?.vitals?.edges?.map((item: any) => item.node)
+  }
+
+  const refetchVitalsReadings = async (antaraId: string) => {
+    if (!antaraId) throw new Error('Antara ID is required')
+
+    const { data } = await refetch({
+      variables: {
+        antaraId,
+      },
+    })
+
+    return data?.vitals?.edges?.map((item: any) => item.node)
+  }
+
+  const getAllVitalsReadings = async (antaraId: string) => {
     if (antaraId) {
       const { data } = await getData({
         variables: {
@@ -64,6 +97,10 @@ export const useGetVitalsReadingApi = () => {
     getVitalsReadings,
     loading,
     error,
+    getAllVitalsReadings,
+    vitalsLoading,
+    vitalsError,
+    refetchVitalsReadings,
   }
 }
 export const useCreateVitalsReadingApi = () => {

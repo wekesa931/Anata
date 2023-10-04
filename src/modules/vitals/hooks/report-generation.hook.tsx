@@ -87,5 +87,6 @@ export const useReportsGenerationData = () => {
     loading,
     getLabsAndVitalsProgressReport,
     loadingProgressReport: loadingDiff,
+    normalRanges,
   }
 }

@@ -14,7 +14,7 @@ dayjs.extend(advancedFormat)
 
 function BloodPressureView() {
   const { getBpClusters, isLoading, getRanges } = useClustersData()
-  const [bpClusters, setBpClusters] = useState<any[]>([])
+  const [bpClusters, setBpClusters] = useState<Record<string, any>[]>([])
   const [xDomain, setXDomain] = useState<[number, number]>([
     dayjs().subtract(1, 'month').valueOf(),
     dayjs().valueOf(),

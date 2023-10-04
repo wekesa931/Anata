@@ -8,6 +8,7 @@ import DateFilterView from 'src/modules/clinical/components/date-filter.componen
 import styles from 'src/modules/clinical/components/date-filter.component.css'
 import LabRequest from 'src/modules/clinical/clinical-modules/labs/components/lab-request.component'
 import VitalsDisplay from 'src/modules/vitals/views/displays'
+import VitalsTables from 'src/modules/vitals/views/tables'
 
 function Clinical() {
   return (
@@ -18,12 +19,13 @@ function Clinical() {
           <Consultation />
           <Logistic />
           <LabRequest />
-          <div className="mt-4">
+          <div className="my-4">
             <h4>Labs & Vitals </h4>
             <div className="border border-blue-light rounded p-2 my-2">
               <VitalsDisplay />
             </div>
           </div>
+          <VitalsTables />
         </div>
         <div className={styles.flex1}>
           <div className="margin-bottom-16">

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useClustersData } from 'src/modules/vitals/hooks/clusters.data.hook'
 import Loading from 'src/components/loaders/centered'
-import Table from 'src/modules/vitals/components/lipids-table'
+import Table from 'src/modules/vitals/components/table'
 
 const columns: any = [
   {
@@ -51,19 +51,13 @@ function LipidsTable() {
     <div>
       {isLoading ? (
         <div className="h-[300px]">
-          <Loading message="Loading BP Data ..." />
+          <Loading message="Loading Lipids Data ..." />
         </div>
       ) : (
         <div>
-          {lipids.length ? (
-            <div>
-              <Table columns={columns} data={lipids} />
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center h-[300px]">
-              <p className="text-gray-400">No CHL data within this period</p>
-            </div>
-          )}
+          <div>
+            <Table columns={columns} data={lipids} title="lipids" />
+          </div>
         </div>
       )}
     </div>

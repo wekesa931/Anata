@@ -68,6 +68,36 @@ export const CREATE_DM_READING = gql`
   }
 `
 
+export const GET_VITALS = gql`
+  query vitals($antaraId: String!) {
+    vitals(antaraId: $antaraId) {
+      edges {
+        node {
+          weight
+          height
+          bmi
+          respiratoryRate
+          oxygenSaturation
+          temperature
+          hipCircumference
+          waterContent
+          waisthipRatio
+          midUpperArmCircumference
+          muscleMass
+          bodyFat
+          visceralFat
+          hipCircumference
+          sixLeadEcgFindings
+          respiratoryRate
+          oxygenSaturation
+          timestamp
+          waistCircumference
+        }
+      }
+    }
+  }
+`
+
 export const GET_ALL_VITALS = gql`
   query ($antaraId: String!) {
     vitals(antaraId: $antaraId) {
