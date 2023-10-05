@@ -46,6 +46,15 @@ export const useHNOSFormHandler = () => {
         }
       }
 
+      const createNewTableRecord = async () => {
+        const tableName = TABLE_ROUTES[form.name]
+        if (tableName) {
+          await createTableEntry(tableName, generatedPayload)
+          form.markAsCompleted()
+          setSubmittingForm(false)
+        }
+      }
+
       const generatedPayload = generatePayload(payload, formMeta, airtableMeta)
       if (activeForm.isHIF) {
         const hifId = await getHifInfo(member?.airtableRecordId)
@@ -54,25 +63,19 @@ export const useHNOSFormHandler = () => {
             .then(() => {
               form.markAsCompleted()
             })
-            .finally(() => {
-              setSubmittingForm(false)
-            })
-        }
-      } else {
-        const tableName = TABLE_ROUTES[form.name]
-        if (tableName) {
-          return createTableEntry(tableName, generatedPayload)
-            .then(() => {
-              form.markAsCompleted()
+            .catch((e) => {
+              throw e
             })
             .finally(() => {
               setSubmittingForm(false)
             })
         }
+
+        return createNewTableRecord()
       }
-    } else {
-      throw new Error('Airtable meta not found')
+      return createNewTableRecord()
     }
+    throw new Error('Airtable meta not found')
   }
 
   return {

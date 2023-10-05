@@ -87,10 +87,13 @@ function AirtableBasedForm({
       }
     })
 
-    submitForm(form, formSchema, formattedPayload)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { timestamp, ...rest } = formattedPayload
+
+    submitForm(form, formSchema, rest)
       .then(() => {
         setIsFormDraft(false)
-        handleSubmissionSuccess(formattedPayload)
+        handleSubmissionSuccess()
       })
       .catch((e) => {
         setIsFormDraft(true)

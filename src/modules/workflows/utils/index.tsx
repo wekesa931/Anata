@@ -3,7 +3,6 @@ import 'dayjs/locale/en'
 import { groupBy } from 'lodash'
 import { GroupedWorkflows, TForm, TWorkflow } from 'src/modules/workflows/types'
 import FORMS from 'src/modules/workflows/components/forms/form-inputs-definitions'
-import logError from 'src/utils/logging/logger'
 import { User } from 'src/types/user'
 import { todayFormattedDate } from 'src/utils/date-time/helpers'
 
@@ -192,7 +191,7 @@ export const generatePayload = (
   })
   if (erroredFields.length > 0) {
     const affectedFields = JSON.stringify(erroredFields)
-    logError(
+    throw new Error(
       `The following fields are missing on airtable and have not been saved ${affectedFields}`
     )
   }
