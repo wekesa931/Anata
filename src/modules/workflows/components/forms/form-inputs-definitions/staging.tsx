@@ -11560,6 +11560,136 @@ export default [
         helper: '',
       },
       {
+        id: 'fldt01Eqnoc1w9h1r',
+        name: 'Family of origin',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          '* Parents: {names, age, current/ former occupation, hx of chronic illness}\n* Siblings: {names, age, occupation, hx of chronic illness}\n* Relationships with/ between family members: {cordial, strained, non-existent}\n* Family History of Mental Illness: {specify the illness, paternal/ maternal/ parent/ sibling}\n* Family History of Substance use: {specify the substance, pattern of use, paternal/ maternal/ parent/ sibling}',
+        conditionType: '',
+        parentKey: 'Consultation type',
+        parentValues: ['Initial consultation'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Consultation type'])) {
+            return ['Initial consultation'].some((r) =>
+              values['Consultation type'].includes(r)
+            )
+          }
+          return ['Initial consultation'].includes(values['Consultation type'])
+        },
+      },
+      {
+        id: 'flddey3MOicXIx4Uy',
+        name: 'Family of Procreation',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          '* Relationships with/ between family members: {partner/ children; cordial, strained, non-existent}\n* Family History of Mental Illness: {specify the illness, partner/ children}\n* Family History of Substance use: {specify the substance, pattern of use, partner/ children}',
+        conditionType: '',
+        parentKey: 'Consultation type',
+        parentValues: ['Initial consultation'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Consultation type'])) {
+            return ['Initial consultation'].some((r) =>
+              values['Consultation type'].includes(r)
+            )
+          }
+          return ['Initial consultation'].includes(values['Consultation type'])
+        },
+      },
+      {
+        id: 'fldboNGZhgbHRlKZm',
+        name: 'Social History',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          '* Friends: {how many, nature of relationship - cordial/ strained}\n* Current relationships: {name, age, occupation, nature of relationship - cordial/ strained}\n* Sexual Orientation: {Heterosexual, Homosexual, Bisexual, Pansexual, Asexual, any other-specify}\n* Recreation activities: {Hobbies / area of interest}\n* Use of substances: {when it began, pattern of use, cessation, relapse}\n* Spiritual experience: {Religious affiliation, specific practices}\n* Premorbid personality: {functionality prior to the presenting symptoms}',
+        conditionType: '',
+        parentKey: 'Consultation type',
+        parentValues: ['Initial consultation'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Consultation type'])) {
+            return ['Initial consultation'].some((r) =>
+              values['Consultation type'].includes(r)
+            )
+          }
+          return ['Initial consultation'].includes(values['Consultation type'])
+        },
+      },
+      {
+        id: 'fldQsFsU24GgnqPur',
+        name: 'Personal History',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          '* Birth: {delivery method}\n* Developmental milestones: {specify any delays, regression periods}\n* Childhood: {Family relationships in upbringing, Nursery and early schooling, socializing hx}\n* Adolescence: {School life and academic achievements, Pubertal development (physically and psychological)}\n* Past trauma: {any experiences in childhood, adolescence, adulthood}',
+        conditionType: '',
+        parentKey: 'Consultation type',
+        parentValues: ['Initial consultation'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Consultation type'])) {
+            return ['Initial consultation'].some((r) =>
+              values['Consultation type'].includes(r)
+            )
+          }
+          return ['Initial consultation'].includes(values['Consultation type'])
+        },
+      },
+      {
+        id: 'fldJtG2oTt2znT6Aj',
+        name: 'Education and work History',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          '{Primary, high school, collage/ university, previous employment}',
+        conditionType: '',
+        parentKey: 'Consultation type',
+        parentValues: ['Initial consultation'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Consultation type'])) {
+            return ['Initial consultation'].some((r) =>
+              values['Consultation type'].includes(r)
+            )
+          }
+          return ['Initial consultation'].includes(values['Consultation type'])
+        },
+      },
+      {
         id: 'fldzyUo4bkRMYZ9hZ',
         name: 'Psychiatric history',
         type: 'richText',
@@ -11570,7 +11700,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: 'Specify disorder',
         conditionType: '!',
         parentKey: 'Consultation type',
