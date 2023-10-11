@@ -15,7 +15,7 @@ export function withCustomBmiDot({ filter }: Props) {
           return (
             <div className="grid grid-cols-2 gap-3 w-full">
               <p className="text-sm text-dark-blue-100">
-                {parseInt(m?.value || 0)}
+                {parseFloat(m?.value || 0)}
               </p>
               <p className="text-xs mt-2">
                 {dayjs(m.timestamp).format('hh:mm A')}

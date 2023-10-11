@@ -27,7 +27,8 @@ export function CustomDot(props: Props) {
     isPayloadKeyed = false,
     isBmi = false,
     avgValueKey,
-    avgValueFormatter = (v) => (isNaN(Number(v)) ? v : parseInt(v)),
+    avgValueFormatter = (v) =>
+      isNaN(Number(v)) ? v : parseFloat(v).toString(),
   } = props
   const payload: any = props?.payload || {}
   const name: string = props?.name || ''
