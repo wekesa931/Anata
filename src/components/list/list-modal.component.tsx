@@ -133,6 +133,24 @@ function ListModal(props: ListModalProps) {
       }
       return reasonForReschedule
     },
+    Status: () => {
+      const reasonForCancellation = {
+        name: 'Reason for cancellation',
+        type: 'single-select',
+        options: [
+          'Member unresponsive',
+          'Member not ready',
+          'Refused services',
+          'Appointment done',
+          'Appointment is booked',
+          'Not relevant as per protocol',
+          'No relevant data available',
+          'Member request',
+          'Other',
+        ].map((option) => ({ label: option, value: option })),
+      }
+      return reasonForCancellation
+    },
   }
   const selectPreviousItem = () => {
     const currentItems = items || []
@@ -190,11 +208,20 @@ function ListModal(props: ListModalProps) {
 
   const fieldsToEdit = () => {
     let currentActiveFields = editableFields || activeItem.data
-    const conditionalField = ref?.current?.values['Due Date']
-    if (!!currentActiveFields && conditionalField) {
+    const conditionalDueDateField = ref?.current?.values['Due Date']
+    const conditionalStatusField = ref?.current?.values.Status
+
+    if (!!currentActiveFields && conditionalDueDateField) {
       currentActiveFields = [
         ...currentActiveFields,
         conditionalFieldMap['Due Date'](),
+      ]
+    }
+
+    if (!!currentActiveFields && conditionalStatusField === 'Cancelled') {
+      currentActiveFields = [
+        ...currentActiveFields,
+        conditionalFieldMap.Status(),
       ]
     }
 

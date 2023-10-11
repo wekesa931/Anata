@@ -43,6 +43,7 @@ function Appointments() {
     'Facilities name from Provider base',
     'Specialist name from Provider base',
     'Assignee Name',
+    'Reason for cancellation',
   ]
 
   const { data, isLoading, isError, refresh } = useAirtableFetch(
@@ -108,6 +109,21 @@ function Appointments() {
       type: 'search',
       tableId:
         process.env.PROD === 'true' ? 'tblsixUe3jfbOUMQP' : 'tblPpf5F81JypdC9k',
+    },
+    {
+      name: 'Reason for cancellation',
+      type: 'single-select',
+      options: [
+        'Member unresponsive',
+        'Member not ready',
+        'Refused services',
+        'Appointment done',
+        'Appointment is booked',
+        'Not relevant as per protocol',
+        'No relevant data available',
+        'Member request',
+        'Other',
+      ].map((type) => ({ label: type, value: type })),
     },
   ]
   const user = useUser()
