@@ -3469,7 +3469,7 @@ export default [
         foreignTableId: null,
         required: true,
         helper:
-          '"One of the worst things about Osteoarthritis is the pain it brings. On a scale of 1-10, how bad would you say the pain is, with 0 being no pain and 10 being the worst pain of your life. Please score the pain as it is before you take medicine to help with that pain."\n\nPlease score the pain of the member using this website: <a href="https://www.researchgate.net/figure/The-Universal-Pain-Assessment-Tool-UPAT-that-has-been-used-to-identify-functional-TMJ_fig1_311158988" target="_blank">https://www.researchgate.net/figure/The-Universal-Pain-Assessment-Tool-UPAT-that-has-been-used-to-identify-functional-TMJ_fig1_311158988</a>\n\nOnce you have scored it, please enter the result. \nExamples: 1 or 5 or 8\n',
+          ' "One of the worst things about Osteoarthritis is the pain it brings and its effects on someone’s activities of daily living”.\nPlease obtain the member’s overall joint score using this calculator:\n    * If HIP use this: <a href="https://www.orthopaedicscore.com/scorepages/hip_disability_osteoarthritis_outcome_score_hoos.html" target="_blank">https://www.orthopaedicscore.com/scorepages/hip_disability_osteoarthritis_outcome_score_hoos.html</a> \n  * If Knee use this: <a href="https://coda.io/d/Clinical-Hub_dLO3YmEbw6e/Knee-pain-calculator_sukw7#_luEz0" target="_blank">https://coda.io/d/Clinical-Hub_dLO3YmEbw6e/Knee-pain-calculator_sukw7#_luEz0</a> \n  * If Shoulder, Arm, Hand use this: <a href="https://www.orthopaedicscore.com/scorepages/disabilities_of_arm_shoulder_hand_score_dash.html" target="_blank">https://www.orthopaedicscore.com/scorepages/disabilities_of_arm_shoulder_hand_score_dash.html</a> \n  * If Spine use this: <a href="https://coda.io/d/Clinical-Hub_dLO3YmEbw6e/Lower-back-pain-calculator_suYVR#_luYs-" target="_blank">https://coda.io/d/Clinical-Hub_dLO3YmEbw6e/Lower-back-pain-calculator_suYVR#_luYs-</a> \nOnce you have scored it, please enter the result. Examples: 65 or 56 or 89',
         conditionType: '',
         parentKey: 'Conditions master list',
         parentValues: [
@@ -3509,7 +3509,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: 'Where applicable',
         conditionType: '',
         parentKey: 'Conditions master list',
@@ -15159,7 +15159,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Please score the pain of the member using this website: <a href="https://www.researchgate.net/figure/The-Universal-Pain-Assessment-Tool-UPAT-that-has-been-used-to-identify-functional-TMJ_fig1_311158988" target="_blank">https://www.researchgate.net/figure/The-Universal-Pain-Assessment-Tool-UPAT-that-has-been-used-to-identify-functional-TMJ_fig1_311158988</a> ',
+          ' "One of the worst things about Osteoarthritis is the pain it brings and its effects on someone’s activities of daily living”.\nPlease obtain the member’s overall joint score using this calculator:\n    * If HIP use this: <a href="https://www.orthopaedicscore.com/scorepages/hip_disability_osteoarthritis_outcome_score_hoos.html" target="_blank">https://www.orthopaedicscore.com/scorepages/hip_disability_osteoarthritis_outcome_score_hoos.html</a> \n  * If Knee use this: <a href="https://coda.io/d/Clinical-Hub_dLO3YmEbw6e/Knee-pain-calculator_sukw7#_luEz0" target="_blank">https://coda.io/d/Clinical-Hub_dLO3YmEbw6e/Knee-pain-calculator_sukw7#_luEz0</a> \n  * If Shoulder, Arm, Hand use this: <a href="https://www.orthopaedicscore.com/scorepages/disabilities_of_arm_shoulder_hand_score_dash.html" target="_blank">https://www.orthopaedicscore.com/scorepages/disabilities_of_arm_shoulder_hand_score_dash.html</a> \n  * If Spine use this: <a href="https://coda.io/d/Clinical-Hub_dLO3YmEbw6e/Lower-back-pain-calculator_suYVR#_luYs-" target="_blank">https://coda.io/d/Clinical-Hub_dLO3YmEbw6e/Lower-back-pain-calculator_suYVR#_luYs-</a> \nOnce you have scored it, please enter the result. Examples: 65 or 56 or 89',
         conditionType: '',
         parentKey: 'Conditions master list',
         parentValues: [
