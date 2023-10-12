@@ -22,7 +22,10 @@ export const useFormHandlers = () => {
     }
 
     if (activeForm.isMemberFeedback) {
-      return handleCreateMemberFeedback
+      return async (form, formData, formMeta) => {
+        await handleCreateMemberFeedback(form, formData)
+        return handleHNOSFormSubmission(form, formData, formMeta)
+      }
     }
 
     return handleHNOSFormSubmission
