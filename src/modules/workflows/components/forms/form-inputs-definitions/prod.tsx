@@ -3799,6 +3799,34 @@ export default [
         },
       },
       {
+        id: 'fldvR9aClmQB4vVJo',
+        name: 'Lower back pain score',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          '* If acute: please ask the member to scale their pain from 1 to 10 (10 is the worst scenario) and enter the result\n* If chronic: please obtain the member’s score using this calculator: <a href="https://coda.io/d/_dLO3YmEbw6e/Lower-back-pain-calculator_suYVR" target="_blank">https://coda.io/d/_dLO3YmEbw6e/Lower-back-pain-calculator_suYVR</a> and enter the result\n* Examples: 1 or 5 or 8',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recVlgx6cf6Fw3gzn'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recVlgx6cf6Fw3gzn'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recVlgx6cf6Fw3gzn'].includes(
+            values['Conditions master list']
+          )
+        },
+      },
+      {
         id: 'fldeahOPKqY22tSgO',
         name: 'Starting lower back pain stage',
         type: 'select',
@@ -3811,7 +3839,7 @@ export default [
         foreignTableId: null,
         required: true,
         helper:
-          '"How long have you been having pain for?"\n\nIf less than 4 weeks: ACUTE\n"I am sorry you are having acute back pain. Why don\'t we schedule a session with our Physiotherapist who should be able to help you with this?"\n\nIf between 4 and 12 weeks: SUB-ACUTE\n"I am sorry you are having sub-acute back pain. Why don\'t we schedule a session with our Physiotherapist who should be able to help you with this?"\n\nIf > 12 weeks: CHRONIC\n"It sounds as though this has been going on for a long time. I want to understand your back pain a bit better in order to help. I am going to take you through a few questions that will allow us to give your lower back pain a score. Then we will work together to improve that score. Part of that work will definitely involve a visit to our physical therapist, but there are other things we shall do as well!"\n\nIf more than 12 weeks, please calculate the score here: <a href="https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Lower-back-pain-calculator_sutix#_lumhe" target="_blank">https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Lower-back-pain-calculator_sutix#_lumhe</a> \n',
+          '"How long have you been having pain for?"\n\nIf less than 4 weeks: acute\n"I am sorry you are having acute back pain. Why don\'t we schedule a session with our Physiotherapist who should be able to help you with this?"\n\nIf between 4 and 12 weeks: sub-acute\n"I am sorry you are having sub-acute back pain. Why don\'t we schedule a session with our Physiotherapist who should be able to help you with this?"\n\nIf chronic → select the stage as displayed in the calculator\n\nIf > 12 weeks: CHRONIC\n"It sounds as though this has been going on for a long time. I want to understand your back pain a bit better in order to help. I am going to take you through a few questions that will allow us to give your lower back pain a score. Then we will work together to improve that score. Part of that work will definitely involve a visit to our physical therapist, but there are other things we shall do as well!"\n\nIf more than 12 weeks, please calculate the score here: <a href="https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Lower-back-pain-calculator_sutix#_lumhe" target="_blank">https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Lower-back-pain-calculator_sutix#_lumhe</a> \n',
         conditionType: '',
         parentKey: 'Conditions master list',
         parentValues: ['recVlgx6cf6Fw3gzn'],
@@ -4447,7 +4475,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Please select the key goal\n\nAll stages: pain control, functional recovery',
+          '  * If acute and sub-acute select functional recovery and pain control\n  * if chronic select functional recovery and pain score less then 9/36',
         conditionType: '',
         parentKey: 'Conditions master list',
         parentValues: ['recVlgx6cf6Fw3gzn'],
@@ -14786,7 +14814,7 @@ export default [
         foreignTableId: null,
         required: true,
         helper:
-          'Acute: symptoms < 4 weeks\nSub-acute: symptoms > 4 weeks & < 12 weeks\nMild chronic: symptoms  >12 weeks; score to be defined\nModerate chronic: symptoms  >12 weeks; score to be defined\nSevere chronic: symptoms  >12 weeks; score to be defined',
+          'Acute: symptoms < 4 weeks\nSub-acute: symptoms > 4 weeks & < 12 weeks\nChronic: select the stage as displayed in the calculator',
         conditionType: '',
         parentKey: 'Conditions master list',
         parentValues: ['recVlgx6cf6Fw3gzn'],
@@ -15271,6 +15299,34 @@ export default [
         required: true,
         helper:
           'Please note that this is the new status of the conditions if it has changed. Since you are tracking data for active conditions, this should change to Inactive when the member does not have the condition anymore',
+      },
+      {
+        id: 'fldMrWeUzpJcUyuHK',
+        name: 'Update lower back pain score',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          ' * Acute: symptoms < 4 weeks\nSub-acute: symptoms > 4 weeks & < 12 weeks\nIf chronic → select the stage as displayed in the calculator\n\nIf > 12 weeks: CHRONIC\n"It sounds as though this has been going on for a long time. I want to understand your back pain a bit better in order to help. I am going to take you through a few questions that will allow us to give your lower back pain a score. Then we will work together to improve that score. Part of that work will definitely involve a visit to our physical therapist, but there are other things we shall do as well!"\n\nIf more than 12 weeks, please calculate the score here: <a href="https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Lower-back-pain-calculator_sutix#_lumhe" target="_blank">https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Lower-back-pain-calculator_sutix#_lumhe</a>',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: ['recVlgx6cf6Fw3gzn'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Conditions master list'])) {
+            return ['recVlgx6cf6Fw3gzn'].some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return ['recVlgx6cf6Fw3gzn'].includes(
+            values['Conditions master list']
+          )
+        },
       },
       {
         id: 'fldneQ3GbMAQwgMn2',
