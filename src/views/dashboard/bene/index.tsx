@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useMember } from 'src/context/member'
-import { DateFilterProvider } from 'src/context/date-range-filter'
 import CenteredLoader from 'src/components/loaders/centered'
 import MemberNotFound from 'src/components/dialog/member-not-found'
 import useAnalytics from 'src/hooks/analytics'
@@ -28,20 +27,18 @@ function DashboardContent() {
       {memberNotFound ? (
         <MemberNotFound />
       ) : (
-        <DateFilterProvider>
-          <div className="w-full flex justify-between bg-white h-full relative rounded-t-2xl">
-            <div className="h-full w-1/4">
-              <BioData member={member} />
-            </div>
-            <div className="w-1/2 flex-1 border-r border-solid border-white">
-              <MainViews />
-            </div>
-
-            <div className="bg-white border-l border-solid border-dark-blue-10 w-1/4 pb-7">
-              <RightViews />
-            </div>
+        <div className="w-full flex justify-between bg-white h-full relative rounded-t-2xl">
+          <div className="h-full w-1/4">
+            <BioData member={member} />
           </div>
-        </DateFilterProvider>
+          <div className="w-1/2 flex-1 border-r border-solid border-white">
+            <MainViews />
+          </div>
+
+          <div className="bg-white border-l border-solid border-dark-blue-10 w-1/4 pb-7">
+            <RightViews />
+          </div>
+        </div>
       )}
     </>
   )

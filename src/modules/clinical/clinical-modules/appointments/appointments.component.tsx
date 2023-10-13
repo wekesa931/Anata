@@ -5,10 +5,11 @@ import { useSortFilter } from 'src/context/sort-filter'
 import airtableFetch from 'src/services/airtable/fetch'
 import Icon from 'src/components/icon/svg-icon'
 import Modal from 'src/components/modals'
-import Table from 'src/components/table'
 import TextArea from 'src/components/forms/textarea'
 import LoadingComponent from 'src/components/loaders/table-loader'
 import { useMember } from 'src/context/member'
+import DataTable, { Column } from 'src/components/table/data-table'
+import dayjs from 'dayjs'
 
 function PafuView({ data }: any) {
   const [showPafu, setShowPafu] = useState(false)
@@ -30,17 +31,19 @@ function PafuView({ data }: any) {
   const openPafu = (e: any) => {
     e.stopPropagation()
     setShowPafu(true)
-    setPafuRecordId(data[0])
+    setPafuRecordId(data?.PAFU[0])
   }
 
   return (
     <>
-      <button
-        className="btn btn-small btn-secondary"
-        onClick={(e) => openPafu(e)}
-      >
-        PAFU
-      </button>
+      {data?.PAFU?.length > 0 && (
+        <button
+          className="btn btn-small btn-secondary"
+          onClick={(e) => openPafu(e)}
+        >
+          PAFU
+        </button>
+      )}
       {showPafu && (
         <Modal
           heading={<h3>PAFU</h3>}
@@ -69,6 +72,26 @@ function PafuView({ data }: any) {
     </>
   )
 }
+
+const COLUMNS: Column[] = [
+  {
+    id: 'created_at',
+    label: 'Appt Date',
+    sortable: true,
+    type: 'date',
+    format: (v: any) => dayjs(v).format('DD/MM/YYYY'),
+  },
+  { id: 'Type', label: 'Type' },
+  { id: 'Status', label: 'Status' },
+  // eslint-disable-next-line react/no-unstable-nested-components
+  {
+    id: 'PAFU',
+    label: 'PAFU',
+    valueComponent: ({ value }: any) => <PafuView data={value} />,
+  },
+  { id: 'Missed #', label: 'Missed #' },
+  { id: 'Rescheduled #', label: 'Rescheduled #' },
+]
 
 function Appointments() {
   const { member } = useMember()
@@ -119,29 +142,6 @@ function Appointments() {
     }
   }, [appointments, filters])
 
-  const columns = [
-    { name: 'Appt Date', format: 'dd/mmm/yy', key: 'start_date_time' },
-    { name: 'Type', format: '\n', key: 'Service' },
-    { name: 'Status', format: '\n', key: 'Status' },
-    {
-      name: 'PAFU',
-      key: 'PAFU',
-      format: '\n',
-      type: 'UI',
-      // eslint-disable-next-line react/no-unstable-nested-components
-      component: ({ data }: any) => <PafuView data={data} />,
-    },
-    {
-      name: 'Missed #',
-      format: '\n',
-      key: 'Missed #',
-    },
-    {
-      name: 'Rescheduled #',
-      format: '\n',
-      key: 'Rescheduled #',
-    },
-  ]
   const isReadyToShow = filteredAppointments?.length >= 0 && !loading
   return (
     <div>
@@ -157,12 +157,14 @@ function Appointments() {
         )}
       </div>
       {isReadyToShow && (
-        <Table
-          title="Appointment"
-          columns={columns}
+        <DataTable
+          columns={COLUMNS}
           data={filteredAppointments}
-          dateColumnKey="start_date_time"
+          title="Appointments"
           filterByDate
+          dateColumnKey="start_date_time"
+          defaultFilterColumn="start_date_time"
+          defaultSortColumn="start_date_time"
         />
       )}
       {loading && <LoadingComponent message="Loading Appointments " />}

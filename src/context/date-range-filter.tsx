@@ -1,96 +1,310 @@
-import React from 'react'
-import dayjs, { Dayjs } from 'dayjs'
+import { Button, ButtonGroup, Popper } from '@mui/material'
+import dayjs from 'dayjs'
+import React, { useEffect, useMemo, useState } from 'react'
+import 'react-date-range/dist/styles.css' // main style file
+import 'react-date-range/dist/theme/default.css' // theme css file
+import { DateRange } from 'react-date-range'
 
-enum Actions {
-  SET_DATE_RANGE = 'setDateRange',
-  WEEKLY = 'weekly',
-  MONTHLY = 'monthly',
-  LAST_3_MONTHS = 'last3Months',
-  LAST_6_MONTHS = 'last6Months',
+export type DateRangeValue = {
+  startDate: Date
+  endDate: Date
+} | null
+
+enum FilterType {
+  MONTH,
+  ALL_TIME,
+  CUSTOM_RANGE,
 }
 
-type TDateRange = [Dayjs | null, Dayjs | null]
+interface MonthFilter {
+  type: FilterType.MONTH
+  months: number
+  getLabel: () => string
+}
+
+export function MonthFilter(months: number): MonthFilter {
+  return {
+    type: FilterType.MONTH,
+    months,
+    getLabel: () => `${months}M`,
+  }
+}
+
+interface AllTimeFilter {
+  type: FilterType.ALL_TIME
+  getLabel: () => string
+}
+
+export function AllTimeFilter(): AllTimeFilter {
+  return {
+    type: FilterType.ALL_TIME,
+    getLabel: () => 'All time',
+  }
+}
+
+interface CustomRangeFilter {
+  type: FilterType.CUSTOM_RANGE
+  getLabel: () => string
+}
+
+export function CustomRangeFilter(range?: DateRangeValue): CustomRangeFilter {
+  return {
+    type: FilterType.CUSTOM_RANGE,
+    getLabel: () =>
+      range
+        ? `${dayjs(range?.startDate).format('DD MMM YYYY')} - ${dayjs(
+            range?.endDate
+          ).format('DD MMM YYYY')}`
+        : 'Custom range',
+  }
+}
+
+export type Filters = MonthFilter | AllTimeFilter | CustomRangeFilter
+
+type FilterMap = {
+  monthly: Filters[]
+  allTime: Filters
+  customRange: Filters
+}
+
+type Props = {
+  monthSlots?: number[]
+  defaultMonthSlot?: number
+  showCustomRange?: boolean
+  showAllTime?: boolean
+  children: React.ReactNode
+}
+
+type DateRangeSelectorProps = {
+  anchorEl: HTMLElement | null
+  onClose: (range: DateRangeValue) => void
+}
+
+function DateRangeSelector({ anchorEl, onClose }: DateRangeSelectorProps) {
+  const [state, setState] = useState<any>([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: 'selection',
+    },
+  ])
+
+  const handleDateRangeChange = (item: any) => {
+    setState([item.selection])
+    if (!dayjs(item.selection.startDate).isSame(item.selection.endDate)) {
+      onClose(item.selection)
+    }
+  }
+
+  return (
+    <Popper
+      open={Boolean(anchorEl)}
+      anchorEl={anchorEl}
+      placement="bottom-start"
+      className="z-20"
+    >
+      <DateRange
+        editableDateInputs
+        onChange={handleDateRangeChange}
+        moveRangeOnFirstSelection={false}
+        ranges={state}
+      />
+    </Popper>
+  )
+}
 
 type ContextType = {
-  dateRange: TDateRange
-  handleAction: (action: Actions, payload?: TDateRange) => void
-  currentFilter: Actions | null
+  currentFilter: Filters
+  currentRange: DateRangeValue
+  next: () => void
+  prev: () => void
 }
 
-const DateRangeContext = React.createContext<ContextType>({
-  dateRange: [null, null],
-  handleAction: () => undefined,
-  currentFilter: null,
+export const DateRangeContext = React.createContext<ContextType>({
+  currentFilter: AllTimeFilter(),
+  currentRange: null,
+  next: () => null,
+  prev: () => null,
 })
 
-function DateFilterProvider({ children }: any) {
-  const [currentFilter, setCurrentFilter] = React.useState<Actions | null>(
-    Actions.LAST_3_MONTHS
-  )
+function DateRangeFiltered({
+  monthSlots = [1, 3, 12],
+  defaultMonthSlot = 3,
+  showAllTime = true,
+  showCustomRange = true,
+  children,
+}: Props) {
+  const allMonthFilters = monthSlots.map(MonthFilter)
+  const defaultFilter =
+    allMonthFilters.find((filter) => filter.months === defaultMonthSlot) ||
+    AllTimeFilter()
 
-  const reducer = (state: any, action: { type: Actions; payload: any }) => {
-    switch (action.type) {
-      case Actions.SET_DATE_RANGE:
-        setCurrentFilter(Actions.SET_DATE_RANGE)
-        return { ...state, dateRange: action.payload }
-      case Actions.WEEKLY:
-        setCurrentFilter(Actions.WEEKLY)
-        return { ...state, dateRange: [dayjs().subtract(7, 'day'), dayjs()] }
-      case Actions.MONTHLY:
-        setCurrentFilter(Actions.MONTHLY)
-        return { ...state, dateRange: [dayjs().subtract(1, 'month'), dayjs()] }
-      case Actions.LAST_3_MONTHS:
-        setCurrentFilter(Actions.LAST_3_MONTHS)
-        return { ...state, dateRange: [dayjs().subtract(3, 'month'), dayjs()] }
-      case Actions.LAST_6_MONTHS:
-        setCurrentFilter(Actions.LAST_6_MONTHS)
-        return { ...state, dateRange: [dayjs().subtract(6, 'month'), dayjs()] }
-      default:
-        return state
-    }
-  }
-
-  const [state, dispatch] = React.useReducer(reducer, {
-    dateRange: [null, null],
+  const [allFilters, setAllFilters] = useState<FilterMap>({
+    monthly: allMonthFilters,
+    allTime: AllTimeFilter(),
+    customRange: CustomRangeFilter(),
   })
 
-  const handleAction = (action: Actions, payload?: TDateRange) => {
-    dispatch({ type: action, payload })
+  const [currentFilter, setCurrentFilter] = useState<Filters>(defaultFilter)
+  const [currentRange, setCurrentRange] = useState<DateRangeValue>(null)
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+
+  const handleCustomRangeClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setCurrentFilter(allFilters.customRange)
+    setAnchorEl(anchorEl ? null : event.currentTarget)
   }
 
-  const providerValue = React.useMemo(() => {
+  const handleCustomDateRange = (range: DateRangeValue) => {
+    setCurrentRange(range)
+    setAnchorEl(null)
+    const newCustomFilter = CustomRangeFilter(range)
+    setAllFilters({
+      ...allFilters,
+      customRange: newCustomFilter,
+    })
+    setCurrentFilter(newCustomFilter)
+  }
+
+  const mapMonthToRange = (month: number): DateRangeValue => {
+    const end = new Date()
+    const start = dayjs(end).subtract(month, 'month').toDate()
     return {
-      dateRange: state.dateRange,
-      handleAction,
-      currentFilter,
+      startDate: start,
+      endDate: end,
     }
-  }, [state.dateRange, currentFilter])
+  }
+
+  useEffect(() => {
+    if (currentFilter.type === FilterType.MONTH) {
+      setCurrentRange(mapMonthToRange(currentFilter.months))
+    } else if (currentFilter.type === FilterType.ALL_TIME) {
+      setCurrentRange(null)
+    }
+  }, [currentFilter])
+
+  const nextRange = () => {
+    if (currentFilter.type === FilterType.MONTH) {
+      const range = {
+        startDate: dayjs(currentRange?.startDate)
+          .add(currentFilter.months, 'month')
+          .toDate(),
+        endDate: dayjs(currentRange?.endDate)
+          .add(currentFilter.months, 'month')
+          .toDate(),
+      }
+
+      setCurrentRange(range)
+    }
+  }
+
+  const prevRange = () => {
+    if (currentFilter.type === FilterType.MONTH) {
+      const range = {
+        startDate: dayjs(currentRange?.startDate)
+          .subtract(currentFilter.months, 'month')
+          .toDate(),
+        endDate: dayjs(currentRange?.endDate)
+          .subtract(currentFilter.months, 'month')
+          .toDate(),
+      }
+
+      setCurrentRange(range)
+    }
+  }
+
+  const providerValue = useMemo(
+    () => ({
+      currentFilter,
+      currentRange,
+      next: nextRange,
+      prev: prevRange,
+    }),
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentFilter, currentRange]
+  )
 
   return (
     <DateRangeContext.Provider value={providerValue}>
-      {children}
+      <div className="sticky mt-4 mb-4 top-0 bg-white p-0 font-rubik z-10">
+        <ButtonGroup size="small" variant="outlined" className="p-0">
+          {allFilters.monthly.map((filter, index) => (
+            <Button
+              key={index}
+              size="small"
+              className={`
+                  border border-dark-blue-10
+                  ${
+                    currentFilter === filter
+                      ? 'bg-dark-blue-10 text-dark-blue-100'
+                      : 'text-dark-blue-50'
+                  }
+                `}
+              onClick={() => setCurrentFilter(filter)}
+            >
+              {filter.getLabel()}
+            </Button>
+          ))}
+          {showAllTime && (
+            <Button
+              size="small"
+              className={`
+                  border border-dark-blue-10
+                  ${
+                    currentFilter === allFilters.allTime
+                      ? 'bg-dark-blue-10 text-dark-blue-100'
+                      : 'text-dark-blue-50'
+                  }
+                `}
+              onClick={() => setCurrentFilter(allFilters.allTime)}
+            >
+              {allFilters.allTime.getLabel()}
+            </Button>
+          )}
+
+          {showCustomRange && (
+            <Button
+              size="small"
+              className={`
+                  border border-dark-blue-10
+                  ${
+                    currentFilter === allFilters.customRange
+                      ? 'bg-dark-blue-10 text-dark-blue-100'
+                      : 'text-dark-blue-50'
+                  }
+                `}
+              onClick={handleCustomRangeClick}
+            >
+              {allFilters.customRange.getLabel()}
+            </Button>
+          )}
+        </ButtonGroup>
+      </div>
+      <DateRangeSelector anchorEl={anchorEl} onClose={handleCustomDateRange} />
+      <div>{children}</div>
     </DateRangeContext.Provider>
   )
 }
 
-const useDateRangeFilter = () => {
+export const useDateRangeFilter = () => {
   const context = React.useContext(DateRangeContext)
   if (context === undefined) {
-    throw new Error(
-      'useDateRangeFilter must be used within a DateFilterProvider'
-    )
+    throw new Error('useDateRange must be used within a DateRangeContext')
   }
   return context
 }
 
-const makeFilterDataByDate =
-  (filterByDate: boolean, dateRange: TDateRange) =>
+export const makeFilterDataByDate =
+  (filterByDate: boolean, dateRange: DateRangeValue) =>
   (arr: any[], dateColumnKey: string) => {
-    if (filterByDate && dateRange.every((item: any) => item !== null)) {
+    if (filterByDate && dateRange) {
       return arr.filter((item: any) => {
         return dayjs(item[dateColumnKey]).isBetween(
-          dateRange[0],
-          dateRange[1],
+          dateRange.startDate,
+          dateRange.endDate,
           'day',
           '[]'
         )
@@ -100,14 +314,14 @@ const makeFilterDataByDate =
     return arr
   }
 
-const makeFilterListDataByDate =
-  (filterByDate: boolean, dateRange: TDateRange) =>
+export const makeFilterListDataByDate =
+  (filterByDate: boolean, dateRange: DateRangeValue) =>
   (arr: any[], dateColumnKey: string) => {
-    if (filterByDate && dateRange.every((item: any) => item !== null)) {
+    if (filterByDate && dateRange) {
       return arr.filter((item: any) => {
         return dayjs(item?.data[dateColumnKey]).isBetween(
-          dateRange[0],
-          dateRange[1],
+          dateRange.startDate,
+          dateRange.endDate,
           'day',
           '[]'
         )
@@ -117,11 +331,4 @@ const makeFilterListDataByDate =
     return arr
   }
 
-export {
-  DateFilterProvider,
-  DateRangeContext,
-  Actions,
-  useDateRangeFilter,
-  makeFilterDataByDate,
-  makeFilterListDataByDate,
-}
+export default DateRangeFiltered

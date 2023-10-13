@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from 'react'
 
 import analytics from 'src/config/analytics'
-import Table from 'src/components/table'
 import airtableFetch from 'src/services/airtable/fetch'
 import { useMember } from 'src/context/member'
 import logError from 'src/utils/logging/logger'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import DataTable, { Column } from 'src/components/table/data-table'
+
+const COLUMNS: Column[] = [
+  { id: 'Date of appointment', label: 'Date', sortable: true, type: 'date' },
+  { id: 'Primary Diagnosis', label: 'Primary Diagnosis' },
+]
 
 function Consultation() {
   const [consultationData, setconsultationData] = useState<any[]>([])
   const { member } = useMember()
   const [loading, setLoading] = useState(true)
-  const columns = [
-    {
-      name: 'Date',
-      format: 'dd/mmm/yy',
-      key: 'Date of appointment',
-    },
-    { name: 'Primary Diagnosis', format: '', key: 'Primary Diagnosis' },
-  ]
 
   useEffect(() => {
     analytics.track('Clinical Consultation Opened')
@@ -55,14 +52,16 @@ function Consultation() {
 
   return (
     <div className="mb-ten">
-      <h4>Clinical Consultation</h4>
+      <p className="text-lg text-left mb-1">Clinical Consultation</p>
       {isReadyToShow && (
-        <Table
-          title="Consultation Details"
-          columns={columns}
+        <DataTable
+          columns={COLUMNS}
           data={consultationData}
-          dateColumnKey="Date of appointment"
+          defaultSortColumn="Date of appointment"
+          title="Consultation Details"
           filterByDate
+          dateColumnKey="Date of appointment"
+          defaultFilterColumn="Date of appointment"
         />
       )}
 

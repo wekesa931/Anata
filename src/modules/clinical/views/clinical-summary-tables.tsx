@@ -4,17 +4,15 @@ import Appointments from 'src/modules/clinical/clinical-modules/appointments/app
 import Medications from 'src/modules/clinical/clinical-modules/medications/components/medications.component'
 import Consultation from 'src/modules/consultation'
 import Logistic from 'src/modules/clinical/clinical-modules/logistic-task/components/logistic-task.component'
-import DateFilterView from 'src/modules/clinical/components/date-filter.component'
-import styles from 'src/modules/clinical/components/date-filter.component.css'
+import DateRangeFiltered from 'src/context/date-range-filter'
 import LabRequest from 'src/modules/clinical/clinical-modules/labs/components/lab-request.component'
 import VitalsDisplay from 'src/modules/vitals/views/displays'
 import VitalsTables from 'src/modules/vitals/views/tables'
 
 function Clinical() {
   return (
-    <div>
-      <DateFilterView />
-      <div className="mt-[6rem]">
+    <DateRangeFiltered monthSlots={[1, 3, 6, 12]}>
+      <div className="mt-1">
         <div className="flex-1">
           <Consultation />
           <Logistic />
@@ -27,7 +25,7 @@ function Clinical() {
           </div>
           <VitalsTables />
         </div>
-        <div className={styles.flex1}>
+        <div className="flex-1">
           <div className="margin-bottom-16">
             <FilledForms />
             <Medications />
@@ -35,7 +33,7 @@ function Clinical() {
           </div>
         </div>
       </div>
-    </div>
+    </DateRangeFiltered>
   )
 }
 

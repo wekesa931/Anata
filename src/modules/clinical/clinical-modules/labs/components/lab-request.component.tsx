@@ -1,23 +1,24 @@
 import React from 'react'
-import Table from 'src/components/table'
+import Table, { Column } from 'src/components/table/data-table'
 import LoadingComponent from 'src/components/loaders/table-loader'
 import useLabData from '../data'
 
+const COLUMS: Column[] = [
+  {
+    id: 'Date of request (created at)',
+    label: 'Date',
+    sortable: true,
+    type: 'date',
+  },
+  { id: 'Status', label: 'Status' },
+  { id: 'Type', label: 'Type' },
+  { id: 'Notes', label: 'Notes' },
+  { id: 'Lab type', label: 'Lab type' },
+  { id: 'Imaging type', label: 'Imaging type' },
+]
+
 function LabRequest() {
   const { labData, loading } = useLabData()
-
-  const columns = [
-    {
-      name: 'Date',
-      format: 'dd/mmm/yy',
-      key: 'Date of request (created at)',
-    },
-    { name: 'Status', format: '', key: 'Status' },
-    { name: 'Type', format: '', key: 'Type' },
-    { name: 'Notes', format: '', key: 'Notes' },
-    { name: 'Lab type', format: '', key: 'Lab type' },
-    { name: 'Imaging type', format: '', key: 'Imaging type' },
-  ]
 
   return (
     <div className="mb-ten">
@@ -25,10 +26,12 @@ function LabRequest() {
       {!loading ? (
         <Table
           title="Lab Request Details"
-          columns={columns}
+          columns={COLUMS}
           data={labData}
           dateColumnKey="Date of request (created at)"
           filterByDate
+          defaultFilterColumn="Date of request (created at)"
+          defaultSortColumn="Date of request (created at)"
         />
       ) : (
         <LoadingComponent message="Loading lab requests" />

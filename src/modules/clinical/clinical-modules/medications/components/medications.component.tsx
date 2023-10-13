@@ -1,46 +1,40 @@
 import React from 'react'
 
-import Table from 'src/components/table'
 import LoadingComponent from 'src/components/loaders/table-loader'
+import DataTable, { Column } from 'src/components/table/data-table'
 import useMedicationData from '../data'
+
+const COLUMNS: Column[] = [
+  { id: 'Start Date', label: 'Start Date', sortable: true, type: 'date' },
+  {
+    id: 'Medication Name (from Medication Base)',
+    label: 'Medication Name',
+  },
+  { id: 'Status', label: 'Status' },
+  { id: 'Refillable', label: 'Refillable' },
+  {
+    id: 'Refill Date calculated',
+    label: 'Refill Date',
+    sortable: true,
+    type: 'date',
+  },
+]
 
 function Medications() {
   const { medicationsData, loading } = useMedicationData()
-
-  const columns = [
-    {
-      name: 'Start Date',
-      format: 'dd/mmm/yy',
-      key: 'Start Date',
-    },
-    {
-      name: 'Medication Name',
-      format: '',
-      key: 'Medication Name (from Medication Base)',
-    },
-    {
-      name: 'Status',
-      format: '',
-      key: 'Status',
-    },
-    { name: 'Refillable', format: '', key: 'Refillable' },
-    {
-      name: 'Refill Date',
-      format: 'dd/mmm/yy',
-      key: 'Refill Date calculated',
-    },
-  ]
 
   return (
     <div className="mb-ten">
       <h4>Medications</h4>
       {!loading ? (
-        <Table
+        <DataTable
           title="Medications"
-          columns={columns}
+          columns={COLUMNS}
           data={medicationsData}
           dateColumnKey="Start Date"
           filterByDate
+          defaultFilterColumn="Start Date"
+          defaultSortColumn="Start Date"
         />
       ) : (
         <LoadingComponent message="Loading Medications" />

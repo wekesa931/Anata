@@ -17,9 +17,12 @@ const useMedicationData = () => {
         )
 
         const mappedResponses = medications?.map((med: any) => {
-          Object.keys(med).forEach((value) => {
-            if (Array.isArray(value)) med[value] = med[value].join(',')
+          Object.entries(med).forEach(([k, v]) => {
+            if (Array.isArray(v)) {
+              med[k] = v.join(',')
+            }
           })
+
           return med
         })
         setMedicationsData(mappedResponses)

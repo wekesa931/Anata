@@ -4,7 +4,7 @@ import { useMember } from 'src/context/member'
 import { useGetVitalsReadingApi } from 'src/modules/vitals/services/vitals.api'
 import { logError } from 'src/utils/logging/logger'
 
-const BMI_TABLE_KEYS = ['bmi', 'height', 'weight']
+const BMI_TABLE_KEYS = ['bmi', 'height', 'weight', 'bmi_percentile']
 const BODY_COMPOSITION_KEYS = [
   'muscleMass',
   'bodyFat',
@@ -12,12 +12,17 @@ const BODY_COMPOSITION_KEYS = [
   'waisthipRatio',
   'hipCircumference',
   'waistCircumference',
+  'mid_upper_arm_circumference',
+  'muscle_mass_weight_ratio',
+  'waisthip_ratio',
 ]
 const OTHER_VITALS_KEYS = [
   'temperature',
   'respiratoryRate',
   'oxygenSaturation',
   'sixLeadEcgFindings',
+  'bone_density',
+  'water_content',
 ]
 
 export const useTablesData = () => {
@@ -26,21 +31,31 @@ export const useTablesData = () => {
     vitalsLoading,
     vitalsError,
     refetchVitalsReadings,
+    getBPReadings,
+    bpLoading,
+    bpError,
+    refetchBPReadings,
   } = useGetVitalsReadingApi()
   const { member } = useMember()
-  const [vitalsData, setVitalsData] = useState<any>({})
-  const [error, setError] = useState<any>(null)
+
+  const [vitals, setVitals] = useState<any>({})
+  const [bloodPressure, setBloodPressure] = useState<any>([])
+  const [vitalError, setVitalsError] = useState<any>(null)
+  const [bloodPressureError, setBloodPressureError] = useState<any>(null)
 
   const processVitalsData = (vitals: any) => {
+    const time = dayjs(vitals?.timestamp).format('DD MMM YYYY')
     if (vitals) {
       // we need to group all vitals into three categories: BMI, Body Composition and Other Vitals
       const bmiData = vitals.map((vital: any) => {
-        const { timestamp, ...rest } = vital
-        const time = dayjs(timestamp).format('DD MMM YYYY')
+        const data = vital?.data
         const bmi = BMI_TABLE_KEYS.reduce((acc: any, key) => {
           return {
             ...acc,
-            [key]: rest[key],
+            [key]: {
+              ...data[key],
+              textColor: data[key]?.reference_range?.text_color,
+            },
           }
         }, {})
 
@@ -51,13 +66,15 @@ export const useTablesData = () => {
       })
 
       const bodyCompositionData = vitals.map((vital: any) => {
-        const { timestamp, ...rest } = vital
-        const time = dayjs(timestamp).format('DD MMM YYYY')
+        const data = vital?.data
         const bodyComposition = BODY_COMPOSITION_KEYS.reduce(
           (acc: any, key) => {
             return {
               ...acc,
-              [key]: rest[key],
+              [key]: {
+                ...data[key],
+                textColor: data[key]?.reference_range?.text_color,
+              },
             }
           },
           {}
@@ -70,12 +87,14 @@ export const useTablesData = () => {
       })
 
       const otherVitalsData = vitals.map((vital: any) => {
-        const { timestamp, ...rest } = vital
-        const time = dayjs(timestamp).format('DD MMM YYYY')
+        const data = vital?.data
         const otherVitals = OTHER_VITALS_KEYS.reduce((acc: any, key) => {
           return {
             ...acc,
-            [key]: rest[key],
+            [key]: {
+              ...data[key],
+              textColor: data[key]?.reference_range?.text_color,
+            },
           }
         }, {})
 
@@ -95,37 +114,106 @@ export const useTablesData = () => {
     return {}
   }
 
-  const getVitalsGroupedData = async () => {
-    if (!member?.antaraId) return
-    setError(null)
+  const processBpData = (bpData: any) => {
+    return bpData?.map((bp: any) => {
+      return {
+        timestamp: bp?.timestamp,
+        average: {
+          value: `${bp?.data?.systolic?.value || '-'}/${
+            bp?.data?.diastolic?.value || '-'
+          }`,
+          textColor: bp?.data?.systolic?.reference_range?.text_color,
+        },
+        ...Object.keys(bp?.data).reduce((acc: any, key) => {
+          return {
+            ...acc,
+            [key]: {
+              ...bp?.data[key],
+              textColor: bp?.data[key]?.reference_range?.text_color,
+            },
+          }
+        }, {}),
+      }
+    })
+  }
 
-    const vitals = await getVitalsReadings(member.antaraId)
-    return processVitalsData(vitals)
+  const getVitalsData = async () => {
+    if (!member?.antaraId) return
+    setVitalsError(null)
+
+    const tableData = await getVitalsReadings(member.antaraId)
+    return processVitalsData(tableData)
   }
 
   const refetchVitalsData = async () => {
     if (!member?.antaraId) return
-    setError(null)
+    setVitalsError(null)
 
-    const vitals = await refetchVitalsReadings(member.antaraId)
-    return processVitalsData(vitals)
+    const tableData = await refetchVitalsReadings(member.antaraId)
+    return processVitalsData(tableData)
+  }
+
+  const getBpData = async () => {
+    if (!member?.antaraId) return []
+    setBloodPressureError(null)
+
+    const bpData = await getBPReadings(member.antaraId)
+    return processBpData(bpData)
+  }
+
+  const refetchBpData = async () => {
+    if (!member?.antaraId) return []
+    setBloodPressureError(null)
+
+    const bpData = await refetchBPReadings(member.antaraId)
+    return processBpData(bpData)
   }
 
   useEffect(() => {
-    getVitalsGroupedData()
-      .then(setVitalsData)
+    getBpData()
+      .then(setBloodPressure)
       .catch((err) => {
-        setError(err)
         logError(err)
       })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member?.antaraId])
 
+  const getTableData = async () => {
+    const [vitals, bloodPressure] = await Promise.allSettled([
+      getVitalsData(),
+      getBpData(),
+    ])
+
+    if (vitals.status === 'fulfilled') {
+      setVitals(vitals.value)
+    } else {
+      setVitalsError(vitals.reason)
+    }
+
+    if (bloodPressure.status === 'fulfilled') {
+      setBloodPressure(bloodPressure.value)
+    } else {
+      setBloodPressureError(bloodPressure.reason)
+    }
+  }
+
+  useEffect(() => {
+    getTableData().catch((err) => {
+      logError(err)
+    })
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member?.antaraId])
+
   return {
-    vitalsData,
     loading: vitalsLoading,
-    error: vitalsError || error,
+    vitalsError: vitalsError || vitalError,
+    bpError: bpError || bloodPressureError,
     refetchVitalsData,
+    vitals,
+    bloodPressure,
+    bpLoading,
+    refetchBpData,
   }
 }

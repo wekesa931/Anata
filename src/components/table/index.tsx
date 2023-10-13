@@ -45,9 +45,9 @@ function Table({
   const [clickedRow, setClickedRow] = useState<any>()
   const [modalOpen, setModalOpen] = useState(false)
   const [sortedData, setSortedData] = useState(data)
-  const { dateRange } = useDateRangeFilter()
+  const { currentRange } = useDateRangeFilter()
 
-  const filterDataByDate = makeFilterDataByDate(filterByDate, dateRange)
+  const filterDataByDate = makeFilterDataByDate(filterByDate, currentRange)
 
   useEffect(() => {
     const sortAsc = (arr: any[]) => {
@@ -71,7 +71,7 @@ function Table({
       : setSortedData(filterDataByDate(sortDesc(data), dateColumnKey))
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, dateColumnKey, globalDateSort, filterByDate, dateRange])
+  }, [data, dateColumnKey, globalDateSort, filterByDate, currentRange])
 
   useEffect(() => {
     setDisplayedData(

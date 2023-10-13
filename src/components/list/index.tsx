@@ -63,9 +63,9 @@ function List({
   const {
     ops: { sort: globalDateSort },
   } = useSortFilter()
-  const { dateRange } = useDateRangeFilter()
+  const { currentRange } = useDateRangeFilter()
 
-  const filterDataByDate = makeFilterListDataByDate(filterByDate, dateRange)
+  const filterDataByDate = makeFilterListDataByDate(filterByDate, currentRange)
 
   useEffect(() => {
     const sortAsc = (arr: any[]) => {
@@ -102,7 +102,7 @@ function List({
         )
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [list, dateColumnKey, globalDateSort, filterByDate, dateRange])
+  }, [list, dateColumnKey, globalDateSort, filterByDate, currentRange])
 
   useEffect(() => {
     if (paginate && sortedList.length > defaultNoElements) {

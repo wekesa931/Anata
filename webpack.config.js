@@ -6,7 +6,7 @@ const env = require('./env')
 const package = require('./package.json')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
-const SentryWebpackPlugin = require("@sentry/webpack-plugin");
+const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 
 const universalPlugins = [
   new HtmlWebpackPlugin({
@@ -28,7 +28,7 @@ module.exports = {
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     alias: {
-      'src': path.resolve(__dirname, 'src'),
+      src: path.resolve(__dirname, 'src'),
     },
     extensions: ['.ts', '.tsx', '.js'],
     fallback: {
@@ -70,7 +70,7 @@ module.exports = {
         ],
       },
       {
-        test: /(index|tippy|tailwind\.styles)\.css$/,
+        test: /(index|tippy|tailwind\.styles|styles|default)\.css$/,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {
@@ -102,11 +102,11 @@ module.exports = {
         ],
       }),
       new SentryWebpackPlugin({
-        org:  process.env.SENTRY_PROJECT_ORG,
-        project:  process.env.SENTRY_PROJECT_NAME,
-        include: "./dist",
+        org: process.env.SENTRY_PROJECT_ORG,
+        project: process.env.SENTRY_PROJECT_NAME,
+        include: './dist',
         authToken: process.env.SENTRY_API_KEY,
-      })
+      }),
     ],
   }),
   devtool: 'source-map',
@@ -119,10 +119,10 @@ module.exports = {
     historyApiFallback: true,
     static: './',
     hot: true,
-    static:  {
-        watch: false,
-        directory: './',
-        publicPath: '/',
-    }
+    static: {
+      watch: false,
+      directory: './',
+      publicPath: '/',
+    },
   },
 }

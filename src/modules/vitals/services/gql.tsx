@@ -73,25 +73,21 @@ export const GET_VITALS = gql`
     vitals(antaraId: $antaraId) {
       edges {
         node {
-          weight
-          height
-          bmi
-          respiratoryRate
-          oxygenSaturation
-          temperature
-          hipCircumference
-          waterContent
-          waisthipRatio
-          midUpperArmCircumference
-          muscleMass
-          bodyFat
-          visceralFat
-          hipCircumference
-          sixLeadEcgFindings
-          respiratoryRate
-          oxygenSaturation
+          data
           timestamp
-          waistCircumference
+        }
+      }
+    }
+  }
+`
+
+export const GET_BP_PANEL = gql`
+  query bloodPressureMonitoring($antaraId: String!) {
+    bloodPressureMonitoring(antaraId: $antaraId) {
+      edges {
+        node {
+          data
+          timestamp
         }
       }
     }

@@ -1910,3 +1910,8 @@ body,
 .hover\:text-orange-50:hover {
   color: var(--orange-50) !important;
 }
+
+.hover\:text-white:hover {
+  --tw-text-opacity: 1 !important;
+  color: rgb(255 255 255 / var(--tw-text-opacity)) !important;
+}
