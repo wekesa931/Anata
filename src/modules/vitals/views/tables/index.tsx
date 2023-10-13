@@ -108,6 +108,7 @@ export function BloodPressureTable() {
         </div>
       ) : (
         <div className="my-2">
+          <p className="text-lg text-left mb-1">Blood Pressure</p>
           <DataTable
             data={bloodPressure}
             columns={BP_Columns}
