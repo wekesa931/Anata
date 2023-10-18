@@ -127,6 +127,7 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
       status {
         status
       }
+      refusedServices
     }
     dependents {
       id
