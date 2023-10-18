@@ -131,7 +131,7 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
                       ) : (
                         <Link
                           to={{
-                            pathname: `/member/${item.airtableRecordId}`,
+                            pathname: `/member/${item.antaraId}`,
                           }}
                         >
                           <span>{item.displayName}</span>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import { Search } from 'react-feather'
@@ -25,7 +25,8 @@ const FORMS = [
 function Forms() {
   const [airtableForm, setAirtableForm] = useState<TForm | null>(null)
   const [isEdited, setIsEdited] = useState(false)
-  const { openForm, closeForm, forms } = useFormsRouting()
+  const { openForm, closeForm, forms, openFormFromSearchParams } =
+    useFormsRouting()
   const [searchForm, setSearchForm] = useState<any[]>(FORMS)
   const { member } = useMember()
 
@@ -39,6 +40,14 @@ function Forms() {
       openForm(form.name)
     }
   }
+
+  useEffect(() => {
+    if (member) {
+      openFormFromSearchParams()
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member])
 
   return (
     <>

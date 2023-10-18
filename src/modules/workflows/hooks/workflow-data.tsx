@@ -262,7 +262,10 @@ export const useWorkflowData = () => {
       if (form.workflow.id) {
         return handleWorkflowFormSubmission(form, formMeta, formData)
       }
-      return handleFormSubmission(form, formMeta, formData)
+      return handleFormSubmission(form, formMeta, {
+        ...formData,
+        'Data Source': 'Scribe form',
+      })
     }
     throw new Error('Member or User not found')
   }

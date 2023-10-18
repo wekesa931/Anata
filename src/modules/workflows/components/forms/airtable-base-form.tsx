@@ -40,8 +40,9 @@ function AirtableBasedForm({
     handleSubmit,
     reset,
   } = useForm({
-    resolver: yupResolver(validationObject),
+    resolver: yupResolver(validationObject, { mode: 'async' }),
     defaultValues: form?.data || {},
+    mode: 'onBlur',
   })
 
   useEffect(() => {
@@ -60,8 +61,8 @@ function AirtableBasedForm({
     setIsFormDraft(form.isDraft)
   }, [form?.isDraft])
 
-  const onSubmit = () => {
-    let formattedPayload = form?.data
+  const preProcessInput = (values: any) => {
+    let formattedPayload = values
     numberFields.forEach((mt: any) => {
       if (formattedPayload[`${mt.name}`]) {
         if (mt.isPercent) {
@@ -90,7 +91,13 @@ function AirtableBasedForm({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { timestamp, ...rest } = formattedPayload
 
-    submitForm(form, formSchema, rest)
+    return rest
+  }
+
+  const onSubmit = () => {
+    const formattedPayload = preProcessInput(form?.data)
+
+    submitForm(form, formSchema, formattedPayload)
       .then(() => {
         setIsFormDraft(false)
         handleSubmissionSuccess()
@@ -102,12 +109,24 @@ function AirtableBasedForm({
   }
 
   const disabled =
-    isSubmitting || submittingForm || !canSubmitForm || isWorkflowComplete
+    isSubmitting ||
+    submittingForm ||
+    !canSubmitForm ||
+    isWorkflowComplete ||
+    !isFormDraft
+
+  useEffect(() => {
+    if (!canSubmitForm) {
+      notify("Can't submit form. Please check for errors and retry")
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canSubmitForm])
 
   return (
     <div>
       {!!formSchema?.fields?.length && (
-        <form>
+        <form onSubmit={onSubmit}>
           {formSchema?.fields?.map((field: any) => {
             if (!field.condition || field.condition(getValues())) {
               const fieldValue = getValues()[field.name] || null

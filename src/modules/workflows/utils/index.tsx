@@ -5,6 +5,7 @@ import { GroupedWorkflows, TForm, TWorkflow } from 'src/modules/workflows/types'
 import FORMS from 'src/modules/workflows/components/forms/form-inputs-definitions'
 import { User } from 'src/types/user'
 import { todayFormattedDate } from 'src/utils/date-time/helpers'
+import { v4 as uuidV4 } from 'uuid'
 
 dayjs.locale('en')
 
@@ -677,9 +678,7 @@ export const sortGroupedWorflows = (groupedWorkflows: GroupedWorkflows) => {
 }
 
 export const generateId = (name: string) => {
-  // generate a unique id in the form {name}-{xxx} with 3 random numbers
-  const random = Math.floor(100 + Math.random() * 900)
-  return `${name}-${random}`
+  return `${name}-${uuidV4()}`
 }
 
 export const getUserModelDetails = (user: User) => ({

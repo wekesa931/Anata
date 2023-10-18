@@ -113,11 +113,16 @@ export const useVitalsUpdate = () => {
           })
         )
 
-        return await createDMReadings({
+        const dm = await createDMReadings({
           ...variables,
           timestamp,
           antaraId: member.antaraId,
         })
+        if (dm?.errors?.length) {
+          throw new Error(dm?.errors?.join(', '))
+        }
+
+        return dm?.successMessage
       } catch (e: any) {
         logError(e)
         throw e

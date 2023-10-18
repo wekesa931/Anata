@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useNotifications } from 'src/context/notifications'
 import { useFormsData } from '../forms-data'
@@ -97,10 +97,10 @@ export const useFormsRouting = () => {
     navigator.clipboard.writeText(link)
   }
 
-  useEffect(() => {
-    const { formIds, formName } = getFormIdsFromSearchParams()
+  const openFormFromSearchParams = () => {
+    const { formIds } = getFormIdsFromSearchParams()
     if (formIds.length > 0) {
-      getForms(formIds, formName)
+      getForms(formIds)
         .then((result: TWorkflowForm[]) => {
           if (result.length > 0) {
             setForms(result)
@@ -114,15 +114,14 @@ export const useFormsRouting = () => {
           notify(`Failed to load forms: ${error.message}`)
         })
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams])
+  }
 
   return {
     forms,
     openForm,
     closeForm,
     copyFormLink,
+    openFormFromSearchParams,
   }
 }
 

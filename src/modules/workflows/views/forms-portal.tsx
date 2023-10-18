@@ -6,7 +6,6 @@ import {
   WorkflowFormsLayout,
   FormsSection,
 } from 'src/modules/workflows/components/layout'
-import { useFormsData } from 'src/modules/workflows/hooks/forms-data'
 import { useWorkflowData } from 'src/modules/workflows/hooks/workflow-data'
 import { getFormImplementation } from 'src/modules/workflows/components/forms'
 import { useFormsRouting } from 'src/modules/workflows/hooks/routing/forms'
@@ -56,7 +55,6 @@ type FormPortalProps = {
 function FormPortal({ form, closeForm, index }: FormPortalProps) {
   const [copyAlertMessage, setCopyAlertMessage] =
     React.useState<CopyAlertMessage | null>(null)
-  const { loading } = useFormsData()
   const { loaderDisplayed } = useWorkflowData()
   const { copyFormLink } = useFormsRouting()
   const [isEdited, setIsEdited] = React.useState<boolean>(false)
@@ -113,10 +111,7 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
         isEdited={isEdited}
         setIsEdited={setIsEdited}
       >
-        <WorkflowFormsLayout
-          loading={loading || loaderDisplayed}
-          isWorkflow={false}
-        >
+        <WorkflowFormsLayout loading={loaderDisplayed} isWorkflow={false}>
           <FormsSection>
             <FormComponent
               form={form}

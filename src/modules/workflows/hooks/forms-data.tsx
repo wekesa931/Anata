@@ -1,6 +1,5 @@
 import { useDatabase } from '@nozbe/watermelondb/hooks'
 import { Collection, Q } from '@nozbe/watermelondb'
-import { useState } from 'react'
 import { useMember } from 'src/context/member'
 import { useUser } from 'src/context/user'
 import {
@@ -10,14 +9,11 @@ import {
 } from 'src/modules/workflows/utils'
 import dayjs from 'dayjs'
 import { Forms } from '../db/models'
-import { useGetAirtableRecord } from '../services/airtable.api'
 
 export const useFormsData = () => {
   const database = useDatabase()
   const { member } = useMember()
   const user = useUser()
-  const [loading, setLoading] = useState<boolean>(false)
-  const { getAirtableRecord } = useGetAirtableRecord()
 
   const formsCollection: Collection<Forms> = database.collections.get('forms')
 
@@ -58,14 +54,7 @@ export const useFormsData = () => {
     return null
   }
 
-  const getFormFromApi = async (formId: string, formName: string) => {
-    setLoading(true)
-    const res = await getAirtableRecord(formId, formName)
-    setLoading(false)
-    return res
-  }
-
-  const getForms = async (formIds: string[], formName: string) => {
+  const getForms = async (formIds: string[]) => {
     if (member) {
       // formIDs maybe an array of local ids or airtable ids from the API
       const query = formIds
@@ -81,35 +70,6 @@ export const useFormsData = () => {
 
       if (formsFound.length) {
         return formsFound
-      }
-      if (formIds?.length > 0) {
-        const [rawId] = formIds
-        // get the first form from the api
-        const fromApi = await getFormFromApi(rawId, formName)
-        // hydrate this form into the database
-        if (Object.keys(fromApi).length > 0) {
-          const createdForm = await database.write(async () => {
-            const created = await formsCollection.create((form) => {
-              form.member = member?.antaraId
-              form.name = formName
-              form.data = {
-                ...fromApi,
-              }
-
-              // eslint-disable-next-line no-underscore-dangle
-              form._raw.id = rawId
-              form.createdBy = getUserModelDetails(user)
-              form.updatedBy = getUserModelDetails(user)
-              form.isSynced = true
-              form.isDraft = false
-              form.isEdited = false
-              form.airtableId = fromApi?.id
-            })
-            return created
-          })
-
-          return [createdForm]
-        }
       }
     }
 
@@ -150,7 +110,6 @@ export const useFormsData = () => {
     getForms,
     deleteAllForms,
     deleteForm,
-    loading,
   }
 }
 

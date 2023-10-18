@@ -147,14 +147,9 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
         }
       })
     }
-    if (form.isSynced) {
-      // delete the module data from the API first
-      deleteModuleFromAPI(workflow, form.name).then(async () => {
-        await removeFormFromDb()
-      })
-    } else {
+    deleteModuleFromAPI(workflow, form.name).then(async () => {
       await removeFormFromDb()
-    }
+    })
   }
 
   const addForm = async (addedFormName: string) => {
@@ -400,11 +395,13 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                             onClick={addForm.bind(null, activeFormName)}
                           />
                         )}
-                        {formIsDraft() && activeForms.length === 1 && (
-                          <ConfirmButton
-                            onConfirm={() => deleteForm(activeForms[0])}
-                          />
-                        )}
+                        {formIsDraft() &&
+                          activeForms.length === 1 &&
+                          workflowForms.length > 1 && (
+                            <ConfirmButton
+                              onConfirm={() => deleteForm(activeForms[0])}
+                            />
+                          )}
                       </div>
                     </div>
                   )}

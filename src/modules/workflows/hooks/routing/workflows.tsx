@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useNotifications } from 'src/context/notifications'
+import useWorkflowData from 'src/modules/workflows/hooks/workflow-data'
 import { Workflows as TWorkflowModel } from '../../db/models'
 
 type WorkflowRouterProps = {
@@ -8,6 +9,7 @@ type WorkflowRouterProps = {
   openWorkflow: (workflow: TWorkflowModel) => void
   closeWorkflow: () => void
   copyWorkflowLink: (workflow: TWorkflowModel) => void
+  openWorkflowFromSearchParams: () => void
 }
 
 export const useWorkflowRouter = (): WorkflowRouterProps => {
@@ -16,6 +18,7 @@ export const useWorkflowRouter = (): WorkflowRouterProps => {
   const navigate = useNavigate()
   const [workflow, setWorkflow] = React.useState<TWorkflowModel | null>(null)
   const { notify } = useNotifications()
+  const { findWorkflow } = useWorkflowData()
 
   const getWorkflowIdFromSearchParams = () => {
     return searchParams.get('workflowId')
@@ -45,6 +48,23 @@ export const useWorkflowRouter = (): WorkflowRouterProps => {
     }
   }
 
+  const openWorkflowFromSearchParams = () => {
+    const workflowId = getWorkflowIdFromSearchParams()
+    if (workflowId) {
+      findWorkflow(workflowId)
+        .then((result: TWorkflowModel | null) => {
+          if (result) {
+            openWorkflow(result)
+          } else {
+            notify(`Workflow ${workflowId} not found`)
+          }
+        })
+        .catch((error: any) => {
+          notify(`Failed to load workflow ${workflowId}: ${error.message}`)
+        })
+    }
+  }
+
   const closeWorkflow = () => {
     setWorkflow(null)
     setWorkflowIdInSearchParams(null)
@@ -68,6 +88,7 @@ export const useWorkflowRouter = (): WorkflowRouterProps => {
     openWorkflow,
     closeWorkflow,
     copyWorkflowLink,
+    openWorkflowFromSearchParams,
   }
 }
 

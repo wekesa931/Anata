@@ -25,8 +25,12 @@ function WorkflowTemplateList({ openWorkflow }: any) {
           notify('Error creating workflow')
         }
       })
-      .catch(() => {
-        notify('Error creating workflow')
+      .catch((e) => {
+        if (typeof e === 'string') {
+          notify(e)
+        } else {
+          notify('Error creating workflow')
+        }
       })
       .finally(() => {
         setIsCreating(false)

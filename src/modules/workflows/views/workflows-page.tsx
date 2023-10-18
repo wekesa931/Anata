@@ -7,7 +7,12 @@ import WorkflowPortal from './workflow-portal'
 
 function WorkflowPage() {
   const { trackWorkflowPageOpened } = useWorkflowAnalytics()
-  const { workflow, openWorkflow, closeWorkflow } = useWorkflowRouter()
+  const {
+    workflow,
+    openWorkflow,
+    closeWorkflow,
+    openWorkflowFromSearchParams,
+  } = useWorkflowRouter()
 
   useEffect(() => {
     trackWorkflowPageOpened()
@@ -18,7 +23,10 @@ function WorkflowPage() {
   return (
     <div>
       <WorkflowTemplateList openWorkflow={openWorkflow} />
-      <WorkflowList openWorkflow={openWorkflow} />
+      <WorkflowList
+        openWorkflow={openWorkflow}
+        openWorkflowFromSearchParams={openWorkflowFromSearchParams}
+      />
       {workflow && (
         <WorkflowPortal workflow={workflow} closeWorkflow={closeWorkflow} />
       )}

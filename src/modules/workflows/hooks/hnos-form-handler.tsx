@@ -52,6 +52,8 @@ export const useHNOSFormHandler = () => {
           await createTableEntry(tableName, generatedPayload)
           form.markAsCompleted()
           setSubmittingForm(false)
+        } else {
+          throw new Error(`Table name not found for ${form.name} on airtable`)
         }
       }
 

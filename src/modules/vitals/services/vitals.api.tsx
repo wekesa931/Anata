@@ -307,6 +307,28 @@ export const useCreateDMReadingApi = () => {
     throw new Error('Neither blood glucose nor hba1c is present')
   }
 
+  const parseDmErrors = (data: any = {}) => {
+    const { uploadBloodGlucoseReading, uploadHba1cReading } = data
+    const errors = []
+    const successMessage = []
+    if (uploadBloodGlucoseReading?.errors) {
+      errors.push(uploadBloodGlucoseReading?.errors)
+    } else {
+      successMessage.push('Blood Glucose Reading Uploaded Successfully')
+    }
+
+    if (uploadHba1cReading?.errors) {
+      errors.push(uploadHba1cReading?.errors)
+    } else {
+      successMessage.push('HBA1C Reading Uploaded Successfully')
+    }
+
+    return {
+      errors,
+      successMessage,
+    }
+  }
+
   const createDMReadings = async (input: DMMonitoringFormInputs) => {
     const variables = parseDMReadings(input)
     if (isObjectEmpty(variables)) {
@@ -318,7 +340,7 @@ export const useCreateDMReadingApi = () => {
       variables: selectVariables(variables),
     })
 
-    return data
+    return parseDmErrors(data)
   }
 
   return {

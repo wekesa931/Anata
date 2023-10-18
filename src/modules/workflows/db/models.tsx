@@ -177,7 +177,12 @@ export class Workflows extends Model {
       f.name = formName
       f.workflow.set(this)
       f.member = this.member
-      f.data = formData
+      f.data = {
+        ...formData,
+        isDraft: true,
+        createdBy: this.createdBy,
+        updatedBy: this.updatedBy,
+      }
       f.isDraft = true
       f.isEdited = false
       f.isSynced = false
@@ -264,7 +269,7 @@ export class Workflows extends Model {
           return existingForm.update((f: Forms) => {
             f.data = formData
             f.isDraft = nf.isDraft
-            f.isSynced = hasAnyFormData
+            f.isSynced = hasAnyFormData || true
             if (nf.createdAt) {
               f.createdAt = dayjs(nf.createdAt).valueOf()
             }
@@ -285,7 +290,7 @@ export class Workflows extends Model {
             f.data = formData
             f.isDraft = nf.isDraft
             f.isEdited = false
-            f.isSynced = hasAnyFormData
+            f.isSynced = hasAnyFormData || true
             f.createdBy = this.createdBy
             f.updatedBy = this.updatedBy
             if (nf.createdAt) {

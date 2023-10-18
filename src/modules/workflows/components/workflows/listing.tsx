@@ -3,10 +3,12 @@ import { Button } from '@mui/material'
 import { sortByCreatedAt, workflowStartDate } from 'src/modules/workflows/utils'
 import { useWorkflowData } from 'src/modules/workflows/hooks/workflow-data'
 import { Workflows as TWorkflowModel } from 'src/modules/workflows/db/models'
+import { useMember } from 'src/context/member'
 import Loader from '../loaders'
 
 type WorkflowListProps = {
   openWorkflow: (workflow: TWorkflowModel) => void
+  openWorkflowFromSearchParams: () => void
 }
 
 function WorkflowListItem({
@@ -40,9 +42,13 @@ function WorkflowListItem({
   )
 }
 
-function WorkflowList({ openWorkflow }: WorkflowListProps) {
+function WorkflowList({
+  openWorkflow,
+  openWorkflowFromSearchParams,
+}: WorkflowListProps) {
   const { incompleteWorkflows, completedWorkflows, hydrateWorkflows } =
     useWorkflowData()
+  const { member } = useMember()
 
   const [isLoadingWorflows, setIsLoadingWorkflows] = useState<boolean>(false)
 
@@ -50,13 +56,19 @@ function WorkflowList({ openWorkflow }: WorkflowListProps) {
     !!incompleteWorkflows?.length || !!completedWorkflows?.length
 
   useEffect(() => {
-    setIsLoadingWorkflows(true)
-    hydrateWorkflows().finally(() => {
-      setIsLoadingWorkflows(false)
-    })
+    if (member) {
+      setIsLoadingWorkflows(true)
+      hydrateWorkflows()
+        .then(() => {
+          openWorkflowFromSearchParams()
+        })
+        .finally(() => {
+          setIsLoadingWorkflows(false)
+        })
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [member])
 
   return (
     <>
