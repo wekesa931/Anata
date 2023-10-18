@@ -2182,8 +2182,8 @@ export default [
         },
       },
       {
-        id: 'fldUYKFRJfYPWxsR5',
-        name: 'Alcohol',
+        id: 'fldI63VddYCadkiEb',
+        name: 'How many drinks do you have per week?',
         type: 'text',
         format: '',
         isDateTime: false,
@@ -2220,8 +2220,8 @@ export default [
         },
       },
       {
-        id: 'fldUDLKuoyJzNELNM',
-        name: 'Tobacco',
+        id: 'fldmB3NJ5QSuT5kdD',
+        name: 'How many cigarettes do you smoke per day?',
         type: 'number',
         format: 'integer',
         isDateTime: false,
