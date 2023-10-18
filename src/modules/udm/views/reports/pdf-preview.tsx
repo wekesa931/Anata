@@ -16,6 +16,7 @@ import SuccessPrompt from 'src/modules/member/views/member-registration/componen
 import { v4 as uuidV4 } from 'uuid'
 import { DocMeta } from 'src/modules/udm/types'
 import { useUdmData } from 'src/modules/udm/hooks/udm.data'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 type Props = {
   loadingData?: boolean
@@ -44,6 +45,7 @@ function PdfPreview({
 
   const [showSuccess, setShowSuccess] = useState(false)
   const [fileId, setFileId] = useState<string>('')
+  const { trackNewDocumentGenerated } = useModuleAnalytics()
 
   const handleClosePortalWindow = () => {
     setOpen(false)
@@ -72,6 +74,7 @@ function PdfPreview({
         uploadDocument(blob).then((res) => {
           const documentId = res?.data?.id?.toString()
           setFileId(documentId)
+          trackNewDocumentGenerated(docMeta, true)
         })
         setTimeout(() => {
           setLoading(false)
@@ -81,8 +84,11 @@ function PdfPreview({
       .catch((err) => {
         setLoading(false)
         setError(err)
+        trackNewDocumentGenerated(docMeta, false)
       })
   }
+
+  const { trackNewDocumentPreviewEdited } = useModuleAnalytics()
 
   return (
     <>
@@ -103,7 +109,13 @@ function PdfPreview({
           >
             {member?.fullName}
             <DialogActions>
-              <Button autoFocus onClick={() => setShowPdfPreview(false)}>
+              <Button
+                autoFocus
+                onClick={() => {
+                  setShowPdfPreview(false)
+                  trackNewDocumentPreviewEdited(docMeta)
+                }}
+              >
                 <Edit className="file-action-btn" />
                 <Typography className="file-action-button-text text-blue-100 font-medium">
                   Edit Details

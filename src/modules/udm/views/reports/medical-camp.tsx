@@ -7,6 +7,7 @@ import { useMember } from 'src/context/member'
 import { DocMeta } from 'src/modules/udm/types'
 import MedicalCampPDFTemplate from 'src/modules/udm/views/reports/templates/medical-camp'
 import { useReportsGenerationData } from 'src/modules/vitals/hooks/report-generation.hook'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 type Props = {
   loading?: boolean
@@ -32,6 +33,7 @@ function MedicalCampComponent({ closeModal, getDocMeta, title }: Props) {
   const [error, setError] = useState<any>(null)
   const { member } = useMember()
   const { loading, getMedicalCampData } = useReportsGenerationData()
+  const { trackNewDocumentPreviewed } = useModuleAnalytics()
 
   const handleShowPdfPreview = (values: any) => {
     const date = values?.medicalCampDate
@@ -62,6 +64,7 @@ function MedicalCampComponent({ closeModal, getDocMeta, title }: Props) {
   }
 
   if (showPdfPreview) {
+    trackNewDocumentPreviewed({ ...getDocMeta(), details: formData })
     return (
       <PdfPreview
         loadingData={loading}

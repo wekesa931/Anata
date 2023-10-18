@@ -7,6 +7,7 @@ import { useLazyQuery, useMutation } from '@apollo/client'
 import { VALIDATE_BIODATA } from 'src/modules/comms/services/gql'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import { MEMBER_CONTACT_DETAILS } from 'src/modules/member/services/gql'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import {
   AuthLoader,
   CheckContainer,
@@ -43,6 +44,7 @@ function AuthenticateMember({
   const [memberAuthQuestions, setMemberAuthQuestions] = useState<
     AuthQuestions[]
   >([])
+  const { trackValidatedMember } = useModuleAnalytics()
   const [getContactDetails, { loading }] = useLazyQuery(
     MEMBER_CONTACT_DETAILS,
     {
@@ -116,8 +118,11 @@ function AuthenticateMember({
           sessionName,
           participantSessionId: sessionId,
         },
+      }).then((res: any) => {
+        trackValidatedMember(res?.validateBiodata)
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authSuccessful, sessionId, sessionName, verifyBiodata])
 
   const updateQuestion = (idx: number, color: string, isConfirmed: boolean) => {

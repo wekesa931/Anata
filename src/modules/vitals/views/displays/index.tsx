@@ -6,15 +6,18 @@ import BloodPressureView from 'src/modules/vitals/views/displays/blood-pressure'
 import BMIView from 'src/modules/vitals/views/displays/bmi'
 import LipidsView from 'src/modules/vitals/views/displays/lipids'
 import BsView from 'src/modules/vitals/views/displays/bs-hba1c-views'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 function VitalsDisplay() {
   const [value, setValue] = React.useState<string>('blood-pressure')
+  const { trackLabsAndVitalsTypeSelected } = useModuleAnalytics()
   return (
     <div className="font-rubik">
       <TabContext value={value}>
         <Tabs
           onChange={(event, newValue) => {
             setValue(newValue)
+            trackLabsAndVitalsTypeSelected(newValue)
           }}
           aria-label="vitals tabs"
           TabIndicatorProps={{

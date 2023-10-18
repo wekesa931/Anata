@@ -42,11 +42,17 @@ function BloodPressureView() {
     })
   }
 
-  const CustomBpDot = withCustomBpDot({ filter: currentTimeFilter })
+  const CustomBpDot = withCustomBpDot({
+    filter: currentTimeFilter,
+    type: 'Blood pressure',
+  })
 
   return (
     <div>
-      <TimeRangeFilter onRangeChange={handleTimeRangeChange} />
+      <TimeRangeFilter
+        onRangeChange={handleTimeRangeChange}
+        type="Blood pressure"
+      />
       {isLoading ? (
         <div className="h-[300px]">
           <Loading message="Loading BP Data ..." />

@@ -13,6 +13,7 @@ import logError from 'src/utils/logging/logger'
 import useHandleResponses from 'src/utils/airtable/error-handler'
 import useAntaraStaff from 'src/hooks/antara-staff.hook'
 import { User } from 'react-feather'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import styles from './appointments.component.css'
 
 const SearchFieldsNameMap: Record<string, string> = {
@@ -28,6 +29,7 @@ function Appointments() {
   const status = ['All', 'Completed', 'Cancelled', 'Missed']
 
   const [selected, setSelected] = React.useState(status[0])
+  const { trackActionEdited } = useModuleAnalytics()
 
   const allowedFields = [
     'Service',
@@ -167,13 +169,16 @@ function Appointments() {
       return payload
     }
 
+    const serverPayload = transformDataForServer()
+
     await airtableFetch('appointments', 'post', {
       id: appointment.id,
-      fields: transformDataForServer(),
+      fields: serverPayload,
     })
       .then((res) => {
         handleResponses(res)
         setSelected(status[0])
+        trackActionEdited('Appointment', serverPayload)
       })
       .catch((err) => {
         logError(err)

@@ -119,7 +119,8 @@ function CallFloatingBox() {
     !subTitle().includes('Calling') &&
     !isFulfilled
 
-  const { trackMissedCall } = useModuleAnalytics()
+  const { trackMissedCall, trackValidateMemberClicked, trackNewContactAdded } =
+    useModuleAnalytics()
 
   useEffect(() => {
     if (participantBusy) {
@@ -137,6 +138,14 @@ function CallFloatingBox() {
       (contact) => contact.phone === phoneNumber
     )
   }
+
+  useEffect(() => {
+    if (shouldAuthenticate) {
+      trackValidateMemberClicked(activeCall)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shouldAuthenticate])
 
   const shouldDisplaySaveMember =
     activeCall?.dialPadInitiated &&
@@ -197,15 +206,13 @@ function CallFloatingBox() {
       }
       return acc
     }, -1)
+    const newContact = {
+      phone: activeCall?.member,
+      phoneType: 'Unknown',
+      priority: priority + 1,
+    }
 
-    const newContacts = [
-      {
-        phone: activeCall?.member,
-        phoneType: 'Unknown',
-        priority: priority + 1,
-      },
-      ...memberContacts,
-    ]
+    const newContacts = [newContact, ...memberContacts]
 
     const variables = {
       input: {
@@ -216,10 +223,14 @@ function CallFloatingBox() {
 
     updatePhones({
       variables,
-    }).catch((err) => {
-      setSaveError('An error occured saving phone')
-      logError(err)
     })
+      .then(() => {
+        trackNewContactAdded(newContact)
+      })
+      .catch((err) => {
+        setSaveError('An error occured saving phone')
+        logError(err)
+      })
   }
 
   const closeDialog = () => {

@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import { groupBy } from 'lodash'
 import { DotProps } from 'recharts'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import { TimeFilters } from '../types'
 
 dayjs.extend(advancedFormat)
@@ -15,6 +16,7 @@ type Props = DotProps & {
   isBmi?: boolean // help determine the circle and font sizes
   avgValueKey: string // the key to access the value from the payload
   avgValueFormatter?: (v: any) => string // format the value
+  type: string // what are we viewing
   [key: string]: any
 }
 
@@ -35,6 +37,7 @@ export function CustomDot(props: Props) {
   const currentValue = isPayloadKeyed ? payload[name] : payload
   const [anchorEl, setAnchorEl] = useState(null)
   const [measurements, setMeasurements] = useState<any>({})
+  const { trackLabsAndVitalsDataHovered } = useModuleAnalytics()
 
   // early exit if the payload is empty
   if (!currentValue) return null
@@ -46,6 +49,7 @@ export function CustomDot(props: Props) {
   const handleMouseEnter = (event: any) => {
     setAnchorEl(event.currentTarget)
     setMeasurements(groupMeasurements(currentValue?.measurements))
+    trackLabsAndVitalsDataHovered(props.type, currentValue)
   }
 
   const handleMouseLeave = () => {

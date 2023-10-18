@@ -9,8 +9,10 @@ const segment = Analytics({
     }),
   ],
 })
-
 const env_check = process.env.NODE_ENV === 'production'
+
+// const env_check = true
+
 const identify = (id: any, props?: any) => {
   if (env_check) segment?.identify(id, props) // eslint-disable-line no-unused-expressions
 }

@@ -5,12 +5,19 @@ import { TimeFilters } from '../types'
 
 type Props = {
   filter: TimeFilters
+  type: string
 }
 
-export function withCustomBsDot({ filter }: Props) {
+export function withCustomBsDot({ filter, type }: Props) {
   return function CustomizedBsDot(props: any) {
     return (
-      <CustomDot filter={filter} {...props} isPayloadKeyed avgValueKey="mean">
+      <CustomDot
+        filter={filter}
+        {...props}
+        isPayloadKeyed
+        avgValueKey="mean"
+        type={type}
+      >
         {(m) => {
           return (
             <div className="grid grid-cols-2 gap-3 w-full">

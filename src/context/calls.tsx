@@ -11,6 +11,7 @@ import {
 import { useFcm } from 'src/context/fcm/fcm.context'
 import { logError } from 'src/utils/logging/logger'
 import type { Member } from 'src/modules/member/db/models'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 export type ILogs = {
   startedAt: string
@@ -340,23 +341,30 @@ function CallProvider({ children }: any) {
     return null
   }
 
-  const handleEndCall = () => {
-    endCall({
-      variables: {
-        session: activeCall?.session,
-      },
-    })
-      .then((res) => {
-        if (res.data.endCall.status === 200) {
-          getCallSessions()
-          setcallError(null)
-        } else {
-          setcallError(res.data.endCall.message)
-        }
+  const {
+    trackCallEnded,
+    trackTransferRequested,
+    trackTransferValidated,
+    trackCalInitiated,
+  } = useModuleAnalytics()
+
+  const handleEndCall = async () => {
+    try {
+      const res = await endCall({
+        variables: {
+          session: activeCall?.session,
+        },
       })
-      .catch((e) => {
-        logError(e.message)
-      })
+      if (res.data.endCall.status === 200) {
+        getCallSessions()
+        setcallError(null)
+        trackCallEnded(activeCall)
+      } else {
+        setcallError(res.data.endCall.message)
+      }
+    } catch (e: any) {
+      logError(e.message)
+    }
   }
 
   const initiateTransfer = ({
@@ -370,16 +378,19 @@ function CallProvider({ children }: any) {
     fullName: string
     transferAction: string
   }) => {
+    const transfer = {
+      phoneNumber: phone,
+      staffEmail: email,
+      session: activeCall?.session,
+      onTransferAction: transferAction,
+    }
+    trackTransferRequested(transfer)
+
     if (activeCall) {
       setActiveCall({ ...activeCall, forwardTo: fullName })
     }
     initiateCallTransfer({
-      variables: {
-        phoneNumber: phone,
-        staffEmail: email,
-        session: activeCall?.session,
-        onTransferAction: transferAction,
-      },
+      variables: transfer,
     })
       .then((response) => {
         if (response?.data?.transferCall.status === 200) {
@@ -391,6 +402,7 @@ function CallProvider({ children }: any) {
               return pat
             })
             setConferenceParticipants(updatedHoldState)
+            trackTransferValidated(transfer)
           }
         }
       })
@@ -442,6 +454,7 @@ function CallProvider({ children }: any) {
             setActiveCallContact(callContact)
             onCallInitiated(response?.data)
             setMemberData(memberDetails)
+            trackCalInitiated(call)
           } else {
             setcallError(response?.data?.placeCall.message)
           }

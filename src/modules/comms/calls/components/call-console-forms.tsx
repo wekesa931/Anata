@@ -4,6 +4,7 @@ import FORMS from 'src/modules/workflows/components/forms/form-inputs-definition
 import Notification from 'src/components/notification'
 import { formNames } from 'src/modules/workflows/utils'
 import { useFormsRouting } from 'src/modules/workflows/hooks/routing/forms'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 function CallConsoleForms({ height }: { height: string }) {
   const [filteredForms, setfilteredForms] = React.useState(FORMS)
@@ -11,6 +12,7 @@ function CallConsoleForms({ height }: { height: string }) {
   const [focused, setFocused] = React.useState(false)
   const [formName, setformName] = React.useState('')
   const { openForm } = useFormsRouting()
+  const { trackOpenFormClicked } = useModuleAnalytics()
 
   React.useEffect(() => {
     if (formName) {
@@ -75,7 +77,10 @@ function CallConsoleForms({ height }: { height: string }) {
           {filteredForms.map((form) => (
             <button
               // @ts-ignore
-              onClick={() => openForm(form.name)}
+              onClick={() => {
+                openForm(form.name)
+                trackOpenFormClicked(form.name)
+              }}
               key={form.name}
             >
               {!formName && (

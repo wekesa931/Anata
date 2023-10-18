@@ -45,12 +45,16 @@ function HBA1CView() {
       setData(bmi)
     })
   }
+  const chartType = 'HB1AC'
 
-  const CustomDot = withCustomBmiDot({ filter: currentTimeFilter })
+  const CustomDot = withCustomBmiDot({
+    filter: currentTimeFilter,
+    type: chartType,
+  })
 
   return (
     <div>
-      <TimeRangeFilter onRangeChange={handleTimeRangeChange} />
+      <TimeRangeFilter onRangeChange={handleTimeRangeChange} type={chartType} />
       {isLoading ? (
         <div className="h-[300px]">
           <Loading message="Loading HbA1c Data ..." />

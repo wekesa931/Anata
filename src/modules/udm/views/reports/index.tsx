@@ -1,5 +1,5 @@
 import { Button, Paper } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FilePlus } from 'react-feather'
 import { NewDocumentPopper } from 'src/modules/udm/components/reports/new-document'
 import MedicalCampComponent from 'src/modules/udm/views/reports/medical-camp'
@@ -7,6 +7,7 @@ import OPGeneralComponent from 'src/modules/udm/views/reports/op-general'
 import DocListItem from 'src/modules/udm/components/reports/list-item'
 import dayjs from 'dayjs'
 import { DocMeta } from 'src/modules/udm/types'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 enum DocTypes {
   MEDICAL_CAMP = 'MEDICAL_CAMP',
@@ -22,15 +23,37 @@ function ReportGenerator() {
   const openPopper = Boolean(anchorEl)
   const [isPortalOpen, setOpenPortal] = React.useState(false)
   const [docType, setDocType] = React.useState<DocTypes | null>(null)
+  const {
+    trackNewDocOpened,
+    trackNewDocSelected,
+    trackNewDocmentPreviewCancelled,
+  } = useModuleAnalytics()
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(anchorEl ? null : event.currentTarget)
   }
 
+  useEffect(() => {
+    if (openPopper) {
+      trackNewDocOpened()
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [anchorEl])
+
+  useEffect(() => {
+    if (docType) {
+      trackNewDocSelected(docType.toString())
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [docType])
+
   const closeModal = () => {
     setOpenPortal(false)
     setDocType(null)
     setAnchorEl(null)
+    trackNewDocmentPreviewCancelled(getDocMeta())
   }
 
   const createDocMeta = (

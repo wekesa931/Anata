@@ -42,16 +42,18 @@ export function BMICharts() {
     if (range[0] === null || range[1] === null) return
     setCurrentTimeFilter(filter)
     setXDomain([range[0].valueOf(), range[1].valueOf()])
-
     getBmiData(range, currentTimeFilter).then((data) => {
       setBmiData(data)
     })
   }
-  const CustomBpDot = withCustomBmiDot({ filter: currentTimeFilter })
+  const CustomBpDot = withCustomBmiDot({
+    filter: currentTimeFilter,
+    type: 'BMI',
+  })
 
   return (
     <div>
-      <TimeRangeFilter onRangeChange={handleTimeRangeChange} />
+      <TimeRangeFilter onRangeChange={handleTimeRangeChange} type="BMI" />
       {isLoading ? (
         <div className="h-[300px]">
           <Loading message="Loading BMI Data ..." />

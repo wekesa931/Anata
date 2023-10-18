@@ -23,6 +23,7 @@ import {
   useDateRangeFilter,
   makeFilterDataByDate,
 } from 'src/context/date-range-filter'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 export type Column = {
   label: string
@@ -160,9 +161,10 @@ function RowDetails({ data }: { data: any }) {
 type DetailedRowProps = {
   columns: readonly Column[]
   row: any
+  tableName: string
 }
 
-function DataTableDetailedRow({ columns, row }: DetailedRowProps) {
+function DataTableDetailedRow({ columns, row, tableName }: DetailedRowProps) {
   const getValueAndColor = (columnId: string) => {
     let value = row[columnId]?.value ?? row[columnId]
     if (typeof value === 'object' && !row[columnId]?.value) {
@@ -178,6 +180,7 @@ function DataTableDetailedRow({ columns, row }: DetailedRowProps) {
   }
   const [open, setOpen] = useState(false)
   const showDetails = Object.keys(row).length > columns.length
+  const { trackRowDetailsAccessed } = useModuleAnalytics()
 
   return (
     <>
@@ -187,7 +190,10 @@ function DataTableDetailedRow({ columns, row }: DetailedRowProps) {
             <IconButton
               aria-label="expand row"
               size="small"
-              onClick={() => setOpen(!open)}
+              onClick={() => {
+                setOpen(!open)
+                if (!open) trackRowDetailsAccessed(tableName, row)
+              }}
             >
               {open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
             </IconButton>
@@ -267,6 +273,8 @@ function DataTable({
   const { currentRange } = useDateRangeFilter()
 
   const filterDataByDate = makeFilterDataByDate(filterByDate, currentRange)
+  const { trackFieldNameSorted, trackRowsPerPageSelected, trackPageSelected } =
+    useModuleAnalytics()
 
   const visibleRows = useMemo(() => {
     const orderingColumn = columns.find((column) => column.id === orderBy)
@@ -286,6 +294,7 @@ function DataTable({
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
+    trackPageSelected(title, newPage)
   }
 
   const handleChangeRowsPerPage = (
@@ -293,6 +302,8 @@ function DataTable({
   ) => {
     setRowsPerPage(+event.target.value)
     setPage(0)
+    trackRowsPerPageSelected(title, +event.target.value)
+    trackPageSelected(title, 0)
   }
 
   const handleRequestSort = (
@@ -302,6 +313,7 @@ function DataTable({
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
+    trackFieldNameSorted(title, property, isAsc ? 'Descending' : 'Ascending')
   }
 
   return (
@@ -326,6 +338,7 @@ function DataTable({
                     key={index}
                     columns={columns}
                     row={row}
+                    tableName={title}
                   />
                 ))}
               </>

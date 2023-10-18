@@ -8,9 +8,10 @@ dayjs.extend(advancedFormat)
 
 type Props = {
   filter: TimeFilters
+  type: string
 }
 
-export function withCustomBpDot({ filter }: Props) {
+export function withCustomBpDot({ filter, type }: Props) {
   return function CustomizedBPDot(props: any) {
     return (
       <CustomDot
@@ -18,6 +19,7 @@ export function withCustomBpDot({ filter }: Props) {
         isPayloadKeyed
         {...props}
         avgValueKey="readableValue"
+        type={type}
       >
         {(m) => {
           const v = `${m.systolic?.value || '-'}/${m.diastolic?.value || '-'}`

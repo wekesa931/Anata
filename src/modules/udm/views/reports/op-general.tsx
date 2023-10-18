@@ -9,6 +9,7 @@ import useClinicalSummary from 'src/modules/member/hooks/clinical-summary'
 import useConditionData from 'src/modules/conditions/hooks/condition.data'
 import { useReportsGenerationData } from 'src/modules/vitals/hooks/report-generation.hook'
 import useInterventionData from 'src/modules/interventions/hooks/intervention.data'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 type Props = {
   loading?: boolean
@@ -47,6 +48,7 @@ function OpGeneralComponent({
     useReportsGenerationData()
   const { memberInterventions, loading: loadingInterventions } =
     useInterventionData()
+  const { trackNewDocumentPreviewed } = useModuleAnalytics()
 
   const handleSuccessShowPdf = () => {
     setError(null)
@@ -84,6 +86,7 @@ function OpGeneralComponent({
     loadingInterventions
 
   if (showPdfPreview) {
+    trackNewDocumentPreviewed({ ...getDocMeta(), details: formData })
     return (
       <PdfPreview
         loadingData={isLoadingData}

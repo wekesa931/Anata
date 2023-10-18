@@ -19,6 +19,7 @@ import useAntaraStaff, {
   mapAssigneeToLookup,
 } from 'src/hooks/antara-staff.hook'
 import { useMember } from 'src/context/member'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import styles from './tasks.component.css'
 import PrescriptionName from '../components/prescription-name'
 
@@ -219,6 +220,7 @@ function Tasks() {
   const { handleResponses } = useHandleResponses('Tasks')
 
   const { allAntaraStaffs, loading: loadingAntaraStaff } = useAntaraStaff()
+  const { trackActionEdited } = useModuleAnalytics()
 
   const [
     loadTasks,
@@ -479,6 +481,7 @@ function Tasks() {
       },
     })
       .then((res) => {
+        trackActionEdited('Tasks', task.fields)
         handleResponses(res)
       })
       .catch((err) => {

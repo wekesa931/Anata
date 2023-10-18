@@ -45,11 +45,18 @@ export const useModuleAnalytics = () => {
         intervention
       ),
 
+    trackActionEdited: (item: string, data: any) => {
+      rightSectionAnalytics.track(`${item} edited`, data)
+    },
+
     // udm
     trackDocumentSearched: (filters: any) =>
       middlesSectionAnalytics.track('Document searched', filters),
-    trackDocumentShared: (doc: any) =>
-      middlesSectionAnalytics.track('Document shared', doc),
+    trackDocumentShared: (doc: any, success = true) =>
+      middlesSectionAnalytics.track(
+        `Document ${success ? 'shared' : 'sharing failed'}`,
+        doc
+      ),
     trackDocumentUploaded: (success: boolean, doc: any) => {
       if (success) {
         middlesSectionAnalytics.track('Document uploaded', doc)
@@ -57,10 +64,41 @@ export const useModuleAnalytics = () => {
         middlesSectionAnalytics.track('Document upload failed', doc)
       }
     },
+    trackNewDocOpened: () => {
+      middlesSectionAnalytics.track('New document opened')
+    },
+    trackNewDocSelected: (docType: string) => {
+      middlesSectionAnalytics.track('New document selected', { docType })
+    },
+    trackNewDocumentPreviewed: (document: any) => {
+      middlesSectionAnalytics.track('New document previewed', { document })
+    },
+    trackNewDocmentPreviewCancelled: (document: any) => {
+      middlesSectionAnalytics.track('New document preview cancelled', {
+        document,
+      })
+    },
+    trackNewDocumentGenerated: (document: any, success = true) => {
+      middlesSectionAnalytics.track(
+        `New document ${success ? 'generated' : 'generation failed'}`,
+        { document }
+      )
+    },
+    trackNewDocumentPreviewEdited: (document: any) => {
+      middlesSectionAnalytics.track('New document preview edited', { document })
+    },
+    trackNewDocumentShared: (document: any, shared = true) => {
+      middlesSectionAnalytics.track(
+        `New document ${shared ? 'shared' : 'not shared'}`,
+        { document }
+      )
+    },
 
     // comms
-    trackOutboundCall: (call: any) =>
-      rightSectionAnalytics.track('Outbound call to member', call),
+    trackOutboundCall: (call: any) => {
+      rightSectionAnalytics.track('Outbound call to member', call)
+      rightSectionAnalytics.track('Call initiated', call)
+    },
     trackCallTransferred: (success: boolean, details: any) => {
       if (success) {
         middlesSectionAnalytics.track('Call transferred successfully', details)
@@ -83,6 +121,100 @@ export const useModuleAnalytics = () => {
       } else {
         rightSectionAnalytics.track('SMS send failed', sms)
       }
+    },
+    trackValidateMemberClicked: (member: any) => {
+      rightSectionAnalytics.track('Call Validate member clicked', member)
+    },
+    trackValidatedMember: (member: any) => {
+      rightSectionAnalytics.track('Call Member validated', member)
+    },
+    trackOpenFormClicked: (formName: any) => {
+      rightSectionAnalytics.track('Call Open form clicked', formName)
+    },
+    trackHoldParticipant: (participant: any, held = true) => {
+      rightSectionAnalytics.track(
+        `Call Participant ${held ? 'hold' : 'unhold'} clicked`,
+        participant
+      )
+    },
+    trackNewContactAdded: (contact: any) => {
+      rightSectionAnalytics.track('Call New contact added', contact)
+    },
+    trackCallEnded: (call: any) => {
+      rightSectionAnalytics.track('Call ended', call)
+    },
+    trackTransferRequested: (call: any) => {
+      rightSectionAnalytics.track('Call transfer requested', call)
+    },
+    trackTransferValidated: (call: any) => {
+      rightSectionAnalytics.track('Call transfer validated', call)
+    },
+    trackCalInitiated: (call: any) => {
+      rightSectionAnalytics.track('Call initiated', call)
+    },
+
+    // labs and vitals
+    trackLabsAndVitalsTypeSelected: (type: string) => {
+      middlesSectionAnalytics.track('Labs & Vitals Type selected', { type })
+    },
+    trackLabsAndVitalsRangeSelected: (
+      timeRange: any,
+      type: string,
+      rangeName: string
+    ) => {
+      middlesSectionAnalytics.track('Labs & Vitals Range selected', {
+        timeRange,
+        type,
+        rangeName,
+      })
+    },
+    trackLabsAndVitalsPreviousPeriodClicked: (type: string, period: string) => {
+      middlesSectionAnalytics.track('Labs & Vitals Previous period clicked', {
+        type,
+        period,
+      })
+    },
+    trackLabsAndVitalsPreviousNextClicked: (type: string, period: string) => {
+      middlesSectionAnalytics.track('Labs & Vitals Next period clicked', {
+        type,
+        period,
+      })
+    },
+    trackLabsAndVitalsDataHovered: (type: string, data: any) => {
+      middlesSectionAnalytics.track('Labs & Vitals Data hovered', {
+        type,
+        data,
+      })
+    },
+
+    // table events
+    trackRowDetailsAccessed: (tableName: string, row: any) => {
+      middlesSectionAnalytics.track(
+        `${tableName} table - Row details accessed`,
+        row
+      )
+    },
+
+    trackPageSelected: (tableName: string, pageNumber: number) => {
+      middlesSectionAnalytics.track(
+        `${tableName} table - Page ${pageNumber} selected`
+      )
+    },
+    trackRowsPerPageSelected: (tableName: string, rowsPerPage: number) => {
+      middlesSectionAnalytics.track(
+        `${tableName} table - Rows per page selected`,
+        { rowsPerPage }
+      )
+    },
+    trackFieldNameSorted: (
+      tableName: string,
+      fieldName: string,
+      order: string
+    ) => {
+      middlesSectionAnalytics.track(
+        `${tableName} table - ${fieldName} field sorted`,
+        { order }
+      )
     },
   }
 }

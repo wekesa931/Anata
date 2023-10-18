@@ -52,7 +52,7 @@ function SuccessPrompt({
   }, [])
   const { handleShareFile, sharingFile: sharing } = useUdmData()
   const { findFolderByName } = useDocumentsReadApi()
-  const { trackDocumentShared } = useModuleAnalytics()
+  const { trackNewDocumentShared } = useModuleAnalytics()
   const { notify } = useNotifications()
 
   const shareFile = () => {
@@ -62,11 +62,12 @@ function SuccessPrompt({
         .then((response) => {
           const message = response?.message
           notify(message)
-          trackDocumentShared(response?.sharedFile)
+          trackNewDocumentShared(response?.sharedFile)
         })
         .catch((err) => {
           logError(err)
           notify('An error occurred while sharing the file')
+          trackNewDocumentShared(fileId, false)
         })
         .finally(() => {
           handleClose && handleClose()

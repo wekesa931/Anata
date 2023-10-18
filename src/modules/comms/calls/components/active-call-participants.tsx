@@ -7,6 +7,7 @@ import {
 } from 'src/modules/comms/services/gql'
 import { IParticipantSession, useCall } from 'src/context/calls'
 import logError from 'src/utils/logging/logger'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 function ActiveCallParticipants() {
   const { conferenceParticipants, updateParticipantHoldState } = useCall()
@@ -25,6 +26,7 @@ function ActiveCallParticipants() {
     )
     updatedParticipants && updateParticipantHoldState(updatedParticipants)
   }
+  const { trackHoldParticipant } = useModuleAnalytics()
 
   const updateError = (err: string) => {
     addToast(err, {
@@ -46,6 +48,7 @@ function ActiveCallParticipants() {
           updateError(res?.data.holdParticipant.message)
         } else {
           makeUpdate(part, true)
+          trackHoldParticipant(part)
         }
       })
       .catch((e) => {
@@ -65,6 +68,7 @@ function ActiveCallParticipants() {
           updateError(res?.data.holdParticipant.message)
         } else {
           makeUpdate(part, false)
+          trackHoldParticipant(part, false)
         }
       })
       .catch((e) => {

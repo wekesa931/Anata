@@ -26,17 +26,22 @@ function BloodSugarView() {
     if (range[0] === null || range[1] === null) return
     setCurrentTimeFilter(filter)
     setXDomain([range[0].valueOf(), range[1].valueOf()])
-
     getBsClusters(range, currentTimeFilter).then((data) => {
       setBsData(data)
     })
   }
 
-  const CustomDot = withCustomBsDot({ filter: currentTimeFilter })
+  const CustomDot = withCustomBsDot({
+    filter: currentTimeFilter,
+    type: 'Blood sugar',
+  })
 
   return (
     <div>
-      <TimeRangeFilter onRangeChange={handleTimeRangeChange} />
+      <TimeRangeFilter
+        onRangeChange={handleTimeRangeChange}
+        type="Blood sugar"
+      />
       {isLoading ? (
         <div className="h-[300px]">
           <Loading message="Loading BS Data ..." />
