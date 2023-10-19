@@ -20,6 +20,7 @@ function AirtableBasedForm({
   saveInput,
   formData,
   isWorkflowComplete = false,
+  saveDraft,
 }: FormProps) {
   const formSchema = (FORM_DEFINITIONS as any).find(
     (f: any) => f?.name === form.name
@@ -94,8 +95,11 @@ function AirtableBasedForm({
     return rest
   }
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const formattedPayload = preProcessInput(form?.data)
+    if (saveDraft) {
+      await saveDraft()
+    }
 
     submitForm(form, formSchema, formattedPayload)
       .then(() => {

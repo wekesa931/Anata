@@ -33,6 +33,7 @@ function BPReadingForm({
   saveInput,
   form,
   isWorkflowComplete = false,
+  saveDraft,
 }: FormProps) {
   const { handleCreateBloodPressureReading, loading } = useVitalsUpdate()
   const [initialValues, setInitialValues] = React.useState<any>({
@@ -49,7 +50,10 @@ function BPReadingForm({
     }
   }, [form])
 
-  const onSubmit = (values: any) => {
+  const onSubmit = async (values: any) => {
+    if (saveDraft) {
+      await saveDraft()
+    }
     handleCreateBloodPressureReading(values)
       .then(async () => {
         await form.markAsCompleted()

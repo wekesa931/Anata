@@ -36,6 +36,7 @@ function CHLForm({
   handleSubmissionError,
   handleSubmissionSuccess,
   isWorkflowComplete = false,
+  saveDraft,
 }: FormProps) {
   const { loading, handleCreateCholesterolReading } = useVitalsUpdate()
   const [initialValues, setInitialValues] = React.useState<any>({
@@ -47,7 +48,10 @@ function CHLForm({
     triglyceride: '',
   })
 
-  const onSubmit = (values: any) => {
+  const onSubmit = async (values: any) => {
+    if (saveDraft) {
+      await saveDraft()
+    }
     handleCreateCholesterolReading(values)
       .then(async () => {
         await form.markAsCompleted()

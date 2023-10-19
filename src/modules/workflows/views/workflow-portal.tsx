@@ -282,7 +282,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     }
 
   const handleSaveDraftWorkflow = async (ignoreNotification?: boolean) => {
-    saveDraftWorkflow(workflow, activeForms)
+    return saveDraftWorkflow(workflow, activeForms)
       .then(() => {
         if (!ignoreNotification) {
           notify('Draft saved successfully')
@@ -395,13 +395,11 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                             onClick={addForm.bind(null, activeFormName)}
                           />
                         )}
-                        {formIsDraft() &&
-                          activeForms.length === 1 &&
-                          workflowForms.length > 1 && (
-                            <ConfirmButton
-                              onConfirm={() => deleteForm(activeForms[0])}
-                            />
-                          )}
+                        {formIsDraft() && activeForms.length === 1 && (
+                          <ConfirmButton
+                            onConfirm={() => deleteForm(activeForms[0])}
+                          />
+                        )}
                       </div>
                     </div>
                   )}
@@ -476,6 +474,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                                       )}
                                       formData={formsData[index] || {}}
                                       isWorkflowComplete={workflow?.isCompleted}
+                                      saveDraft={handleSaveDraftWorkflow}
                                     />
                                   </AccordionDetails>
                                 </Accordion>
@@ -493,6 +492,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                           )}
                           formData={formsData[0] || {}}
                           isWorkflowComplete={workflow?.isCompleted}
+                          saveDraft={handleSaveDraftWorkflow}
                         />
                       )}
                     </>

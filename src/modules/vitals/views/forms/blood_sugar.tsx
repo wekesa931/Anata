@@ -40,6 +40,7 @@ function DMMonitoring({
   handleSubmissionSuccess,
   saveInput,
   isWorkflowComplete,
+  saveDraft,
 }: FormProps) {
   const { handleCreateDMReading, loading } = useVitalsUpdate()
   const [initialValues, setInitialValues] = React.useState<any>({
@@ -56,7 +57,11 @@ function DMMonitoring({
     }
   }, [form])
 
-  const onSubmit = (values: any) => {
+  const onSubmit = async (values: any) => {
+    if (saveDraft) {
+      await saveDraft()
+    }
+
     handleCreateDMReading(values)
       .then(async () => {
         await form.markAsCompleted()
