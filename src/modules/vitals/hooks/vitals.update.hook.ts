@@ -15,6 +15,10 @@ import { logError } from 'src/utils/logging/logger'
 import { removeEmptyValues } from 'src/utils/data-transform'
 import { transformFormData } from 'src/modules/vitals/utils'
 
+const isObjectEmpty = (values: any) => {
+  return Object.keys(values).length === 0
+}
+
 export const useVitalsUpdate = () => {
   const { member } = useMember()
   const { createVitalReadings, loading: creatingVitals } =
@@ -35,6 +39,10 @@ export const useVitalsUpdate = () => {
             ...rest,
           })
         )
+
+        if(isObjectEmpty(variables)) {
+          throw new Error('No values to save')
+        }
 
         return await createVitalReadings({
           ...variables,
@@ -62,6 +70,10 @@ export const useVitalsUpdate = () => {
           })
         )
 
+        if(isObjectEmpty(variables)) {
+          throw new Error('No values to save')
+        }
+
         return createBloodPressureReadings({
           ...variables,
           antaraId: member.antaraId,
@@ -88,6 +100,10 @@ export const useVitalsUpdate = () => {
           })
         )
 
+        if(isObjectEmpty(variables)) {
+          throw new Error('No values to save')
+        }
+
         return createCholesterolReadings({
           ...variables,
 
@@ -112,6 +128,10 @@ export const useVitalsUpdate = () => {
             ...rest,
           })
         )
+
+        if(isObjectEmpty(variables)) {
+          throw new Error('No values to save')
+        }
 
         const dm = await createDMReadings({
           ...variables,

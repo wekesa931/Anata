@@ -153,7 +153,7 @@ function CHLForm({
               disabled={loading || disabled}
               type="submit"
             >
-              Save
+              Submit form
             </PrimaryButton>
           </div>
         </Form>

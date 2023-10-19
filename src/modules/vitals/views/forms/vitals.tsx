@@ -277,7 +277,7 @@ function VitalsCollection({
               disabled={loading || disabled}
               type="submit"
             >
-              Submit
+              Submit form
             </PrimaryButton>
           </div>
         </Form>
