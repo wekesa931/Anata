@@ -2186,7 +2186,7 @@ export default [
       },
       {
         id: 'fldKslyV6i2w0Yabp',
-        name: 'Alcohol',
+        name: 'How many drinks do you have per week?',
         type: 'text',
         format: '',
         isDateTime: false,
@@ -2223,8 +2223,8 @@ export default [
         },
       },
       {
-        id: 'fldUDLKuoyJzNELNM',
-        name: 'Tobacco',
+        id: 'fldUPhTBX3sYuemaO',
+        name: 'How many cigarettes do you smoke per day?',
         type: 'number',
         format: 'integer',
         isDateTime: false,
@@ -5431,6 +5431,31 @@ export default [
             )
           }
           return ['True'].includes(values['Asked to make payment'])
+        },
+      },
+      {
+        id: 'fldvFmt5HjyoCRJVy',
+        name: 'Feedback',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please put any additional feedback the BN has on Avenue here',
+        conditionType: '',
+        parentKey: 'Attended appointment?',
+        parentValues: ['Completed'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Attended appointment?'])) {
+            return ['Completed'].some((r) =>
+              values['Attended appointment?'].includes(r)
+            )
+          }
+          return ['Completed'].includes(values['Attended appointment?'])
         },
       },
       {

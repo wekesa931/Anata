@@ -40,7 +40,7 @@ export const useVitalsUpdate = () => {
           })
         )
 
-        if(isObjectEmpty(variables)) {
+        if (isObjectEmpty(variables)) {
           throw new Error('No values to save')
         }
 
@@ -70,7 +70,7 @@ export const useVitalsUpdate = () => {
           })
         )
 
-        if(isObjectEmpty(variables)) {
+        if (isObjectEmpty(variables)) {
           throw new Error('No values to save')
         }
 
@@ -100,7 +100,7 @@ export const useVitalsUpdate = () => {
           })
         )
 
-        if(isObjectEmpty(variables)) {
+        if (isObjectEmpty(variables)) {
           throw new Error('No values to save')
         }
 
@@ -129,7 +129,7 @@ export const useVitalsUpdate = () => {
           })
         )
 
-        if(isObjectEmpty(variables)) {
+        if (isObjectEmpty(variables)) {
           throw new Error('No values to save')
         }
 

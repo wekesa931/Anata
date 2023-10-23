@@ -13409,7 +13409,7 @@ export default [
       },
 
       {
-        id: 'fldBMQDwYQREqTCdA',
+        id: 'fldzX2CKNgyLoeoe1',
         name: 'Feedback',
         type: 'richText',
         format: '',
