@@ -75,7 +75,6 @@ function Appointments() {
         'Completed',
         'Missed',
         'Cancelled',
-        'Proposed',
         'Suggested',
         'Schedule needed',
       ].map((type) => ({ label: type, value: type })),
@@ -304,7 +303,7 @@ function Appointments() {
 
   const getNextAppointments = (nextAppointments: any[]): any[] => {
     return nextAppointments.filter((appointment: any) => {
-      return ['Scheduled', 'Proposed', 'Suggested', 'Schedule needed'].includes(
+      return ['Scheduled', 'Suggested', 'Schedule needed'].includes(
         appointment.data.find(({ name }: any) => name === 'Status')?.value
       )
     })
