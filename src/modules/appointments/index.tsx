@@ -71,7 +71,6 @@ function Appointments() {
       name: 'Status',
       type: 'single-select',
       options: [
-        'Needed',
         'Scheduled',
         'Completed',
         'Missed',
@@ -307,7 +306,6 @@ function Appointments() {
     return nextAppointments.filter((appointment: any) => {
       return [
         'Scheduled',
-        'Needed',
         'Proposed',
         'Suggested',
         'Schedule needed',
