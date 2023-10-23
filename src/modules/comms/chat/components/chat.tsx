@@ -305,61 +305,62 @@ function MessageChat() {
     }
     return parse(msg.message)
   }
-
-  const messagesContainer = (message: Message, index: number) => (
-    <MessagesContainer key={index}>
-      {isInbound(message.direction) ? (
-        <MessagesWrapper>
-          <SenderDiv key={index}>
-            {renderMessage(message, index)}
-            <GreyText>
-              <SenderName>{message.channel}</SenderName>
-              <div className="chat-delivery">{message.updatedAt}</div>
-            </GreyText>
-          </SenderDiv>
-        </MessagesWrapper>
-      ) : (
-        <MessagesWrapper>
-          <RecipientDiv>
-            {renderMessage(message, index)}
-            <OrangeText>
-              <SenderName>
-                <span>{message.staffName}</span>
-                <span>{message.channel}</span>
-              </SenderName>
-              <DeliveryWrapper>
+  const messagesContainer = (message: Message, index: number) => {
+    return (
+      <MessagesContainer key={index}>
+        {isInbound(message.direction) ? (
+          <MessagesWrapper>
+            <SenderDiv key={index}>
+              {renderMessage(message, index)}
+              <GreyText>
+                <SenderName>{message.channel}</SenderName>
                 <div className="chat-delivery">{message.updatedAt}</div>
-                {isSent(message.status) && (
-                  <span>
-                    <SentMessage>
-                      <Check color="#ffcb80" width="16px" height="16px" />
-                    </SentMessage>
-                  </span>
-                )}
-                {isDelivered(message.status) && (
-                  <div className="relative">
-                    <SentMessage>
-                      <Check color="#ffcb80" width="16px" height="16px" />
-                    </SentMessage>
-                    <DeliveredText>
-                      <Check color="#ffcb80" width="16px" height="16px" />
-                    </DeliveredText>
-                  </div>
-                )}
-                {isFailed(message.status) && (
-                  <span>
-                    <SentMessage>
-                      <AlertTriangle color="red" width="16px" height="16px" />
-                    </SentMessage>
-                  </span>
-                )}
-              </DeliveryWrapper>
-            </OrangeText>
-          </RecipientDiv>
-        </MessagesWrapper>
-      )}
-    </MessagesContainer>
-  )
+              </GreyText>
+            </SenderDiv>
+          </MessagesWrapper>
+        ) : (
+          <MessagesWrapper>
+            <RecipientDiv>
+              {renderMessage(message, index)}
+              <OrangeText>
+                <SenderName>
+                  <span>{message.staffName}</span>
+                  <span>{message.channel}</span>
+                </SenderName>
+                <DeliveryWrapper>
+                  <div className="chat-delivery">{message?.updatedAt}</div>
+                  {isSent(message.status) && (
+                    <span>
+                      <SentMessage>
+                        <Check color="#ffcb80" width="16px" height="16px" />
+                      </SentMessage>
+                    </span>
+                  )}
+                  {isDelivered(message.status) && (
+                    <div className="relative">
+                      <SentMessage>
+                        <Check color="#ffcb80" width="16px" height="16px" />
+                      </SentMessage>
+                      <DeliveredText>
+                        <Check color="#ffcb80" width="16px" height="16px" />
+                      </DeliveredText>
+                    </div>
+                  )}
+                  {isFailed(message.status) && (
+                    <span>
+                      <SentMessage>
+                        <AlertTriangle color="red" width="16px" height="16px" />
+                      </SentMessage>
+                    </span>
+                  )}
+                </DeliveryWrapper>
+              </OrangeText>
+            </RecipientDiv>
+          </MessagesWrapper>
+        )}
+      </MessagesContainer>
+    )
+  }
 
   const renderMessages = () => {
     if (memberMessages) {

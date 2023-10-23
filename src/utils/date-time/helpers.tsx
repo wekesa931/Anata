@@ -33,7 +33,7 @@ const dateInPastMonth = (date: string | Date) => {
 }
 
 const formattedDate = (date: string | Date) => {
-  return dayjs(date).format('DD-MMM-YY')
+  return dayjs(date).format('DD/MM/YY HH:mm')
 }
 
 const todayFormattedDate = (date: string | Date) => {
