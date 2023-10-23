@@ -75,7 +75,7 @@ function PafuView({ data }: any) {
 
 const COLUMNS: Column[] = [
   {
-    id: 'created_at',
+    id: 'start_date_time',
     label: 'Appt Date',
     sortable: true,
     type: 'date',
@@ -164,9 +164,9 @@ function Appointments() {
           data={filteredAppointments}
           title="Appointments"
           filterByDate
-          dateColumnKey="created_at"
-          defaultFilterColumn="created_at"
-          defaultSortColumn="created_at"
+          dateColumnKey="start_date_time"
+          defaultFilterColumn="start_date_time"
+          defaultSortColumn="start_date_time"
         />
       )}
       {loading && <LoadingComponent message="Loading Appointments " />}
