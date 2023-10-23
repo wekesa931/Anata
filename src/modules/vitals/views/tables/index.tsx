@@ -12,6 +12,9 @@ type TableProps = {
   title: string
 }
 
+const toFixed = (value: number) =>
+  !isNaN(Number(value)) ? value?.toFixed(2) : value?.toString()
+
 const BMI_COLUMNS: Column[] = [
   { id: 'timestamp', label: 'Date', sortable: true, type: 'date' },
   { id: 'height', label: 'Height', units: 'm', sortable: true },
@@ -21,27 +24,40 @@ const BMI_COLUMNS: Column[] = [
     label: 'BMI',
     units: 'kg/m2',
     sortable: true,
-    format: (value: number) =>
-      !isNaN(Number(value)) ? value?.toFixed(2) : value.toString(),
+    format: toFixed,
   },
 ]
 
 const BODY_COMPOSITION_COLUMNS: Column[] = [
-  { id: 'timestamp', label: 'Date', sortable: true, type: 'date' },
-  { id: 'muscleMass', label: 'Muscle Mass', units: 'kg', sortable: true },
-  { id: 'bodyFat', label: 'Body Fat', sortable: true },
-  { id: 'visceralFat', label: 'Visceral Fat', sortable: true },
+  {
+    id: 'timestamp',
+    label: 'Date',
+    sortable: true,
+    type: 'date',
+    width: '30%',
+  },
+  {
+    id: 'muscleMass',
+    label: 'Muscle Mass',
+    units: 'kg',
+    sortable: true,
+    width: '10%',
+  },
+  { id: 'bodyFat', label: 'Body Fat', sortable: true, width: '15%' },
+  { id: 'visceralFat', label: 'Visceral Fat', sortable: true, width: '15%' },
   {
     id: 'waistCircumference',
     label: 'Waist Circumference',
     units: 'cm',
     sortable: true,
+    width: '15%',
   },
   {
     id: 'hipCircumference',
     label: 'Hip Circumference',
     units: 'cm',
     sortable: true,
+    width: '15%',
   },
 ]
 
@@ -70,6 +86,56 @@ function DataTable({ data, loading, columns, title }: TableProps) {
             defaultFilterColumn="timestamp"
             dateColumnKey="timestamp"
             filterByDate
+          />
+        </div>
+      )}
+    </div>
+  )
+}
+
+const BS_COLUMNS: Column[] = [
+  {
+    id: 'timestamp',
+    label: 'Date',
+    sortable: true,
+    type: 'date',
+    format: (value: string) => dayjs(value).format('DD MMM YYYY'),
+  },
+  {
+    id: 'fasting_blood_glucose',
+    label: 'FBS',
+    units: 'mmol/L',
+    sortable: true,
+  },
+  {
+    id: 'random_blood_glucose',
+    label: 'RBS',
+    units: 'mmol/L',
+    sortable: true,
+    format: toFixed,
+  },
+  { id: 'hba1c', label: 'HBA1C', units: '%', sortable: true },
+]
+
+export function BloodGlucoseTable() {
+  const { bloodSugar, bloodSugarError, bloodSugarLoading, refetchBsData } =
+    useTablesData()
+
+  return (
+    <div>
+      {bloodSugarError ? (
+        <div>
+          <p className="text-lg text-left mb-1">Glucose Monitoring</p>
+          <ErrorComponent retry={refetchBsData} />
+        </div>
+      ) : (
+        <div className="my-2">
+          <p className="text-lg text-left mb-1">Glucose Monitoring</p>
+          <DataTable
+            data={bloodSugar}
+            columns={BS_COLUMNS}
+            loading={bloodSugarLoading}
+            title="Glucose Monitoring"
           />
         </div>
       )}
@@ -170,6 +236,7 @@ function LabsAndVitalsTable() {
   return (
     <div className="font-rubik">
       <BloodPressureTable />
+      <BloodGlucoseTable />
       <VitalsTable />
     </div>
   )

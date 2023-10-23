@@ -10,6 +10,7 @@ import DataTable, { Column } from 'src/components/table/data-table'
 const COLUMNS: Column[] = [
   { id: 'Date of appointment', label: 'Date', sortable: true, type: 'date' },
   { id: 'Primary Diagnosis', label: 'Primary Diagnosis' },
+  { id: 'Plan', label: 'Plan' },
 ]
 
 function Consultation() {

@@ -35,6 +35,10 @@ export const useTablesData = () => {
     bpLoading,
     bpError,
     refetchBPReadings,
+    getBsReadings,
+    refetchBsReadings,
+    bsLoading,
+    bsError,
   } = useGetVitalsReadingApi()
   const { member } = useMember()
 
@@ -42,6 +46,42 @@ export const useTablesData = () => {
   const [bloodPressure, setBloodPressure] = useState<any>([])
   const [vitalError, setVitalsError] = useState<any>(null)
   const [bloodPressureError, setBloodPressureError] = useState<any>(null)
+  const [bloodSugar, setBloodSugar] = useState<any>([])
+  const [bloodSugarError, setBloodSugarError] = useState<any>(null)
+
+  const processBsData = (bsData: any) => {
+    return bsData?.map((bs: any) => {
+      const { timestamp, ...rest } = bs
+      return {
+        timestamp,
+        ...Object.keys(rest).reduce((acc: any, key) => {
+          return {
+            ...acc,
+            [key]: {
+              ...rest[key],
+              textColor: rest[key]?.reference_range?.text_color,
+            },
+          }
+        }, {}),
+      }
+    })
+  }
+
+  const getBsData = async () => {
+    if (!member?.antaraId) return
+    setBloodSugarError(null)
+    const tableData = await getBsReadings(member.antaraId)
+
+    return processBsData(tableData)
+  }
+
+  const refetchBsData = async () => {
+    if (!member?.antaraId) return
+    setBloodSugarError(null)
+    const tableData = await refetchBsReadings(member.antaraId)
+
+    return processBsData(tableData)
+  }
 
   const processVitalsData = (vitals: any) => {
     const time = dayjs(vitals?.timestamp).format('DD MMM YYYY')
@@ -180,9 +220,10 @@ export const useTablesData = () => {
   }, [member?.antaraId])
 
   const getTableData = async () => {
-    const [vitals, bloodPressure] = await Promise.allSettled([
+    const [vitals, bloodPressure, bloodSugar] = await Promise.allSettled([
       getVitalsData(),
       getBpData(),
+      getBsData(),
     ])
 
     if (vitals.status === 'fulfilled') {
@@ -195,6 +236,12 @@ export const useTablesData = () => {
       setBloodPressure(bloodPressure.value)
     } else {
       setBloodPressureError(bloodPressure.reason)
+    }
+
+    if (bloodSugar.status === 'fulfilled') {
+      setBloodSugar(bloodSugar.value)
+    } else {
+      setBloodSugarError(bloodSugar.reason)
     }
   }
 
@@ -215,5 +262,9 @@ export const useTablesData = () => {
     bloodPressure,
     bpLoading,
     refetchBpData,
+    refetchBsData,
+    bloodSugar,
+    bloodSugarLoading: bsLoading,
+    bloodSugarError: bsError || bloodSugarError,
   }
 }

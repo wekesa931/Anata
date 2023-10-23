@@ -301,7 +301,7 @@ export const makeFilterDataByDate =
   (filterByDate: boolean, dateRange: DateRangeValue) =>
   (arr: any[], dateColumnKey: string) => {
     if (filterByDate && dateRange) {
-      return arr.filter((item: any) => {
+      return arr?.filter((item: any) => {
         return dayjs(item[dateColumnKey]).isBetween(
           dateRange.startDate,
           dateRange.endDate,
@@ -318,7 +318,7 @@ export const makeFilterListDataByDate =
   (filterByDate: boolean, dateRange: DateRangeValue) =>
   (arr: any[], dateColumnKey: string) => {
     if (filterByDate && dateRange) {
-      return arr.filter((item: any) => {
+      return arr?.filter((item: any) => {
         return dayjs(item?.data[dateColumnKey]).isBetween(
           dateRange.startDate,
           dateRange.endDate,

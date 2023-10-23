@@ -94,6 +94,27 @@ export const GET_BP_PANEL = gql`
   }
 `
 
+export const GET_BS_PANEL = gql`
+  query ($antaraId: String!) {
+    bs: bloodGlucoseMonitoring(antaraId: $antaraId) {
+      edges {
+        node {
+          data
+          timestamp
+        }
+      }
+    }
+    hba1c: hba1cMonitoring(antaraId: $antaraId) {
+      edges {
+        node {
+          data
+          timestamp
+        }
+      }
+    }
+  }
+`
+
 export const GET_ALL_VITALS = gql`
   query ($antaraId: String!) {
     vitals(antaraId: $antaraId) {

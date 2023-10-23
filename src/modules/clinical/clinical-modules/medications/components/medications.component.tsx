@@ -5,18 +5,24 @@ import DataTable, { Column } from 'src/components/table/data-table'
 import useMedicationData from '../data'
 
 const COLUMNS: Column[] = [
-  { id: 'Start Date', label: 'Start Date', sortable: true, type: 'date' },
+  {
+    id: 'Start Date',
+    label: 'Start Date',
+    sortable: true,
+    type: 'date',
+    width: '15%',
+  },
   {
     id: 'Medication Name (from Medication Base)',
     label: 'Medication Name',
+    width: '30%',
   },
-  { id: 'Status', label: 'Status' },
-  { id: 'Refillable', label: 'Refillable' },
+  { id: 'Status', label: 'Status', width: '20%' },
+  { id: 'Refillable', label: 'Refillable', width: '10%' },
   {
     id: 'Refill Date calculated',
     label: 'Refill Date',
-    sortable: true,
-    type: 'date',
+    width: '15%',
   },
 ]
 

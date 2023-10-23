@@ -80,17 +80,19 @@ const COLUMNS: Column[] = [
     sortable: true,
     type: 'date',
     format: (v: any) => dayjs(v).format('DD/MM/YYYY'),
+    width: '20%',
   },
-  { id: 'Type', label: 'Type' },
-  { id: 'Status', label: 'Status' },
+  { id: 'Service', label: 'Service', width: '20%' },
+  { id: 'Status', label: 'Status', width: '10%' },
   // eslint-disable-next-line react/no-unstable-nested-components
   {
     id: 'PAFU',
     label: 'PAFU',
     valueComponent: ({ value }: any) => <PafuView data={value} />,
+    width: '10%',
   },
-  { id: 'Missed #', label: 'Missed #' },
-  { id: 'Rescheduled #', label: 'Rescheduled #' },
+  { id: 'Missed #', label: 'Missed', units: '#', width: '15%' },
+  { id: 'Rescheduled #', label: 'Rescheduled', units: '#', width: '15%' },
 ]
 
 function Appointments() {
@@ -162,9 +164,9 @@ function Appointments() {
           data={filteredAppointments}
           title="Appointments"
           filterByDate
-          dateColumnKey="start_date_time"
-          defaultFilterColumn="start_date_time"
-          defaultSortColumn="start_date_time"
+          dateColumnKey="created_at"
+          defaultFilterColumn="created_at"
+          defaultSortColumn="created_at"
         />
       )}
       {loading && <LoadingComponent message="Loading Appointments " />}

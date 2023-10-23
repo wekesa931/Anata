@@ -1,4 +1,5 @@
 import { useMutation, useLazyQuery } from '@apollo/client'
+import { groupBy } from 'lodash'
 import {
   CREATE_VITALS_READING,
   CREATE_BLOOD_PRESSURE_READING,
@@ -9,6 +10,7 @@ import {
   CREATE_HBA1C_READING,
   GET_VITALS,
   GET_BP_PANEL,
+  GET_BS_PANEL,
 } from 'src/modules/vitals/services/gql'
 import {
   VitalsReading,
@@ -31,12 +33,73 @@ export const useGetVitalsReadingApi = () => {
   ] = useLazyQuery(GET_VITALS, {
     context,
   })
-  const [getBPData, { loading: bpLoading, error: bpError }] = useLazyQuery(
-    GET_BP_PANEL,
+  const [
+    getBPData,
+    { loading: bpLoading, error: bpError, refetch: refetchBs },
+  ] = useLazyQuery(GET_BP_PANEL, {
+    context,
+  })
+
+  const [getBsData, { loading: bsLoading, error: bsError }] = useLazyQuery(
+    GET_BS_PANEL,
     {
       context,
     }
   )
+
+  const parseBsReadings = (input: any = {}) => {
+    const bsEdges = input?.bs?.edges?.map((item: any) => item.node)
+    const hbEdges = input?.hba1c?.edges?.map((item: any) => item.node)
+
+    const allEdges = [...bsEdges, ...hbEdges]
+    // group by timestamp day wise
+    const grouped = groupBy(allEdges, 'timestamp')
+    const returnData: any = []
+    Object.keys(grouped).forEach((timestamp) => {
+      const group = grouped[timestamp]
+      // group is an array of objects with {data, timestamp}
+      // I want to merge all data into one object
+      const merged = group.reduce((acc, curr) => {
+        return {
+          ...acc,
+          ...curr.data,
+        }
+      }, {})
+
+      const mergedData = {
+        ...merged,
+        timestamp,
+      }
+
+      returnData.push(mergedData)
+    })
+
+    return returnData
+  }
+
+  const getBsReadings = async (antaraId: string) => {
+    if (!antaraId) throw new Error('Antara ID is required')
+
+    const { data } = await getBsData({
+      variables: {
+        antaraId,
+      },
+    })
+
+    return parseBsReadings(data)
+  }
+
+  const refetchBsReadings = async (antaraId: string) => {
+    if (!antaraId) throw new Error('Antara ID is required')
+
+    const { data } = await refetchBs({
+      variables: {
+        antaraId,
+      },
+    })
+
+    return parseBsReadings(data)
+  }
 
   const getBPReadings = async (antaraId: string) => {
     if (!antaraId) throw new Error('Antara ID is required')
@@ -136,6 +199,10 @@ export const useGetVitalsReadingApi = () => {
     bpLoading,
     bpError,
     refetchBPReadings,
+    getBsReadings,
+    bsLoading,
+    bsError,
+    refetchBsReadings,
   }
 }
 export const useCreateVitalsReadingApi = () => {

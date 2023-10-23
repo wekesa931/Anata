@@ -16,7 +16,6 @@ import { visuallyHidden } from '@mui/utils'
 import React, { useMemo, useState } from 'react'
 import { Order, getComparator, stableSort } from 'src/utils/sort/stable'
 import EmptyDataIcon from 'src/assets/img/icons/empty-data.svg'
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import _ from 'lodash'
 import {
@@ -24,6 +23,7 @@ import {
   makeFilterDataByDate,
 } from 'src/context/date-range-filter'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import { ArrowRight } from '@mui/icons-material'
 
 export type Column = {
   label: string
@@ -33,6 +33,7 @@ export type Column = {
   format?: (value: any) => string
   type?: 'date' | 'number' | 'string'
   valueComponent?: React.ComponentType<{ value: any }>
+  width?: string
 }
 
 type SortableTableHeadProps = {
@@ -51,15 +52,21 @@ function SortableTableHead(props: SortableTableHeadProps) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell className="rounded-tl-lg bg-dark-blue-70" />
         {columns.map((column, index) => (
           <TableCell
             key={column.id}
-            align="center"
+            align="left"
             sortDirection={orderBy === column.id ? order : false}
-            className={`font-bold text-white p-0 py-2 bg-dark-blue-70 hover:text-white ${
-              index === columns.length - 1 ? 'rounded-tr-lg' : ''
+            className={`font-bold text-white p-0 text-left py-2 bg-dark-blue-70 hover:text-white align-top ${
+              index === columns.length - 1
+                ? 'rounded-tr-lg'
+                : index === 0
+                ? 'rounded-tl-lg pl-2'
+                : ''
             }`}
+            sx={{
+              width: column.width || `${100 / columns.length}%`,
+            }}
           >
             {column.sortable ? (
               <TableSortLabel
@@ -80,11 +87,9 @@ function SortableTableHead(props: SortableTableHeadProps) {
                       : 'sorted ascending'}
                   </Box>
                 ) : null}
-                <div>
+                <div className="text-xs">
                   {column.label}
-                  <p className="text-xs">
-                    {column.units && ` (${column.units})`}
-                  </p>
+                  {column.units && ` (${column.units})`}
                 </div>
               </TableSortLabel>
             ) : (
@@ -184,32 +189,30 @@ function DataTableDetailedRow({ columns, row, tableName }: DetailedRowProps) {
 
   return (
     <>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-        <TableCell className="p-2 bg-table-col-grey border-none">
-          {showDetails && (
-            <IconButton
-              aria-label="expand row"
-              size="small"
-              onClick={() => {
-                setOpen(!open)
-                if (!open) trackRowDetailsAccessed(tableName, row)
-              }}
-            >
-              {open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-            </IconButton>
-          )}
-        </TableCell>
-        {columns.map((column) => {
+      <TableRow
+        sx={{ '& > *': { borderBottom: 'unset' } }}
+        onClick={() => {
+          setOpen(!open)
+          if (!open) trackRowDetailsAccessed(tableName, row)
+        }}
+      >
+        {columns.map((column, index) => {
           const { value, textColor } = getValueAndColor(column.id)
           return (
             <TableCell
               key={column.id}
-              align="center"
-              className="p-2 bg-table-col-grey border-none"
+              align="left"
+              className="p-2 bg-table-col-grey border-none text-left"
               sx={{
                 color: textColor || 'var(--dark-blue-100)',
+                width: column?.width || `${100 / columns.length}%}`,
               }}
             >
+              {index === 0 && (
+                <IconButton aria-label="expand row" size="small">
+                  {open ? <ArrowDropUpIcon /> : <ArrowRight />}
+                </IconButton>
+              )}
               {column.valueComponent ? (
                 <column.valueComponent value={row} />
               ) : column.format ? (
@@ -287,7 +290,7 @@ function DataTable({
     return stableSort(
       rangeFilteredData,
       getComparator(order, orderBy, orderingColumn?.type)
-    ).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    )?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order, orderBy, data, page, rowsPerPage, currentRange])
@@ -355,7 +358,7 @@ function DataTable({
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={data.length}
+        count={data?.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
