@@ -84,10 +84,10 @@ export const useTablesData = () => {
   }
 
   const processVitalsData = (vitals: any) => {
-    const time = dayjs(vitals?.timestamp).format('DD MMM YYYY')
     if (vitals) {
       // we need to group all vitals into three categories: BMI, Body Composition and Other Vitals
       const bmiData = vitals.map((vital: any) => {
+        const time = dayjs(vital?.timestamp).format('DD MMM YYYY')
         const data = vital?.data
         const bmi = BMI_TABLE_KEYS.reduce((acc: any, key) => {
           return {
@@ -107,6 +107,7 @@ export const useTablesData = () => {
 
       const bodyCompositionData = vitals.map((vital: any) => {
         const data = vital?.data
+        const time = dayjs(vital?.timestamp).format('DD MMM YYYY')
         const bodyComposition = BODY_COMPOSITION_KEYS.reduce(
           (acc: any, key) => {
             return {
@@ -128,6 +129,7 @@ export const useTablesData = () => {
 
       const otherVitalsData = vitals.map((vital: any) => {
         const data = vital?.data
+        const time = dayjs(vital?.timestamp).format('DD MMM YYYY')
         const otherVitals = OTHER_VITALS_KEYS.reduce((acc: any, key) => {
           return {
             ...acc,
