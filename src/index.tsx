@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from 'src/App'
 import { datadogRum } from '@datadog/browser-rum'
 
-const { DATADOG_APPLICATION_ID, DATADOG_CLIENT_TOKEN, PROD } = process.env
+const { DATADOG_APPLICATION_ID, DATADOG_CLIENT_TOKEN } = process.env
 
 if (!DATADOG_APPLICATION_ID || !DATADOG_CLIENT_TOKEN) {
   throw new Error(
@@ -16,7 +16,7 @@ datadogRum.init({
   clientToken: DATADOG_CLIENT_TOKEN,
   site: 'us5.datadoghq.com',
   service: 'scribe',
-  env: PROD,
+  env: process.env.NODE_ENV,
   version: '1.0.0',
   sessionSampleRate: 100,
   premiumSampleRate: 100,
