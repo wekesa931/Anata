@@ -3,6 +3,7 @@ import {
   Collapse,
   Divider,
   IconButton,
+  Popper,
   Table,
   TableBody,
   TableCell,
@@ -34,6 +35,8 @@ export type Column = {
   type?: 'date' | 'number' | 'string'
   valueComponent?: React.ComponentType<{ value: any }>
   width?: string
+  helperText?: string | React.ReactNode
+  cellHeperText?: React.ComponentType<{ value: any }>
 }
 
 type SortableTableHeadProps = {
@@ -44,6 +47,20 @@ type SortableTableHeadProps = {
 }
 function SortableTableHead(props: SortableTableHeadProps) {
   const { columns, orderBy, order, onRequestSort } = props
+  const [helperTextCoumnId, setHelperTextCoumnId] = useState<string | null>(
+    null
+  )
+  const [anchorEl, setAnchorEl] = useState(null)
+
+  const handleMouseEnter = (event: any, columnId: string) => {
+    setHelperTextCoumnId(columnId)
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleMouseLeave = () => {
+    setHelperTextCoumnId(null)
+    setAnchorEl(null)
+  }
 
   const createSortHandler =
     (property: string) => (event: React.MouseEvent<unknown>) => {
@@ -67,6 +84,8 @@ function SortableTableHead(props: SortableTableHeadProps) {
             sx={{
               width: column.width || `${100 / columns.length}%`,
             }}
+            onMouseEnter={(e) => handleMouseEnter(e, column.id)}
+            onMouseLeave={handleMouseLeave}
           >
             {column.sortable ? (
               <TableSortLabel
@@ -103,6 +122,9 @@ function SortableTableHead(props: SortableTableHeadProps) {
           </TableCell>
         ))}
       </TableRow>
+      <Popper open={!!helperTextCoumnId} anchorEl={anchorEl} className="z-20">
+        {columns.find((column) => column.id === helperTextCoumnId)?.helperText}
+      </Popper>
     </TableHead>
   )
 }
@@ -186,6 +208,18 @@ function DataTableDetailedRow({ columns, row, tableName }: DetailedRowProps) {
   const [open, setOpen] = useState(false)
   const showDetails = Object.keys(row).length > columns.length
   const { trackRowDetailsAccessed } = useModuleAnalytics()
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [selectedColum, setSelectedColumn] = useState<any>(null)
+
+  const handleMouseEnter = (event: any, columnId: string) => {
+    setAnchorEl(event.currentTarget)
+    setSelectedColumn(columns.find((column) => column.id === columnId))
+  }
+
+  const handleMouseLeave = () => {
+    setAnchorEl(null)
+    setSelectedColumn(null)
+  }
 
   return (
     <>
@@ -202,29 +236,43 @@ function DataTableDetailedRow({ columns, row, tableName }: DetailedRowProps) {
                 width: column?.width || `${100 / columns.length}%}`,
               }}
             >
-              {index === 0 && (
-                <IconButton
-                  aria-label="expand row"
-                  size="small"
-                  onClick={() => {
-                    setOpen(!open)
-                    if (!open) trackRowDetailsAccessed(tableName, row)
-                  }}
-                >
-                  {open ? <ArrowDropUpIcon /> : <ArrowRight />}
-                </IconButton>
-              )}
-              {column.valueComponent ? (
-                <column.valueComponent value={row} />
-              ) : column.format ? (
-                column.format(value)
-              ) : (
-                value
-              )}
+              <div
+                onMouseEnter={(e: any) => handleMouseEnter(e, column.id)}
+                onMouseLeave={handleMouseLeave}
+              >
+                {index === 0 && (
+                  <IconButton
+                    aria-label="expand row"
+                    size="small"
+                    onClick={() => {
+                      setOpen(!open)
+                      if (!open) trackRowDetailsAccessed(tableName, row)
+                    }}
+                  >
+                    {open ? <ArrowDropUpIcon /> : <ArrowRight />}
+                  </IconButton>
+                )}
+                {column.valueComponent ? (
+                  <column.valueComponent value={row} />
+                ) : column.format ? (
+                  column.format(value)
+                ) : (
+                  value
+                )}
+              </div>
             </TableCell>
           )
         })}
       </TableRow>
+      <Popper
+        open={!!anchorEl || selectedColum}
+        anchorEl={anchorEl}
+        className="z-20"
+      >
+        {selectedColum?.cellHeperText && (
+          <selectedColum.cellHeperText value={row} />
+        )}
+      </Popper>
       {showDetails && (
         <TableRow>
           <TableCell colSpan={columns.length + 1} className="py-0">

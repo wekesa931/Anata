@@ -1,7 +1,7 @@
 import { useLazyQuery } from '@apollo/client'
 import {
   GET_REPORT_GEN_MEASUREMENTS,
-  GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES,
+  GET_REPORT_GEN_MEASUREMENTS_RANGES,
   GET_BP_DIFF,
   GET_BS_DIFF,
   GET_HBA1C_DIFF,
@@ -47,7 +47,7 @@ export const useReportGenerationApi = () => {
   const [
     getReportGenMeasurementsNormalRanges,
     { loading: gettingReportGenMeasurementsNormalRanges },
-  ] = useLazyQuery(GET_REPORT_GEN_MEASUREMENTS_NORMAL_RANGES, {
+  ] = useLazyQuery(GET_REPORT_GEN_MEASUREMENTS_RANGES(), {
     context,
   })
 

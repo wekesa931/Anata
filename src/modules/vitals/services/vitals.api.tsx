@@ -12,11 +12,13 @@ import {
   GET_BP_PANEL,
   GET_BS_PANEL,
 } from 'src/modules/vitals/services/gql'
+import { GET_REPORT_GEN_MEASUREMENTS_RANGES } from 'src/modules/vitals/services/report-generation.gql'
 import {
   VitalsReading,
   CholesterolFormInputs,
   BloodPressureFormInputs,
   DMMonitoringFormInputs,
+  ReportGenNormalRangeVariables,
 } from 'src/modules/vitals/types'
 
 export const useGetVitalsReadingApi = () => {
@@ -413,5 +415,40 @@ export const useCreateDMReadingApi = () => {
   return {
     createDMReadings,
     loading,
+  }
+}
+
+export const useGetLabsRanges = () => {
+  const context = {
+    clientName: 'v2',
+  }
+
+  const [getReportGenMeasurementsRanges, { loading }] = useLazyQuery(
+    GET_REPORT_GEN_MEASUREMENTS_RANGES(false),
+    {
+      context,
+    }
+  )
+
+  const getReportGenMeasurementsRangesData = async (
+    variables: ReportGenNormalRangeVariables
+  ) => {
+    const { data } = await getReportGenMeasurementsRanges({
+      variables,
+    })
+
+    return Object.keys(data).reduce((acc, key) => {
+      const { edges } = data[key]
+
+      return {
+        ...acc,
+        [key]: edges?.map((item: any) => item.node),
+      }
+    }, {})
+  }
+
+  return {
+    loading,
+    getReportGenMeasurementsRangesData,
   }
 }

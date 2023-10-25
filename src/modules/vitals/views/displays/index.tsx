@@ -4,7 +4,7 @@ import { ErrorBoundary } from '@sentry/react'
 import React from 'react'
 import BloodPressureView from 'src/modules/vitals/views/displays/blood-pressure'
 import BMIView from 'src/modules/vitals/views/displays/bmi'
-import LipidsView from 'src/modules/vitals/views/displays/lipids'
+import { LipidsTable } from 'src/modules/vitals/views/tables'
 import BsView from 'src/modules/vitals/views/displays/bs-hba1c-views'
 import { useModuleAnalytics } from 'src/modules/analytics'
 
@@ -53,7 +53,7 @@ function VitalsDisplay() {
 
         <TabPanel value="lipids" className="p-0">
           <ErrorBoundary>
-            <LipidsView />
+            <LipidsTable />
           </ErrorBoundary>
         </TabPanel>
 

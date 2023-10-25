@@ -1,8 +1,12 @@
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import { useMember } from 'src/context/member'
-import { useGetVitalsReadingApi } from 'src/modules/vitals/services/vitals.api'
+import {
+  useGetVitalsReadingApi,
+  useGetLabsRanges,
+} from 'src/modules/vitals/services/vitals.api'
 import { logError } from 'src/utils/logging/logger'
+import { ReportGenNormalRangeVariables } from '../types'
 
 const BMI_TABLE_KEYS = ['bmi', 'height', 'weight', 'bmi_percentile']
 const BODY_COMPOSITION_KEYS = [
@@ -48,6 +52,21 @@ export const useTablesData = () => {
   const [bloodPressureError, setBloodPressureError] = useState<any>(null)
   const [bloodSugar, setBloodSugar] = useState<any>([])
   const [bloodSugarError, setBloodSugarError] = useState<any>(null)
+  const { getReportGenMeasurementsRangesData, loading: loadingRanges } =
+    useGetLabsRanges()
+
+  const getRanges = async (currMember: any) => {
+    if (currMember) {
+      const sex = currMember?.sex || 'Unknown'
+      const ageInMonths = dayjs().diff(currMember?.birthDate, 'month')
+      const variables: ReportGenNormalRangeVariables = {
+        sex,
+        ageInMonths,
+      }
+      return getReportGenMeasurementsRangesData(variables)
+    }
+    throw new Error('Member is required to get ranges.')
+  }
 
   const processBsData = (bsData: any) => {
     return bsData?.map((bs: any) => {
@@ -222,28 +241,25 @@ export const useTablesData = () => {
   }, [member?.antaraId])
 
   const getTableData = async () => {
-    const [vitals, bloodPressure, bloodSugar] = await Promise.allSettled([
-      getVitalsData(),
-      getBpData(),
-      getBsData(),
-    ])
+    const [vitalsData, bloodPressureData, bloodSugarData] =
+      await Promise.allSettled([getVitalsData(), getBpData(), getBsData()])
 
-    if (vitals.status === 'fulfilled') {
-      setVitals(vitals.value)
+    if (vitalsData.status === 'fulfilled') {
+      setVitals(vitalsData.value)
     } else {
-      setVitalsError(vitals.reason)
+      setVitalsError(vitalsData.reason)
     }
 
-    if (bloodPressure.status === 'fulfilled') {
-      setBloodPressure(bloodPressure.value)
+    if (bloodPressureData.status === 'fulfilled') {
+      setBloodPressure(bloodPressureData.value)
     } else {
-      setBloodPressureError(bloodPressure.reason)
+      setBloodPressureError(bloodPressureData.reason)
     }
 
-    if (bloodSugar.status === 'fulfilled') {
-      setBloodSugar(bloodSugar.value)
+    if (bloodSugarData.status === 'fulfilled') {
+      setBloodSugar(bloodSugarData.value)
     } else {
-      setBloodSugarError(bloodSugar.reason)
+      setBloodSugarError(bloodSugarData.reason)
     }
   }
 
@@ -256,17 +272,19 @@ export const useTablesData = () => {
   }, [member?.antaraId])
 
   return {
-    loading: vitalsLoading,
+    loading: vitalsLoading || loadingRanges,
     vitalsError: vitalsError || vitalError,
     bpError: bpError || bloodPressureError,
     refetchVitalsData,
     vitals,
     bloodPressure,
-    bpLoading,
+    bpLoading: bpLoading || loadingRanges,
     refetchBpData,
     refetchBsData,
     bloodSugar,
-    bloodSugarLoading: bsLoading,
+    bloodSugarLoading: bsLoading || loadingRanges,
     bloodSugarError: bsError || bloodSugarError,
+    loadingRanges,
+    getRanges,
   }
 }
