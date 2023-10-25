@@ -6,21 +6,21 @@ import { logError } from 'src/utils/logging/logger'
 
 const BMI_TABLE_KEYS = ['bmi', 'height', 'weight', 'bmi_percentile']
 const BODY_COMPOSITION_KEYS = [
-  'muscleMass',
-  'bodyFat',
-  'visceralFat',
-  'waisthipRatio',
-  'hipCircumference',
-  'waistCircumference',
+  'muscle_mass',
+  'body_fat',
+  'visceral_fat',
+  'waisthip_ratio',
+  'hip_circumference',
+  'waist_circumference',
   'mid_upper_arm_circumference',
   'muscle_mass_weight_ratio',
   'waisthip_ratio',
 ]
 const OTHER_VITALS_KEYS = [
   'temperature',
-  'respiratoryRate',
-  'oxygenSaturation',
-  'sixLeadEcgFindings',
+  'respiratory_rate',
+  'oxygen_saturation',
+  'six_lead_ecg_findings',
   'bone_density',
   'water_content',
 ]

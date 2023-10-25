@@ -37,23 +37,23 @@ const BODY_COMPOSITION_COLUMNS: Column[] = [
     width: '30%',
   },
   {
-    id: 'muscleMass',
+    id: 'muscle_mass',
     label: 'Muscle Mass',
     units: 'kg',
     sortable: true,
     width: '10%',
   },
-  { id: 'bodyFat', label: 'Body Fat', sortable: true, width: '15%' },
-  { id: 'visceralFat', label: 'Visceral Fat', sortable: true, width: '15%' },
+  { id: 'body_fat', label: 'Body Fat', sortable: true, width: '15%' },
+  { id: 'visceral_fat', label: 'Visceral Fat', sortable: true, width: '15%' },
   {
-    id: 'waistCircumference',
+    id: 'waist_circumference',
     label: 'Waist Circumference',
     units: 'cm',
     sortable: true,
     width: '15%',
   },
   {
-    id: 'hipCircumference',
+    id: 'hip_circumference',
     label: 'Hip Circumference',
     units: 'cm',
     sortable: true,
@@ -64,9 +64,9 @@ const BODY_COMPOSITION_COLUMNS: Column[] = [
 const OTHER_VITALS: Column[] = [
   { id: 'timestamp', label: 'Date', sortable: true, type: 'date' },
   { id: 'temperature', label: 'Temperature', units: '°C', sortable: true },
-  { id: 'respiratoryRate', label: 'RR', units: 'bpm', sortable: true },
-  { id: 'oxygenSaturation', label: 'SpO2', units: '%', sortable: true },
-  { id: 'sixLeadEcgFindings', label: 'ECG', units: '6-lead' },
+  { id: 'respiratory_rate', label: 'RR', units: 'bpm', sortable: true },
+  { id: 'oxygen_saturation', label: 'SpO2', units: '%', sortable: true },
+  { id: 'six_lead_ecg_findings', label: 'ECG', units: '6-lead' },
 ]
 
 function DataTable({ data, loading, columns, title }: TableProps) {
