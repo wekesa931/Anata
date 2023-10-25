@@ -189,13 +189,7 @@ function DataTableDetailedRow({ columns, row, tableName }: DetailedRowProps) {
 
   return (
     <>
-      <TableRow
-        sx={{ '& > *': { borderBottom: 'unset' } }}
-        onClick={() => {
-          setOpen(!open)
-          if (!open) trackRowDetailsAccessed(tableName, row)
-        }}
-      >
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         {columns.map((column, index) => {
           const { value, textColor } = getValueAndColor(column.id)
           return (
@@ -209,7 +203,14 @@ function DataTableDetailedRow({ columns, row, tableName }: DetailedRowProps) {
               }}
             >
               {index === 0 && (
-                <IconButton aria-label="expand row" size="small">
+                <IconButton
+                  aria-label="expand row"
+                  size="small"
+                  onClick={() => {
+                    setOpen(!open)
+                    if (!open) trackRowDetailsAccessed(tableName, row)
+                  }}
+                >
                   {open ? <ArrowDropUpIcon /> : <ArrowRight />}
                 </IconButton>
               )}
