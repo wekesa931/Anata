@@ -230,7 +230,7 @@ function DataTableDetailedRow({ columns, row, tableName }: DetailedRowProps) {
             <TableCell
               key={column.id}
               align="left"
-              className="p-2 bg-table-col-grey border-none text-left"
+              className="p-2 bg-table-col-grey border-none text-left text-xs"
               sx={{
                 color: textColor || 'var(--dark-blue-100)',
                 width: column?.width || `${100 / columns.length}%}`,
