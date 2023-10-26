@@ -131,6 +131,9 @@ export type V2MemberType = {
   referralSource?: string
   payor?: PayorType
   kenyaNationalId?: string
+  caregiverName?: string
+  caregiverNumber?: string
+  nhifNumber?: string
 }
 
 type RawPhoneType = {
@@ -200,6 +203,8 @@ export type V2MemberQueryType = {
     }
     relationshipToPrimary?: string
     referralSource?: string
+    kenyaNationalId?: string
+    nhifNumber?: string
   }
   phones?: RawPhoneType[]
   status?: {
@@ -262,6 +267,8 @@ export type V2MemberQueryType = {
     emergencyContactName?: string
     emergencyContactPhone?: string
     emergencyContactRelationship?: string
+    caregiverName?: string
+    caregiverNumber?: string
   }
   insuranceDetails?: RawInsuranceType[]
   primary: V2MemberQueryType
@@ -287,6 +294,8 @@ export type BiodataValues = BirthdateUpdateValues & {
   relationshipToPrimary?: string
   referralSource?: string
   refusedServices: string[]
+  nhifNumber?: string
+  kenyaNationalId?: string
 }
 
 export type UpdatePhoneValues = {
@@ -300,6 +309,10 @@ export type ContactValues = UpdatePhoneValues & {
     name?: string
     phoneNumber?: string
     relationship?: string
+  }
+  caregiverContact: {
+    name?: string
+    phoneNumber?: string
   }
 }
 

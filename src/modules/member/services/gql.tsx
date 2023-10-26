@@ -95,6 +95,8 @@ export const UPDATE_MEMBER_DETAILS = gql`
           firstName
           lastName
           middleName
+          kenyaNationalId
+          nhifNumber
         }
       }
       errors
@@ -112,6 +114,8 @@ export const UPDATE_MEMBER_CONTACT = gql`
         emergencyContactName
         emergencyContactPhone
         emergencyContactRelationship
+        caregiverName
+        caregiverNumber
       }
       errors
       status
@@ -217,6 +221,8 @@ export const MEMBER_CONTACT_DETAILS = gql`
           emergencyContactPhone1
           emergencyContactPhone2
           emergencyContactRelationship
+          caregiverName
+          caregiverNumber
           memberType
           primary {
             fullName
@@ -239,6 +245,7 @@ export const MEMBER_CONTACT_DETAILS = gql`
             sex
           }
           kenyaNationalId
+          nhifNumber
           employerName
           intercomUrl
           lastConsentReminder

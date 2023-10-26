@@ -23,6 +23,10 @@ function SummarySection() {
         <Item title="Gender" child={member?.sex} />
         <Item title="Marital status" child={member?.maritalStatus} />
       </GridItems>
+      <GridItems>
+        <Item title="National ID" child={member?.kenyaNationalId} />
+        <Item title="NHIF Number" child={member?.nhifNumber} />
+      </GridItems>
     </SectionItem>
   ) : (
     <SummarySkeleton />

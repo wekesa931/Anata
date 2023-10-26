@@ -99,7 +99,11 @@ function CallsCallout({
   const getMemberPhones = () => {
     if (member) {
       const { allPhones } = member
-      const { phones = [], emergencyContactPhone } = allPhones
+      const {
+        phones = [],
+        emergencyContactPhone,
+        caregiverContactPhone,
+      } = allPhones
       let parsed = phones.map((phone: any, index: number) => ({
         [`Phone ${index + 1}`]: phone?.phone,
       }))
@@ -132,6 +136,7 @@ function CallsCallout({
       const allContacts: any[] = [
         ...parsed,
         { 'Emergency 1': emergencyContactPhone },
+        { Caregiver: caregiverContactPhone },
       ]
 
       const cleanedContacts = allContacts.filter((con) => checkProperties(con))

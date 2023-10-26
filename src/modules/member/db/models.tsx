@@ -39,6 +39,12 @@ type AssignedStaff = {
   atRecordId?: string
 }
 
+type CaregiverContact = {
+  name?: string
+  phoneNumber?: string
+  relationship?: string
+}
+
 const getStaff = (data: any): AssignedStaff => {
   return {
     fullName: data?.fullName,
@@ -64,6 +70,14 @@ const mergeInsuranceDetails = (member: Member, memberData: V2MemberType) => {
   }
 
   return member.insurances
+}
+
+const mergeCaregiverContact = (member: Member, memberData: V2MemberType) => {
+  return {
+    name: memberData.caregiverName || member.caregiverContact?.name,
+    phoneNumber:
+      memberData.caregiverNumber || member.caregiverContact?.phoneNumber,
+  }
 }
 
 export const createOrUpdateMember = (
@@ -109,6 +123,8 @@ export const createOrUpdateMember = (
   member.referralSource = memberData?.referralSource
   member.payor = memberData?.payor
   member.kenyaNationalId = memberData?.kenyaNationalId
+  member.caregiverContact = mergeCaregiverContact(member, memberData)
+  member.nhifNumber = memberData?.nhifNumber
 
   return member
 }
@@ -185,6 +201,10 @@ export class Member extends Model {
 
   @text('kenya_national_id') kenyaNationalId?: string
 
+  @json('caregiver_contact', identityJson) caregiverContact?: CaregiverContact
+
+  @text('nhif_number') nhifNumber?: string
+
   @writer async destroy() {
     await super.destroyPermanently()
   }
@@ -204,6 +224,7 @@ export class Member extends Model {
       primary: primaryMemberPhones,
       otherDependents: otherDependentsPhones,
       emergencyContactPhone: this.emergencyContact?.phoneNumber,
+      caregiverContactPhone: this.caregiverContact?.phoneNumber,
     }
   }
 
@@ -265,6 +286,12 @@ export class Member extends Model {
 
   get ageFull() {
     return calcAge(this.birthDate) || []
+  }
+
+  get caregiverContactDisplay() {
+    return `${this.caregiverContact?.name || '-'}, ${
+      this.caregiverContact?.phoneNumber || '-'
+    }`
   }
 
   @writer async reset() {

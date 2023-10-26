@@ -76,6 +76,8 @@ const validationSchema = (isChildRegistration = false) =>
     maritalStatus: isChildRegistration
       ? yup.string().nullable()
       : yup.string().required('Marital status is required'),
+    kenyaNationalId: yup.string(),
+    nhifNumber: yup.string(),
   })
 
 const extractInitialState = ({
@@ -103,6 +105,8 @@ const extractInitialState = ({
       ? 'Spouse'
       : '',
     referralSource: member?.referralSource || '',
+    nhifNumber: member?.nhifNumber || '',
+    kenyaNationalId: member?.kenyaNationalId || '',
   }
 }
 
@@ -310,6 +314,20 @@ export function BioDataForm({
                         label="Gender"
                         options={lookupOptions?.sexes || []}
                         placeholder="--Select--"
+                      />
+                    </FlexRow>
+                    <FlexRow>
+                      <TextField
+                        name="kenyaNationalId"
+                        label="National ID"
+                        placeholder="Enter the national ID"
+                        required={false}
+                      />
+                      <TextField
+                        name="nhifNumber"
+                        label="NHIF Number"
+                        placeholder="Enter the NHIF number"
+                        required={false}
                       />
                     </FlexRow>
                     {!isChildRegistration ? (

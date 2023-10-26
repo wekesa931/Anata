@@ -99,6 +99,8 @@ export const useRegistrationData = () => {
           m.tags = biodata.tags
           m.referralSource = biodata.referralSource
           m.refusedServices = biodata.refusedServices
+          m.nhifNumber = biodata.nhifNumber
+          m.kenyaNationalId = biodata.kenyaNationalId
         })
       })
     } catch (error) {

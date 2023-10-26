@@ -55,6 +55,12 @@ const validationSchema = (isChildRegistration = false) =>
         .matches(/^\+\d{3}\d{9}$/, 'Invalid phone format'),
       relationship: yup.string(),
     }),
+    caregiverContact: yup.object().shape({
+      name: yup.string(),
+      phoneNumber: yup
+        .string()
+        .matches(/^\+\d{3}\d{9}$/, 'Invalid phone format'),
+    }),
   })
 
 export default function ContactsSectionForm(props: ContactsSectionProps) {
@@ -108,6 +114,10 @@ export function ContactsForm({
       name: member?.emergencyContact?.name || '',
       phoneNumber: member?.emergencyContact?.phoneNumber || '',
       relationship: member?.emergencyContact?.relationship || '',
+    },
+    caregiverContact: {
+      name: member?.caregiverContact?.name || '',
+      phoneNumber: member?.caregiverContact?.phoneNumber || '',
     },
     antaraId: member?.antaraId || '',
   }
@@ -259,6 +269,22 @@ export function ContactsForm({
                   label="Relationship"
                   placeholder="--Select--"
                   options={relationshipOptions}
+                  required={false}
+                />
+                <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
+                  {' '}
+                  Caregiver contact{' '}
+                </h3>
+                <TextField
+                  name="caregiverContact.name"
+                  label="Full name"
+                  placeholder="Caregiver name"
+                  required={false}
+                />
+                <PhoneField
+                  name="caregiverContact.phoneNumber"
+                  label="Phone number"
+                  placeholder="Caregiver phone number"
                   required={false}
                 />
               </div>

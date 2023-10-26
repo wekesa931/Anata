@@ -80,6 +80,12 @@ function ContactsSection({ member }: ContactsSectionProps) {
             child={member?.emergencyContactDisplay}
           />
         </GridItems>
+        <GridItems single>
+          <Item
+            title="Caregiver contact info"
+            child={member?.caregiverContactDisplay}
+          />
+        </GridItems>
       </SectionItem>
     </div>
   ) : (

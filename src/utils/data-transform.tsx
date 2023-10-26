@@ -44,6 +44,7 @@ export const parseV2MemberData = (
   const sex = details?.sex?.sex || ''
   member.sex = sex
   member.maritalStatus = details?.maritalStatus?.maritalStatus
+  member.kenyaNationalId = details?.kenyaNationalId
 
   // phones
   const { phones = [] } = memberData

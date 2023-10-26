@@ -155,6 +155,8 @@ export const useUpdateBiodata = () => {
         primaryMemberAntaraId: values.primaryMemberAntaraId,
         relationshipToPrimary: values.relationshipToPrimary,
         referralSource: values.referralSource,
+        nhifNumber: values.nhifNumber,
+        kenyaNationalId: values.kenyaNationalId,
       },
       memberStatus: {
         tags: values.tags,
@@ -217,7 +219,7 @@ export const useUpdateContactsData = () => {
   })
 
   const updateContactsData = async (values: ContactValues) => {
-    const { antaraId, emergencyContact } = values
+    const { antaraId, emergencyContact, caregiverContact } = values
 
     const variables = {
       memberPhones: {
@@ -230,6 +232,8 @@ export const useUpdateContactsData = () => {
         emergencyContactName: emergencyContact?.name || '',
         emergencyContactPhone: emergencyContact?.phoneNumber || '',
         emergencyContactRelationship: emergencyContact?.relationship || '',
+        caregiverName: caregiverContact?.name || '',
+        caregiverNumber: caregiverContact?.phoneNumber || '',
       },
     }
 

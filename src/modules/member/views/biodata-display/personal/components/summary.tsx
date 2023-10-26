@@ -108,6 +108,10 @@ function SummarySection({ member }: SummarySectionProps) {
           <Item title="Gender" child={member?.sex} />
           <Item title="Marital status" child={member?.maritalStatus} />
         </GridItems>
+        <GridItems>
+          <Item title="National ID" child={member?.kenyaNationalId} />
+          <Item title="NHIF Number" child={member?.nhifNumber} />
+        </GridItems>
         <GridItems single>
           <Item title="Referral source" child={member?.referralSource} />
         </GridItems>

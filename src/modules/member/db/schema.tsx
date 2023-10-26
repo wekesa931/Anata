@@ -36,6 +36,8 @@ export const membersTableColumns: ColumnSchema[] = [
   { name: 'referral_source', type: 'string' },
   { name: 'payor', type: 'string' },
   { name: 'kenya_national_id', type: 'string' },
+  { name: 'caregiver_contact', type: 'string' },
+  { name: 'nhif_number', type: 'string' },
 ]
 
 export const MembersSchema = tableSchema({

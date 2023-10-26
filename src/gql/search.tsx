@@ -58,6 +58,7 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
       primaryMemberAntaraId
       referralSource
       kenyaNationalId
+      nhifNumber
     }
     primary {
       antaraId
@@ -74,6 +75,8 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
         sex {
           sex
         }
+        kenyaNationalId
+        nhifNumber
       }
       phones {
         phone
@@ -189,6 +192,8 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
       emergencyContactName
       emergencyContactPhone
       emergencyContactRelationship
+      caregiverName
+      caregiverNumber
     }
     insuranceDetails {
       id
