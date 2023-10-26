@@ -3,6 +3,7 @@ import React from 'react'
 import LoadingComponent from 'src/components/loaders/table-loader'
 import DataTable, { Column } from 'src/components/table/data-table'
 import useMedicationData from '../data'
+import { toTitleCase } from 'src/utils/text-utils'
 
 const MEDICATION_NAME_KEY = 'Medication Name (from Medication Base)'
 const OTHER_MEDICATION_NAME_KEY = 'Other Medication'
@@ -19,7 +20,7 @@ function MedicationName({ value }: any) {
   const frequency = value?.Frequency
 
   return (
-    <div className="font-rubik flex flex-col items-start text-xs">
+    <div className="font-rubik flex flex-col items-start justify-center text-xs text-left">
       <p className="text-dark-blue-100">{medName}</p>
       <p className="text-dark-blue-70">
         {quantity} {quantityUnits}
@@ -34,22 +35,33 @@ function MedicationStatus({ value }: any) {
   const getBorderColor = (status?: string) => {
     switch (status?.toLowerCase()) {
       case 'stopped':
-        return 'border-red-100'
+        return {
+          border: 'border-red-100',
+          text: 'text-red-100',
+        }
       case 'finished':
-        return 'border-green-100'
+        return {
+          border: 'border-green-100',
+          text: 'text-green-100',
+        }
       case 'ongoing':
-        return 'border-blue-100'
+        return {
+          border: 'border-blue-100',
+          text: 'text-blue-100',
+        }
       default:
-        return 'border-dark-red-50'
+        return {
+          border: 'border-dark-blue-50',
+          text: 'text-dark-blue-100',
+        }
     }
   }
+  const colors = getBorderColor(status)
   return (
     <div
-      className={`w-full m-1 p-0 rounded-2xl border text-center ${getBorderColor(
-        status
-      )}`}
+      className={`w-full m-1 p-0 rounded-2xl border text-center ${colors.border} ${colors.text}`}
     >
-      {status?.toLocaleLowerCase() ?? '-'}
+      {toTitleCase(status) ?? '-'}
     </div>
   )
 }

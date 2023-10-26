@@ -9,9 +9,9 @@ function Range({ range }: { range: any }) {
   const unit = range?.healthMetric?.measurementUnit?.name || ''
   const rangeValue = `${range?.minimumValue} - ${range?.maximumValue} ${unit}`
   return (
-    <div className="grid grid-cols-2 gap-2">
-      <p className="text-right">{rangeValue}:</p>
-      <p className="text-left max-w-[10rem]">{range?.name}</p>
+    <div className="table-row">
+      <p className="table-cell text-right">{rangeValue}:</p>
+      <p className="table-cell text-left pl-1">{range?.name}</p>
     </div>
   )
 }
@@ -114,7 +114,7 @@ export function TableHeadHelpertext({ metric }: { metric: string }) {
       {loadingRanges ? (
         <Loading message="Loading ranges" />
       ) : (
-        <div className="p-2 flex flex-col gap-2 items-start">
+        <div className="p-2 table">
           {referenceRanges.length ? (
             referenceRanges?.map((range: any) => (
               <Range key={range?.id} range={range} />

@@ -16,7 +16,7 @@ import {
   transformInsuranceData,
 } from 'src/modules/member/utils/data-transforms'
 import { calcAge } from 'src/utils/date-time/date-formatters'
-import { toTitleCase } from 'src/modules/member/utils'
+import { toTitleCase } from 'src/utils/text-utils'
 
 type AddressValues = DbTypes.AddressValues
 type InsuranceDetailsValues = DbTypes.InsuranceDetailsValues

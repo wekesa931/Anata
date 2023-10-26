@@ -31,7 +31,7 @@ import {
   removeEmpty,
 } from 'src/modules/member/utils/data-transforms'
 import { useMembersData } from 'src/modules/member/hooks/member-data'
-import { toTitleCase } from 'src/modules/member/utils'
+import { toTitleCase } from 'src/utils/text-utils'
 
 export const useRegistrationData = () => {
   const database = useDatabase()

@@ -9,16 +9,10 @@ import { PortalForm } from 'src/modules/member/components/update-forms'
 import { StatusForm } from 'src/modules/member/components/forms/statuses-form'
 import type { Member } from 'src/modules/member/db/models'
 import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
-import _ from 'lodash'
+import { toTitleCase } from 'src/utils/text-utils'
 
 type StatusesSectionProps = {
   member: Member | null
-}
-
-const toTitleCase = (str?: string) => {
-  if (!str) return str
-  const trimmedStr = str.trim()
-  return _.startCase(_.toLower(trimmedStr))
 }
 
 function MemberStatus({ status }: { status?: string }) {

@@ -72,9 +72,9 @@ function SortableTableHead(props: SortableTableHeadProps) {
         {columns.map((column, index) => (
           <TableCell
             key={column.id}
-            align="left"
+            align="center"
             sortDirection={orderBy === column.id ? order : false}
-            className={`font-bold text-white p-0 text-left py-2 bg-dark-blue-70 hover:text-white align-top ${
+            className={`font-bold text-white p-0 text-center py-2 bg-dark-blue-70 hover:text-white align-top ${
               index === columns.length - 1
                 ? 'rounded-tr-lg'
                 : index === 0
@@ -229,8 +229,8 @@ function DataTableDetailedRow({ columns, row, tableName }: DetailedRowProps) {
           return (
             <TableCell
               key={column.id}
-              align="left"
-              className="p-2 bg-table-col-grey border-none text-left text-xs"
+              align="center"
+              className="p-2 bg-table-col-grey border-none text-center text-xs"
               sx={{
                 color: textColor || 'var(--dark-blue-100)',
                 width: column?.width || `${100 / columns.length}%}`,
