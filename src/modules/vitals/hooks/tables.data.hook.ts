@@ -103,6 +103,12 @@ export const useTablesData = () => {
   }
 
   const processVitalsData = (vitals: any) => {
+    const isVitalRecordNonNull = (record: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { timestamp, ...rest } = record
+
+      return Object.values(rest).some((v: any) => !!v?.value)
+    }
     if (vitals) {
       // we need to group all vitals into three categories: BMI, Body Composition and Other Vitals
       const bmiData = vitals.map((vital: any) => {
@@ -166,9 +172,9 @@ export const useTablesData = () => {
       })
 
       return {
-        bmiData,
-        bodyCompositionData,
-        otherVitalsData,
+        bmiData: bmiData.filter(isVitalRecordNonNull),
+        bodyCompositionData: bodyCompositionData.filter(isVitalRecordNonNull),
+        otherVitalsData: otherVitalsData.filter(isVitalRecordNonNull),
       }
     }
 

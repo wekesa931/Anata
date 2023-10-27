@@ -60,7 +60,7 @@ function MedicationStatus({ value }: any) {
   const colors = getBorderColor(status)
   return (
     <div
-      className={`w-full m-1 p-0 rounded-2xl border text-center ${colors.border} ${colors.text}`}
+      className={`w-full p-0 rounded-2xl border text-center ${colors.border} ${colors.text}`}
     >
       {toTitleCase(status) ?? '-'}
     </div>
