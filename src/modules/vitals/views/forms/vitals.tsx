@@ -106,7 +106,12 @@ function VitalsCollection({
     >
       {() => (
         <Form>
-          <DateTimeField name="timestamp" label="Date" saveInput={saveInput} />
+          <DateTimeField
+            name="timestamp"
+            label="Date"
+            saveInput={saveInput}
+            maxDate={new Date()}
+          />
           <TextField
             name="temperature"
             label="Temperature"

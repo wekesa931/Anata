@@ -55,6 +55,7 @@ export default function MissingBirthdateForm({
                 label="Birthdate"
                 placeholder="Enter the date of birth"
                 handleBlur={() => setIsEdited(true)}
+                maxDate={new Date()}
               />
 
               <PrimaryButton

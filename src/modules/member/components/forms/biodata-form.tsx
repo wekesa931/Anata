@@ -308,6 +308,7 @@ export function BioDataForm({
                         label="Date of Birth"
                         placeholder="Enter the date of birth"
                         minDate={ageMinDate}
+                        maxDate={new Date()}
                       />
                       <SelectField
                         name="sex"

@@ -83,7 +83,12 @@ function DMMonitoring({
     >
       {() => (
         <Form>
-          <DateTimeField name="timestamp" label="Date and Time" required />
+          <DateTimeField
+            name="timestamp"
+            label="Date and Time"
+            required
+            maxDate={new Date()}
+          />
           <TextField
             name="preprandialBloodGlucose"
             label="Preprandial Blood Glucose"

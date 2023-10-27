@@ -79,7 +79,12 @@ function CHLForm({
     >
       {() => (
         <Form>
-          <DateTimeField name="timestamp" label="Date" saveInput={saveInput} />
+          <DateTimeField
+            name="timestamp"
+            label="Date"
+            saveInput={saveInput}
+            maxDate={new Date()}
+          />
           <RadioField
             name="lipidPanelTestType"
             label="Lipid Panel Test Type"

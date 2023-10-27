@@ -81,6 +81,7 @@ function BPReadingForm({
               label="Date"
               saveInput={saveInput}
               disabled={disabled}
+              maxDate={new Date()}
             />
             <SelectField
               name="bpReadingType"

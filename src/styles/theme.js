@@ -51,6 +51,7 @@ module.exports = {
       'status-active': 'var(--green-100)',
       'status-terminated': '#CB314B',
       'status-provisioned': '#608EB6',
+      'midnight-blue': '#26187B',
     },
     zIndex: {
       2000: '2000',

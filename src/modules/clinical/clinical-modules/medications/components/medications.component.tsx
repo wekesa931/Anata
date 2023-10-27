@@ -2,8 +2,9 @@ import React from 'react'
 
 import LoadingComponent from 'src/components/loaders/table-loader'
 import DataTable, { Column } from 'src/components/table/data-table'
-import useMedicationData from '../data'
+import useMedicationData from 'src/modules/clinical/clinical-modules/medications/hooks'
 import { toTitleCase } from 'src/utils/text-utils'
+import { EditMedication } from 'src/modules/clinical/clinical-modules/medications/components/edit-medication'
 
 const MEDICATION_NAME_KEY = 'Medication Name (from Medication Base)'
 const OTHER_MEDICATION_NAME_KEY = 'Other Medication'
@@ -32,8 +33,8 @@ function MedicationName({ value }: any) {
 
 function MedicationStatus({ value }: any) {
   const status: string = value?.Status
-  const getBorderColor = (status?: string) => {
-    switch (status?.toLowerCase()) {
+  const getBorderColor = (s?: string) => {
+    switch (s?.toLowerCase()) {
       case 'stopped':
         return {
           border: 'border-red-100',
@@ -72,18 +73,18 @@ const COLUMNS: Column[] = [
     label: 'Start Date',
     sortable: true,
     type: 'date',
-    width: '15%',
+    width: '20%',
   },
   {
     id: 'Medication Name (from Medication Base)',
     label: 'Medication Name',
-    width: '30%',
+    width: '20%',
     valueComponent: MedicationName,
   },
   {
     id: 'Status',
     label: 'Status',
-    width: '20%',
+    width: '15%',
     valueComponent: MedicationStatus,
   },
   { id: 'Refillable', label: 'Refillable', width: '10%' },
@@ -91,6 +92,12 @@ const COLUMNS: Column[] = [
     id: 'Refill Date calculated',
     label: 'Refill Date',
     width: '15%',
+  },
+  {
+    id: 'Actions',
+    label: 'Actions',
+    width: '20%',
+    valueComponent: EditMedication,
   },
 ]
 

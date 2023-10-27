@@ -60,7 +60,7 @@ export default function SearchField<T extends Searchable>({
   }
 
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth className="mb-2">
       <FormLabel className="font-rubik font-medium text-grey-main text-base text-left mb-2">
         {label}
       </FormLabel>
