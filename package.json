@@ -99,7 +99,8 @@
     "url": "^0.11.0",
     "webpack": "^5.76.0",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.11.1"
+    "webpack-dev-server": "^4.11.1",
+    "worker-loader": "^3.0.8"
   },
   "dependencies": {
     "@airtable/blocks": "1.15.0",
@@ -121,7 +122,7 @@
     "@mui/utils": "^5.14.9",
     "@mui/x-data-grid": "^5.17.26",
     "@mui/x-date-pickers": "^5.0.20",
-    "@nozbe/watermelondb": "^0.27.0",
+    "@nozbe/watermelondb": "^0.27.1",
     "@react-pdf/renderer": "^3.1.12",
     "@sentry/react": "^7.70.0",
     "@sentry/tracing": "^7.70.0",

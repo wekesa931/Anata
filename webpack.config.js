@@ -85,6 +85,10 @@ module.exports = {
         test: /\.svg$/,
         use: ['@svgr/webpack'],
       },
+      {
+        test: /\.worker\.js$/,
+        use: { loader: 'worker-loader' },
+      },
     ],
   },
   ...(process.env.NODE_ENV !== 'production' && {

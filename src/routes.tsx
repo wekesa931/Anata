@@ -20,6 +20,7 @@ import { MemberProvider } from 'src/context/member'
 import { Button } from '@mui/material'
 import NotFoundIcon from 'src/assets/img/icons/404-not-found.svg'
 import NoDataIcon from 'src/assets/img/icons/no-data.svg'
+import { DataProvider } from 'src/storage/indexeddb/watermelon/db'
 import { useAuth } from './context/auth'
 
 function ProtectedRoute({ children }: any) {
@@ -36,15 +37,19 @@ function ProtectedRoute({ children }: any) {
 
   return user ? (
     <>
-      <MemberProvider antaraId={recId}>
-        <div className="flex h-full">
-          <div className="flex flex-col flex-1 overflow-auto bg-white">
-            {!!user.userAirtableId && <NavBar />}
-            <div className="bg-white flex-1 h-dashboard-height">{children}</div>
+      <DataProvider>
+        <MemberProvider antaraId={recId}>
+          <div className="flex h-full">
+            <div className="flex flex-col flex-1 overflow-auto bg-white">
+              {!!user.userAirtableId && <NavBar />}
+              <div className="bg-white flex-1 h-dashboard-height">
+                {children}
+              </div>
+            </div>
+            <MemberRegistration />
           </div>
-          <MemberRegistration />
-        </div>
-      </MemberProvider>
+        </MemberProvider>
+      </DataProvider>
     </>
   ) : (
     <Navigate to="/login" state={{ from: currentPathWithParams }} />

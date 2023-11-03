@@ -45,7 +45,7 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
         setMemberInfo(item)
       } else {
         navigate(`/member/${item.antaraId}`)
-        // location.reload()
+        location.reload() // added to ensure that pending idb saves are reset for the new db
       }
     }
     // clear selection
