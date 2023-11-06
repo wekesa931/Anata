@@ -23,8 +23,7 @@ import NoDataIcon from 'src/assets/img/icons/no-data.svg'
 import { DataProvider } from 'src/storage/indexeddb/watermelon/db'
 import { useAuth } from './context/auth'
 
-function ProtectedRoute({ children }: any) {
-  const user = useUser()
+function ProtectedRoute({ children, user }: any) {
   const location = useLocation()
   const [recId, setRecId] = useState<string>()
   const params = useParams<any>()
@@ -63,7 +62,7 @@ function UserNotFound() {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-2 p-4">
       <p className="text-3xl font-bold text-dark-blue-100">
-        Your account does not exist in member db!
+        Your account does not exist in the member database!
       </p>
       <NoDataIcon height="30%" />
 
@@ -100,6 +99,8 @@ function PageNotFound() {
 }
 
 function Routes() {
+  const user = useUser()
+
   return (
     <FcmProvider>
       <CallProvider>
@@ -109,38 +110,28 @@ function Routes() {
           <Route
             path="/"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute user={user}>
                 <MainDashboard />
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/member/:antaraId"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute user={user}>
                 <BeneDashboard />
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/member"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute user={user}>
                 <MainDashboard />
               </ProtectedRoute>
             }
           />
-
-          <Route
-            path="/user-not-found"
-            element={
-              <ProtectedRoute>
-                <UserNotFound />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/user-not-found" element={<UserNotFound />} />
           <Route path="*" element={<PageNotFound />} />
         </SwitchRoutes>
       </CallProvider>
