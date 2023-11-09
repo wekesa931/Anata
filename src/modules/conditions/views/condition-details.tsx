@@ -142,6 +142,40 @@ function ConditionCard({ condition, activeCondition }: ConditionCardProps) {
               <Item title="Diagnosis stage" child={condition?.diagnosisStage} />
               <Item title="Diagnosis date" child={diagnosis_date} />
             </div>
+            {condition?.asthmaStartingScore ? (
+              <div className="flex flex-col gap-2">
+                <Item
+                  title="Asthma Starting Score"
+                  child={condition?.asthmaStartingScore}
+                />
+              </div>
+            ) : null}
+
+            {condition?.osteoarthritisStartingScore ? (
+              <div className="flex flex-col gap-2">
+                <Item
+                  title="Osteoarthritis Starting Score"
+                  child={condition?.osteoarthritisStartingScore}
+                />
+              </div>
+            ) : null}
+
+            {condition?.lowerBackPainStartingScore ? (
+              <div className="flex flex-col gap-2">
+                <Item
+                  title="Lower back pain starting score"
+                  child={condition?.lowerBackPainStartingScore}
+                />
+              </div>
+            ) : null}
+            {condition?.lowerBackPainScore ? (
+              <div className="flex flex-col gap-2">
+                <Item
+                  title="Lower back pain score"
+                  child={condition?.lowerBackPainScore}
+                />
+              </div>
+            ) : null}
           </div>
           <Divider />
           <div className="mt-4">

@@ -33,7 +33,11 @@ const buildCondition = (condition: Condition, data: TCondition) => {
   condition.currentClinicalStatus = data?.currentClinicalStatus
   condition.medication = data?.medication
   // eslint-disable-next-line no-underscore-dangle
-  condition._raw.id = data.id
+  condition._raw.id = data?.id
+  condition.asthmaStartingScore = data?.asthmaStartingScore
+  condition.lowerBackPainScore = data?.lowerBackPainScore
+  condition.lowerBackPainStartingScore = data?.lowerBackPainStartingScore
+  condition.osteoarthritisStartingScore = data?.osteoarthritisStartingScore
 }
 
 export const useConditionData = () => {

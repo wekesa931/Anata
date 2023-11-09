@@ -30,6 +30,12 @@ const transformConditionData = (
       ],
     interventions: currentCondition['Interventions Table'],
     healthStatus: currentCondition['Health Status (from Member)'],
+    asthmaStartingScore: currentCondition['Asthma Starting Score'],
+    lowerBackPainScore: currentCondition['Lower back pain score'],
+    lowerBackPainStartingScore:
+      currentCondition['Lower back pain starting score'],
+    osteoarthritisStartingScore:
+      currentCondition['Osteoarthritis Starting Score'],
   }
 }
 

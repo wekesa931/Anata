@@ -16,6 +16,10 @@ export type Condition = {
   medication?: string[]
   interventions?: string[]
   healthStatus?: string
+  asthmaStartingScore?: string
+  lowerBackPainScore?: string
+  lowerBackPainStartingScore?: string
+  osteoarthritisStartingScore?: string
 }
 
 export enum ConditionStatus {

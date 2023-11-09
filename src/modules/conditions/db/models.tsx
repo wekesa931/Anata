@@ -49,6 +49,14 @@ export class Condition extends Model {
   @json('medication', sanitizeMedication) medication?: string[]
 
   @text('health_status') healthStatus?: string
+
+  @text('asthma_starting_score') asthmaStartingScore?: string
+
+  @text('lower_back_pain_score') lowerBackPainScore?: string
+
+  @text('lower_back_pain_starting_score') lowerBackPainStartingScore?: string
+
+  @text('osteoarthritis_starting_score') osteoarthritisStartingScore?: string
 }
 
 export default [Condition]

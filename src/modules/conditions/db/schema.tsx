@@ -17,6 +17,10 @@ export const conditionColumns: ColumnSchema[] = [
   { name: 'current_clinical_status', type: 'string' },
   { name: 'medication', type: 'string' },
   { name: 'health_status', type: 'string' },
+  { name: 'asthma_starting_score', type: 'string' },
+  { name: 'lower_back_pain_score', type: 'string' },
+  { name: 'lower_back_pain_starting_score', type: 'string' },
+  { name: 'osteoarthritis_starting_score', type: 'string' },
 ]
 
 export const ConditionsSchema = tableSchema({
