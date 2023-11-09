@@ -75,11 +75,10 @@ function Appointments() {
         'Completed',
         'Missed',
         'Cancelled',
-        'Suggested',
         'Schedule needed',
       ].map((type) => ({ label: type, value: type })),
       helperText:
-        'Needed: if the appointment has no date and no time and you want our team to schedule it\nScheduled: we know the date and time and it is assigned\nMissed: the member did not pick up the call or picked up but could not do the call without giving a new date and time, we will need to reschedule\nComplete: successful interaction/ consultation has been done (on phone or in person)\nCanceled: we, Antara, decides that the appointment is not relevant anymore.',
+        'Schedule needed: if the appointment has no date and no time and you want our team to schedule it\nScheduled: we know the date and time and it is assigned\nMissed: the member did not pick up the call or picked up but could not do the call without giving a new date and time, we will need to reschedule\nComplete: successful interaction/ consultation has been done (on phone or in person)\nCanceled: we, Antara, decides that the appointment is not relevant anymore.',
     },
     {
       name: 'Assignee',
@@ -303,7 +302,7 @@ function Appointments() {
 
   const getNextAppointments = (nextAppointments: any[]): any[] => {
     return nextAppointments.filter((appointment: any) => {
-      return ['Scheduled', 'Suggested', 'Schedule needed'].includes(
+      return ['Scheduled', 'Schedule needed'].includes(
         appointment.data.find(({ name }: any) => name === 'Status')?.value
       )
     })
