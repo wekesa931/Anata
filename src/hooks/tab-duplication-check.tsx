@@ -38,9 +38,7 @@ export const useCheckTabDuplication = () => {
       setShowAlert(false)
     }, 5000)
 
-    const handleBeforeUnload = (event: any) => {
-      event.preventDefault()
-      event.returnValue = ''
+    const handleBeforeUnload = () => {
       broadcastChannel.postMessage({ type: 'tabClosed', antaraId })
     }
 
@@ -51,6 +49,8 @@ export const useCheckTabDuplication = () => {
       window.removeEventListener('beforeunload', handleBeforeUnload)
       broadcastChannel.close()
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [antaraId])
 
   return {

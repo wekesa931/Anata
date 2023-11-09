@@ -12,7 +12,7 @@ import useClickOutside from 'src/hooks/click-outside'
 import FlatLogo from 'src/assets/img/logo/Antara Logo@1x.png'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useRegistrationForm } from 'src/context/member-registration'
-import { useDatabase } from '@nozbe/watermelondb/hooks'
+import { logError } from 'src/utils/logging/logger'
 import TaskMenu from './task-menu/task-menu.component'
 import styles from './navbar.component.css'
 import FloatingMenu from './menu.component'
@@ -21,18 +21,27 @@ function UserMenu() {
   const user = useUser()
   const auth = useAuth()
   const navigate = useNavigate()
-  const database = useDatabase()
+
+  const resetAllDbs = async () => {
+    const r = await window.indexedDB.databases()
+    for (let i = 0; i < r.length; i += 1) {
+      const db = r[i]
+      if (db?.name) {
+        window.indexedDB.deleteDatabase(db.name)
+      }
+    }
+  }
 
   const logout = () => {
-    database.write(async () => {
-      // eslint-disable-next-line no-underscore-dangle
-      database._subscribers = []
-      return database.unsafeResetDatabase().then(() => {
-        auth.logout()
+    auth.logout()
+    resetAllDbs()
+      .then(() => {
         analytics.track('User LoggedOut')
         navigate('/login')
       })
-    })
+      .catch((err) => {
+        logError(err)
+      })
   }
 
   const hasName = (userDetails: { given_name: string; family_name: string }) =>

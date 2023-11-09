@@ -64,10 +64,13 @@ export const getDatabase = (dbName: string) =>
 export function DataProvider({ children }: any) {
   const { antaraId } = useParams()
   const dbName = antaraId ? `${antaraId}.db` : 'scribe.db'
+
+  const database = getDatabase(dbName)
+
   const { showAlert } = useCheckTabDuplication()
 
   return (
-    <DatabaseProvider database={getDatabase(dbName)}>
+    <DatabaseProvider database={database}>
       {showAlert && (
         <Alert severity="warning" variant="filled">
           This member&apos;s dashboard ({antaraId}) is open in another tab.
