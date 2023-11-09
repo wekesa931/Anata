@@ -1,13 +1,30 @@
-[Ticket Link](https://example.com)
-### Changes Summary
+## What does this PR do?
+<!-- Briefly describe what this PR is about -->
 
-### Prerequisite for testing if any
-- E.g. Update to get new dependencies
+## Documentation link(s)
+[Documentation Link](https://example.com)
 
-### Test Plan
-1. Go to xxx place
-2. Do this
-3. Do that
-4. Observe new changes at play
+## Bug/ Feature ticket(s) (Coda link required)
+[Bug/Feature Link](https://example.com)
 
-### Attach an image/video explaining the impact to the user
+## Related issues
+<!-- Mention the issue(s) this PR is related to -->
+
+## Closes
+[Coda Link](https://example.com)
+
+## General checklist
+- [ ] Conforms to the [airbnb style guidelines](https://github.com/airbnb/javascript)
+- [ ] [Documentation created/updated]()
+- [ ] [Tests added for this feature/bug]()
+- [ ] Conforms to the [code review guidelines]()
+- [ ] Conforms to the [merge request performance guidelines]()
+
+## Author's checklist
+- [ ] Unit Tests Passed
+- [ ] Documentation done
+
+## Review checklist
+- [ ] Your team's review (required)
+
+/label ~scribe

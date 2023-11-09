@@ -7,6 +7,10 @@ const package = require('./package.json')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
+const PrettierPlugin = require('prettier-webpack-plugin')
+
+const lintingExtensions = ['js', 'jsx', 'ts', 'tsx']
 
 const universalPlugins = [
   new HtmlWebpackPlugin({
@@ -17,6 +21,15 @@ const universalPlugins = [
     'process.env': env,
   }),
   new NodePolyfillPlugin(),
+  new ESLintPlugin({
+    extensions: lintingExtensions,
+    fix: true,
+    emitError: true,
+    emitWarning: false,
+  }),
+  new PrettierPlugin({
+    extensions: lintingExtensions,
+  }),
 ]
 
 module.exports = {
