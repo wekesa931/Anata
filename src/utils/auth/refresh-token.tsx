@@ -13,7 +13,8 @@ const getFormData = () => {
   return formdata
 }
 const refreshToken = async () => {
-  if (!refreshTokenRequest) {
+  if (!refreshTokenRequest && storage.get(keys.USER)) {
+    // ensure only one request is made and the user is logged in
     refreshTokenRequest = axios({
       url: 'https://oauth2.googleapis.com/token',
       method: 'POST',

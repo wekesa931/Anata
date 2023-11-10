@@ -52,6 +52,7 @@ module.exports = {
         'standard',
         'events',
         'migrate',
+        'merge',
       ],
     ],
   },

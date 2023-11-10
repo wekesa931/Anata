@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
-import { useGoogleLogout } from 'react-google-login'
 import storage from 'src/storage/secure-storage'
 import { User } from 'src/types/user'
 import keys from 'src/config/constants'
 import useAntaraStaff from 'src/hooks/antara-staff.hook'
 import { logError } from 'src/utils/logging/logger'
 import { useNavigate } from 'react-router-dom'
+import { googleLogout } from '@react-oauth/google'
 
 dayjs.extend(utc)
 type AuthContextType = {
@@ -33,9 +33,6 @@ type Props = {
 
 function AuthProvider({ user, children }: Props) {
   let loggedInUser = storage.get(keys.USER)
-  const { signOut } = useGoogleLogout({
-    clientId: process.env.GOOGLE_CLIENT_ID || '',
-  })
 
   if (loggedInUser) {
     loggedInUser = JSON.parse(loggedInUser)
@@ -46,7 +43,7 @@ function AuthProvider({ user, children }: Props) {
   const logout = () => {
     storage.removeAll()
     setCurrentUser(null)
-    signOut()
+    googleLogout()
   }
 
   const isLoggedIn = () => !!currentUser

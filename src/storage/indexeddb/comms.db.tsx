@@ -24,7 +24,7 @@ export function fetchAll<T>(tableName: string): Promise<Array<T>> {
     // TODO: Figure out a way to wait for the variable to be initialized.
 
     setTimeout(() => {
-      if (!CommDB) {
+      if (!CommDB || !CommDB.transaction) {
         reject('Database is not initialised')
       }
       const transaction = CommDB.transaction(tableName, 'readwrite')

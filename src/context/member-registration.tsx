@@ -6,6 +6,7 @@ import useAntaraStaff, {
 import { useGetLookupEntries } from 'src/modules/member/services/lookups'
 import { LookupOption, LookupOptions } from 'src/modules/member/types'
 import { sortAlphabetically } from 'src/utils/sort'
+import { useAuth } from './auth'
 
 type RegistrationFormContextType = {
   isFormOpen: boolean
@@ -52,6 +53,7 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
   )
   const [isDataLoading, setDataLoading] = useState<boolean>(false)
   const [searchParams, setSearchParams] = useSearchParams()
+  const { isLoggedIn } = useAuth()
 
   const openRegistrationFromSearchParams = Boolean(
     searchParams.get('register') === 'true'
@@ -90,6 +92,7 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
   }, [openRegistrationFromSearchParams, loading])
 
   useEffect(() => {
+    if (!isLoggedIn) return
     setDataLoading(true)
     Promise.all([getInsuranceCompanies(), getLookupEntries()])
       .then(([companies, options]) => {
@@ -101,7 +104,7 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
       })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isLoggedIn])
   // console.log(lookupOptions)
 
   const providerValue = {
