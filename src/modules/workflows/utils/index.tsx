@@ -233,6 +233,7 @@ export const initialFormValues = (
 ): Record<string, any> => {
   const isOnsite = workflow === 'Onsite'
   const homeAddress = member?.homeAddress?.address || null
+
   return {
     'BP Mon': {
       Date: dayjs().format('YYYY-MM-DD'),
@@ -304,6 +305,9 @@ export const initialFormValues = (
     },
     'Prescriptions VC': {
       'Start Date': todayFormattedDate(new Date()),
+    },
+    'Healthy triage form': {
+      Gender: member?.sex,
     },
   }
 }
@@ -381,6 +385,7 @@ export const duplicates = [
   'Member Feedback',
   'Minor Health Check (6 to 17)',
   'Minor Health Check (0 to 5)',
+  'Healthy triage form',
 ]
 
 export const formNames: Record<string, string> = {
@@ -412,6 +417,7 @@ export const formNames: Record<string, string> = {
   'Member Feedback': 'Member Feedback',
   'Minor Health Check (0 to 5)': 'Minor Health Check (0 to 5)',
   'Minor Health Check (6 to 17)': 'Minor Health Check (6 to 17)',
+  'Healthy triage form': 'Healthy triage form',
 }
 
 export const interactionlogform = {

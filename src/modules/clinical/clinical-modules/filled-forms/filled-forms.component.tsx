@@ -63,6 +63,7 @@ function FilledForms() {
     'physio',
     'minor_health_check',
     'minorhifv2',
+    'healthTriageForm',
   ]
 
   useEffect(() => {
@@ -148,6 +149,10 @@ function FilledForms() {
             {
               name: 'Minor Health Check (6 to 17)',
               data: response[forms.indexOf('minorHealthCheckSixToSeventeen')],
+            },
+            {
+              name: 'Healthy triage form',
+              data: response[forms.indexOf('healthTriageForm')],
             },
           ]
           setFilledForms(formResponses)

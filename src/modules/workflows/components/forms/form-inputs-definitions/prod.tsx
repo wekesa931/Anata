@@ -22687,4 +22687,1230 @@ export default [
       },
     ],
   },
+  {
+    id: 'tbl9clBB6eEPiIbmS',
+    name: 'Healthy triage form',
+    fields: [
+      {
+        id: 'fldJ1jlmDfsJH9x0M',
+        name: 'Member',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldYGlDNBU3s7yL08',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblidCJtioaFSYwvk',
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld1ovFAUaWYAp6fe',
+        name: 'Healthy Program Tracking',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld6sR3Mi58IYorkN',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblxRNsmLq9YDmMVm',
+        required: false,
+        helper:
+          'Seba: this is optional but might be helpful for tracking/monitoring. It is a link to the member record in Healthy program table',
+      },
+      {
+        id: 'fldwKVqOLHP4br93O',
+        name: 'Gender',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'flduWbM6VacIUZxo8',
+        name: 'Triage date',
+        type: 'date',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldkJAQssyntEJ4qE',
+        name: 'Assignee',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldRgKK354Cbly9Fe',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblHs6JxFnMGAjNNC',
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldGVduOoMTEm5uW2',
+        name: 'Triaged Health goals',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld9bscs7oEo0Mpre',
+        name: 'Healthy eating interests',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'I want to...',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Eating healthy'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Eating healthy'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Eating healthy'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldgQdAsgZOnXPtjx',
+        name: 'Other healthy eating interest',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Healthy eating interests',
+        parentValues: ['Other reason'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Healthy eating interests'])) {
+            return ['Other reason'].some((r) =>
+              values['Healthy eating interests'].includes(r)
+            )
+          }
+          return ['Other reason'].includes(values['Healthy eating interests'])
+        },
+      },
+      {
+        id: 'fldBpZKYvED0tztzN',
+        name: 'Preferred Healthy eating resources',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Eating healthy'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Eating healthy'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Eating healthy'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldGtnVF76TtRBXFY',
+        name: 'Other preferred healthy eating resource',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Preferred Healthy eating resources',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Preferred Healthy eating resources'])) {
+            return ['Other'].some((r) =>
+              values['Preferred Healthy eating resources'].includes(r)
+            )
+          }
+          return ['Other'].includes(
+            values['Preferred Healthy eating resources']
+          )
+        },
+      },
+      {
+        id: 'fldmsvZxR6wL6JXv1',
+        name: 'Current fitness description',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Tell us the type of exercise, duration in minutes/hours, frequency in days/weeks. Example: Walking for 15 minutes, 5 days a week',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Getting fit'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Getting fit'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Getting fit'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldNoaonw3H3VPOIh',
+        name: 'Fitness interests',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'I enjoy...',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Getting fit'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Getting fit'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Getting fit'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldltHl6CUcYSBql5',
+        name: 'Other fitness interest',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Fitness interests',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Fitness interests'])) {
+            return ['Other'].some((r) =>
+              values['Fitness interests'].includes(r)
+            )
+          }
+          return ['Other'].includes(values['Fitness interests'])
+        },
+      },
+      {
+        id: 'fldRzz9oCvq5JNX0G',
+        name: 'Preferred fitness resources',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Getting fit'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Getting fit'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Getting fit'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldcDzTP6kkKR9KEW',
+        name: 'Other preferred fitness resource',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Preferred fitness resources',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Preferred fitness resources'])) {
+            return ['Other'].some((r) =>
+              values['Preferred fitness resources'].includes(r)
+            )
+          }
+          return ['Other'].includes(values['Preferred fitness resources'])
+        },
+      },
+      {
+        id: 'fldwpLGaakXnFoZEC',
+        name: 'Do you have a decreased sex drive or libido?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Healthy sex life'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Healthy sex life'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Healthy sex life'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fld7pKuA6B3s0fqwX',
+        name: 'Do you experience pleasure during sexual activities?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If No book a VC, If Yes send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Healthy sex life'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Healthy sex life'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Healthy sex life'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldoIBxjdCyBweyqp',
+        name: 'Do you experience pain or burning sensation when urinating or during sexual activities?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Healthy sex life'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Healthy sex life'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Healthy sex life'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldnHrO2yaqv3Jr4j',
+        name: 'Do you often experience heightened levels of stress or anxiety that might be impacting your sexual health and intimacy in any way?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a MHC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Healthy sex life'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Healthy sex life'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Healthy sex life'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldjYb17LFr045GrV',
+        name: 'Do you currently have any penile discharge or rashes?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Healthy sex life'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Healthy sex life'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Healthy sex life'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldnjqO5Omv3I0MK5',
+        name: 'Do you experience pain or swelling in your testicles?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Healthy sex life'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Healthy sex life'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Healthy sex life'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fld5rNzjvEMxV4YST',
+        name: 'Do you get an erection during sexual intercourse?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If No book a VC, If Yes send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Healthy sex life'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Healthy sex life'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Healthy sex life'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldEgWukX77LxKAOL',
+        name: 'Are you able to sustain an erection during sexual activities?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If No book a VC, If Yes send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Healthy sex life'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Healthy sex life'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Healthy sex life'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldPegqvG503AdEBH',
+        name: 'Do you ejaculate within a minute or less during sexual activities?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Healthy sex life'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Healthy sex life'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Healthy sex life'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldiNl4ARAdxeiRol',
+        name: 'Do you have lower abdominal pain not related to menstruation?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Healthy sex life'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Healthy sex life'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Healthy sex life'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fld7ms7Q5xqwGfz5C',
+        name: 'Do you have any vaginal itchiness, sores or rashes?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Healthy sex life'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Healthy sex life'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Healthy sex life'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldwOxWfscR5cGjLM',
+        name: 'Do you have any change in vaginal discharge (smell or color)?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Healthy sex life'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Healthy sex life'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Healthy sex life'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fld0wHFO2L00Ec5lP',
+        name: 'Do you experience vaginal bleeding or odour after sexual intercourse?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Healthy sex life'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Healthy sex life'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Healthy sex life'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldWqICNXcgmtY16E',
+        name: 'Do you have any of the following skin problems?',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Clearer skin'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Clearer skin'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Clearer skin'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'flddGnaE1knWSy6c3',
+        name: 'Do you have any areas of redness, pain or discharge on your skin?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Clearer skin'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Clearer skin'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Clearer skin'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldWZuLnatclHjdzw',
+        name: 'Do you have any allergies affecting your skin?',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'If Food allergies → book an NC, if Medication allergies → send content, if None → no follow up needed',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Clearer skin'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Clearer skin'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Clearer skin'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldzamKNn8f1VoCvJ',
+        name: 'Additional skin interests',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Tell us more...',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Clearer skin'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Clearer skin'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Clearer skin'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldrHWge5iEh6fgw5',
+        name: 'Do you feel overwhelmed with your life?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Managing stress'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Managing stress'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Managing stress'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldowBxxtu0x4WCcj',
+        name: 'Do you get less than 6 hours of sleep per night?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Managing stress'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Managing stress'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Managing stress'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldPJdt3wqvQwjrA1',
+        name: 'Do you struggle to fall or stay asleep at night due to stress?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Managing stress'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Managing stress'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Managing stress'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldh856uenjXZnTSl',
+        name: 'Do you have trouble staying focused on the present moment?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Managing stress'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Managing stress'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Managing stress'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldI4RdH4KDWPr5sk',
+        name: 'Do you experience headaches or muscle tension frequently?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Managing stress'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Managing stress'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Managing stress'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldPefLbCK8zjuI2a',
+        name: 'Do you have regular sleeping and waking up times?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Sleeping well'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Sleeping well'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Sleeping well'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldsPaN8ypZMLqZ4p',
+        name: 'Do you experience disrupted sleep?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Sleeping well'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Sleeping well'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Sleeping well'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldFwHPAEr2ci4xvb',
+        name: 'Do you have trouble falling or staying asleep at night? (sleep)',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Sleeping well'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Sleeping well'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Sleeping well'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldWqlZMek4s5lvf3',
+        name: 'Do you use alcohol, medication or drugs to help you sleep?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Sleeping well'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Sleeping well'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Sleeping well'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldVriFWdyfo6kJUd',
+        name: 'Do you have difficulties staying awake during day?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Sleeping well'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Sleeping well'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Sleeping well'].includes(values['Triaged Health goals'])
+        },
+      },
+      {
+        id: 'fldQSaeq2iFJI4R1M',
+        name: 'How long have you been having lower back pain?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          '- Occasional (Send content)\n- Less than 4 weeks (This is Acute LBP; schedule HC)\n- Between 4 and 12 weeks (This is Sub-acute LBP; schedule HC)\n- More than 12 weeks (This is Chronic LBP; schedule VC)',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Reduce lower back pain'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Reduce lower back pain'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Reduce lower back pain'].includes(
+            values['Triaged Health goals']
+          )
+        },
+      },
+      {
+        id: 'fldt5M4HEH1w39DPU',
+        name: 'Have you experienced any recent injuries or incidents that might have contributed to it?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Reduce lower back pain'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Reduce lower back pain'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Reduce lower back pain'].includes(
+            values['Triaged Health goals']
+          )
+        },
+      },
+      {
+        id: 'fldpQF3A8j9PvQy7i',
+        name: 'Are there any underlying medical conditions or relevant medical history that may contribute to your lower back pain?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Reduce lower back pain'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Reduce lower back pain'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Reduce lower back pain'].includes(
+            values['Triaged Health goals']
+          )
+        },
+      },
+      {
+        id: 'fldWSaIUnHWK4nZuo',
+        name: 'On a scale of 1 to 10, with 10 being the most severe, how would you rate the intensity of your pain?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If 3 and above book a VC, If less than 3 send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Reduce lower back pain'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Reduce lower back pain'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Reduce lower back pain'].includes(
+            values['Triaged Health goals']
+          )
+        },
+      },
+      {
+        id: 'fld8HtAqPVjWm8cLB',
+        name: 'Does the pain radiate to any other areas, such as your legs, buttocks, or hips?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Reduce lower back pain'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Reduce lower back pain'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Reduce lower back pain'].includes(
+            values['Triaged Health goals']
+          )
+        },
+      },
+      {
+        id: 'fldXuqpu3wDURmYg9',
+        name: 'Are there other symptoms accompanying your lower back pain, such as numbness, tingling, or weakness in the legs?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Reduce lower back pain'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Reduce lower back pain'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Reduce lower back pain'].includes(
+            values['Triaged Health goals']
+          )
+        },
+      },
+      {
+        id: 'fld5hWxB2gesSyF8X',
+        name: 'Have you noticed any specific activities or movements that make the pain worse or better?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Reduce lower back pain'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Reduce lower back pain'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Reduce lower back pain'].includes(
+            values['Triaged Health goals']
+          )
+        },
+      },
+      {
+        id: 'fldIVCN5vfFBl2bz9',
+        name: 'Does the pain impact your daily life and activities, such as work, exercise, or sleep?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'If Yes book a VC, If No send content',
+        conditionType: '',
+        parentKey: 'Triaged Health goals',
+        parentValues: ['Reduce lower back pain'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Triaged Health goals'])) {
+            return ['Reduce lower back pain'].some((r) =>
+              values['Triaged Health goals'].includes(r)
+            )
+          }
+          return ['Reduce lower back pain'].includes(
+            values['Triaged Health goals']
+          )
+        },
+      },
+      {
+        id: 'flddOt10uVx0JC4Ap',
+        name: 'How would you like to engage with your Antara Wellness Family?',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'I want to get... (select as many as you want)',
+      },
+    ],
+  },
 ]

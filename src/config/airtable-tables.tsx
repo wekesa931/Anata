@@ -46,6 +46,7 @@ const TABLE_ROUTES: Record<string, string> = {
   'Medications Base Sync': 'medication_base',
   'Minor Health Check (6 to 17)': 'minorHealthCheckSixToSeventeen',
   'Minor Health Check (0 to 5)': 'minorHealthCheckZeroToFive',
+  'Healthy triage form': 'healthTriageForm',
 }
 
 export default TABLE_ROUTES
