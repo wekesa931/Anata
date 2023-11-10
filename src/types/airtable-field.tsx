@@ -18,5 +18,6 @@ type AirtableField = {
   disabled?: boolean
   helperText?: string
   tableId?: string
+  condition?: (values: any) => boolean
 }
 export default AirtableField

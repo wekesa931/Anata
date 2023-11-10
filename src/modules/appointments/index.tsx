@@ -9,16 +9,25 @@ import Icon from 'src/components/icon/svg-icon'
 import Tooltip from 'src/components/tooltip'
 import airtableFetch from 'src/services/airtable/fetch'
 import { useMember } from 'src/context/member'
-import logError from 'src/utils/logging/logger'
 import useHandleResponses from 'src/utils/airtable/error-handler'
 import useAntaraStaff from 'src/hooks/antara-staff.hook'
 import { User } from 'react-feather'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import styles from './appointments.component.css'
 
-const SearchFieldsNameMap: Record<string, string> = {
-  'Facilities from Provider base': 'Facilities name from Provider base',
-  'Specialists from Provider Base': 'Specialist name from Provider base',
+const SearchFieldsNameMap: Record<string, any> = {
+  'Facilities from Provider base': {
+    name: 'Facilities name from Provider base',
+    tableId:
+      process.env.PROD === 'true' ? 'tbltmQuqyuKPc4Ffo' : 'tblU94ZnFmMT7S0o0',
+    type: 'search',
+  },
+  'Specialists from Provider Base': {
+    name: 'Specialist name from Provider base',
+    tableId:
+      process.env.PROD === 'true' ? 'tblsixUe3jfbOUMQP' : 'tblPpf5F81JypdC9k',
+    type: 'search',
+  },
 }
 
 function Appointments() {
@@ -96,6 +105,10 @@ function Appointments() {
     {
       name: 'Reasons for missed or rescheduled meeting',
       type: 'long-text',
+      condition: (appt: any = {}) => {
+        const { Status } = appt
+        return Status === 'Missed'
+      },
     },
     {
       name: 'Facilities from Provider base',
@@ -123,6 +136,10 @@ function Appointments() {
         'Member request',
         'Other',
       ].map((type) => ({ label: type, value: type })),
+      condition: (appt: any = {}) => {
+        const { Status } = appt
+        return Status === 'Cancelled'
+      },
     },
   ]
   const user = useUser()
@@ -159,8 +176,11 @@ function Appointments() {
           payload[fieldKey] = [appointment.fields.Assignee]
         }
 
-        if (Object.keys(SearchFieldsNameMap).includes(fieldKey)) {
-          payload[fieldKey] = [appointment.fields[fieldKey].id]
+        if (
+          Object.keys(SearchFieldsNameMap).includes(fieldKey) &&
+          appointment?.fields[fieldKey]
+        ) {
+          payload[fieldKey] = [appointment?.fields[fieldKey]?.id]
         }
       })
       return payload
@@ -168,54 +188,49 @@ function Appointments() {
 
     const serverPayload = transformDataForServer()
 
-    await airtableFetch('appointments', 'post', {
+    return airtableFetch('appointments', 'post', {
       id: appointment.id,
       fields: serverPayload,
+    }).then((res) => {
+      handleResponses(res)
+      setSelected(status[0])
+      trackActionEdited('Appointment', serverPayload)
+      refresh()
     })
-      .then((res) => {
-        handleResponses(res)
-        setSelected(status[0])
-        trackActionEdited('Appointment', serverPayload)
-      })
-      .catch((err) => {
-        logError(err)
-      })
-      .finally(() => {
-        return refresh()
-      })
   }
 
   const includeFieldTypes = (appointment: any) => {
     const parsedFields: any[] = []
-    Object.keys(appointment).forEach((key) => {
-      const field = APPOINTMENT_FIELDS.find(({ name }) => name === key)
 
-      // process the search fields (facilities and specialists)
-      if (field) {
-        const searchKeyName = SearchFieldsNameMap[field.name] // Facilities name from Provider base
-        if (searchKeyName) {
-          const name = appointment[searchKeyName]?.length
-            ? appointment[searchKeyName][0]
-            : ''
-          const value = {
-            id: appointment[key]?.length ? appointment[key][0] : '',
-            name,
-            displayName: name,
-          }
+    APPOINTMENT_FIELDS.forEach((field) => {
+      const key = field.name
+      let value = appointment[key]
 
-          parsedFields.push({
-            ...field,
-            value,
-          })
-        } else {
-          parsedFields.push({
-            value:
-              field.type === 'datetime'
-                ? dayjs(appointment[key]).format('YYYY-MM-DDTHH:mm')
-                : appointment[key],
-            ...field,
-          })
-        }
+      if (field.type === 'datetime') {
+        value = value ? dayjs(value).format('YYYY-MM-DDTHH:mm') : ''
+      }
+
+      if (SearchFieldsNameMap[key]) {
+        /**
+         * Parse the search field into the format expected by the search component
+         * And the field format is name, value: {name, displayName, id}, type: 'search', tableId
+         */
+        parsedFields.push({
+          name: key,
+          value: {
+            name: appointment[SearchFieldsNameMap[key]?.name]?.join() ?? '',
+            displayName:
+              appointment[SearchFieldsNameMap[key]?.name]?.join() ?? '',
+            id: appointment[key],
+          },
+          type: 'search',
+          tableId: SearchFieldsNameMap[key].tableId,
+        })
+      } else {
+        parsedFields.push({
+          ...field,
+          value,
+        })
       }
     })
 
@@ -271,9 +286,13 @@ function Appointments() {
           </div>
           <div className="font-medium text-sm text-gray-400 flex justify-between w-full items-center">
             <span className="status">{appointment.Status}</span>
-            <span>
-              {dayjs(appointment.start_date_time).format("DD MMM 'YY HH:mmA")}
-            </span>
+            {appointment.Status !== 'Schedule needed' ? (
+              <span>
+                {dayjs(appointment.start_date_time).format("DD MMM 'YY HH:mmA")}
+              </span>
+            ) : (
+              <span>-</span>
+            )}
           </div>
         </div>
       )

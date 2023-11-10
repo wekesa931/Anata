@@ -34,6 +34,16 @@ function PafuView({ data }: any) {
     setPafuRecordId(data?.PAFU[0])
   }
 
+  const getValue = (value: any) => {
+    if (Array.isArray(value)) {
+      return value.join(', ')
+    }
+    if (typeof value === 'object') {
+      return JSON.stringify(value)
+    }
+    return value
+  }
+
   return (
     <>
       {data?.PAFU?.length > 0 && (
@@ -56,7 +66,7 @@ function PafuView({ data }: any) {
                 <div key={key} onClick={(e) => e.stopPropagation()}>
                   <label htmlFor={key}>
                     {key}
-                    <TextArea disabled value={`${pafu[key]}`} />
+                    <TextArea disabled value={getValue(pafu[key])} />
                   </label>
                 </div>
               )

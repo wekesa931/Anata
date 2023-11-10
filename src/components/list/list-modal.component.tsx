@@ -1,21 +1,21 @@
 /* eslint-disable radix */
-import { Label, Text } from '@airtable/blocks/ui'
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
-import { Form, Formik } from 'formik'
+import { Text } from '@airtable/blocks/ui'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Form } from 'formik'
 import dayjs from 'dayjs'
 import { ChevronLeft, ChevronRight } from 'react-feather'
-import { Tooltip } from '@mui/material'
+import { Button, FormLabel, Tooltip } from '@mui/material'
 import Modal from 'src/components/modals'
 import EditIcon from 'src/assets/img/icons/edit.svg'
 import AirtableField from 'src/types/airtable-field'
 import FormField from 'src/components/forms/formik-fields'
+import parse from 'html-react-parser'
+import { useNotifications } from 'src/context/notifications'
+import { logError } from 'src/utils/logging/logger'
+import { diff } from 'deep-object-diff'
 import styles from './list.component.css'
+import PrimaryForm from '../forms/primary-form'
+import PrimaryButton from '../buttons/primary'
 
 export type TOpenItem = {
   name: string
@@ -115,43 +115,6 @@ function ListModal(props: ListModalProps) {
   }
   const [activeItem, setActiveItem] = useState<any>(getActiveItem())
   const [currentIndex, setCurrentIndex] = useState<number>(0)
-  const ref = useRef(null)
-  const conditionalFieldMap = {
-    'Due Date': () => {
-      const reasonForReschedule = {
-        name: 'Reason For Rescheduling',
-        type: 'single-select',
-        options: [
-          'Member unresponsive',
-          'Going on Leave',
-          'Member Request',
-          'Daily interaction limit reached',
-          'New prioritization',
-          'Task backlog',
-          'Missing data',
-        ].map((option) => ({ label: option, value: option })),
-      }
-      return reasonForReschedule
-    },
-    Status: () => {
-      const reasonForCancellation = {
-        name: 'Reason for cancellation',
-        type: 'single-select',
-        options: [
-          'Member unresponsive',
-          'Member not ready',
-          'Refused services',
-          'Appointment done',
-          'Appointment is booked',
-          'Not relevant as per protocol',
-          'No relevant data available',
-          'Member request',
-          'Other',
-        ].map((option) => ({ label: option, value: option })),
-      }
-      return reasonForCancellation
-    },
-  }
   const selectPreviousItem = () => {
     const currentItems = items || []
     const previousIndex = currentIndex - 1
@@ -206,53 +169,6 @@ function ListModal(props: ListModalProps) {
     }
   }
 
-  const fieldsToEdit = () => {
-    let currentActiveFields = editableFields || activeItem.data
-    const conditionalDueDateField = ref?.current?.values['Due Date']
-    const conditionalStatusField = ref?.current?.values.Status
-
-    if (!!currentActiveFields && conditionalDueDateField) {
-      currentActiveFields = [
-        ...currentActiveFields,
-        conditionalFieldMap['Due Date'](),
-      ]
-    }
-
-    if (!!currentActiveFields && conditionalStatusField === 'Cancelled') {
-      currentActiveFields = [
-        ...currentActiveFields,
-        conditionalFieldMap.Status(),
-      ]
-    }
-
-    if (editableFields) {
-      return currentActiveFields?.map((field, index) => (
-        <div key={index} className="d-flex flex-direction-column">
-          <Label htmlFor={field.name}>{field.name}</Label>
-          {field.helperText && (
-            <Text variant="paragraph" color="gray" fontSize="12px">
-              {field.helperText}
-            </Text>
-          )}
-          <FormField {...field} disabled={field.disabled || formDisabled} />
-        </div>
-      ))
-    }
-    return currentActiveFields.map((field: any, index: number) => {
-      return !field.calculated ? (
-        <div key={index} className="d-flex flex-direction-column">
-          <Label htmlFor={field.name}>{field.name}</Label>
-          {field.helperText && (
-            <Text variant="paragraph" color="gray" fontSize="12px">
-              {field.helperText}
-            </Text>
-          )}
-          <FormField {...field} disabled={field.disabled || formDisabled} />
-        </div>
-      ) : null
-    })
-  }
-
   const isNotNull = (data: any) => {
     if (data) {
       if (Array.isArray(data) && data.length === 0) {
@@ -263,40 +179,90 @@ function ListModal(props: ListModalProps) {
     return true
   }
 
+  const { notify } = useNotifications()
+
+  const initialValues = activeItem?.data
+    ?.filter((field: any) => !field.calculated)
+    .reduce(
+      (obj: any, field: any) => ({
+        [field.name]: Array.isArray(field.value)
+          ? field.value.join()
+          : field.value,
+        ...obj,
+      }),
+      {}
+    )
+
   const handleSubmit = async (values: any) => {
     if (onEdit) {
-      const task = { id: activeItem.id || activeItem?.data?.id, fields: values }
-      await onEdit(task)
-      setFormDisabled(true)
-      setModalOpen(false)
+      try {
+        const task = {
+          id: activeItem.id || activeItem?.data?.id,
+          fields: diff(initialValues, values),
+        }
+        await onEdit(task)
+        setFormDisabled(true)
+        setModalOpen(false)
+        notify('Updated successfully')
+      } catch (error: any) {
+        logError(error)
+        notify(error?.message || 'Something went wrong')
+      }
     }
   }
 
-  const getInitialValues = () => {
-    if (editableFields) {
-      return editableFields
-        .map((f) => f.name)
-        .reduce(
-          (acc, curV) => ({
-            ...acc,
-            [curV]: '',
-          }),
-          {}
-        )
-    }
+  function FormElement({ initial }: any) {
     return (
-      activeItem?.data?.filter &&
-      activeItem?.data
-        ?.filter((field: any) => !field.calculated)
-        .reduce(
-          (obj: any, field: any) => ({
-            [field.name]: Array.isArray(field.value)
-              ? field.value.join()
-              : field.value,
-            ...obj,
-          }),
-          {}
-        )
+      <PrimaryForm initialValues={initial} handleSubmit={handleSubmit}>
+        {({ isSubmitting, values }) => {
+          const currentActiveFields = editableFields || activeItem.data
+          return (
+            <Form key="list-edit-form">
+              {currentActiveFields.map(
+                (field: AirtableField, index: number) => {
+                  let showField = true
+                  if (field.condition) {
+                    showField = field.condition(values)
+                  }
+                  return !field.calculated && showField ? (
+                    <div key={index} className="d-flex flex-direction-column">
+                      <FormLabel>{field.name}</FormLabel>
+                      {field.helperText && (
+                        <p className="mb-2.5 whitespace-pre-line font-rubik text-xs text-dark-blue-100">
+                          {parse(field.helperText)}
+                        </p>
+                      )}
+                      <FormField
+                        {...field}
+                        disabled={field.disabled || formDisabled}
+                      />
+                    </div>
+                  ) : null
+                }
+              )}
+              {!formDisabled && (
+                <div className="mt-2 flex flex-col gap-2">
+                  <Button
+                    fullWidth
+                    className="border border-disabled-grey bg-disabled-grey text-white"
+                    onClick={() => setFormDisabled(true)}
+                    disabled={isSubmitting}
+                  >
+                    Cancel
+                  </Button>
+                  <PrimaryButton
+                    fullWidth
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    Save
+                  </PrimaryButton>
+                </div>
+              )}
+            </Form>
+          )
+        }}
+      </PrimaryForm>
     )
   }
 
@@ -317,47 +283,17 @@ function ListModal(props: ListModalProps) {
         />
       }
     >
-      {modalOpen}
       {activeItem.data &&
         (editable ? (
-          <Formik
-            innerRef={ref}
-            initialValues={getInitialValues()}
-            onSubmit={handleSubmit}
-          >
-            {({ isSubmitting }) => (
-              <Form key="list-edit-form">
-                {fieldsToEdit()}
-                {!formDisabled && (
-                  <div className="d-flex margin-top-8">
-                    <button
-                      className="btn btn-primary"
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? 'Saving...' : 'Save'}
-                    </button>
-                    {!isSubmitting && (
-                      <button
-                        className="btn btn-secondary"
-                        onClick={() => setFormDisabled(true)}
-                      >
-                        Cancel
-                      </button>
-                    )}
-                  </div>
-                )}
-              </Form>
-            )}
-          </Formik>
+          <FormElement initial={initialValues} />
         ) : (
           Object.keys(activeItem.data).map((info, i) => {
             return (
               !isNotNull(activeItem.data[info]) && (
                 <div key={info} style={{ margin: '16px 0' }}>
-                  <Label className="text-capitalize" htmlFor={`input${i}`}>
+                  <FormLabel className="text-capitalize" htmlFor={`input${i}`}>
                     {info}
-                  </Label>
+                  </FormLabel>
                   <Text
                     variant="paragraph"
                     id={`input${i}`}

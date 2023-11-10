@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Field, FieldProps, useFormikContext } from 'formik'
 import TextareaAutosize from '@mui/material/TextareaAutosize'
 import AirtableField from 'src/types/airtable-field'
@@ -51,12 +51,6 @@ function FormField(customField: CustomFieldProps) {
       ]) || []
     )
   }
-  useEffect(() => {
-    // if field is unmounted, delete its value (comes in handy in dynamic forms)
-    return () => {
-      setFieldValue(name, undefined, false)
-    }
-  }, [name, setFieldValue])
 
   const fieldClassName = `form-control ${
     touched[name] && errors[name] && 'error'
@@ -166,7 +160,7 @@ function FormField(customField: CustomFieldProps) {
               <SearchField
                 search={searchQuery(tableId || '')}
                 handleChange={(v: any) => {
-                  form.setFieldValue(field.name, [v?.id])
+                  form.setFieldValue(field.name, v, false)
                 }}
                 initialValue={value}
                 label=""
