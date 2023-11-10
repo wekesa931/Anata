@@ -45,7 +45,6 @@ function FilledForms() {
     'baseline',
     'hif',
     'ncf',
-    'activity',
     'minorhif',
     'hntasks',
     'pafu',
@@ -98,7 +97,6 @@ function FilledForms() {
               name: 'Nutritional Consultation',
               data: response[forms.indexOf('ncf')],
             },
-            { name: 'Activity', data: response[forms.indexOf('activity')] },
             { name: 'Minor HIF', data: response[forms.indexOf('minorhif')] },
             { name: 'HN Tasks', data: response[forms.indexOf('hntasks')] },
             {
