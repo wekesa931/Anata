@@ -379,8 +379,8 @@ export const duplicates = [
   'Incident reports',
   'Interaction log',
   'Member Feedback',
-  'Minor HIF v2',
-  'Minor Health Check',
+  'Minor Health Check (6 to 17)',
+  'Minor Health Check (0 to 5)',
 ]
 
 export const formNames: Record<string, string> = {
@@ -410,8 +410,8 @@ export const formNames: Record<string, string> = {
   'Incident reports': 'Incident reports',
   'Interaction log': 'Interaction log',
   'Member Feedback': 'Member Feedback',
-  'Minor Health Check': 'Minor Health Check (0 to 5)',
-  'Minor HIF v2': 'Minor Health Check (6 to 17)',
+  'Minor Health Check (0 to 5)': 'Minor Health Check (0 to 5)',
+  'Minor Health Check (6 to 17)': 'Minor Health Check (6 to 17)',
 }
 
 export const interactionlogform = {
