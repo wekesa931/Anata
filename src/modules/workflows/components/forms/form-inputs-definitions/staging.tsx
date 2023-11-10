@@ -13949,7 +13949,7 @@ export default [
     ],
   },
   {
-    name: 'Minor HIF v2',
+    name: 'Minor Health Check (6 to 17)',
     id: 'tbl8EfWnshgOZQpmE',
     helper:
       'Please fill this form only if minor is older than 5 years old, if not, delete the form from the workflow. Please note that you can also push the parent to fill it in the app by creating a member task',
@@ -16529,7 +16529,7 @@ export default [
     ],
   },
   {
-    name: 'Minor Health Check',
+    name: 'Minor Health Check (0 to 5)',
     id: 'tblcShvXs3WINoqL7',
     helper:
       'Please fill this form only if minor is younger than 5 years old, if not, delete the form from the workflow',

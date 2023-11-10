@@ -53,8 +53,8 @@ const TABLE_ROUTES: Record<string, string> = {
   'Incident reports': 'incident',
   'Member Feedback': 'member_feedback',
   'Medications Base Sync': 'medication_base',
-  'Minor HIF v2': 'minorhifv2',
-  'Minor Health Check': 'minor_health_check',
+  'Minor Health Check (6 to 17)': 'minorHealthCheckSixToSeventeen',
+  'Minor Health Check (0 to 5)': 'minorHealthCheckZeroToFive',
 }
 
 export default TABLE_ROUTES

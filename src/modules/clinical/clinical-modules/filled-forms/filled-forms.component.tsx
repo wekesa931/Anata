@@ -144,12 +144,12 @@ function FilledForms() {
               data: response[forms.indexOf('physio')],
             },
             {
-              name: 'Minor Health Check',
-              data: response[forms.indexOf('minor_health_check')],
+              name: 'Minor Health Check (0 to 5)',
+              data: response[forms.indexOf('minorHealthCheckZeroToFive')],
             },
             {
-              name: 'Minor HIF v2',
-              data: response[forms.indexOf('minorhifv2')],
+              name: 'Minor Health Check (6 to 17)',
+              data: response[forms.indexOf('minorHealthCheckSixToSeventeen')],
             },
           ]
           setFilledForms(formResponses)
