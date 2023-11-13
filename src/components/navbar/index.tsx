@@ -26,7 +26,8 @@ function UserMenu() {
     const r = await window.indexedDB.databases()
     for (let i = 0; i < r.length; i += 1) {
       const db = r[i]
-      if (db?.name) {
+      if (db?.name && db.name !== 'commLibDB') {
+        // ignore commLibDB
         window.indexedDB.deleteDatabase(db.name)
       }
     }
