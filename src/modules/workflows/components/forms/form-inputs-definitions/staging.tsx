@@ -7068,7 +7068,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: 'What is the task yo want to assign to the team',
+        helper:
+          'Please select the type of tasks you want the riders to perform. Remember to always select weight measurement if any of blood sugar, HbA1c, lipid panel, blood pressure, bp kit delivery or glucometer delivery',
       },
       {
         id: 'flddfIdJpUSgcY7Sw',
