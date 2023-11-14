@@ -7217,7 +7217,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Tasks will be done as soon as possible, please enter the latest possible date at which you want the task to be performed.',
+          'Please enter the due date you agreed with the member. Please take the below rules into consideration when selecting the date:\nThika Road from Roysambu to Thika town - Wednesdays\nUtawala - Fridays\nMaximum of two fasting tasks per day at Antara. Please verify with Logistics first (<a href="https://airtable.com/app5syOvwU86ByWD8/tblJmoQGSS2vl8u9g/viwrNUL5bEGmPbeWd?blocks=hide)" target="_blank">https://airtable.com/app5syOvwU86ByWD8/tblJmoQGSS2vl8u9g/viwrNUL5bEGmPbeWd?blocks=hide)</a>',
       },
       {
         id: 'fldIOkOLZq90YaUP7',
