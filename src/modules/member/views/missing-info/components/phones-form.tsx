@@ -5,9 +5,7 @@ import FlexRow from 'src/components/layouts/flex-row'
 import type { Member } from 'src/modules/member/db/models'
 import UpdateForms from 'src/modules/member/components/update-forms'
 import { PhoneNumberSearch } from 'src/modules/member/components/phone-field-search'
-import { useRegistrationForm } from 'src/context/member-registration'
 import DeleteFormEntry from 'src/modules/member/components/delete-form-entry'
-import SelectField from 'src/components/forms/fields/select-field'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useRegistrationData } from 'src/modules/member/hooks/registration'
 import { BooleanStatus } from 'src/modules/member/types'
@@ -21,7 +19,6 @@ type MissingInfoBlockProps = {
 export default function MissingPhoneForm({ member }: MissingInfoBlockProps) {
   const [showForm, setShowForm] = useState<BooleanStatus>({})
   const [isFetching, setIsFetching] = useState<BooleanStatus>({})
-  const { lookupOptions } = useRegistrationForm()
   const { handleUpdatePhones, isUpdatingPhones } = useRegistrationData()
   const { notify } = useNotifications()
 
@@ -111,15 +108,6 @@ export default function MissingPhoneForm({ member }: MissingInfoBlockProps) {
                                   .map((y: any) => y.phone)}
                                 fullWidth
                               />
-                              <div className="mb-8 w-full flex self-start">
-                                <SelectField
-                                  name={`phones.${index}.phoneType`}
-                                  label="Phone Type"
-                                  placeholder="--Select--"
-                                  options={lookupOptions?.phoneTypes || []}
-                                  required={false}
-                                />
-                              </div>
                             </FlexRow>
                           </div>
                         ))}

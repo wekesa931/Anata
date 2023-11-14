@@ -60,14 +60,17 @@ function ContactsSection({ member }: ContactsSectionProps) {
         {member?.phones?.map((phone, index) => (
           <GridItems key={index}>
             <Item title={`Phone ${index + 1}`} child={phone?.phone} />
-            <Item title="Phone type" child={phone?.phoneType} />
+            <Item
+              title="Last app opened date"
+              child={phone?.lastUsedToAccessApp}
+            />
           </GridItems>
         ))}
 
         {member?.phones?.length === 0 && (
           <GridItems>
             <Item title="Phone 1" child="-" />
-            <Item title="Phone type" child="-" />
+            <Item title="Last app opened date" child="-" />
           </GridItems>
         )}
 

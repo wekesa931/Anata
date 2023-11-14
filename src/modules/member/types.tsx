@@ -3,6 +3,7 @@ export type PhoneType = {
   phoneType: string
   priority: number
   toDelete?: boolean
+  lastUsedToAccessApp?: string
 }
 
 type BenefitType = {
@@ -83,6 +84,7 @@ export type V2MemberType = {
   maritalStatus?: string
   phone?: string
   phoneType?: string
+  lastUsedToAccessApp?: string
   phones?: PhoneType[]
   employer?: EmployerType
   department?: string
@@ -142,6 +144,7 @@ type RawPhoneType = {
     phoneType?: string
   }
   priority: number
+  lastUsedToAccessApp?: string
 }
 
 type RawInsuranceType = {

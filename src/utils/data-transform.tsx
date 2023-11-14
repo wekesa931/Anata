@@ -59,6 +59,7 @@ export const parseV2MemberData = (
     phone: e.phone,
     phoneType: e.phoneType?.phoneType,
     priority: e.priority,
+    lastUsedToAccessApp: e.lastUsedToAccessApp,
   }))
 
   // status

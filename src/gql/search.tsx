@@ -41,6 +41,7 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
   fragment MemberDetailsFragment on MemberType {
     antaraId
     birthDate
+    lastSeen
     details {
       fullName
       firstName
@@ -88,6 +89,7 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
         phoneType
       }
       priority
+      lastUsedToAccessApp
     }
     status {
       startDate

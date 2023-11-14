@@ -17,7 +17,6 @@ import type { ContactValues } from 'src/modules/member/types'
 import { useRegistrationData } from 'src/modules/member/hooks/registration'
 import { logError } from 'src/utils/logging/logger'
 import { useNotifications } from 'src/context/notifications'
-import { useRegistrationForm } from 'src/context/member-registration'
 import { relationshipOptions } from 'src/config/constants'
 import PhoneNumberSearch from 'src/modules/member/components/phone-field-search'
 import { BooleanStatus } from 'src/modules/member/types'
@@ -91,7 +90,6 @@ export function ContactsForm({
 }: ContactsFormProps) {
   const { handleUpdateContactsData, loading } = useRegistrationData()
   const { notify } = useNotifications()
-  const { lookupOptions } = useRegistrationForm()
   const [showForm, setShowForm] = useState<BooleanStatus>({})
   const [isFetching, setIsFetching] = useState<BooleanStatus>({})
   const [userError, setUserError] = useState<string | null>(null)
@@ -206,15 +204,6 @@ export function ContactsForm({
                                 .filter((x: any, i: number) => i !== index)
                                 .map((y: any) => y.phone)}
                             />
-                            <div className="mb-8 w-full flex self-start">
-                              <SelectField
-                                name={`phones.${index}.phoneType`}
-                                label="Phone Type"
-                                placeholder="--Select--"
-                                options={lookupOptions?.phoneTypes || []}
-                                required={false}
-                              />
-                            </div>
                           </FlexRow>
                         </div>
                       ))}
