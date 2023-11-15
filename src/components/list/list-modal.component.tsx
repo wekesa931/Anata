@@ -181,17 +181,19 @@ function ListModal(props: ListModalProps) {
 
   const { notify } = useNotifications()
 
-  const initialValues = activeItem?.data
-    ?.filter((field: any) => !field.calculated)
-    .reduce(
-      (obj: any, field: any) => ({
-        [field.name]: Array.isArray(field.value)
-          ? field.value.join()
-          : field.value,
-        ...obj,
-      }),
-      {}
-    )
+  const initialValues =
+    Array.isArray(activeItem?.data) &&
+    activeItem?.data
+      ?.filter((field: any) => !field.calculated)
+      .reduce(
+        (obj: any, field: any) => ({
+          [field.name]: Array.isArray(field.value)
+            ? field.value.join()
+            : field.value,
+          ...obj,
+        }),
+        {}
+      )
 
   const handleSubmit = async (values: any) => {
     if (onEdit) {

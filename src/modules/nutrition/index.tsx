@@ -24,6 +24,8 @@ function Nutrition() {
     'Dietary challenges',
     'Describe dietary challenges',
     'Assessment',
+    'Current dietary challenges',
+    'Future dietary challenges',
     'Nutrition consultation outcomes',
     'Recommendation',
     'Put anything else you want to share here',
@@ -145,9 +147,40 @@ Level [3]: >500mg (Very High)`,
       )}`
     )
   )
+
+  const getModifiedFieldValue = (field: any) => {
+    if (Array.isArray(field)) {
+      return field.join(' ')
+    }
+    return field || ''
+  }
+
   React.useEffect(() => {
     if (data) {
-      const mappedData = Object.keys(data).map((key) => data[key])
+      const mappedData = Object.keys(data).map((key) => {
+        const consultation = data[key]
+
+        // Modify multiselect fields to display values as separate words
+        const modifiedConsultation: any = {
+          ...consultation,
+        }
+
+        const multiselectFields = [
+          'Current dietary challenges',
+          'Future dietary challenges',
+          'Do you have any of the following conditions?',
+          'Nutrition consultation outcomes',
+        ]
+
+        multiselectFields.forEach((fieldName) => {
+          modifiedConsultation[fieldName] = getModifiedFieldValue(
+            consultation[fieldName]
+          )
+        })
+
+        return modifiedConsultation
+      })
+
       setConsultations(mappedData)
     }
   }, [data])
