@@ -305,6 +305,7 @@ export const initialFormValues = (
     },
     'Prescriptions VC': {
       'Start Date': todayFormattedDate(new Date()),
+      'Prescribing facility from Provider base': ['recnjX3KGmGvKv7Ek'],
     },
     'Healthy triage form': {
       Gender: member?.sex,
