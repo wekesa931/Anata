@@ -20,9 +20,9 @@ function AirtableBasedForm({
   saveInput,
   formData,
   isWorkflowComplete = false,
-  saveDraft,
+  upsertDraft,
 }: FormProps) {
-  const formSchema = (FORM_DEFINITIONS as any).find(
+  const formSchema: any = (FORM_DEFINITIONS as any).find(
     (f: any) => f?.name === form.name
   )
   if (!formSchema) {
@@ -97,19 +97,16 @@ function AirtableBasedForm({
 
   const onSubmit = async () => {
     const formattedPayload = preProcessInput(form?.data)
-    if (saveDraft) {
-      await saveDraft()
-    }
+    try {
+      upsertDraft && (await upsertDraft())
 
-    submitForm(form, formSchema, formattedPayload)
-      .then(() => {
-        setIsFormDraft(false)
-        handleSubmissionSuccess()
-      })
-      .catch((e) => {
-        setIsFormDraft(true)
-        handleSubmissionError(e)
-      })
+      await submitForm(form, formSchema, formattedPayload)
+      setIsFormDraft(false)
+      handleSubmissionSuccess()
+    } catch (e) {
+      setIsFormDraft(true)
+      handleSubmissionError(e)
+    }
   }
 
   const disabled =

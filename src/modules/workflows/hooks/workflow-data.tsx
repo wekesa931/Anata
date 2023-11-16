@@ -24,6 +24,7 @@ import logError from 'src/utils/logging/logger'
 import useObservable from 'src/hooks/observable'
 import { useFormHandlers } from 'src/modules/workflows/hooks/form-handlers'
 import { useWorkflowAnalytics } from './analytics'
+import { getUserModelDetails } from '../utils'
 
 export type WorkflowDataApi = ReturnType<typeof useWorkflowData>
 
@@ -210,6 +211,8 @@ export const useWorkflowData = () => {
         ...formData,
         'Case ID': caseId,
         'Data Source': 'Guided Workflow',
+        createdBy: getUserModelDetails(user),
+        updatedBy: getUserModelDetails(user),
       })
         .then(async () => {
           let isModulesDraft = false
@@ -265,6 +268,8 @@ export const useWorkflowData = () => {
       return handleFormSubmission(form, formMeta, {
         ...formData,
         'Data Source': 'Scribe form',
+        createdBy: getUserModelDetails(user),
+        updatedBy: getUserModelDetails(user),
       })
     }
     throw new Error('Member or User not found')

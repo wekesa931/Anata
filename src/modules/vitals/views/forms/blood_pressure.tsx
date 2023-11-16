@@ -33,7 +33,7 @@ function BPReadingForm({
   saveInput,
   form,
   isWorkflowComplete = false,
-  saveDraft,
+  upsertDraft: saveDraft,
 }: FormProps) {
   const { handleCreateBloodPressureReading, loading } = useVitalsUpdate()
   const [initialValues, setInitialValues] = React.useState<any>({

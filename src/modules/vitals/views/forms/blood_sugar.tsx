@@ -40,7 +40,7 @@ function DMMonitoring({
   handleSubmissionSuccess,
   saveInput,
   isWorkflowComplete,
-  saveDraft,
+  upsertDraft: saveDraft,
 }: FormProps) {
   const { handleCreateDMReading, loading } = useVitalsUpdate()
   const [initialValues, setInitialValues] = React.useState<any>({

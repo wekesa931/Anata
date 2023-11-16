@@ -172,5 +172,5 @@ export type FormProps = {
   saveInput: (name: string, value: string) => void
   formData?: Record<string, any>
   isWorkflowComplete?: boolean
-  saveDraft?: () => Promise<void>
+  upsertDraft?: () => Promise<void>
 }

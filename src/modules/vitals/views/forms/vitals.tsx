@@ -54,7 +54,7 @@ function VitalsCollection({
   handleSubmissionError,
   handleSubmissionSuccess,
   isWorkflowComplete,
-  saveDraft,
+  upsertDraft: saveDraft,
 }: FormProps) {
   const { loading, handleCreateVitalsReading } = useVitalsUpdate()
   const [initialValues, setInitialValues] = useState<any>({

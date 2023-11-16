@@ -36,7 +36,7 @@ function CHLForm({
   handleSubmissionError,
   handleSubmissionSuccess,
   isWorkflowComplete = false,
-  saveDraft,
+  upsertDraft: saveDraft,
 }: FormProps) {
   const { loading, handleCreateCholesterolReading } = useVitalsUpdate()
   const [initialValues, setInitialValues] = React.useState<any>({

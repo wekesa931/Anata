@@ -474,7 +474,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                                       )}
                                       formData={formsData[index] || {}}
                                       isWorkflowComplete={workflow?.isCompleted}
-                                      saveDraft={handleSaveDraftWorkflow}
+                                      upsertDraft={handleSaveDraftWorkflow}
                                     />
                                   </AccordionDetails>
                                 </Accordion>
@@ -492,7 +492,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                           )}
                           formData={formsData[0] || {}}
                           isWorkflowComplete={workflow?.isCompleted}
-                          saveDraft={handleSaveDraftWorkflow}
+                          upsertDraft={handleSaveDraftWorkflow}
                         />
                       )}
                     </>
