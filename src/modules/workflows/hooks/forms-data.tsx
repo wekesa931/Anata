@@ -55,25 +55,22 @@ export const useFormsData = () => {
   }
 
   const getForms = async (formIds: string[]) => {
-    if (member) {
+    if (formIds.length) {
       // formIDs maybe an array of local ids or airtable ids from the API
-      const query = formIds
-        ? formsCollection.query(
-            Q.where('member', member?.antaraId),
-            Q.or(
-              Q.where('id', Q.oneOf(formIds)),
-              Q.where('airtable_id', Q.oneOf(formIds))
-            )
-          )
-        : formsCollection.query(Q.where('member', member?.antaraId))
+      const query = formsCollection.query(Q.where('id', Q.oneOf(formIds)))
+
       const formsFound = await query.fetch()
 
       if (formsFound.length) {
         return formsFound
       }
+      throw new Error('Form(s) not found')
+    }
+    if (member?.antaraId) {
+      return formsCollection.query(Q.where('member', member?.antaraId)).fetch()
     }
 
-    return []
+    throw new Error('Member not found')
   }
 
   const deleteAllForms = async () => {
