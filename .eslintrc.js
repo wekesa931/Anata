@@ -68,6 +68,7 @@ module.exports = {
     'react/jsx-no-constructed-context-values': 0,
     'consistent-return': 0,
     '@typescript-eslint/no-underscore-dangle': 0,
+    'jsx-a11y/control-has-associated-label': 'off',
   },
   settings: {
     'import/resolver': {
