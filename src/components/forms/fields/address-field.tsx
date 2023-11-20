@@ -65,13 +65,24 @@ function FormPlacesField({
   if (typeof window !== 'undefined' && !loaded.current) {
     if (!document.querySelector('#google-maps')) {
       loadScript(
-        `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_API_KEY}&libraries=places&callback=initMap`,
+        `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_API_KEY}&libraries=places&callback=initAutocompleteService`,
         document.querySelector('head'),
         'google-maps'
       )
     }
 
     loaded.current = true
+  }
+
+  ;(window as any).initAutocompleteService = () => {
+    if (!autocompleteService.current && (window as any).google) {
+      autocompleteService.current = new (
+        window as any
+      ).google.maps.places.AutocompleteService()
+    }
+    if (!autocompleteService.current) {
+      return undefined
+    }
   }
 
   const fetch = React.useMemo(
@@ -96,42 +107,34 @@ function FormPlacesField({
 
   React.useEffect(() => {
     let active = true
-
-    if (!autocompleteService.current && (window as any).google) {
-      autocompleteService.current = new (
-        window as any
-      ).google.maps.places.AutocompleteService()
-    }
-    if (!autocompleteService.current) {
-      return undefined
-    }
-
     if (inputValue === '') {
       setOptions(value ? [value] : [])
       return undefined
     }
 
-    fetch(
-      {
-        input: inputValue,
-        componentRestrictions: { country: 'ke' },
-      },
-      (results?: readonly PlaceType[]) => {
-        if (active) {
-          let newOptions: readonly PlaceType[] = []
+    if (autocompleteService.current) {
+      fetch(
+        {
+          input: inputValue,
+          componentRestrictions: { country: 'ke' },
+        },
+        (results?: readonly PlaceType[]) => {
+          if (active) {
+            let newOptions: readonly PlaceType[] = []
 
-          if (value) {
-            newOptions = [value]
+            if (value) {
+              newOptions = [value]
+            }
+
+            if (results) {
+              newOptions = [...newOptions, ...results]
+            }
+
+            setOptions(newOptions)
           }
-
-          if (results) {
-            newOptions = [...newOptions, ...results]
-          }
-
-          setOptions(newOptions)
         }
-      }
-    )
+      )
+    }
 
     return () => {
       active = false
