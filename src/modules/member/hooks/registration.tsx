@@ -55,6 +55,7 @@ export const useRegistrationData = () => {
           phone: p?.phone,
           phoneType: p.phoneType?.phoneType,
           priority: p?.priority || index,
+          lastUsedToAccessApp: p?.lastUsedToAccessApp,
         })
       )
 
@@ -101,7 +102,11 @@ export const useRegistrationData = () => {
       const phonesToUpdate = preparePhonesForUpdate(
         member.phones || [],
         contactsData.phones
-      )
+      ).map((p: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { lastUsedToAccessApp, ...rest } = p
+        return rest
+      })
       contactsData.phones = phonesToUpdate
 
       const { data } = await updateContactsData({

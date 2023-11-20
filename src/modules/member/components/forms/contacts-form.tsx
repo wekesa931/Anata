@@ -236,6 +236,7 @@ export function ContactsForm({
                   type="email"
                   required={false}
                   validate={validateEmail}
+                  autoFocus // to hinder phone verification from popping up initially
                 />
                 <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
                   {' '}

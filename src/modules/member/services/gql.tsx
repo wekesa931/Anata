@@ -174,6 +174,7 @@ export const UPDATE_MEMBER_PHONES = gql`
             phoneType
           }
           phone
+          lastUsedToAccessApp
         }
       }
       errors

@@ -96,7 +96,6 @@ export function PhoneNumberSearch({
           setIsEdited(true)
           setPhoneFound(undefined)
         }}
-        autoFocus
       />
       {isFetching ? (
         <VerificationLoader
