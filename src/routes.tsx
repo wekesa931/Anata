@@ -37,6 +37,7 @@ function ProtectedRoute({ children, user }: any) {
   return user ? (
     <>
       <DataProvider>
+        <CallConsole />
         <MemberProvider antaraId={recId}>
           <div className="flex h-full">
             <div className="flex flex-col flex-1 overflow-auto bg-white">
@@ -104,7 +105,6 @@ function Routes() {
   return (
     <FcmProvider>
       <CallProvider>
-        <CallConsole />
         <SwitchRoutes>
           <Route path="/login" element={<Login />} />
           <Route

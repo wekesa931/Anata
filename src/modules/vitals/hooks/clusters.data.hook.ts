@@ -56,7 +56,8 @@ export const useClustersData = () => {
       metrics.sort((a, b) => a.timestamp - b.timestamp)
       return metrics
     }
-    throw new Error('Member not found')
+
+    return []
   }
 
   const getBsClusters = async (range: TimeRange, filter: TimeFilters) => {
@@ -78,7 +79,7 @@ export const useClustersData = () => {
       metrics.sort((a, b) => a.timestamp - b.timestamp)
       return metrics
     }
-    throw new Error('Member not found')
+    return []
   }
 
   const getBmiData = async (range: TimeRange, filter: TimeFilters) => {
@@ -98,7 +99,7 @@ export const useClustersData = () => {
       metrics.sort((a, b) => a.timestamp - b.timestamp)
       return metrics
     }
-    throw new Error('Member not found')
+    return []
   }
 
   const getLipidsClusters = async () => {
@@ -108,7 +109,7 @@ export const useClustersData = () => {
       metrics.sort((a, b) => a.timestamp - b.timestamp)
       return metrics
     }
-    throw new Error('Member not found')
+    return []
   }
 
   const getRanges = async (healthMetric: HealthMetricNames) => {
@@ -116,7 +117,7 @@ export const useClustersData = () => {
       const data = await getReferences(healthMetric)
       return transformReferenceRanges(data?.referenceRanges?.edges || [])
     }
-    throw new Error('Member not found')
+    return []
   }
 
   const getBsReference = async () => {
@@ -124,7 +125,7 @@ export const useClustersData = () => {
       const data = await getBsReferences()
       return mapBsRefsToDomain(data)
     }
-    throw new Error('Member not found')
+    return []
   }
 
   const getHba1cClusters = async (range: TimeRange, filter: TimeFilters) => {
@@ -144,7 +145,7 @@ export const useClustersData = () => {
       metrics.sort((a, b) => a.timestamp - b.timestamp)
       return metrics
     }
-    throw new Error('Member not found')
+    return []
   }
 
   return {
