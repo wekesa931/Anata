@@ -13,9 +13,6 @@ export const useGetLookupEntries = () => {
       context: {
         clientName: 'v2',
       },
-      variables: {
-        status: 'Active',
-      },
     }
   )
   const [loadInsuranceCompanies, { loading }] = useLazyQuery(

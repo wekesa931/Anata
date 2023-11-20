@@ -16,8 +16,8 @@ export const GET_INSURANCE_COMPANIES = gql`
 `
 
 export const LOOKUP_ENTRIES_QUERY = gql`
-  query lookUps($status: String) {
-    getCompanies(status: $status) {
+  query lookUps {
+    getCompanies {
       edges {
         node {
           name
