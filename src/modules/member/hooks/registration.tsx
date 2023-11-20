@@ -1,4 +1,3 @@
-import { useDatabase } from '@nozbe/watermelondb/hooks'
 import {
   PhoneType,
   InsuranceVerificationStatus,
@@ -34,7 +33,6 @@ import { useMembersData } from 'src/modules/member/hooks/member-data'
 import { toTitleCase } from 'src/utils/text-utils'
 
 export const useRegistrationData = () => {
-  const database = useDatabase()
   const { createMember, loading: creatingMember } = useCreateMember()
   const { updateBiodata, loading: updatingMember } = useUpdateBiodata()
   const { updateContactsData, loading: updatingContactsData } =
@@ -85,23 +83,9 @@ export const useRegistrationData = () => {
       }
 
       await updateBiodata(removeEmpty(biodata))
-      return database.write(async () => {
-        return member.update((m) => {
-          m.isSynced = true
-          m.antaraId = biodata.antaraId
-          m.firstName = biodata.firstName
-          m.lastName = biodata.lastName
-          m.middleName = biodata.middleName
-          m.phone = biodata.phone
-          m.sex = biodata.sex
-          m.birthDate = dayjs(biodata.birthDate).format('YYYY-MM-DD')
-          m.maritalStatus = biodata.maritalStatus
-          m.tags = biodata.tags
-          m.referralSource = biodata.referralSource
-          m.refusedServices = biodata.refusedServices
-          m.nhifNumber = biodata.nhifNumber
-          m.kenyaNationalId = biodata.kenyaNationalId
-        })
+      return member.updateMember({
+        ...biodata,
+        birthDate: dayjs(biodata.birthDate).format('YYYY-MM-DD'),
       })
     } catch (error) {
       logError(error)
@@ -125,14 +109,10 @@ export const useRegistrationData = () => {
         antaraId: member.antaraId,
       })
       const phones = transformPhones(data)
-
-      return database.write(async () => {
-        return member.update((m) => {
-          m.phones = phones
-          m.email = contactsData.email
-          m.emergencyContact = contactsData.emergencyContact
-          m.isSynced = true
-        })
+      return await member.updateMember({
+        phones,
+        email: contactsData.email,
+        emergencyContact: contactsData.emergencyContact,
       })
     } catch (error) {
       logError(error)
@@ -154,11 +134,8 @@ export const useRegistrationData = () => {
         antaraId: member.antaraId,
       })
 
-      return database.write(async () => {
-        return member.update((m) => {
-          m.addresses = addressData
-          m.isSynced = true
-        })
+      return member.updateMember({
+        addresses: addressData,
       })
     } catch (error) {
       logError(error)
@@ -193,11 +170,9 @@ export const useRegistrationData = () => {
         employer: insuranceDetails.employer,
       }
 
-      await database.write(async () => {
-        await member.update((m) => {
-          m.insurances = update
-          m.isSynced = true
-        })
+      await member.updateMember({
+        insurances: update.insurances,
+        employer: update.employer,
       })
 
       return {
@@ -228,12 +203,10 @@ export const useRegistrationData = () => {
           ...variables,
           antaraId: member.antaraId,
         })
-        return database.write(async () => {
-          return member.update((m) => {
-            m.insurances = insuranceDetails
-            m.employer = insuranceDetails.employer
-            m.isSynced = true
-          })
+
+        return member.updateMember({
+          insurances: insuranceDetails,
+          employer: insuranceDetails.employer,
         })
       }
       return null
@@ -258,11 +231,9 @@ export const useRegistrationData = () => {
           newPhones.find((p: any) => p.priority === 0)?.phone || ''
 
         // write them to db and update member
-        return database.write(async () => {
-          return member.update((m) => {
-            m.phones = newPhones
-            m.phone = priority0Phone
-          })
+        return member.updateMember({
+          phones: newPhones,
+          phone: priority0Phone,
         })
       }
       return null
@@ -286,10 +257,8 @@ export const useRegistrationData = () => {
       }
 
       await updateBirthdate(payload)
-      return database.write(async () => {
-        return member.update((m) => {
-          m.birthDate = dayjs(birthDate).format('YYYY-MM-DD')
-        })
+      return member.updateMember({
+        birthDate: dayjs(birthDate).format('YYYY-MM-DD'),
       })
     } catch (error) {
       logError(error)
@@ -312,17 +281,16 @@ export const useRegistrationData = () => {
         }
 
         await updateStatus(payload)
-        await database.write(async () => {
-          await member.update((m) => {
-            m.onboardStage = values?.onboardStage || ''
-            m.verificationStatus = values?.verificationStatus || ''
-            m.status = values?.status || ''
-            m.assignedMe = values?.assignedMe || {}
-            m.assignedHn = values?.assignedHn || {}
-            m.assignedNutritionist = values?.assignedNutritionist || {}
-          })
+        return member.updateMember({
+          onboardStage: values?.onboardStage || '',
+          verificationStatus: values?.verificationStatus || '',
+          status: values?.status || '',
+          assignedMe: values?.assignedMe || {},
+          assignedHn: values?.assignedHn || {},
+          assignedNutritionist: values?.assignedNutritionist || {},
         })
       }
+      return member
     } catch (error) {
       logError(error)
       throw error
