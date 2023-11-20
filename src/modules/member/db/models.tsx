@@ -80,6 +80,8 @@ const mergeCaregiverContact = (member: Member, memberData: V2MemberType) => {
   }
 }
 
+type MemberInfo = Partial<Record<keyof Member, any>>
+
 export const createOrUpdateMember = (
   member: Member,
   memberData: V2MemberType
@@ -207,6 +209,15 @@ export class Member extends Model {
 
   @writer async destroy() {
     await super.destroyPermanently()
+  }
+
+  @writer async updateMember(memberInfo: MemberInfo) {
+    return this.update(() => {
+      Object.keys(memberInfo).forEach((key) => {
+        ;(this as any)[key] = (memberInfo as any)[key]
+        this.isSynced = true
+      })
+    })
   }
 
   get fullName() {
