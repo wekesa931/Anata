@@ -12,7 +12,6 @@ import useClickOutside from 'src/hooks/click-outside'
 import FlatLogo from 'src/assets/img/logo/Antara Logo@1x.png'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useRegistrationForm } from 'src/context/member-registration'
-import { logError } from 'src/utils/logging/logger'
 import TaskMenu from './task-menu/task-menu.component'
 import styles from './navbar.component.css'
 import FloatingMenu from './menu.component'
@@ -22,27 +21,10 @@ function UserMenu() {
   const auth = useAuth()
   const navigate = useNavigate()
 
-  const resetAllDbs = async () => {
-    const r = await window.indexedDB.databases()
-    for (let i = 0; i < r.length; i += 1) {
-      const db = r[i]
-      if (db?.name && db.name !== 'commLibDB') {
-        // ignore commLibDB
-        window.indexedDB.deleteDatabase(db.name)
-      }
-    }
-  }
-
   const logout = () => {
     auth.logout()
-    resetAllDbs()
-      .then(() => {
-        analytics.track('User LoggedOut')
-        navigate('/login')
-      })
-      .catch((err) => {
-        logError(err)
-      })
+    analytics.track('User LoggedOut')
+    navigate('/login')
   }
 
   const hasName = (userDetails: { given_name: string; family_name: string }) =>

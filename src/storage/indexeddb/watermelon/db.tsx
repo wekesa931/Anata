@@ -10,6 +10,10 @@ import schema from './schema'
 import migrations from './migrations'
 import models from './models'
 
+// enable this to see detailed IndexedDB debugging information
+// eslint-disable-next-line no-underscore-dangle
+// window.__loki_incremental_idb_debug = true
+
 logger.silence()
 
 const getAdapter = (dbName: string) =>
@@ -18,9 +22,7 @@ const getAdapter = (dbName: string) =>
     migrations,
     useWebWorker: false,
     useIncrementalIndexedDB: true,
-    extraLokiOptions: {
-      autosaveInterval: 5000,
-    },
+
     dbName,
     onQuotaExceededError: (error) => {
       // eslint-disable-next-line no-console
@@ -45,7 +47,9 @@ const getAdapter = (dbName: string) =>
         // This happens if there's another open tab of the same app that's making changes.
         // Try to synchronize the app now, and if user is offline, alert them that if they close this
         // tab, some data may be lost
-        window.location.reload()
+        alert(
+          'This app is open in another tab. Please close one of the tabs to avoid data loss or app crashes.'
+        )
       },
       onversionchange: () => {
         // database was deleted in another browser tab (user logged out), so we must make sure we delete

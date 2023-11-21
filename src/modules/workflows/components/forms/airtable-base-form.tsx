@@ -21,6 +21,7 @@ function AirtableBasedForm({
   formData,
   isWorkflowComplete = false,
   upsertDraft,
+  workflow,
 }: FormProps) {
   const formSchema: any = (FORM_DEFINITIONS as any).find(
     (f: any) => f?.name === form.name
@@ -31,7 +32,7 @@ function AirtableBasedForm({
 
   const { validationObject, numberFields, dateFields } = validationRules(
     formSchema,
-    !!form?.workflow.id
+    !!workflow
   )
 
   const {
@@ -100,7 +101,7 @@ function AirtableBasedForm({
     try {
       upsertDraft && (await upsertDraft())
 
-      await submitForm(form, formSchema, formattedPayload)
+      await submitForm(form, formSchema, formattedPayload, workflow)
       setIsFormDraft(false)
       handleSubmissionSuccess()
     } catch (e) {

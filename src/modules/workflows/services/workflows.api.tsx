@@ -12,6 +12,7 @@ import {
   WorkflowVariables,
   DeleteModuleVariables,
   DeleteWorkflowVariables,
+  RawForm,
 } from 'src/modules/workflows/types'
 import { useLazyDataSource, NormalizeDataFn } from 'src/services/api/utils'
 import { generateId } from 'src/storage/utils'
@@ -24,14 +25,6 @@ import {
   CANCEL_WORKFLOW,
   ADD_MODULE_TO_WORKFLOW,
 } from './gql'
-
-type RawForm = {
-  name: string
-  moduleId: string
-  isDraft: boolean
-  data: Record<string, any>
-  createdAt?: string
-}
 
 const isFormDraft = (workflow: TWorkflow, formData: any, formName: string) => {
   if (formData[formName]?.status === 'Draft') {

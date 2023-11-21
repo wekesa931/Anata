@@ -13,8 +13,8 @@ import {
 
 import { Associations } from '@nozbe/watermelondb/Model'
 import dayjs from 'dayjs'
-import type { Member } from 'src/modules/member/db/models'
-import { initialFormValues } from '../utils'
+// import type { Member } from 'src/modules/member/db/models'
+// import { initialFormValues } from '../utils'
 import { CollectionType } from '../../../storage/types'
 
 // return objects and arrays as is
@@ -44,8 +44,8 @@ export class Templates extends Model {
 
   // update the modules
   @writer async updateModules(modules: TModule[]) {
-    await this.update((t) => {
-      t.modules = modules
+    await this.update(() => {
+      this.modules = modules
     })
   }
 }
@@ -81,9 +81,9 @@ export class Forms extends Model {
 
   @writer async saveInput(key: string, data: any) {
     // update the data object with the new data [key]: data
-    await this.update((f) => {
-      f.data = { ...this.data, [key]: data }
-      f.isEdited = true
+    await this.update(() => {
+      this.data = { ...this.data, [key]: data }
+      this.isEdited = true
     })
   }
 
@@ -92,26 +92,26 @@ export class Forms extends Model {
   }
 
   @writer async markAsCompleted(airtableId?: string) {
-    await this.update((f) => {
-      f.isDraft = false
-      f.isEdited = false
-      f.isSynced = true
-      f.airtableId = airtableId
+    await this.update(() => {
+      this.isDraft = false
+      this.isEdited = false
+      this.isSynced = true
+      this.airtableId = airtableId
     })
   }
 
   @writer async markAsSynced() {
-    await this.update((f) => {
-      f.isSynced = true
+    await this.update(() => {
+      this.isSynced = true
     })
   }
 
   @writer async clearDraft() {
-    await this.update((f) => {
-      f.isDraft = false
-      f.isEdited = false
-      f.data = {
-        ...f.data,
+    await this.update(() => {
+      this.isDraft = false
+      this.isEdited = false
+      this.data = {
+        ...this.data,
         isDraft: false,
       }
     })
@@ -210,7 +210,7 @@ export class Workflows extends Model {
 
   async isDraft() {
     const forms = await this.forms.fetch()
-    return forms.some((f: Forms) => f.isDraft)
+    return forms.some((f: Forms) => f.data?.isDraft || f.isDraft)
   }
 
   @writer async clearEdited() {
@@ -225,85 +225,18 @@ export class Workflows extends Model {
   }
 
   @writer async markAsCompleted() {
-    await this.update((w) => {
-      w.isCompleted = true
+    await this.update(() => {
+      this.isCompleted = true
     })
   }
 
   @writer async syncWorkflow(syncedWorkflow: any) {
-    await this.update((w) => {
-      w.isSynced = true
-      w.airtableId = syncedWorkflow.airtableId
-      w.workflowId = syncedWorkflow.workflowId
-      w.isCompleted = syncedWorkflow.completed
+    await this.update(() => {
+      this.isSynced = true
+      this.airtableId = syncedWorkflow.airtableId
+      this.workflowId = syncedWorkflow.workflowId
+      this.isCompleted = syncedWorkflow.completed
     })
-  }
-
-  @writer async synchronizeWorkflowFormData(
-    newWorkflow: any,
-    member: Member,
-    user: any
-  ) {
-    const prefills = initialFormValues(member, user, newWorkflow.template.name)
-    const cachedForms = await this.forms.fetch()
-    const currentWorkflowForms = newWorkflow.forms
-
-    // create the forms
-    await Promise.all(
-      currentWorkflowForms.map(async (nf: any) => {
-        const setupFormData = {
-          ...prefills[nf.name],
-          Member: [member?.airtableRecordId],
-          moduleId: nf.moduleId,
-          isDraft: nf.isDraft,
-        }
-
-        const hasAnyFormData = Object.keys(nf.data).length !== 0
-        const formData = hasAnyFormData ? nf.data : setupFormData
-
-        const existingForm = cachedForms.find(
-          (f: Forms) => f.data?.moduleId === formData?.moduleId
-        )
-
-        if (existingForm) {
-          return existingForm.update((f: Forms) => {
-            f.data = formData
-            f.isDraft = nf.isDraft
-            f.isSynced = hasAnyFormData || true
-            if (nf.createdAt) {
-              f.createdAt = dayjs(nf.createdAt).valueOf()
-            }
-          })
-        }
-
-        const shouldCreateForm = !cachedForms.find(
-          (f: Forms) => f.name === nf.name
-        )
-
-        if (shouldCreateForm) {
-          const formsCollection: Collection<Forms> =
-            this.collections.get('forms')
-          const form = await formsCollection.create((f) => {
-            f.name = nf.name
-            f.workflow.set(this)
-            f.member = this.member
-            f.data = formData
-            f.isDraft = nf.isDraft
-            f.isEdited = false
-            f.isSynced = hasAnyFormData || true
-            f.createdBy = this.createdBy
-            f.updatedBy = this.updatedBy
-            if (nf.createdAt) {
-              f.createdAt = dayjs(nf.createdAt).valueOf()
-            }
-          })
-
-          return form
-        }
-
-        return Promise.resolve()
-      })
-    )
   }
 
   @writer async createFromAPI(newWorkflow: any, member: any, user: any) {
@@ -311,22 +244,18 @@ export class Workflows extends Model {
       email: user.email,
       name: user.name,
     }
-    await this.update((w) => {
-      w.workflowId = newWorkflow.workflowId
-      w.template = newWorkflow.template.name
-      w.member = member.antaraId
-      w.isCompleted = newWorkflow.completed
-      w.isSynced = true
-      w.isDraftSaved = true
-      w.airtableId = newWorkflow.airtableId
-      w.createdBy = userData
-      w.updatedBy = userData
-      w.createdAt = dayjs(newWorkflow.createdAt).valueOf()
-      w.updatedAt = dayjs(newWorkflow.updatedAt).valueOf()
-    })
-
-    return this.callWriter(() => {
-      return this.synchronizeWorkflowFormData(newWorkflow, member, user)
+    return this.update(() => {
+      this.workflowId = newWorkflow.workflowId
+      this.template = newWorkflow.template.name
+      this.member = member.antaraId
+      this.isCompleted = newWorkflow.completed
+      this.isSynced = true
+      this.isDraftSaved = true
+      this.airtableId = newWorkflow.airtableId
+      this.createdBy = userData
+      this.updatedBy = userData
+      this.createdAt = dayjs(newWorkflow.createdAt).valueOf()
+      this.updatedAt = dayjs(newWorkflow.updatedAt).valueOf()
     })
   }
 

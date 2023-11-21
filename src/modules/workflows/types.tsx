@@ -35,6 +35,14 @@ export type UpdateCaseVariables = {
   fields: CreateCaseVariables
 }
 
+export type RawForm = {
+  name: string
+  moduleId: string
+  isDraft: boolean
+  data: Record<string, any>
+  createdAt?: string
+}
+
 export type TWorkflow = {
   airtableId?: string
   completed: boolean
@@ -55,6 +63,7 @@ export type TWorkflow = {
   moduleData: Record<string, any>
   member?: Record<string, any>
   prefills?: Record<string, any>
+  forms?: RawForm[]
 }
 
 export type WorkflowVariables = {
@@ -173,4 +182,5 @@ export type FormProps = {
   formData?: Record<string, any>
   isWorkflowComplete?: boolean
   upsertDraft?: () => Promise<void>
+  workflow?: any
 }

@@ -13,7 +13,7 @@ dayjs.extend(utc)
 type AuthContextType = {
   user: User
   setCurrentUser: (user: User) => void
-  logout: () => void
+  logout: () => Promise<void>
   isLoggedIn: () => boolean
 }
 
@@ -22,7 +22,7 @@ const AuthContext = React.createContext<AuthContextType>({
   setCurrentUser: (user: any) => {
     return user || null
   },
-  logout: () => null,
+  logout: () => Promise.resolve(),
   isLoggedIn: () => false,
 })
 
@@ -40,7 +40,7 @@ function AuthProvider({ user, children }: Props) {
 
   const { getStaffByUser } = useAntaraStaff()
   const [currentUser, setCurrentUser] = useState(user || loggedInUser)
-  const logout = () => {
+  const logout = async () => {
     storage.removeAll()
     setCurrentUser(null)
     googleLogout()

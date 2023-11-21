@@ -282,7 +282,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     }
 
   const handleSaveDraftWorkflow = async (ignoreNotification?: boolean) => {
-    return saveDraftWorkflow(workflow, activeForms)
+    return saveDraftWorkflow(workflow, activeForms, formsData)
       .then(() => {
         if (!ignoreNotification) {
           notify('Draft saved successfully')
@@ -475,6 +475,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                                       formData={formsData[index] || {}}
                                       isWorkflowComplete={workflow?.isCompleted}
                                       upsertDraft={handleSaveDraftWorkflow}
+                                      workflow={workflow}
                                     />
                                   </AccordionDetails>
                                 </Accordion>
@@ -493,6 +494,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                           formData={formsData[0] || {}}
                           isWorkflowComplete={workflow?.isCompleted}
                           upsertDraft={handleSaveDraftWorkflow}
+                          workflow={workflow}
                         />
                       )}
                     </>

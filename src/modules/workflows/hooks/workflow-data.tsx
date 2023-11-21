@@ -23,8 +23,10 @@ import { TWorkflow, CreateCaseVariables } from 'src/modules/workflows/types'
 import logError from 'src/utils/logging/logger'
 import useObservable from 'src/hooks/observable'
 import { useFormHandlers } from 'src/modules/workflows/hooks/form-handlers'
+import type { Member } from 'src/modules/member/db/models'
+import dayjs from 'dayjs'
 import { useWorkflowAnalytics } from './analytics'
-import { getUserModelDetails } from '../utils'
+import { getUserModelDetails, initialFormValues } from '../utils'
 
 export type WorkflowDataApi = ReturnType<typeof useWorkflowData>
 
@@ -198,10 +200,10 @@ export const useWorkflowData = () => {
   const handleWorkflowFormSubmission = async (
     form: TWorkflowForm,
     formMeta: any,
-    formData: any
+    formData: any,
+    workflow: TWorkflowModel
   ) => {
     let caseId
-    const workflow = await workflowsCollection.find(form.workflow.id)
     if (workflow) {
       caseId = workflow?.airtableId
         ? [workflow.airtableId]
@@ -259,11 +261,12 @@ export const useWorkflowData = () => {
   const handleSubmitForm = async (
     form: TWorkflowForm,
     formMeta: any,
-    formData: any
+    formData: any,
+    workflow?: TWorkflowModel
   ) => {
     if (member && user) {
-      if (form.workflow.id) {
-        return handleWorkflowFormSubmission(form, formMeta, formData)
+      if (workflow) {
+        return handleWorkflowFormSubmission(form, formMeta, formData, workflow)
       }
       return handleFormSubmission(form, formMeta, {
         ...formData,
@@ -275,20 +278,14 @@ export const useWorkflowData = () => {
     throw new Error('Member or User not found')
   }
 
-  const submitForm = async (form: any, formMeta: any, formData: any) => {
+  const submitForm = async (
+    form: any,
+    formMeta: any,
+    formData: any,
+    workflow?: TWorkflowModel
+  ) => {
     setSubmittingForm(true)
-    if (form.workflow.id) {
-      const workflow = await workflowsCollection.find(form.workflow.id)
-      if (!workflow?.isSynced) {
-        return syncWorkflow(workflow).then(() => {
-          trackWorkflowCreated(workflow.workflowObject)
-          return handleSubmitForm(form, formMeta, formData).finally(() => {
-            setSubmittingForm(false)
-          })
-        })
-      }
-    }
-    return handleSubmitForm(form, formMeta, formData).finally(() => {
+    return handleSubmitForm(form, formMeta, formData, workflow).finally(() => {
       setSubmittingForm(false)
     })
   }
@@ -347,6 +344,79 @@ export const useWorkflowData = () => {
     return Promise.resolve()
   }
 
+  const hydrateWorkflowForms = async (
+    workflowFromAPi: TWorkflow,
+    workflowFromDb: TWorkflowModel,
+    memberInstance: Member,
+    userData: any
+  ) => {
+    const prefills = initialFormValues(
+      memberInstance,
+      userData,
+      workflowFromAPi.template.name
+    )
+    const cachedForms = await workflowFromDb.forms.fetch()
+    const currentWorkflowForms = workflowFromAPi.forms || []
+
+    await Promise.all(
+      currentWorkflowForms.map(async (nf: any) => {
+        const setupFormData = {
+          ...prefills[nf.name],
+          Member: [member?.airtableRecordId],
+          moduleId: nf.moduleId,
+          isDraft: nf.isDraft,
+        }
+
+        const hasAnyFormData = Object.keys(nf.data).length !== 0
+        const formData = hasAnyFormData ? nf.data : setupFormData
+
+        const existingForm = cachedForms.find(
+          (f: Forms) => f.data?.moduleId === formData?.moduleId
+        )
+
+        if (existingForm) {
+          await database.write(async () => {
+            await existingForm.update((f: Forms) => {
+              f.data = formData
+              f.isDraft = nf.isDraft
+              f.isSynced = hasAnyFormData || true
+              if (nf.createdAt) {
+                f.createdAt = dayjs(nf.createdAt).valueOf()
+              }
+            })
+          })
+        } else {
+          const shouldCreateForm = !cachedForms.find(
+            (f: Forms) => f.name === nf.name
+          )
+
+          if (shouldCreateForm) {
+            const formsCollection: Collection<Forms> =
+              workflowFromDb.collections.get('forms')
+            return database.write(async () => {
+              await formsCollection.create((f) => {
+                f.name = nf.name
+                f.workflow.set(workflowFromDb)
+                f.member = workflowFromDb.member
+                f.data = formData
+                f.isDraft = nf.isDraft
+                f.isEdited = false
+                f.isSynced = hasAnyFormData || true
+                f.createdBy = workflowFromDb.createdBy
+                f.updatedBy = workflowFromDb.updatedBy
+                if (nf.createdAt) {
+                  f.createdAt = dayjs(nf.createdAt).valueOf()
+                }
+                // eslint-disable-next-line no-underscore-dangle
+                f._raw.id = nf.moduleId
+              })
+            })
+          }
+        }
+      })
+    )
+  }
+
   const hydrateWorkflows = async () => {
     if (member) {
       const loadedWorkflows = await getData({
@@ -388,12 +458,22 @@ export const useWorkflowData = () => {
 
       // update workflows that are still in the db
       await Promise.all(
-        workflowsToUpdate.map((w: TWorkflowModel) => {
+        workflowsToUpdate.map(async (w: TWorkflowModel) => {
           const updatedWorkflow = normalizedWorkflows.find(
             (nw: TWorkflow) => nw.workflowId === w.workflowId
           )
           if (updatedWorkflow) {
-            return w.createFromAPI(updatedWorkflow, member, user)
+            const newUpdatedWorkflow = await w.createFromAPI(
+              updatedWorkflow,
+              member,
+              user
+            )
+            return hydrateWorkflowForms(
+              updatedWorkflow,
+              newUpdatedWorkflow,
+              member,
+              user
+            )
           }
           return Promise.resolve()
         })
@@ -406,7 +486,12 @@ export const useWorkflowData = () => {
             const existingWorkflow = await workflowsCollection.find(
               w.workflowId
             )
-            await existingWorkflow.createFromAPI(w, member, user)
+            const newUpdatedWorkflow = await existingWorkflow.createFromAPI(
+              w,
+              member,
+              user
+            )
+            await hydrateWorkflowForms(w, newUpdatedWorkflow, member, user)
           } catch (err: any) {
             const notFoundRegex = /Record ([^ ]+) not found/
             const notFoundError = err?.message.match(notFoundRegex)
@@ -421,7 +506,12 @@ export const useWorkflowData = () => {
                     n._raw.id = w.workflowId
                   })
                 })
-                createdWorkflow.createFromAPI(w, member, user)
+                const duplicateUpdated = await createdWorkflow.createFromAPI(
+                  w,
+                  member,
+                  user
+                )
+                await hydrateWorkflowForms(w, duplicateUpdated, member, user)
               } catch (e: any) {
                 const duplicateRegex =
                   /Diagnostic error: Error: Duplicate key for property id: ([A-Z0-9-]+)/
@@ -444,20 +534,15 @@ export const useWorkflowData = () => {
 
   const handleSaveDraftWorkflow = async (
     workflow: TWorkflowModel,
-    activeForms: TWorkflowForm[]
+    activeForms: TWorkflowForm[],
+    formsData: any
   ) => {
     // create a an array payload that looks like this
     // {formName: [form.data, form.data...]}
-    let formName = ''
-    const payload = activeForms.reduce((acc: any, form: TWorkflowForm) => {
-      formName = form.name
-      if (acc[form.name]) {
-        acc[form.name].push(form.data)
-      } else {
-        acc[form.name] = [form.data]
-      }
-      return acc
-    }, {})
+    const formName = activeForms?.[0]?.name || ''
+    const payload = {
+      [formName]: formsData,
+    }
 
     // check if any of the formshave isDraft
     const hasDraft = activeForms.some((f) => f.isDraft)
@@ -467,28 +552,36 @@ export const useWorkflowData = () => {
       moduleName: formName,
       data: payload[formName],
       draft: hasDraft,
-    }).then(async (res) => {
-      if (res) {
-        trackModuleDataSaved(workflow.workflowObject, formName, payload)
-        await workflow.markSavedDraft()
-        // mark all the active forms as synced
-        activeForms.forEach((f) => {
-          f.markAsSynced()
-        })
-      }
     })
+      .then(async (res) => {
+        if (res) {
+          trackModuleDataSaved(workflow.workflowObject, formName, payload)
+          if (workflow) {
+            await workflow.markSavedDraft()
+          }
+          // mark all the active forms as synced
+          activeForms.forEach((f) => {
+            f.markAsSynced()
+          })
+        }
+      })
+      .catch((errors) => {
+        logError(errors)
+        throw errors
+      })
   }
 
   const saveDraftWorkflow = async (
     workflow: TWorkflowModel,
-    activeForms: TWorkflowForm[]
+    activeForms: TWorkflowForm[],
+    data: any
   ) => {
     if (workflow.isSynced) {
-      return handleSaveDraftWorkflow(workflow, activeForms)
+      return handleSaveDraftWorkflow(workflow, activeForms, data)
     }
     return syncWorkflow(workflow).then(async () => {
       trackWorkflowCreated(workflow.workflowObject)
-      await handleSaveDraftWorkflow(workflow, activeForms)
+      await handleSaveDraftWorkflow(workflow, activeForms, data)
     })
   }
 
