@@ -76,7 +76,7 @@ function CloseTabPage({ antaraId }: any) {
         <div className="flex flex-col items-center justify-center gap-2 w-1/2">
           <p className="text-3xl font-bold text-dark-blue-100">
             This member&apos;s dashboard ({antaraId}) is open in another tab.
-            Please close one of the tabs to avoid data loss or app crashes.
+            Please close this tab, use the other one and refresh.
           </p>
         </div>
       </div>
