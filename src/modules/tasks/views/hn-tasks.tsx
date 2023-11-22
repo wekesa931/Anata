@@ -477,7 +477,9 @@ function Tasks() {
       id: task.id,
       fields: {
         ...task.fields,
-        Assignee: task.fields.Assignee ? [task.fields.Assignee] : [],
+        Assignee: task.fields.Assignee
+          ? [task.fields.Assignee]
+          : task.fields.Assignee,
       },
     })
       .then((res) => {
