@@ -15889,6 +15889,36 @@ export default [
           'Please enter the name of the source (example: Jubilee, Dr John, Rebecca...)',
       },
       {
+        id: 'fldnw8JzyEcKwsKCW',
+        name: 'Incident risk category',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Classify and prioritize risks based on their nature and potential impact',
+      },
+      {
+        id: 'fld0zuq9iUcEtU8hG',
+        name: 'Severity',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Indicates the degree of impact/importance of an issue. P0-An incident that is very impactful and significant and needs immediacy in resolution and has great repercussion .Requires an all-hands on deck approach. P1-An incident that is moderate/mild  in nature, needs time to be solved and one or fewer team members.P2- Minor issues or incidences raised that may go unnoticed if not brought up. Solution is readily available and restoration is quick',
+      },
+      {
         id: 'fldi8Ilnmxay3ueCd',
         name: 'Responsible party',
         type: 'multiSelect',
@@ -15958,6 +15988,7 @@ export default [
         required: false,
         helper: 'Where did it happen?',
       },
+
       {
         id: 'fldJyiQrTsJ7aLLxs',
         name: 'Incident type',
