@@ -65,6 +65,25 @@ export const getDatabase = (dbName: string) =>
     modelClasses: models,
   })
 
+function CloseTabPage({ antaraId }: any) {
+  return (
+    <div className="h-full w-full">
+      <Alert severity="warning" variant="filled">
+        This member&apos;s dashboard ({antaraId}) is open in another tab. Please
+        close one of the tabs to avoid data loss or app crashes.
+      </Alert>
+      <div className="flex justify-center items-center h-full w-full">
+        <div className="flex flex-col items-center justify-center gap-2 w-1/2">
+          <p className="text-3xl font-bold text-dark-blue-100">
+            This member&apos;s dashboard ({antaraId}) is open in another tab.
+            Please close one of the tabs to avoid data loss or app crashes.
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function DataProvider({ children }: any) {
   const { antaraId } = useParams()
   const dbName = antaraId ? `${antaraId}.db` : 'scribe.db'
@@ -73,16 +92,10 @@ export function DataProvider({ children }: any) {
 
   const { showAlert } = useCheckTabDuplication()
 
-  return (
-    <DatabaseProvider database={database}>
-      {showAlert && (
-        <Alert severity="warning" variant="filled">
-          This member&apos;s dashboard ({antaraId}) is open in another tab.
-          Please close one of the tabs to avoid data loss or app crashes.
-        </Alert>
-      )}
-      {children}
-    </DatabaseProvider>
+  return showAlert ? (
+    <CloseTabPage antaraId={antaraId} />
+  ) : (
+    <DatabaseProvider database={database}>{children}</DatabaseProvider>
   )
 }
 
