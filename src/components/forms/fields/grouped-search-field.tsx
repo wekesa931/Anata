@@ -106,7 +106,9 @@ function GroupedSearchField(props: OutlinedFieldProps & SelectFieldProps) {
               popupIcon={null}
               onOpen={() => setOpen(true)}
               onClose={() => setOpen(false)}
-              groupBy={(option) => option.value[0].toUpperCase()}
+              groupBy={(option) =>
+                option.value && option.value[0].toUpperCase()
+              }
               renderGroup={(params) => (
                 <li key={params.key}>
                   <GroupHeader>{params.group}</GroupHeader>
