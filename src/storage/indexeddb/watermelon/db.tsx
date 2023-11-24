@@ -47,9 +47,7 @@ const getAdapter = (dbName: string) =>
         // This happens if there's another open tab of the same app that's making changes.
         // Try to synchronize the app now, and if user is offline, alert them that if they close this
         // tab, some data may be lost
-        alert(
-          'This app is open in another tab. Please close one of the tabs to avoid data loss or app crashes.'
-        )
+        alert('Please refresh the page to avoid data loss.')
       },
       onversionchange: () => {
         // database was deleted in another browser tab (user logged out), so we must make sure we delete

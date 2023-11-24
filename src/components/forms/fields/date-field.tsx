@@ -11,6 +11,7 @@ type DateFieldProps = {
   minDate?: Date
   maxDate?: Date
   openToYear?: boolean
+  maxTime?: Date
 }
 
 DateField.defaultProps = {
@@ -96,7 +97,12 @@ export function DateTimeField(props: DateFieldProps & OutlinedFieldProps) {
           onChange={(d) => {
             handleValueChange(d, fieldProps)
           }}
-          maxDateTime={props.maxDate}
+          maxDateTime={
+            props.maxDate
+              ? dayjs(props.maxDate).format('YYYY-MM-DD HH:mm')
+              : null
+          }
+          maxTime={props.maxDate ? dayjs(props.maxDate).format('HH:mm') : null}
           renderInput={(params) => (
             <TextField
               {...params}

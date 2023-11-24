@@ -111,6 +111,7 @@ function VitalsCollection({
             label="Date"
             saveInput={saveInput}
             maxDate={new Date()}
+            maxTime={new Date()}
           />
           <TextField
             name="temperature"

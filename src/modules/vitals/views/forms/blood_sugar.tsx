@@ -88,6 +88,7 @@ function DMMonitoring({
             label="Date and Time"
             required
             maxDate={new Date()}
+            maxTime={new Date()}
           />
           <TextField
             name="preprandialBloodGlucose"

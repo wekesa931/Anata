@@ -84,6 +84,7 @@ function CHLForm({
             label="Date"
             saveInput={saveInput}
             maxDate={new Date()}
+            maxTime={new Date()}
           />
           <RadioField
             name="lipidPanelTestType"

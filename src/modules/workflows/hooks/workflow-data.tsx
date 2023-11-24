@@ -537,15 +537,16 @@ export const useWorkflowData = () => {
     activeForms: TWorkflowForm[],
     formsData: any
   ) => {
+    const hasDraft = activeForms.some((f) => f.isDraft)
     // create a an array payload that looks like this
     // {formName: [form.data, form.data...]}
     const formName = activeForms?.[0]?.name || ''
     const payload = {
-      [formName]: formsData,
+      [formName]: {
+        ...formsData,
+        isDraft: hasDraft,
+      },
     }
-
-    // check if any of the formshave isDraft
-    const hasDraft = activeForms.some((f) => f.isDraft)
 
     return saveModuleData({
       workflowId: workflow.workflowId,
