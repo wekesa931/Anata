@@ -110,13 +110,13 @@ function MedicalCampForm({
               fullWidth
               type="submit"
               variant="contained"
-              disabled={isValidating}
+              disabled={isValidating || loading}
             >
               {loading ? (
                 <>
                   <Loader className="text-blue-300" />
                   <Typography className="file-action-button-text text-white font-medium">
-                    Preview Report
+                    Loading preview...
                   </Typography>
                 </>
               ) : (
