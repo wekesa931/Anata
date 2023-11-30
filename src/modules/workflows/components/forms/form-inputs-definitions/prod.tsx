@@ -6192,7 +6192,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Please input the calculated glycemic load using this field.\n[Stage 0]: <100 (Recommended for diabetes)\n[Stage 1]: 80-180 (Normal)\n[Stage 2]: >180 (High)',
+          'Please input the calculated glycemic load using this field.\nLevel 0: <100 (Recommended for diabetes)\nLevel 1: 100 - 180 (recommended for at risk/healthy)\nLevel 2: 181 - 200\nLevel 3: >200',
         conditionType: '',
         parentKey: 'Do you have any of the following conditions?',
         parentValues: ['Diabetes'],
@@ -7995,7 +7995,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          '0: 80-180 (At Risk)\n1: <80 (Newly dx)\n2: <100 (1st line meds)\n3: <180 (2nd line meds)',
+          'Level 0: <100\nLevel 1: 100 - 180\nLevel 2: 181 - 200\nLevel 3: >200',
         conditionType: '',
         parentKey: 'Intervention',
         parentValues: ['Diabetic Diet Plan'],
@@ -8203,7 +8203,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'If 0 and 1, go to level 0: 80-180 (At Risk)\nIf 2, go to level 1: <80 (Newly dx)\nIf 3, go to level 2: <100 (1st line meds)',
+          'If condition is Diabetes + condition stage = AT RISK and:\n  Level 0: <100, target = Level 0: <100\n  Level 1: 100 - 180, target = Level 1: 100 - 180\n  Level 2: 181 - 200, target = Level 1: 100 -180\n  Level 3: >200, target = Level 2: 181 - 200\n\n If condition is Diabetes + condition stage = PRE-DIABETES, 1, 2, or 3 and:\n  Level 0: <100, target = Level 0: <100\n  Level 1: 100 - 180, target = Level 0 <100\n  Level 2: 181 - 200, target = Level 1: 100 -180\n  Level 3: >200, target = Level 2: 181 - 200',
         conditionType: '',
         parentKey: 'Intervention',
         parentValues: ['Diabetic Diet Plan'],
@@ -14183,7 +14183,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          '0: 80-180 (At Risk)\n1: <80 (Newly dx)\n2: <100 (1st line meds)\n3: <180 (2nd line meds)',
+          'Level 0: <100\nLevel 1: 100 - 180\nLevel 2: 181 - 200\nLevel 3: >200',
         conditionType: '',
         parentKey: 'Intervention type',
         parentValues: ['Diabetic Diet Plan'],
@@ -14482,7 +14482,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Optional unless you want to change the current milestone\n\nStage 0: 80-180 (At Risk)\nStage 1: <80 (Newly dx)\nStage 2: <100 (1st line meds)\nStage 3: <180 (2nd line meds)',
+          'If condition is Diabetes + condition stage = AT RISK and:\nLevel 0: <100, target = Level 0: <100\nLevel 1: 100 - 180, target = Level 1: 100 - 180\nLevel 2: 181 - 200, target = Level 1: 100 -180\nLevel 3: >200, target = Level 2: 181 - 200\n\nIf condition is Diabetes + condition stage = PRE-DIABETES, 1, 2, or 3 and:\nLevel 0: <100, target = Level 0: <100\nLevel 1: 100 - 180, target = Level 0 <100\nLevel 2: 181 - 200, target = Level 1: 100 -180\nLevel 3: >200, target = Level 2: 181 - 200\n',
         conditionType: '',
         parentKey: 'Intervention type',
         parentValues: ['Diabetic Diet Plan'],
