@@ -11,7 +11,7 @@ import ToastNotification, {
   ToastMessage,
 } from 'src/components/toasts/toast-notification'
 import { useModuleAnalytics } from 'src/modules/analytics'
-import styles from 'src/modules/udm/files.component.css'
+import styles from 'src/modules/udm/files.module.css'
 import { Folder } from 'src/modules/udm/types'
 import { useUdmData } from 'src/modules/udm/hooks/udm.data'
 

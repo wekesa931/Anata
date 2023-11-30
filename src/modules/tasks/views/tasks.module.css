@@ -66,11 +66,11 @@
   justify-content: space-between;
 }
 .taskNameWrap {
-  flex-direction: 'column'
+  flex-direction: 'column';
 }
-.taskAssignee{
-  color: #8b95a5; 
-  font-size: '14px'
+.taskAssignee {
+  color: #8b95a5;
+  font-size: '14px';
 }
 .taskDue {
   font-weight: 500;

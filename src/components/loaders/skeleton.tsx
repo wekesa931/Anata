@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './skeleton-loader.component.css'
+import styles from './skeleton-loader.module.css'
 
 type ListSkeletonLoaderProps = {
   count?: number

@@ -2,15 +2,15 @@
 import React, { useState } from 'react'
 import { ChevronRight, Phone, X } from 'react-feather'
 import { Input, InputAdornment } from '@mui/material'
-import Icon from 'src/components/icon/svg-icon'
 import Notification from 'src/components/notification'
 import { useMember } from 'src/context/member'
 import { useCall } from 'src/context/calls'
 import DropDownComponent from 'src/components/dropdown'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import PhoneIcon from 'src/assets/img/icons/phone.svg?react'
 import ContactList from '../components/contact-list'
-import styles from './calls.component.css'
+import styles from './calls.module.css'
 
 export interface IProps {
   showPrompt: boolean
@@ -173,7 +173,7 @@ function CallsCallout({
         onKeyDown={handleCallClick}
         onClick={handleCallClick}
       >
-        <Icon name="phone" fill="#efefef" width={16} height={16} />
+        <PhoneIcon className="w-4 h-4" fill="#efefef" />
       </a>
       {isPhoneChooserOpen && (
         <DropDownComponent

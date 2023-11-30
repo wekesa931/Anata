@@ -8,13 +8,14 @@ import {
   GET_ALL_FLAGGED_INTERACTIONS,
   GET_ALL_INTERACTIONS,
 } from 'src/modules/interactions/services/gql'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
 import List from 'src/components/list'
 import analytics from 'src/config/analytics'
-import Icon from 'src/components/icon/svg-icon'
 import airtableFetch from 'src/services/airtable/fetch'
 import MultiSelect from 'src/components/forms/multiselect.field'
-import styles from './styles.component.css'
+import FilterIcon from 'src/assets/img/icons/filter.svg?react'
+import CloseIcon from 'src/assets/img/icons/close_16.svg?react'
+import styles from './styles.module.css'
 
 const ALL_INTERACTIONS = 'All'
 
@@ -88,7 +89,7 @@ function FlagForReview() {
     )
   }
 
-  const getReviewStatus = (node) => {
+  const getReviewStatus = (node: any) => {
     switch (node['flag For Review']) {
       case 'YES':
         return <span className="text-danger">Flagged</span>
@@ -116,7 +117,7 @@ function FlagForReview() {
     return str.replace(/([A-Z])/g, ' $1')
   }
 
-  const formatData = (node, key, acc) => {
+  const formatData = (node: any, key: any, acc: any) => {
     if (key === 'healthNavigator') {
       return {
         ...acc,
@@ -148,17 +149,12 @@ function FlagForReview() {
           >
             {!showFiltersMenu ? (
               <>
-                <Icon
-                  name="filter"
-                  fill="var(--orange-base)"
-                  height={16}
-                  width={16}
-                />
+                <FilterIcon className="text-orange-main h-4 w-4" />
                 Filters
               </>
             ) : (
               <>
-                <Icon name="close_16" fill="var(--orange-base)" />
+                <CloseIcon className="text-orange-main h-4 w-4" />
                 Close
               </>
             )}

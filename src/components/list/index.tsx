@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { toggle } from 'kremling'
 import dayjs from 'dayjs'
-import ExpandIcon from 'src/assets/img/icons/arrows-diagonals-bltr.svg'
+import ExpandIcon from 'src/assets/img/icons/arrows-diagonals-bltr.svg?react'
 import Tooltip from 'src/components/tooltip'
 import { useSortFilter } from 'src/context/sort-filter'
 import analytics from 'src/config/analytics'
@@ -11,7 +11,7 @@ import {
   makeFilterListDataByDate,
 } from 'src/context/date-range-filter'
 import ListModal from './list-modal.component'
-import styles from './list.component.css'
+import styles from './list.module.css'
 
 type ListProps = {
   list: { name: string; data: any }[]

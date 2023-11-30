@@ -68,13 +68,13 @@
 }
 .checkCircle {
   margin-left: 40%;
-  color: var(--green-100)
+  color: var(--green-100);
 }
 .savedPhone {
   padding: 2rem;
 }
 
-.errSaving{
+.errSaving {
   color: var(--red-100);
   font-size: 14px;
   margin-top: 10px;

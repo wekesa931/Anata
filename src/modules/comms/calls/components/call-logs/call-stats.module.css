@@ -46,7 +46,7 @@
 .statsActionSection {
   margin-top: 0.2rem;
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
 }
 
 .statsActionBtn {

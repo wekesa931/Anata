@@ -1,4 +1,4 @@
-import styles from 'src/modules/udm/files.component.css'
+import styles from 'src/modules/udm/files.module.css'
 import React from 'react'
 import { FileText, Image } from 'react-feather'
 import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined'

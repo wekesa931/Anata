@@ -69,6 +69,13 @@ module.exports = {
     'consistent-return': 0,
     '@typescript-eslint/no-underscore-dangle': 0,
     'jsx-a11y/control-has-associated-label': 'off',
+    'jsx-a11y/label-has-for': 'off',
+    'import/no-unresolved': [
+      'error',
+      {
+        ignore: ['^virtual:pwa-register'],
+      },
+    ],
   },
   settings: {
     'import/resolver': {

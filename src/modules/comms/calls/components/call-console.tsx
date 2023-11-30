@@ -11,14 +11,18 @@ import {
 import { useMutation } from '@apollo/client'
 import { Portal } from '@mui/material'
 import Draggable from 'react-draggable'
-import Icon from 'src/components/icon/svg-icon'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
 import { useCall } from 'src/context/calls'
 import Timer from 'src/components/timer'
 import SearchInput from 'src/components/search'
 import { UPDATE_PHONES } from 'src/modules/comms/services/gql'
 import logError from 'src/utils/logging/logger'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import XIcon from 'src/assets/img/icons/x.svg?react'
+import MinimizeIcon from 'src/assets/img/icons/minimize.svg?react'
+import MaximizeIcon from 'src/assets/img/icons/maximize-2.svg?react'
+import PhoneMissedIcon from 'src/assets/img/icons/phone-missed.svg?react'
+import CheckCircleIcon from 'src/assets/img/icons/check-circle.svg?react'
 import CallConsoleForms from './call-console-forms'
 import HNAndCSList from './call-console-staff'
 import CallbackHistory, { HistoryLogs } from './callback-history'
@@ -26,7 +30,7 @@ import SaveContactView from './save-contact'
 import ActiveCallParticipants from './active-call-participants'
 import AuthenticateMember from './authenticate-member'
 import { AuthButton } from './styled-components'
-import styles from './call-console.component.css'
+import styles from './call-console.module.css'
 
 function CallFloatingBox() {
   const [isOpen, setisOpen] = React.useState(true)
@@ -292,7 +296,7 @@ function CallFloatingBox() {
                 onKeyDown={completeCall}
                 onClick={completeCall}
               >
-                <Icon name="x" fill="white" width={20} height={20} />
+                <XIcon className="w-5 h-5 text-white" />
               </span>
             ) : (
               <span
@@ -302,12 +306,8 @@ function CallFloatingBox() {
                 onKeyDown={() => setisOpen(!isOpen)}
                 onClick={() => setisOpen(!isOpen)}
               >
-                {isOpen && (
-                  <Icon name="minimize" fill="white" width={20} height={20} />
-                )}
-                {!isOpen && (
-                  <Icon name="maximize-2" fill="white" width={20} height={20} />
-                )}
+                {isOpen && <MinimizeIcon className="w-5 h-5 text-white" />}
+                {!isOpen && <MaximizeIcon className="w-5 h-5 text-white" />}
               </span>
             )}
           </div>
@@ -363,7 +363,7 @@ function CallFloatingBox() {
           {(participantBusy || staffBusy) && (
             <div className="no-answer">
               <div className="d-flex flex-center align-center phone-off">
-                <Icon name="phone-missed" fill="white" width={30} height={30} />
+                <PhoneMissedIcon className="w-7 h-7 text-white" />
               </div>
               {participantBusy && <p>{activeCall?.memberName}</p>}
               <p style={{ marginTop: '0px' }}>
@@ -371,12 +371,7 @@ function CallFloatingBox() {
               </p>
               <div className="task-created d-flex align-center">
                 <span>
-                  <Icon
-                    name="check-circle"
-                    fill="white"
-                    width={15}
-                    height={15}
-                  />
+                  <CheckCircleIcon className="text-white w-4 h-4" />
                 </span>
                 <p>Callback task created</p>
               </div>

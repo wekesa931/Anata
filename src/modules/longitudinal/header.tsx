@@ -15,7 +15,7 @@ import {
   Divider,
 } from '@mui/material'
 import { Check, ChevronDown, ChevronLeft, ChevronRight } from 'react-feather'
-import styles from './longitudinal.component.css'
+import styles from './longitudinal.module.css'
 import { IResource } from './modules'
 import useLongitudinalTracker from './analytics'
 

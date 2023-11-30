@@ -1,5 +1,5 @@
 import React from 'react'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
 
 type LoadingMessageType = {
   message: string

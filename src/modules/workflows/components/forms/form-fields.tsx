@@ -29,7 +29,7 @@ import { Editor } from 'react-draft-wysiwyg'
 import { markdownToDraft, draftToMarkdown } from 'markdown-draft-js'
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
 import { debounce } from 'lodash'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
 import { Form } from 'src/modules/workflows/types'
 import {
   GLOBAL_SEARCH,
@@ -38,7 +38,7 @@ import {
 } from 'src/gql/search'
 import { INDEXES } from 'src/modules/workflows/utils'
 import { useMember } from 'src/context/member'
-import styles from './styles.component.css'
+import styles from './styles.module.css'
 
 const icon = <Square width={18} height={18} />
 const checkedIcon = <CheckSquare width={18} height={18} />

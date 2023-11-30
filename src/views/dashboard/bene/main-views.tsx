@@ -17,7 +17,7 @@ import InterventionSection from 'src/modules/interventions/views/intervention-de
 import MemberTasks from 'src/modules/tasks/components/member-tasks.component'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import _ from 'lodash'
-import styles from './views.component.css'
+import styles from './views.module.css'
 
 function Views({ view, handleChange }: any) {
   const { trackMiddleSectionOpened: middleSectionOpened } = useModuleAnalytics()

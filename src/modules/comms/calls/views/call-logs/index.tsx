@@ -5,8 +5,10 @@ import { GET_CALL_LOGS } from 'src/modules/comms/services/gql'
 import DataTable from 'src/modules/comms/calls/components/call-logs/table'
 import CallStatsCard from 'src/modules/comms/calls/components/call-logs/stats-card'
 import LoadingComponent from 'src/components/loaders/table-loader'
-import Icon from 'src/components/icon/svg-icon'
 import { useParams } from 'react-router-dom'
+import PhoneOutgoing from 'src/assets/img/icons/icon_feather_phone-outgoing.svg?react'
+import PhoneIncoming from 'src/assets/img/icons/icon_feather_phone-incoming.svg?react'
+import PhoneMissed from 'src/assets/img/icons/icon_feather_phone-missed.svg?react'
 import { generateStats, groupingDataCalls } from '../../utils'
 
 type CleanedDataItem = {
@@ -131,7 +133,13 @@ function CallLog() {
       type: 'OUTBOUND',
       callback: () =>
         updateCurrentLogs(outBoundData, 'Outbound call to member'),
-      icon: <Icon name="icon_feather_phone-outgoing" fill="#ffffff" />,
+      icon: (
+        <PhoneOutgoing
+          className="text-white"
+          name="icon_feather_phone-outgoing"
+          fill="#ffffff"
+        />
+      ),
     },
     {
       color: '#87c1f7',
@@ -140,7 +148,7 @@ function CallLog() {
       stats: inBoundData.stats,
       type: 'INBOUND',
       callback: () => updateCurrentLogs(inBoundData, 'Inbound call to Antara'),
-      icon: <Icon name="icon_feather_phone-incoming" fill="#ffffff" />,
+      icon: <PhoneIncoming className="text-white" />,
     },
     {
       color: '#ff9d97',
@@ -150,7 +158,7 @@ function CallLog() {
       type: 'MISSED',
       callback: () =>
         updateCurrentLogs(inBoundMissedData, 'Missed from member'),
-      icon: <Icon name="icon_feather_phone-missed" fill="#ffffff" />,
+      icon: <PhoneMissed className="text-white" />,
     },
     {
       color: '#ff9d97',
@@ -160,7 +168,7 @@ function CallLog() {
       type: 'MISSED OUTBOUND',
       callback: () =>
         updateCurrentLogs(outBoundMissedData, 'Missed  OutBound Calls'),
-      icon: <Icon name="icon_feather_phone-missed" fill="#ffffff" />,
+      icon: <PhoneMissed className="text-white" />,
     },
   ]
 

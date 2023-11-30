@@ -5,7 +5,7 @@ import { CheckCircle, ChevronDown, ChevronUp, Phone } from 'react-feather'
 
 import { useCall } from 'src/context/calls'
 import Notification from 'src/components/notification'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
 import { UPDATE_CONTACT } from 'src/modules/comms/services/gql'
 import airtableFetch from 'src/services/airtable/fetch'
 import logError from 'src/utils/logging/logger'

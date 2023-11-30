@@ -10,7 +10,7 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { useUser } from 'src/context/user'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
 import { GET_FOLDERS } from 'src/modules/udm/services/gql'
 import { useMember } from 'src/context/member'
 

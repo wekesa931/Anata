@@ -1,9 +1,9 @@
 import * as React from 'react'
-import Icon from 'src/components/icon/svg-icon'
 import { useCall } from 'src/context/calls'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
 import Notification from 'src/components/notification'
 import { useMember } from 'src/context/member'
+import OutgoingIcon from 'src/assets/img/icons/phone-outgoing.svg?react'
 
 export interface IProps {
   relevantContact: any
@@ -108,7 +108,7 @@ function ContactList({ relevantContact, onCallInitiated, tasksType }: IProps) {
         {isRinging ? (
           <LoadingIcon />
         ) : (
-          <Icon name="phone-outgoing" fill="#d1d5db" width={16} height={16} />
+          <OutgoingIcon className="text-[#d1d5db] w-4 h-4" />
         )}
       </div>
       {displayError && (

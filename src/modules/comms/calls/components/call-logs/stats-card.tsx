@@ -1,6 +1,6 @@
 import React from 'react'
 import { Paper, Box, Button } from '@mui/material'
-import styles from './call-stats.component.css'
+import styles from './call-stats.module.css'
 
 type CallStats = {
   label: string

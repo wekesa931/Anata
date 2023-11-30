@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { always } from 'kremling'
-import styles from './tabs.component.css'
+import styles from './tabs.module.css'
 
 function Tab({ activeTab, label, onClick, orientation }: any) {
   const isActive = activeTab === label

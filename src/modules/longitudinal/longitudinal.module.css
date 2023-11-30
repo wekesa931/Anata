@@ -1,0 +1,53 @@
+.calendarHeader {
+  padding: 1rem 1.5rem;
+  position: sticky;
+  margin-bottom: 2rem;
+}
+
+.modalPaper {
+  padding: 1rem;
+}
+
+.slotLabel {
+  color: var(--dark-blue-50);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 0.875rem;
+}
+
+.slotLabelBold {
+  font-weight: 600;
+  color: var(--dark-blue-100);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  line-height: 0.875rem;
+}
+
+.resourceLabelCount {
+  font-weight: 600;
+  color: var(--dark-blue-100);
+  font-size: 0.875rem;
+  line-height: 1rem;
+}
+
+.resourceLabelTitle {
+  color: var(--dark-blue-50);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 0.875rem;
+  letter-spacing: 0.02em;
+}
+
+.btnIcon {
+  color: var(--dark-blue-100) !important;
+}
+
+.selected {
+  color: var(--dark-blue-100) !important;
+}
+
+.hidden {
+  color: var(--greyscale-2) !important;
+}

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import parse from 'html-react-parser'
-import styles from './notification.component.css'
+import styles from './notification.module.css'
 
 export interface IProps {
   title: 'Warning' | 'Error' | 'Info'

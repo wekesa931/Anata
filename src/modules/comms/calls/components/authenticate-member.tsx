@@ -5,7 +5,7 @@ import { Check, CheckCircle, Slash, X } from 'react-feather'
 import { useLazyQuery, useMutation } from '@apollo/client'
 
 import { VALIDATE_BIODATA } from 'src/modules/comms/services/gql'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
 import { MEMBER_CONTACT_DETAILS } from 'src/modules/member/services/gql'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import {

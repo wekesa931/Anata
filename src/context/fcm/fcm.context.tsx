@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import SVGIcon from 'src/components/icon/svg-icon'
 import FCM, { fetchAllAndClear } from 'src/context/fcm/utils'
 import { XCircle } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
-import styles from './fcm.component.css'
+import CallIcon from 'src/assets/img/icons/phone-call.svg?react'
+import MessageIcon from 'src/assets/img/icons/message-circle.svg?react'
+import styles from './fcm.module.css'
 
 type PushNotification = {
   notification:
@@ -92,11 +93,6 @@ function FcmProvider({ children }: any) {
     }
   }
 
-  const notificationIconsMap = {
-    CALL: 'phone-call',
-    MESSAGE: 'message-circle',
-  }
-
   useEffect(() => {
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
@@ -137,12 +133,7 @@ function FcmProvider({ children }: any) {
           <div className="d-flex align-center">
             {memberId ? (
               <>
-                <SVGIcon
-                  name={notificationIconsMap[localPushCategory]}
-                  fill="white"
-                  width={24}
-                  height={24}
-                />
+                {localPushCategory === 'CALL' ? <CallIcon /> : <MessageIcon />}
                 <div className="d-flex flex-column ml-10">
                   <button
                     className={styles.goToDashboard}

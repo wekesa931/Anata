@@ -3,10 +3,10 @@ import Downshift from 'downshift'
 import { Link, useNavigate } from 'react-router-dom'
 import analytics from 'src/config/analytics'
 import useMemberSearch from 'src/hooks/members-search'
-import SearchIcon from '../../assets/img/icons/search.svg'
-import CloseIcon from '../../assets/img/icons/close.svg'
-import LoadingIcon from '../../assets/img/icons/loading.svg'
-import styles from './search.component.css'
+import SearchIcon from '../../assets/img/icons/search.svg?react'
+import CloseIcon from '../../assets/img/icons/close.svg?react'
+import LoadingIcon from '../../assets/img/icons/loading.svg?react'
+import styles from './search.module.css'
 
 interface IProps {
   unknownMemberSearch?: boolean

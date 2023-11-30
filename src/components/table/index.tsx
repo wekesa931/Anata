@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { always } from 'kremling'
 import dayjs from 'dayjs'
 import { Label, Text } from '@airtable/blocks/ui'
-import ExpandIcon from 'src/assets/img/icons/arrows-diagonals-bltr.svg'
+import ExpandIcon from 'src/assets/img/icons/arrows-diagonals-bltr.svg?react'
 import Modal from 'src/components/modals'
 import Tooltip from 'src/components/tooltip'
 import { useSortFilter } from 'src/context/sort-filter'
@@ -11,7 +11,7 @@ import {
   useDateRangeFilter,
   makeFilterDataByDate,
 } from 'src/context/date-range-filter'
-import styles from './table.component.css'
+import styles from './table.module.css'
 
 type TableProps = {
   title: string
@@ -215,14 +215,15 @@ function Table({
           </tbody>
         </table>
         <div className={styles.pagination}>
-          {sortedData.length > 3 && sortedData.length !== displayedData.length && (
-            <button
-              className={`btn-unstyled ${styles.tableBtn}`}
-              onClick={displayMore}
-            >
-              More
-            </button>
-          )}
+          {sortedData.length > 3 &&
+            sortedData.length !== displayedData.length && (
+              <button
+                className={`btn-unstyled ${styles.tableBtn}`}
+                onClick={displayMore}
+              >
+                More
+              </button>
+            )}
           {displayedData.length > 3 && (
             <button
               className={`btn-unstyled ${styles.tableBtn}`}

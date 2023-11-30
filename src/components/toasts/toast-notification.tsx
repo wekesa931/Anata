@@ -1,7 +1,7 @@
 import React from 'react'
 import Snackbar from '@mui/material/Snackbar'
 import Button from '@mui/material/Button'
-import styles from './toasts.component.css'
+import styles from './toasts.module.css'
 
 export type ToastMessage = {
   message: string | null

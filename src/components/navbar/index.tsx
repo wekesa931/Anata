@@ -5,15 +5,16 @@ import { CssBaseline, IconButton } from '@mui/material'
 import { useUser } from 'src/context/user'
 import { useAuth } from 'src/context/auth'
 import SearchInput from 'src/components/search'
-import Icon from 'src/components/icon/svg-icon'
 import analytics from 'src/config/analytics'
 import Tooltip from 'src/components/tooltip'
 import useClickOutside from 'src/hooks/click-outside'
 import FlatLogo from 'src/assets/img/logo/Antara Logo@1x.png'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useRegistrationForm } from 'src/context/member-registration'
+import CalendarIcon from 'src/assets/img/icons/calendar-dates.svg?react'
+import UserIcon from 'src/assets/img/icons/user.svg?react'
 import TaskMenu from './task-menu/task-menu.component'
-import styles from './navbar.component.css'
+import styles from './navbar.module.css'
 import FloatingMenu from './menu.component'
 
 function UserMenu() {
@@ -115,7 +116,7 @@ function NavBar() {
               onClick={() => setShowTasksMenu(!showTasksMenu)}
               data-testid="calender-btn"
             >
-              <Icon name="calendar-dates" fill="var(--greyscale-6)" />
+              <CalendarIcon />
             </button>
           </Tooltip>
           <Tooltip title="Profile">
@@ -124,7 +125,7 @@ function NavBar() {
               onClick={() => setShowUserMenu(!showUserMenu)}
               data-testid="user-menu-btn"
             >
-              <Icon name="user" fill="var(--greyscale-6)" />
+              <UserIcon fill="var(--greyscale-6)" />
             </button>
           </Tooltip>
         </div>

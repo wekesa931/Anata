@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import fetch from 'node-fetch'
+import fetch from 'cross-fetch'
 import jwt_decode from 'jwt-decode'
 import {
   ApolloClient,
@@ -53,7 +53,7 @@ const authMiddleWare = () =>
 const v1Link = new HttpLink({
   uri: `${process.env.API_URL}/scribe/graphql/`,
   credentials: 'same-origin',
-  fetch: fetch as any,
+  fetch,
 })
 
 const v2Link = new HttpLink({

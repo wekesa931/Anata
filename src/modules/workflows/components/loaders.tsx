@@ -1,6 +1,6 @@
 import React from 'react'
 import { CircularProgress } from '@mui/material'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
 
 type LoaderProps = {
   message: string

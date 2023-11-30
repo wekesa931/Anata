@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react'
-import styles from './iframe.component.css'
+import styles from './iframe.module.css'
 
 type AirtableIframePropType = {
   src: string

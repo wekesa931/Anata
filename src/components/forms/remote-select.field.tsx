@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Downshift from 'downshift'
 import useAirtableFetch from 'src/hooks/airtable-fetch'
 import { filterFields } from 'src/utils/airtable/field-utils'
-import styles from './remote-select.component.css'
+import styles from './remote-select.module.css'
 
 type RemoteSelectProps = {
   lookupUrl: string

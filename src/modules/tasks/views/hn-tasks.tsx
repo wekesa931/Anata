@@ -4,7 +4,6 @@ import { useLazyQuery } from '@apollo/client'
 import { User, ExternalLink } from 'react-feather'
 import airtableFetch from 'src/services/airtable/fetch'
 import List from 'src/components/list'
-import Icon from 'src/components/icon/svg-icon'
 import Tooltip from 'src/components/tooltip'
 import { filterFields } from 'src/utils/airtable/field-utils'
 import getTaskFields from 'src/modules/tasks/config/hn-tasks-fields'
@@ -20,7 +19,8 @@ import useAntaraStaff, {
 } from 'src/hooks/antara-staff.hook'
 import { useMember } from 'src/context/member'
 import { useModuleAnalytics } from 'src/modules/analytics'
-import styles from './tasks.component.css'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
+import styles from './tasks.module.css'
 import PrescriptionName from '../components/prescription-name'
 
 type RecordWithId = { data: any; id: string }
@@ -568,7 +568,7 @@ function Tasks() {
       {/* Only show the Loading Message if either data sources are loading */}
       {(isAirtableLoading || isApiLoading) && (
         <div className="d-flex flex-direction-column flex-align-center margin-top-32">
-          <Icon name="loading" />
+          <LoadingIcon className="w-6 h-6" />
           <p className="text-small">Loading Tasks...</p>
         </div>
       )}

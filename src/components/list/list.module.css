@@ -54,7 +54,7 @@
   border-radius: 4px;
 }
 .justify-start {
-  justify-content: start;
+  justify-content: flex-start;
 }
 
 .modalPara {

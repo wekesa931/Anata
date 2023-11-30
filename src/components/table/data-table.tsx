@@ -16,7 +16,7 @@ import {
 import { visuallyHidden } from '@mui/utils'
 import React, { useMemo, useState } from 'react'
 import { Order, getComparator, stableSort } from 'src/utils/sort/stable'
-import EmptyDataIcon from 'src/assets/img/icons/empty-data.svg'
+import EmptyDataIcon from 'src/assets/img/icons/empty-data.svg?react'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import _ from 'lodash'
 import {

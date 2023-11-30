@@ -29,7 +29,7 @@ import Drawer from '@mui/material/Drawer'
 import Grid from '@mui/material/Grid'
 import LinearProgress from '@mui/material/LinearProgress'
 import PdfViewer from 'src/modules/udm/components/pdf-viewer.component'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
 import RefinedFileMetaForm from 'src/modules/udm/components/form'
 import logError from 'src/utils/logging/logger'
 import { useParams } from 'react-router-dom'
@@ -48,7 +48,7 @@ import {
 import { FileDetails } from 'src/modules/udm/views/file-details'
 import { EnhancedTableHead } from 'src/modules/udm/components/file-table-header'
 import { useUdmData } from './hooks/udm.data'
-import styles from './files.component.css'
+import styles from './files.module.css'
 
 type DocMeta = {
   docType: string

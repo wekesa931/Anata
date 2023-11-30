@@ -22,7 +22,7 @@ import {
   IDocument,
   IResource,
 } from './modules'
-import styles from './longitudinal.component.css'
+import styles from './longitudinal.module.css'
 import { CalendarHeader, TDateRange } from './header'
 import requestBody from './config.json'
 import useLongitudinalTracker from './analytics'

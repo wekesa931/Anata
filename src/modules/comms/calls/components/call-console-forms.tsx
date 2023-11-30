@@ -1,10 +1,12 @@
 import * as React from 'react'
-import Icon from 'src/components/icon/svg-icon'
 import FORMS from 'src/modules/workflows/components/forms/form-inputs-definitions'
 import Notification from 'src/components/notification'
 import { formNames } from 'src/modules/workflows/utils'
 import { useFormsRouting } from 'src/modules/workflows/hooks/routing/forms'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import FormSearchIcon from 'src/assets/img/icons/form-search.svg?react'
+import XIcon from 'src/assets/img/icons/x.svg?react'
+import ClockIcon from 'src/assets/img/icons/clock.svg?react'
 
 function CallConsoleForms({ height }: { height: string }) {
   const [filteredForms, setfilteredForms] = React.useState(FORMS)
@@ -46,7 +48,7 @@ function CallConsoleForms({ height }: { height: string }) {
       >
         <div className="d-flex align-center full-width">
           <span className="task-form-list">
-            <Icon name="form-search" fill="#ffffff" width={18} height={19} />
+            <FormSearchIcon className="w-4 h-4 text-white" />
           </span>
 
           <input
@@ -66,7 +68,7 @@ function CallConsoleForms({ height }: { height: string }) {
             onClick={closeFilter}
             onKeyDown={closeFilter}
           >
-            <Icon name="x" fill="#ffffff" width={18} height={19} />
+            <XIcon className="w-4 h-4 text-white" />
           </span>
         )}
       </div>
@@ -85,7 +87,7 @@ function CallConsoleForms({ height }: { height: string }) {
             >
               {!formName && (
                 <span>
-                  <Icon name="clock" fill="#ffffff" width={16} height={16} />
+                  <ClockIcon className="w-4 h-4 text-white" />
                 </span>
               )}
               <p>{formNames[form.name]}</p>

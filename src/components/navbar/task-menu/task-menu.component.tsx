@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useUser } from 'src/context/user'
 import useAirtableFetch from 'src/hooks/airtable-fetch'
-import Icon from 'src/components/icon/svg-icon'
 import Tabs from 'src/components/tabs/tabs.component'
 import analytics from 'src/config/analytics'
-import styles from './task-menu.component.css'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
+import styles from './task-menu.module.css'
 
 function DateInput({ date, onChange }: any) {
   return (
@@ -84,7 +84,7 @@ function TaskMenu() {
               )}
             {isLoading && (
               <div className="d-flex flex-direction-column flex-align-center">
-                <Icon name="loading" />
+                <LoadingIcon className="h-6 w-6" />
                 <p className="text-small">Loading your tasks...</p>
               </div>
             )}
@@ -110,7 +110,7 @@ function TaskMenu() {
               )}
             {isLoading && (
               <div className="d-flex flex-direction-column flex-align-center">
-                <Icon name="loading" />
+                <LoadingIcon className="h-6 w-6" />
                 <p className="text-small ">Loading your tasks...</p>
               </div>
             )}

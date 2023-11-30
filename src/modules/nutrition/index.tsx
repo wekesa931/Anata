@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { filterFields } from 'src/utils/airtable/field-utils'
 import useAirtableFetch from 'src/hooks/airtable-fetch'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
 import Table from 'src/components/table'
 import { useMember } from 'src/context/member'
 

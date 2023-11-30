@@ -18,7 +18,7 @@ import { CallIcon } from 'src/components/icon/calls'
 import { humanize } from 'src/utils/date-time/date-formatters'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import CallView from './details'
-import styles from './styles.component.css'
+import styles from './styles.module.css'
 
 dayjs.extend(customParseFormat)
 

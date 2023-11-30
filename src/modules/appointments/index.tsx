@@ -5,7 +5,6 @@ import { useUser } from 'src/context/user'
 import useAirtableFetch from 'src/hooks/airtable-fetch'
 import List from 'src/components/list'
 import filterFields from 'src/utils/airtable/field-utils'
-import Icon from 'src/components/icon/svg-icon'
 import Tooltip from 'src/components/tooltip'
 import airtableFetch from 'src/services/airtable/fetch'
 import { useMember } from 'src/context/member'
@@ -13,7 +12,9 @@ import useHandleResponses from 'src/utils/airtable/error-handler'
 import useAntaraStaff from 'src/hooks/antara-staff.hook'
 import { User } from 'react-feather'
 import { useModuleAnalytics } from 'src/modules/analytics'
-import styles from './appointments.component.css'
+import ExternalLinkIcon from 'src/assets/img/icons/external-link.svg?react'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
+import styles from './appointments.module.css'
 
 const SearchFieldsNameMap: Record<string, any> = {
   'Facilities from Provider base': {
@@ -273,12 +274,7 @@ function Appointments() {
                     className="btn-unstyled"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <Icon
-                      name="external-link"
-                      fill="var(--blue-base)"
-                      width={16}
-                      height={16}
-                    />
+                    <ExternalLinkIcon className="w-4 h-4 text-blue-50 " />
                   </a>
                 </Tooltip>
               </span>
@@ -405,7 +401,7 @@ function Appointments() {
       )}
       {isLoading && loading && (
         <div className="d-flex flex-direction-column flex-align-center margin-top-32">
-          <Icon name="loading" />
+          <LoadingIcon className="h-6 w-6" />
           <p className="text-small">Loading Appointments...</p>
         </div>
       )}

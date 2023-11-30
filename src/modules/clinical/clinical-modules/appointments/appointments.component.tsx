@@ -3,13 +3,13 @@
 import React, { useEffect, useState } from 'react'
 import { useSortFilter } from 'src/context/sort-filter'
 import airtableFetch from 'src/services/airtable/fetch'
-import Icon from 'src/components/icon/svg-icon'
 import Modal from 'src/components/modals'
 import TextArea from 'src/components/forms/textarea'
 import LoadingComponent from 'src/components/loaders/table-loader'
 import { useMember } from 'src/context/member'
 import DataTable, { Column } from 'src/components/table/data-table'
 import dayjs from 'dayjs'
+import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
 
 function PafuView({ data }: any) {
   const [showPafu, setShowPafu] = useState(false)
@@ -73,7 +73,7 @@ function PafuView({ data }: any) {
             })}
           {loading && (
             <div className="d-flex flex-direction-column flex-align-center">
-              <Icon name="loading" />
+              <LoadingIcon className="h-6 w-6" />
               Loading Pafu
             </div>
           )}

@@ -1,6 +1,6 @@
 import { useCombobox, useMultipleSelection } from 'downshift'
 import React from 'react'
-import styles from './multiselect.component.css'
+import styles from './multiselect.module.css'
 
 function MultiSelect({ form, field, options, onChange, defaultValue }: any) {
   const [value, setValue] = React.useState<string | undefined>('')

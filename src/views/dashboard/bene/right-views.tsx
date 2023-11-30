@@ -8,7 +8,6 @@ import Communication from 'src/modules/comms/chat/views/messages'
 import Forms from 'src/modules/workflows/views/forms-page'
 import Appointments from 'src/modules/appointments'
 import Tasks from 'src/modules/tasks/views/hn-tasks'
-import Icon from 'src/components/icon/svg-icon'
 import CallsCallout from 'src/modules/comms/calls/views'
 import { useCall } from 'src/context/calls'
 import ErrorBoundary from 'src/components/error-boundary'
@@ -16,6 +15,7 @@ import GuidedWorkflows from 'src/modules/workflows/views/workflows-page'
 import { withTabRouter } from 'src/utils/routing/tab-router'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import _ from 'lodash'
+import MessageCircleIcon from 'src/assets/img/icons/message-circle.svg?react'
 
 function Actions({ handleChange, view }: any) {
   const { setCounterValue } = useCall()
@@ -62,7 +62,7 @@ function Actions({ handleChange, view }: any) {
             }}
             onClick={(e) => rightSectionHandleChange(e, 'messages')}
           >
-            <Icon name="message-circle" fill="#efefef" width={16} height={16} />
+            <MessageCircleIcon className="w-4 h-4" fill="#efefef" />
           </button>
           <CallsCallout />
         </div>

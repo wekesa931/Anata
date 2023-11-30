@@ -34,9 +34,8 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "paths": {
-      "src/*": [
-       "*"
-      ],
+      "src/*": ["*"]
     }
-  }
+  },
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

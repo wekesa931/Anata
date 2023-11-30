@@ -3,7 +3,7 @@ import Button from '@mui/material/Button'
 import { Link2, Monitor } from 'react-feather'
 import Box from '@mui/material/Box'
 import DropDownComponent from 'src/components/dropdown'
-import styles from 'src/modules/udm/files.component.css'
+import styles from 'src/modules/udm/files.module.css'
 
 type Props = {
   open: boolean
