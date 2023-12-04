@@ -391,8 +391,6 @@ export const useWorkflowData = () => {
           )
 
           if (shouldCreateForm) {
-            const formsCollection: Collection<Forms> =
-              workflowFromDb.collections.get('forms')
             return database.write(async () => {
               await formsCollection.create((f) => {
                 f.name = nf.name

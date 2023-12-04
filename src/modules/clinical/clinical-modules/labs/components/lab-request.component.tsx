@@ -22,7 +22,6 @@ function LabRequest() {
 
   return (
     <div className="mb-ten">
-      <h4>Lab Request</h4>
       {!loading ? (
         <Table
           title="Lab Request Details"

@@ -128,11 +128,20 @@ export function EditMedication({ value }: any) {
     <div className="font-rubik">
       <Button
         className="border border-solid border-midnight-blue rounded-md text-center normal-case text-xs text-midnight-blue"
-        onClick={() => setShowModal(!showModal)}
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          setShowModal(!showModal)
+        }}
       >
         Edit
       </Button>
-      <PrimaryModal open={showModal} onClose={() => setShowModal(false)}>
+      <PrimaryModal
+        open={showModal}
+        onClose={() => {
+          setShowModal(false)
+        }}
+      >
         {loading ? (
           <div className="p-2 flex items-center justify-center">
             <Loading message="Loading options" />

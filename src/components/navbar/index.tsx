@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { Menu as MenuIcon } from 'react-feather'
 import { CssBaseline, IconButton } from '@mui/material'
 import { useUser } from 'src/context/user'

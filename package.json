@@ -128,7 +128,6 @@
     "@babel/plugin-proposal-decorators": "^7.21.0",
     "@datadog/browser-rum": "^4.50.1",
     "@emotion/core": "^10.1.1",
-    "@emotion/react": "^11.10.5",
     "@emotion/styled": "^10.3.0",
     "@fullcalendar/core": "^6.1.4",
     "@fullcalendar/react": "^6.1.4",
@@ -147,6 +146,7 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@sentry/react": "^7.70.0",
     "@sentry/tracing": "^7.70.0",
+    "@testing-library/user-event": "^14.5.1",
     "@types/tableau": "^2.2.4",
     "ajv": "^8.11.0",
     "analytics": "^0.8.1",
@@ -190,6 +190,7 @@
     "react-hook-form": "^7.38.0",
     "react-image-render": "^0.0.3",
     "react-pdf": "^5.7.2",
+    "react-pro-sidebar": "^1.1.0-alpha.1",
     "react-router-dom": "^6.4.2",
     "react-toast-notifications": "^2.5.1",
     "recharts": "^2.7.2",
@@ -210,9 +211,9 @@
   "jest": {
     "testEnvironment": "jsdom",
     "moduleNameMapper": {
-      "^src/(.*)": "<rootDir>/src/$1",
       ".+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/file.mock.js",
-      ".+\\.(css|less)$": "<rootDir>/__mocks__/styles.mock.js"
+      ".+\\.(css|less)$": "<rootDir>/__mocks__/styles.mock.js",
+      "^src/(.*)": "<rootDir>/src/$1"
     },
     "globalSetup": "./jest.global.js",
     "setupFilesAfterEnv": [

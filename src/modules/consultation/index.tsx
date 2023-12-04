@@ -53,7 +53,6 @@ function Consultation() {
 
   return (
     <div className="mb-ten">
-      <p className="text-lg text-left mb-1">Clinical Consultation</p>
       {isReadyToShow && (
         <DataTable
           columns={COLUMNS}

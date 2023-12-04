@@ -102,16 +102,16 @@ export const useTablesData = () => {
     return processBsData(tableData)
   }
 
-  const processVitalsData = (vitals: any) => {
+  const processVitalsData = (vitalsData: any) => {
     const isVitalRecordNonNull = (record: any) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { timestamp, ...rest } = record
 
       return Object.values(rest).some((v: any) => !!v?.value)
     }
-    if (vitals) {
+    if (vitalsData) {
       // we need to group all vitals into three categories: BMI, Body Composition and Other Vitals
-      const bmiData = vitals.map((vital: any) => {
+      const bmiData = vitalsData.map((vital: any) => {
         const time = dayjs(vital?.timestamp).format('DD MMM YYYY')
         const data = vital?.data
         const bmi = BMI_TABLE_KEYS.reduce((acc: any, key) => {
@@ -130,7 +130,7 @@ export const useTablesData = () => {
         }
       })
 
-      const bodyCompositionData = vitals.map((vital: any) => {
+      const bodyCompositionData = vitalsData.map((vital: any) => {
         const data = vital?.data
         const time = dayjs(vital?.timestamp).format('DD MMM YYYY')
         const bodyComposition = BODY_COMPOSITION_KEYS.reduce(
@@ -152,7 +152,7 @@ export const useTablesData = () => {
         }
       })
 
-      const otherVitalsData = vitals.map((vital: any) => {
+      const otherVitalsData = vitalsData.map((vital: any) => {
         const data = vital?.data
         const time = dayjs(vital?.timestamp).format('DD MMM YYYY')
         const otherVitals = OTHER_VITALS_KEYS.reduce((acc: any, key) => {

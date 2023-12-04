@@ -98,9 +98,9 @@ function GlucoseMonitoring() {
       format: 'mmol/L',
       key: 'Fasting Blood Sugar',
       info: `Normal: <5.5 mmol/l,
-             Pre-diabetic: 5.5-6.9 mmol/l,
-             Diabetic: >7 mmol/l,
-             Target for Diabetics: <7 mmol/l`,
+            Pre-diabetic: 5.5-6.9 mmol/l,
+            Diabetic: >7 mmol/l,
+            Target for Diabetics: <7 mmol/l`,
     },
     {
       name: 'RBS',

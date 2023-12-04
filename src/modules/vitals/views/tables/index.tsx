@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useTablesData } from 'src/modules/vitals/hooks/tables.data.hook'
 import Loading from 'src/components/loaders/centered'
 import Table, { Column } from 'src/components/table/data-table'
-import ErrorComponent from 'src/modules/vitals/components/error'
+import ErrorComponent from 'src/components/feedbacks/error-retry'
 import dayjs from 'dayjs'
 import { useClustersData } from 'src/modules/vitals/hooks/clusters.data.hook'
 import {
@@ -321,7 +321,6 @@ export function BloodGlucoseTable() {
         </div>
       ) : (
         <div className="my-2">
-          <p className="text-lg text-left mb-1">Glucose Monitoring</p>
           <DataTable
             data={bloodSugar}
             columns={BS_COLUMNS}
@@ -383,7 +382,6 @@ export function BloodPressureTable() {
         </div>
       ) : (
         <div className="my-2">
-          <p className="text-lg text-left mb-1">Blood Pressure</p>
           <DataTable
             data={bloodPressure}
             columns={BP_Columns}
@@ -409,7 +407,6 @@ function VitalsTable() {
       ) : (
         <>
           <div className="my-2">
-            <p className="text-lg text-left mb-1">BMI</p>
             <DataTable
               data={vitals?.bmiData || []}
               columns={BMI_COLUMNS}
@@ -418,7 +415,6 @@ function VitalsTable() {
             />
           </div>
           <div className="my-2">
-            <p className="text-lg text-left mb-1">Body Composition</p>
             <DataTable
               data={vitals?.bodyCompositionData || []}
               columns={BODY_COMPOSITION_COLUMNS}
@@ -427,7 +423,6 @@ function VitalsTable() {
             />
           </div>
           <div className="my-2">
-            <p className="text-lg text-left mb-1">Other Vitals</p>
             <DataTable
               data={vitals?.otherVitalsData || []}
               columns={OTHER_VITALS}

@@ -72,7 +72,7 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
         <div id="search-wrap" className={styles.searchWrap}>
           <div
             id="search-input-wrap"
-            className={styles.searchInputWrap}
+            className="flex items-center flex-1 px-3 py-0 border border-1 border-neural-base rounded-2xl bg-white "
             {...getRootProps(undefined, { suppressRefError: true })}
           >
             <SearchIcon />
@@ -80,7 +80,7 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
               type="text"
               {...getInputProps()}
               className={styles.search}
-              placeholder="Search members..."
+              placeholder="Search member name, Antara Id,..."
               role="searchbox"
             />
             {inputValue && (

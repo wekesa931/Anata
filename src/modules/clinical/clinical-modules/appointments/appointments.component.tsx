@@ -158,7 +158,6 @@ function Appointments() {
   return (
     <div>
       <div className="d-flex flex-align-center">
-        <h4>Appointments</h4>
         {filters.status && (
           <span className="badge badge-success">Status: {filters.status}</span>
         )}

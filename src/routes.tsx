@@ -12,7 +12,6 @@ import { CallProvider } from 'src/context/calls'
 import CallConsole from 'src/modules/comms/calls/components/call-console'
 import Login from 'src/views/login'
 import { useUser } from 'src/context/user'
-import NavBar from 'src/components/navbar'
 import MainDashboard from 'src/views/dashboard/main'
 import BeneDashboard from 'src/views/dashboard/bene'
 import MemberRegistration from 'src/modules/member/views/member-registration'
@@ -39,15 +38,8 @@ function ProtectedRoute({ children, user }: any) {
       <DataProvider>
         <CallConsole />
         <MemberProvider antaraId={recId}>
-          <div className="flex h-full">
-            <div className="flex flex-col flex-1 overflow-auto bg-white">
-              {!!user.userAirtableId && <NavBar />}
-              <div className="bg-white flex-1 h-dashboard-height">
-                {children}
-              </div>
-            </div>
-            <MemberRegistration />
-          </div>
+          <MemberRegistration />
+          <div className="flex h-full">{children}</div>
         </MemberProvider>
       </DataProvider>
     </>
@@ -124,7 +116,7 @@ function Routes() {
             }
           />
           <Route
-            path="/member"
+            path="/*"
             element={
               <ProtectedRoute user={user}>
                 <MainDashboard />

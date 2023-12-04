@@ -1,5 +1,7 @@
 import {
   Box,
+  Button,
+  Chip,
   Collapse,
   Divider,
   IconButton,
@@ -14,17 +16,19 @@ import {
   TableSortLabel,
 } from '@mui/material'
 import { visuallyHidden } from '@mui/utils'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Order, getComparator, stableSort } from 'src/utils/sort/stable'
 import EmptyDataIcon from 'src/assets/img/icons/empty-data.svg?react'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
-import _ from 'lodash'
+import _, { isEmpty } from 'lodash'
 import {
   useDateRangeFilter,
   makeFilterDataByDate,
 } from 'src/context/date-range-filter'
 import { useModuleAnalytics } from 'src/modules/analytics'
-import { ArrowRight } from '@mui/icons-material'
+import { ArrowDropDown, ArrowRight } from '@mui/icons-material'
+import { toTitleCase } from 'src/utils/text-utils'
+import Loading from 'src/components/loaders/centered'
 
 export type Column = {
   label: string
@@ -92,7 +96,7 @@ function SortableTableHead(props: SortableTableHeadProps) {
                 active={orderBy === column.id}
                 direction={orderBy === column.id ? order : 'desc'}
                 onClick={createSortHandler(column.id)}
-                className="text-white"
+                className="text-white flex items-center justify-center"
                 sx={{
                   '& .MuiTableSortLabel-icon': {
                     color: 'white !important',
@@ -223,14 +227,19 @@ function DataTableDetailedRow({ columns, row, tableName }: DetailedRowProps) {
 
   return (
     <>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <TableRow
+        sx={{ '& > *': { borderBottom: 'unset' } }}
+        onClick={() => {
+          setOpen(!open)
+        }}
+      >
         {columns.map((column, index) => {
           const { value, textColor } = getValueAndColor(column.id)
           return (
             <TableCell
               key={column.id}
               align="left"
-              className="p-2 pl-0 bg-table-col-grey border-none text-left text-xs"
+              className="p-2 pl-0 bg-table-col-grey border-none text-left text-xs cursor-pointer"
               sx={{
                 color: textColor || 'var(--dark-blue-100)',
                 width: column?.width || `${100 / columns.length}%}`,
@@ -300,14 +309,118 @@ function EmptyData({ title }: { title?: string }) {
   )
 }
 
+type GroupedRowProps = {
+  columns: readonly Column[]
+  data: any[]
+  defaultExpanded?: boolean
+  groupTitle: string
+  title: string
+}
+
+function GroupedRow({
+  columns,
+  data,
+  defaultExpanded = true,
+  groupTitle,
+  title,
+}: GroupedRowProps) {
+  const [expanded, setExpanded] = useState<boolean>(true)
+  const { trackTableRowExpandToggled } = useModuleAnalytics()
+
+  useEffect(() => {
+    setExpanded(defaultExpanded)
+  }, [defaultExpanded])
+
+  const getValue = (columnId: string, row: any) => {
+    let value = row[columnId]?.value ?? row[columnId]
+    if (typeof value === 'object' && !row[columnId]?.value) {
+      value = '-'
+    }
+    return value
+  }
+
+  return (
+    <TableBody>
+      <TableRow
+        onClick={() => {
+          trackTableRowExpandToggled(title, groupTitle, !expanded)
+          setExpanded(!expanded)
+        }}
+        data-testid={`group-row-title-${groupTitle}`}
+      >
+        <TableCell colSpan={columns.length + 1} className="py-0">
+          <div className="flex gap-2 items-center pl-0">
+            <IconButton
+              aria-label="group-expand"
+              size="small"
+              className="text-blue-btn"
+            >
+              {expanded ? <ArrowDropDown /> : <ArrowRight />}
+            </IconButton>
+            <p className="text-base font-medium text-blue-btn">
+              {toTitleCase(groupTitle)}
+            </p>
+            <Chip
+              className="text-sm text-white font-medium rounded-md bg-blue-btn h-4"
+              label={data.length}
+              size="small"
+            />
+          </div>
+        </TableCell>
+      </TableRow>
+      {expanded && (
+        <>
+          {data.map((row: any, index) => (
+            <TableRow
+              key={`grouped-row-item-${index}`}
+              className="pl-2"
+              data-testid="grouped-row"
+            >
+              {columns.map((column, colIndex) => {
+                return (
+                  <TableCell
+                    key={`column-${column?.id}-${colIndex}`}
+                    align="left"
+                    className={`p-2 bg-table-col-grey border-none text-left text-xs ${
+                      colIndex === 0 ? 'pl-6' : 'pl-0'
+                    }'}`}
+                    sx={{
+                      width: column?.width || `${100 / columns.length}%}`,
+                    }}
+                  >
+                    {column.valueComponent ? (
+                      <column.valueComponent value={row} />
+                    ) : column.format ? (
+                      column.format(getValue(column.id, row))
+                    ) : (
+                      <>{getValue(column.id, row)}</>
+                    )}
+                  </TableCell>
+                )
+              })}
+            </TableRow>
+          ))}
+        </>
+      )}
+    </TableBody>
+  )
+}
+
 type DataTableProps = {
   data: any[]
   columns: readonly Column[]
   title: string
+  titleComponent?: React.ReactNode
   defaultSortColumn?: string
   defaultFilterColumn?: string
   filterByDate?: boolean
   dateColumnKey?: string
+  groupColumns?: string[]
+  defaultGroupColumn?: string
+  loading?: boolean
+  filterControl?: React.ReactNode
+  groupSortFunction?: (data: any, groupingColumn?: string) => any
+  dataSortFunction?(data: any, comparator: (a: any, b: any) => number): any
 }
 
 function DataTable({
@@ -317,6 +430,13 @@ function DataTable({
   defaultSortColumn,
   filterByDate = false,
   dateColumnKey,
+  groupColumns,
+  defaultGroupColumn,
+  titleComponent,
+  loading = false,
+  filterControl,
+  groupSortFunction,
+  dataSortFunction,
 }: DataTableProps) {
   const [order, setOrder] = useState<Order>('desc')
   const [orderBy, setOrderBy] = useState<string>(defaultSortColumn || '')
@@ -325,21 +445,38 @@ function DataTable({
   const { currentRange } = useDateRangeFilter()
 
   const filterDataByDate = makeFilterDataByDate(filterByDate, currentRange)
-  const { trackFieldNameSorted, trackRowsPerPageSelected, trackPageSelected } =
-    useModuleAnalytics()
+  const {
+    trackFieldNameSorted,
+    trackRowsPerPageSelected,
+    trackPageSelected,
+    trackTableGrouped,
+    trackTableGroupAllExpandToggled,
+  } = useModuleAnalytics()
+
+  const sortData = (unsorted: any) => {
+    const orderingColumn = columns.find((column) => column.id === orderBy)
+    if (dataSortFunction)
+      return dataSortFunction(
+        unsorted,
+        getComparator(order, orderBy, orderingColumn?.type)
+      )
+
+    return stableSort(
+      unsorted,
+      getComparator(order, orderBy, orderingColumn?.type)
+    )
+  }
 
   const visibleRows = useMemo(() => {
-    const orderingColumn = columns.find((column) => column.id === orderBy)
-
     // filter data by range if specified
     const rangeFilteredData = filterByDate
       ? filterDataByDate(data, dateColumnKey || 'created_at')
       : data
 
-    return stableSort(
-      rangeFilteredData,
-      getComparator(order, orderBy, orderingColumn?.type)
-    )?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    return sortData(rangeFilteredData)?.slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage
+    )
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order, orderBy, data, page, rowsPerPage, currentRange])
@@ -368,8 +505,91 @@ function DataTable({
     trackFieldNameSorted(title, property, isAsc ? 'Descending' : 'Ascending')
   }
 
+  const [groupByColumn, setGroupByColumn] = useState<string | undefined>(
+    defaultGroupColumn
+  )
+  const [defaultExpanded, setDefaultExpanded] = useState<boolean>(true)
+
+  const sortGroupedDataAlphabetically = (data: any) => {
+    const sortedKeys = Object.keys(data).sort()
+    return sortedKeys.reduce((acc: any, key) => {
+      acc[key] = data[key]
+      return acc
+    }, {})
+  }
+
+  const sortGroupedData = (groupedData: any) => {
+    if (groupSortFunction) return groupSortFunction(groupedData, groupByColumn)
+
+    return sortGroupedDataAlphabetically(groupedData)
+  }
+
+  const getGroupedData = () => {
+    const groupedData = _.groupBy(data, groupByColumn)
+    if (groupByColumn) {
+      trackTableGrouped(title, groupByColumn)
+    }
+
+    if (isEmpty(groupedData))
+      return [
+        {
+          title: '',
+          data: [],
+        },
+      ]
+
+    return Object.keys(sortGroupedData(groupedData)).map((key) => ({
+      title: key,
+      data: sortData(groupedData[key]),
+    }))
+  }
+
   return (
-    <div className="w-full overflow-hidden font-rubik">
+    <div
+      className="w-full overflow-hidden font-rubik"
+      data-testid={`${title} table`}
+    >
+      <div className="flex justify-between items-center">
+        {titleComponent || <h4 className="text-2xl text-[#444] ">{title}</h4>}
+        <div className="flex justify-between gap-2 font-rubik">
+          {filterControl}
+          {groupColumns && groupColumns.length > 0 && (
+            <>
+              <div className="min-w-[150px]">
+                <label
+                  htmlFor="group-by-column"
+                  className="block text-xs font-medium text-[#747474] "
+                >
+                  Group by
+                </label>
+                <select
+                  id="group-by-column"
+                  className="bg-gray-50 border-[#8A8A8A] border-[0.5px] text-sm rounded-md w-full text-[#545454]"
+                  onChange={(e) => setGroupByColumn(e.target.value)}
+                  value={groupByColumn}
+                >
+                  {groupColumns.map((column) => (
+                    <option value={column} key={column}>
+                      {toTitleCase(column)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {groupByColumn && (
+                <Button
+                  className="normal-case underline pb-0 text-blue-100 text-sm font-medium self-end"
+                  onClick={() => {
+                    trackTableGroupAllExpandToggled(title, !defaultExpanded)
+                    setDefaultExpanded(!defaultExpanded)
+                  }}
+                >
+                  {defaultExpanded ? 'Collapse All' : 'Expand All'}
+                </Button>
+              )}
+            </>
+          )}
+        </div>
+      </div>
       <TableContainer>
         <Table
           stickyHeader
@@ -382,40 +602,88 @@ function DataTable({
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
           />
-          <TableBody>
-            {visibleRows?.length ? (
-              <>
-                {visibleRows.map((row: any, index) => (
-                  <DataTableDetailedRow
-                    key={index}
-                    columns={columns}
-                    row={row}
-                    tableName={title}
-                  />
-                ))}
-              </>
-            ) : (
+          {loading ? (
+            <TableBody>
               <TableRow>
                 <TableCell colSpan={columns.length + 1} className="p-0">
-                  <EmptyData title={title} />
+                  <div className="flex items-center justify-center">
+                    <Loading message={`Loading ${title}`} />
+                  </div>
                 </TableCell>
               </TableRow>
-            )}
-          </TableBody>
+            </TableBody>
+          ) : (
+            <>
+              {groupByColumn ? (
+                <>
+                  {getGroupedData().map((group, index) => {
+                    return (
+                      <React.Fragment key={`grouped-row-${index}`}>
+                        {group?.data?.length ? (
+                          <GroupedRow
+                            columns={columns}
+                            data={group.data}
+                            defaultExpanded={defaultExpanded}
+                            key={`grouped-row-${index}`}
+                            groupTitle={group.title}
+                            title={title}
+                          />
+                        ) : (
+                          <TableBody>
+                            <TableRow>
+                              <TableCell
+                                colSpan={columns.length + 1}
+                                className="p-0"
+                              >
+                                <EmptyData title={title} />
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+                        )}
+                      </React.Fragment>
+                    )
+                  })}
+                </>
+              ) : (
+                <TableBody>
+                  {visibleRows?.length ? (
+                    <>
+                      {visibleRows.map((row: any, index: number) => (
+                        <DataTableDetailedRow
+                          key={index}
+                          columns={columns}
+                          row={row}
+                          tableName={title}
+                        />
+                      ))}
+                    </>
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={columns.length + 1} className="p-0">
+                        <EmptyData title={title} />
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              )}
+            </>
+          )}
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={data?.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        className="text-dark-blue-100 font-rubik mt-2 bg-table-col-grey"
-        showFirstButton
-        showLastButton
-      />
+      {!groupByColumn && (
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={data?.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          className="text-dark-blue-100 font-rubik mt-2 bg-table-col-grey"
+          showFirstButton
+          showLastButton
+        />
+      )}
     </div>
   )
 }

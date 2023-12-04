@@ -3,6 +3,8 @@ import { useMember } from 'src/context/member'
 import CenteredLoader from 'src/components/loaders/centered'
 import MemberNotFound from 'src/components/dialog/member-not-found'
 import useAnalytics from 'src/hooks/analytics'
+import NavBar from 'src/components/navbar'
+import { useUser } from 'src/context/user'
 import RightViews from './right-views'
 import MainViews from './main-views'
 import BioData from './biodata'
@@ -10,6 +12,7 @@ import BioData from './biodata'
 function DashboardContent() {
   const { isLoading, memberNotFound, member } = useMember()
   const { identifyMember } = useAnalytics('Member Dashboard')
+  const user = useUser()
 
   useEffect(() => {
     if (member) {
@@ -21,9 +24,12 @@ function DashboardContent() {
   }, [member])
 
   return isLoading ? (
-    <CenteredLoader message="Loading member" />
+    <div className="flex items-center justify-center h-screen w-full">
+      <CenteredLoader message="Loading member..." />
+    </div>
   ) : (
-    <>
+    <div className="flex flex-col h-full flex-1 bg-white w-full">
+      {!!user?.userAirtableId && <NavBar />}
       {memberNotFound ? (
         <MemberNotFound />
       ) : (
@@ -40,7 +46,7 @@ function DashboardContent() {
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
 

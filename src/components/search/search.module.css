@@ -41,9 +41,9 @@
   flex-direction: row;
   align-items: center;
   flex: 2;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 0px 12px;
-  border: solid 1px #d1d5db;
+  border: solid 1px #f7f7f7;
   background-color: #f9fafc;
 }
 

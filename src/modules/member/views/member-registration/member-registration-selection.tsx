@@ -11,7 +11,7 @@ import RegistrationForm from 'src/modules/member/views/member-registration/regis
 import { useRegistrationForm } from 'src/context/member-registration'
 
 type MemberRegistrationFormProps = {
-  setIsEdited: (isEdited: boolean) => void
+  setIsEdited?: (isEdited: boolean) => void
   openForm?: RegistrationFormsNames | null
 }
 
@@ -70,6 +70,10 @@ function MemberRegistrationForm({
       default:
         return ''
     }
+  }
+
+  const handleEdited = (edited: boolean) => {
+    setIsEdited && setIsEdited(edited)
   }
 
   const [selectedForm, setSelectedForm] = React.useState<RegistrationForms>(
@@ -159,7 +163,7 @@ function MemberRegistrationForm({
           ) : (
             <RegistrationForm
               closeForm={() => setSelectedForm(undefined)}
-              setIsEdited={setIsEdited}
+              setIsEdited={handleEdited}
               setCompleted={(member?: Member, primaryMember?: Member) =>
                 setSelectedForm({
                   ...selectedForm,

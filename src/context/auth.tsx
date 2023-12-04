@@ -8,6 +8,7 @@ import useAntaraStaff from 'src/hooks/antara-staff.hook'
 import { logError } from 'src/utils/logging/logger'
 import { useNavigate } from 'react-router-dom'
 import { googleLogout } from '@react-oauth/google'
+import { toTitleCase } from 'src/utils/text-utils'
 
 dayjs.extend(utc)
 type AuthContextType = {
@@ -68,6 +69,8 @@ function AuthProvider({ user, children }: Props) {
             const updatedUser = {
               ...currentUser,
               userAirtableId: data?.atRecordId,
+              fullName: data?.fullName,
+              team: toTitleCase(data?.team),
             }
             setCurrentUser(updatedUser)
             storage.set(keys.USER, JSON.stringify(updatedUser))

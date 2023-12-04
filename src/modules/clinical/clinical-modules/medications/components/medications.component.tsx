@@ -106,7 +106,6 @@ function Medications() {
 
   return (
     <div className="mb-ten">
-      <h4>Medications</h4>
       {!loading ? (
         <DataTable
           title="Medications"

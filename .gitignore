@@ -12,3 +12,5 @@ scripts/
 .env.sentry-build-plugin
 
 LokiJS/
+
+/dev-dist

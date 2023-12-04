@@ -34,9 +34,9 @@ function FlagForReview() {
       ? GET_ALL_INTERACTIONS
       : GET_ALL_FLAGGED_INTERACTIONS,
     {
-      onCompleted: (data) => {
-        if (data) {
-          setInteractions(data.allInteractions.edges)
+      onCompleted: (d) => {
+        if (d) {
+          setInteractions(d.allInteractions.edges)
         }
       },
     }

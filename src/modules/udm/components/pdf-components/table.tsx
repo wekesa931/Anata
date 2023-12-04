@@ -83,11 +83,11 @@ function Table({ data, columns, width = '98%' }: TableProps) {
         </View>
       ) : (
         <View style={styles.tableBody}>
-          {data.map((item, index) => (
-            <View key={index} style={styles.tableHeaderContainer}>
-              {columns.map((column, index) => (
+          {data.map((item, i) => (
+            <View key={i} style={styles.tableHeaderContainer}>
+              {columns.map((column, idx) => (
                 <Text
-                  key={index}
+                  key={idx}
                   style={{ ...styles.tableHeader, width: column.width }}
                 >
                   {item[column.dataIndex] || 'N/A'}

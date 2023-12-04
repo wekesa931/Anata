@@ -36,7 +36,6 @@ function Logistic() {
 
   return (
     <div className="mb-ten">
-      <h4>Logistic Tasks</h4>
       {!loading ? (
         <Table
           title="Logistic Details"

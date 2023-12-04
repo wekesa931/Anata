@@ -5,6 +5,7 @@ export const useModuleAnalytics = () => {
   const leftSectionAnalytics = useAnalytics('Left Section')
   const rightSectionAnalytics = useAnalytics('Right Section')
   const middlesSectionAnalytics = useAnalytics('Middle Section')
+  const homePageSectionAnalytics = useAnalytics('Home Page')
   const { member } = useMember()
 
   return {
@@ -215,6 +216,28 @@ export const useModuleAnalytics = () => {
         `${tableName} table - ${fieldName} field sorted`,
         { order }
       )
+    },
+    trackTableGrouped: (tableName: string, groupColumn: string) => {
+      homePageSectionAnalytics.track(
+        `${tableName} table - grouped by ${groupColumn}`
+      )
+    },
+    trackTableGroupAllExpandToggled: (tableName: string, expanded: boolean) => {
+      homePageSectionAnalytics.track(
+        `${tableName} table - all groups ${expanded ? 'expanded' : 'collapsed'}`
+      )
+    },
+    trackTableRowExpandToggled: (
+      tableName: string,
+      rowName: any,
+      expanded: boolean
+    ) => {
+      homePageSectionAnalytics.track(
+        `${tableName} table - ${rowName} ${expanded ? 'expanded' : 'collapsed'}`
+      )
+    },
+    trackTasksFiltered: (table: string, filter: string) => {
+      homePageSectionAnalytics.track(`${table} table - filtered by ${filter}`)
     },
   }
 }
