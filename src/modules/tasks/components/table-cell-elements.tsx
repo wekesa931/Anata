@@ -58,7 +58,6 @@ export function ActionComponent({ value }: any) {
   return (
     <Link
       to={`/member/${value?.antaraId}`}
-      target="_blank"
       className="underline font-rubik text-blue-100"
     >
       {' '}

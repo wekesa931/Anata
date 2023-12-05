@@ -239,5 +239,9 @@ export const useModuleAnalytics = () => {
     trackTasksFiltered: (table: string, filter: string) => {
       homePageSectionAnalytics.track(`${table} table - filtered by ${filter}`)
     },
+    trackUserOpenedWorkflow: (workflow: any) =>
+      homePageSectionAnalytics.track('workflow section - workflow opened', {
+        workflow,
+      }),
   }
 }

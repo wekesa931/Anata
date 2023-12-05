@@ -87,5 +87,10 @@ module.exports = {
     fontSize: {
       '2xs': '.5rem',
     },
+    transitionDelay: {
+      2000: '2000ms',
+      5000: '5000ms',
+      3000: '3000ms',
+    },
   },
 }

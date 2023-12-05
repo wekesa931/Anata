@@ -8,6 +8,10 @@
   box-sizing: border-box;
 }
 
+.ps-menu-button:hover {
+  background-color: transparent !important;
+}
+
 .recharts-legend-item-text {
   font-size: 12px !important;
   color: var(--dark-blue-50) !important;

@@ -136,18 +136,18 @@ function HnTasksView({ user }: Props) {
   }
 
   return (
-    <>
+    <div className="h-full ">
       {loading ? (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center mt-[15%] mb-[15%] ">
           <Loading message="Loading tasks" />
         </div>
       ) : (
         <div className="font-rubik flex flex-col gap-10">
           <div className="flex flex-col gap-6">
-            <h1 className="text-[40px] text-dark-blue-100">
+            <h1 className="text-2xl text-dark-blue-100">
               Hello, <strong>{user?.fullName || user?.name} 👋🏾 </strong>
             </h1>
-            <h2 className="text-2xl text-dark-blue-100">
+            <h2 className="text-sm text-dark-blue-100">
               Here is what your day looks like
             </h2>
             <div className="w-full flex justify-between gap-10">
@@ -196,7 +196,7 @@ function HnTasksView({ user }: Props) {
           </>
         </div>
       )}
-    </>
+    </div>
   )
 }
 

@@ -49,7 +49,6 @@ export const useWorkflowData = () => {
   const { removeWorkflow, loading: removingWorkflow } = useRemoveWorkflow()
   const { addModule, loading: addingWorkflowModule } = useAddWorkflowModule()
   const [submittingForm, setSubmittingForm] = useState<boolean>(false)
-
   const formsCollection: Collection<TWorkflowForm> =
     database.collections.get('forms')
   const workflowsCollection: Collection<Workflows> =
@@ -57,9 +56,13 @@ export const useWorkflowData = () => {
 
   const incompleteWorkflowsObservable = workflowsCollection
     .query(
-      Q.where('member', member?.antaraId || ''),
-      Q.where('is_completed', false),
-      Q.sortBy('created_at', Q.desc)
+      ...(member && member.antaraId
+        ? [
+            Q.where('member', member.antaraId),
+            Q.where('is_completed', false),
+            Q.sortBy('created_at', Q.desc),
+          ]
+        : [Q.where('is_completed', false), Q.sortBy('created_at', Q.desc)])
     )
     .observe()
   const incompleteWorkflows = useObservable(
@@ -67,7 +70,6 @@ export const useWorkflowData = () => {
     [] as TWorkflowModel[],
     [workflowsCollection, member?.antaraId]
   )
-
   const completedWorkflowsObservable = workflowsCollection
     .query(
       Q.where('member', member?.antaraId || ''),
@@ -415,12 +417,13 @@ export const useWorkflowData = () => {
     )
   }
 
-  const hydrateWorkflows = async () => {
-    if (member) {
+  const hydrateWorkflows = async (memberId?: string, addedBy?: string) => {
+    if (memberId || addedBy) {
       const loadedWorkflows = await getData({
         variables: {
           workflowId: '',
-          memberId: member.antaraId,
+          memberId: memberId || '',
+          addedBy: addedBy || '',
         },
         fetchPolicy: 'network-only',
       })
@@ -429,9 +432,13 @@ export const useWorkflowData = () => {
       const newWorkflowIds = normalizedWorkflows.map(
         (w: TWorkflow) => w.workflowId
       )
-      const existingWorkflows = await workflowsCollection
-        .query(Q.where('member', member.antaraId))
-        .fetch()
+
+      let existingWorkflows = await workflowsCollection.query().fetch()
+      if (memberId) {
+        existingWorkflows = await workflowsCollection
+          .query(Q.where('member', memberId))
+          .fetch()
+      }
       const existingWorkflowIds = existingWorkflows.map(
         (w: TWorkflowModel) => w.workflowId
       )

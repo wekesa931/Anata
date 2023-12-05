@@ -111,10 +111,6 @@ export default ({ mode }: any) => {
           start_url: '/',
           orientation: 'portrait',
         },
-        devOptions: {
-          enabled: true,
-          type: 'module',
-        },
         injectManifest: {
           injectionPoint: undefined,
         },

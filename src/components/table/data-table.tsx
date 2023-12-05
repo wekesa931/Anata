@@ -14,6 +14,9 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel,
+  FormControl,
+  Select,
+  MenuItem,
 } from '@mui/material'
 import { visuallyHidden } from '@mui/utils'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -96,11 +99,12 @@ function SortableTableHead(props: SortableTableHeadProps) {
                 active={orderBy === column.id}
                 direction={orderBy === column.id ? order : 'desc'}
                 onClick={createSortHandler(column.id)}
-                className="text-white flex items-center justify-center"
+                className="text-white flex items-center"
                 sx={{
                   '& .MuiTableSortLabel-icon': {
                     color: 'white !important',
                   },
+                  paddingLeft: index === 0 ? '1.5rem !important' : 0,
                 }}
               >
                 {orderBy === column.id ? (
@@ -193,9 +197,15 @@ type DetailedRowProps = {
   columns: readonly Column[]
   row: any
   tableName: string
+  canExpandRow?: boolean
 }
 
-function DataTableDetailedRow({ columns, row, tableName }: DetailedRowProps) {
+function DataTableDetailedRow({
+  columns,
+  row,
+  tableName,
+  canExpandRow = true,
+}: DetailedRowProps) {
   const getValueAndColor = (columnId: string) => {
     let value = row[columnId]?.value ?? row[columnId]
     if (typeof value === 'object' && !row[columnId]?.value) {
@@ -243,13 +253,16 @@ function DataTableDetailedRow({ columns, row, tableName }: DetailedRowProps) {
               sx={{
                 color: textColor || 'var(--dark-blue-100)',
                 width: column?.width || `${100 / columns.length}%}`,
+                paddingLeft:
+                  index === 0 && !canExpandRow ? '2rem !important' : 0,
+                borderBottom: 'none !important',
               }}
             >
               <div
                 onMouseEnter={(e: any) => handleMouseEnter(e, column.id)}
                 onMouseLeave={handleMouseLeave}
               >
-                {index === 0 && (
+                {index === 0 && canExpandRow && (
                   <IconButton
                     aria-label="expand row"
                     size="small"
@@ -421,6 +434,7 @@ type DataTableProps = {
   filterControl?: React.ReactNode
   groupSortFunction?: (data: any, groupingColumn?: string) => any
   dataSortFunction?(data: any, comparator: (a: any, b: any) => number): any
+  canExpandRow?: boolean
 }
 
 function DataTable({
@@ -437,6 +451,7 @@ function DataTable({
   filterControl,
   groupSortFunction,
   dataSortFunction,
+  canExpandRow = true,
 }: DataTableProps) {
   const [order, setOrder] = useState<Order>('desc')
   const [orderBy, setOrderBy] = useState<string>(defaultSortColumn || '')
@@ -549,35 +564,44 @@ function DataTable({
       className="w-full overflow-hidden font-rubik"
       data-testid={`${title} table`}
     >
-      <div className="flex justify-between items-center">
-        {titleComponent || <h4 className="text-2xl text-[#444] ">{title}</h4>}
+      <div className="flex justify-between items-center mb-4">
+        {titleComponent || (
+          <h4 className="text-2xl text-[#444] font-rubik font-medium">
+            {title}
+          </h4>
+        )}
         <div className="flex justify-between gap-2 font-rubik">
           {filterControl}
           {groupColumns && groupColumns.length > 0 && (
             <>
               <div className="min-w-[150px]">
-                <label
-                  htmlFor="group-by-column"
-                  className="block text-xs font-medium text-[#747474] "
-                >
-                  Group by
-                </label>
-                <select
-                  id="group-by-column"
-                  className="bg-gray-50 border-[#8A8A8A] border-[0.5px] text-sm rounded-md w-full text-[#545454]"
-                  onChange={(e) => setGroupByColumn(e.target.value)}
-                  value={groupByColumn}
-                >
-                  {groupColumns.map((column) => (
-                    <option value={column} key={column}>
-                      {toTitleCase(column)}
-                    </option>
-                  ))}
-                </select>
+                <span className="text-sm text-gray-400">Group by</span>
+                <FormControl fullWidth>
+                  <Select
+                    labelId="group-by-select-label"
+                    id="group-by-select"
+                    className="h-8"
+                    value={groupByColumn}
+                    onChange={(e) => setGroupByColumn(e.target.value)}
+                    renderValue={(value) => {
+                      return (
+                        <div className="flex gap-3 items-center text-[#989898]">
+                          {toTitleCase(value)}
+                        </div>
+                      )
+                    }}
+                  >
+                    {groupColumns.map((column) => (
+                      <MenuItem value={column} key={column}>
+                        {toTitleCase(column)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </div>
               {groupByColumn && (
                 <Button
-                  className="normal-case underline pb-0 text-blue-100 text-sm font-medium self-end"
+                  className="normal-case underline pb-0 text-blue-100 text-sm font-bold self-end"
                   onClick={() => {
                     trackTableGroupAllExpandToggled(title, !defaultExpanded)
                     setDefaultExpanded(!defaultExpanded)
@@ -654,6 +678,7 @@ function DataTable({
                           columns={columns}
                           row={row}
                           tableName={title}
+                          canExpandRow={canExpandRow}
                         />
                       ))}
                     </>
@@ -679,7 +704,7 @@ function DataTable({
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          className="text-dark-blue-100 font-rubik mt-2 bg-table-col-grey"
+          className="text-dark-blue-100 font-rubik mt-2 bg-white flex justify-center"
           showFirstButton
           showLastButton
         />

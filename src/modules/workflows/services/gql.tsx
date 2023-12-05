@@ -82,8 +82,8 @@ export const SAVE_WORKFLOW = gql`
 `
 
 export const GET_WORKFLOWS = gql`
-  query workflows($workflowId: String!, $memberId: String!) {
-    workflows(workflowId: $workflowId, memberId: $memberId) {
+  query workflows($workflowId: String, $memberId: String, $addedBy: String) {
+    workflows(workflowId: $workflowId, memberId: $memberId, addedBy: $addedBy) {
       edges {
         node {
           id
@@ -98,10 +98,18 @@ export const GET_WORKFLOWS = gql`
             id
             name
           }
+          member {
+            details {
+              firstName
+              middleName
+              lastName
+            }
+          }
           currentModules
           moduleData
           createdAt
           updatedAt
+          memberId
         }
       }
     }

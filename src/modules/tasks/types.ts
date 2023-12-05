@@ -26,9 +26,9 @@ export type RawUserTask = {
 }
 
 export enum Filters {
-  TODAYS = 'TODAYS',
-  THIS_WEEK = 'THIS_WEEK',
-  THIS_MONTH = 'THIS_MONTH',
+  TODAYS = "Today's tasks",
+  THIS_WEEK = "This week's tasks",
+  THIS_MONTH = "This month's tasks",
 }
 
 export const convertPriority = (priority: string): Priority => {

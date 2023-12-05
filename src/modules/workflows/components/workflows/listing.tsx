@@ -55,10 +55,12 @@ function WorkflowList({
   const hasActiveWorkflows =
     !!incompleteWorkflows?.length || !!completedWorkflows?.length
 
+  const memberId = member?.antaraId
+
   useEffect(() => {
     if (member) {
       setIsLoadingWorkflows(true)
-      hydrateWorkflows()
+      hydrateWorkflows(memberId, '')
         .then(() => {
           openWorkflowFromSearchParams()
         })

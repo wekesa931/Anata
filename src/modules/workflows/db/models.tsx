@@ -149,6 +149,8 @@ export class Workflows extends Model {
 
   @text('is_draft_saved') isDraftSaved?: boolean
 
+  @json('member_data', sanitizeJson) memberData?: any
+
   get workflowObject() {
     return {
       workflowId: this.workflowId,
@@ -161,6 +163,7 @@ export class Workflows extends Model {
       updatedBy: this.updatedBy,
       airtableId: this.airtableId,
       isSynced: this.isSynced,
+      memberData: this.memberData,
     }
   }
 
@@ -242,12 +245,14 @@ export class Workflows extends Model {
   @writer async createFromAPI(newWorkflow: any, member: any, user: any) {
     const userData = {
       email: user.email,
-      name: user.name,
+      name: user?.name ?? user?.fullName,
     }
     return this.update(() => {
       this.workflowId = newWorkflow.workflowId
       this.template = newWorkflow.template.name
-      this.member = member.antaraId
+      this.member =
+        member && member.antaraId ? member.antaraId : newWorkflow.memberId
+      this.memberData = newWorkflow.member?.details
       this.isCompleted = newWorkflow.completed
       this.isSynced = true
       this.isDraftSaved = true

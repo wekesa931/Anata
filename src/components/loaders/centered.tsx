@@ -35,7 +35,7 @@ function Loading({ color, message = 'Loading' }: Props) {
   return (
     <CenteredDiv>
       <Loader />
-      <div>{message}</div>
+      <div className="mt-4">{message}</div>
     </CenteredDiv>
   )
 }

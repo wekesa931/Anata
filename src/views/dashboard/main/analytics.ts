@@ -8,5 +8,15 @@ export const useHomePageAnalytics = () => {
       homePageSections.track('task section - default accessed'),
     trackUserNavigatedToTasksPage: () =>
       homePageSections.track('task section - clicked'),
+    trackUserNavigatedToWorkflowsPage: () =>
+      homePageSections.track('workflow section - clicked'),
+    trackUserOpenedWorkflow: (workflow: any) =>
+      homePageSections.track('workflow section - workflow opened', {
+        workflow,
+      }),
+    trackUserOpenedRegistration: () =>
+      homePageSections.track('registration section - clicked'),
+    trackUserLoggedOut: () =>
+      homePageSections.track('logout section - clicked'),
   }
 }

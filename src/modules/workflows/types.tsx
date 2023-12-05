@@ -67,8 +67,9 @@ export type TWorkflow = {
 }
 
 export type WorkflowVariables = {
-  memberId: string
-  workflowId: string
+  memberId?: string
+  workflowId?: string
+  addedBy?: string
 }
 
 export type AddModuleVariables = {

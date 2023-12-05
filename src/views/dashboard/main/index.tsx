@@ -1,12 +1,6 @@
-import { Button, Divider, IconButton, Tooltip } from '@mui/material'
+import { Button, IconButton, Tooltip } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import {
-  Sidebar,
-  Menu,
-  MenuItem,
-  // menuClasses,
-  MenuItemStyles,
-} from 'react-pro-sidebar'
+import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar'
 import Header from 'src/assets/img/vector/header.svg?react'
 import LogoutIcon from '@mui/icons-material/ExitToApp'
 import TasksIcon from '@mui/icons-material/ViewQuilt'
@@ -22,15 +16,7 @@ import HnTasksView from 'src/modules/tasks/views/hn-tasks-view'
 import MemberRegistration from 'src/modules/member/views/member-registration/member-registration-selection'
 import { useHomePageAnalytics } from 'src/views/dashboard/main/analytics'
 import { useRegistrationForm } from 'src/context/member-registration'
-
-function ComingSoon() {
-  return (
-    <div className="flex flex-col items-center justify-center h-screen w-full">
-      <h1 className="text-3xl font-bold">Coming Soon</h1>
-      <p className="text-xl font-medium">We are working on this feature</p>
-    </div>
-  )
-}
+import WorkflowView from 'src/modules/workflows/views/workflow-dashboard-view'
 
 function RedirectToTasks({
   setActive,
@@ -60,7 +46,12 @@ function MainDashboard() {
   const user = useUser()
   const auth = useAuth()
   const { identifyUser } = useAnalytics()
-  const { trackUserNavigatedToTasksPage } = useHomePageAnalytics()
+  const {
+    trackUserNavigatedToTasksPage,
+    trackUserNavigatedToWorkflowsPage,
+    trackUserOpenedRegistration,
+    trackUserLoggedOut,
+  } = useHomePageAnalytics()
   const [collapsed, setCollapsed] = useState(true)
   const { setIsFormOpen, isDataLoading } = useRegistrationForm()
 
@@ -84,45 +75,39 @@ function MainDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
-  const menuItemStyles: MenuItemStyles = {
-    button: {
-      '&:hover': {
-        backgroundColor: '#CFE6FC',
-        color: 'white',
-        ...(!collapsed
-          ? {
-              borderTopRightRadius: '16px',
-              borderBottomRightRadius: '16px',
-            }
-          : {
-              borderRadius: '16px',
-            }),
-      },
-    },
+  const activeStyle = (active: boolean) => {
+    const globalStyles = collapsed
+      ? 'rounded-2xl'
+      : 'rounded-tr-2xl rounded-br-2xl'
+
+    const activeStyles = active
+      ? 'bg-primary-button text-white mb-2 hover:bg-primary-button'
+      : 'text-grey-main mb-2 hover:bg-blue-20'
+
+    return `${activeStyles} ${globalStyles}`
   }
 
-  const activeStyle = `bg-primary-button text-white ${
-    collapsed
-      ? 'rounded-2xl transition ease-in-out delay-500'
-      : 'rounded-tr-2xl rounded-br-2xl'
-  }`
+  const logout = () => {
+    auth.logout()
+    trackUserLoggedOut()
+  }
 
   return (
-    <div className="flex h-screen font-rubik flex-col w-screen">
-      <nav className="flex border-bottom items-center w-full h-14 sticky top-0 bg-dashboard-blue gap-4 p-4">
+    <div className="flex h-full font-rubik flex-col w-screen">
+      <nav className="flex border-bottom items-center w-full h-14 sticky top-0 bg-dashboard-blue gap-4 py-[2%] px-4">
         <IconButton
           className="bg-blue-20 rounded-full"
           onClick={() => setCollapsed(!collapsed)}
         >
           <MenuIcon />
         </IconButton>
-        <Header />
+        <Header className="ml-4" />
 
         <div className="p-2 w-1/3">
           <SearchInput />
         </div>
       </nav>
-      <div className="flex overflow-x-hidden">
+      <div className="flex overflow-x-hidden h-full">
         <Sidebar
           toggled={toggled}
           onBackdropClick={() => setToggled(false)}
@@ -130,20 +115,18 @@ function MainDashboard() {
           collapsed={collapsed}
           transitionDuration={500}
           className="border-none"
-          width="240px"
+          width="254px"
           onBreakPoint={setBroken}
         >
           <div className="my-4 flex-1 text-sm">
-            <Menu menuItemStyles={menuItemStyles}>
+            <Menu>
               <MenuItem
                 icon={<TasksIcon className="align-bottom" />}
                 onClick={() => {
                   setActive(Active.MY_TASKS)
                   trackUserNavigatedToTasksPage()
                 }}
-                className={
-                  active === Active.MY_TASKS ? activeStyle : 'text-grey-main'
-                }
+                className={activeStyle(active === Active.MY_TASKS)}
                 component={<NavLink to="/my-tasks" />}
               >
                 My Tasks
@@ -152,28 +135,24 @@ function MainDashboard() {
                 icon={<WorkflowsIcon />}
                 onClick={() => {
                   setActive(Active.MY_WORKFLOWS)
+                  trackUserNavigatedToWorkflowsPage()
                 }}
-                className={
-                  active === Active.MY_WORKFLOWS
-                    ? activeStyle
-                    : 'text-grey-main'
-                }
+                className={activeStyle(active === Active.MY_WORKFLOWS)}
                 component={<NavLink to="/my-workflows" />}
               >
                 My Workflows
               </MenuItem>
-              {!collapsed ? (
-                <p className="my-4 text-grey-main text-sm pl-5">Onboarding</p>
-              ) : (
-                <Divider />
-              )}
+
               {!isDataLoading && (
                 <MenuItem
                   icon={<RegisterIcon />}
                   onClick={() => {
                     setIsFormOpen(true)
+                    trackUserOpenedRegistration()
                   }}
-                  className="text-grey-main"
+                  className={`text-grey-main mb-2 hover:bg-blue-20 ${
+                    collapsed ? ' rounded-2xl' : 'rounded-tr-2xl rounded-br-2xl'
+                  }`}
                 >
                   Register new member
                 </MenuItem>
@@ -181,7 +160,7 @@ function MainDashboard() {
             </Menu>
           </div>
           {!collapsed ? (
-            <div className="fixed bottom-0">
+            <div className="fixed bottom-0 mb-2 transition-all duration-500">
               <div className="flex flex-col items-center gap-1 p-2 text-center">
                 <p className="text-xs text-grey-main">
                   {user?.name || user?.fullName || user?.given_name} |{' '}
@@ -191,7 +170,7 @@ function MainDashboard() {
                 <Button
                   variant="outlined"
                   className="border-light-grey text-grey-main text-xs normal-case flex gap-2 mt-2"
-                  onClick={auth.logout}
+                  onClick={logout}
                 >
                   Logout
                   <LogoutIcon />
@@ -201,29 +180,36 @@ function MainDashboard() {
           ) : (
             <div className="w-full flex items-center justify-center">
               <Tooltip title="Logout">
-                <IconButton onClick={auth.logout} className="fixed bottom-0">
+                <IconButton onClick={logout} className="fixed bottom-0 mb-2">
                   <LogoutIcon />
                 </IconButton>
               </Tooltip>
             </div>
           )}
         </Sidebar>
-        <main className="w-full h-full overflow-scroll bg-dashboard-blue p-4">
-          <div className="rounded-2xl bg-white p-6">
+        <main className="w-full h-full overflow-scroll bg-dashboard-blue px-4">
+          <div className="rounded-2xl bg-white p-4 h-full overflow-scroll">
             <Routes>
               <Route
                 path="/my-tasks"
                 element={
-                  <div className="h-screen">
+                  <div className="h-full">
                     <HnTasksView user={user} />
                   </div>
                 }
               />
-              <Route path="/my-workflows" element={<ComingSoon />} />
+              <Route
+                path="/my-workflows"
+                element={
+                  <div className="h-full">
+                    <WorkflowView user={user} />
+                  </div>
+                }
+              />
               <Route
                 path="/register-member"
                 element={
-                  <div className="h-screen">
+                  <div className="h-full">
                     <MemberRegistration />
                   </div>
                 }
