@@ -156,7 +156,7 @@ function WorkflowDashboardView({ user }: Props) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [incompleteWorkflows])
+  }, [incompleteWorkflows, addedBy])
 
   return (
     <div className="p-1 overflow-scroll">
