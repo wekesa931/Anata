@@ -96,6 +96,8 @@ export const createOrUpdateMember = (
   member.birthDate = memberData?.birthDate
   member.tags = memberData.tags || member.tags
   member.refusedServices = memberData.refusedServices || member.refusedServices
+  member.otherRefusedService =
+    memberData.otherRefusedService || member.otherRefusedService
   member.maritalStatus = memberData.maritalStatus
   member.emergencyContact = mergeEmergencyContact(member, memberData)
   member.addresses = transformAddressData(
@@ -154,7 +156,7 @@ export class Member extends Model {
 
   @json('tags', sanitizeTags) tags?: string[]
 
-  @json('refusedServices', sanitizeRefusedServices) refusedServices?: string[]
+  @json('refused_services', sanitizeRefusedServices) refusedServices?: string[]
 
   @text('marital_status') maritalStatus?: string
 
@@ -198,6 +200,8 @@ export class Member extends Model {
   @date('last_synced_at') lastSyncedAt?: number
 
   @text('referral_source') referralSource?: string
+
+  @text('other_refused_service') otherRefusedService?: string
 
   @json('payor', identityJson) payor?: PayorType
 

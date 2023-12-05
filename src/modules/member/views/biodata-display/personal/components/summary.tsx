@@ -27,6 +27,12 @@ function SummarySection({ member }: SummarySectionProps) {
 
     analytics.trackEditProfile(`Edit bio data ${open ? 'opened' : 'closed'}`)
   }
+  const refusedServices = member?.refusedServices?.filter(el => el !== 'Other') || []
+
+  const otherRefusedService = member?.otherRefusedService || ''
+
+  const mergeRefusedServices = [...refusedServices, otherRefusedService]
+
 
   return member ? (
     <div>
@@ -81,7 +87,7 @@ function SummarySection({ member }: SummarySectionProps) {
             title="Refused Services"
             child={
               <div className="flex flex-wrap gap-2">
-                {(member?.refusedServices || []).map(
+                {(mergeRefusedServices || []).map(
                   (refusedService, index) => (
                     <span
                       key={index}

@@ -105,6 +105,7 @@ const extractInitialState = ({
       ? 'Spouse'
       : '',
     referralSource: member?.referralSource || '',
+    otherRefusedService: member?.otherRefusedService,
     nhifNumber: member?.nhifNumber || '',
     kenyaNationalId: member?.kenyaNationalId || '',
   }
@@ -355,6 +356,12 @@ export function BioDataForm({
                           multiple
                           required={false}
                         />
+                        {values?.refusedServices?.includes('Other') ? (
+                          <TextField
+                            name="otherRefusedService"
+                            label="Other Refused Service"
+                          />
+                        ) : null}
                       </>
                     ) : null}
                     <SelectField

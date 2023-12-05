@@ -133,6 +133,7 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
         status
       }
       refusedServices
+      otherRefusedService
     }
     dependents {
       id

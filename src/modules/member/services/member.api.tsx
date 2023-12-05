@@ -161,6 +161,7 @@ export const useUpdateBiodata = () => {
       memberStatus: {
         tags: values.tags,
         refusedServices: values.refusedServices,
+        otherRefusedService: values.otherRefusedService,
         antaraId,
       },
     }

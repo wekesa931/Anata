@@ -113,6 +113,7 @@ export type V2MemberType = {
   startDate?: string
   tags?: string[]
   refusedServices?: string[]
+  otherRefusedService?: string
   email?: string
   emergencyContactName?: string
   emergencyContactPhone?: string
@@ -249,6 +250,7 @@ export type V2MemberQueryType = {
     }
     tags?: string[]
     refusedServices: string[]
+    otherRefusedService?: string
     status?: {
       status?: string
     }
@@ -296,6 +298,7 @@ export type BiodataValues = BirthdateUpdateValues & {
   primaryMemberAntaraId?: string
   relationshipToPrimary?: string
   referralSource?: string
+  otherRefusedService?: string
   refusedServices: string[]
   nhifNumber?: string
   kenyaNationalId?: string
