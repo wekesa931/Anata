@@ -2771,6 +2771,20 @@ export default [
       'Please use this to complete Beneficiary information for those Beneficiaries that were not able to complete their HIFs before the Baseline',
     fields: [
       {
+        id: 'fldfyYfFvyuAjmIL0',
+        name: 'Your Age',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
         id: 'fldCFn05pBRhY3Y31',
         name: 'Date/Time',
         type: 'date',
@@ -2783,6 +2797,11 @@ export default [
         foreignTableId: null,
         required: true,
         helper: '',
+        conditionType: '',
+        parentKey: 'Your Age',
+        condition: (values: any) => {
+          return values['Your Age'] >= 18
+        },
       },
       {
         id: 'fldkA2wgirGsnDdnk',
@@ -2810,7 +2829,8 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        helper: '',
+        helper:
+          "If it's a minor and they have any of the following chronic conditions that has lasted for more than 3 months, book a health check",
       },
       {
         id: 'fldBEd9lJpUX6DMPe',
@@ -2856,6 +2876,11 @@ export default [
         foreignTableId: null,
         required: true,
         helper: '',
+        conditionType: '',
+        parentKey: 'Your Age',
+        condition: (values: any) => {
+          return values['Your Age'] >= 18
+        },
       },
       {
         id: 'fldWrVIfOGjQcnhQa',
@@ -2903,6 +2928,11 @@ export default [
         foreignTableId: null,
         required: true,
         helper: '',
+        conditionType: '',
+        parentKey: 'Your Age',
+        condition: (values: any) => {
+          return values['Your Age'] >= 18
+        },
       },
       {
         id: 'fldcXGe3jntfydkRE',
@@ -2918,6 +2948,11 @@ export default [
         required: true,
         helper:
           'If member has already given this information during screening or PSPB or HIF phase, please see it in the hif filled form',
+        conditionType: '',
+        parentKey: 'Your Age',
+        condition: (values: any) => {
+          return values['Your Age'] >= 18
+        },
       },
       {
         id: 'fld1wArLXpqRrJpMr',
@@ -2971,6 +3006,11 @@ export default [
         required: false,
         helper:
           '"How much do you weigh"\n\n(kg) examples: 60 or 75 or 85\n(If member has already given this information during screening or PSPB or HIF phase and if you can see it on Vitals section on src, please skip this step)',
+        conditionType: '',
+        parentKey: 'Your Age',
+        condition: (values: any) => {
+          return values['Your Age'] >= 18
+        },
       },
       {
         id: 'fldTQkMCecLbkjzrR',
@@ -2986,6 +3026,11 @@ export default [
         required: false,
         helper:
           '"Do you know how tall you are? Even if you have a vague memory of your height in Meters, let us know."\n\n(m) examples: 1.5 or 1.8 or 1.55\n(If member has already given this information during screening or PSPB or HIF phase, please see the height in the filled form)\n\nYou need to enter vitals? Please fill the vitals form in Guided workflow form',
+        conditionType: '',
+        parentKey: 'Your Age',
+        condition: (values: any) => {
+          return values['Your Age'] >= 18
+        },
       },
       {
         id: 'fldwJJH8FplI4qlLE',
@@ -3057,6 +3102,11 @@ export default [
         foreignTableId: null,
         required: true,
         helper: '',
+        conditionType: '',
+        parentKey: 'Your Age',
+        condition: (values: any) => {
+          return values['Your Age'] >= 18
+        },
       },
       {
         id: 'fldSjjner7hERnr1X',
@@ -3161,6 +3211,11 @@ export default [
         foreignTableId: null,
         required: false,
         helper: '',
+        conditionType: '',
+        parentKey: 'Your Age',
+        condition: (values: any) => {
+          return values['Your Age'] >= 18
+        },
       },
       {
         id: 'fldGqwP9q6K5f4Erd',
@@ -3175,6 +3230,11 @@ export default [
         foreignTableId: null,
         required: false,
         helper: '',
+        conditionType: '',
+        parentKey: 'Your Age',
+        condition: (values: any) => {
+          return values['Your Age'] >= 18
+        },
       },
       {
         id: 'fldiFnIzYvWkcrOSO',
@@ -3216,6 +3276,11 @@ export default [
         foreignTableId: null,
         required: false,
         helper: '',
+        conditionType: '',
+        parentKey: 'Your Age',
+        condition: (values: any) => {
+          return values['Your Age'] >= 18
+        },
       },
       {
         id: 'fldjPCITvynDbf5A3',
@@ -3255,6 +3320,11 @@ export default [
         foreignTableId: null,
         required: false,
         helper: 'Insert a number from 0 to 5',
+        conditionType: '',
+        parentKey: 'Your Age',
+        condition: (values: any) => {
+          return values['Your Age'] >= 18
+        },
       },
     ],
   },

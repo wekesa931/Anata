@@ -311,6 +311,9 @@ export const initialFormValues = (
     'Healthy triage form': {
       Gender: member?.sex,
     },
+    HIF: {
+      'Your Age': member?.ageFull,
+    },
   }
 }
 

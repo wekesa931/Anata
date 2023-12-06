@@ -72,7 +72,7 @@ const validationRules = (formMeta: any, isWorkflow: boolean) => {
                     if (fl?.conditionType === '!') {
                       return !fl.parentValues.includes(val)
                     }
-                    return fl.parentValues.includes(val)
+                    return fl?.parentValues?.includes(val)
                   },
                   then: Yup.array().required(),
                   otherwise: Yup.array().notRequired(),
@@ -119,7 +119,7 @@ const validationRules = (formMeta: any, isWorkflow: boolean) => {
                     if (fl?.conditionType === '!') {
                       return !fl.parentValues.includes(val)
                     }
-                    return fl.parentValues.includes(val)
+                    return fl?.parentValues?.includes(val)
                   },
                   then: Yup.date().required(),
                   otherwise: Yup.date().notRequired(),

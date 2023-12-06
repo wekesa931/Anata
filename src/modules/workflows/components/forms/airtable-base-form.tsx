@@ -41,11 +41,23 @@ function AirtableBasedForm({
     getValues,
     handleSubmit,
     reset,
+    watch,
   } = useForm({
     resolver: yupResolver(validationObject, { mode: 'async' }),
     defaultValues: form?.data || {},
     mode: 'onBlur',
   })
+
+  useEffect(() => {
+    const sub$ = watch((value, { type }) => {
+      if (type === 'change') {
+        reset(generateFromState())
+      }
+    })
+
+    return () => sub$.unsubscribe()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watch])
 
   useEffect(() => {
     reset(formData)
@@ -125,39 +137,55 @@ function AirtableBasedForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSubmitForm])
 
+  const getFieldsToRender = () => {
+    const returnFields: any = []
+    formSchema?.fields?.forEach((field: any) => {
+      if (!field.condition || field.condition(getValues())) {
+        const fieldValue = getValues()[field.name] || null
+        returnFields.push({
+          field,
+          fieldValue,
+        })
+      }
+    })
+
+    return returnFields
+  }
+
+  const generateFromState = () => {
+    const fieldsToRender = getFieldsToRender()
+
+    return fieldsToRender?.reduce((acc: any, curr: any) => {
+      return {
+        ...acc,
+        [curr?.field?.name]: curr?.fieldValue,
+      }
+    }, {})
+  }
+
   return (
     <div>
       {!!formSchema?.fields?.length && (
         <form onSubmit={onSubmit}>
-          {formSchema?.fields?.map((field: any) => {
-            if (!field.condition || field.condition(getValues())) {
-              const fieldValue = getValues()[field.name] || null
+          {getFieldsToRender()?.map(({ field, fieldValue }: any) => (
+            <div className="mt-[40px]" key={field.id}>
+              <div>
+                {field?.formId && <ButtonField field={field} />}
+                <WorkflowFormsFields
+                  value={fieldValue}
+                  control={control}
+                  field={{ ...field, parentTableId: formSchema?.id }}
+                  error={errors[field.name]}
+                  airtableMeta={airtableMeta}
+                  saveInput={saveInput}
+                  isWorkflow={!!form.workflow}
+                  disabled={!isFormDraft}
+                />
+                <CalendlyLink fieldId={field?.id} formPayload={getValues()} />
+              </div>
+            </div>
+          ))}
 
-              return (
-                <div className="mt-[40px]" key={field.id}>
-                  <div>
-                    {field?.formId && <ButtonField field={field} />}
-                    <WorkflowFormsFields
-                      value={fieldValue}
-                      control={control}
-                      field={{ ...field, parentTableId: formSchema?.id }}
-                      error={errors[field.name]}
-                      airtableMeta={airtableMeta}
-                      saveInput={saveInput}
-                      isWorkflow={!!form.workflow}
-                      disabled={!isFormDraft}
-                    />
-                    <CalendlyLink
-                      fieldId={field?.id}
-                      formPayload={getValues()}
-                    />
-                  </div>
-                </div>
-              )
-            }
-
-            return null
-          })}
           <div className="flex items-center justify-end">
             <LoadingButton
               className={`rounded-xl font-rubik text-sm font-medium normal-case text-white ${
