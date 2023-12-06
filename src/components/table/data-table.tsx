@@ -580,19 +580,24 @@ function DataTable({
                   <Select
                     labelId="group-by-select-label"
                     id="group-by-select"
-                    className="h-8"
+                    className="h-8 font-rubik text-sm"
                     value={groupByColumn}
                     onChange={(e) => setGroupByColumn(e.target.value)}
+                    displayEmpty
                     renderValue={(value) => {
                       return (
-                        <div className="flex gap-3 items-center text-[#989898]">
-                          {toTitleCase(value)}
+                        <div className="flex gap-3 items-center text-[#545454]">
+                          {value ? toTitleCase(value) : '-- Select --'}
                         </div>
                       )
                     }}
                   >
                     {groupColumns.map((column) => (
-                      <MenuItem value={column} key={column}>
+                      <MenuItem
+                        value={column}
+                        key={column}
+                        className="h-8 font-rubik text-sm"
+                      >
                         {toTitleCase(column)}
                       </MenuItem>
                     ))}

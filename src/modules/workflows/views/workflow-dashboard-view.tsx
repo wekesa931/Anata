@@ -94,7 +94,8 @@ function createData(
   createdAt: Date,
   updatedAt: Date,
   updatedBy: string,
-  createdBy: string
+  createdBy: string,
+  member: string
 ) {
   return {
     workflowId,
@@ -104,6 +105,7 @@ function createData(
     updatedAt: formatDate(updatedAt).valueOf(),
     updatedBy,
     createdBy,
+    member,
   }
 }
 
@@ -149,7 +151,8 @@ function WorkflowDashboardView({ user }: Props) {
           workflow.createdAt,
           workflow.updatedAt,
           workflow.updatedBy?.name ?? '',
-          workflow.createdBy?.name ?? ''
+          workflow.createdBy?.name ?? '',
+          workflow.member
         )
       )
       setRows(updatedRows)

@@ -22,14 +22,14 @@ function TaskFilterComponent({ filter, setFilter }: Props) {
         <Select
           labelId="filter-select-label"
           id="filter-select"
-          className="h-8"
+          className="h-8 font-rubik text-sm"
           value={filter}
           onChange={handleFilterChange}
           displayEmpty
           renderValue={(value) => {
             return (
-              <div className="flex gap-3 items-center text-[#989898]">
-                <CalendarMonthIcon />
+              <div className="flex gap-3 items-center text-[#545454]">
+                <CalendarMonthIcon className="text-lg text-[#989898]" />
                 {value}
               </div>
             )
