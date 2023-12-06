@@ -13977,20 +13977,6 @@ export default [
         helper:
           'Details any follow up taken/needs to be taken to fully resolve the issue',
       },
-      {
-        id: 'fldrZKsYbjyfS9Nmt',
-        name: 'Status',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
     ],
   },
   {

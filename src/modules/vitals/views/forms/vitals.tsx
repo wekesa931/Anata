@@ -92,7 +92,10 @@ function VitalsCollection({
 
   useEffect(() => {
     if (form?.data) {
-      setInitialValues(getInitialValues(form.data))
+      setInitialValues({
+        ...getInitialValues(form.data),
+        timestamp: dayjs(form.data?.timestamp).toDate(),
+      })
     }
   }, [form])
 
