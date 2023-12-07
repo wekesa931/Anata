@@ -7,6 +7,7 @@ import svgr from 'vite-plugin-svgr'
 import terser from '@rollup/plugin-terser'
 import { ViteMinifyPlugin } from 'vite-plugin-minify'
 import { VitePWA } from 'vite-plugin-pwa'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 dns.setDefaultResultOrder('verbatim')
 
@@ -39,6 +40,14 @@ export default ({ mode }: any) => {
       },
     },
     plugins: [
+      viteStaticCopy({
+        targets: [
+          {
+            src: './firebase-messaging-sw.js',
+            dest: './',
+          }
+        ]
+      }),
       ViteMinifyPlugin({}),
       terser(),
       svgr({}),
