@@ -138,28 +138,26 @@ function WorkflowDashboardView({ user }: Props) {
     if (addedBy) {
       setIsLoadingOngoingWorkflows(true)
       hydrateWorkflows('', addedBy).finally(() => {
+        if (incompleteWorkflows && incompleteWorkflows.length > 0) {
+          const updatedRows = incompleteWorkflows.map((workflow: any) =>
+            createData(
+              workflow.workflowId,
+              workflow.template,
+              getMemberName(workflow.memberData),
+              workflow.createdAt,
+              workflow.updatedAt,
+              workflow.updatedBy?.name ?? '',
+              workflow.createdBy?.name ?? '',
+              workflow.member
+            )
+          )
+          setRows(updatedRows)
+        }
         setIsLoadingOngoingWorkflows(false)
       })
     }
-
-    if (incompleteWorkflows && incompleteWorkflows.length > 0) {
-      const updatedRows = incompleteWorkflows.map((workflow: any) =>
-        createData(
-          workflow.workflowId,
-          workflow.template,
-          getMemberName(workflow.memberData),
-          workflow.createdAt,
-          workflow.updatedAt,
-          workflow.updatedBy?.name ?? '',
-          workflow.createdBy?.name ?? '',
-          workflow.member
-        )
-      )
-      setRows(updatedRows)
-    }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [incompleteWorkflows, addedBy])
+  }, [user, incompleteWorkflows])
 
   return (
     <div className="p-1 overflow-scroll">
