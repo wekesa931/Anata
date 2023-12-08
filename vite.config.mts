@@ -45,8 +45,8 @@ export default ({ mode }: any) => {
           {
             src: './firebase-messaging-sw.js',
             dest: './',
-          }
-        ]
+          },
+        ],
       }),
       ViteMinifyPlugin({}),
       terser(),
@@ -75,7 +75,7 @@ export default ({ mode }: any) => {
         preventAssignment: true,
       }),
       VitePWA({
-        registerType: 'prompt',
+        registerType: 'autoUpdate',
         manifest: {
           name: 'Scribe Web Application',
           short_name: 'scribe-app',
@@ -124,7 +124,9 @@ export default ({ mode }: any) => {
           injectionPoint: undefined,
         },
         workbox: {
-          maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+          cleanupOutdatedCaches: true,
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
+          maximumFileSizeToCacheInBytes: 20000000,
         },
       }),
     ],
