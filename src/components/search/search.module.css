@@ -13,7 +13,6 @@
   right: 0;
   object-fit: contain;
   max-height: 400px;
-  overflow: scroll;
   z-index: 2000;
   border: solid 1px #c6dfeb;
   background-color: #ffffff;

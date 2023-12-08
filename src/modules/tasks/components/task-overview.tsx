@@ -15,7 +15,7 @@ function TasksOverview({
 }: TasksOverviewProps) {
   return (
     <div
-      className={`border ${
+      className={`border relative ${
         isHighPriority ? 'border-orange-50' : 'border-[#26187b80]'
       } rounded-lg flex flex-col items-center justify-center flex-grow text-center p-4`}
     >

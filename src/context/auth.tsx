@@ -34,6 +34,7 @@ type Props = {
 
 function AuthProvider({ user, children }: Props) {
   let loggedInUser = storage.get(keys.USER)
+  const navigate = useNavigate()
 
   if (loggedInUser) {
     loggedInUser = JSON.parse(loggedInUser)
@@ -45,10 +46,10 @@ function AuthProvider({ user, children }: Props) {
     storage.removeAll()
     setCurrentUser(null)
     googleLogout()
+    navigate('/login')
   }
 
   const isLoggedIn = () => !!currentUser
-  const navigate = useNavigate()
 
   const providerValue = React.useMemo(
     () => ({

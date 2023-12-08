@@ -99,9 +99,11 @@ export function MemberProvider({ antaraId, children }: Props) {
     isLoading,
   }
 
+  const showMemberNotSyncedToHNOSAlert = !!memberNotSyncedToHNOS && !!antaraId
+
   return (
     <MemberContext.Provider value={providerValue}>
-      {memberNotSyncedToHNOS && <MemberNotSyncedToHNOS />}
+      {showMemberNotSyncedToHNOSAlert && <MemberNotSyncedToHNOS />}
       {children}
     </MemberContext.Provider>
   )

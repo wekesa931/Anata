@@ -19,12 +19,10 @@ import FloatingMenu from './menu.component'
 function UserMenu() {
   const user = useUser()
   const auth = useAuth()
-  const navigate = useNavigate()
 
   const logout = () => {
+    analytics.track('Member Dashboard - User LoggedOut')
     auth.logout()
-    analytics.track('User LoggedOut')
-    navigate('/login')
   }
 
   const hasName = (userDetails: { given_name: string; family_name: string }) =>

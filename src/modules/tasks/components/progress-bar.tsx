@@ -6,7 +6,7 @@ function ProgressBar({ value, target }: any) {
   const normalizedValue = (value / target) * 100
 
   return (
-    <div className="relative pt-1 w-full">
+    <div className="pt-1 w-full">
       <div className="flex items-center justify-between text-xs text-black mt-2">
         <div
           className="absolute flex justify-end"

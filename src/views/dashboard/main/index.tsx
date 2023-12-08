@@ -24,14 +24,17 @@ function RedirectToTasks({
   setActive: (active: Active) => void
 }) {
   const { trackUserRedirectedToTasksPage } = useHomePageAnalytics()
+  const user = useUser()
 
   useEffect(() => {
     // capture the event when the user navigates to the dashboard
-    trackUserRedirectedToTasksPage()
-    setActive(Active.MY_TASKS)
+    if (user) {
+      trackUserRedirectedToTasksPage()
+      setActive(Active.MY_TASKS)
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [user])
   return <Navigate to="/my-tasks" />
 }
 
