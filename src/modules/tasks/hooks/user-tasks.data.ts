@@ -8,7 +8,7 @@ import { getCompleteTasksCount, getHighPriorityTasks } from '../utils'
 export const useUserTasksData = (user: User) => {
   const {
     getUserOverdueTasks,
-    getTaskBetween,
+    getTasksBefore,
     getUserDueTasks,
     getUserDueAndOverdueTasks,
   } = useUserTasksAPI()
@@ -63,19 +63,15 @@ export const useUserTasksData = (user: User) => {
 
   const filterTasks = async (filter: Filters) => {
     if (user?.userAirtableId) {
-      let start
-      let end
       switch (filter) {
         case Filters.THIS_WEEK: {
-          start = dayjs().startOf('week').format('YYYY/MM/DD')
-          end = dayjs().endOf('week').add(1, 'day').format('YYYY/MM/DD')
-          const tasks = await getTaskBetween(user.userAirtableId, start, end)
+          const end = dayjs().endOf('week').add(1, 'day').format('YYYY/MM/DD')
+          const tasks = await getTasksBefore(user.userAirtableId, end)
           return transformRawTasksToUserTasks(tasks)
         }
         case Filters.THIS_MONTH: {
-          start = dayjs().startOf('month').format('YYYY/MM/DD')
-          end = dayjs().endOf('month').add(1, 'day').format('YYYY/MM/DD')
-          const tasks = await getTaskBetween(user.userAirtableId, start, end)
+          const end = dayjs().endOf('month').add(1, 'day').format('YYYY/MM/DD')
+          const tasks = await getTasksBefore(user.userAirtableId, end)
           return transformRawTasksToUserTasks(tasks)
         }
         default: {

@@ -34,8 +34,8 @@ export const useUserTasksAPI = () => {
     return filterTasks(filterArg)
   }
 
-  const getTaskBetween = async (userId: string, start: string, end: string) => {
-    const filterArg = `filterByFormula=AND(FIND("${userId}", {Assignee Record ID}), FIND("Not Applicable", Status) = 0, IS_AFTER({Due Date}, "${start}"), IS_BEFORE({Due Date}, "${end}"))`
+  const getTasksBefore = async (userId: string, end: string) => {
+    const filterArg = `filterByFormula=AND(FIND("${userId}", {Assignee Record ID}), FIND("Not Applicable", Status) = 0, IS_BEFORE({Due Date}, "${end}"))`
     return filterTasks(filterArg)
   }
 
@@ -47,7 +47,7 @@ export const useUserTasksAPI = () => {
   return {
     getUserDueTasks,
     getUserOverdueTasks,
-    getTaskBetween,
+    getTasksBefore,
     getUserDueAndOverdueTasks,
   }
 }

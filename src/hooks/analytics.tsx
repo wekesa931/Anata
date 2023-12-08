@@ -26,8 +26,6 @@ export const useAnalytics = (object?: string) => {
         }
 
         analytics.track(`${object} ${action}`, allProperties)
-      } else {
-        throw new Error('useAnalytics: user is not defined')
       }
     },
     page: (pageData?: Record<string, unknown>) => analytics.page(pageData),
