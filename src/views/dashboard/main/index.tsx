@@ -80,8 +80,8 @@ function MainDashboard() {
 
   const activeStyle = (active: boolean) => {
     const globalStyles = collapsed
-      ? 'rounded-2xl'
-      : 'rounded-tr-2xl rounded-br-2xl'
+      ? 'rounded-2xl w-[90%] ml-[6px]'
+      : 'rounded-2xl  w-[95%] ml-[6px]'
 
     const activeStyles = active
       ? 'bg-primary-button text-white mb-2 hover:bg-primary-button'
@@ -97,7 +97,7 @@ function MainDashboard() {
 
   return (
     <div className="flex h-full font-rubik flex-col w-screen">
-      <nav className="flex border-bottom items-center w-full h-14 sticky top-0 bg-dashboard-blue gap-4 py-[2%] px-4">
+      <nav className="flex border-bottom items-center w-full h-14 sticky top-0 bg-dashboard-blue gap-4 py-[2%] px-4 ml-1.5">
         <IconButton
           className="bg-blue-20 rounded-full"
           onClick={() => setCollapsed(!collapsed)}
@@ -153,8 +153,8 @@ function MainDashboard() {
                     setIsFormOpen(true)
                     trackUserOpenedRegistration()
                   }}
-                  className={`text-grey-main mb-2 hover:bg-blue-20 ${
-                    collapsed ? ' rounded-2xl' : 'rounded-tr-2xl rounded-br-2xl'
+                  className={`text-grey-main mb-2 hover:bg-blue-20  ml-1.5 rounded-2xl ${
+                    collapsed ? 'w-[90%]' : 'w-[95%] hover:w-[95%]'
                   }`}
                 >
                   Register new member
