@@ -14,7 +14,7 @@ function TasksOverview({
   completed,
 }: TasksOverviewProps) {
   return (
-    <div className="border border-[#EBF6FF] rounded-lg flex flex-col items-center justify-center flex-grow text-center p-4">
+    <div className="relative border border-[#EBF6FF] rounded-lg flex flex-col items-center justify-center flex-grow text-center p-4">
       <p
         className="text-[#444] text-[40px] font-medium"
         data-testid={isHighPriority ? 'highPriorityTasks' : 'dueTasks'}
