@@ -17,7 +17,7 @@ function SVGIcon({ name, width = 24, height = 24, fill = '#000' }: IconProps) {
     const importIcon = async () => {
       try {
         const { default: namedImport } = await import(
-          `../../assets/img/icons/${name}.svg?react`
+          `../../assets/img/icons/${name}.svg`
         )
         iconRef.current = namedImport
       } catch (err) {

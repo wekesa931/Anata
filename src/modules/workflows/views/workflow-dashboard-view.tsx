@@ -7,6 +7,7 @@ import DataTable, { Column } from 'src/components/table/data-table'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useNavigate } from 'react-router-dom'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import { useNotifications } from 'src/context/notifications'
 
 type Props = {
   user: User
@@ -37,14 +38,18 @@ function StartedDisplay({ value }: any) {
 function ActionComponent({ value }: any) {
   const navigate = useNavigate()
   const { trackUserOpenedWorkflow } = useModuleAnalytics()
+  const { notify } = useNotifications()
 
   const redirectToWorkflowModal = () => {
-    if (value) {
-      trackUserOpenedWorkflow(value)
-      navigate(
-        `/member/${value.member}?action=workflows&workflowId=${value.workflowId}`
-      )
+    if (!value?.member) {
+      notify('Member ID not found')
+      return
     }
+
+    trackUserOpenedWorkflow(value)
+    navigate(
+      `/member/${value.member}?action=workflows&workflowId=${value.workflowId}`
+    )
   }
   return (
     <PrimaryButton

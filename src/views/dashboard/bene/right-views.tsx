@@ -15,7 +15,7 @@ import GuidedWorkflows from 'src/modules/workflows/views/workflows-page'
 import { withTabRouter } from 'src/utils/routing/tab-router'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import _ from 'lodash'
-import MessageCircleIcon from 'src/assets/img/icons/message-circle.svg?react'
+import MessageCircleIcon from 'src/assets/img/icons/message-circle.svg'
 
 function Actions({ handleChange, view }: any) {
   const { setCounterValue } = useCall()

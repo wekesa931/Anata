@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Minimize, Maximize } from 'react-feather'
 import { Dialog } from '@airtable/blocks/ui'
-import CloseIcon from 'src/assets/img/icons/close_16.svg?react'
+import CloseIcon from 'src/assets/img/icons/close_16.svg'
 
 function Modal({
   open,

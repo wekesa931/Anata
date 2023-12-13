@@ -4,9 +4,9 @@ import Notification from 'src/components/notification'
 import { formNames } from 'src/modules/workflows/utils'
 import { useFormsRouting } from 'src/modules/workflows/hooks/routing/forms'
 import { useModuleAnalytics } from 'src/modules/analytics'
-import FormSearchIcon from 'src/assets/img/icons/form-search.svg?react'
-import XIcon from 'src/assets/img/icons/x.svg?react'
-import ClockIcon from 'src/assets/img/icons/clock.svg?react'
+import FormSearchIcon from 'src/assets/img/icons/form-search.svg'
+import XIcon from 'src/assets/img/icons/x.svg'
+import ClockIcon from 'src/assets/img/icons/clock.svg'
 
 function CallConsoleForms({ height }: { height: string }) {
   const [filteredForms, setfilteredForms] = React.useState(FORMS)

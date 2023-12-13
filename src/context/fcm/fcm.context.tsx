@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import FCM, { fetchAllAndClear } from 'src/context/fcm/utils'
 import { XCircle } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
-import CallIcon from 'src/assets/img/icons/phone-call.svg?react'
-import MessageIcon from 'src/assets/img/icons/message-circle.svg?react'
+import CallIcon from 'src/assets/img/icons/phone-call.svg'
+import MessageIcon from 'src/assets/img/icons/message-circle.svg'
 import styles from './fcm.module.css'
 
 type PushNotification = {

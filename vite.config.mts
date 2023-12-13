@@ -2,9 +2,7 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import dns from 'dns'
-import replace from '@rollup/plugin-replace'
 import svgr from 'vite-plugin-svgr'
-import terser from '@rollup/plugin-terser'
 import { ViteMinifyPlugin } from 'vite-plugin-minify'
 import { VitePWA } from 'vite-plugin-pwa'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
@@ -49,8 +47,9 @@ export default ({ mode }: any) => {
         ],
       }),
       ViteMinifyPlugin({}),
-      terser(),
-      svgr({}),
+      svgr({
+        include: '**/*.svg',
+      }),
       react({
         babel: {
           plugins: [
@@ -68,11 +67,6 @@ export default ({ mode }: any) => {
             ],
           ],
         },
-      }),
-      replace({
-        'globalThis.process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-        preventAssignment: true,
       }),
       VitePWA({
         registerType: 'autoUpdate',
@@ -127,6 +121,8 @@ export default ({ mode }: any) => {
           cleanupOutdatedCaches: true,
           globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
           maximumFileSizeToCacheInBytes: 20000000,
+          skipWaiting: true,
+          clientsClaim: true,
         },
       }),
     ],
@@ -136,16 +132,10 @@ export default ({ mode }: any) => {
       },
     },
     build: {
-      minify: 'terser',
       chunkSizeWarningLimit: 1800,
-      outDir: 'dist',
-      rollupOptions: {},
-      terserOptions: {
-        compress: {
-          drop_console: true,
-          ecma: 2015,
-          keep_classnames: false,
-          keep_fnames: false,
+      rollupOptions: {
+        output: {
+          manualChunks: {},
         },
       },
     },

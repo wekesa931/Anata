@@ -1,7 +1,7 @@
 import { Button, IconButton, Tooltip } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar'
-import Header from 'src/assets/img/vector/header.svg?react'
+import Header from 'src/assets/img/vector/header.svg'
 import LogoutIcon from '@mui/icons-material/ExitToApp'
 import TasksIcon from '@mui/icons-material/ViewQuilt'
 import { NavLink, Routes, Route, Navigate, useLocation } from 'react-router-dom'

@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { useCall } from 'src/context/calls'
-import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
+import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import Notification from 'src/components/notification'
 import { useMember } from 'src/context/member'
-import OutgoingIcon from 'src/assets/img/icons/phone-outgoing.svg?react'
+import OutgoingIcon from 'src/assets/img/icons/phone-outgoing.svg'
 
 export interface IProps {
   relevantContact: any

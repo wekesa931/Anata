@@ -68,7 +68,7 @@ export const useWorkflowData = () => {
   const incompleteWorkflows = useObservable(
     incompleteWorkflowsObservable,
     [] as TWorkflowModel[],
-    [workflowsCollection, member?.antaraId]
+    [member?.antaraId ? workflowsCollection : '', member?.antaraId]
   )
   const completedWorkflowsObservable = workflowsCollection
     .query(

@@ -14,7 +14,7 @@ import { Grid, Typography } from '@mui/material'
 import dayjs from 'dayjs'
 import axios from 'axios'
 import { ENCRYPT_FILE, GENERATE_FILE_LINK } from 'src/modules/udm/services/gql'
-import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
+import LoadingIcon from 'src/assets/img/icons/loading.svg'
 
 type IFiles = {
   addedBy: string

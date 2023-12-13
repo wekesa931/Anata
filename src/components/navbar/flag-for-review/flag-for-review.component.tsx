@@ -8,13 +8,13 @@ import {
   GET_ALL_FLAGGED_INTERACTIONS,
   GET_ALL_INTERACTIONS,
 } from 'src/modules/interactions/services/gql'
-import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
+import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import List from 'src/components/list'
 import analytics from 'src/config/analytics'
 import airtableFetch from 'src/services/airtable/fetch'
 import MultiSelect from 'src/components/forms/multiselect.field'
-import FilterIcon from 'src/assets/img/icons/filter.svg?react'
-import CloseIcon from 'src/assets/img/icons/close_16.svg?react'
+import FilterIcon from 'src/assets/img/icons/filter.svg'
+import CloseIcon from 'src/assets/img/icons/close_16.svg'
 import styles from './styles.module.css'
 
 const ALL_INTERACTIONS = 'All'

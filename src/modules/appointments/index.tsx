@@ -12,8 +12,8 @@ import useHandleResponses from 'src/utils/airtable/error-handler'
 import useAntaraStaff from 'src/hooks/antara-staff.hook'
 import { User } from 'react-feather'
 import { useModuleAnalytics } from 'src/modules/analytics'
-import ExternalLinkIcon from 'src/assets/img/icons/external-link.svg?react'
-import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
+import ExternalLinkIcon from 'src/assets/img/icons/external-link.svg'
+import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import styles from './appointments.module.css'
 
 const SearchFieldsNameMap: Record<string, any> = {

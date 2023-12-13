@@ -4,7 +4,7 @@ import analytics from 'src/config/analytics'
 import airtableFetch from 'src/services/airtable/fetch'
 import { useMember } from 'src/context/member'
 import logError from 'src/utils/logging/logger'
-import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
+import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import DataTable, { Column } from 'src/components/table/data-table'
 
 const COLUMNS: Column[] = [

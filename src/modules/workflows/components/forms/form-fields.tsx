@@ -29,7 +29,7 @@ import { Editor } from 'react-draft-wysiwyg'
 import { markdownToDraft, draftToMarkdown } from 'markdown-draft-js'
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
 import { debounce } from 'lodash'
-import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
+import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import { Form } from 'src/modules/workflows/types'
 import {
   GLOBAL_SEARCH,

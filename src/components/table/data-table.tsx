@@ -21,7 +21,7 @@ import {
 import { visuallyHidden } from '@mui/utils'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Order, getComparator, stableSort } from 'src/utils/sort/stable'
-import EmptyDataIcon from 'src/assets/img/icons/empty-data.svg?react'
+import EmptyDataIcon from 'src/assets/img/icons/empty-data.svg'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import _, { isEmpty } from 'lodash'
 import {
@@ -295,7 +295,7 @@ function DataTableDetailedRow({
           <selectedColum.cellHeperText value={row} />
         )}
       </Popper>
-      {showDetails && (
+      {showDetails && canExpandRow && (
         <TableRow>
           <TableCell colSpan={columns.length + 1} className="py-0">
             <Collapse in={open} timeout="auto" unmountOnExit>

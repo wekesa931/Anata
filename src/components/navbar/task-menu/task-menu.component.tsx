@@ -5,7 +5,7 @@ import { useUser } from 'src/context/user'
 import useAirtableFetch from 'src/hooks/airtable-fetch'
 import Tabs from 'src/components/tabs/tabs.component'
 import analytics from 'src/config/analytics'
-import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
+import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import styles from './task-menu.module.css'
 
 function DateInput({ date, onChange }: any) {

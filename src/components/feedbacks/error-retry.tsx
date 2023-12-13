@@ -1,6 +1,6 @@
 import { Button } from '@mui/material'
 import React from 'react'
-import ErrorIcon from 'src/assets/img/icons/error.svg?react'
+import ErrorIcon from 'src/assets/img/icons/error.svg'
 
 function Error({ retry }: { retry: () => void }) {
   return (

@@ -9,7 +9,7 @@ import LoadingComponent from 'src/components/loaders/table-loader'
 import { useMember } from 'src/context/member'
 import DataTable, { Column } from 'src/components/table/data-table'
 import dayjs from 'dayjs'
-import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
+import LoadingIcon from 'src/assets/img/icons/loading.svg'
 
 function PafuView({ data }: any) {
   const [showPafu, setShowPafu] = useState(false)

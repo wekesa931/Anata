@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom'
 import { useLazyQuery } from '@apollo/client'
 import { useMember } from 'src/context/member'
 import { GET_MEMBER_CHATS } from 'src/modules/comms/services/gql'
-import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
+import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import Modal from 'src/components/modals'
 import { useFcm } from 'src/context/fcm/fcm.context'
 import {

@@ -6,9 +6,9 @@ import DataTable from 'src/modules/comms/calls/components/call-logs/table'
 import CallStatsCard from 'src/modules/comms/calls/components/call-logs/stats-card'
 import LoadingComponent from 'src/components/loaders/table-loader'
 import { useParams } from 'react-router-dom'
-import PhoneOutgoing from 'src/assets/img/icons/icon_feather_phone-outgoing.svg?react'
-import PhoneIncoming from 'src/assets/img/icons/icon_feather_phone-incoming.svg?react'
-import PhoneMissed from 'src/assets/img/icons/icon_feather_phone-missed.svg?react'
+import PhoneOutgoing from 'src/assets/img/icons/icon_feather_phone-outgoing.svg'
+import PhoneIncoming from 'src/assets/img/icons/icon_feather_phone-incoming.svg'
+import PhoneMissed from 'src/assets/img/icons/icon_feather_phone-missed.svg'
 import { generateStats, groupingDataCalls } from '../../utils'
 
 type CleanedDataItem = {

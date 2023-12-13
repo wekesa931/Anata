@@ -19,7 +19,7 @@ import useAntaraStaff, {
 } from 'src/hooks/antara-staff.hook'
 import { useMember } from 'src/context/member'
 import { useModuleAnalytics } from 'src/modules/analytics'
-import LoadingIcon from 'src/assets/img/icons/loading.svg?react'
+import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import styles from './tasks.module.css'
 import PrescriptionName from '../components/prescription-name'
 
