@@ -114,7 +114,7 @@ function MainDashboard() {
 
   return (
     <div className="flex h-full font-rubik flex-col w-full overflow-x-hidden relative ">
-      <nav className="flex border-bottom items-center w-full h-14 sticky top-0 bg-dashboard-blue gap-4 py-[2%] px-4 ml-1.5 z-2">
+      <nav className="flex border-bottom items-center w-full h-14 sticky top-0 bg-dashboard-blue gap-4 py-[2%] px-4 ml-1.5 z-20">
         <IconButton
           className="bg-blue-20 rounded-full"
           onClick={() => setCollapsed(!collapsed)}
@@ -127,7 +127,7 @@ function MainDashboard() {
           <SearchInput />
         </div>
       </nav>
-      <div className="flex overflow-x-hidden h-full z-1">
+      <div className="flex overflow-x-hidden h-full z-10">
         <Sidebar
           toggled={toggled}
           onBackdropClick={() => setToggled(false)}

@@ -632,10 +632,6 @@ body,
   left: 50% !important;
 }
 
-.right-0 {
-  right: 0px !important;
-}
-
 .top-0 {
   top: 0px !important;
 }
@@ -1083,10 +1079,6 @@ body,
 
 .w-full {
   width: 100% !important;
-}
-
-.w-screen {
-  width: 100vw !important;
 }
 
 .min-w-1\/2 {
