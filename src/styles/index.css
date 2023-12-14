@@ -2167,6 +2167,8 @@ a.fc-event:has(.singleEvent) {
 .fc-scrollgrid.fc-scrollgrid-liquid {
   border-top: none !important;
 }
-.css-1e3jsob-MuiButtonBase-root-MuiMenuItem-root {
+.MuiTableCell-root,
+.MuiChip-root,
+.MuiMenuItem-root {
   font-family: 'Rubik', sans-serif !important;
 }
