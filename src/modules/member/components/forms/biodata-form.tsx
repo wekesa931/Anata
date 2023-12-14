@@ -25,7 +25,7 @@ import { useRegistrationForm } from 'src/context/member-registration'
 import { getChanges, isDirty } from 'src/utils/form-validation-methods'
 import * as yup from 'yup'
 import ErrorComponent from 'src/components/feedbacks/error-component'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 
 type BioDataSectionProps = {
@@ -150,6 +150,7 @@ export function BioDataForm({
   const { lookupOptions } = useRegistrationForm()
   const [userError, setUserError] = useState<string | null>(null)
   const analytics = useMemberAnalytics()
+  const { antaraId } = useParams()
 
   const parseMemberFromResponse = (response: any, phone: string) => {
     if (response) {
@@ -207,7 +208,9 @@ export function BioDataForm({
               'Bio data updated',
               getChanges(initialValues, values)
             )
-            navigate(`/member/${member.antaraId}`)
+            // we only want to navigate if we're in a member's dashboard to avoid losing the wizard context
+            const inMembersDashboard = !!antaraId
+            inMembersDashboard && navigate(`/member/${member.antaraId}`)
             onNext()
           })
           .catch((err) => {

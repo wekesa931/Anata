@@ -270,8 +270,7 @@ export function InsuranceForm({
     if (member) {
       handleVerifyInsuranceDetails(member, variables, c?.insuranceId)
         .then((newDetails) => {
-          const { verified, update } = newDetails
-          setInitialValues(update)
+          const { verified } = newDetails
           if (verified) {
             setVerificationStatus({
               ...verificationStatus,
