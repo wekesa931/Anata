@@ -1,6 +1,7 @@
 import React from 'react'
 import { UserTask, Priority } from 'src/modules/tasks/types'
 import { Link } from 'react-router-dom'
+import PrimaryButton from 'src/components/buttons/primary'
 
 type Props = {
   value: UserTask
@@ -19,7 +20,7 @@ export function TaskPriorityComponent({ value }: Props) {
   }
   return (
     <p
-      className={`flex items-center justify-center text-center text-white rounded-2xl max-w-[150px] ${getColor(
+      className={`flex font-rubik items-center justify-center text-center text-white rounded-2xl max-w-[150px] ${getColor(
         value?.priority
       )}`}
     >
@@ -45,7 +46,7 @@ export function StatusComponent({ value }: Props) {
   }
   return (
     <p
-      className={`flex items-center justify-center border rounded-2xl text-center max-w-[100px] ${getColor(
+      className={`flex items-center font-rubik justify-center border rounded-2xl text-center max-w-[100px] ${getColor(
         value?.status
       )}`}
     >
@@ -56,12 +57,11 @@ export function StatusComponent({ value }: Props) {
 
 export function ActionComponent({ value }: any) {
   return (
-    <Link
-      to={`/member/${value?.antaraId}`}
-      className="underline font-rubik text-blue-100"
-    >
-      {' '}
-      open dashboard{' '}
-    </Link>
+    <PrimaryButton className="bg-orange-100 text-xs font-rubik normal-case text-white hover:bg-orange-100 hover:text-white">
+      <Link to={`/member/${value?.antaraId}`} className="font-rubik">
+        {' '}
+        Open dashboard{' '}
+      </Link>
+    </PrimaryButton>
   )
 }

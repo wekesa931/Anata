@@ -12,6 +12,8 @@ function TaskFilterComponent({ filter, setFilter }: Props) {
   const handleFilterChange = (event: SelectChangeEvent) => {
     const selectedFilter = event.target.value as Filters
     setFilter(selectedFilter)
+    // store the selected filter in local storage
+    localStorage.setItem('selectedFilter', selectedFilter)
   }
 
   return (

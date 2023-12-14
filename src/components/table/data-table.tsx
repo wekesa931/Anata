@@ -81,7 +81,7 @@ function SortableTableHead(props: SortableTableHeadProps) {
             key={column.id}
             align="left"
             sortDirection={orderBy === column.id ? order : false}
-            className={`font-bold text-white p-0 text-left py-2 bg-dark-blue-70 hover:text-white align-top ${
+            className={`font-bold font-rubik text-white p-0 text-left py-2 bg-dark-blue-70 hover:text-white align-top ${
               index === columns.length - 1
                 ? 'rounded-tr-lg'
                 : index === 0
@@ -99,7 +99,7 @@ function SortableTableHead(props: SortableTableHeadProps) {
                 active={orderBy === column.id}
                 direction={orderBy === column.id ? order : 'desc'}
                 onClick={createSortHandler(column.id)}
-                className="text-white flex items-center"
+                className="text-white flex items-center font-rubik"
                 sx={{
                   '& .MuiTableSortLabel-icon': {
                     color: 'white !important',
@@ -114,14 +114,14 @@ function SortableTableHead(props: SortableTableHeadProps) {
                       : 'sorted ascending'}
                   </Box>
                 ) : null}
-                <div className="text-xs">
+                <div className="text-xs font-rubik">
                   {column.label}
                   {column.units && ` (${column.units})`}
                 </div>
               </TableSortLabel>
             ) : (
               <>
-                <p className="text-xs">
+                <p className="text-xs font-rubik">
                   {column.label}
                   {column.units && ` (${column.units})`}
                 </p>
@@ -295,7 +295,7 @@ function DataTableDetailedRow({
           <selectedColum.cellHeperText value={row} />
         )}
       </Popper>
-      {showDetails && canExpandRow && (
+      {showDetails && (
         <TableRow>
           <TableCell colSpan={columns.length + 1} className="py-0">
             <Collapse in={open} timeout="auto" unmountOnExit>
@@ -328,6 +328,7 @@ type GroupedRowProps = {
   defaultExpanded?: boolean
   groupTitle: string
   title: string
+  toggleExpanded?: (expanded: boolean) => void
 }
 
 function GroupedRow({
@@ -336,6 +337,7 @@ function GroupedRow({
   defaultExpanded = true,
   groupTitle,
   title,
+  toggleExpanded,
 }: GroupedRowProps) {
   const [expanded, setExpanded] = useState<boolean>(true)
   const { trackTableRowExpandToggled } = useModuleAnalytics()
@@ -353,16 +355,17 @@ function GroupedRow({
   }
 
   return (
-    <TableBody>
+    <TableBody className="font-rubik">
       <TableRow
         onClick={() => {
           trackTableRowExpandToggled(title, groupTitle, !expanded)
           setExpanded(!expanded)
+          toggleExpanded && toggleExpanded(!expanded)
         }}
         data-testid={`group-row-title-${groupTitle}`}
       >
         <TableCell colSpan={columns.length + 1} className="py-0">
-          <div className="flex gap-2 items-center pl-0">
+          <div className="flex gap-2 font-rubik items-center pl-0">
             <IconButton
               aria-label="group-expand"
               size="small"
@@ -370,7 +373,7 @@ function GroupedRow({
             >
               {expanded ? <ArrowDropDown /> : <ArrowRight />}
             </IconButton>
-            <p className="text-base font-medium text-blue-btn">
+            <p className="text-base font-medium font-rubik text-blue-btn">
               {toTitleCase(groupTitle)}
             </p>
             <Chip
@@ -394,7 +397,7 @@ function GroupedRow({
                   <TableCell
                     key={`column-${column?.id}-${colIndex}`}
                     align="left"
-                    className={`p-2 bg-table-col-grey border-none text-left text-xs ${
+                    className={`p-2 bg-table-col-grey border-none font-rubik text-left text-xs ${
                       colIndex === 0 ? 'pl-6' : 'pl-0'
                     }'}`}
                     sx={{
@@ -419,6 +422,11 @@ function GroupedRow({
   )
 }
 
+type GroupColumns = {
+  label: string
+  value: string
+}
+
 type DataTableProps = {
   data: any[]
   columns: readonly Column[]
@@ -428,7 +436,7 @@ type DataTableProps = {
   defaultFilterColumn?: string
   filterByDate?: boolean
   dateColumnKey?: string
-  groupColumns?: string[]
+  groupColumns?: GroupColumns[]
   defaultGroupColumn?: string
   loading?: boolean
   filterControl?: React.ReactNode
@@ -580,25 +588,28 @@ function DataTable({
                   <Select
                     labelId="group-by-select-label"
                     id="group-by-select"
-                    className="h-8 font-rubik text-sm"
+                    className="h-8 font-rubik text-sm min-w-[200px]"
                     value={groupByColumn}
                     onChange={(e) => setGroupByColumn(e.target.value)}
                     displayEmpty
                     renderValue={(value) => {
+                      const option = groupColumns.find(
+                        (column) => column.value === value
+                      )
                       return (
                         <div className="flex gap-3 items-center text-[#545454]">
-                          {value ? toTitleCase(value) : '-- Select --'}
+                          {option ? toTitleCase(option.label) : '-- Select --'}
                         </div>
                       )
                     }}
                   >
                     {groupColumns.map((column) => (
                       <MenuItem
-                        value={column}
-                        key={column}
+                        value={column.value}
+                        key={column?.label}
                         className="h-8 font-rubik text-sm"
                       >
-                        {toTitleCase(column)}
+                        {toTitleCase(column.label)}
                       </MenuItem>
                     ))}
                   </Select>
