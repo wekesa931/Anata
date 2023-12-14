@@ -60,6 +60,7 @@ function MainDashboard() {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [broken, setBroken] = useState(false)
+  const [sidebarLoaded, setSidebarLoaded] = useState(false)
 
   const location = useLocation()
   const [active, setActive] = useState<Active>(
@@ -77,6 +78,22 @@ function MainDashboard() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
+
+  React.useEffect(() => {
+    let timeout: NodeJS.Timeout
+
+    if (collapsed) {
+      timeout = setTimeout(() => {
+        setSidebarLoaded(false)
+      }, 150)
+    } else {
+      timeout = setTimeout(() => {
+        setSidebarLoaded(true)
+      }, 150)
+    }
+
+    return () => clearTimeout(timeout)
+  }, [collapsed])
 
   const activeStyle = (active: boolean) => {
     const globalStyles = collapsed
@@ -163,7 +180,11 @@ function MainDashboard() {
             </Menu>
           </div>
           {!collapsed ? (
-            <div className="fixed bottom-0 mb-2 transition-all duration-500">
+            <div
+              className={`fixed bottom-0 mb-2 ${
+                sidebarLoaded ? 'transition-all duration-100' : 'hidden'
+              }`}
+            >
               <div className="flex flex-col items-center gap-1 p-2 text-center">
                 <p className="text-xs text-grey-main">
                   {user?.name || user?.fullName || user?.given_name} |{' '}
