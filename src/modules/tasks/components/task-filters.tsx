@@ -35,9 +35,19 @@ function TaskFilterComponent({ filter, setFilter }: Props) {
             )
           }}
         >
-          <MenuItem value={Filters.TODAYS}>Today&apos;s tasks</MenuItem>
-          <MenuItem value={Filters.THIS_WEEK}>This week&apos; tasks</MenuItem>
-          <MenuItem value={Filters.THIS_MONTH}>
+          <MenuItem value={Filters.TODAYS} className="h-8 font-rubik! text-sm">
+            Today&apos;s tasks
+          </MenuItem>
+          <MenuItem
+            value={Filters.THIS_WEEK}
+            className="h-8 font-rubik text-sm"
+          >
+            This week&apos;s tasks
+          </MenuItem>
+          <MenuItem
+            value={Filters.THIS_MONTH}
+            className="h-8 font-rubik text-sm"
+          >
             This month&apos;s tasks
           </MenuItem>
         </Select>
