@@ -53,7 +53,7 @@ function ActionComponent({ value }: any) {
   }
   return (
     <PrimaryButton
-      className="bg-orange-main text-white hover:bg-orange-500 normal-case w-full"
+      className="bg-orange-main text-white hover:bg-orange-500 normal-case w-full shadow-none"
       onClick={redirectToWorkflowModal}
     >
       Open workflow

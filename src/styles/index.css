@@ -2169,6 +2169,11 @@ a.fc-event:has(.singleEvent) {
 }
 .MuiTableCell-root,
 .MuiChip-root,
-.MuiMenuItem-root {
+.MuiMenuItem-root,
+.MuiToolbar-root,
+.MuiTablePagination-root,
+.MuiTablePagination-selectLabel,
+.MuiTablePagination-displayedRows,
+.MuiSelect-select  {
   font-family: 'Rubik', sans-serif !important;
 }
