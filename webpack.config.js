@@ -14,7 +14,7 @@ const lintingExtensions = ['js', 'jsx', 'ts', 'tsx']
 
 const universalPlugins = [
   new HtmlWebpackPlugin({
-    template: './src/index.html',
+    template: './index.html',
     favicon: './src/assets/img/logo/Antara Logo@1x.png',
   }),
   new webpack.DefinePlugin({
@@ -69,7 +69,7 @@ module.exports = {
         },
       },
       {
-        test: /\.component.css$/,
+        test: /\.module.css$/,
         use: [
           { loader: 'style-loader' },
           {

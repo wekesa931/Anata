@@ -181,7 +181,7 @@ function MainDashboard() {
           </div>
           {!collapsed ? (
             <div
-              className={`fixed bottom-0 mb-2 ${
+              className={`fixed bottom-0 mb-2 w-64 ${
                 sidebarLoaded ? 'transition-all duration-100' : 'hidden'
               }`}
             >

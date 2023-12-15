@@ -57,7 +57,7 @@ export function StatusComponent({ value }: Props) {
 
 export function ActionComponent({ value }: any) {
   return (
-    <PrimaryButton className="bg-orange-100 text-xs font-rubik normal-case text-white hover:bg-orange-100 hover:text-white">
+    <PrimaryButton className="bg-orange-100 text-xs font-rubik normal-case text-white hover:bg-orange-100 hover:text-white shadow-none">
       <Link to={`/member/${value?.antaraId}`} className="font-rubik">
         {' '}
         Open dashboard{' '}

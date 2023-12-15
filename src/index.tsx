@@ -2,13 +2,13 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from 'src/App'
 import { datadogRum } from '@datadog/browser-rum'
-import { registerSW } from 'virtual:pwa-register'
+// import { registerSW } from 'virtual:pwa-register'
 
 const { DATADOG_APPLICATION_ID, DATADOG_CLIENT_TOKEN } = process.env
 
-if ('serviceWorker' in navigator) {
-  registerSW()
-}
+// if ('serviceWorker' in navigator) {
+//   registerSW()
+// }
 
 if (!DATADOG_APPLICATION_ID || !DATADOG_CLIENT_TOKEN) {
   throw new Error(

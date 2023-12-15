@@ -574,7 +574,7 @@ function DataTable({
     >
       <div className="flex justify-between items-center mb-4">
         {titleComponent || (
-          <h4 className="text-xl text-[#444] font-rubik font-normal">
+          <h4 className="text-xl text-[#444] font-rubik font-medium">
             {title}
           </h4>
         )}
