@@ -176,7 +176,10 @@ function WorkflowDashboardView({ user }: Props) {
           data={rows}
           defaultSortColumn="updatedAt"
           title="My Ongoing Workflows"
-          groupColumns={['member_name', 'workflow_type']}
+          groupColumns={[
+            { label: 'Member Name', value: 'member_name' },
+            { label: 'Workflow Type', value: 'workflow_type' },
+          ]}
           loading={isLoadingOngoingWorflows}
           canExpandRow={false}
         />

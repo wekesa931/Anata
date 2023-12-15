@@ -2174,6 +2174,7 @@ a.fc-event:has(.singleEvent) {
 .MuiTablePagination-root,
 .MuiTablePagination-selectLabel,
 .MuiTablePagination-displayedRows,
-.MuiSelect-select  {
+.MuiSelect-select,
+.MuiButton-root  {
   font-family: 'Rubik', sans-serif !important;
 }
