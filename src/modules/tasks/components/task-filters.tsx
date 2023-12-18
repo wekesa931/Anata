@@ -17,7 +17,7 @@ function TaskFilterComponent({ filter, setFilter }: Props) {
   }
 
   return (
-    <div className="min-w-[150px]">
+    <div className="min-w-[230px]">
       <span className="text-sm text-gray-400">Filter</span>
 
       <FormControl fullWidth>

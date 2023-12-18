@@ -85,7 +85,7 @@ function SortableTableHead(props: SortableTableHeadProps) {
               index === columns.length - 1
                 ? 'rounded-tr-lg'
                 : index === 0
-                ? 'rounded-tl-lg pl-2'
+                ? 'rounded-tl-lg pl-[30px]'
                 : ''
             }`}
             sx={{
@@ -104,7 +104,6 @@ function SortableTableHead(props: SortableTableHeadProps) {
                   '& .MuiTableSortLabel-icon': {
                     color: 'white !important',
                   },
-                  paddingLeft: index === 0 ? '1.5rem !important' : 0,
                 }}
               >
                 {orderBy === column.id ? (
@@ -399,7 +398,7 @@ function GroupedRow({
                     align="left"
                     className={`p-2 bg-table-col-grey border-none font-rubik text-left text-xs ${
                       colIndex === 0 ? 'pl-6' : 'pl-0'
-                    }'}`}
+                    }`}
                     sx={{
                       width: column?.width || `${100 / columns.length}%}`,
                     }}
@@ -582,13 +581,13 @@ function DataTable({
           {filterControl}
           {groupColumns && groupColumns.length > 0 && (
             <>
-              <div className="min-w-[150px]">
+              <div className="min-w-[230px]">
                 <span className="text-sm text-gray-400">Group by</span>
                 <FormControl fullWidth>
                   <Select
                     labelId="group-by-select-label"
                     id="group-by-select"
-                    className="h-8 font-rubik text-sm min-w-[200px]"
+                    className="h-8 font-rubik text-sm"
                     value={groupByColumn}
                     onChange={(e) => setGroupByColumn(e.target.value)}
                     displayEmpty

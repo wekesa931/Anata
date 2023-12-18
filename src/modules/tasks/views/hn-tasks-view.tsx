@@ -137,7 +137,7 @@ function HnTasksView({ user }: Props) {
   return (
     <div className="h-full ">
       <div className="font-rubik flex flex-col gap-10">
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <h1 className="text-2xl text-dark-blue-100">
             Hello, <strong>{user?.fullName || user?.name} 👋🏾 </strong>
           </h1>

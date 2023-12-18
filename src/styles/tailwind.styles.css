@@ -1089,10 +1089,6 @@ body,
   min-width: 50% !important;
 }
 
-.min-w-\[150px\] {
-  min-width: 150px !important;
-}
-
 .min-w-\[200px\] {
   min-width: 200px !important;
 }
@@ -1103,6 +1099,14 @@ body,
 
 .min-w-\[90\%\] {
   min-width: 90% !important;
+}
+
+.min-w-\[150px\] {
+  min-width: 150px !important;
+}
+
+.min-w-\[230px\] {
+  min-width: 230px !important;
 }
 
 .max-w-\[100px\] {
@@ -1875,6 +1879,18 @@ body,
 
 .pt-7 {
   padding-top: 1.75rem !important;
+}
+
+.pl-7 {
+  padding-left: 1.75rem !important;
+}
+
+.pl-8 {
+  padding-left: 2rem !important;
+}
+
+.pl-\[30px\] {
+  padding-left: 30px !important;
 }
 
 .text-left {
