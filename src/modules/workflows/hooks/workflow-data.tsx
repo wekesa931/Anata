@@ -336,13 +336,26 @@ export const useWorkflowData = () => {
     return Promise.resolve()
   }
 
+  const cancelWorkflowHnos = async (workflow: TWorkflowModel) => {
+    if (workflow.airtableId) {
+      await updateCase({
+        id: workflow.airtableId,
+        fields: {
+          Status: 'Canceled',
+          updatedBy: workflow.updatedBy,
+        },
+      })
+    }
+  }
+
   const deleteWorkflowFromAPI = async (workflow: TWorkflowModel) => {
     if (workflow.isSynced) {
       return removeWorkflow({
         workflowId: workflow.workflowId,
+      }).then(async () => {
+        await cancelWorkflowHnos(workflow)
       })
     }
-
     return Promise.resolve()
   }
 
