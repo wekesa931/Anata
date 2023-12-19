@@ -296,7 +296,7 @@ function DataTableDetailedRow({
       </Popper>
       {showDetails && (
         <TableRow>
-          <TableCell colSpan={columns.length + 1} className="py-0">
+          <TableCell colSpan={columns.length + 1} className="py-0 border-b-0">
             <Collapse in={open} timeout="auto" unmountOnExit>
               <RowDetails data={row} />
             </Collapse>
@@ -633,7 +633,9 @@ function DataTable({
         <Table
           stickyHeader
           aria-label="data-table"
-          className="border-spacing-y-2"
+          className={`${
+            !canExpandRow ? 'border-spacing-y-2' : 'border-spacing-y-4'
+          }`}
         >
           <SortableTableHead
             columns={columns}
@@ -644,7 +646,10 @@ function DataTable({
           {loading ? (
             <TableBody>
               <TableRow>
-                <TableCell colSpan={columns.length + 1} className="p-0">
+                <TableCell
+                  colSpan={columns.length + 1}
+                  className={`p-0 ${!canExpandRow ? 'border-b-0' : ''}`}
+                >
                   <div className="flex items-center justify-center">
                     <Loading message={`Loading ${title}`} />
                   </div>
