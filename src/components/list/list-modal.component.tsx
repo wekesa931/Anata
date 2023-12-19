@@ -35,6 +35,7 @@ type ListModalProps = {
   multiple?: boolean
   items?: any[]
   itemCallback?: (item: TOpenItem) => void
+  showEditIcon?: boolean
 }
 
 function ModalHeader({
@@ -46,6 +47,7 @@ function ModalHeader({
   multiple,
   selectPreviousItem,
   selectNextItem,
+  showEditIcon = true,
 }: any) {
   return (
     <div className="full-width d-flex flex-align-center flex-justify-space-between">
@@ -53,7 +55,7 @@ function ModalHeader({
       {formDisabled && (
         <div className="d-flex">
           {actions && actions(() => setFormDisabled(false))}
-          {editable && (
+          {editable && showEditIcon && (
             <button
               className="btn-icon"
               onClick={() => setFormDisabled(false)}
@@ -105,6 +107,7 @@ function ListModal(props: ListModalProps) {
     multiple = false,
     items = [],
     itemCallback,
+    showEditIcon,
   } = props
   const getActiveItem = () => {
     if (multiple && items.length > 0) {
@@ -282,6 +285,7 @@ function ListModal(props: ListModalProps) {
           multiple={multiple && items?.length >= 1}
           selectNextItem={selectNextItem}
           selectPreviousItem={selectPreviousItem}
+          showEditIcon={showEditIcon}
         />
       }
     >

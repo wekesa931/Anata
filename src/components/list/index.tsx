@@ -30,6 +30,7 @@ type ListProps = {
   dueDate?: (data: any) => string | JSX.Element | null
   conditionComponent?: boolean
   filterByDate?: boolean
+  isItemEditable?: (item?: { name: string; data: any }) => boolean
 }
 
 function List({
@@ -48,6 +49,7 @@ function List({
   editableFields,
   conditionComponent,
   filterByDate = false,
+  isItemEditable,
 }: ListProps) {
   const [isHovering, setIsHovering] = useState<number>()
   const [openItem, setOpenItem] = useState<{
@@ -128,6 +130,10 @@ function List({
     if (displayedData.length > elementIncrement) {
       setDisplayedData(displayedData.slice(0, itemDisplayed - elementIncrement))
     }
+  }
+
+  const isListItemEditable = () => {
+    return editable && isItemEditable && isItemEditable(openItem)
   }
 
   return (
@@ -236,6 +242,7 @@ function List({
           onEdit={onEdit}
           actions={listItemActions?.bind(null, openItem)}
           editableFields={editableFields}
+          showEditIcon={isListItemEditable()}
         />
       )}
     </div>

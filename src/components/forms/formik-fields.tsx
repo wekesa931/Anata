@@ -10,6 +10,7 @@ import SearchField from 'src/components/forms/fields/search'
 
 type CustomFieldProps = AirtableField & {
   disabled: boolean
+  required?: boolean
 }
 
 function FormField(customField: CustomFieldProps) {
@@ -22,6 +23,7 @@ function FormField(customField: CustomFieldProps) {
     lookupUrl,
     lookupFieldNames,
     tableId,
+    required = false,
   } = customField
 
   const { setFieldValue, errors, touched } = useFormikContext<any>()
@@ -65,6 +67,7 @@ function FormField(customField: CustomFieldProps) {
           id={name}
           className={fieldClassName}
           disabled={disabled}
+          required={required}
         >
           <option value="">Select</option>
           {options &&
@@ -77,7 +80,12 @@ function FormField(customField: CustomFieldProps) {
       )
     case 'multi-select':
       return (
-        <Field name={name} className={fieldClassName} disabled={disabled}>
+        <Field
+          name={name}
+          className={fieldClassName}
+          disabled={disabled}
+          required={required}
+        >
           {({ field, form }: any) => (
             <MultiSelect options={options} field={field} form={form} />
           )}
@@ -91,6 +99,7 @@ function FormField(customField: CustomFieldProps) {
           type="number"
           className={fieldClassName}
           disabled={disabled}
+          required={required}
         />
       )
     case 'text':
@@ -101,6 +110,7 @@ function FormField(customField: CustomFieldProps) {
           type="text"
           className={fieldClassName}
           disabled={disabled}
+          required={required}
         />
       )
     case 'date':
@@ -111,6 +121,7 @@ function FormField(customField: CustomFieldProps) {
           type="date"
           className={fieldClassName}
           disabled={disabled}
+          required={required}
         />
       )
     case 'datetime':
@@ -121,6 +132,7 @@ function FormField(customField: CustomFieldProps) {
           type="datetime-local"
           className={fieldClassName}
           disabled={disabled}
+          required={required}
         />
       )
     case 'long-text':
@@ -135,11 +147,17 @@ function FormField(customField: CustomFieldProps) {
             setTextAreaValue(e.target.value)
             setFieldValue(name, e.target.value, false)
           }}
+          required={required}
         />
       )
     case 'lookup':
       return (
-        <Field name={name} className={fieldClassName} disabled={disabled}>
+        <Field
+          name={name}
+          className={fieldClassName}
+          disabled={disabled}
+          required={required}
+        >
           {({ field, form }: FieldProps) => (
             <RemoteSelect
               lookupUrl={lookupUrl || ''}
@@ -154,7 +172,7 @@ function FormField(customField: CustomFieldProps) {
       )
     case 'search':
       return (
-        <Field name={name} disabled={disabled}>
+        <Field name={name} disabled={disabled} required={required}>
           {({ field, form }: FieldProps) => (
             <div className="relative">
               <SearchField

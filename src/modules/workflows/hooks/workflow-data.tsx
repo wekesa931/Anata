@@ -215,6 +215,7 @@ export const useWorkflowData = () => {
         'Data Source': 'Guided Workflow',
         createdBy: getUserModelDetails(user),
         updatedBy: getUserModelDetails(user),
+        Member: [member?.airtableRecordId],
       })
         .then(async () => {
           let isModulesDraft = false
@@ -273,6 +274,7 @@ export const useWorkflowData = () => {
         'Data Source': 'Scribe form',
         createdBy: getUserModelDetails(user),
         updatedBy: getUserModelDetails(user),
+        Member: [member?.airtableRecordId],
       })
     }
     throw new Error('Member or User not found')
