@@ -141,6 +141,7 @@ function Appointments() {
         const { Status } = appt
         return Status === 'Cancelled'
       },
+      required: true,
     },
   ]
   const user = useUser()
@@ -347,6 +348,12 @@ function Appointments() {
 
   const isReadytoShowAppt = !isLoading && !loading
 
+  const isItemEditable = (item: any) => {
+    const data = item?.data
+    const status = data.find(({ name }: any) => name === 'Status')?.value
+    return status !== 'Cancelled'
+  }
+
   return (
     <div>
       <button className={styles.appointment} onClick={openCalendar}>
@@ -362,6 +369,7 @@ function Appointments() {
               editable
               onEdit={updateAppointment}
               modalTitle="Appointment"
+              isItemEditable={isItemEditable}
             />
           </>
         )}
@@ -396,6 +404,7 @@ function Appointments() {
             editable
             onEdit={updateAppointment}
             modalTitle="Appointment"
+            isItemEditable={isItemEditable}
           />
         </div>
       )}
