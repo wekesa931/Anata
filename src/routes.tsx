@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Route,
   Routes as SwitchRoutes,
@@ -24,12 +24,7 @@ import { useAuth } from './context/auth'
 
 function ProtectedRoute({ children, user }: any) {
   const location = useLocation()
-  const [recId, setRecId] = useState<string>()
   const params = useParams<any>()
-
-  if (params.antaraId && recId !== params.antaraId) {
-    setRecId(params.antaraId)
-  }
 
   const currentPathWithParams = location.pathname + location.search
 
@@ -37,7 +32,7 @@ function ProtectedRoute({ children, user }: any) {
     <>
       <DataProvider>
         <CallConsole />
-        <MemberProvider antaraId={recId}>
+        <MemberProvider antaraId={params.antaraId}>
           <MemberRegistration />
           <div className="flex h-full">{children}</div>
         </MemberProvider>
@@ -99,14 +94,7 @@ function Routes() {
       <CallProvider>
         <SwitchRoutes>
           <Route path="/login" element={<Login />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute user={user}>
-                <MainDashboard />
-              </ProtectedRoute>
-            }
-          />
+
           <Route
             path="/member/:antaraId"
             element={
@@ -115,6 +103,7 @@ function Routes() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/*"
             element={

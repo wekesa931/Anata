@@ -74,6 +74,8 @@ export function MemberProvider({ antaraId, children }: Props) {
         .finally(() => {
           forceUpdate()
         })
+    } else {
+      setMember(null)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [antaraId])

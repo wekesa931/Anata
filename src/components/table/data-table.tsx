@@ -327,23 +327,19 @@ type GroupedRowProps = {
   defaultExpanded?: boolean
   groupTitle: string
   title: string
-  toggleExpanded?: (expanded: boolean) => void
+  expanded: boolean
+  setExpanded: (expanded: boolean) => void
 }
 
 function GroupedRow({
   columns,
   data,
-  defaultExpanded = true,
+  expanded = true,
   groupTitle,
   title,
-  toggleExpanded,
+  setExpanded,
 }: GroupedRowProps) {
-  const [expanded, setExpanded] = useState<boolean>(true)
   const { trackTableRowExpandToggled } = useModuleAnalytics()
-
-  useEffect(() => {
-    setExpanded(defaultExpanded)
-  }, [defaultExpanded])
 
   const getValue = (columnId: string, row: any) => {
     let value = row[columnId]?.value ?? row[columnId]
@@ -359,7 +355,6 @@ function GroupedRow({
         onClick={() => {
           trackTableRowExpandToggled(title, groupTitle, !expanded)
           setExpanded(!expanded)
-          toggleExpanded && toggleExpanded(!expanded)
         }}
         data-testid={`group-row-title-${groupTitle}`}
       >
@@ -534,7 +529,6 @@ function DataTable({
   const [groupByColumn, setGroupByColumn] = useState<string | undefined>(
     cachedGroupByColumn
   )
-  const [defaultExpanded, setDefaultExpanded] = useState<boolean>(true)
 
   const sortGroupedDataAlphabetically = (data: any) => {
     const sortedKeys = Object.keys(data).sort()
@@ -550,6 +544,27 @@ function DataTable({
     return sortGroupedDataAlphabetically(groupedData)
   }
 
+  const [expandedGroups, setexpandedGroups] = useState<Record<string, boolean>>(
+    {}
+  )
+  const [groupedData, setGroupedData] = useState<
+    {
+      title: string
+      data: any[]
+    }[]
+  >([
+    {
+      title: '',
+      data: [],
+    },
+  ])
+
+  useEffect(() => {
+    setGroupedData(getGroupedData())
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groupByColumn])
+
   const getGroupedData = () => {
     const groupedData = _.groupBy(data, groupByColumn)
     if (groupByColumn) {
@@ -564,10 +579,34 @@ function DataTable({
         },
       ]
 
+    const expandedGroupsRaw = Object.keys(groupedData).reduce(
+      (acc: Record<string, boolean>, key) => {
+        acc[key] = true
+        return acc
+      },
+      {}
+    )
+    setexpandedGroups(expandedGroupsRaw)
+
     return Object.keys(sortGroupedData(groupedData)).map((key) => ({
       title: key,
       data: sortData(groupedData[key]),
     }))
+  }
+
+  const allExpanded = Object.values(expandedGroups).some(
+    (expanded) => !!expanded
+  )
+
+  const toggleAllRowsExpanded = (expanded: boolean) => {
+    const expandedRaw = Object.keys(expandedGroups).reduce(
+      (acc: Record<string, boolean>, key) => {
+        acc[key] = expanded
+        return acc
+      },
+      {}
+    )
+    setexpandedGroups(expandedRaw)
   }
 
   return (
@@ -629,11 +668,11 @@ function DataTable({
                 <Button
                   className="normal-case underline pb-0 text-blue-100 text-sm font-bold self-end"
                   onClick={() => {
-                    trackTableGroupAllExpandToggled(title, !defaultExpanded)
-                    setDefaultExpanded(!defaultExpanded)
+                    trackTableGroupAllExpandToggled(title, !allExpanded)
+                    toggleAllRowsExpanded(!allExpanded)
                   }}
                 >
-                  {defaultExpanded ? 'Collapse All' : 'Expand All'}
+                  {allExpanded ? 'Collapse All' : 'Expand All'}
                 </Button>
               )}
             </>
@@ -671,17 +710,23 @@ function DataTable({
             <>
               {groupByColumn ? (
                 <>
-                  {getGroupedData().map((group, index) => {
+                  {groupedData.map((group, index) => {
                     return (
                       <React.Fragment key={`grouped-row-${index}`}>
                         {group?.data?.length ? (
                           <GroupedRow
                             columns={columns}
                             data={group.data}
-                            defaultExpanded={defaultExpanded}
+                            expanded={expandedGroups[group.title]}
                             key={`grouped-row-${index}`}
                             groupTitle={group.title}
                             title={title}
+                            setExpanded={(expanded) => {
+                              setexpandedGroups({
+                                ...expandedGroups,
+                                [group.title]: expanded,
+                              })
+                            }}
                           />
                         ) : (
                           <TableBody>

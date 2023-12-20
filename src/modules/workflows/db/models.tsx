@@ -242,7 +242,7 @@ export class Workflows extends Model {
     })
   }
 
-  @writer async createFromAPI(newWorkflow: any, member: any, user: any) {
+  @writer async createFromAPI(newWorkflow: any, user: any) {
     const userData = {
       email: user.email,
       name: user?.name ?? user?.fullName,
@@ -250,8 +250,7 @@ export class Workflows extends Model {
     return this.update(() => {
       this.workflowId = newWorkflow.workflowId
       this.template = newWorkflow.template.name
-      this.member =
-        member && member.antaraId ? member.antaraId : newWorkflow.memberId
+      this.member = newWorkflow.memberId
       this.memberData = newWorkflow.member?.details
       this.isCompleted = newWorkflow.completed
       this.isSynced = true

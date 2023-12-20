@@ -23,7 +23,6 @@ import { TWorkflow, CreateCaseVariables } from 'src/modules/workflows/types'
 import logError from 'src/utils/logging/logger'
 import useObservable from 'src/hooks/observable'
 import { useFormHandlers } from 'src/modules/workflows/hooks/form-handlers'
-import type { Member } from 'src/modules/member/db/models'
 import dayjs from 'dayjs'
 import { useWorkflowAnalytics } from './analytics'
 import { getUserModelDetails, initialFormValues } from '../utils'
@@ -364,11 +363,10 @@ export const useWorkflowData = () => {
   const hydrateWorkflowForms = async (
     workflowFromAPi: TWorkflow,
     workflowFromDb: TWorkflowModel,
-    memberInstance: Member,
     userData: any
   ) => {
     const prefills = initialFormValues(
-      memberInstance,
+      member,
       userData,
       workflowFromAPi.template.name
     )
@@ -485,13 +483,11 @@ export const useWorkflowData = () => {
           if (updatedWorkflow) {
             const newUpdatedWorkflow = await w.createFromAPI(
               updatedWorkflow,
-              member,
               user
             )
             return hydrateWorkflowForms(
               updatedWorkflow,
               newUpdatedWorkflow,
-              member,
               user
             )
           }
@@ -508,10 +504,9 @@ export const useWorkflowData = () => {
             )
             const newUpdatedWorkflow = await existingWorkflow.createFromAPI(
               w,
-              member,
               user
             )
-            await hydrateWorkflowForms(w, newUpdatedWorkflow, member, user)
+            await hydrateWorkflowForms(w, newUpdatedWorkflow, user)
           } catch (err: any) {
             const notFoundRegex = /Record ([^ ]+) not found/
             const notFoundError = err?.message.match(notFoundRegex)
@@ -528,10 +523,9 @@ export const useWorkflowData = () => {
                 })
                 const duplicateUpdated = await createdWorkflow.createFromAPI(
                   w,
-                  member,
                   user
                 )
-                await hydrateWorkflowForms(w, duplicateUpdated, member, user)
+                await hydrateWorkflowForms(w, duplicateUpdated, user)
               } catch (e: any) {
                 const duplicateRegex =
                   /Diagnostic error: Error: Duplicate key for property id: ([A-Z0-9-]+)/
