@@ -68,6 +68,10 @@ function MainDashboard() {
   )
 
   React.useEffect(() => {
+    setActive(location.pathname as Active)
+  }, [location])
+
+  React.useEffect(() => {
     document.title = `Scribe Home`
   }, [])
 
