@@ -527,8 +527,12 @@ function DataTable({
     trackFieldNameSorted(title, property, isAsc ? 'Descending' : 'Ascending')
   }
 
-  const [groupByColumn, setGroupByColumn] = useState<string | undefined>(
+  const cachedGroupByColumn =
+    (localStorage.getItem(`${title}-group-by-column`) as string) ||
     defaultGroupColumn
+
+  const [groupByColumn, setGroupByColumn] = useState<string | undefined>(
+    cachedGroupByColumn
   )
   const [defaultExpanded, setDefaultExpanded] = useState<boolean>(true)
 
@@ -589,7 +593,14 @@ function DataTable({
                     id="group-by-select"
                     className="h-8 font-rubik text-sm"
                     value={groupByColumn}
-                    onChange={(e) => setGroupByColumn(e.target.value)}
+                    onChange={(e) => {
+                      const selectedColumn = e.target.value as string
+                      setGroupByColumn(selectedColumn)
+                      localStorage.setItem(
+                        `${title}-group-by-column`,
+                        selectedColumn
+                      )
+                    }}
                     displayEmpty
                     renderValue={(value) => {
                       const option = groupColumns.find(

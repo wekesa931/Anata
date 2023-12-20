@@ -21,29 +21,32 @@ export const useUserTasksData = (user: User) => {
     return []
   }
 
+  const getTasksAndStats = async (rawTasks: any[]) => {
+    const tasks = transformRawTasksToUserTasks(rawTasks)
+    // parse the overview options here
+    const completeTasksCount = getCompleteTasksCount(tasks)
+    const p0Tasks = getHighPriorityTasks(tasks)
+    const p0CompleteCount = getCompleteTasksCount(p0Tasks)
+
+    return {
+      tasks,
+      overview: {
+        all: {
+          target: tasks.length,
+          complete: completeTasksCount,
+        },
+        p0: {
+          target: p0Tasks.length,
+          complete: p0CompleteCount,
+        },
+      },
+    }
+  }
+
   const getAllTasks = async (): Promise<TasksAndOverview> => {
     if (user?.userAirtableId) {
       const response = await getUserDueAndOverdueTasks(user.userAirtableId)
-      const tasks = transformRawTasksToUserTasks(response)
-
-      // parse the overview options here
-      const completeTasksCount = getCompleteTasksCount(tasks)
-      const p0Tasks = getHighPriorityTasks(tasks)
-      const p0CompleteCount = getCompleteTasksCount(p0Tasks)
-
-      return {
-        tasks,
-        overview: {
-          all: {
-            target: tasks.length,
-            complete: completeTasksCount,
-          },
-          p0: {
-            target: p0Tasks.length,
-            complete: p0CompleteCount,
-          },
-        },
-      }
+      return getTasksAndStats(response)
     }
 
     return {
@@ -67,20 +70,20 @@ export const useUserTasksData = (user: User) => {
         case Filters.THIS_WEEK: {
           const end = dayjs().endOf('week').add(1, 'day').format('YYYY/MM/DD')
           const tasks = await getTasksBefore(user.userAirtableId, end)
-          return transformRawTasksToUserTasks(tasks)
+          return getTasksAndStats(tasks)
         }
         case Filters.THIS_MONTH: {
           const end = dayjs().endOf('month').add(1, 'day').format('YYYY/MM/DD')
           const tasks = await getTasksBefore(user.userAirtableId, end)
-          return transformRawTasksToUserTasks(tasks)
+          return getTasksAndStats(tasks)
         }
         default: {
           const tasks = await getUserDueTasks(user.userAirtableId)
-          return transformRawTasksToUserTasks(tasks)
+          return getTasksAndStats(tasks)
         }
       }
     } else {
-      return []
+      return getTasksAndStats([]) // return empty tasks
     }
   }
 

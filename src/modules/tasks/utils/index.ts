@@ -82,9 +82,5 @@ export const sortGroupedDataByColumn = (data: GroupedData, column?: string) => {
     return sortGroupedDataByPriority(data)
   }
 
-  if (!(column in data)) {
-    return { ...data }
-  }
-
   return sortGroupedDataAlphabetically(data)
 }

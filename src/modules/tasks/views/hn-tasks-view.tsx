@@ -8,7 +8,12 @@ import {
   StatusComponent,
   ActionComponent,
 } from 'src/modules/tasks/components/table-cell-elements'
-import { UserTask, Filters, Overview } from 'src/modules/tasks/types'
+import {
+  UserTask,
+  Filters,
+  Overview,
+  TasksAndOverview,
+} from 'src/modules/tasks/types'
 import TaskFilterComponent from 'src/modules/tasks/components/task-filters'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import ErrorRetry from 'src/components/feedbacks/error-retry'
@@ -19,6 +24,7 @@ import {
 } from 'src/modules/tasks/utils'
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
+import Loader from 'src/modules/workflows/components/loaders'
 
 dayjs.extend(advancedFormat)
 
@@ -81,6 +87,11 @@ function HnTasksView({ user }: Props) {
     p0: { target: 0, complete: 0 },
   })
 
+  const setTasksAndStats = (tasksAndStats: TasksAndOverview) => {
+    setAllTasks(getIncompleteTasks(tasksAndStats.tasks))
+    setOverview(tasksAndStats.overview)
+  }
+
   const loadTasks = async () => {
     if (currentFilter !== Filters.TODAYS) {
       setLoadingTasks(true)
@@ -88,7 +99,7 @@ function HnTasksView({ user }: Props) {
       try {
         const tasks = await filterTasks(currentFilter)
         trackTasksFiltered('Active tasks', getTableTitle())
-        setAllTasks(getIncompleteTasks(tasks))
+        setTasksAndStats(tasks)
       } catch (e: any) {
         setError(e)
       } finally {
@@ -102,8 +113,7 @@ function HnTasksView({ user }: Props) {
       setLoadingTasks(true)
       try {
         const tasksAndOverview = await getAllTasks()
-        setAllTasks(getIncompleteTasks(tasksAndOverview.tasks))
-        setOverview(tasksAndOverview.overview)
+        setTasksAndStats(tasksAndOverview)
       } catch (e: any) {
         setError(e)
       } finally {
@@ -135,65 +145,73 @@ function HnTasksView({ user }: Props) {
   }
 
   return (
-    <div className="h-full ">
-      <div className="font-rubik flex flex-col gap-10">
-        <div className="flex flex-col gap-4">
-          <h1 className="text-2xl text-dark-blue-100">
-            Hello, <strong>{user?.fullName || user?.name} 👋🏾 </strong>
-          </h1>
-          <h2 className="text-sm text-dark-blue-100">
-            Here is what your day looks like
-          </h2>
-          <div className="w-full flex justify-between gap-10">
-            <TasksOverview
-              isHighPriority={false}
-              target={overview.all.target}
-              completed={overview.all.complete}
-            />
-            <TasksOverview
-              isHighPriority
-              target={overview.p0.target}
-              completed={overview.p0.complete}
-            />
+    <>
+      {loadingTasks ? (
+        <div className="h-full flex justify-center items-center">
+          <Loader message="Loading tasks..." />
+        </div>
+      ) : (
+        <div className="h-full ">
+          <div className="font-rubik flex flex-col gap-10">
+            <div className="flex flex-col gap-4">
+              <h1 className="text-2xl text-dark-blue-100">
+                Hello, <strong>{user?.fullName || user?.name} 👋🏾 </strong>
+              </h1>
+              <h2 className="text-sm text-dark-blue-100">
+                Here is what your day looks like
+              </h2>
+              <div className="w-full flex justify-between gap-10">
+                <TasksOverview
+                  isHighPriority={false}
+                  target={overview.all.target}
+                  completed={overview.all.complete}
+                />
+                <TasksOverview
+                  isHighPriority
+                  target={overview.p0.target}
+                  completed={overview.p0.complete}
+                />
+              </div>
+            </div>
+            <>
+              {error ? (
+                <ErrorRetry retry={loadAllTasks} />
+              ) : (
+                <DataTable
+                  data={allTasks}
+                  title={getTableTitle()}
+                  titleComponent={
+                    <div className="flex items-center gap-2 font-rubik">
+                      <p className="text-2xl color text-[#444] font-medium">
+                        {getTableTitle()}
+                      </p>
+                    </div>
+                  }
+                  columns={COLUMNS}
+                  defaultGroupColumn="priority"
+                  groupColumns={[
+                    { label: 'Task type', value: 'type' },
+                    { label: 'Task status', value: 'status' },
+                    { label: 'Priority', value: 'priority' },
+                    { label: 'Member name', value: 'member' },
+                  ]}
+                  loading={loadingTasks}
+                  defaultSortColumn="due_date"
+                  filterControl={
+                    <TaskFilterComponent
+                      filter={currentFilter}
+                      setFilter={setCurrentFilter}
+                    />
+                  }
+                  dataSortFunction={sortByPriorityAndKey}
+                  groupSortFunction={sortGroupedDataByColumn}
+                />
+              )}
+            </>
           </div>
         </div>
-        <>
-          {error ? (
-            <ErrorRetry retry={loadTasks} />
-          ) : (
-            <DataTable
-              data={allTasks}
-              title={getTableTitle()}
-              titleComponent={
-                <div className="flex items-center gap-2 font-rubik">
-                  <p className="text-2xl color text-[#444] font-medium">
-                    {getTableTitle()}
-                  </p>
-                </div>
-              }
-              columns={COLUMNS}
-              defaultGroupColumn="priority"
-              groupColumns={[
-                { label: 'Task type', value: 'type' },
-                { label: 'Task status', value: 'status' },
-                { label: 'Priority', value: 'priority' },
-                { label: 'Member name', value: 'member' },
-              ]}
-              loading={loadingTasks}
-              defaultSortColumn="due_date"
-              filterControl={
-                <TaskFilterComponent
-                  filter={currentFilter}
-                  setFilter={setCurrentFilter}
-                />
-              }
-              dataSortFunction={sortByPriorityAndKey}
-              groupSortFunction={sortGroupedDataByColumn}
-            />
-          )}
-        </>
-      </div>
-    </div>
+      )}
+    </>
   )
 }
 
