@@ -544,10 +544,7 @@ export const useWorkflowData = () => {
     // {formName: [form.data, form.data...]}
     const formName = activeForms?.[0]?.name || ''
     const payload = {
-      [formName]: {
-        ...formsData,
-        isDraft: hasDraft,
-      },
+      [formName]: [...formsData],
     }
 
     return saveModuleData({
