@@ -31,8 +31,8 @@ export enum Filters {
   THIS_MONTH = "This month's tasks",
 }
 
-export const convertPriority = (priority: string): Priority => {
-  switch (priority.toLowerCase()) {
+export const convertPriority = (priority?: string): Priority => {
+  switch (priority?.toLowerCase()) {
     case 'high':
       return Priority.P0
     case 'medium':
