@@ -82,59 +82,58 @@ export function TaskNotes({ value }: any) {
   }
 
   const closeDetails = () => {
-    setShowDetails(false)
     setSelected(false)
+    setShowDetails(false)
+    setAnchorEl(null)
   }
 
   return (
-    <>
-      <ClickAwayListener onClickAway={closeDetails}>
-        <>
-          <div
-            className={`cursor-pointer relative box-content max-h-[4rem] ${
-              selected && ' outline outline-dark-blue-20 p-2'
-            }`}
-            onClick={() => setSelected(true)}
-            role="presentation"
-          >
-            <p className="font-rubik max-w-md overflow-hidden">
-              {value?.notes}
-            </p>
-            {selected && (
-              <div className="absolute top-0 right-0">
-                <IconButton
-                  className="text-dark-blue-50 h-5 w-5"
-                  onClick={toggleShowDetails(!showDetails)}
-                >
-                  {showDetails ? (
-                    <CloseIcon className="h-4 w-4" />
-                  ) : (
-                    <OpenInFullIcon className="h-4 w-4" />
-                  )}
-                </IconButton>
+    <ClickAwayListener onClickAway={closeDetails}>
+      <>
+        <div
+          className={`cursor-pointer relative box-content p-2 max-h-[4rem] max-w-[200px] ${
+            selected && ' outline outline-dark-blue-20 '
+          }`}
+          onClick={() => setSelected((prev) => !prev)}
+          role="presentation"
+        >
+          <p className="font-rubik max-w-md max-h-[4rem] line-clamp-3">
+            {value?.notes}
+          </p>
+          {selected && (
+            <div className="absolute top-0 right-0">
+              <IconButton
+                className="text-dark-blue-50 h-5 w-5"
+                onClick={toggleShowDetails(!showDetails)}
+              >
+                {showDetails ? (
+                  <CloseIcon className="h-4 w-4" />
+                ) : (
+                  <OpenInFullIcon className="h-4 w-4" />
+                )}
+              </IconButton>
+            </div>
+          )}
+        </div>
+        <Popper
+          open={showDetails}
+          anchorEl={anchorEl}
+          className="z-10"
+          placement="top"
+        >
+          <ClickAwayListener onClickAway={closeDetails}>
+            <div className="bg-white rounded-md p-6 max-w-2xl font-rubik">
+              <div className="flex justify-between items-start flex-col gap-3 text-left">
+                <p className="flex justify-start items-center gap-2 text-xl text-dark-blue-50">
+                  <NotesIcon className="h-6 w-6" />
+                  Tasks Notes
+                </p>
+                <p className="text-sm font-rubik break-all">{value?.notes}</p>
               </div>
-            )}
-          </div>
-          <Popper
-            open={showDetails}
-            anchorEl={anchorEl}
-            className="z-10"
-            placement="top"
-          >
-            <ClickAwayListener onClickAway={closeDetails}>
-              <div className="bg-white rounded-md p-6 max-w-2xl font-rubik">
-                <div className="flex justify-between items-start flex-col gap-3 text-left">
-                  <p className="flex justify-start items-center gap-2 text-xl text-dark-blue-50">
-                    <NotesIcon className="h-6 w-6" />
-                    Tasks Notes
-                  </p>
-                  <p className="text-sm font-rubik break-all">{value?.notes}</p>
-                </div>
-              </div>
-            </ClickAwayListener>
-          </Popper>
-        </>
-      </ClickAwayListener>
-    </>
+            </div>
+          </ClickAwayListener>
+        </Popper>
+      </>
+    </ClickAwayListener>
   )
 }
