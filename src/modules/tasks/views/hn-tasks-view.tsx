@@ -7,6 +7,7 @@ import {
   TaskPriorityComponent,
   StatusComponent,
   ActionComponent,
+  TaskNotes,
 } from 'src/modules/tasks/components/table-cell-elements'
 import {
   UserTask,
@@ -46,6 +47,7 @@ const COLUMNS: Column[] = [
   {
     id: 'notes',
     label: 'Task Notes',
+    valueComponent: TaskNotes,
   },
   {
     id: 'due_date',

@@ -20,7 +20,7 @@ export function TaskPriorityComponent({ value }: Props) {
   }
   return (
     <p
-      className={`flex font-rubik items-center justify-center text-center text-white rounded-2xl max-w-[150px] ${getColor(
+      className={`flex font-rubik items-center justify-center text-center text-white rounded-2xl w-[150px] ${getColor(
         value?.priority
       )}`}
     >
@@ -31,7 +31,7 @@ export function TaskPriorityComponent({ value }: Props) {
 
 export function StatusComponent({ value }: Props) {
   const getColor = (status: string) => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case 'complete':
         return 'text-green-100 border-green-100'
       case 'in progress':
@@ -64,4 +64,8 @@ export function ActionComponent({ value }: any) {
       </Link>
     </PrimaryButton>
   )
+}
+
+export function TaskNotes({ value }: any) {
+  return <p className="font-rubik max-w-xs">{value?.notes}</p>
 }
