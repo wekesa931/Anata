@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { UserTask, Priority } from 'src/modules/tasks/types'
 import { Link } from 'react-router-dom'
 import PrimaryButton from 'src/components/buttons/primary'
+import { ClickAwayListener, IconButton, Popper } from '@mui/material'
+import OpenInFullIcon from '@mui/icons-material/OpenInFull'
+import CloseIcon from '@mui/icons-material/Close'
+import NotesIcon from '@mui/icons-material/Notes'
 
 type Props = {
   value: UserTask
@@ -67,5 +71,70 @@ export function ActionComponent({ value }: any) {
 }
 
 export function TaskNotes({ value }: any) {
-  return <p className="font-rubik max-w-xs">{value?.notes}</p>
+  const [selected, setSelected] = useState(false)
+  const [showDetails, setShowDetails] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null)
+
+  const toggleShowDetails = (show: boolean) => (e: any) => {
+    e.stopPropagation()
+    setShowDetails(show)
+    setAnchorEl(e.currentTarget)
+  }
+
+  const closeDetails = () => {
+    setShowDetails(false)
+    setSelected(false)
+  }
+
+  return (
+    <>
+      <ClickAwayListener onClickAway={closeDetails}>
+        <>
+          <div
+            className={`cursor-pointer relative box-content max-h-[4rem] ${
+              selected && ' outline outline-dark-blue-20 p-2'
+            }`}
+            onClick={() => setSelected(true)}
+            role="presentation"
+          >
+            <p className="font-rubik max-w-md overflow-hidden">
+              {value?.notes}
+            </p>
+            {selected && (
+              <div className="absolute top-0 right-0">
+                <IconButton
+                  className="text-dark-blue-50 h-5 w-5"
+                  onClick={toggleShowDetails(!showDetails)}
+                >
+                  {showDetails ? (
+                    <CloseIcon className="h-4 w-4" />
+                  ) : (
+                    <OpenInFullIcon className="h-4 w-4" />
+                  )}
+                </IconButton>
+              </div>
+            )}
+          </div>
+          <Popper
+            open={showDetails}
+            anchorEl={anchorEl}
+            className="z-10"
+            placement="top"
+          >
+            <ClickAwayListener onClickAway={closeDetails}>
+              <div className="bg-white rounded-md p-6 max-w-2xl font-rubik">
+                <div className="flex justify-between items-start flex-col gap-3 text-left">
+                  <p className="flex justify-start items-center gap-2 text-xl text-dark-blue-50">
+                    <NotesIcon className="h-6 w-6" />
+                    Tasks Notes
+                  </p>
+                  <p className="text-sm font-rubik break-all">{value?.notes}</p>
+                </div>
+              </div>
+            </ClickAwayListener>
+          </Popper>
+        </>
+      </ClickAwayListener>
+    </>
+  )
 }

@@ -104,6 +104,7 @@ function HnTasksView({ user }: Props) {
         setTasksAndStats(tasks)
       } catch (e: any) {
         setError(e)
+        throw e
       } finally {
         setLoadingTasks(false)
       }
@@ -118,6 +119,7 @@ function HnTasksView({ user }: Props) {
         setTasksAndStats(tasksAndOverview)
       } catch (e: any) {
         setError(e)
+        throw e
       } finally {
         setLoadingTasks(false)
       }
