@@ -128,7 +128,7 @@ function MainDashboard() {
         <Header className="ml-4" />
 
         <div className="p-2 w-1/3">
-          <SearchInput source={'main'} />
+          <SearchInput source="main" />
         </div>
       </nav>
       <div className="flex overflow-x-hidden h-full z-10">

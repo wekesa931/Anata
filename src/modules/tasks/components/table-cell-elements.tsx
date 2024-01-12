@@ -75,10 +75,8 @@ export function TaskNotes({ value }: any) {
   const [showDetails, setShowDetails] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
 
-  const toggleShowDetails = (show: boolean) => (e: any) => {
-    e.stopPropagation()
+  const toggleShowDetails = (show: boolean) => () => {
     setShowDetails(show)
-    setAnchorEl(e.currentTarget)
   }
 
   const closeDetails = () => {
@@ -87,16 +85,30 @@ export function TaskNotes({ value }: any) {
     setShowDetails(false)
   }
 
+  const toggleSelectedStatus = (show: boolean) => {
+    if (value?.notes?.length > 0) {
+      setSelected(show)
+    }
+  }
+
   return (
     <ClickAwayListener onClickAway={closeDetails}>
       <>
         <div
-          className={`cursor-pointer relative box-content p-2 max-h-[4rem] max-w-[200px] ${
+          className={`${
+            value?.notes?.length > 0 && 'cursor-pointer'
+          } relative box-content p-2 max-h-[4rem] max-w-[200px] ${
             selected && ' outline outline-dark-blue-20 '
           }`}
-          onClick={() => setSelected((prev) => !prev)}
+          onClick={(e: any) => {
+            toggleSelectedStatus(!selected)
+            setAnchorEl(e.currentTarget)
+          }}
           role="presentation"
-          onMouseEnter={() => setSelected(true)}
+          onMouseEnter={(e: any) => {
+            toggleSelectedStatus(true)
+            setAnchorEl(e.currentTarget)
+          }}
           onMouseLeave={() => setSelected(false)}
         >
           <p className="font-rubik max-w-md max-h-[4rem] line-clamp-3">
@@ -123,15 +135,16 @@ export function TaskNotes({ value }: any) {
           className="z-10"
           placement="top"
           onMouseEnter={() => setSelected(true)}
-          onMouseLeave={closeDetails}
         >
           <ClickAwayListener onClickAway={closeDetails}>
             <div
               className="bg-white rounded-md p-6 max-w-2xl font-rubik shadow-md"
-              onMouseEnter={() => setSelected(true)}
-              onMouseLeave={closeDetails}
+              onMouseEnter={() => toggleSelectedStatus(true)}
             >
-              <div className="flex justify-between items-start flex-col gap-3 text-left">
+              <div className="flex justify-between items-start flex-col gap-3 text-left relative">
+                <IconButton className="absolute top-0 right-0 translate-x-full -translate-y-full bg-blue-10">
+                  <CloseIcon className="h-6 w-6" onClick={closeDetails} />
+                </IconButton>
                 <p className="flex justify-start items-center gap-2 text-xl text-dark-blue-50">
                   <NotesIcon className="h-6 w-6" />
                   Tasks Notes
