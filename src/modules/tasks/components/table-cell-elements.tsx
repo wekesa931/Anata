@@ -98,7 +98,7 @@ export function TaskNotes({ value }: any) {
           className={`${
             value?.notes?.length > 0 && 'cursor-pointer'
           } relative box-content p-2 max-h-[4rem] max-w-[200px] ${
-            selected && ' outline outline-dark-blue-20 '
+            selected && ' outline outline-dark-blue-20 rounded-md '
           }`}
           onClick={(e: any) => {
             toggleSelectedStatus(!selected)
