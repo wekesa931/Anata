@@ -24,23 +24,23 @@ export const useUserTasksAPI = () => {
   }
 
   const getUserDueTasks = async (userId: string) => {
-    const filterArg = `filterByFormula=AND(FIND("${userId}", {Assignee Record ID}), FIND("Not Applicable", Status) = 0, IS_SAME({Due Date}, TODAY()))`
+    const filterArg = `filterByFormula=AND(FIND("${userId}", {Assignee Record ID}), FIND("Not Applicable", {Status}) = 0, IS_SAME({Due Date}, TODAY()))`
 
     return filterTasks(filterArg)
   }
 
   const getUserOverdueTasks = async (userId: string) => {
-    const filterArg = `filterByFormula=AND(FIND("${userId}", {Assignee Record ID}), FIND("Not Applicable", Status) = 0, FIND("Cancelled", Status) = 0, OR(FIND("Complete", Status) = 0, AND(FIND("Complete", Status) > 0, IS_SAME(LAST_MODIFIED_TIME(), TODAY(), 'day'))), OR(IS_BEFORE({Due Date}, TODAY()), IS_SAME({Due Date}, TODAY())))`
+    const filterArg = `filterByFormula=AND(FIND("${userId}", {Assignee Record ID}), FIND("Not Applicable", {Status}) = 0, FIND("Cancelled", {Status}) = 0, OR(FIND("Complete", {Status}) = 0, AND(FIND("Complete", {Status}) != 0, IS_SAME(LAST_MODIFIED_TIME(), TODAY(), 'day'))), OR(IS_BEFORE({Due Date}, TODAY()), IS_SAME({Due Date}, TODAY())))`
     return filterTasks(filterArg)
   }
 
   const getTasksBefore = async (userId: string, end: string) => {
-    const filterArg = `filterByFormula=AND(FIND("${userId}", {Assignee Record ID}), FIND("Not Applicable", Status) = 0, IS_BEFORE({Due Date}, "${end}"))`
+    const filterArg = `filterByFormula=AND(FIND("${userId}", {Assignee Record ID}), FIND("Not Applicable", {Status}) = 0, FIND("Cancelled", {Status}) = 0, OR(FIND("Complete", {Status}) = 0, AND(FIND("Complete", {Status}) != 0, IS_SAME(LAST_MODIFIED_TIME(), TODAY(), 'day'))), IS_BEFORE({Due Date}, "${end}"))`
     return filterTasks(filterArg)
   }
 
   const getUserDueAndOverdueTasks = async (userId: string) => {
-    const filterArg = `filterByFormula=AND(FIND("${userId}", {Assignee Record ID}), FIND("Not Applicable", Status) = 0, FIND("Cancelled", Status) = 0, OR(FIND("Complete", Status) = 0, AND(FIND("Complete", Status) > 0, IS_SAME(LAST_MODIFIED_TIME(), TODAY(), 'day'))), OR(IS_BEFORE({Due Date}, TODAY()), IS_SAME({Due Date}, TODAY())))`
+    const filterArg = `filterByFormula=AND(FIND("${userId}", {Assignee Record ID}), FIND("Not Applicable", {Status}) = 0, FIND("Cancelled", {Status}) = 0, OR(FIND("Complete", {Status}) = 0, AND(FIND("Complete", {Status}) != 0, IS_SAME(LAST_MODIFIED_TIME(), TODAY(), 'day'))), OR(IS_BEFORE({Due Date}, TODAY()), IS_SAME({Due Date}, TODAY())))`
     return filterTasks(filterArg)
   }
 

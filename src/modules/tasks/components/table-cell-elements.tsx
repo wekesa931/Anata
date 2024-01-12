@@ -142,7 +142,7 @@ export function TaskNotes({ value }: any) {
               onMouseEnter={() => toggleSelectedStatus(true)}
             >
               <div className="flex justify-between items-start flex-col gap-3 text-left relative">
-                <IconButton className="absolute top-0 right-0 translate-x-full -translate-y-full bg-blue-10">
+                <IconButton className="absolute top-0 right-0 translate-x-full -translate-y-full bg-table-col-grey">
                   <CloseIcon className="h-6 w-6" onClick={closeDetails} />
                 </IconButton>
                 <p className="flex justify-start items-center gap-2 text-xl text-dark-blue-50">

@@ -169,11 +169,13 @@ function HnTasksView({ user }: Props) {
                   isHighPriority={false}
                   target={overview.all.target}
                   completed={overview.all.complete}
+                  currentFilter={currentFilter}
                 />
                 <TasksOverview
                   isHighPriority
                   target={overview.p0.target}
                   completed={overview.p0.complete}
+                  currentFilter={currentFilter}
                 />
               </div>
             </div>

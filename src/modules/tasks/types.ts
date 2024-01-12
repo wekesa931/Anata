@@ -34,10 +34,15 @@ export enum Filters {
 export const convertPriority = (priority?: string): Priority => {
   switch (priority?.toLowerCase()) {
     case 'high':
+    case 'p0':
+    case 'p1':
       return Priority.P0
     case 'medium':
+    case 'p2':
+    case 'p3':
       return Priority.P1
     case 'low':
+    case 'p4':
       return Priority.P2
     default:
       return Priority.P3
