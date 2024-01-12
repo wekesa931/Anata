@@ -243,5 +243,16 @@ export const useModuleAnalytics = () => {
       homePageSectionAnalytics.track('workflow section - workflow opened', {
         workflow,
       }),
+
+    trackTasksSectionOpenedFromMenu: () => {
+      homePageSectionAnalytics.track(
+        'tasks section - opened from dashboard menu'
+      )
+    },
+    trackWorkflowsSectionOpenedFromMenu: () => {
+      homePageSectionAnalytics.track(
+        'workflows section - opened from dashboard menu'
+      )
+    },
   }
 }

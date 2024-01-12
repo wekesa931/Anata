@@ -82,9 +82,9 @@ export function TaskNotes({ value }: any) {
   }
 
   const closeDetails = () => {
+    setAnchorEl(null)
     setSelected(false)
     setShowDetails(false)
-    setAnchorEl(null)
   }
 
   return (
@@ -96,6 +96,8 @@ export function TaskNotes({ value }: any) {
           }`}
           onClick={() => setSelected((prev) => !prev)}
           role="presentation"
+          onMouseEnter={() => setSelected(true)}
+          onMouseLeave={() => setSelected(false)}
         >
           <p className="font-rubik max-w-md max-h-[4rem] line-clamp-3">
             {value?.notes}
@@ -120,9 +122,15 @@ export function TaskNotes({ value }: any) {
           anchorEl={anchorEl}
           className="z-10"
           placement="top"
+          onMouseEnter={() => setSelected(true)}
+          onMouseLeave={closeDetails}
         >
           <ClickAwayListener onClickAway={closeDetails}>
-            <div className="bg-white rounded-md p-6 max-w-2xl font-rubik">
+            <div
+              className="bg-white rounded-md p-6 max-w-2xl font-rubik shadow-md"
+              onMouseEnter={() => setSelected(true)}
+              onMouseLeave={closeDetails}
+            >
               <div className="flex justify-between items-start flex-col gap-3 text-left">
                 <p className="flex justify-start items-center gap-2 text-xl text-dark-blue-50">
                   <NotesIcon className="h-6 w-6" />

@@ -11,6 +11,7 @@ import styles from './search.module.css'
 interface IProps {
   unknownMemberSearch?: boolean
   memberInfo?: (info: any) => void
+  source?: 'main' | 'member'
 }
 
 interface searchResultType {
@@ -23,7 +24,11 @@ interface searchResultType {
   employerName: string
 }
 
-function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
+function SearchInput({
+  unknownMemberSearch,
+  memberInfo,
+  source = 'member',
+}: IProps) {
   const navigate = useNavigate()
   const { search, loading, results, error } = useMemberSearch()
 
@@ -38,9 +43,7 @@ function SearchInput({ unknownMemberSearch, memberInfo }: IProps) {
     stateAndHelpers: { clearSelection: () => any }
   ) => {
     if (item) {
-      analytics.track('Bene Searched', {
-        bene: item.antaraId,
-      })
+      analytics.track(`Member - searched from ${source} dashboard`, { item })
       if (unknownMemberSearch) {
         setMemberInfo(item)
       } else {

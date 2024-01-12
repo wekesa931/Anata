@@ -3,6 +3,7 @@ import { MenuItem, Menu, ListItemIcon, ListItemText } from '@mui/material'
 import TasksIcon from '@mui/icons-material/ViewQuilt'
 import WorkflowsIcon from '@mui/icons-material/Assignment'
 import { useNavigate } from 'react-router-dom'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 type FloatingMenuProps = {
   anchorEl: any
@@ -10,11 +11,19 @@ type FloatingMenuProps = {
   handleClose: () => void
 }
 
+type Menus = 'tasks' | 'workflows'
+
 function FloatingMenu({ anchorEl, open, handleClose }: FloatingMenuProps) {
   const navigate = useNavigate()
-  const openLink = (link: string) => {
+  const {
+    trackTasksSectionOpenedFromMenu,
+    trackWorkflowsSectionOpenedFromMenu,
+  } = useModuleAnalytics()
+  const openLink = (link: string, menu: Menus) => {
     navigate(link)
     handleClose()
+    menu === 'tasks' && trackTasksSectionOpenedFromMenu()
+    menu === 'workflows' && trackWorkflowsSectionOpenedFromMenu()
   }
   return (
     <Menu
@@ -43,7 +52,7 @@ function FloatingMenu({ anchorEl, open, handleClose }: FloatingMenuProps) {
     >
       <MenuItem
         className="hover:bg-greyscale-6 hover:text-white cursor-pointer px-4 py-2"
-        onClick={() => openLink('/my-tasks')}
+        onClick={() => openLink('/my-tasks', 'tasks')}
       >
         <ListItemIcon className="text-white">
           <TasksIcon />
@@ -52,7 +61,7 @@ function FloatingMenu({ anchorEl, open, handleClose }: FloatingMenuProps) {
       </MenuItem>
       <MenuItem
         className="hover:bg-greyscale-6 hover:text-white cursor-pointer px-4 py-2"
-        onClick={() => openLink('/my-workflows')}
+        onClick={() => openLink('/my-workflows', 'workflows')}
       >
         <ListItemIcon className="text-white">
           <WorkflowsIcon />
