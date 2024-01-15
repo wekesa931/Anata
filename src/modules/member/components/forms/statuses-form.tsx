@@ -204,7 +204,7 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
                     placeholder="-- Select --"
                     handleChange={(v) => {
                       const selectedME = antaraMEs.find((me) => me.value === v)
-                      setFieldValue('assignedMe.name', selectedME?.label)
+                      setFieldValue('assignedMe.fullName', selectedME?.label)
                       setFieldValue(
                         'assignedMe.atRecordId',
                         selectedME?.recordId
