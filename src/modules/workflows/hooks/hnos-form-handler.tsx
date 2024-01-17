@@ -25,7 +25,7 @@ export const useHNOSFormHandler = () => {
     if (airtableMeta) {
       setSubmittingForm(true)
       const activeForm = ActiveForm(form.name)
-      let payload = omitKeys(data, ['moduleId', 'Case ID', 'isDraft'])
+      let payload = omitKeys(data, ['moduleId', 'isDraft'])
       if (activeForm.isHIFMinor || activeForm.isInterventionDataTracking) {
         payload = omitKeys(payload, ['Member'])
       }
