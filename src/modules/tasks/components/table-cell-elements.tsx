@@ -6,6 +6,7 @@ import { ClickAwayListener, IconButton, Popper } from '@mui/material'
 import OpenInFullIcon from '@mui/icons-material/OpenInFull'
 import CloseIcon from '@mui/icons-material/Close'
 import NotesIcon from '@mui/icons-material/Notes'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 type Props = {
   value: UserTask
@@ -60,9 +61,17 @@ export function StatusComponent({ value }: Props) {
 }
 
 export function ActionComponent({ value }: any) {
+  const { trackTaskItemOpened } = useModuleAnalytics()
+  const handleClick = () => {
+    trackTaskItemOpened(value)
+  }
   return (
     <PrimaryButton className="bg-orange-100 text-xs font-rubik normal-case text-white hover:bg-orange-100 hover:text-white shadow-none">
-      <Link to={`/member/${value?.antaraId}`} className="font-rubik">
+      <Link
+        onClick={handleClick}
+        to={`/member/${value?.antaraId}`}
+        className="font-rubik"
+      >
         {' '}
         Open dashboard{' '}
       </Link>

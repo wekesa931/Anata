@@ -6,6 +6,7 @@ export const useModuleAnalytics = () => {
   const rightSectionAnalytics = useAnalytics('Right Section')
   const middlesSectionAnalytics = useAnalytics('Middle Section')
   const homePageSectionAnalytics = useAnalytics('Home Page')
+  const memberAnalytics = useAnalytics('Member')
   const { member } = useMember()
 
   return {
@@ -210,12 +211,14 @@ export const useModuleAnalytics = () => {
     trackFieldNameSorted: (
       tableName: string,
       fieldName: string,
-      order: string
+      order: string,
+      source: 'home' | 'middle'
     ) => {
-      middlesSectionAnalytics.track(
-        `${tableName} table - ${fieldName} field sorted`,
-        { order }
-      )
+      const sectionAnalytics =
+        source === 'home' ? homePageSectionAnalytics : middlesSectionAnalytics
+      sectionAnalytics.track(`${tableName} table - ${fieldName} field sorted`, {
+        order,
+      })
     },
     trackTableGrouped: (tableName: string, groupColumn: string) => {
       homePageSectionAnalytics.track(
@@ -253,6 +256,12 @@ export const useModuleAnalytics = () => {
       homePageSectionAnalytics.track(
         'workflows section - opened from dashboard menu'
       )
+    },
+    trackMemberSearched: (member: any, source: 'main' | 'member') => {
+      memberAnalytics.track(`searched from ${source} dashboard`, { member })
+    },
+    trackTaskItemOpened: (task: any) => {
+      homePageSectionAnalytics.track(`tasks - task opened`, { task })
     },
   }
 }

@@ -437,6 +437,7 @@ type DataTableProps = {
   groupSortFunction?: (data: any, groupingColumn?: string) => any
   dataSortFunction?(data: any, comparator: (a: any, b: any) => number): any
   canExpandRow?: boolean
+  analyticsSource?: 'home' | 'middle'
 }
 
 function DataTable({
@@ -454,6 +455,7 @@ function DataTable({
   groupSortFunction,
   dataSortFunction,
   canExpandRow = true,
+  analyticsSource = 'middle',
 }: DataTableProps) {
   const [order, setOrder] = useState<Order>('desc')
   const [orderBy, setOrderBy] = useState<string>(defaultSortColumn || '')
@@ -519,7 +521,12 @@ function DataTable({
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
-    trackFieldNameSorted(title, property, isAsc ? 'Descending' : 'Ascending')
+    trackFieldNameSorted(
+      title,
+      property,
+      isAsc ? 'Descending' : 'Ascending',
+      analyticsSource
+    )
   }
 
   const cachedGroupByColumn =

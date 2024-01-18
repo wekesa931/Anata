@@ -211,6 +211,7 @@ function HnTasksView({ user }: Props) {
                   }
                   dataSortFunction={sortByPriorityAndKey}
                   groupSortFunction={sortGroupedDataByColumn}
+                  analyticsSource="home"
                 />
               )}
             </>

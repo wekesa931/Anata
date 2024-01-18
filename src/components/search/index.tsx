@@ -1,8 +1,8 @@
 import React from 'react'
 import Downshift from 'downshift'
 import { Link, useNavigate } from 'react-router-dom'
-import analytics from 'src/config/analytics'
 import useMemberSearch from 'src/hooks/members-search'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import SearchIcon from '../../assets/img/icons/search.svg'
 import CloseIcon from '../../assets/img/icons/close.svg'
 import LoadingIcon from '../../assets/img/icons/loading.svg'
@@ -31,6 +31,7 @@ function SearchInput({
 }: IProps) {
   const navigate = useNavigate()
   const { search, loading, results, error } = useMemberSearch()
+  const { trackMemberSearched } = useModuleAnalytics()
 
   const setMemberInfo = (info: any) => {
     if (memberInfo) {
@@ -43,7 +44,7 @@ function SearchInput({
     stateAndHelpers: { clearSelection: () => any }
   ) => {
     if (item) {
-      analytics.track(`Member - searched from ${source} dashboard`, { item })
+      trackMemberSearched(item, source)
       if (unknownMemberSearch) {
         setMemberInfo(item)
       } else {
