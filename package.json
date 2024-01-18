@@ -24,7 +24,6 @@
     "check-types": "tsc",
     "release": "release-it",
     "release:dry": "release-it --dry-run",
-    "prepare": "husky install",
     "pretty-quick": "pretty-quick",
     "test:coverage": "npm test -- --coverage",
     "test:badges": "npm run test:coverage  && jest-coverage-badges",
