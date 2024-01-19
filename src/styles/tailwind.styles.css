@@ -1282,6 +1282,10 @@ body,
   align-items: stretch !important;
 }
 
+.justify-normal {
+  justify-content: normal !important;
+}
+
 .justify-start {
   justify-content: flex-start !important;
 }
@@ -1368,6 +1372,11 @@ body,
 
 .whitespace-pre-line {
   white-space: pre-line !important;
+}
+
+.break-normal {
+  overflow-wrap: normal !important;
+  word-break: normal !important;
 }
 
 .break-words {

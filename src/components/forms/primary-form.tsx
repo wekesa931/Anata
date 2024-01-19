@@ -7,11 +7,14 @@ type PrimaryFormProps = {
   validationSchema?: any
   children: (formikProps: FormikProps<any>) => React.ReactNode
   expanded?: boolean
+  className?: string
 }
 
-function PrimaryForm({ expanded, ...props }: PrimaryFormProps) {
+function PrimaryForm({ expanded, className, ...props }: PrimaryFormProps) {
   return (
-    <div className={`overflow-scroll ${expanded ? 'mt-6' : 'mt-1'}`}>
+    <div
+      className={`overflow-scroll ${expanded ? 'mt-6' : 'mt-1'} ${className}`}
+    >
       <Formik
         onSubmit={props.handleSubmit}
         initialValues={props.initialValues}

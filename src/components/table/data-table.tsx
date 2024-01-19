@@ -440,7 +440,7 @@ type DataTableProps = {
   analyticsSource?: 'home' | 'middle'
 }
 
-function DataTable({
+export function DataTable({
   data,
   columns,
   title,

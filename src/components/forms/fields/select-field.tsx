@@ -8,6 +8,7 @@ import OutlinedField, { OutlinedFieldProps } from './outlined-field'
 type SelectFieldProps = {
   options: { label: string; value: string }[]
   multiple?: boolean
+  onClick?: (e: any) => void
 }
 
 function ValueRenderer({ selected, props }: any) {
@@ -77,6 +78,7 @@ function SelectField(props: OutlinedFieldProps & SelectFieldProps) {
               )}
               disabled={props.disabled}
               autoFocus={props.autoFocus}
+              onClick={props.onClick}
             >
               {props.options.map((option: any) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -91,11 +93,13 @@ function SelectField(props: OutlinedFieldProps & SelectFieldProps) {
                 </MenuItem>
               ))}
             </Select>
-            <FormHelperText error={!!fieldProps.meta.error}>
-              {!!fieldProps.meta.error && !!fieldProps.meta.error
-                ? fieldProps.meta.error
-                : ' '}
-            </FormHelperText>
+            {!!fieldProps.meta.error && (
+              <FormHelperText error={!!fieldProps.meta.error}>
+                {!!fieldProps.meta.error && !!fieldProps.meta.error
+                  ? fieldProps.meta.error
+                  : ' '}
+              </FormHelperText>
+            )}
           </>
         )
       }}
