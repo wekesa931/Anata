@@ -210,7 +210,7 @@ export const useWorkflowData = () => {
         ? [workflow.airtableId]
         : await getNewCaseId(workflow)
 
-      handleFormSubmission(form, formMeta, {
+      return handleFormSubmission(form, formMeta, {
         ...formData,
         'Case ID': caseId,
         'Data Source': 'Guided Workflow',
@@ -255,9 +255,8 @@ export const useWorkflowData = () => {
           }
           throw err
         })
-    } else {
-      throw new Error(`Workflow ${form.workflow?.id} not found in the cache`)
     }
+    throw new Error(`Workflow ${form.workflow?.id} not found in the cache`)
   }
 
   const handleSubmitForm = async (

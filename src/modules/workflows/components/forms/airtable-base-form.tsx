@@ -138,10 +138,11 @@ function AirtableBasedForm({
   }, [canSubmitForm])
 
   const getFieldsToRender = () => {
+    const values = getValues()
     const returnFields: any = []
     formSchema?.fields?.forEach((field: any) => {
-      if (!field.condition || field.condition(getValues())) {
-        const fieldValue = getValues()[field.name] || null
+      if (!field.condition || field.condition(values)) {
+        const fieldValue = values[field.name] || null
         returnFields.push({
           field,
           fieldValue,
