@@ -547,10 +547,10 @@ export const useWorkflowData = () => {
 
   const handleSaveDraftWorkflow = async (
     workflow: TWorkflowModel,
-    activeForms: TWorkflowForm[],
-    formsData: any
+    activeForms: TWorkflowForm[]
   ) => {
     const hasDraft = activeForms.some((f) => f.isDraft)
+    const formsData = activeForms.map((f) => f?.data || {})
     // create a an array payload that looks like this
     // {formName: [form.data, form.data...]}
     const formName = activeForms?.[0]?.name || ''
@@ -584,15 +584,14 @@ export const useWorkflowData = () => {
 
   const saveDraftWorkflow = async (
     workflow: TWorkflowModel,
-    activeForms: TWorkflowForm[],
-    data: any
+    activeForms: TWorkflowForm[]
   ) => {
     if (workflow.isSynced) {
-      return handleSaveDraftWorkflow(workflow, activeForms, data)
+      return handleSaveDraftWorkflow(workflow, activeForms)
     }
     return syncWorkflow(workflow).then(async () => {
       trackWorkflowCreated(workflow.workflowObject)
-      await handleSaveDraftWorkflow(workflow, activeForms, data)
+      await handleSaveDraftWorkflow(workflow, activeForms)
     })
   }
 

@@ -282,7 +282,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     }
 
   const handleSaveDraftWorkflow = async (ignoreNotification?: boolean) => {
-    return saveDraftWorkflow(workflow, activeForms, formsData)
+    return saveDraftWorkflow(workflow, activeForms)
       .then(() => {
         if (!ignoreNotification) {
           notify('Draft saved successfully')

@@ -49,8 +49,9 @@ export const useHNOSFormHandler = () => {
       const createNewTableRecord = async () => {
         const tableName = TABLE_ROUTES[form.name]
         if (tableName) {
-          await createTableEntry(tableName, generatedPayload)
-          form.markAsCompleted()
+          const res = await createTableEntry(tableName, generatedPayload)
+          // update the form status to completed and set it's record ID
+          form.markAsCompleted(res?.['Record ID'])
           setSubmittingForm(false)
         } else {
           throw new Error(`Table name not found for ${form.name} on airtable`)

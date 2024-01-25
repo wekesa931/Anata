@@ -97,6 +97,11 @@ export class Forms extends Model {
       this.isEdited = false
       this.isSynced = true
       this.airtableId = airtableId
+      this.data = {
+        ...this.data,
+        isDraft: false,
+        airtableRecordId: airtableId,
+      }
     })
   }
 

@@ -115,7 +115,7 @@ function AirtableBasedForm({
 
       await submitForm(form, formSchema, formattedPayload, workflow)
       setIsFormDraft(false)
-      handleSubmissionSuccess()
+      handleSubmissionSuccess(false) // ensures that the draft is saved again post submission
     } catch (e) {
       setIsFormDraft(true)
       handleSubmissionError(e)
