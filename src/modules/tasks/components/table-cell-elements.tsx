@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { UserTask, Priority } from 'src/modules/tasks/types'
 import { Link } from 'react-router-dom'
-import PrimaryButton from 'src/components/buttons/primary'
 import { ClickAwayListener, IconButton, Popper } from '@mui/material'
 import OpenInFullIcon from '@mui/icons-material/OpenInFull'
 import CloseIcon from '@mui/icons-material/Close'
@@ -62,20 +61,21 @@ export function StatusComponent({ value }: Props) {
 
 export function ActionComponent({ value }: any) {
   const { trackTaskItemOpened } = useModuleAnalytics()
+
   const handleClick = () => {
     trackTaskItemOpened(value)
   }
   return (
-    <PrimaryButton className="bg-orange-100 text-xs font-rubik normal-case text-white hover:bg-orange-100 hover:text-white shadow-none">
-      <Link
-        onClick={handleClick}
-        to={`/member/${value?.antaraId}`}
-        className="font-rubik"
-      >
-        {' '}
-        Open dashboard{' '}
-      </Link>
-    </PrimaryButton>
+    <Link
+      onClick={handleClick}
+      to={`/member/${value?.antaraId}`}
+      className="font-rubik bg-orange-100 text-xs normal-case text-white hover:bg-orange-100 hover:text-white shadow-none px-4 py-1 rounded-md"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      {' '}
+      Open dashboard{' '}
+    </Link>
   )
 }
 

@@ -4,10 +4,8 @@ import { useWorkflowData } from 'src/modules/workflows/hooks/workflow-data'
 import dayjs from 'dayjs'
 import Loading from 'src/components/loaders/centered'
 import DataTable, { Column } from 'src/components/table/data-table'
-import PrimaryButton from 'src/components/buttons/primary'
-import { useNavigate } from 'react-router-dom'
 import { useModuleAnalytics } from 'src/modules/analytics'
-import { useNotifications } from 'src/context/notifications'
+import { Link } from 'react-router-dom'
 
 type Props = {
   user: User
@@ -36,28 +34,22 @@ function StartedDisplay({ value }: any) {
 }
 
 function ActionComponent({ value }: any) {
-  const navigate = useNavigate()
   const { trackUserOpenedWorkflow } = useModuleAnalytics()
-  const { notify } = useNotifications()
 
-  const redirectToWorkflowModal = () => {
-    if (!value?.member) {
-      notify('Member ID not found')
-      return
-    }
-
+  const handleClick = () => {
     trackUserOpenedWorkflow(value)
-    navigate(
-      `/member/${value.member}?action=workflows&workflowId=${value.workflowId}`
-    )
   }
   return (
-    <PrimaryButton
-      className="bg-orange-main text-white hover:bg-orange-500 normal-case w-full shadow-none"
-      onClick={redirectToWorkflowModal}
+    <Link
+      onClick={handleClick}
+      to={`/member/${value?.member}?action=workflows&workflowId=${value?.workflowId}`}
+      className="font-rubik bg-orange-100 text-xs normal-case text-white hover:bg-orange-100 hover:text-white shadow-none px-4 py-1 rounded-md"
+      rel="noopener noreferrer"
+      target="_blank"
     >
-      Open workflow
-    </PrimaryButton>
+      {' '}
+      Open workflow{' '}
+    </Link>
   )
 }
 
