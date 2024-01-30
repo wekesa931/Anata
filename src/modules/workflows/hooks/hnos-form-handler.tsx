@@ -46,6 +46,13 @@ export const useHNOSFormHandler = () => {
         }
       }
 
+      if (activeForm.isIncidentReports) {
+        payload = {
+          ...payload,
+          Assignee: ['recpEJZoCuWN85DM4'],
+        }
+      }
+
       const createNewTableRecord = async () => {
         const tableName = TABLE_ROUTES[form.name]
         if (tableName) {

@@ -151,7 +151,13 @@ export const renameField = (
 }
 
 const isAllowedField = (name: string) => {
-  const allowedFields = ['createdBy', 'updatedBy', 'Data Source', 'Member']
+  const allowedFields = [
+    'createdBy',
+    'updatedBy',
+    'Data Source',
+    'Member',
+    'Assignee',
+  ]
   return allowedFields.includes(name)
 }
 
