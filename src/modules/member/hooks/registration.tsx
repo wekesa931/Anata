@@ -31,6 +31,7 @@ import {
 } from 'src/modules/member/utils/data-transforms'
 import { useMembersData } from 'src/modules/member/hooks/member-data'
 import { toTitleCase } from 'src/utils/text-utils'
+import { parseUpdateContactError } from '../utils'
 
 export const useRegistrationData = () => {
   const { createMember, loading: creatingMember } = useCreateMember()
@@ -98,6 +99,10 @@ export const useRegistrationData = () => {
     member: Member,
     contactsData: ContactValues
   ) => {
+    const ignoreEmptyPhone = (phoneNumber?: string) => {
+      return phoneNumber && phoneNumber?.length > 4 ? phoneNumber : ''
+    }
+
     try {
       const phonesToUpdate = preparePhonesForUpdate(
         member.phones || [],
@@ -109,16 +114,39 @@ export const useRegistrationData = () => {
       })
       contactsData.phones = phonesToUpdate
 
-      const { data } = await updateContactsData({
+      // remove empty phone numbers
+      const { emergencyContact, caregiverContact } = contactsData
+      contactsData.emergencyContact.phoneNumber = ignoreEmptyPhone(
+        emergencyContact.phoneNumber
+      )
+      contactsData.caregiverContact.phoneNumber = ignoreEmptyPhone(
+        caregiverContact.phoneNumber
+      )
+
+      const { data = {} } = await updateContactsData({
         ...contactsData,
         antaraId: member.antaraId,
       })
+      const { updateMemberContact, updateMemberPhones } = data
+
+      // parse the errors if any
+      if (updateMemberPhones?.status !== 200) {
+        throw new Error('Unable to update phone details. Please try again')
+      }
+
+      if (updateMemberContact?.status !== 200) {
+        throw new Error(
+          parseUpdateContactError(updateMemberContact?.errors || {})
+        )
+      }
       const phones = transformPhones(data)
-      return await member.updateMember({
+      const update = await member.updateMember({
         phones,
         email: contactsData.email,
         emergencyContact: contactsData.emergencyContact,
+        caregiverContact: contactsData.caregiverContact,
       })
+      return update
     } catch (error) {
       logError(error)
       throw error

@@ -18,3 +18,14 @@ export const formatCurreny = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'KES',
 }).format
+
+export const parseUpdateContactError = (error: any) => {
+  let errorMessage = ''
+  Object.keys(error).forEach((key) => {
+    errorMessage = `${errorMessage} ${toTitleCase(key)}: ${error[key].join(
+      ', '
+    )}`
+  })
+
+  return errorMessage || 'Could not update contact details. Please try again.'
+}

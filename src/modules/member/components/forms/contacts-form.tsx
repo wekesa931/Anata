@@ -48,17 +48,37 @@ const validationSchema = (isChildRegistration = false) =>
     ),
     email: yup.string(),
     emergencyContact: yup.object().shape({
-      name: yup.string(),
+      name: yup.string().notRequired(),
       phoneNumber: yup
         .string()
-        .matches(/^\+\d{3}\d{9}$/, 'Invalid phone format'),
-      relationship: yup.string(),
+        .notRequired()
+        .test(
+          'phone-validation',
+          'Invalid phone format',
+          function validate(value) {
+            if (value && value.length > 4) {
+              return /^\+\d{3}\d{9}$/.test(value)
+            }
+            return true
+          }
+        ),
+      relationship: yup.string().notRequired(),
     }),
     caregiverContact: yup.object().shape({
-      name: yup.string(),
+      name: yup.string().notRequired(),
       phoneNumber: yup
         .string()
-        .matches(/^\+\d{3}\d{9}$/, 'Invalid phone format'),
+        .notRequired()
+        .test(
+          'phone-validation',
+          'Invalid phone format',
+          function validate(value) {
+            if (value && value.length > 4) {
+              return /^\+\d{3}\d{9}$/.test(value)
+            }
+            return true
+          }
+        ),
     }),
   })
 
