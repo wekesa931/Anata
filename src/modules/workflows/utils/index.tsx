@@ -6,6 +6,7 @@ import FORMS from 'src/modules/workflows/components/forms/form-inputs-definition
 import { User } from 'src/types/user'
 import { todayFormattedDate } from 'src/utils/date-time/helpers'
 import { v4 as uuidV4 } from 'uuid'
+import { logError } from 'src/utils/logging/logger'
 
 dayjs.locale('en')
 
@@ -198,7 +199,7 @@ export const generatePayload = (
   })
   if (erroredFields.length > 0) {
     const affectedFields = JSON.stringify(erroredFields)
-    throw new Error(
+    logError(
       `The following fields are missing on airtable and have not been saved ${affectedFields}`
     )
   }
