@@ -3,6 +3,7 @@ import airtableFetch from 'src/services/airtable/fetch'
 import logError from 'src/utils/logging/logger'
 import useAnalytics from 'src/hooks/analytics'
 import { useMember } from 'src/context/member'
+import filterFields from 'src/utils/airtable/field-utils'
 
 const useLogisticTasksEvents = () => {
   const { track } = useAnalytics('Logistic Tasks')
@@ -25,25 +26,51 @@ const useLogisticData = () => {
   }, [])
 
   useEffect(() => {
-    const getLogisticTasks = async (memberAntaraId: string) => {
+    const getLogisticTasks = (memberAntaraId: string) => {
       setLoading(true)
       try {
-        const logisticTask = await airtableFetch(
-          `logisticsTasks/list?&filterByFormula=FIND("${memberAntaraId}", {Antara ID (from Members)})`
-        )
-
-        const mappedResponses = Object.keys(logisticTask).map((key) => {
-          const parent = logisticTask[key]
-          Object.keys(parent).forEach((pointer) => {
-            if (
-              Object.prototype.toString.call(parent[pointer]) ===
-              '[object Array]'
-            )
-              parent[pointer] = parent[pointer].join(',')
+        const allowedFields = [
+          'Best location',
+          'Contact',
+          'Created',
+          'Data Source',
+          'Days between creation and due time',
+          'Due date',
+          'Full Address (from Members)',
+          'Geolocation (from Members)',
+          'Google map route',
+          'Last Modified',
+          'Last status modified',
+          'Missed',
+          'Missed by',
+          'Name (from Creator)',
+          'Notes',
+          'Priority',
+          'Status',
+          'Supervisor Map',
+          'Time',
+          'Type',
+          'updated_by',
+          'Field notes',
+        ]
+        airtableFetch(
+          `logisticsTasks/list?filterByFormula=FIND("${memberAntaraId}", {Antara ID (from Members)})&${filterFields(
+            allowedFields
+          )}`
+        ).then((response) => {
+          const mappedResponses = Object.keys(response).map((key) => {
+            const parent = response[key]
+            Object.keys(parent).forEach((pointer) => {
+              if (
+                Object.prototype.toString.call(parent[pointer]) ===
+                '[object Array]'
+              )
+                parent[pointer] = parent[pointer].join(',')
+            })
+            return parent
           })
-          return parent
+          setLogisticData(mappedResponses)
         })
-        setLogisticData(mappedResponses)
       } catch (e) {
         logError(e)
       } finally {

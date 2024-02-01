@@ -10,6 +10,7 @@ import { useMember } from 'src/context/member'
 import DataTable, { Column } from 'src/components/table/data-table'
 import dayjs from 'dayjs'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import filterFields from 'src/utils/airtable/field-utils'
 
 function PafuView({ data }: any) {
   const [showPafu, setShowPafu] = useState(false)
@@ -101,8 +102,8 @@ const COLUMNS: Column[] = [
     valueComponent: ({ value }: any) => <PafuView data={value} />,
     width: '10%',
   },
-  { id: 'Missed #', label: 'Missed', units: '#', width: '15%' },
-  { id: 'Rescheduled #', label: 'Rescheduled', units: '#', width: '15%' },
+  { id: 'Missed', label: 'Missed', units: '#', width: '15%' },
+  { id: 'Rescheduled', label: 'Rescheduled', units: '#', width: '15%' },
 ]
 
 function Appointments() {
@@ -119,9 +120,49 @@ function Appointments() {
 
   useEffect(() => {
     let isCancelled = false
+    const allowedFields = [
+      'App Sign-up (from Member)',
+      'Assignee Name',
+      'Calendly Cancellation URL',
+      'Calendly Reschedule URL',
+      'Calendly event ID',
+      'Clinical Consultation',
+      'Comments',
+      'Consultation Type (from Clinical Consultation)',
+      'Data Source',
+      'Days left before Appointment',
+      'DaysSinceLastStatusUpdate',
+      'Internal vs External',
+      'LastStatusUpdate',
+      'Minor Health Check (from Member)',
+      'Plan (from Clinical Consultations)',
+      'Primary Diagnosis (from Clinical Consultations)',
+      'Service',
+      'Baseline',
+      'Source',
+      'Start_date_time_month_of_the_year',
+      'State Machine ID',
+      'Status',
+      'Summary',
+      'Tags (from Member)',
+      'Tasks',
+      'created_by',
+      'created_at',
+      'end_date_time',
+      'last_modified_by_',
+      'start_date_time',
+      'start_day_of_week_int',
+      'start_time_hour_int',
+      'status_last_modified_at',
+      'updated_by',
+      'Rescheduled',
+      'Missed',
+    ]
     if (recId) {
       airtableFetch(
-        `appointments/list?filterByFormula=FIND("${recId}", {Member Record ID})`
+        `appointments/list?filterByFormula=FIND("${recId}", {Member Record ID})&${filterFields(
+          allowedFields
+        )}`
       ).then((response) => {
         if (!isCancelled) {
           const apps = Object.keys(response).map((key) => response[key])

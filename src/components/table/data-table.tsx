@@ -29,6 +29,11 @@ import {
   makeFilterDataByDate,
 } from 'src/context/date-range-filter'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import {
+  pascalToTitle,
+  isObject,
+  extractValueFromObject,
+} from 'src/utils/data-table-utils'
 import { ArrowDropDown, ArrowRight } from '@mui/icons-material'
 import { toTitleCase } from 'src/utils/text-utils'
 import Loading from 'src/components/loaders/centered'
@@ -137,20 +142,6 @@ function SortableTableHead(props: SortableTableHeadProps) {
 }
 
 function RowDetails({ data }: { data: any }) {
-  const pascalToTitle = (str: string) => {
-    return _.startCase(_.toLower(str))
-  }
-
-  const isObject = (value: any): value is Record<string, any> =>
-    typeof value === 'object' && value !== null
-
-  const extractValueFromObject = (obj: Record<string, any>): any => {
-    if ('value' in obj) {
-      return obj.value
-    }
-    return JSON.stringify(obj)
-  }
-
   const getValueFromKey = (key: string) => {
     const entry = data[key]
     let value = entry ?? '-'
@@ -197,6 +188,7 @@ type DetailedRowProps = {
   row: any
   tableName: string
   canExpandRow?: boolean
+  RenderDetails?: React.ComponentType<{ data: any }>
 }
 
 function DataTableDetailedRow({
@@ -204,6 +196,7 @@ function DataTableDetailedRow({
   row,
   tableName,
   canExpandRow = true,
+  RenderDetails,
 }: DetailedRowProps) {
   const getValueAndColor = (columnId: string) => {
     let value = row[columnId]?.value ?? row[columnId]
@@ -298,7 +291,11 @@ function DataTableDetailedRow({
         <TableRow>
           <TableCell colSpan={columns.length + 1} className="py-0 border-b-0">
             <Collapse in={open} timeout="auto" unmountOnExit>
-              <RowDetails data={row} />
+              {RenderDetails ? (
+                <RenderDetails data={row} />
+              ) : (
+                <RowDetails data={row} />
+              )}
             </Collapse>
           </TableCell>
         </TableRow>
@@ -438,6 +435,7 @@ type DataTableProps = {
   dataSortFunction?(data: any, comparator: (a: any, b: any) => number): any
   canExpandRow?: boolean
   analyticsSource?: 'home' | 'middle'
+  RenderRowDetails?: React.ComponentType<{ data: any }>
 }
 
 export function DataTable({
@@ -456,6 +454,7 @@ export function DataTable({
   dataSortFunction,
   canExpandRow = true,
   analyticsSource = 'middle',
+  RenderRowDetails,
 }: DataTableProps) {
   const [order, setOrder] = useState<Order>('desc')
   const [orderBy, setOrderBy] = useState<string>(defaultSortColumn || '')
@@ -762,6 +761,7 @@ export function DataTable({
                           row={row}
                           tableName={title}
                           canExpandRow={canExpandRow}
+                          RenderDetails={RenderRowDetails}
                         />
                       ))}
                     </>

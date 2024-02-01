@@ -19,14 +19,14 @@ const BODY_COMPOSITION_KEYS = [
   'mid_upper_arm_circumference',
   'muscle_mass_weight_ratio',
   'waisthip_ratio',
+  'bone_density',
+  'water_content',
 ]
 const OTHER_VITALS_KEYS = [
   'temperature',
   'respiratory_rate',
   'oxygen_saturation',
   'six_lead_ecg_findings',
-  'bone_density',
-  'water_content',
 ]
 
 export const useTablesData = () => {

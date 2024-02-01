@@ -27,7 +27,7 @@ const COLUMS: Column[] = [
     helperText: <StatusHelperText />,
   },
   { id: 'Field notes', label: 'Field notes' },
-  { id: 'Missed #', label: 'Missed #', sortable: true },
+  { id: 'Missed', label: 'Missed #', sortable: true },
   { id: 'Missed by', label: 'Missed by' },
 ]
 

@@ -6,6 +6,7 @@ import { useMember } from 'src/context/member'
 import logError from 'src/utils/logging/logger'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import DataTable, { Column } from 'src/components/table/data-table'
+import filterFields from 'src/utils/airtable/field-utils'
 
 const COLUMNS: Column[] = [
   { id: 'Date of appointment', label: 'Date', sortable: true, type: 'date' },
@@ -22,9 +23,41 @@ function Consultation() {
     analytics.track('Clinical Consultation Opened')
 
     const getConsultation = async () => {
+      const allowedFields = [
+        'Temperature (C)',
+        'Any Medication Allergies',
+        'Plan',
+        'Date of appointment',
+        'Please select the system(s) with a relevant finding',
+        'Chief Complaint',
+        'Assessment',
+        'Secondary Diagnosis',
+        'Interaction type',
+        'Next appointment',
+        'Were you able to conduct a Physical Examination?',
+        'Primary Diagnosis',
+        'Please write in any additional comments or observation you think are important',
+        'PE GASTROINTESTINAL findings',
+        'LMP',
+        'Consultation Type',
+        'Consultation type - billing',
+        'Sick days required',
+        'Appointments',
+        'Minor',
+        'Initial vs FU',
+        'Summary',
+        'Created',
+        'Record ID (from Appointments)',
+        'Status (from Appointments)',
+        "Doctor's Name",
+        'Kenya National ID Number (from Member)',
+        'created_by',
+      ]
       try {
         const memberConsultation = await airtableFetch(
-          `clinicalconsultation/list?&filterByFormula=FIND("${member?.antaraId}", {Antara ID (from Member)})`
+          `clinicalconsultation/list?&filterByFormula=FIND("${
+            member?.antaraId
+          }", {Antara ID (from Member)})&${filterFields(allowedFields)}`
         )
         const mappedResponses = Object.keys(memberConsultation).map((key) => {
           const parent = memberConsultation[key]
