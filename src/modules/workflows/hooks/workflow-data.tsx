@@ -287,9 +287,13 @@ export const useWorkflowData = () => {
     workflow?: TWorkflowModel
   ) => {
     setSubmittingForm(true)
-    return handleSubmitForm(form, formMeta, formData, workflow).finally(() => {
-      setSubmittingForm(false)
-    })
+    return handleSubmitForm(form, formMeta, formData, workflow)
+      .catch((err) => {
+        throw err
+      })
+      .finally(() => {
+        setSubmittingForm(false)
+      })
   }
 
   const handleCompleteWorkflow = async (workflow: TWorkflowModel) => {

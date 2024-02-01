@@ -2,16 +2,33 @@ import React from 'react'
 import { FieldProps } from 'formik'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import { Checkbox, Chip, FormHelperText, OutlinedInput } from '@mui/material'
+import {
+  Autocomplete,
+  Checkbox,
+  Chip,
+  FormHelperText,
+  IconButton,
+  OutlinedInput,
+  TextField,
+} from '@mui/material'
+import { SearchOutlined } from '@mui/icons-material'
 import OutlinedField, { OutlinedFieldProps } from './outlined-field'
 
-type SelectFieldProps = {
-  options: { label: string; value: string }[]
-  multiple?: boolean
-  onClick?: (e: any) => void
+export type Options = {
+  label: string
+  value: string
+  [key: string]: any
 }
 
-function ValueRenderer({ selected, props }: any) {
+export type SelectFieldProps = {
+  options: Options[]
+  multiple?: boolean
+  onClick?: (e: any) => void
+  loading?: boolean
+  bottomPadding?: boolean
+}
+
+export function ValueRenderer({ selected, props }: any) {
   if (!selected || selected?.length === 0) {
     return <span className="text-grey-main">{props.placeholder} </span>
   }
@@ -31,7 +48,10 @@ function ValueRenderer({ selected, props }: any) {
   return selectedOption?.label || selected
 }
 
-function SelectField(props: OutlinedFieldProps & SelectFieldProps) {
+function SelectField({
+  bottomPadding = true,
+  ...props
+}: OutlinedFieldProps & SelectFieldProps) {
   const handleValueChange = (e: any, fieldProps: FieldProps) => {
     fieldProps.form.handleChange(fieldProps.field.name)(e)
     if (props.handleChange) {
@@ -93,13 +113,91 @@ function SelectField(props: OutlinedFieldProps & SelectFieldProps) {
                 </MenuItem>
               ))}
             </Select>
-            {!!fieldProps.meta.error && (
+            {!!fieldProps.meta.error && bottomPadding && (
               <FormHelperText error={!!fieldProps.meta.error}>
                 {!!fieldProps.meta.error && !!fieldProps.meta.error
                   ? fieldProps.meta.error
                   : ' '}
               </FormHelperText>
             )}
+          </>
+        )
+      }}
+    </OutlinedField>
+  )
+}
+
+export function MultiselectField(props: SelectFieldProps & OutlinedFieldProps) {
+  const handleValueChange = (values: any, fieldProps: FieldProps) => {
+    fieldProps.form.setFieldValue(fieldProps.field.name, values)
+
+    if (props.saveInput) {
+      props.saveInput(fieldProps.field.name, values)
+    }
+  }
+
+  const handleBlur = (e: any, fieldProps: FieldProps) => {
+    fieldProps.form.handleBlur(fieldProps.field.name)(e)
+    if (props.handleBlur) {
+      props.handleBlur(e)
+    }
+  }
+
+  return (
+    <OutlinedField {...props}>
+      {(fieldProps: FieldProps) => {
+        return (
+          <>
+            <Autocomplete
+              multiple
+              options={props.options}
+              getOptionLabel={(option: any) => option.label}
+              freeSolo
+              onChange={(e, newValue) => {
+                handleValueChange(newValue, fieldProps)
+              }}
+              onBlur={(e: any) => {
+                handleBlur(e, fieldProps)
+              }}
+              renderTags={(value: readonly Options[], getTagProps) => {
+                return value.map((option: Options, index: number) => (
+                  <Chip
+                    variant="outlined"
+                    label={option.label}
+                    {...getTagProps({ index })}
+                  />
+                ))
+              }}
+              renderInput={(params) => {
+                return (
+                  <TextField
+                    {...params}
+                    {...fieldProps.field}
+                    ref={params.InputProps.ref}
+                    inputProps={params.inputProps}
+                    placeholder={props.placeholder || 'Search...'}
+                    // eslint-disable-next-line
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <>
+                          <IconButton size="small">
+                            <SearchOutlined />
+                          </IconButton>
+                          {params.InputProps.startAdornment}
+                        </>
+                      ),
+                    }}
+                    size="small"
+                  />
+                )
+              }}
+            />
+            <FormHelperText error={!!fieldProps.meta.error}>
+              {!!fieldProps.meta.error && !!fieldProps.meta.error
+                ? fieldProps.meta.error
+                : ' '}
+            </FormHelperText>
           </>
         )
       }}

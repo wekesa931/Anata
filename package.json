@@ -197,6 +197,7 @@
     "react-image-render": "^0.0.3",
     "react-pdf": "^5.7.2",
     "react-pro-sidebar": "^1.1.0-alpha.1",
+    "react-promise-tracker": "^2.1.1",
     "react-router-dom": "^6.4.2",
     "react-toast-notifications": "^2.5.1",
     "recharts": "^2.7.2",

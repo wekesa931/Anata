@@ -21,7 +21,7 @@ type Props = {
   id: string | undefined
   close: () => void
   folders: Folder[]
-  fileId: number
+  fileId: string
 }
 export function ShareFileView({
   open,

@@ -837,6 +837,10 @@ body,
   margin-top: 1.5rem !important;
 }
 
+.mt-8 {
+  margin-top: 2rem !important;
+}
+
 .mt-\[-2\.5rem\] {
   margin-top: -2.5rem !important;
 }
@@ -851,6 +855,10 @@ body,
 
 .mt-\[40px\] {
   margin-top: 40px !important;
+}
+
+.mt-2\.5 {
+  margin-top: 0.625rem !important;
 }
 
 .box-content {
@@ -1084,6 +1092,10 @@ body,
   width: 40px !important;
 }
 
+.w-\[50px\] {
+  width: 50px !important;
+}
+
 .w-\[60px\] {
   width: 60px !important;
 }
@@ -1106,6 +1118,14 @@ body,
 
 .w-full {
   width: 100% !important;
+}
+
+.w-xl {
+  width: 36rem !important;
+}
+
+.w-12 {
+  width: 3rem !important;
 }
 
 .min-w-1\/2 {
@@ -1334,6 +1354,10 @@ body,
   gap: 1.5rem !important;
 }
 
+.gap-8 {
+  gap: 2rem !important;
+}
+
 .self-end {
   align-self: flex-end !important;
 }
@@ -1364,6 +1388,12 @@ body,
 
 .overflow-y-scroll {
   overflow-y: scroll !important;
+}
+
+.truncate {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
 }
 
 .whitespace-nowrap {

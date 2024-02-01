@@ -19,9 +19,9 @@ export const useLabsData = () => {
       setLoading(true)
       const response = await getAllLabRequests(antaraId)
       setLabRequests(response?.map(transformRawLabRequest))
-    } catch (error: any) {
-      logError(error)
-      setError(error)
+    } catch (e: any) {
+      logError(e)
+      setError(e)
     } finally {
       setLoading(false)
     }
@@ -45,12 +45,25 @@ export const useLabsData = () => {
     return update(rawUpdate)
   }
 
+  const markLabRequestAsReceived = async (labs: LabRequest[]) => {
+    const Status = 'Results received by Antara'
+    const rawUpdates: UpdateLabRequest[] = labs.map((labRequest) => ({
+      id: labRequest.recordId,
+      fields: {
+        Status,
+      },
+    }))
+
+    return Promise.all(rawUpdates.map(updateLabRequest))
+  }
+
   return {
     labRequests,
     error,
     loading,
     refetch,
     updateLabRequest,
+    markLabRequestAsReceived,
     updating,
   }
 }

@@ -17,6 +17,8 @@ import OutlinedField, { OutlinedFieldProps } from './outlined-field'
 type SelectFieldProps = {
   options: { label: string; value: string }[]
   multiple?: boolean
+  placeholder?: string
+  group?: boolean
 }
 
 const StyledAutocompletePopper = styled('div')(({ theme }) => ({
@@ -76,6 +78,7 @@ const GroupHeader = styled('div')(({ theme }) => ({
     theme.palette.mode === 'light'
       ? lighten(theme.palette.primary.light, 0.85)
       : darken(theme.palette.primary.main, 0.8),
+  fontFamily: 'rubik',
 }))
 
 function GroupedSearchField(props: OutlinedFieldProps & SelectFieldProps) {
@@ -92,6 +95,13 @@ function GroupedSearchField(props: OutlinedFieldProps & SelectFieldProps) {
     }
   }
 
+  const handleClear = (fieldProps: FieldProps) => {
+    fieldProps.form.handleChange(fieldProps.field.name)('')
+    if (props.handleChange) {
+      props.handleChange('')
+    }
+  }
+
   const [open, setOpen] = React.useState(false)
 
   return (
@@ -103,27 +113,32 @@ function GroupedSearchField(props: OutlinedFieldProps & SelectFieldProps) {
               classes={{
                 noOptions: !open ? 'hidden' : '',
               }}
-              popupIcon={null}
-              onOpen={() => setOpen(true)}
+              onOpen={() => setOpen(false)}
               onClose={() => setOpen(false)}
               groupBy={(option) =>
-                option.value && option.value[0].toUpperCase()
+                option.value && option.value[0]?.toUpperCase()
               }
               renderGroup={(params) => (
                 <li key={params.key}>
-                  <GroupHeader>{params.group}</GroupHeader>
-                  <GroupItems>{params.children}</GroupItems>
+                  {props.group && <GroupHeader>{params.group}</GroupHeader>}
+                  <GroupItems className="font-rubik text-sm">
+                    {params.children}
+                  </GroupItems>
                 </li>
               )}
-              inputValue={fieldProps?.field?.value}
+              inputValue={props.multiple ? undefined : fieldProps?.field?.value}
               // eslint-disable-next-line
               onChange={(event, newValue) => {
-                handleValueChange(newValue, fieldProps)
+                if (newValue === null) {
+                  handleClear(fieldProps)
+                } else {
+                  handleValueChange(newValue, fieldProps)
+                }
               }}
               onInputChange={(event, newInputValue) => {
                 handleInputChange(newInputValue)
               }}
-              disableClearable
+              // disableClearable
               PopperComponent={PopperComponent}
               noOptionsText={open ? props.EmptyOptionBtn : null}
               options={props.options}
@@ -138,7 +153,7 @@ function GroupedSearchField(props: OutlinedFieldProps & SelectFieldProps) {
                     {...fieldProps.field}
                     ref={params.InputProps.ref}
                     inputProps={params.inputProps}
-                    placeholder="Search employer name"
+                    placeholder={props.placeholder || 'Search employer name'}
                     // eslint-disable-next-line
                     InputProps={{
                       ...params.InputProps,

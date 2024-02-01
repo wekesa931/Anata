@@ -18,6 +18,8 @@ import { useModuleAnalytics } from 'src/modules/analytics'
 import { logError } from 'src/utils/logging/logger'
 import mime from 'mime-types'
 
+export type UDMDataHook = ReturnType<typeof useUdmData>
+
 export const useUdmData = () => {
   const {
     getAllFiles,
@@ -151,7 +153,7 @@ export const useUdmData = () => {
         setUploadStatus(UploadStatus.SUCCESS)
         refetch({
           variables: {
-            antaraId: '69V-Z3Q5',
+            antaraId: member?.antaraId,
           },
         })
 
@@ -278,5 +280,6 @@ export const useUdmData = () => {
     setConfirmationDrawerHelper,
     networkError,
     setNetworkError,
+    uploadStatus,
   }
 }

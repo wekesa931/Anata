@@ -76,6 +76,14 @@ module.exports = {
     },
     width: {
       'fill-available': '-webkit-fill-available',
+      xs: '20rem',
+      sm: '24rem',
+      md: '28rem',
+      lg: '32rem',
+      xl: '36rem',
+      '2xl': '42rem',
+      '3xl': '48rem',
+      '4xl': '56rem',
     },
     height: {
       'dashboard-height': 'calc(100vh - 64px)',

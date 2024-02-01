@@ -1,3 +1,5 @@
+import type { LabRequest } from 'src/modules/labs/types'
+
 export type TFile = {
   addedBy?: string
   antaraId: string
@@ -38,6 +40,17 @@ export type UploadDocumentOptions = {
   fileSize: number
   shouldUploadByLink: boolean
   file: any
+}
+
+export type UploadDocumentFormValues = {
+  docType: string
+  title: string
+  folder?: string
+  shareDocument?: boolean
+  linkedLabRequest?: LabRequest[]
+  creator?: string
+  description?: string
+  createReviewTask?: boolean
 }
 
 export type FileFilters = {

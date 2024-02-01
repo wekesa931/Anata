@@ -71,3 +71,42 @@ export type TasksAndOverview = {
   tasks: UserTask[]
   overview: Overview
 }
+
+export type TaskDefinition = {
+  clinicalPrefferedName?: string
+  scribeTags: string
+  recordId: string
+  verb: string
+  subject: string
+  notes: string
+  defaultTeam: AssigneeTypes
+  defaultPriority: string
+  sources?: string[]
+  sourceDetails?: string
+  messageTemplateTitle?: string
+  dueDate?: string
+  defaultPeriod: string
+}
+
+export enum TaskDefinitionTypes {
+  LabManagement = 'Lab management',
+  NewDocument = 'New Document',
+}
+
+export enum AssigneeTypes {
+  ME = 'ME',
+  HN = 'HN',
+}
+
+type RecordId = [string] | []
+
+export type NewTask = {
+  Member: RecordId
+  'Task definition': RecordId
+  Type: string
+  'Due Date': string
+  'Task Priority': string
+  Assignee: RecordId
+  Status: string
+  'Task Notes': string
+}

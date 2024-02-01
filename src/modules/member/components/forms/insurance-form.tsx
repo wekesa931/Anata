@@ -349,6 +349,7 @@ export function InsuranceForm({
                   label="Employer"
                   name="employer.name"
                   placeholder="--Select--"
+                  group
                   options={sortAlphabetically(employers || [], 'label')}
                   handleChange={(v) => {
                     setBusinessLookups(v)
