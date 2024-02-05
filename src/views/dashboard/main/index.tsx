@@ -98,7 +98,6 @@ function MainDashboard() {
 
     return () => clearTimeout(timeout)
   }, [collapsed])
-
   const activeStyle = (active: boolean) => {
     const globalStyles = collapsed
       ? 'rounded-2xl w-[90%] ml-[6px]'

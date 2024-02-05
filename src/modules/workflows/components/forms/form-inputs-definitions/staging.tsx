@@ -13028,7 +13028,7 @@ export default [
       {
         id: 'fld0o5latdAhM6o68',
         name: 'Update lower back pain stage',
-        type: 'multiSelect',
+        type: 'select',
         format: '',
         isDateTime: false,
         options: [],

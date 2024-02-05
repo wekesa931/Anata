@@ -535,7 +535,6 @@ export function DataTable({
   const [groupByColumn, setGroupByColumn] = useState<string | undefined>(
     cachedGroupByColumn
   )
-
   const sortGroupedDataAlphabetically = (data: any) => {
     const sortedKeys = Object.keys(data).sort()
     return sortedKeys.reduce((acc: any, key) => {
@@ -570,7 +569,6 @@ export function DataTable({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupByColumn])
-
   const getGroupedData = () => {
     const groupedData = _.groupBy(data, groupByColumn)
     if (groupByColumn) {

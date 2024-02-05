@@ -10,6 +10,7 @@ export const useLabManagementAPI = () => {
 
     return response
   }
+
   const [updating, setUpdating] = useState(false)
 
   const update = async (rawUpdate: UpdateLabRequest) => {
