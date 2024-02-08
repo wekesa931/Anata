@@ -504,6 +504,8 @@ export const interactionlogform = {
           { name: 'Nutrition follow up' },
           { name: 'Chief complaint review' },
           { name: 'HMP check-in call' },
+          { name: 'Lab result review' },
+          { name: 'Lab and vitals review' },
         ],
       },
     },
