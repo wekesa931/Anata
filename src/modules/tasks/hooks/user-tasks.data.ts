@@ -7,19 +7,10 @@ import { getCompleteTasksCount, getHighPriorityTasks } from '../utils'
 
 export const useUserTasksData = (user: User) => {
   const {
-    getUserOverdueTasks,
     getTasksBefore,
-    getUserDueTasks,
     getUserDueAndOverdueTasks,
   } = useUserTasksAPI()
 
-  const getOverdueTasks = async () => {
-    if (user?.userAirtableId) {
-      const tasks = await getUserOverdueTasks(user.userAirtableId)
-      return transformRawTasksToUserTasks(tasks)
-    }
-    return []
-  }
 
   const getTasksAndStats = async (rawTasks: any[]) => {
     const tasks = transformRawTasksToUserTasks(rawTasks)
@@ -78,8 +69,7 @@ export const useUserTasksData = (user: User) => {
           return getTasksAndStats(tasks)
         }
         default: {
-          const tasks = await getUserDueTasks(user.userAirtableId)
-          return getTasksAndStats(tasks)
+          return getAllTasks() // return all tasks
         }
       }
     } else {
@@ -89,7 +79,6 @@ export const useUserTasksData = (user: User) => {
 
   return {
     filterTasks,
-    getOverdueTasks,
     getAllTasks,
   }
 }
