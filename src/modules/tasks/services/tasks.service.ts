@@ -16,11 +16,9 @@ export const useTasksAPI = () => {
     'Default priority settings',
     'Default period for completion',
     'Due date calculation for automation',
-    'Subject (for who)',
     'Sources',
     'Sources details',
     'Notes',
-    'Verb (do something)',
     'Default team assigned',
   ]
   const getTaskDefinitionTemplates = async () => {

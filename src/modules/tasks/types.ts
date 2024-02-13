@@ -76,8 +76,6 @@ export type TaskDefinition = {
   clinicalPrefferedName?: string
   scribeTags: string
   recordId: string
-  verb: string
-  subject: string
   notes: string
   defaultTeam: AssigneeTypes
   defaultPriority: string

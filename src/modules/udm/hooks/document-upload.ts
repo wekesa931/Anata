@@ -186,11 +186,22 @@ export const useDocumentUpload = ({
   }, [submittingDocument])
 
   const mapLabRequestsToOptions = (labs: LabRequest[]) => {
-    return labs.map((labRequest) => ({
-      label: labRequest.summary,
-      value: labRequest.recordId,
-      ...labRequest,
-    }))
+    const LabsFilterStatuses = [
+      'Needed',
+      'Scheduled',
+      'Results received by Member',
+      'Schedule needed',
+      'Checkin Confirmed',
+    ]
+    return labs
+      .filter(
+        (labRequest) => LabsFilterStatuses.indexOf(labRequest.status) > -1
+      )
+      .map((labRequest) => ({
+        label: labRequest.summary,
+        value: labRequest.recordId,
+        ...labRequest,
+      }))
   }
 
   const retryCurrentProcess = () => {

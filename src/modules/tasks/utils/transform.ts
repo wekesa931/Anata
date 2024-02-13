@@ -55,11 +55,9 @@ export const mapRawTaskDefinitionToTaskDefinition = (
     defaultPriority: rawTaskDefinition['Default priority settings'],
     defaultPeriod: rawTaskDefinition['Default period for completion'],
     dueDate: rawTaskDefinition['Due date calculation for automation'],
-    subject: rawTaskDefinition['Subject (for who)'],
     sources: rawTaskDefinition.Sources,
     sourceDetails: rawTaskDefinition['Sources details'],
     notes: rawTaskDefinition.Notes,
-    verb: rawTaskDefinition['Verb (do something)'],
     defaultTeam: getAssignedTeam(rawTaskDefinition['Default team assigned']),
   }
 }
