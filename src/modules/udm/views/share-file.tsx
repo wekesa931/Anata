@@ -13,7 +13,7 @@ import ToastNotification, {
 import { useModuleAnalytics } from 'src/modules/analytics'
 import styles from 'src/modules/udm/files.module.css'
 import { Folder } from 'src/modules/udm/types'
-import { useUdmData } from 'src/modules/udm/hooks/udm.data'
+import { UDMDataHook } from 'src/modules/udm/hooks/udm.data'
 
 type Props = {
   open: boolean
@@ -22,6 +22,7 @@ type Props = {
   close: () => void
   folders: Folder[]
   fileId: string
+  udmDataHook: UDMDataHook
 }
 export function ShareFileView({
   open,
@@ -30,12 +31,13 @@ export function ShareFileView({
   close,
   folders,
   fileId,
+  udmDataHook,
 }: Props) {
   const [folder, setFolder] = useState<string>('')
   const [toastMessage, setToastMessage] =
     useState<ToastMessage>(defaultToastMessage)
   const { trackDocumentShared } = useModuleAnalytics()
-  const { handleShareFile, sharingFile: sharing } = useUdmData()
+  const { handleShareFile, sharingFile: sharing } = udmDataHook
 
   const shareFile = () => {
     handleShareFile(fileId, folder)

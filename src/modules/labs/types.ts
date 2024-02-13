@@ -21,6 +21,9 @@ export interface LabRequest {
   lastModifiedAt: string
   recordId: string
   notes: string
+  resultDate: string
+  imagingType: string
+  reason: string
 }
 
 export type RawLabRequest = {
@@ -46,6 +49,9 @@ export type RawLabRequest = {
   'Tags (from Members)': string[]
   tableName: string
   Notes: string
+  'Result Date': string
+  'Imaging Type': string
+  Reason: string
 }
 
 export type UpdateLabRequest = {

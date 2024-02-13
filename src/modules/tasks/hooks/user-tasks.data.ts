@@ -6,11 +6,7 @@ import dayjs from 'dayjs'
 import { getCompleteTasksCount, getHighPriorityTasks } from '../utils'
 
 export const useUserTasksData = (user: User) => {
-  const {
-    getTasksBefore,
-    getUserDueAndOverdueTasks,
-  } = useUserTasksAPI()
-
+  const { getTasksBefore, getUserDueAndOverdueTasks } = useUserTasksAPI()
 
   const getTasksAndStats = async (rawTasks: any[]) => {
     const tasks = transformRawTasksToUserTasks(rawTasks)

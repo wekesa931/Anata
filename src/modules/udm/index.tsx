@@ -84,6 +84,7 @@ function Files() {
     confirmationDrawerHelper,
     setConfirmationDrawerHelper,
     uploadStatus,
+    shouldRefetch,
   } = udmDataHook
 
   const uploadDocument = async (docMeta: DocMeta) => {
@@ -110,9 +111,9 @@ function Files() {
   const { notify } = useNotifications()
 
   useEffect(() => {
-    // load and reload files when upload happens
+    // load and reload files when upload happens / file is shared
     if (antaraId) {
-      getFiles()
+      getFiles() // 21334
         .then((files) => {
           setFilteredFiles(files)
         })
@@ -123,7 +124,7 @@ function Files() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [uploadStatus, antaraId])
+  }, [uploadStatus, antaraId, shouldRefetch])
 
   useEffect(() => {
     getFolders()
@@ -303,6 +304,7 @@ function Files() {
           close={closeFileSharing}
           folders={folders}
           fileId={fileIdToShare}
+          udmDataHook={udmDataHook}
         />
       )}
 

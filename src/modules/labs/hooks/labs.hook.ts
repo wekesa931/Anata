@@ -4,14 +4,18 @@ import { useLabManagementAPI } from 'src/modules/labs/services'
 import { logError } from 'src/utils/logging/logger'
 import { transformRawLabRequest } from 'src/modules/labs/utils'
 import { LabRequest, UpdateLabRequest } from 'src/modules/labs/types'
+import { trackPromise, usePromiseTracker } from 'react-promise-tracker'
+
+export type LabRequestHook = ReturnType<typeof useLabsData>
 
 export const useLabsData = () => {
-  const { getAllLabRequests, update, updating } = useLabManagementAPI()
+  const { getAllLabRequests, update } = useLabManagementAPI()
   const { member } = useMember()
 
   const [labRequests, setLabRequests] = useState<LabRequest[]>([])
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+  const { promiseInProgress: updating } = usePromiseTracker({ area: 'update' })
 
   const getLabRequests = async (antaraId: string) => {
     try {
@@ -42,7 +46,7 @@ export const useLabsData = () => {
   }
 
   const updateLabRequest = async (rawUpdate: UpdateLabRequest) => {
-    return update(rawUpdate)
+    return trackPromise(update(rawUpdate), 'update')
   }
 
   const markLabRequestAsReceived = async (labs: LabRequest[]) => {

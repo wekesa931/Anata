@@ -113,7 +113,7 @@ function SelectField({
                 </MenuItem>
               ))}
             </Select>
-            {!!fieldProps.meta.error && bottomPadding && (
+            {bottomPadding && (
               <FormHelperText error={!!fieldProps.meta.error}>
                 {!!fieldProps.meta.error && !!fieldProps.meta.error
                   ? fieldProps.meta.error

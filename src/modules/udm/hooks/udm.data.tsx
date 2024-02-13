@@ -51,6 +51,7 @@ export const useUdmData = () => {
   const [confirmationDrawerHelper, setConfirmationDrawerHelper] =
     useState(false)
   const [networkError, setNetworkError] = useState(false)
+  const [shouldRefetch, setShouldRefetch] = useState(false)
 
   const getFiles = async (filters: FileFilters = {}) => {
     if (member) {
@@ -77,11 +78,14 @@ export const useUdmData = () => {
 
   const handleShareFile = async (fileId: string, folderId: string) => {
     if (member) {
-      return shareFile({
+      const sharedFiled = shareFile({
         fileId,
         folderId,
         antaraId: member.antaraId,
       })
+
+      setShouldRefetch((prev) => !prev)
+      return sharedFiled
     }
     throw new Error('Member not found')
   }
@@ -252,6 +256,7 @@ export const useUdmData = () => {
   return {
     getFiles,
     refetch,
+    shouldRefetch,
     loading,
     getFolders,
     getCategories,

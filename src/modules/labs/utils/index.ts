@@ -20,6 +20,9 @@ export const transformRawLabRequest = (
     'Last Modified By': lastModifiedBy,
     'Last Modified': lastModifiedAt,
     'Date of request (created at)': dateOfRequest,
+    'Imaging Type': imagingType,
+    'Result Date': resultDate,
+    Reason: reason,
   } = rawLabRequest
 
   return {
@@ -39,6 +42,9 @@ export const transformRawLabRequest = (
     lastModifiedAt,
     lastModifiedBy,
     dateOfRequest,
+    resultDate,
+    imagingType,
+    reason,
   }
 }
 

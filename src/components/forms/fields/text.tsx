@@ -5,9 +5,11 @@ import OutlinedField, { OutlinedFieldProps } from './outlined-field'
 
 type TextFieldProps = {
   textarea?: boolean
+  rows?: number
+  bottomPadding?: boolean
 } & OutlinedFieldProps
 
-function TextField(props: TextFieldProps) {
+function TextField({ bottomPadding = true, ...props }: TextFieldProps) {
   const handleValueBlur = (e: any, fieldProps: FieldProps) => {
     fieldProps.form.handleBlur(fieldProps.field.name)(e)
     if (props.handleBlur) {
@@ -37,7 +39,7 @@ function TextField(props: TextFieldProps) {
             error={!!fieldProps.meta.error && !!fieldProps.meta.touched}
             type={props.type || 'text'}
             multiline={props.textarea}
-            rows={props.textarea ? 4 : undefined}
+            rows={props.textarea ? props.rows || 4 : undefined}
             onBlur={(e: any) => {
               handleValueBlur(e, fieldProps)
             }}
@@ -46,11 +48,11 @@ function TextField(props: TextFieldProps) {
             }}
             disabled={props.disabled}
           />
-          <FormHelperText error={!!fieldProps.meta.error}>
-            {!!fieldProps.meta.error && !!fieldProps.meta.error
-              ? fieldProps.meta.error
-              : ' '}
-          </FormHelperText>
+          {bottomPadding && (
+            <FormHelperText error={!!fieldProps.meta.error}>
+              {fieldProps?.meta?.error}
+            </FormHelperText>
+          )}
         </>
       )}
     </OutlinedField>

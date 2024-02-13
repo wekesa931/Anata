@@ -25,7 +25,6 @@ export const useUserTasksAPI = () => {
     )
   }
 
-
   const getTasksBefore = async (userId: string, end: string) => {
     const filterArg = `filterByFormula=AND(FIND("${userId}", {Assignee Record ID}), ${statusFilter} IS_BEFORE({Due Date}, "${end}"))`
     return filterTasks(filterArg)
