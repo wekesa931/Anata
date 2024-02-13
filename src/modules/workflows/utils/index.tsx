@@ -81,6 +81,7 @@ export const ActiveForm = (activeForm: string) => {
     isBp: activeForm === 'BP Mon',
     isChl: activeForm === 'CHL Mon',
     isDm: activeForm === 'DM Mon',
+    isLabs: activeForm === 'Lab/imaging management',
   }
 }
 
@@ -398,6 +399,7 @@ export const duplicates = [
   'Minor Health Check (6 to 17)',
   'Minor Health Check (0 to 5)',
   'Healthy triage form',
+  'Lab/imaging management',
 ]
 
 export const formNames: Record<string, string> = {
@@ -430,6 +432,7 @@ export const formNames: Record<string, string> = {
   'Minor Health Check (0 to 5)': 'Minor Health Check (0 to 5)',
   'Minor Health Check (6 to 17)': 'Minor Health Check (6 to 17)',
   'Healthy triage form': 'Healthy triage form',
+  'Lab/imaging management': 'Lab/imaging management',
 }
 
 export const interactionlogform = {

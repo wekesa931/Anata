@@ -47,6 +47,7 @@ const TABLE_ROUTES: Record<string, string> = {
   'Minor Health Check (6 to 17)': 'minorHealthCheckSixToSeventeen',
   'Minor Health Check (0 to 5)': 'minorHealthCheckZeroToFive',
   'Healthy triage form': 'healthTriageForm',
+  'Lab/imaging management': 'labs',
 }
 
 export default TABLE_ROUTES

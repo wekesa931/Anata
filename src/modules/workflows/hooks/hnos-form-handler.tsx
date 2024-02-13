@@ -34,7 +34,11 @@ export const useHNOSFormHandler = () => {
         payload = renameField(payload, 'Member', 'member')
       }
 
-      if (activeForm.isLogisticsTasks || activeForm.isIncidentReports) {
+      if (
+        activeForm.isLogisticsTasks ||
+        activeForm.isIncidentReports ||
+        activeForm.isLabs
+      ) {
         payload = renameField(payload, 'Member', 'Members')
       }
 

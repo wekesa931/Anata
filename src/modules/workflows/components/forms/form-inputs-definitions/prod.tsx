@@ -24018,4 +24018,259 @@ export default [
       },
     ],
   },
+  {
+    name: 'Lab/imaging management',
+    id: 'tblYOGN4iEGRc3Mjm',
+    fields: [
+      {
+        id: 'fld6bbxFuHmUvS0dX',
+        name: 'Members',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld3GL6Nfl7NcffTx',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblidCJtioaFSYwvk',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldWQy5aMn2Ktt7dh',
+        name: 'Type',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld9VL6rLwQmy4okQ',
+        name: 'Routine lab (from Lab synced view)',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldHRmEmdxwBgDzMT',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblV0rNDZCPe3ZalK',
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Type',
+        parentValues: ['Lab'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Type)) {
+            return ['Lab'].some((r) => values.Type.includes(r))
+          }
+          return ['Lab'].includes(values.Type)
+        },
+      },
+      {
+        id: 'fldl5LFULpE3ff64k',
+        name: 'Imaging type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Type',
+        parentValues: ['Imaging'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Type)) {
+            return ['Imaging'].some((r) => values.Type.includes(r))
+          }
+          return ['Imaging'].includes(values.Type)
+        },
+      },
+      {
+        id: 'fldIWQMKsV3bcY9AE',
+        name: 'Reason',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the reason why we are requesting this lab',
+      },
+      {
+        id: 'fldOdL1I33KJI9jEE',
+        name: 'Status',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          '[Needed] -> we want this service to happen but we have no logistic task planned or no appointment with provider scheduled\n[Scheduled] -> we have a logistic task planned or a provider appointment scheduled\n[Checkin Confirmed] -> if the request is about lab/imaging, this means the member went to facility or the sample was delivered to facility\n[Results received by Member] (only for lab and imaging)\n[Results received by Antara] (only for lab and imaging)\n[Results reviewed by HN] -> HN has identified from the result if Doctor needs to take over for review with member (only for lab and imaging)\n[Completed] -> results were reviewed with member for lab and imaging or PAFU is done for referral. Nothing else to do for this service request\n[Canceled]',
+      },
+      {
+        id: 'fld4ozFXDprQvKat7',
+        name: 'Sample Collection Date',
+        type: 'date',
+        format: '',
+        isDateTime: true,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'That is when we collected the sample if we did it at Antara or the date and time the member went to the laboratory',
+        conditionType: '',
+        parentKey: 'Status',
+        parentValues: [
+          'Scheduled',
+          'Checkin Confirmed',
+          'Results received by Member',
+          'Results received by Antara',
+          'Results reviewed by HN',
+          'Completed',
+        ],
+        condition: (values: any) => {
+          if (Array.isArray(values.Status)) {
+            return [
+              'Scheduled',
+              'Checkin Confirmed',
+              'Results received by Member',
+              'Results received by Antara',
+              'Results reviewed by HN',
+              'Completed',
+            ].some((r) => values.Status.includes(r))
+          }
+          return [
+            'Scheduled',
+            'Checkin Confirmed',
+            'Results received by Member',
+            'Results received by Antara',
+            'Results reviewed by HN',
+            'Completed',
+          ].includes(values.Status)
+        },
+      },
+      {
+        id: 'fldUWW0w1CY9BqM4j',
+        name: 'Sample Drop Off Date',
+        type: 'date',
+        format: '',
+        isDateTime: true,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'That is when we dropped the sample to that laboratory (only applicable if we managed the sample collection at Antara',
+        conditionType: '',
+        parentKey: 'Status',
+        parentValues: [
+          'Scheduled',
+          'Checkin Confirmed',
+          'Results received by Member',
+          'Results received by Antara',
+          'Results reviewed by HN',
+          'Completed',
+        ],
+        condition: (values: any) => {
+          if (Array.isArray(values.Status)) {
+            return [
+              'Scheduled',
+              'Checkin Confirmed',
+              'Results received by Member',
+              'Results received by Antara',
+              'Results reviewed by HN',
+              'Completed',
+            ].some((r) => values.Status.includes(r))
+          }
+          return [
+            'Scheduled',
+            'Checkin Confirmed',
+            'Results received by Member',
+            'Results received by Antara',
+            'Results reviewed by HN',
+            'Completed',
+          ].includes(values.Status)
+        },
+      },
+      {
+        id: 'fld0Q1Ej07GxPwkfk',
+        name: 'Result Date',
+        type: 'date',
+        format: '',
+        isDateTime: true,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'That is when the results were provided to us, whether it was from facility directly or from member',
+        conditionType: '',
+        parentKey: 'Status',
+        parentValues: [
+          'Checkin Confirmed',
+          'Results received by Member',
+          'Results received by Antara',
+          'Results reviewed by HN',
+          'Completed',
+        ],
+        condition: (values: any) => {
+          if (Array.isArray(values.Status)) {
+            return [
+              'Checkin Confirmed',
+              'Results received by Member',
+              'Results received by Antara',
+              'Results reviewed by HN',
+              'Completed',
+            ].some((r) => values.Status.includes(r))
+          }
+          return [
+            'Checkin Confirmed',
+            'Results received by Member',
+            'Results received by Antara',
+            'Results reviewed by HN',
+            'Completed',
+          ].includes(values.Status)
+        },
+      },
+      {
+        id: 'fldTNYT7DrNKKo286',
+        name: 'Notes',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+    ],
+  },
 ]

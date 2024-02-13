@@ -154,6 +154,10 @@ function FilledForms() {
               name: 'Healthy triage form',
               data: response[forms.indexOf('healthTriageForm')],
             },
+            {
+              name: 'Lab/imaging management',
+              data: response[forms.indexOf('labs')],
+            },
           ]
           setFilledForms(formResponses)
         }
