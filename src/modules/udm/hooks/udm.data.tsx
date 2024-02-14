@@ -115,6 +115,7 @@ export const useUdmData = () => {
     setProgress(0)
     setUploadStatus(UploadStatus.FAILED)
     logError(response.message)
+    throw new Error(response.message)
   }
 
   const handlePersistFile = async ({
@@ -249,7 +250,10 @@ export const useUdmData = () => {
             handleUploadError(err)
           }
         })
-        .catch(logError)
+        .catch((err) => {
+          logError(err)
+          throw err
+        })
     }
   }
 
