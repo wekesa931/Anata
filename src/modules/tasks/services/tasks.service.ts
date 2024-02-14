@@ -1,10 +1,14 @@
 import airtableFetch from 'src/services/airtable/fetch'
-import { TaskDefinitionTypes, NewTask } from 'src/modules/tasks/types'
+import { NewTask } from 'src/modules/tasks/types'
 import { filterFields } from 'src/utils/airtable/field-utils'
 import { useHNOSData } from 'src/modules/workflows/services/workflows.api'
 import TABLE_ROUTES from 'src/config/airtable-tables'
 
 const TasksTable = TABLE_ROUTES['HN Tasks']
+const LabManagementRecordId =
+  process.env.PROD === 'true' ? 'recR0Rni1WNDiQpj3' : 'rec5i6q30NJAcXOsA'
+const NewDocumentRecordId =
+  process.env.PROD === 'true' ? 'rec0bpNSpRx6huygq' : 'recbDbP099lD9mKw7'
 
 export const useTasksAPI = () => {
   const { createTableEntry } = useHNOSData()
@@ -21,8 +25,9 @@ export const useTasksAPI = () => {
     'Notes',
     'Default team assigned',
   ]
+
   const getTaskDefinitionTemplates = async () => {
-    const filterArgs = `filterByFormula=OR(FIND("${TaskDefinitionTypes.LabManagement}",{Scribe-tags}),FIND("${TaskDefinitionTypes.NewDocument}",{Scribe-tags}))`
+    const filterArgs = `filterByFormula=OR(FIND("${LabManagementRecordId}",{Record ID}),FIND("${NewDocumentRecordId}",{Record ID}))`
 
     return airtableFetch(
       `tasksDefinition/list?${filterArgs}&${filterFields(templateFields)}`

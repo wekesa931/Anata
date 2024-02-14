@@ -105,7 +105,7 @@ export function EditLab({ value, labsApi }: Props) {
         Edit
       </PrimaryButton>
       <PrimaryModal open={showEditModal} onClose={setVisibility(false)}>
-        <div className="flex flex-col gap-6 items-start justify-normal w-full">
+        <div className="flex flex-col gap-2 items-start justify-normal w-full">
           <h1 className="text-black text-xl font-medium">Edit Lab Request</h1>
           <div className="flex flex-col gap-2 text-base">
             <p className=" text-grey-main font-medium">Date of request</p>
@@ -119,7 +119,7 @@ export function EditLab({ value, labsApi }: Props) {
             className="w-full pb-0"
           >
             {() => (
-              <Form className="flex flex-col gap-4">
+              <Form className="flex flex-col gap-2">
                 <SelectField
                   name="status"
                   label="Status"
@@ -130,7 +130,7 @@ export function EditLab({ value, labsApi }: Props) {
                   handleChange={(v: any) => {
                     setLabStatus(v)
                   }}
-                  bottomPadding
+                  bottomPadding={false}
                 />
                 <DateTimeField
                   name="resultDate"

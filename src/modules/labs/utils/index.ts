@@ -35,14 +35,14 @@ export const transformRawLabRequest = (
     'Result Date': resultDate,
     Reason: reason,
     Type: type,
-    'Routine lab name': routineLabName,
+    'Lab type': labType,
   } = rawLabRequest
 
   return {
     status,
     notes,
     tags,
-    labType: parseLabType(routineLabName),
+    labType: parseLabType(labType),
     payorName: extractFromArray(payorName),
     memberName: extractFromArray(memberName),
     memberAddress: extractFromArray(memberAddress),

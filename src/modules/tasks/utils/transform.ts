@@ -107,5 +107,7 @@ export const mapTaskDefinitionToNewask = (
     'Task Priority': taskDefinition.defaultPriority,
     Status: 'Not Started',
     'Task Notes': taskDefinition.notes,
+    Source: 'UDM',
+    'Data Source': 'UDM',
   }
 }

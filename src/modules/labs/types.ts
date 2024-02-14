@@ -41,7 +41,6 @@ export type RawLabRequest = {
   'Employer (from Members)': string[]
   'Antara ID (from Members)': string[]
   'Full Name (from Members)': string[]
-  'Lab type': string
   'Date of request (created at)': string
   'Full Address (from Members)': string[]
   'Assigned HN (from Members)': string[]
@@ -53,7 +52,7 @@ export type RawLabRequest = {
   'Result Date': string
   'Imaging type': string
   Reason: string
-  'Routine lab name': string | string[]
+  'Lab type': string | string[]
 }
 
 export type UpdateLabRequest = {
