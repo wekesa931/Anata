@@ -24,13 +24,14 @@ export interface LabRequest {
   resultDate: string
   imagingType: string
   reason: string
+  type: string
 }
 
 export type RawLabRequest = {
   Summary: string
   Status: string
   Type: string
-  'Created By': Creator
+  createdBy: Creator
   'Last Modified By': Creator
   Created: string
   'Last Modified': string
@@ -50,8 +51,9 @@ export type RawLabRequest = {
   tableName: string
   Notes: string
   'Result Date': string
-  'Imaging Type': string
+  'Imaging type': string
   Reason: string
+  'Routine lab name': string | string[]
 }
 
 export type UpdateLabRequest = {

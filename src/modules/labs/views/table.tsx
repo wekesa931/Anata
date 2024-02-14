@@ -16,13 +16,18 @@ function LabRequestTable() {
       type: 'date',
       sortable: true,
       format: (value: string) => dayjs(value).format('DD MMM YYYY'),
-      width: '25%',
+      width: '20%',
     },
     {
       id: 'status',
       label: 'Status',
       valueComponent: Status,
       width: '20%',
+    },
+    {
+      id: 'type',
+      label: 'Type',
+      width: '10%',
     },
     {
       id: 'labType',
@@ -32,7 +37,7 @@ function LabRequestTable() {
     {
       id: 'notes',
       label: 'Notes',
-      width: '30%',
+      width: '20%',
     },
     {
       id: 'action',

@@ -3,33 +3,46 @@ import { LabRequest, RawLabRequest } from 'src/modules/labs/types'
 export const transformRawLabRequest = (
   rawLabRequest: RawLabRequest
 ): LabRequest => {
+  const parseArrayOrString = (arrayOrString: any) => {
+    if (Array.isArray(arrayOrString)) {
+      return arrayOrString.join(', ')
+    }
+
+    return arrayOrString
+  }
+
+  const parseImagingType = (imagingType: any) => parseArrayOrString(imagingType)
+
+  const parseLabType = (labType: any) => parseArrayOrString(labType)
+
   const {
     Status: status,
     Notes: notes,
     'Tags (from Members)': tags,
-    'Lab type': labType,
     'Payor name (from Payors) (from Members)': payorName,
     'Full Name (from Members)': memberName,
     'Full Address (from Members)': memberAddress,
     Source: source,
     'Record ID': recordId,
     Summary: summary,
-    'Created By': createdBy,
+    createdBy,
     'Antara ID (from Members)': antaraId,
     Created: createdAt,
     'Last Modified By': lastModifiedBy,
     'Last Modified': lastModifiedAt,
     'Date of request (created at)': dateOfRequest,
-    'Imaging Type': imagingType,
+    'Imaging type': imagingType,
     'Result Date': resultDate,
     Reason: reason,
+    Type: type,
+    'Routine lab name': routineLabName,
   } = rawLabRequest
 
   return {
     status,
     notes,
     tags,
-    labType,
+    labType: parseLabType(routineLabName),
     payorName: extractFromArray(payorName),
     memberName: extractFromArray(memberName),
     memberAddress: extractFromArray(memberAddress),
@@ -43,8 +56,9 @@ export const transformRawLabRequest = (
     lastModifiedBy,
     dateOfRequest,
     resultDate,
-    imagingType,
+    imagingType: parseImagingType(imagingType),
     reason,
+    type,
   }
 }
 
