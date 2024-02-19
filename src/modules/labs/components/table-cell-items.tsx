@@ -11,6 +11,13 @@ import { LabRequestHook } from 'src/modules/labs/hooks/labs.hook'
 import { useNotifications } from 'src/context/notifications'
 import TextField from 'src/components/forms/fields/text'
 import { DateTimeField } from 'src/components/forms/fields/date-field'
+import * as yup from 'yup'
+
+const validationSchema = yup.object().shape({
+  status: yup.string().required('Status is required'),
+  resultDate: yup.string().notRequired(),
+  reason: yup.string().notRequired(),
+})
 
 type Props = {
   value: LabRequest
@@ -117,6 +124,7 @@ export function EditLab({ value, labsApi }: Props) {
             initialValues={initialFormValues}
             handleSubmit={handleSubmit}
             className="w-full pb-0"
+            validationSchema={validationSchema}
           >
             {() => (
               <Form className="flex flex-col gap-2">
@@ -140,6 +148,7 @@ export function EditLab({ value, labsApi }: Props) {
                   handleChange={(v: any) => {
                     setResultDate(v)
                   }}
+                  required={false}
                 />
                 <TextField
                   name="reason"
@@ -150,6 +159,7 @@ export function EditLab({ value, labsApi }: Props) {
                   handleChange={(e: any) => {
                     setReason(e.target.value)
                   }}
+                  required={false}
                 />
               </Form>
             )}
