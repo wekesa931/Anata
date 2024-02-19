@@ -9,7 +9,7 @@ import DataTable, { Column } from 'src/components/table/data-table'
 import filterFields from 'src/utils/airtable/field-utils'
 
 const COLUMNS: Column[] = [
-  { id: 'Date of appointment', label: 'Date', sortable: true, type: 'date' },
+  { id: 'Date of Consultation', label: 'Date', sortable: true, type: 'date' },
   { id: 'Primary Diagnosis', label: 'Primary Diagnosis' },
   { id: 'Plan', label: 'Plan' },
 ]
@@ -90,11 +90,11 @@ function Consultation() {
         <DataTable
           columns={COLUMNS}
           data={consultationData}
-          defaultSortColumn="Date of appointment"
+          defaultSortColumn="Date of Consultation"
           title="Consultation Details"
           filterByDate
-          dateColumnKey="Date of appointment"
-          defaultFilterColumn="Date of appointment"
+          dateColumnKey="Date of Consultation"
+          defaultFilterColumn="Date of Consultation"
         />
       )}
 
