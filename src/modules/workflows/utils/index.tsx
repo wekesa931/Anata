@@ -279,7 +279,7 @@ export const initialFormValues = (
       Minor: member?.isMinor ? 'yes' : 'no',
       'Interaction type': isOnsite ? 'In-person' : null,
       'Initial vs FU': isOnsite ? 'Initial consultation' : null,
-      'Date of appointment': dayjs().format('YYYY-MM-DD'),
+      'Date of Consultation': dayjs().format('YYYY-MM-DD'),
     },
     'Interaction log': {
       'Encounter Date': new Date(),

@@ -10665,7 +10665,7 @@ export default [
       },
       {
         id: 'fld7papvjJHJd4IIH',
-        name: 'Date of appointment',
+        name: 'Date of Consultation',
         type: 'date',
         format: '',
         isDateTime: false,
