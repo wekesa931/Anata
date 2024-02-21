@@ -27,7 +27,7 @@ function Consultation() {
         'Temperature (C)',
         'Any Medication Allergies',
         'Plan',
-        'Date of appointment',
+        'Date of Consultation',
         'Please select the system(s) with a relevant finding',
         'Chief Complaint',
         'Assessment',
