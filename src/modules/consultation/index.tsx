@@ -52,6 +52,7 @@ function Consultation() {
         "Doctor's Name",
         'Kenya National ID Number (from Member)',
         'created_by',
+        'PMH',
       ]
       try {
         const memberConsultation = await airtableFetch(
