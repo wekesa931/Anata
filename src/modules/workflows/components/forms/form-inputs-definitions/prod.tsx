@@ -10550,17 +10550,17 @@ export default [
     formId: 'shrPWg4S3LYxHbgmv',
     fields: [
       {
-        id: 'fldoOlTXfHynyqhfe',
-        name: 'Case ID',
-        type: 'foreignKey',
+        id: 'fldig3jhN9bqflF1u',
+        name: 'Consultation Type',
+        type: 'select',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fld0x0OQ1U4Zkjij2',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tbl7Kh4tVrQp9JdUc',
-        required: false,
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
         helper: '',
       },
       {
@@ -10644,9 +10644,23 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblZB4YOpd7XH3cYt',
-        required: true,
+        required: false,
         helper:
           'Please add the appointment record here. If you do not, the appointment will not be automatically marked as completed',
+        parentKey: 'Consultation Type',
+        parentValues: ['Refillable medication prescription'],
+        conditionType: '',
+        requirementCondition: (values: any) => {
+          if (Array.isArray(values?.['Consultation Type'])) {
+            return ['Refillable medication prescription'].some((r) =>
+              values?.['Consultation Type'].includes(r)
+            )
+          }
+
+          return ['Refillable medication prescription'].includes(
+            values?.['Consultation Type']
+          )
+        },
       },
       {
         id: 'fldnO6I4UugUZgr9C',
@@ -11620,20 +11634,6 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
-      },
-      {
-        id: 'fldig3jhN9bqflF1u',
-        name: 'Consultation Type',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
         helper: '',
       },
       {

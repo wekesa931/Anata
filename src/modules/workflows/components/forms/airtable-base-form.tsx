@@ -164,6 +164,14 @@ function AirtableBasedForm({
     }, {})
   }
 
+  /**
+   * Enable handling conditional requirements for the field
+   * @param field field to get required rules for
+   */
+  const getRequirements = (field: any) =>
+    field.required ||
+    (field.requirementCondition && field.requirementCondition(getValues()))
+
   return (
     <div>
       {!!formSchema?.fields?.length && (
@@ -175,7 +183,11 @@ function AirtableBasedForm({
                 <WorkflowFormsFields
                   value={fieldValue}
                   control={control}
-                  field={{ ...field, parentTableId: formSchema?.id }}
+                  field={{
+                    ...field,
+                    parentTableId: formSchema?.id,
+                    required: getRequirements(field),
+                  }}
                   error={errors[field.name]}
                   airtableMeta={airtableMeta}
                   saveInput={saveInput}
