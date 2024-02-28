@@ -10724,7 +10724,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblhHcP4VrFV9atFx',
-        required: false,
+        required: true,
         helper:
           'Please add the appointment record here. If you do not, the appointment will not be automatically marked as completed',
         parentKey: 'Consultation Type',
