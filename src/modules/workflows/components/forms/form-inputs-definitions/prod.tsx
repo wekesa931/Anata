@@ -10644,11 +10644,12 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblZB4YOpd7XH3cYt',
-        required: false,
+        required: true,
         helper:
           'Please add the appointment record here. If you do not, the appointment will not be automatically marked as completed',
         parentKey: 'Consultation Type',
         parentValues: ['Refillable medication prescription'],
+        toggleRequriedOnCondition: true,
         conditionType: '',
         requirementCondition: (values: any) => {
           if (Array.isArray(values?.['Consultation Type'])) {

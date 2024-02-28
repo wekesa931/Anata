@@ -26,7 +26,12 @@ const updateOnCondition = (
 ) => {
   return {
     [fl.name]: dataType().when(`${fl.parentKey}`, {
-      is: (val: any) => is(val, fl?.parentValues, fl?.conditionType !== '!'),
+      is: (val: any) =>
+        is(
+          val,
+          fl?.parentValues,
+          fl?.conditionType !== '!' && !fl?.toggleRequriedOnCondition
+        ),
       then: dataType().required(),
       otherwise: dataType().nullable().notRequired(),
     }),

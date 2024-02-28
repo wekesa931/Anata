@@ -10730,6 +10730,7 @@ export default [
         parentKey: 'Consultation Type',
         parentValues: ['Refillable medication prescription'],
         conditionType: '',
+        toggleRequriedOnCondition: true,
         requirementCondition: (values: any) => {
           if (Array.isArray(values?.['Consultation Type'])) {
             return ['Refillable medication prescription'].some((r) =>

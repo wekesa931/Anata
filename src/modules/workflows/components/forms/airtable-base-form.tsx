@@ -168,9 +168,19 @@ function AirtableBasedForm({
    * Enable handling conditional requirements for the field
    * @param field field to get required rules for
    */
-  const getRequirements = (field: any) =>
-    field.required ||
-    (field.requirementCondition && field.requirementCondition(getValues()))
+  const getRequirements = (field: any) => {
+    const prevRequired = field?.required
+
+    if (
+      field?.toggleRequriedOnCondition &&
+      !!field?.requirementCondition &&
+      field?.requirementCondition(getValues())
+    ) {
+      return !prevRequired
+    }
+
+    return prevRequired
+  }
 
   return (
     <div>
