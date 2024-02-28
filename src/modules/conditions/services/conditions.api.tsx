@@ -4,12 +4,19 @@ import type { Member } from 'src/modules/member/db/models'
 import { useMember } from 'src/context/member'
 import { useState } from 'react'
 
+const getConditionName = (currentCondition: any) => {
+  const conditionName = currentCondition?.Condition?.toString();
+  const otherConditionName = currentCondition?.['Other, specify'];
+
+  return conditionName === 'Other' ? otherConditionName ?? conditionName : conditionName;
+}
+
 const transformConditionData = (
   currentCondition: any,
   member: Member | null
 ): Condition => {
   return {
-    condition: currentCondition.Condition?.toString(),
+    condition: getConditionName(currentCondition),
     conditionStatus: currentCondition['Condition Status']?.toString(),
     acuteVsChronic: currentCondition['Acute vs Chronic']?.toString(),
     dateOfDiagnosis:
