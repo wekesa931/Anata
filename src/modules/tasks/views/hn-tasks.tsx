@@ -473,6 +473,10 @@ function Tasks() {
   }
 
   const updateTask = async (task: { id: string; fields: any }) => {
+    // validate that the assignee is not reset to null
+    if ('Assignee' in task.fields && !task.fields.Assignee) {
+      throw new Error('Cannot remove assignee from task')
+    }
     await airtableFetch('hntasks', 'post', {
       id: task.id,
       fields: {
