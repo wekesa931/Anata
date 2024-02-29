@@ -353,14 +353,11 @@ export const useWorkflowData = () => {
   }
 
   const deleteWorkflowFromAPI = async (workflow: TWorkflowModel) => {
-    if (workflow.isSynced) {
-      return removeWorkflow({
-        workflowId: workflow.workflowId,
-      }).then(async () => {
-        await cancelWorkflowHnos(workflow)
-      })
-    }
-    return Promise.resolve()
+    return removeWorkflow({
+      workflowId: workflow.workflowId,
+    }).then(async () => {
+      await cancelWorkflowHnos(workflow)
+    })
   }
 
   const hydrateWorkflowForms = async (

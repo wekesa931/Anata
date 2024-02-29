@@ -37,6 +37,7 @@ import { generateId } from 'src/storage/utils'
 import { getFormImplementation } from 'src/modules/workflows/components/forms'
 import dayjs from 'dayjs'
 import { formNames, duplicates, initialFormValues } from '../utils'
+import { LoadingButton } from '@mui/lab'
 
 type TitleProps = {
   workflow: TWorkflowModel
@@ -242,14 +243,17 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
   }
 
   const deleteWorkflow = async () => {
-    if (canDeleteWorkflow) {
-      deleteWorkflowFromAPI(workflow).then(() => {
-        workflow.delete().then(() => {
-          setShowDeleteWorkflowPrompt(false)
-          notify('Workflow deleted successfully')
-          closeWorkflow()
-        })
-      })
+    try {
+      await deleteWorkflowFromAPI(workflow)
+      await workflow.delete()
+
+      notify('Workflow deleted successfully')
+      closeWorkflow()
+    } catch (err) {
+      logError(err)
+      notify('Error deleting workflow')
+    } finally {
+      setShowDeleteWorkflowPrompt(false)
     }
   }
 
@@ -568,14 +572,12 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                       >
                         No, go back
                       </Button>
-                      <Button
+                      <LoadingButton
                         className="rounded-xl bg-red-100 font-rubik font-medium normal-case text-white"
-                        onClick={() => {
-                          deleteWorkflow()
-                        }}
+                        onClick={deleteWorkflow}
                       >
                         Yes, delete
-                      </Button>
+                      </LoadingButton>
                     </div>
                   </Stack>
                 </>
