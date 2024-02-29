@@ -220,7 +220,10 @@ export const generatePayload = (
   })
 
   return {
-    fields: mappedPayload,
+    generatedPayload: {
+      fields: mappedPayload,
+    },
+    findFieldId,
   }
 }
 
