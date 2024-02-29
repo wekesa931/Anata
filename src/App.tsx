@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import 'src/styles/index.css'
 import 'src/styles/tailwind.styles.css'
 import ErrorBoundary from 'src/components/error-boundary/index'
@@ -9,9 +9,17 @@ import { StyledEngineProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { BrowserRouter } from 'react-router-dom'
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import { datadogRum } from '@datadog/browser-rum'
 import Routes from './routes'
 
 function App() {
+  useEffect(() => {
+    datadogRum.startSessionReplayRecording()
+
+    return () => datadogRum.stopSessionReplayRecording()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID || ''}>
       <StyledEngineProvider injectFirst>

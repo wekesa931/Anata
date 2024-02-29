@@ -29,8 +29,6 @@ datadogRum.init({
   defaultPrivacyLevel: 'mask-user-input',
 })
 
-datadogRum.startSessionReplayRecording()
-
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(

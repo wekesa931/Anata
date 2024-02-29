@@ -278,15 +278,17 @@ function DataTableDetailedRow({
           )
         })}
       </TableRow>
-      <Popper
-        open={!!anchorEl || selectedColum}
-        anchorEl={anchorEl}
-        className="z-20"
-      >
-        {selectedColum?.cellHeperText && (
-          <selectedColum.cellHeperText value={row} />
-        )}
-      </Popper>
+      {anchorEl && (
+        <Popper
+          open={!!anchorEl || selectedColum}
+          anchorEl={anchorEl}
+          className="z-20"
+        >
+          {selectedColum?.cellHeperText && (
+            <selectedColum.cellHeperText value={row} />
+          )}
+        </Popper>
+      )}
       {showDetails && (
         <TableRow>
           <TableCell colSpan={columns.length + 1} className="py-0 border-b-0">

@@ -5,10 +5,12 @@ import { useMember } from 'src/context/member'
 import { useState } from 'react'
 
 const getConditionName = (currentCondition: any) => {
-  const conditionName = currentCondition?.Condition?.toString();
-  const otherConditionName = currentCondition?.['Other, specify'];
+  const conditionName = currentCondition?.Condition?.toString()
+  const otherConditionName = currentCondition?.['Other, specify']
 
-  return conditionName === 'Other' ? otherConditionName ?? conditionName : conditionName;
+  return conditionName === 'Other'
+    ? otherConditionName ?? conditionName
+    : conditionName
 }
 
 const transformConditionData = (
