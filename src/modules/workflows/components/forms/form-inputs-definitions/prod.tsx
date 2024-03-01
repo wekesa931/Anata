@@ -5123,6 +5123,31 @@ export default [
         helper: '',
       },
       {
+        id: 'fldH50RfElGxwqC9t',
+        name: 'Lab/imaging management',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldwXTM9HtvpkCXsE',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblYOGN4iEGRc3Mjm',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Service',
+        parentValues: ['Laboratory', 'Radiology'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Service)) {
+            return ['Laboratory', 'Radiology'].some((r) =>
+              values.Service.includes(r)
+            )
+          }
+          return ['Laboratory', 'Radiology'].includes(values.Service)
+        },
+      },
+      {
         id: 'fldIK4CHOHR4GyixK',
         name: 'Facilities from Provider base',
         type: 'foreignKey',
@@ -24060,7 +24085,7 @@ export default [
         options: [],
         symmetricColumnId: 'fldHRmEmdxwBgDzMT',
         unreversed: true,
-        relationship: 'many',
+        relationship: 'one',
         foreignTableId: 'tblV0rNDZCPe3ZalK',
         required: true,
         helper: '',

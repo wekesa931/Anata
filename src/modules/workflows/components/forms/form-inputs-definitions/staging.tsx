@@ -2821,6 +2821,31 @@ export default [
         helper: '',
       },
       {
+        id: 'fldZb8IvazevYxTQx',
+        name: 'Lab/imaging request',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldRTcRqRxpvhbjXg',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblgUOEkOSePEa30q',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Service',
+        parentValues: ['Laboratory', 'Radiology'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Service)) {
+            return ['Laboratory', 'Radiology'].some((r) =>
+              values.Service.includes(r)
+            )
+          }
+          return ['Laboratory', 'Radiology'].includes(values.Service)
+        },
+      },
+      {
         id: 'fld8g9weqaITSlPSc',
         name: 'Other Facility',
         type: 'text',
