@@ -157,6 +157,7 @@ function Appointments() {
       'updated_by',
       'Rescheduled',
       'Missed',
+      'PAFU',
     ]
     if (recId) {
       airtableFetch(
