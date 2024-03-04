@@ -157,17 +157,24 @@ const getTaskFields = (allAntaraStaffs: any[]) => {
       calculated: true,
     },
     {
-      name: 'Reason For Rescheduling',
+      name: 'Reason for cancellation',
       type: 'single-select',
       options: [
         'Member unresponsive',
-        'Going on Leave',
-        'Member Request',
-        'Daily interaction limit reached',
-        'New prioritization',
-        'Task backlog',
-        'Missing data',
+        'Member not ready',
+        'Refused services',
+        'Appointment done',
+        'Appointment is booked',
+        'Not relevant as per protocol',
+        'No relevant data available',
+        'Member request',
+        'Other',
       ].map((option) => ({ label: option, value: option })),
+      condition: (task: any = {}) => {
+        const { Status } = task
+        return Status === 'Cancelled'
+      },
+      required: true,
     },
   ]
 

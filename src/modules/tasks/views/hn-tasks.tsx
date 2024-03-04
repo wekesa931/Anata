@@ -44,7 +44,7 @@ function useTransformedApiRecords(rawApiRecords: any) {
       },
       lastStatusChangedAt: 'Last Status changed at',
       formUrl: 'Open URL',
-      reasonForRescheduling: 'Reason For Rescheduling',
+      reasonForCancellation: 'Reason for cancellation',
     }
     // TODO: Replace this with a callback so that this custom hook
     // can be reused for other record types
@@ -87,6 +87,7 @@ function useTransformedApiRecords(rawApiRecords: any) {
         lastStatusChangedAt: string
         formUrl: string
         reasonForRescheduling: string
+        reasonForCancellation: string
       }
     ) => {
       const mappedResponse = records.memberHnTasks.edges.reduce(
@@ -194,7 +195,7 @@ function Tasks() {
     'Other Prescription Drug Name',
     'Assignee Name',
     'recordid',
-    'Reason For Rescheduling',
+    'Reason for cancellation',
   ]
 
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
@@ -244,10 +245,10 @@ function Tasks() {
   }
 
   const includeFieldTypes = (data: { [x: string]: any }) => {
-    return Object.keys(data).map((key) => {
-      const field = taskFields.find(({ name }) => name === key)
-      return field ? { value: data[key], ...field } : data
-    })
+    return taskFields.map((field) => ({
+      ...field,
+      value: data[field.name] || null,
+    }))
   }
 
   const extractPrefills = (url: string) => {
