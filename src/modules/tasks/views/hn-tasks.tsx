@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { useLazyQuery } from '@apollo/client'
-import { User, ExternalLink } from 'react-feather'
+import { ExternalLink } from 'react-feather'
 import airtableFetch from 'src/services/airtable/fetch'
 import List from 'src/components/list'
 import Tooltip from 'src/components/tooltip'
 import { filterFields } from 'src/utils/airtable/field-utils'
 import getTaskFields from 'src/modules/tasks/config/hn-tasks-fields'
 import useAirtableFetch from 'src/hooks/airtable-fetch'
-import CallsCallout from 'src/modules/comms/calls/views'
 import FORMS from 'src/modules/workflows/components/forms/form-inputs-definitions'
 import { GET_MEMBER_TASKS } from 'src/modules/tasks/services/gql'
 import logError from 'src/utils/logging/logger'
@@ -20,8 +19,12 @@ import useAntaraStaff, {
 import { useMember } from 'src/context/member'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import DoneIcon from '@mui/icons-material/Done'
+import CachedIcon from '@mui/icons-material/Cached'
+import { useNotifications } from 'src/context/notifications'
+import TaskModal from 'src/modules/tasks/components/task-modal'
+import useTaskModuleData from 'src/modules/tasks/hooks/tasks-module.data'
 import styles from './tasks.module.css'
-import PrescriptionName from '../components/prescription-name'
 
 type RecordWithId = { data: any; id: string }
 type MatchType = { key: string; value: string }
@@ -160,12 +163,55 @@ function useMergedRecords(
   return mergedRecords
 }
 
+function getPriorityLabel(priority: any) {
+  switch (priority) {
+    case 'High':
+    case 'P0':
+      return 'High'
+    case 'Medium':
+    case 'P1':
+      return 'Medium'
+    case 'Low':
+    case 'P3':
+      return 'Low'
+    default:
+      return 'No Priority'
+  }
+}
+
+function getPriorityStyle(priority: any) {
+  switch (priority) {
+    case 'High':
+    case 'P0':
+      return 'bg-[#ffebea] text-[#ff3b30]'
+    case 'Medium':
+    case 'P1':
+      return 'bg-[#fff5e5] text-[#ff9500]'
+    case 'Low':
+    case 'P3':
+      return 'bg-[#e7f3fd] text-[#007aff]'
+    default:
+      return ''
+  }
+}
+
 function Tasks() {
   const [allTasks, setAllTasks] = useState<any[]>([])
   const [filteredTasks, setFilteredTasks] = useState<any[]>([])
   const { openForm } = useFormsRouting()
 
   const [upnextTasks, setUpnextTasks] = useState<any[]>([])
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
+  const [openItem, setOpenItem] = useState<{
+    name: string
+    id: string
+    data: any
+  }>()
+  const [templateData, setTemplateData] = useState({
+    smsTemplate: ' ',
+    interactionLogTemplate: ' ',
+    defaultReschedulingDays: 1,
+  })
 
   const defaultTaskFilterStatus = 'All Incomplete'
   const allIncomplete = (value: string) =>
@@ -180,6 +226,7 @@ function Tasks() {
     'On Hold',
   ]
   const { member } = useMember()
+  const { notify } = useNotifications()
 
   const fields = [
     'Type',
@@ -196,6 +243,8 @@ function Tasks() {
     'Assignee Name',
     'recordid',
     'Reason for cancellation',
+    'Number of Attempts',
+    'Task definition',
   ]
 
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
@@ -221,7 +270,9 @@ function Tasks() {
   const { handleResponses } = useHandleResponses('Tasks')
 
   const { allAntaraStaffs, loading: loadingAntaraStaff } = useAntaraStaff()
-  const { trackActionEdited } = useModuleAnalytics()
+  const { trackActionEdited, trackTaskCompletion, trackMissedTaskClicked } =
+    useModuleAnalytics()
+  const { handleDataUpdate } = useTaskModuleData()
 
   const [
     loadTasks,
@@ -239,6 +290,8 @@ function Tasks() {
 
   const apiRecords = useTransformedApiRecords(rawApiRecords)
   const mergedRecords = useMergedRecords(airtableRecords, apiRecords)
+
+  const getMemberName = () => `${member?.firstName} ${member?.lastName}`
 
   function StrikeThrough({ children }: any) {
     return <s className="text-disabled">{children}</s>
@@ -302,17 +355,180 @@ function Tasks() {
       return typeof assigned === 'string' ? assigned : assigned?.fullName || ''
     }
 
+    const mapHnTaskItem = (val: any) => {
+      const filteredRecord = renderTaskRecords(
+        mergedRecords,
+        renderTaskRecord
+      ).filter((obj) => obj.id === val.airtId)
+
+      return filteredRecord[0]
+    }
+    const handleTaskCompletion = async (task: any) => {
+      const updatedValue = {
+        Status: 'Complete',
+      }
+      await handleDataUpdate(updatedValue, task.recordid)
+        .then(() => {
+          notify('Updated successfully')
+          trackTaskCompletion(task)
+        })
+        .catch((error) => {
+          logError(error)
+          notify(error?.message || 'Something went wrong')
+        })
+        .finally(() => {
+          return refetchTasks()
+        })
+    }
+    const handleRescheduleDialog = async (task: any) => {
+      const taskDefinition = task?.['Task definition'] || []
+      const [resp] =
+        taskDefinition.length > 0
+          ? await getTaskDefinitionData(taskDefinition[0])
+          : []
+      setTemplateData(extractTaskTemplate(resp) || [])
+      setOpenItem(mapHnTaskItem(task))
+      setModalOpen(true)
+      trackMissedTaskClicked(task)
+    }
+    const extractTaskTemplate = (resp: any) => {
+      if (!resp)
+        return {
+          smsTemplate: ' ',
+          interactionLogTemplate: ' ',
+          defaultReschedulingDays: 1,
+        }
+
+      const smsTemplate = resp['SMS Template (from Msg Templates)']
+        ? resp['SMS Template (from Msg Templates)'].replace(
+            /\{Member Name\}/g,
+            getMemberName()
+          )
+        : ' '
+
+      const interactionLogTemplate = resp['Interaction log form content']
+        ? resp['Interaction log form content'].replace(
+            /\[SMS content\]/g,
+            smsTemplate
+          )
+        : ' '
+
+      return {
+        smsTemplate,
+        interactionLogTemplate,
+        defaultReschedulingDays:
+          resp['Default rescheduling number of days'] || 1,
+      }
+    }
+    const getTaskDefinitionData = async (record_id: string) => {
+      const templateFields = [
+        'Record ID',
+        'SMS Template (from Msg Templates)',
+        'Interaction log form content',
+        'Default rescheduling number of days',
+      ]
+
+      const filterArgs = `filterByFormula=OR(FIND("${record_id}",{Record ID}))`
+
+      return airtableFetch(
+        `tasksDefinition/list?${filterArgs}&${filterFields(templateFields)}`
+      )
+    }
     // Display the mergedRecords
     function DisplayInfo({ hnTask }: any) {
       return (
-        <div className={styles.taskContainer}>
-          <div className={styles.taskContainerInner}>
-            <div className={styles.taskDiv}>
-              <div className={styles.taskNameWrap}>
-                <span>{hnTask.Type}</span>
-                {hnTask['Assignee Name'] && (
-                  <div className={styles.taskAssignee}>
-                    <User width={14} height={14} />
+        <div className={`${styles.taskContainer} ml-2`}>
+          <div className={`${styles.taskContainerInner} !p-0`}>
+            <div>
+              <div
+                className={`text-normal font-medium flex justify-between items-center mt-2 mb-2 ${styles.taskNameWrap}`}
+              >
+                <p>{hnTask.Type}</p>
+                <button className="flex btn !mr-0">
+                  {hnTask.Status !== 'Complete' && (
+                    <Tooltip title="Complete Task">
+                      <DoneIcon
+                        className="bg-[#ebfbed]  text-[#34c759]  w-8 h-9 rounded-sm mr-2"
+                        onClick={(e) => {
+                          e?.stopPropagation()
+                          handleTaskCompletion(hnTask)
+                        }}
+                      />
+                    </Tooltip>
+                  )}
+                  {hnTask.Status === 'Not Started' && (
+                    <Tooltip title="Missed Task">
+                      <CachedIcon
+                        className="bg-[#fff5e5] text-[#ff9500] w-8 h-9 rounded-sm mr-2"
+                        onClick={(e) => {
+                          e?.stopPropagation()
+                          handleRescheduleDialog(hnTask)
+                        }}
+                      />
+                    </Tooltip>
+                  )}
+
+                  {hnTask['Open URL'] && hnTask['Open URL'].url && (
+                    <Tooltip title="Open URL">
+                      <button
+                        className="btn-unstyled"
+                        data-testid="task-url-link"
+                        onClick={(e) => {
+                          let url = hnTask['Open URL']?.url
+                          if (url) {
+                            const prefills = extractPrefills(url)
+
+                            url = url.split('/')[3].split('?')
+                            const formMeta = FORMS.find(
+                              (fm: any) =>
+                                fm.formId === url[0] || fm.id === url[0]
+                            )
+                            formMeta && openForm(formMeta.name, prefills)
+                          }
+                          e.stopPropagation()
+                        }}
+                      >
+                        <ExternalLink
+                          className="bg-[#e7f3fd] w-8 h-9 rounded-sm mr-2"
+                          color="var(--blue-50)"
+                        />
+                      </button>
+                    </Tooltip>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="border-b border-solid border-[#d9d9d9] mt-2  w-[95%]" />
+          <div className="flex justify-between mt-3 text-xs w-full">
+            <section>
+              <p className="text-dark-blue-50">Priority</p>
+              <span
+                className={`status !m-0 mt-2 ${getPriorityStyle(
+                  hnTask['Task Priority']
+                )}`}
+              >
+                {getPriorityLabel(hnTask['Task Priority'])}
+              </span>
+            </section>
+            <div className="border-r border-solid border-[#d9d9d9] m-2" />
+            <section>
+              <p className="text-dark-blue-50"> Status</p>
+              <span className="status !m-0 mt-2">{hnTask.Status}</span>
+            </section>
+            <div className="border-r border-solid border-[#d9d9d9] m-2" />
+            <section>
+              <p className="text-dark-blue-50"> Due Date</p>
+              <p className="mt-2">
+                {dayjs(hnTask['Due Date']).format('DD MMM YYYY')}
+              </p>
+            </section>
+            <div className="border-r border-solid border-[#d9d9d9] m-2" />
+            {hnTask['Assignee Name'] && (
+              <div>
+                <section>
+                  <p className="text-dark-blue-50">Assigned to</p>
+                  <p className="mt-2">
                     {Array.isArray(hnTask['Assignee Name']) &&
                       hnTask['Assignee Name'].map(
                         (
@@ -322,51 +538,10 @@ function Tasks() {
                           <span key={index}>{getAssigneeName(assigned)}</span>
                         )
                       )}
-                  </div>
-                )}
+                  </p>
+                </section>
               </div>
-
-              {hnTask['Prescription Drug Names'] && (
-                <PrescriptionName
-                  value={hnTask['Prescription Drug Names']}
-                  otherMeds={hnTask['Other Prescription Drug Name']}
-                />
-              )}
-              {hnTask['Open URL'] && hnTask['Open URL'].url && (
-                <Tooltip title="Open URL">
-                  <button
-                    className="btn-unstyled"
-                    data-testid="task-url-link"
-                    onClick={(e) => {
-                      let url = hnTask['Open URL']?.url
-                      if (url) {
-                        const prefills = extractPrefills(url)
-
-                        url = url.split('/')[3].split('?')
-                        const formMeta = FORMS.find(
-                          (fm: any) => fm.formId === url[0] || fm.id === url[0]
-                        )
-                        formMeta && openForm(formMeta.name, prefills)
-                      }
-                      e.stopPropagation()
-                    }}
-                  >
-                    <ExternalLink
-                      color="var(--blue-50)"
-                      width={16}
-                      height={16}
-                    />
-                  </button>
-                </Tooltip>
-              )}
-              {hnTask.Type && hnTask.Type.toLowerCase().includes('call') && (
-                <CallsCallout tasksType="CALLBACK" airtableId={hnTask.airtId} />
-              )}
-            </div>
-          </div>
-          <div className={styles.taskDue}>
-            <span className="status">{hnTask.Status}</span>
-            <span>{dayjs(hnTask['Due Date']).format('DD MMM YYYY')}</span>
+            )}
           </div>
         </div>
       )
@@ -401,7 +576,6 @@ function Tasks() {
         mergedRecords,
         renderTaskRecord
       )
-
       setAllTasks(recordsToDisplay)
       setFilteredTasks(
         recordsToDisplay.filter((task) =>
@@ -425,46 +599,6 @@ function Tasks() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mergedRecords])
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority.toLowerCase()) {
-      case 'high':
-        return 'text-danger'
-      case 'medium':
-        return 'text-success'
-      case 'low':
-        return 'text-warning'
-      default:
-        return ''
-    }
-  }
-
-  const getPriority = (record: any[]) => {
-    const field = record.reduce(
-      (obj, { name, value }) => ({ ...obj, [name]: value }),
-      {}
-    )
-
-    if (field['Task Priority']) {
-      return field.Status !== 'Complete' ? (
-        <span className={getPriorityColor(field['Task Priority'])}>
-          <span className="text-bold text-capitalize">
-            {field['Task Priority']} priority
-          </span>
-        </span>
-      ) : (
-        <span className={getPriorityColor(field['Task Priority'])}>
-          <span className="text-bold text-capitalize">
-            {field['Task Priority']} priority
-          </span>
-          <span className="text-capitalize">{` (${field.Status}, ${dayjs(
-            field['Last Status changed at']
-          ).format('DD MMM YYYY')})`}</span>
-        </span>
-      )
-    }
-    return `No Priority (${field.Status})`
-  }
 
   const getTaskNotes = (record: any) => {
     if (record.Status !== 'Complete') {
@@ -529,7 +663,6 @@ function Tasks() {
           <div data-testid="data-list-2">
             <List
               list={upnextTasks}
-              getTopLeftText={getPriority}
               getTopRightText={getTaskNotes}
               modalTitle="Task"
               emptyListText="No tasks found."
@@ -560,7 +693,6 @@ function Tasks() {
         <div data-testid="data-list-1">
           <List
             list={filteredTasks}
-            getTopLeftText={getPriority}
             getTopRightText={getTaskNotes}
             modalTitle="Task"
             data-testid="data-list-1"
@@ -582,6 +714,16 @@ function Tasks() {
         <p className="text-small text-danger margin-top-24">
           An error occurred while fetching tasks, please refresh the page.
         </p>
+      )}
+      {modalOpen && openItem && (
+        <TaskModal
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          openItem={openItem}
+          modalTitle="Task"
+          refetchTasks={refetchTasks}
+          templateData={templateData}
+        />
       )}
     </div>
   )

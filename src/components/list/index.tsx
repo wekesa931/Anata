@@ -150,7 +150,8 @@ function List({
                     textAlign: 'start',
                   }}
                   className="btn-unstyled"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e?.stopPropagation()
                     setOpenItem(item)
                     setModalOpen(true)
                     analytics.track(`${modalTitle} Opened`)
@@ -168,19 +169,20 @@ function List({
                     </div>
                   </div>
                   <div className={styles.notes}>
-                    <Tooltip title="Expand Record">
-                      <div
-                        style={{ width: '12px', marginRight: '6px' }}
-                        className={toggle(
-                          styles.showIcon,
-                          styles.hideIcon,
-                          isHovering === i
-                        )}
-                      >
-                        <ExpandIcon />
-                      </div>
-                    </Tooltip>
-                    <div style={{ flex: 1 }}>
+                    {modalTitle !== 'Task' && (
+                      <Tooltip title="Expand Record">
+                        <div
+                          className={`${toggle(
+                            styles.showIcon,
+                            styles.hideIcon,
+                            isHovering === i
+                          )} w-3 mr-1`}
+                        >
+                          <ExpandIcon />
+                        </div>
+                      </Tooltip>
+                    )}
+                    <div className="flex-1">
                       {!conditionComponent ? (
                         <div className="text-normal">{item.name}</div>
                       ) : (

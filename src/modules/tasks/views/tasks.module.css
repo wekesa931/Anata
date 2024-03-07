@@ -54,12 +54,13 @@
 
 .taskContainerInner {
   font-weight: 500;
-  font-size: 14;
-  color: #182c4c;
+  font-size: 15px;
+  color: #8b95a5;
   display: flex;
   justify-content: space-between;
   width: 100%;
   flex-direction: column;
+  padding: 7px;
 }
 .taskDiv {
   display: flex;
@@ -67,6 +68,7 @@
 }
 .taskNameWrap {
   flex-direction: 'column';
+  color: #8b95a5;
 }
 .taskAssignee {
   color: #8b95a5;

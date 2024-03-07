@@ -263,5 +263,22 @@ export const useModuleAnalytics = () => {
     trackTaskItemOpened: (task: any) => {
       homePageSectionAnalytics.track(`tasks - task opened`, { task })
     },
+
+    // tasks modal
+    trackTaskCompletion: (data: any) => {
+      rightSectionAnalytics.track(`complete button clicked`, data)
+    },
+    trackMissedTaskClicked: (data: any) => {
+      rightSectionAnalytics.track(`missed button clicked`, data)
+    },
+    trackTemplateEdit: (item: any) => {
+      rightSectionAnalytics.track(item)
+    },
+    trackReshedulingDueDate: (item: any) => {
+      rightSectionAnalytics.track(`rescheduling date modified - ${item}`)
+    },
+    trackAutomaticActionSubmitted: () => {
+      rightSectionAnalytics.track('automatic actions submitted')
+    },
   }
 }

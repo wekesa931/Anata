@@ -36,8 +36,8 @@ import {
 import { generateId } from 'src/storage/utils'
 import { getFormImplementation } from 'src/modules/workflows/components/forms'
 import dayjs from 'dayjs'
-import { formNames, duplicates, initialFormValues } from '../utils'
 import { LoadingButton } from '@mui/lab'
+import { formNames, duplicates, initialFormValues } from '../utils'
 
 type TitleProps = {
   workflow: TWorkflowModel
