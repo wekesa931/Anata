@@ -167,15 +167,15 @@ function getPriorityLabel(priority: any) {
   switch (priority) {
     case 'High':
     case 'P0':
-      return 'High'
+      return 'P0'
     case 'Medium':
     case 'P1':
-      return 'Medium'
+      return 'P1'
     case 'Low':
     case 'P3':
-      return 'Low'
+      return 'P2'
     default:
-      return 'No Priority'
+      return 'P3'
   }
 }
 
@@ -454,17 +454,15 @@ function Tasks() {
                           handleTaskCompletion(hnTask)
                         }}
                       />
-                    </Tooltip>
-                  )}
-                  {hnTask.Status === 'Not Started' && (
-                    <Tooltip title="Missed Task">
-                      <CachedIcon
-                        className="bg-[#fff5e5] text-[#ff9500] w-8 h-9 rounded-sm mr-2"
-                        onClick={(e) => {
-                          e?.stopPropagation()
-                          handleRescheduleDialog(hnTask)
-                        }}
-                      />
+                      <Tooltip title="Missed Task">
+                        <CachedIcon
+                          className="bg-[#fff5e5] text-[#ff9500] w-8 h-9 rounded-sm mr-2"
+                          onClick={(e) => {
+                            e?.stopPropagation()
+                            handleRescheduleDialog(hnTask)
+                          }}
+                        />
+                      </Tooltip>
                     </Tooltip>
                   )}
 

@@ -44,6 +44,8 @@ function TasksModalContainer({
     sms: '',
     dueDate: 1,
     taskAttempt: 0,
+    smsCheck: false,
+    interactionLogCheck: false,
   })
   const [dueDate, setDueDate] = useState<number>(1)
   const [checkboxes, setCheckboxes] = useState({
@@ -85,6 +87,8 @@ function TasksModalContainer({
     sms: templateData?.smsTemplate || '',
     dueDate: templateData?.defaultReschedulingDays || 1,
     taskAttempt: getDefaultTaskAttempt(data),
+    smsCheck: false,
+    interactionLogCheck: false,
   })
 
   const getDefaultTaskAttempt = (data: any[]) =>
@@ -96,12 +100,16 @@ function TasksModalContainer({
   const handleDecrement = () =>
     setDueDate((prevDueDate) => Math.max(prevDueDate - 1, 1))
 
-  const handleCheckboxChange = (name: keyof typeof checkboxes, data: any) => {
-    setInitialValues(data.values)
-    setCheckboxes((prevCheckboxes) => ({
-      ...prevCheckboxes,
-      [name]: !prevCheckboxes[name],
-    }))
+  const handleCheckboxChange = (event: any, formik: any) => {
+    const { name, checked } = event.target
+    formik.handleChange(event)
+
+    if (name === 'smsCheck' || name === 'interactionLogCheck') {
+      setCheckboxes((prevCheckboxes) => ({
+        ...prevCheckboxes,
+        [name]: checked,
+      }))
+    }
   }
 
   useEffect(() => {
@@ -233,44 +241,58 @@ function TasksModalContainer({
     }
   }
 
+  const prepareTasks = (values: any) => {
+    const updatedValue = {
+      Status: 'In Progress',
+      'Number of Attempts': values.taskAttempt + 1,
+      ...(checkboxes.rescheduleTaskCheck
+        ? {
+            'Due Date': dayjs().add(values.dueDate, 'day').format('YYYY-MM-DD'),
+          }
+        : {}),
+    }
+    const tasks = []
+
+    if (checkboxes.smsCheck) {
+      tasks.push({
+        name: 'Sending SMS',
+        task: () =>
+          sendSms({
+            variables: { message: values.sms, antaraId: member?.antaraId },
+          }),
+        progressStart: 0,
+        progressEnd: 33,
+      })
+    }
+
+    if (checkboxes.interactionLogCheck) {
+      tasks.push({
+        name: 'Submitting Interaction Log',
+        task: () => submitInteractionLogRequest(values, user, member),
+        progressStart: 33,
+        progressEnd: 66,
+      })
+    }
+
+    tasks.push({
+      name: 'Rescheduling task, changing status, and increasing attempt',
+      task: () => handleDataUpdate(updatedValue, openItem?.id),
+      progressStart: 66,
+      progressEnd: 100,
+    })
+
+    return tasks
+  }
+
   const handleSubmit = async (values: any) => {
     try {
-      const updatedValue = {
-        Status: 'In Progress',
-        'Number of Attempts': values.taskAttempt + 1,
-        'Due Date': dayjs().add(values.dueDate, 'day').format('YYYY-MM-DD'),
-      }
-      const tasks = [
-        {
-          name: 'Sending SMS',
-          task: () =>
-            sendSms({
-              variables: { message: values.sms, antaraId: member?.antaraId },
-            }),
-          progressStart: 0,
-          progressEnd: 33,
-        },
-        {
-          name: 'Submitting Interaction Log',
-          task: () => submitInteractionLogRequest(values, user, member),
-          progressStart: 33,
-          progressEnd: 66,
-        },
-        {
-          name: 'Rescheduling task, changing status, and increasing attempt',
-          task: () => handleDataUpdate(updatedValue, openItem?.id),
-          progressStart: 66,
-          progressEnd: 100,
-        },
-      ]
-
+      const tasks = prepareTasks(values)
       await executeTasks(tasks)
     } catch (error) {
       logError(error)
       notify('Error submitting actions')
     }
   }
-
   return (
     <TaskModalView
       initialValues={initialValues}

@@ -16,10 +16,28 @@ import PrimaryForm from 'src/components/forms/primary-form'
 import * as Yup from 'yup'
 
 const validationSchema = Yup.object().shape({
-  sms: Yup.string().required('SMS message is required').trim(),
-  interactionLog: Yup.string()
-    .required('Interaction notes are required')
-    .trim(),
+  smsCheck: Yup.boolean(),
+  interactionLogCheck: Yup.boolean(),
+
+  sms: Yup.string().when('smsCheck', {
+    is: true,
+    then: Yup.string()
+      .required(
+        'Please enter the required information. This field cannot be left blank.'
+      )
+      .trim(),
+    otherwise: Yup.string().trim(),
+  }),
+
+  interactionLog: Yup.string().when('interactionLogCheck', {
+    is: true,
+    then: Yup.string()
+      .required(
+        'Please enter the required information. This field cannot be left blank.'
+      )
+      .trim(),
+    otherwise: Yup.string().trim(),
+  }),
 })
 
 type TCheckboxes = {
@@ -36,7 +54,7 @@ type TEditModes = {
 type ListModalProps = {
   initialValues: any
   handleSubmit: (values: any) => void
-  handleCheckboxChange: (name: keyof TCheckboxes, data: any) => void
+  handleCheckboxChange: (e: any, data: any) => void
   handleEditClick: (fieldName: keyof TEditModes, data: any) => void
   handleIncrement: () => void
   handleDecrement: () => void
@@ -69,7 +87,6 @@ function ListModalView({
   handleIncrement,
   handleDecrement,
   checkboxes,
-  editModes,
   progress,
   progressColor,
   stepLabel,
@@ -78,6 +95,9 @@ function ListModalView({
   retryFailedTasks,
   setModalOpen,
 }: ListModalProps) {
+  const getErrorMessage = () => {
+    return 'We encountered an error while finishing this up. Please retry to resolve it. If the issue continues, contact our support team via Slack for help'
+  }
   return modalOpen ? (
     <Modal
       open={modalOpen}
@@ -98,10 +118,12 @@ function ListModalView({
               }`}
             >
               <div className=" mb-3 flex items-center">
+                <span>{checkboxes.smsCheck}</span>
                 <Checkbox
                   checked={checkboxes.smsCheck}
-                  onChange={() => handleCheckboxChange('smsCheck', formik)}
+                  onChange={(event) => handleCheckboxChange(event, formik)}
                   disabled={!formik.values.sms?.trim()}
+                  name="smsCheck"
                 />
                 <TextField
                   name="sms"
@@ -109,18 +131,15 @@ function ListModalView({
                   textarea
                   placeholder="We tried to call for a virtual consulation"
                   required={false}
-                  editMode={editModes.sms}
                   onEditClick={() => handleEditClick('sms', formik)}
-                  editable
                 />
               </div>
               <div className=" mb-3 flex items-center">
                 <Checkbox
                   checked={checkboxes.interactionLogCheck}
-                  onChange={() =>
-                    handleCheckboxChange('interactionLogCheck', formik)
-                  }
+                  onChange={(event) => handleCheckboxChange(event, formik)}
                   disabled={!formik.values.interactionLog?.trim()}
+                  name="interactionLogCheck"
                 />
                 <TextField
                   name="interactionLog"
@@ -128,9 +147,7 @@ function ListModalView({
                   textarea
                   placeholder="We tried to call for a virtual consulation"
                   required={false}
-                  editMode={editModes.interactionLog}
                   onEditClick={() => handleEditClick('interactionLog', formik)}
-                  editable
                 />
               </div>
               <div className="mb-3 flex items-center ">
@@ -248,18 +265,26 @@ function ListModalView({
                     border: '1px #205284 solid',
                     color: '#205284',
                   }}
+                  onClick={() => {
+                    setModalOpen(false)
+                  }}
                 >
                   Cancel
                 </Button>
               </div>
             )}
             {progressColor === 'secondary' && progress > 0 && (
-              <PrimaryButton
-                className="mt-3 float-right"
-                onClick={retryFailedTasks}
-              >
-                Retry
-              </PrimaryButton>
+              <div>
+                <span className="text-[#972323] text-xs font-normal">
+                  {getErrorMessage()}
+                </span>
+                <PrimaryButton
+                  className="mt-3 float-right"
+                  onClick={retryFailedTasks}
+                >
+                  Retry
+                </PrimaryButton>
+              </div>
             )}
           </Form>
         )}
