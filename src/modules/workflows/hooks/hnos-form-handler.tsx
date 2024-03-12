@@ -138,9 +138,9 @@ export const useHNOSFormHandler = () => {
             })
         }
 
-        return createNewTableRecord(generatePayload)
+        return createNewTableRecord(generatedPayload)
       }
-      return createNewTableRecord(generatePayload)
+      return createNewTableRecord(generatedPayload)
     }
     throw new Error('Airtable meta not found')
   }
