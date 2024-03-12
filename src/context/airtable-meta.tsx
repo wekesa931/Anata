@@ -4,15 +4,20 @@ import { interactionlogform } from 'src/modules/workflows/utils'
 import logError from 'src/utils/logging/logger'
 import { useUser } from 'src/context/user'
 import { keyBy } from 'lodash'
+import { useTasksAPI } from 'src/modules/tasks/services/tasks.service'
 
 type AirtableMetaType = {
   airtableMeta: any
   loading: boolean
+  taskDefinitions: any
+  getTaskDefinitionById: (id: string) => any
 }
 
 const AirtableMetaContext = React.createContext<AirtableMetaType>({
   airtableMeta: null,
   loading: false,
+  taskDefinitions: [],
+  getTaskDefinitionById: () => null,
 })
 
 type Props = {
@@ -20,18 +25,39 @@ type Props = {
   meta?: any
 }
 
+export type AirtableMetaData = ReturnType<typeof useAirtableMeta>
+
 export function AirtableMetaProvider({ children, meta }: Props) {
   const [airtableMeta, setAirtableMeta] = React.useState<any>(meta || null)
   const [loading, setLoading] = React.useState<boolean>(false)
   const user = useUser()
+  const [taskDefinitions, setTaskDefinitions] = React.useState<any>([])
+  const { getAllDefinitionTemplates } = useTasksAPI()
 
+  const getTaskDefinitionById = (id: string) => {
+    return taskDefinitions.find((t: any) => t.recordId === id)
+  }
   const providerValue = React.useMemo(
     () => ({
       airtableMeta,
       loading,
+      taskDefinitions,
+      getTaskDefinitionById,
     }),
-    [airtableMeta, loading]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [airtableMeta, loading, taskDefinitions]
   )
+
+  React.useEffect(() => {
+    if (user) {
+      getAllDefinitionTemplates()
+        .then((res: any) => {
+          setTaskDefinitions(res)
+        })
+        .catch(logError)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
   React.useEffect(() => {
     setLoading(true)
@@ -59,7 +85,7 @@ export function AirtableMetaProvider({ children, meta }: Props) {
         })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [user])
 
   return (
     <AirtableMetaContext.Provider value={providerValue}>

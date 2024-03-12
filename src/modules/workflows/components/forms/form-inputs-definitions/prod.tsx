@@ -8809,309 +8809,6 @@ export default [
     ],
   },
   {
-    name: 'HN Tasks',
-    id: 'tblfH6lD7Cd1cGgSR',
-    formId: 'shrSPv5zEGvh1nm22',
-    fields: [
-      {
-        id: 'fldlW5gNb9Pgl0CkX',
-        name: 'Case ID',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldv58MxPAfuLq0hJ',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tbl7Kh4tVrQp9JdUc',
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldFpZ9f9DZRPqfVN',
-        name: 'Member',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldJYRny4intY0HtI',
-        unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblidCJtioaFSYwvk',
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldcoglP551MBGulL',
-        name: 'Type',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldpN14ChLWa4Fgpt',
-        name: 'ME task type',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Type',
-        parentValues: ['ME task type'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Type)) {
-            return ['ME task type'].some((r) => values.Type.includes(r))
-          }
-          return ['ME task type'].includes(values.Type)
-        },
-      },
-      {
-        id: 'fldzDRGAeR6fmNYum',
-        name: 'Other task type',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Type',
-        parentValues: ['Others'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Type)) {
-            return ['Others'].some((r) => values.Type.includes(r))
-          }
-          return ['Others'].includes(values.Type)
-        },
-      },
-      {
-        id: 'fldm9Xve7yWI1vSYL',
-        name: 'Appointment',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fld4YyDh9WtNqXc8d',
-        unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblZB4YOpd7XH3cYt',
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldnfVIFhMTSb6tFP',
-        name: 'HMP',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldrz47Uj13D7yBUx',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblMKwFctRYwBYHgt',
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Type',
-        parentValues: [
-          'HMP: Follow',
-          'HMP: Followup',
-          'HMP: Internal Review',
-          'HMP: Member Review',
-          'HMP: Send',
-          'HMP: Send Monitoring Plan & Coordinate Kit Delivery',
-          'HMP: Generate',
-          'HMP: Confirm Monitoring Plan and Kit Delivery ',
-          'HMP: Confirm Monitoring Plan and Kit Delivery',
-          'HMP: Collect condition data',
-          'HMP: book consult to review with member',
-        ],
-        condition: (values: any) => {
-          if (Array.isArray(values.Type)) {
-            return [
-              'HMP: Follow',
-              'HMP: Followup',
-              'HMP: Internal Review',
-              'HMP: Member Review',
-              'HMP: Send',
-              'HMP: Send Monitoring Plan & Coordinate Kit Delivery',
-              'HMP: Generate',
-              'HMP: Confirm Monitoring Plan and Kit Delivery ',
-              'HMP: Confirm Monitoring Plan and Kit Delivery',
-              'HMP: Collect condition data',
-              'HMP: book consult to review with member',
-            ].some((r) => values.Type.includes(r))
-          }
-          return [
-            'HMP: Follow',
-            'HMP: Followup',
-            'HMP: Internal Review',
-            'HMP: Member Review',
-            'HMP: Send',
-            'HMP: Send Monitoring Plan & Coordinate Kit Delivery',
-            'HMP: Generate',
-            'HMP: Confirm Monitoring Plan and Kit Delivery ',
-            'HMP: Confirm Monitoring Plan and Kit Delivery',
-            'HMP: Collect condition data',
-            'HMP: book consult to review with member',
-          ].includes(values.Type)
-        },
-      },
-      {
-        id: 'fldXclXvQtT3CDhBc',
-        name: 'Collect Condition Data',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Type',
-        parentValues: ['HMP: Collect condition data'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Type)) {
-            return ['HMP: Collect condition data'].some((r) =>
-              values.Type.includes(r)
-            )
-          }
-          return ['HMP: Collect condition data'].includes(values.Type)
-        },
-      },
-      {
-        id: 'fld8h5DDipbVXqg7S',
-        name: 'What condition data?',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Collect Condition Data',
-        parentValues: ['Other'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Collect Condition Data'])) {
-            return ['Other'].some((r) =>
-              values['Collect Condition Data'].includes(r)
-            )
-          }
-          return ['Other'].includes(values['Collect Condition Data'])
-        },
-      },
-      {
-        id: 'fldpHFRM829UWPSss',
-        name: 'Due Date',
-        type: 'date',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldA4jQrhD8uqQZTn',
-        name: 'Task Priority',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldy2gbiCU4M7D0sR',
-        name: 'Assignee',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldJy4EdenWTTlT8s',
-        unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblHs6JxFnMGAjNNC',
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fld44WK9nOk5ZanUX',
-        name: 'Status',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldrGJFYi4iUXcOX6',
-        name: 'Collaborator (created by)',
-        type: 'collaborator',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: 'tblHs6JxFnMGAjNNC',
-        required: false,
-        helper:
-          'Please select yourself here only if you want to be informed about the status of this task (especially if the task is supposed to be done by somebody else)',
-      },
-      {
-        id: 'fld8DZRpNZO8UpuzV',
-        name: 'Task Notes',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-    ],
-  },
-  {
     name: 'Member tasks',
     id: 'tbljwCFIDT2vG65AH',
     formId: 'shr1nZ8X0K7jPo3oq',
@@ -24295,6 +23992,291 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
+        helper: '',
+      },
+    ],
+  },
+  {
+    name: 'Care Team Tasks',
+    id: 'tblfH6lD7Cd1cGgSR',
+    fields: [
+      {
+        id: 'fldFpZ9f9DZRPqfVN',
+        name: 'Member',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldJYRny4intY0HtI',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblidCJtioaFSYwvk',
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldluUjdXcncSqpNk',
+        name: 'Scribe Tags',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionalOptions: true,
+        isMixed: true,
+        prefills: (name: string, value: any) => {
+          return {
+            [name]: value,
+            'Task definition': null,
+            'Task Priority': null,
+            'Due Date': '',
+            'Task Notes': '',
+          }
+        },
+      },
+      {
+        id: 'fldrJeu9BzF1p0thE',
+        name: 'Task definition',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        conditionalOptions: true,
+        symmetricColumnId: 'fldDQIfKUcgxqPs2b',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tbltE2P2zScwkJvB1',
+        required: true,
+        helper: '',
+        isMixed: true,
+        prefills: (name: string, value: any, airtableMetaArgs?: any) => {
+          const recordId =
+            Array.isArray(value) && !!value.length
+              ? value[0]
+              : value?.id ?? value
+          const args = airtableMetaArgs?.getTaskDefinitionById(recordId)
+
+          if (args) {
+            return {
+              'Task Priority': args?.defaultPriority,
+              'Task Notes': args?.notes,
+              'Due Date': args?.dueDate ?? dayjs(args?.dueDate).toDate(),
+              'Task definition': {
+                id: args.recordId,
+                name: args?.clinicalPrefferedName,
+              },
+              Status: 'Not Started',
+            }
+          }
+
+          return {
+            [name]: value,
+          }
+        },
+      },
+      {
+        id: 'fldm9Xve7yWI1vSYL',
+        name: 'Appointment',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld4YyDh9WtNqXc8d',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblZB4YOpd7XH3cYt',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Scribe Tags',
+        parentValues: ['Internal Appointment', 'Internal Appointment,Referral'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Scribe Tags'])) {
+            return [
+              'Internal Appointment',
+              'Internal Appointment,Referral',
+            ].some((r) => values['Scribe Tags'].includes(r))
+          }
+          const tagsValues = values['Scribe Tags']
+          return [
+            'Internal Appointment',
+            'Internal Appointment,Referral',
+          ].includes(tagsValues?.name ?? tagsValues)
+        },
+      },
+      {
+        id: 'fldnfVIFhMTSb6tFP',
+        name: 'HMP',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldrz47Uj13D7yBUx',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblMKwFctRYwBYHgt',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Scribe Tags',
+        parentValues: ['HMP'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Scribe Tags'])) {
+            return ['HMP'].some((r) => values['Scribe Tags'].includes(r))
+          }
+          const tagsValues = values['Scribe Tags']
+          return ['HMP'].includes(tagsValues?.name ?? tagsValues)
+        },
+      },
+      {
+        id: 'fldqrNl2W1qkEjDFR',
+        name: 'Condition',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldVxEnaxNA305O1B',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblYSNrfZJnzdSwmx',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Scribe Tags',
+        parentValues: ['Condition'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Scribe Tags'])) {
+            return ['Condition'].some((r) => values['Scribe Tags'].includes(r))
+          }
+          const tagsValues = values['Scribe Tags']
+          return ['Condition'].includes(tagsValues?.name ?? tagsValues)
+        },
+      },
+      {
+        id: 'fldTCEzVgbpXoYhYZ',
+        name: 'Prescription',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldZ266HXKxJyMYR2',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tbl3iBWzYVWEpdLje',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Scribe Tags',
+        parentValues: ['Medication'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Scribe Tags'])) {
+            return ['Medication'].some((r) => values['Scribe Tags'].includes(r))
+          }
+          const tagsValues = values['Scribe Tags']
+          return ['Medication'].includes(tagsValues?.name ?? tagsValues)
+        },
+      },
+      {
+        id: 'fldyKWbgj5Ly2wLDR',
+        name: 'Member tasks',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldBpGpwNj4gNVIWr',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tbljwCFIDT2vG65AH',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Scribe Tags',
+        parentValues: ['Member Task,Health Metric', 'Member Task'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Scribe Tags'])) {
+            return ['Member Task,Health Metric', 'Member Task'].some((r) =>
+              values['Scribe Tags'].includes(r)
+            )
+          }
+          const tagsValues = values['Scribe Tags']
+          return ['Member Task,Health Metric', 'Member Task'].includes(
+            tagsValues?.name ?? tagsValues
+          )
+        },
+      },
+      {
+        id: 'fldpHFRM829UWPSss',
+        name: 'Due Date',
+        type: 'date',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldA4jQrhD8uqQZTn',
+        name: 'Task Priority',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld8DZRpNZO8UpuzV',
+        name: 'Task Notes',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldy2gbiCU4M7D0sR',
+        name: 'Assignee',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldJy4EdenWTTlT8s',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblHs6JxFnMGAjNNC',
+        required: true,
+        helper: 'Note: if CS task, please assign it to Effie',
+      },
+      {
+        id: 'fld44WK9nOk5ZanUX',
+        name: 'Status',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
         helper: '',
       },
     ],

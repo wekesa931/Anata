@@ -252,27 +252,28 @@ const validationRules = (formMeta: any, isWorkflow: boolean) => {
         case 'multilineText':
         case 'singleLineText':
         case 'richText': {
+          const fieldType = fl?.isMixed ? Yup.mixed : Yup.string
           if (fl.parentKey) {
             if (fl.required) {
               schema = {
                 ...schema,
-                ...updateOnCondition(fl),
+                ...updateOnCondition(fl, fieldType),
               }
             } else {
               schema = {
                 ...schema,
-                ...updateOnConditionalRequired(fl),
+                ...updateOnConditionalRequired(fl, fieldType),
               }
             }
           } else if (fl.required) {
             schema = {
               ...schema,
-              [fieldName]: Yup.string().required(),
+              [fieldName]: fieldType().required(),
             }
           } else {
             schema = {
               ...schema,
-              [fieldName]: Yup.string().nullable().notRequired(),
+              [fieldName]: fieldType().nullable().notRequired(),
             }
           }
           break

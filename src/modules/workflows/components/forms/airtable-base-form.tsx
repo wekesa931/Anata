@@ -3,7 +3,7 @@ import FORM_DEFINITIONS from 'src/modules/workflows/components/forms/form-inputs
 import validationRules from 'src/modules/workflows/components/forms/validation-schema'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { every, isEmpty } from 'lodash'
+import { every, groupBy, isEmpty } from 'lodash'
 import type { FormProps } from 'src/modules/workflows/types'
 import useWorkflowData from 'src/modules/workflows/hooks/workflow-data'
 import ButtonField from 'src/modules/workflows/components/forms/button-field'
@@ -12,6 +12,12 @@ import { useAirtableMeta } from 'src/context/airtable-meta'
 import CalendlyLink from 'src/modules/workflows/components/forms/calendly-link'
 import { LoadingButton } from '@mui/lab'
 import { useNotifications } from 'src/context/notifications'
+import { TaskDefinition } from 'src/modules/tasks/types'
+
+const TASK_DEFINITION_FIELD_ID =
+  process.env.PROD === 'true' ? 'fldrJeu9BzF1p0thE' : 'fldwYDHowo9JFzkc7'
+
+const SCRIBE_TAGS_FIELD_ID = 'fldluUjdXcncSqpNk'
 
 function AirtableBasedForm({
   form,
@@ -22,6 +28,7 @@ function AirtableBasedForm({
   isWorkflowComplete = false,
   upsertDraft,
   workflow,
+  updatePrefills,
 }: FormProps) {
   const formSchema: any = (FORM_DEFINITIONS as any).find(
     (f: any) => f?.name === form.name
@@ -67,7 +74,8 @@ function AirtableBasedForm({
 
   const { submitForm, submittingForm } = useWorkflowData()
   const canSubmitForm = every(errors, isEmpty)
-  const { airtableMeta } = useAirtableMeta()
+  const airtableMetaData = useAirtableMeta()
+  const { airtableMeta, taskDefinitions } = airtableMetaData
   const [isFormDraft, setIsFormDraft] = useState(true)
   const { notify } = useNotifications()
 
@@ -159,9 +167,16 @@ function AirtableBasedForm({
     return fieldsToRender?.reduce((acc: any, curr: any) => {
       return {
         ...acc,
-        [curr?.field?.name]: curr?.fieldValue,
+        [curr?.field?.name]: curr?.fieldValue?.name ?? curr?.fieldValue,
       }
     }, {})
+  }
+  const handleSaveInput = (fl: any) => (name: string, value: any) => {
+    const prefills = {
+      [name]: value,
+      ...(fl?.prefills && fl.prefills(name, value, airtableMetaData)),
+    }
+    updatePrefills ? updatePrefills(prefills) : saveInput(name, value)
   }
 
   /**
@@ -182,6 +197,66 @@ function AirtableBasedForm({
     return prevRequired
   }
 
+  const taskDefinitionsFilterFn = (field: any, values: any) => {
+    const selectedTag = values?.['Scribe Tags']
+    let parsedField = field
+    if (selectedTag) {
+      const definitions = taskDefinitions.filter((taskDefinition: any) =>
+        taskDefinition.scribeTags.includes(selectedTag?.name ?? selectedTag)
+      )
+      if (definitions.length) {
+        parsedField = {
+          ...field,
+          options: definitions.map((t: TaskDefinition) => ({
+            id: t.recordId,
+            name: t.clinicalPrefferedName,
+          })),
+          type: 'select',
+        }
+      }
+    } else {
+      parsedField = {
+        ...field,
+        type: 'foreignKey',
+      }
+    }
+
+    return parsedField
+  }
+
+  const getOptions = (field: any) => {
+    if (field.id === TASK_DEFINITION_FIELD_ID && field.conditionalOptions) {
+      const fields = taskDefinitionsFilterFn(field, getValues())
+      return fields
+    }
+
+    if (field.id === SCRIBE_TAGS_FIELD_ID) {
+      const scribeTags = groupBy(taskDefinitions, 'scribeTags')
+      const definitionOptions = Object.keys(scribeTags).map((k: any) => ({
+        id: k,
+        name: k,
+      }))
+
+      const parsedField = {
+        ...field,
+        options: definitionOptions,
+      }
+      return parsedField
+    }
+
+    return {}
+  }
+
+  const getFieldValue = (field: any, fieldValue: any) => {
+    if (fieldValue?.id) {
+      const parsedField = getOptions(field)
+      if (parsedField?.type === 'foreignKey') {
+        return [fieldValue?.id]
+      }
+    }
+    return fieldValue?.name ?? fieldValue
+  }
+
   return (
     <div>
       {!!formSchema?.fields?.length && (
@@ -191,16 +266,17 @@ function AirtableBasedForm({
               <div>
                 {field?.formId && <ButtonField field={field} />}
                 <WorkflowFormsFields
-                  value={fieldValue}
+                  value={getFieldValue(field, fieldValue)}
                   control={control}
                   field={{
                     ...field,
                     parentTableId: formSchema?.id,
                     required: getRequirements(field),
+                    ...getOptions(field),
                   }}
                   error={errors[field.name]}
                   airtableMeta={airtableMeta}
-                  saveInput={saveInput}
+                  saveInput={handleSaveInput(field)}
                   isWorkflow={!!form.workflow}
                   disabled={!isFormDraft}
                 />

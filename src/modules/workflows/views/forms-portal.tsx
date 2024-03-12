@@ -77,10 +77,17 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
     }
   }
 
-  const saveInput = async (name: string, value: any) => {
+  const saveInput = (name: string, value: any) => {
     setIsEdited(true)
     form.saveInput(name, value)
     setFormData({ ...formData, [name]: value })
+  }
+
+  const updatePrefills = (prefills: any) => {
+    setIsEdited(true)
+
+    form.updatePrefills(prefills)
+    setFormData({ ...formData, ...prefills })
   }
 
   const handleSubmissionSuccess = (f: TWorkflowForm) => () => {
@@ -118,6 +125,8 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
               saveInput={saveInput}
               handleSubmissionSuccess={handleSubmissionSuccess(form)}
               handleSubmissionError={handleSubmissionError}
+              updatePrefills={updatePrefills}
+              formData={formData}
             />
           </FormsSection>
         </WorkflowFormsLayout>

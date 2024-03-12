@@ -99,7 +99,10 @@ function FilledForms() {
               data: response[forms.indexOf('ncf')],
             },
             { name: 'Minor HIF', data: response[forms.indexOf('minorhif')] },
-            { name: 'HN Tasks', data: response[forms.indexOf('hntasks')] },
+            {
+              name: 'Care Team Tasks',
+              data: response[forms.indexOf('hntasks')],
+            },
             {
               name: 'Interactions',
               data: response[forms.indexOf('interactions')],

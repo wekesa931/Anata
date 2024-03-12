@@ -121,6 +121,16 @@ export class Forms extends Model {
       }
     })
   }
+
+  @writer async updatePrefills(prefills: any) {
+    await this.update(() => {
+      this.isEdited = true
+      this.data = {
+        ...this.data,
+        ...prefills,
+      }
+    })
+  }
 }
 
 export class Workflows extends Model {

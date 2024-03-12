@@ -228,36 +228,37 @@ function SingleSelectOption({
   control,
   error,
 }: Form) {
+  const isCheckBoxField =
+    airtableMeta[field.parentTableId]?.fields[field.id]?.type === 'checkbox'
+
   if (airtableMeta) {
-    if (
-      airtableMeta[field.parentTableId]?.fields[field.id].type !== 'checkbox' &&
-      airtableMeta[field.parentTableId]?.fields[field.id].options?.choices
-        .length > 2
-    ) {
+    if (isCheckBoxField) {
       return (
-        <SingleSelectInput
+        <SingleSelectView
           value={value}
           disabled={disabled}
-          field={field}
           airtableMeta={airtableMeta}
+          field={field}
           saveInput={saveInput}
           control={control}
           error={error}
         />
       )
     }
+
     return (
-      <SingleSelectView
+      <SingleSelectInput
         value={value}
         disabled={disabled}
-        airtableMeta={airtableMeta}
         field={field}
+        airtableMeta={airtableMeta}
         saveInput={saveInput}
         control={control}
         error={error}
       />
     )
   }
+
   return <LoaderOption field={field} airtableMeta={airtableMeta} />
 }
 
@@ -281,11 +282,24 @@ function SingleSelectInput({
   }, [value])
   const handleChange = (newValue: any) => {
     setOption(newValue)
-    saveInput(field.name, newValue)
+    if (field.conditionalOptions) {
+      const option = field?.options?.find((f: any) => f.name === newValue)
+      if (option) {
+        saveInput(field.name, option)
+      }
+    } else {
+      saveInput(field.name, newValue)
+    }
   }
-  const optionsData = airtableMeta
-    ? airtableMeta[field.parentTableId]?.fields[field.id].options?.choices
-    : []
+
+  const getFieldOptions = () => {
+    if (field.conditionalOptions) {
+      return field.options
+    }
+
+    return (airtableMeta[field.parentTableId]?.fields[field.id] || ({} as any))
+      ?.options?.choices
+  }
 
   return (
     <Controller
@@ -300,7 +314,7 @@ function SingleSelectInput({
           disablePortal
           value={option}
           id="combo-box-demo"
-          options={optionsData.map((opt) => opt.name)}
+          options={getFieldOptions().map((opt: any) => opt.name)}
           onChange={(event: any, newValue: string) => {
             handleChange(newValue)
             onChange(newValue)
@@ -356,7 +370,7 @@ function SingleSelectView({
       ]
     } else {
       fieldOptions = airtableMeta
-        ? airtableMeta[field.parentTableId]?.fields[field.id].options?.choices
+        ? airtableMeta[field.parentTableId]?.fields[field.id]?.options?.choices
         : []
     }
 

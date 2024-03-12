@@ -70,6 +70,18 @@ export const useHNOSFormHandler = () => {
         }
       }
 
+      if (activeForm.isCareTeamTasks) {
+        payload = omitKeys(payload, ['Scribe Tags'])
+        let taskDefinition = (payload as any)?.['Task definition'] || ''
+        taskDefinition = Array.isArray(taskDefinition)
+          ? taskDefinition
+          : [taskDefinition?.id ?? taskDefinition]
+        payload = {
+          ...payload,
+          'Task definition': taskDefinition,
+        }
+      }
+
       if (activeForm.isLabs) {
         const { generatedPayload, findFieldId } = generatePayload(
           payload,

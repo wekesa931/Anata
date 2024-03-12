@@ -18,6 +18,7 @@ const TABLE_ROUTES: Record<string, string> = {
   Appointments: 'appointments',
   Interactions: 'interactions',
   'HN Tasks': 'hntasks',
+  'Care Team Tasks': 'hntasks',
   'HN Meetings': 'meetings',
   'Clinical Rounds': 'clinicalrounds',
   'Nutritional Consultation': 'ncf',

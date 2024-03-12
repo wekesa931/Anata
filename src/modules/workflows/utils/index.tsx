@@ -82,6 +82,7 @@ export const ActiveForm = (activeForm: string) => {
     isChl: activeForm === 'CHL Mon',
     isDm: activeForm === 'DM Mon',
     isLabs: activeForm === 'Lab/imaging management',
+    isCareTeamTasks: activeForm === 'Care Team Tasks',
   }
 }
 
@@ -309,9 +310,6 @@ export const initialFormValues = (
     Interventions: {
       Status: 'Active',
     },
-    'HN Tasks': {
-      Status: 'Not Started',
-    },
     'Member tasks': {
       Status: 'Not Started',
     },
@@ -367,7 +365,7 @@ export const DUPLICATE_DEFAULTS: Record<string, any> = {
   'BP Mon': 'Date',
   'CHL Mon': 'Test Date',
   'DM Mon': 'Test Date',
-  'HN Tasks': 'Type',
+  'Care Team Tasks': 'Task definition',
   'Logistics Tasks': 'Type',
   'Member tasks': 'Type',
   'Prescriptions VC': 'Drug Name',
@@ -375,7 +373,7 @@ export const DUPLICATE_DEFAULTS: Record<string, any> = {
 }
 
 export const duplicates = [
-  'HN Tasks',
+  'Care Team Tasks',
   'Member tasks',
   'Prescriptions',
   'Appointments',
@@ -406,7 +404,6 @@ export const duplicates = [
 ]
 
 export const formNames: Record<string, string> = {
-  'HN Tasks': 'HN & ME Task',
   'Member tasks': 'Member Task',
   Prescriptions: 'HN Prescription',
   'Prescriptions VC': 'VC Prescription',
@@ -436,6 +433,7 @@ export const formNames: Record<string, string> = {
   'Minor Health Check (6 to 17)': 'Minor Health Check (6 to 17)',
   'Healthy triage form': 'Healthy triage form',
   'Lab/imaging management': 'Lab/imaging management',
+  'Care Team Tasks': 'Care Team Tasks',
 }
 
 export const interactionlogform = {

@@ -277,13 +277,23 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     (form: any, index: number) => (name: string, value: any) => {
       setIsEdited(true)
       form.saveInput(name, value)
-
       setFormsData((prev: any) => {
         const newForms = [...prev]
         newForms[index] = form.data
         return newForms
       })
     }
+
+  const updatePrefills = (form: any, index: number) => (prefills: any) => {
+    setIsEdited(true)
+
+    form.updatePrefills(prefills)
+    setFormsData((prev: any) => {
+      const newForms = [...prev]
+      newForms[index] = { ...newForms[index], ...prefills }
+      return newForms
+    })
+  }
 
   const handleSaveDraftWorkflow = async (ignoreNotification?: boolean) => {
     return saveDraftWorkflow(workflow, activeForms)
@@ -476,6 +486,10 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                                       handleSubmissionSuccess={handleSubmissionSuccess(
                                         form
                                       )}
+                                      updatePrefills={updatePrefills(
+                                        form,
+                                        index
+                                      )}
                                       formData={formsData[index] || {}}
                                       isWorkflowComplete={workflow?.isCompleted}
                                       upsertDraft={handleSaveDraftWorkflow}
@@ -495,6 +509,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                           handleSubmissionSuccess={handleSubmissionSuccess(
                             activeForms[0]
                           )}
+                          updatePrefills={updatePrefills(activeForms[0], 0)}
                           formData={formsData[0] || {}}
                           isWorkflowComplete={workflow?.isCompleted}
                           upsertDraft={handleSaveDraftWorkflow}

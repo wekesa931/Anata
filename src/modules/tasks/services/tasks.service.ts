@@ -3,6 +3,7 @@ import { NewTask } from 'src/modules/tasks/types'
 import { filterFields } from 'src/utils/airtable/field-utils'
 import { useHNOSData } from 'src/modules/workflows/services/workflows.api'
 import TABLE_ROUTES from 'src/config/airtable-tables'
+import { mapRawTaskDefinitionToTaskDefinition } from 'src/modules/tasks/utils/transform'
 
 const TasksTable = TABLE_ROUTES['HN Tasks']
 const LabManagementRecordId =
@@ -24,6 +25,7 @@ export const useTasksAPI = () => {
     'Sources details',
     'Notes',
     'Default team assigned',
+    'Status',
   ]
 
   const getTaskDefinitionTemplates = async () => {
@@ -39,9 +41,21 @@ export const useTasksAPI = () => {
       fields: task,
     })
   }
+  const getAllDefinitionTemplates = async () => {
+    const definitions = await airtableFetch(
+      `tasksDefinition/list?${filterFields(templateFields)}`
+    )
+    if (Array.isArray(definitions)) {
+      return definitions
+        .filter((t: any) => t?.Status === 'Live')
+        .map(mapRawTaskDefinitionToTaskDefinition)
+    }
+    return []
+  }
 
   return {
     getTaskDefinitionTemplates,
     createTask,
+    getAllDefinitionTemplates,
   }
 }
