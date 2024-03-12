@@ -11,6 +11,7 @@ function Modal({
   attachmentUrl,
   children,
   width = '480px',
+  closeOption = true,
 }: any) {
   const [maximize, setMaximize] = useState(false)
   return (
@@ -23,15 +24,17 @@ function Modal({
         >
           <div className="d-flex flex-align-center">
             <div className="full-width">{heading}</div>
-            <button
-              className="btn-icon"
-              onClick={(e) => {
-                e.stopPropagation()
-                setModalOpen(false)
-              }}
-            >
-              <CloseIcon />
-            </button>
+            {closeOption && (
+              <button
+                className="btn-icon"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setModalOpen(false)
+                }}
+              >
+                <CloseIcon />
+              </button>
+            )}
             {attachmentUrl && (
               <>
                 <button

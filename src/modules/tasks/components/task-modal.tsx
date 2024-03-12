@@ -20,6 +20,7 @@ type TTemplateData = {
   smsTemplate: string
   interactionLogTemplate: string
   defaultReschedulingDays: number
+  taskAttempt: number
 }
 
 type TasksModalProps = {
@@ -83,18 +84,15 @@ function TasksModalContainer({
 
   const { notify } = useNotifications()
 
-  const getInitialValues = (data: any[]) => ({
+  const getInitialValues = () => ({
     interactionLog: templateData?.interactionLogTemplate || '',
     sms: templateData?.smsTemplate || '',
-    dueDate: templateData?.defaultReschedulingDays || 1,
-    taskAttempt: getDefaultTaskAttempt(data),
+    dueDate: templateData?.defaultReschedulingDays,
+    taskAttempt: templateData?.taskAttempt,
     smsCheck: false,
     interactionLogCheck: false,
     rescheduleTaskCheck: false,
   })
-
-  const getDefaultTaskAttempt = (data: any[]) =>
-    data?.[data.length - 1]?.['Number of Attempts'] || 1
 
   const handleIncrement = () =>
     setDueDate((prevDueDate) => Math.min(prevDueDate + 1, 14))
@@ -113,7 +111,7 @@ function TasksModalContainer({
   }
 
   useEffect(() => {
-    if (openItem?.data) setInitialValues(getInitialValues(openItem.data))
+    if (openItem?.data) setInitialValues(getInitialValues())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openItem])
 
@@ -244,7 +242,7 @@ function TasksModalContainer({
   const prepareTasks = (values: any) => {
     const updatedValue = {
       Status: 'In Progress',
-      'Number of Attempts': values.taskAttempt + 1,
+      'Number of Attempts': templateData.taskAttempt + 1,
       ...(checkboxes.rescheduleTaskCheck
         ? {
             'Due Date': dayjs().add(values.dueDate, 'day').format('YYYY-MM-DD'),

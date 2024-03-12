@@ -13,6 +13,7 @@ type TextFieldProps = {
   editMode?: boolean
   onEditClick?: () => void
   editable?: boolean
+  maxLength?: number
 } & OutlinedFieldProps
 
 function TextField({
@@ -20,6 +21,7 @@ function TextField({
   editMode = false,
   onEditClick,
   editable,
+  maxLength = 0,
   ...props
 }: TextFieldProps) {
   const handleValueBlur = (e: any, fieldProps: FieldProps) => {
@@ -38,6 +40,9 @@ function TextField({
     if (props.saveInput) {
       props.saveInput(fieldProps.field.name, e.target.value)
     }
+  }
+  const calculateCharacterCount = (value: string) => {
+    return value ? value.length : 0
   }
   return (
     <OutlinedField {...props}>
@@ -71,9 +76,28 @@ function TextField({
             }
           />
           {bottomPadding && (
-            <FormHelperText error={!!fieldProps.meta.error}>
-              {fieldProps?.meta?.error}
-            </FormHelperText>
+            <div className="flex justify-between">
+              <FormHelperText
+                error={!!fieldProps.meta.error && !!fieldProps.meta.touched}
+                id="standard-error-text"
+                className="text-red-500"
+              >
+                {fieldProps.meta.error}
+              </FormHelperText>
+              {maxLength > 0 && (
+                <span
+                  className={
+                    fieldProps.field.value?.length <= maxLength
+                      ? ''
+                      : 'text-red-500'
+                  }
+                >
+                  {`${calculateCharacterCount(
+                    fieldProps.field.value || ''
+                  )}/${maxLength}`}
+                </span>
+              )}
+            </div>
           )}
         </>
       )}

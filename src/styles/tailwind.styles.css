@@ -2330,6 +2330,25 @@ html,
   color: rgb(234 179 8 / var(--tw-text-opacity)) !important;
 }
 
+.text-red-500 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(239 68 68 / var(--tw-text-opacity)) !important;
+}
+
+.text-\[\'\#000000\'\] {
+  color: '#000000' !important;
+}
+
+.text-\[\#000000\] {
+  --tw-text-opacity: 1 !important;
+  color: rgb(0 0 0 / var(--tw-text-opacity)) !important;
+}
+
+.text-\[\#205284\] {
+  --tw-text-opacity: 1 !important;
+  color: rgb(32 82 132 / var(--tw-text-opacity)) !important;
+}
+
 .underline {
   text-decoration-line: underline !important;
 }

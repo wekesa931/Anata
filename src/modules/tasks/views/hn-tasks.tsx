@@ -211,6 +211,7 @@ function Tasks() {
     smsTemplate: ' ',
     interactionLogTemplate: ' ',
     defaultReschedulingDays: 1,
+    taskAttempt: 0,
   })
 
   const defaultTaskFilterStatus = 'All Incomplete'
@@ -386,17 +387,19 @@ function Tasks() {
         taskDefinition.length > 0
           ? await getTaskDefinitionData(taskDefinition[0])
           : []
-      setTemplateData(extractTaskTemplate(resp) || [])
+      setTemplateData(extractTaskTemplate(resp, task) || [])
       setOpenItem(mapHnTaskItem(task))
       setModalOpen(true)
       trackMissedTaskClicked(task)
     }
-    const extractTaskTemplate = (resp: any) => {
+    const extractTaskTemplate = (resp: any, task: any) => {
+      const attempt = task?.['Number of Attempts'] || 0
       if (!resp)
         return {
           smsTemplate: ' ',
           interactionLogTemplate: ' ',
           defaultReschedulingDays: 1,
+          taskAttempt: attempt,
         }
 
       const smsTemplate = resp['SMS Template (from Msg Templates)']
@@ -418,6 +421,7 @@ function Tasks() {
         interactionLogTemplate,
         defaultReschedulingDays:
           resp['Default rescheduling number of days'] || 1,
+        taskAttempt: attempt,
       }
     }
     const getTaskDefinitionData = async (record_id: string) => {
