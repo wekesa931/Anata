@@ -444,7 +444,7 @@ function Tasks() {
                 className={`text-normal font-medium flex justify-between items-center mt-2 mb-2 ${styles.taskNameWrap}`}
               >
                 <p>{hnTask.Type}</p>
-                <button className="flex btn !mr-0">
+                <button className="flex btn !mr-0 w-3/4 justify-end">
                   {hnTask.Status !== 'Complete' && (
                     <Tooltip title="Complete Task">
                       <DoneIcon

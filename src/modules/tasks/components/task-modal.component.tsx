@@ -67,6 +67,7 @@ type ListModalProps = {
   modalOpen: boolean
   setModalOpen: (value: boolean) => void
   retryFailedTasks: () => void
+  dueDate: number
 }
 function ModalHeader({ modalTitle }: { modalTitle: string }) {
   return (
@@ -94,6 +95,7 @@ function ListModalView({
   modalOpen,
   retryFailedTasks,
   setModalOpen,
+  dueDate,
 }: ListModalProps) {
   const getErrorMessage = () => {
     return 'We encountered an error while finishing this up. Please retry to resolve it. If the issue continues, contact our support team via Slack for help'
@@ -103,7 +105,8 @@ function ListModalView({
       open={modalOpen}
       setModalOpen={setModalOpen}
       heading={<ModalHeader modalTitle="Automatic next steps" />}
-      height="75%"
+      height="80%"
+      width="35%"
     >
       <PrimaryForm
         initialValues={initialValues}
@@ -113,7 +116,7 @@ function ListModalView({
         {(formik) => (
           <Form key="list-edit-form">
             <div
-              className={`mb-3 ${
+              className={`mb-10 ${
                 progress > 0 ? 'opacity-50 pointer-events-none' : ''
               }`}
             >
@@ -153,9 +156,8 @@ function ListModalView({
               <div className="mb-3 flex items-center ">
                 <Checkbox
                   checked={checkboxes.rescheduleTaskCheck}
-                  onChange={() =>
-                    handleCheckboxChange('rescheduleTaskCheck', formik)
-                  }
+                  onChange={(event) => handleCheckboxChange(event, formik)}
+                  name="rescheduleTaskCheck"
                 />
                 <Grid container alignItems="center">
                   <Grid item xs={12}>
@@ -164,7 +166,7 @@ function ListModalView({
                     </h1>
                   </Grid>
                   <Grid item xs={12}>
-                    <div className="flex items-center">
+                    <div className="flex items-center justify-between">
                       Select the number of days you want to add to the due date.
                       <div className="flex items-center">
                         <RemoveCircleIcon
@@ -178,12 +180,7 @@ function ListModalView({
                           onClick={handleDecrement}
                         />
 
-                        <TextField
-                          name="dueDate"
-                          label=""
-                          type="number"
-                          required={false}
-                        />
+                        <p className="text-lg mr-2 ml-2">{dueDate}</p>
                         <AddCircleIcon
                           sx={{
                             width: '31%',

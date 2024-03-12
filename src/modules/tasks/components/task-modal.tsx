@@ -46,6 +46,7 @@ function TasksModalContainer({
     taskAttempt: 0,
     smsCheck: false,
     interactionLogCheck: false,
+    rescheduleTaskCheck: false,
   })
   const [dueDate, setDueDate] = useState<number>(1)
   const [checkboxes, setCheckboxes] = useState({
@@ -89,6 +90,7 @@ function TasksModalContainer({
     taskAttempt: getDefaultTaskAttempt(data),
     smsCheck: false,
     interactionLogCheck: false,
+    rescheduleTaskCheck: false,
   })
 
   const getDefaultTaskAttempt = (data: any[]) =>
@@ -104,12 +106,10 @@ function TasksModalContainer({
     const { name, checked } = event.target
     formik.handleChange(event)
 
-    if (name === 'smsCheck' || name === 'interactionLogCheck') {
-      setCheckboxes((prevCheckboxes) => ({
-        ...prevCheckboxes,
-        [name]: checked,
-      }))
-    }
+    setCheckboxes((prevCheckboxes) => ({
+      ...prevCheckboxes,
+      [name]: checked,
+    }))
   }
 
   useEffect(() => {
@@ -310,6 +310,7 @@ function TasksModalContainer({
       modalOpen={modalOpen}
       setModalOpen={setModalOpen}
       retryFailedTasks={retryFailedTasks}
+      dueDate={dueDate}
     />
   )
 }

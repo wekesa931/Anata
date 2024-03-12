@@ -10,6 +10,7 @@ function Modal({
   height = '560px',
   attachmentUrl,
   children,
+  width = '480px',
 }: any) {
   const [maximize, setMaximize] = useState(false)
   return (
@@ -17,7 +18,7 @@ function Modal({
       {open && (
         <Dialog
           onClose={() => setModalOpen(false)}
-          width={maximize ? '100%' : '480px'}
+          width={maximize ? '100%' : width}
           height={maximize ? '100%' : height}
         >
           <div className="d-flex flex-align-center">

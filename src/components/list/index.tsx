@@ -168,7 +168,7 @@ function List({
                       {getTopRightText && getTopRightText(item.data)}
                     </div>
                   </div>
-                  <div className={styles.notes}>
+                  <div className={`${styles.notes} overflow-auto`}>
                     {modalTitle !== 'Task' && (
                       <Tooltip title="Expand Record">
                         <div

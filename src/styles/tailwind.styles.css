@@ -882,6 +882,10 @@ html,
   margin-top: 40px !important;
 }
 
+.mb-10 {
+  margin-bottom: 2.5rem !important;
+}
+
 .box-content {
   box-sizing: content-box !important;
 }
@@ -1155,6 +1159,10 @@ html,
 
 .w-xl {
   width: 36rem !important;
+}
+
+.w-3\/4 {
+  width: 75% !important;
 }
 
 .min-w-1\/2 {
