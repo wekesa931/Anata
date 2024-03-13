@@ -184,6 +184,7 @@ export function MultiselectField(props: MultiselectFieldProps) {
                     variant="outlined"
                     label={option.label}
                     {...getTagProps({ index })}
+                    className="font-rubik text-sm bg-blue-10 font-normal"
                   />
                 ))
               }}
@@ -223,23 +224,25 @@ export function MultiselectField(props: MultiselectFieldProps) {
               renderOption={(optionProps, option, options) => {
                 const { selected, index } = options
                 return (
-                  <div className="border-b border-b-dark-blue-100">
-                    <MenuItem
-                      {...optionProps}
-                      className="flex items-center gap-2 text-sm overflow-hidden"
-                      selected={selected}
-                    >
-                      <Checkbox
-                        checked={selected}
-                        sx={{
-                          '&.Mui-checked': {
+                  <div>
+                    <div className="border-b border-b-dark-blue-100">
+                      <MenuItem
+                        {...optionProps}
+                        className="flex items-center gap-2 text-sm overflow-hidden "
+                        selected={selected}
+                      >
+                        <Checkbox
+                          checked={selected}
+                          sx={{
+                            '&.Mui-checked': {
+                              color: '#ff9800',
+                            },
                             color: '#ff9800',
-                          },
-                          color: '#ff9800',
-                        }}
-                      />
-                      <p>{option?.label}</p>
-                    </MenuItem>
+                          }}
+                        />
+                        <p>{option?.label}</p>
+                      </MenuItem>
+                    </div>
                     {index + 1 === props.options.length &&
                       props.ExtraOptionsComponent && (
                         <div className="w-full mb-0">

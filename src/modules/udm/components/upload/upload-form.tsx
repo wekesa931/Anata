@@ -156,7 +156,7 @@ function CreateNewLabRequest({
         fullWidth
         variant="text"
         startIcon={<Plus />}
-        className="bg-white mt-1 w-full normal-case flex items-center justify-start text-blue-100 py-2 px-6"
+        className="bg-white mt-1 w-full normal-case flex items-center justify-start text-blue-100 py-2 px-8 font-medium  "
         onClick={(e: any) => {
           e?.preventDefault()
           e?.stopPropagation()
