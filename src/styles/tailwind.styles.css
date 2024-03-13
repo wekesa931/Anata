@@ -886,6 +886,10 @@ html,
   margin-bottom: 2.5rem !important;
 }
 
+.mt-10 {
+  margin-top: 2.5rem !important;
+}
+
 .box-content {
   box-sizing: content-box !important;
 }

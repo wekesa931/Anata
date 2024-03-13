@@ -26,16 +26,7 @@ const validationSchema = Yup.object().shape({
         'Please enter the required information. This field cannot be left blank.'
       )
       .trim()
-      .test(
-        'character-limit',
-        'Character limit exceeded. Please shorten your message.',
-        (value) => {
-          if (value) {
-            return value.length <= 360
-          }
-          return true
-        }
-      ),
+      .max(360, 'Character limit exceeded. Please shorten your message.'),
     otherwise: Yup.string().trim(),
   }),
 
@@ -97,7 +88,7 @@ function ModalHeader({
       >
         {modalTitle}
       </h3>
-      <p className={`mt-2 ${editMode ? 'text-xs' : 'text-base mt-4 mb-4'}`}>
+      <p className={`mt-2 ${editMode ? 'text-xs' : 'text-base mt-6 mb-4'}`}>
         {modalDescription}
       </p>
     </div>
@@ -148,8 +139,8 @@ function ListModalView({
           editMode={editMode}
         />
       }
-      height={editMode ? '80%' : '35%'}
-      width={editMode ? '50%' : '35%'}
+      height={editMode ? '80%' : '45%'}
+      width={editMode ? '50%' : '40%'}
       closeOption={false}
     >
       <PrimaryForm
@@ -335,7 +326,7 @@ function ListModalView({
                 )}
               </div>
             ) : (
-              <div className="mt-8 flex flex-col gap-2">
+              <div className="mt-10 flex flex-col gap-4">
                 <Button
                   fullWidth
                   className="border "
