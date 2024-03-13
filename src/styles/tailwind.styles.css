@@ -901,6 +901,10 @@ body,
   margin-top: 2.5rem !important;
 }
 
+.mt-10 {
+  margin-top: 2.5rem !important;
+}
+
 .box-content {
   box-sizing: content-box !important;
 }
@@ -1044,6 +1048,10 @@ body,
   height: 100vh !important;
 }
 
+.h-auto {
+  height: auto !important;
+}
+
 .max-h-\[150px\] {
   max-height: 150px !important;
 }
@@ -1182,6 +1190,10 @@ body,
 
 .w-lg {
   width: 32rem !important;
+}
+
+.w-auto {
+  width: auto !important;
 }
 
 .min-w-1\/2 {

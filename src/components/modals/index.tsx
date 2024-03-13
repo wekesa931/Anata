@@ -14,11 +14,16 @@ function Modal({
   closeOption = true,
 }: any) {
   const [maximize, setMaximize] = useState(false)
+  const handleClose = () => {
+    if (closeOption) {
+      setModalOpen(false)
+    }
+  }
   return (
     <div data-testid="modal">
       {open && (
         <Dialog
-          onClose={() => setModalOpen(false)}
+          onClose={handleClose}
           width={maximize ? '100%' : width}
           height={maximize ? '100%' : height}
         >

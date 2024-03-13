@@ -139,8 +139,8 @@ function ListModalView({
           editMode={editMode}
         />
       }
-      height={editMode ? '80%' : '45%'}
-      width={editMode ? '50%' : '40%'}
+      height="auto"
+      width="auto"
       closeOption={false}
     >
       <PrimaryForm
