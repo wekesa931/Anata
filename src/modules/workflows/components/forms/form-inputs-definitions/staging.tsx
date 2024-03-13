@@ -20459,18 +20459,24 @@ export default [
         helper: '',
         conditionType: '',
         parentKey: 'Scribe Tags',
-        parentValues: ['Internal Appointment', 'Internal Appointment,Referral'],
+        parentValues: [
+          'Internal Appointment',
+          'Internal Appointment,Referral',
+          'Appointment',
+        ],
         condition: (values: any) => {
           if (Array.isArray(values['Scribe Tags'])) {
             return [
               'Internal Appointment',
               'Internal Appointment,Referral',
+              'Appointment',
             ].some((r) => values['Scribe Tags'].includes(r))
           }
           const tagsValues = values['Scribe Tags']
           return [
             'Internal Appointment',
             'Internal Appointment,Referral',
+            'Appointment',
           ].includes(tagsValues?.name ?? tagsValues)
         },
       },
@@ -20628,7 +20634,7 @@ export default [
         relationship: 'one',
         foreignTableId: 'tblZyeANbBkE2q4uG',
         required: true,
-        helper: 'Note: if CS task, please assign it to Effie',
+        helper: '',
       },
       {
         id: 'fldma4BpT2S3rhEB1',

@@ -24263,7 +24263,7 @@ export default [
         relationship: 'one',
         foreignTableId: 'tblHs6JxFnMGAjNNC',
         required: true,
-        helper: 'Note: if CS task, please assign it to Effie',
+        helper: '',
       },
       {
         id: 'fld44WK9nOk5ZanUX',
