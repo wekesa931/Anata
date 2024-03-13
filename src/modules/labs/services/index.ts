@@ -2,6 +2,9 @@ import airtableFetch from 'src/services/airtable/fetch'
 import { UpdateLabRequest } from 'src/modules/labs/types'
 import { logError } from 'src/utils/logging/logger'
 import { useState } from 'react'
+import { filterFields } from 'src/utils/airtable/field-utils'
+
+const LabTypesFields = ['Record ID', 'Name']
 
 export const useLabManagementAPI = () => {
   const getAllLabRequests = async (antaraId: string) => {
@@ -13,9 +16,10 @@ export const useLabManagementAPI = () => {
 
   const [updating, setUpdating] = useState(false)
 
-  const update = async (rawUpdate: UpdateLabRequest) => {
+  const update = async (rawUpdate: UpdateLabRequest, create?: boolean) => {
     setUpdating(true)
-    const res = await airtableFetch('labs', 'post', rawUpdate)
+    const url = create ? 'create/labs' : 'labs'
+    const res = await airtableFetch(url, 'post', rawUpdate)
     setUpdating(false)
 
     if (typeof res === 'string') {
@@ -30,9 +34,17 @@ export const useLabManagementAPI = () => {
     return res
   }
 
+  const getAllLabsTypes = async () => {
+    const url = `routine_labs/list?${filterFields(LabTypesFields)}`
+    const response = airtableFetch(url)
+
+    return response
+  }
+
   return {
     getAllLabRequests,
     update,
     updating,
+    getAllLabsTypes,
   }
 }

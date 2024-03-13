@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useMember } from 'src/context/member'
 import { useUser } from 'src/context/user'
 import type { UploadDocumentFormValues } from 'src/modules/udm/types'
@@ -7,7 +7,8 @@ import { useLabsData } from 'src/modules/labs/hooks/labs.hook'
 import { useTasksData } from 'src/modules/tasks/hooks/tasks.data'
 import { TaskDefinitionTypes } from 'src/modules/tasks/types'
 import { logError } from 'src/utils/logging/logger'
-import { LabRequest } from 'src/modules/labs/types'
+import type { LabRequest, LabTypes } from 'src/modules/labs/types'
+import type { Options } from 'src/components/forms/fields/select-field'
 
 type Process = () => void
 
@@ -38,6 +39,8 @@ const calculateProgressDiff = (oldProgress: number, processCount: number) => {
   return Math.round(oldProgress)
 }
 
+export type DocumentUploadHook = ReturnType<typeof useDocumentUpload>
+
 export const useDocumentUpload = ({
   markAsDone,
   uploadDocument,
@@ -60,8 +63,32 @@ export const useDocumentUpload = ({
   const [error, setError] = useState<string | null>(null)
   const [retryTask, setRetryTask] = useState<Process | null>(null)
   const [currentProcessTitle, setTitle] = useState<string | null>(null)
-  const { labRequests, markLabRequestAsReceived } = useLabsData()
+  const { labRequests, markLabRequestAsReceived, labTypes, createLabRequests } =
+    useLabsData()
   const { createTaskFromTemplate } = useTasksData()
+
+  const mapLabRequestsToOptions = (labs: LabRequest[]) => {
+    const LabsFilterStatuses = [
+      'Needed',
+      'Scheduled',
+      'Results received by Member',
+      'Schedule needed',
+      'Checkin Confirmed',
+    ]
+    return labs
+      .filter(
+        (labRequest) => LabsFilterStatuses.indexOf(labRequest.status) > -1
+      )
+      .map((labRequest) => ({
+        label: labRequest.summary,
+        value: labRequest.recordId,
+        ...labRequest,
+      }))
+  }
+
+  const [currentLabRequests, setCurrentLabRequests] = useState<Options[]>(
+    mapLabRequestsToOptions(labRequests)
+  )
 
   const setProcessError = () => {
     setError(
@@ -185,40 +212,55 @@ export const useDocumentUpload = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submittingDocument])
 
-  const mapLabRequestsToOptions = (labs: LabRequest[]) => {
-    const LabsFilterStatuses = [
-      'Needed',
-      'Scheduled',
-      'Results received by Member',
-      'Schedule needed',
-      'Checkin Confirmed',
-    ]
-    return labs
-      .filter(
-        (labRequest) => LabsFilterStatuses.indexOf(labRequest.status) > -1
-      )
-      .map((labRequest) => ({
-        label: labRequest.summary,
-        value: labRequest.recordId,
-        ...labRequest,
-      }))
-  }
-
   const retryCurrentProcess = () => {
     setSubmittingDocument(true)
     setError(null)
     retryTask?.()
   }
 
-  return {
-    progress,
-    error,
-    showProgressFeedback: submittingDocument || !!retryTask,
-    currentProcessTitle,
-    submitDocument,
-    labRequests: mapLabRequestsToOptions(labRequests),
-    retryCurrentProcess,
-    formValues,
-    submittingDocument,
+  const mapLabTypesToOptions = (rawLabTypes: LabTypes[]) => {
+    return rawLabTypes.map((labType) => ({
+      label: labType.name,
+      value: labType.recordId,
+      ...labType,
+    }))
   }
+
+  const createNewLabRequests = async (labRequestTypes: LabTypes[]) => {
+    const results = await createLabRequests(labRequestTypes)
+
+    const newLabRequests =
+      results?.map((l) => ({
+        label: l.summary,
+        value: l.recordId,
+        ...l,
+      })) || []
+
+    setCurrentLabRequests((prev) => [...prev, ...newLabRequests])
+    return newLabRequests
+  }
+
+  const updateFormValues = (values: Partial<UploadDocumentFormValues>) => {
+    // enable re-initialization of the form values
+    setFormValues((prev) => ({ ...prev, ...values }))
+  }
+
+  return useMemo(() => {
+    return {
+      progress,
+      error,
+      showProgressFeedback: submittingDocument || !!retryTask,
+      currentProcessTitle,
+      submitDocument,
+      labRequests: currentLabRequests,
+      retryCurrentProcess,
+      formValues,
+      submittingDocument,
+      labTypes: mapLabTypesToOptions(labTypes),
+      createNewLabRequests,
+      updateFormValues,
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentLabRequests, formValues, error, labTypes, labRequests])
 }

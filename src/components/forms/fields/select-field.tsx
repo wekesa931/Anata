@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FieldProps } from 'formik'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
@@ -127,7 +127,14 @@ function SelectField({
   )
 }
 
-export function MultiselectField(props: SelectFieldProps & OutlinedFieldProps) {
+type MultiselectFieldProps = SelectFieldProps &
+  OutlinedFieldProps & {
+    ExtraOptionsComponent?: React.ReactNode
+    isOpen?: boolean
+  }
+
+export function MultiselectField(props: MultiselectFieldProps) {
+  const [open, setOpen] = useState(!props.options.length)
   const handleValueChange = (values: any, fieldProps: FieldProps) => {
     fieldProps.form.setFieldValue(fieldProps.field.name, values)
 
@@ -143,22 +150,34 @@ export function MultiselectField(props: SelectFieldProps & OutlinedFieldProps) {
     }
   }
 
+  const handleClose = (e: any, reason: string) => {
+    if (reason === 'blur' && props.isOpen) {
+      e.stopPropagation()
+    } else {
+      setOpen(false)
+    }
+  }
+
   return (
-    <OutlinedField {...props}>
+    <OutlinedField {...props} id="custom-autocomplete">
       {(fieldProps: FieldProps) => {
         return (
           <>
             <Autocomplete
+              open={open}
+              onOpen={() => setOpen(true)}
               multiple
+              getOptionLabel={(option: Options) => option.label}
               options={props.options}
-              getOptionLabel={(option: any) => option.label}
-              freeSolo
+              disableCloseOnSelect
               onChange={(e, newValue) => {
                 handleValueChange(newValue, fieldProps)
               }}
+              onClose={handleClose}
               onBlur={(e: any) => {
                 handleBlur(e, fieldProps)
               }}
+              value={fieldProps.field.value}
               renderTags={(value: readonly Options[], getTagProps) => {
                 return value.map((option: Options, index: number) => (
                   <Chip
@@ -170,26 +189,64 @@ export function MultiselectField(props: SelectFieldProps & OutlinedFieldProps) {
               }}
               renderInput={(params) => {
                 return (
-                  <TextField
-                    {...params}
-                    {...fieldProps.field}
-                    ref={params.InputProps.ref}
-                    inputProps={params.inputProps}
-                    placeholder={props.placeholder || 'Search...'}
-                    // eslint-disable-next-line
-                    InputProps={{
-                      ...params.InputProps,
-                      startAdornment: (
-                        <>
-                          <IconButton size="small">
-                            <SearchOutlined />
-                          </IconButton>
-                          {params.InputProps.startAdornment}
-                        </>
-                      ),
-                    }}
-                    size="small"
-                  />
+                  <div>
+                    <TextField
+                      {...params}
+                      {...fieldProps.field}
+                      ref={params.InputProps.ref}
+                      inputProps={params.inputProps}
+                      placeholder={props.placeholder || 'Search...'}
+                      // eslint-disable-next-line
+                      InputProps={{
+                        ...params.InputProps,
+                        startAdornment: (
+                          <>
+                            <IconButton size="small">
+                              <SearchOutlined />
+                            </IconButton>
+                            {params.InputProps.startAdornment}
+                          </>
+                        ),
+                      }}
+                      size="small"
+                    />
+                  </div>
+                )
+              }}
+              noOptionsText={
+                props.ExtraOptionsComponent ? (
+                  <>{props.ExtraOptionsComponent} </>
+                ) : (
+                  'No options found'
+                )
+              }
+              renderOption={(optionProps, option, options) => {
+                const { selected, index } = options
+                return (
+                  <div className="border-b border-b-dark-blue-100">
+                    <MenuItem
+                      {...optionProps}
+                      className="flex items-center gap-2 text-sm overflow-hidden"
+                      selected={selected}
+                    >
+                      <Checkbox
+                        checked={selected}
+                        sx={{
+                          '&.Mui-checked': {
+                            color: '#ff9800',
+                          },
+                          color: '#ff9800',
+                        }}
+                      />
+                      <p>{option?.label}</p>
+                    </MenuItem>
+                    {index + 1 === props.options.length &&
+                      props.ExtraOptionsComponent && (
+                        <div className="w-full mb-0">
+                          {props.ExtraOptionsComponent}
+                        </div>
+                      )}
+                  </div>
                 )
               }}
             />

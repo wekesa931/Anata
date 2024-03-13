@@ -124,11 +124,14 @@ export const useModuleAnalytics = () => {
         rightSectionAnalytics.track('SMS send failed', sms)
       }
     },
-    trackValidateMemberClicked: (member: any) => {
-      rightSectionAnalytics.track('Call Validate member clicked', member)
+    trackValidateMemberClicked: (validatedMember: any) => {
+      rightSectionAnalytics.track(
+        'Call Validate member clicked',
+        validatedMember
+      )
     },
-    trackValidatedMember: (member: any) => {
-      rightSectionAnalytics.track('Call Member validated', member)
+    trackValidatedMember: (validatedMember: any) => {
+      rightSectionAnalytics.track('Call Member validated', validatedMember)
     },
     trackOpenFormClicked: (formName: any) => {
       rightSectionAnalytics.track('Call Open form clicked', formName)
@@ -257,8 +260,10 @@ export const useModuleAnalytics = () => {
         'workflows section - opened from dashboard menu'
       )
     },
-    trackMemberSearched: (member: any, source: 'main' | 'member') => {
-      memberAnalytics.track(`searched from ${source} dashboard`, { member })
+    trackMemberSearched: (searchedMember: any, source: 'main' | 'member') => {
+      memberAnalytics.track(`searched from ${source} dashboard`, {
+        member: searchedMember,
+      })
     },
     trackTaskItemOpened: (task: any) => {
       homePageSectionAnalytics.track(`tasks - task opened`, { task })
@@ -279,6 +284,14 @@ export const useModuleAnalytics = () => {
     },
     trackAutomaticActionSubmitted: () => {
       rightSectionAnalytics.track('automatic actions submitted')
+    },
+    trackLabRequestCreatedFromDocs: (labTypes: any) => {
+      middlesSectionAnalytics.track(
+        'lab requests created from UDM document upload',
+        {
+          labTypes,
+        }
+      )
     },
   }
 }

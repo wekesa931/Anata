@@ -21,6 +21,7 @@ export type OutlinedFieldProps = {
   autoFocus?: boolean
   saveInput?: (name: string, value: any) => void // enable save input to a different source on change
   EmptyOptionBtn?: React.ReactNode
+  id?: string
 }
 
 type OutlinedFieldPropType = {
@@ -36,9 +37,10 @@ function OutlinedField({
   validate,
   disabled = false,
   helperText,
+  id,
 }: OutlinedFieldProps & OutlinedFieldPropType) {
   return (
-    <FormControl fullWidth={fullWidth} required={required}>
+    <FormControl fullWidth={fullWidth} required={required} id={id}>
       <FormLabel
         disabled={disabled}
         className="font-rubik font-medium text-grey-main text-base text-left mb-2"

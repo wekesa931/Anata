@@ -53,9 +53,15 @@ export type RawLabRequest = {
   'Imaging type': string
   Reason: string
   'Lab type': string | string[]
+  'Routine lab (from Lab synced view)': string[]
 }
 
 export type UpdateLabRequest = {
-  id: string
+  id?: string
   fields: Partial<RawLabRequest>
+}
+
+export type LabTypes = {
+  recordId: string
+  name: string
 }

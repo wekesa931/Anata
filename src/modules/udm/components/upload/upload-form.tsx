@@ -1,4 +1,9 @@
-import { FormControlLabel, Checkbox, LinearProgress } from '@mui/material'
+import {
+  FormControlLabel,
+  Checkbox,
+  LinearProgress,
+  Button,
+} from '@mui/material'
 import { Form } from 'formik'
 import React from 'react'
 import PrimaryButton from 'src/components/buttons/primary'
@@ -10,9 +15,14 @@ import {
 import TextField from 'src/components/forms/fields/text'
 import PrimaryForm from 'src/components/forms/primary-form'
 import { DocMeta } from 'src/modules/udm/types'
-import { useDocumentUpload } from 'src/modules/udm/hooks/document-upload'
+import {
+  useDocumentUpload,
+  DocumentUploadHook,
+} from 'src/modules/udm/hooks/document-upload'
 import * as yup from 'yup'
-import { LabRequest } from 'src/modules/labs/types'
+import { LabRequest, LabTypes } from 'src/modules/labs/types'
+import { Plus } from 'react-feather'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 const validationSchema = yup.object().shape({
   docType: yup.string().required(),
@@ -48,12 +58,127 @@ type Props = {
 
 const LAB_REPORT_DOC_TYPE = 'Laboratory Report'
 
+type CreateNewLabRequestProps = {
+  closeWindow: () => void
+  show: boolean
+  toggle: () => void
+  updateLabRequests: (labRequests: LabRequest[]) => void
+  data: DocumentUploadHook
+}
+
+function CreateNewLabRequest({
+  show,
+  toggle,
+  closeWindow,
+  updateLabRequests,
+  data,
+}: CreateNewLabRequestProps) {
+  const [uploading, setUploading] = React.useState(false)
+  const [error, setError] = React.useState<string | null>(null)
+
+  const { labTypes, createNewLabRequests } = data
+  const { trackLabRequestCreatedFromDocs } = useModuleAnalytics()
+
+  const handleSubmit = async (values: any) => {
+    try {
+      setUploading(true)
+      const created = await createNewLabRequests(values.newLabTypes)
+      updateLabRequests(created)
+      trackLabRequestCreatedFromDocs(
+        values.newLabTypes.map((lab: any) => lab.name)
+      )
+      closeWindow()
+    } catch (e: any) {
+      setError(e.message ?? 'An error occurred saving lab requests')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const initialValues = {
+    newLabTypes: [],
+  }
+
+  const newLabValidationSchema = yup.object().shape({
+    newLabTypes: yup.array().of(
+      yup
+        .mixed<LabTypes>()
+        .typeError('Invalid lab type')
+        .test('is-valid', 'Invalid lab type', (value: any) => {
+          return 'name' in value && 'recordId' in value
+        })
+        .required()
+    ),
+  })
+
+  return (
+    <div className="bg-white font-rubik">
+      {show && (
+        <div className="border rounded-md p-2">
+          <PrimaryForm
+            initialValues={initialValues}
+            handleSubmit={handleSubmit}
+            validationSchema={newLabValidationSchema}
+          >
+            {() => {
+              return (
+                <Form>
+                  <MultiselectField
+                    options={labTypes}
+                    name="newLabTypes"
+                    label="Lab Type"
+                  />
+
+                  <div className="flex flex-col gap-2">
+                    <PrimaryButton
+                      onClick={toggle}
+                      className="bg-disabled-grey hover:bg-disabled-grey normal-case text-white font-medium px-4 py-2 rounded-md"
+                    >
+                      Cancel
+                    </PrimaryButton>
+                    <PrimaryButton
+                      className="bg-orange-100 hover:bg-orange-100 normal-case text-white font-medium px-4 py-2 rounded-md"
+                      fullWidth
+                      variant="contained"
+                      type="submit"
+                    >
+                      {uploading ? 'Saving...' : 'Save'}
+                    </PrimaryButton>
+                  </div>
+                  {error && <p className="text-red-100">{error}</p>}
+                </Form>
+              )
+            }}
+          </PrimaryForm>
+        </div>
+      )}
+      <Button
+        fullWidth
+        variant="text"
+        startIcon={<Plus />}
+        className="bg-white mt-1 w-full normal-case flex items-center justify-start text-blue-100 py-2 px-6"
+        onClick={(e: any) => {
+          e?.preventDefault()
+          e?.stopPropagation()
+          toggle()
+        }}
+      >
+        Add new Lab Request
+      </Button>
+    </div>
+  )
+}
+
 function UploadDocumentForm({
   options,
   uploadDocument,
   folders,
   markAsDone,
 }: Props) {
+  const uploadDocumentHook: DocumentUploadHook = useDocumentUpload({
+    markAsDone,
+    uploadDocument,
+  })
   const {
     labRequests,
     submitDocument,
@@ -64,10 +189,15 @@ function UploadDocumentForm({
     submittingDocument,
     progress,
     currentProcessTitle: processTitle,
-  } = useDocumentUpload({
-    markAsDone,
-    uploadDocument,
-  })
+  } = uploadDocumentHook
+
+  // console.log('Form values  ', formValues)
+
+  const [showCreateLabRequest, setShowCreateLabRequest] = React.useState(false)
+
+  const toggleCreateLabRequest = () => {
+    setShowCreateLabRequest(!showCreateLabRequest)
+  }
 
   return (
     <PrimaryForm
@@ -96,6 +226,21 @@ function UploadDocumentForm({
                 placeholder="Search..."
                 disabled={submittingDocument}
                 required={false}
+                ExtraOptionsComponent={
+                  <CreateNewLabRequest
+                    toggle={toggleCreateLabRequest}
+                    show={showCreateLabRequest}
+                    closeWindow={() => setShowCreateLabRequest(false)}
+                    data={uploadDocumentHook}
+                    updateLabRequests={(labs: any) => {
+                      formik.setFieldValue('linkedLabRequest', [
+                        ...formik.values.linkedLabRequest,
+                        ...labs,
+                      ])
+                    }}
+                  />
+                }
+                isOpen={showCreateLabRequest}
               />
             )}
 
