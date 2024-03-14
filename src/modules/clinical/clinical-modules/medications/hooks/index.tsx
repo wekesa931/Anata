@@ -60,6 +60,7 @@ const useMedicationData = () => {
       'last_modified',
       'status_last_modified_at',
       'updated_by',
+      'Other Medication',
     ]
     setLoading(true)
     try {
