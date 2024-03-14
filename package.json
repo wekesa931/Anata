@@ -141,7 +141,7 @@
     "@hookform/resolvers": "^2.9.10",
     "@mui/icons-material": "^5.14.9",
     "@mui/lab": "^5.0.0-alpha.144",
-    "@mui/material": "^5.14.9",
+    "@mui/material": "^5.15.13",
     "@mui/styles": "^5.14.18",
     "@mui/utils": "^5.14.9",
     "@mui/x-data-grid": "^5.17.26",

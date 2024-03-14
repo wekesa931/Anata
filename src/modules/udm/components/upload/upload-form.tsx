@@ -25,12 +25,13 @@ import { Plus } from 'react-feather'
 import { useModuleAnalytics } from 'src/modules/analytics'
 
 const validationSchema = yup.object().shape({
-  docType: yup.string().required(),
-  title: yup.string().required(),
+  docType: yup.string().required('Document type is required'),
+  title: yup.string().required('Title is required'),
   creator: yup.string().required(),
   description: yup.string().optional(),
   linkedLabRequest: yup
     .array()
+    .typeError('Select a valid lab request')
     .of(
       yup
         .mixed<LabRequest>()
@@ -44,7 +45,7 @@ const validationSchema = yup.object().shape({
   shareDocument: yup.boolean().optional(),
   folder: yup.string().when('shareDocument', {
     is: true,
-    then: yup.string().required(),
+    then: yup.string().required('Folder is required'),
     otherwise: yup.string().optional(),
   }),
 })
@@ -100,15 +101,18 @@ function CreateNewLabRequest({
   }
 
   const newLabValidationSchema = yup.object().shape({
-    newLabTypes: yup.array().of(
-      yup
-        .mixed<LabTypes>()
-        .typeError('Invalid lab type')
-        .test('is-valid', 'Invalid lab type', (value: any) => {
-          return 'name' in value && 'recordId' in value
-        })
-        .required()
-    ),
+    newLabTypes: yup
+      .array()
+      .typeError('Select a lab type')
+      .of(
+        yup
+          .mixed<LabTypes>()
+          .typeError('Invalid lab type')
+          .test('is-valid', 'Invalid lab type', (value: any) => {
+            return 'name' in value && 'recordId' in value
+          })
+          .required()
+      ),
   })
 
   return (
@@ -189,6 +193,7 @@ function UploadDocumentForm({
     submittingDocument,
     progress,
     currentProcessTitle: processTitle,
+    loadingLabRequests,
   } = uploadDocumentHook
 
   // console.log('Form values  ', formValues)
@@ -226,11 +231,14 @@ function UploadDocumentForm({
                 placeholder="Search..."
                 disabled={submittingDocument}
                 required={false}
+                loading={loadingLabRequests}
                 ExtraOptionsComponent={
                   <CreateNewLabRequest
                     toggle={toggleCreateLabRequest}
                     show={showCreateLabRequest}
-                    closeWindow={() => setShowCreateLabRequest(false)}
+                    closeWindow={() => {
+                      setShowCreateLabRequest(false)
+                    }}
                     data={uploadDocumentHook}
                     updateLabRequests={(labs: any) => {
                       formik.setFieldValue('linkedLabRequest', [

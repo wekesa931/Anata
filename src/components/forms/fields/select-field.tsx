@@ -167,7 +167,7 @@ export function MultiselectField(props: MultiselectFieldProps) {
               open={open}
               onOpen={() => setOpen(true)}
               multiple
-              getOptionLabel={(option: Options) => option.label}
+              autoFocus
               options={props.options}
               disableCloseOnSelect
               onChange={(e, newValue) => {
@@ -177,23 +177,27 @@ export function MultiselectField(props: MultiselectFieldProps) {
               onBlur={(e: any) => {
                 handleBlur(e, fieldProps)
               }}
-              value={fieldProps.field.value}
+              loading={props.loading}
+              value={fieldProps.field.value ?? []}
               renderTags={(value: readonly Options[], getTagProps) => {
-                return value.map((option: Options, index: number) => (
-                  <Chip
-                    variant="outlined"
-                    label={option.label}
-                    {...getTagProps({ index })}
-                    className="font-rubik text-sm bg-blue-10 font-normal"
-                  />
-                ))
+                return (
+                  Array.isArray(value) &&
+                  value.map((option: Options, index: number) => (
+                    <Chip
+                      variant="outlined"
+                      label={option.label}
+                      {...getTagProps({ index })}
+                      className="font-rubik text-sm bg-blue-10 font-normal"
+                    />
+                  ))
+                )
               }}
               renderInput={(params) => {
                 return (
                   <div>
                     <TextField
                       {...params}
-                      {...fieldProps.field}
+                      autoFocus
                       ref={params.InputProps.ref}
                       inputProps={params.inputProps}
                       placeholder={props.placeholder || 'Search...'}
@@ -202,9 +206,11 @@ export function MultiselectField(props: MultiselectFieldProps) {
                         ...params.InputProps,
                         startAdornment: (
                           <>
-                            <IconButton size="small">
-                              <SearchOutlined />
-                            </IconButton>
+                            {!fieldProps.field.value?.length && (
+                              <IconButton size="small">
+                                <SearchOutlined />
+                              </IconButton>
+                            )}
                             {params.InputProps.startAdornment}
                           </>
                         ),

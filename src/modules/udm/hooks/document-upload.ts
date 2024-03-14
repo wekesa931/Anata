@@ -63,8 +63,13 @@ export const useDocumentUpload = ({
   const [error, setError] = useState<string | null>(null)
   const [retryTask, setRetryTask] = useState<Process | null>(null)
   const [currentProcessTitle, setTitle] = useState<string | null>(null)
-  const { labRequests, markLabRequestAsReceived, labTypes, createLabRequests } =
-    useLabsData()
+  const {
+    labRequests,
+    markLabRequestAsReceived,
+    labTypes,
+    createLabRequests,
+    loading,
+  } = useLabsData()
   const { createTaskFromTemplate } = useTasksData()
 
   const mapLabRequestsToOptions = (labs: LabRequest[]) => {
@@ -259,8 +264,9 @@ export const useDocumentUpload = ({
       labTypes: mapLabTypesToOptions(labTypes),
       createNewLabRequests,
       updateFormValues,
+      loadingLabRequests: loading,
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentLabRequests, formValues, error, labTypes, labRequests])
+  }, [currentLabRequests, formValues, error, labTypes, labRequests, loading])
 }
