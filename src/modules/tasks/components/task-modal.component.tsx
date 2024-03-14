@@ -286,7 +286,7 @@ function ListModalView({
                     <LinearProgress
                       variant="determinate"
                       sx={{
-                        backgroundColor: 'white',
+                        backgroundColor: '#E8EAED',
                         '& .MuiLinearProgress-bar': {
                           backgroundColor:
                             progressState === 'error' ? '#972323' : '#007AFF',
