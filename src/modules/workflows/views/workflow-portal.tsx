@@ -273,26 +273,24 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     }
   }
 
+  const updateDataAtIndex = (index: number, newData: any) => {
+    // update the form at that point in index with new data
+    return [...formsData].map((f: any, i) =>
+      i === index ? { ...f, ...newData } : f
+    )
+  }
+
   const handleSaveInput =
     (form: any, index: number) => (name: string, value: any) => {
       setIsEdited(true)
-      form.saveInput(name, value)
-      setFormsData((prev: any) => {
-        const newForms = [...prev]
-        newForms[index] = form.data
-        return newForms
-      })
+      form.saveIsnput(name, value)
+      setFormsData(updateDataAtIndex(index, { [name]: value }))
     }
 
   const updatePrefills = (form: any, index: number) => (prefills: any) => {
     setIsEdited(true)
-
     form.updatePrefills(prefills)
-    setFormsData((prev: any) => {
-      const newForms = [...prev]
-      newForms[index] = { ...newForms[index], ...prefills }
-      return newForms
-    })
+    setFormsData(updateDataAtIndex(index, prefills))
   }
 
   const handleSaveDraftWorkflow = async (ignoreNotification?: boolean) => {

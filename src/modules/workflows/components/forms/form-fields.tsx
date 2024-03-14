@@ -531,8 +531,12 @@ function TextInputField({
 }: Form) {
   const [shouldShrink, setShouldShrink] = useState(false)
   const [numError, setNumError] = useState(false)
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    saveInput(field.name, event.target.value)
+  const [inputValue, setInputValue] = useState(value ?? '')
+
+  const handleBlur = () => {
+    // we save input on blur to optimize for saves
+    setShouldShrink(false)
+    saveInput(field.name, inputValue)
   }
 
   return (
@@ -545,9 +549,9 @@ function TextInputField({
       <Controller
         name={field.name}
         control={control}
-        defaultValue={value}
+        defaultValue={inputValue}
         rules={{ required: true }}
-        render={({ field: { onChange, value: val } }) => (
+        render={() => (
           <>
             {field.helper && (
               <InputLabel>
@@ -559,13 +563,13 @@ function TextInputField({
                 error?.message ? `${styles.textfieldError}` : ''
               } `}
               id="outlined-basic"
-              defaultValue={value}
+              defaultValue={inputValue}
               disabled={disabled}
-              value={val ?? ''}
-              onBlur={() => setShouldShrink(false)}
+              value={inputValue ?? ''}
+              onBlur={handleBlur}
               onFocus={() => setShouldShrink(true)}
               InputLabelProps={{
-                shrink: value || shouldShrink,
+                shrink: inputValue || shouldShrink,
               }}
               inputProps={
                 type === 'number'
@@ -581,16 +585,10 @@ function TextInputField({
                   const targetValue = e.target.value
                   const regex = /^\d*\.?\d*$/
                   if (!regex.test(targetValue)) {
-                    setNumError(true)
-                  } else {
-                    setNumError(false)
-                    handleChange(e)
-                    onChange(e)
+                    return setNumError(true)
                   }
-                } else {
-                  handleChange(e)
-                  onChange(e)
                 }
+                setInputValue(e.target.value)
               }}
               label={<Label field={field} error={error} />}
               variant="outlined"
