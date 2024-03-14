@@ -1938,11 +1938,6 @@ html,
   padding-right: 1.5rem !important;
 }
 
-.px-8 {
-  padding-left: 2rem !important;
-  padding-right: 2rem !important;
-}
-
 .px-\[30px\] {
   padding-left: 30px !important;
   padding-right: 30px !important;
@@ -2001,6 +1996,11 @@ html,
 .py-\[3px\] {
   padding-top: 3px !important;
   padding-bottom: 3px !important;
+}
+
+.px-8 {
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
 }
 
 .pb-0 {

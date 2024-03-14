@@ -66,7 +66,7 @@ function TasksModalContainer({
   } = useModuleAnalytics()
   const [progress, setProgress] = useState(0)
   const [stepLabel, setStepLabel] = useState('')
-  const [progressColor, setProgressColor] = useState('primary')
+  const [progressState, setProgressState] = useState('active')
   const [failedTasks, setFailedTasks] = useState<
     {
       name: string
@@ -203,7 +203,7 @@ function TasksModalContainer({
     if (!task) return
 
     try {
-      setProgressColor('primary')
+      setProgressState('active')
       await handleTask(
         task.name,
         task.task,
@@ -212,7 +212,7 @@ function TasksModalContainer({
         task.retryCount
       )
     } catch (error) {
-      setProgressColor('secondary')
+      setProgressState('error')
       logError(error)
       notify(`Error retrying failed task : ${error?.message}`)
     }
@@ -232,7 +232,7 @@ function TasksModalContainer({
         await handleTask(name, task, progressStart, progressEnd)
       }
     } catch (error) {
-      setProgressColor('secondary')
+      setProgressState('error')
       logError(error)
       notify('Error executing tasks')
       throw error
@@ -302,7 +302,7 @@ function TasksModalContainer({
       checkboxes={checkboxes}
       editModes={editModes}
       progress={progress}
-      progressColor={progressColor}
+      progressState={progressState}
       stepLabel={stepLabel}
       count={count}
       modalOpen={modalOpen}

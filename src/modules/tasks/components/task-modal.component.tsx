@@ -62,7 +62,7 @@ type ListModalProps = {
   checkboxes: TCheckboxes
   editModes: TEditModes
   progress: number
-  progressColor: string
+  progressState: string
   stepLabel: string
   count: number
   modalOpen: boolean
@@ -103,7 +103,7 @@ function ListModalView({
   handleDecrement,
   checkboxes,
   progress,
-  progressColor,
+  progressState,
   stepLabel,
   count,
   modalOpen,
@@ -285,7 +285,13 @@ function ListModalView({
                     </Typography>
                     <LinearProgress
                       variant="determinate"
-                      color={progressColor}
+                      sx={{
+                        backgroundColor: 'white',
+                        '& .MuiLinearProgress-bar': {
+                          backgroundColor:
+                            progressState === 'error' ? '#972323' : '#007AFF',
+                        },
+                      }}
                       value={count}
                       style={{ transition: 'width 0.5s ease' }}
                     />
@@ -311,7 +317,7 @@ function ListModalView({
                     </Button>
                   </div>
                 )}
-                {progressColor === 'secondary' && progress > 0 && (
+                {progressState === 'error' && progress > 0 && (
                   <div>
                     <span className="text-[#972323] text-xs font-normal">
                       {getErrorMessage()}
