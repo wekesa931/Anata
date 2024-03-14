@@ -283,7 +283,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
   const handleSaveInput =
     (form: any, index: number) => (name: string, value: any) => {
       setIsEdited(true)
-      form.saveIsnput(name, value)
+      form.saveInput(name, value)
       setFormsData(updateDataAtIndex(index, { [name]: value }))
     }
 
