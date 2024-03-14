@@ -64,6 +64,8 @@ function FilledForms() {
     'minor_health_check',
     'minorhifv2',
     'healthTriageForm',
+    'incident',
+    'logisticsTasks',
   ]
 
   useEffect(() => {

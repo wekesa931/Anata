@@ -352,6 +352,7 @@ function SingleSelectView({
   error,
 }: Form) {
   const [option, setOption] = useState<string | null>(null)
+  const [checked, setChecked] = useState<boolean>(false)
   useEffect(() => {
     if (value) {
       setOption(value)
@@ -361,32 +362,18 @@ function SingleSelectView({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
   const optionsData = () => {
-    let fieldOptions = []
-    if (field.type === 'checkbox') {
-      fieldOptions = [
-        {
-          name: true,
-        },
-        {
-          name: false,
-        },
-      ]
-    } else {
-      fieldOptions = airtableMeta
-        ? airtableMeta[field.parentTableId]?.fields[field.id]?.options?.choices
-        : []
-    }
-
-    return fieldOptions
+    return airtableMeta
+      ? airtableMeta[field.parentTableId]?.fields[field.id]?.options?.choices
+      : []
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
-    setOption(event.target.value)
-
     if (field.type === 'checkbox') {
-      saveInput(field.name, event.target.value === 'true')
+      setChecked(event.target.checked)
+      saveInput(field.name, event.target.checked)
     } else {
+      setOption(event.target.value)
       saveInput(field.name, event.target.value)
     }
   }
@@ -401,34 +388,56 @@ function SingleSelectView({
         return (
           <>
             {field.helper && <HelperText field={field} error={error} />}
-            <FormControl className="m-0 mt-2 min-w-[90%]" component="fieldset">
-              {!field.helper && (
-                <FormLabel component="legend">
-                  <Label field={field} error={error} />
-                </FormLabel>
-              )}
-              <RadioGroup
-                className="flex w-full flex-row"
-                aria-label={field.name}
-                value={option}
-                onChange={(event) => {
-                  handleChange(event)
-                  onChange(event)
+            {field.type ? (
+              <FormControlLabel
+                sx={{
+                  marginLeft: 0,
                 }}
-                name="radio-buttons-group"
+                control={
+                  <Checkbox
+                    checked={checked}
+                    onChange={handleChange}
+                    name={field.name}
+                    inputProps={{ 'aria-label': field.name }}
+                  />
+                }
+                label={field.name}
+                labelPlacement="start"
+              />
+            ) : (
+              <FormControl
+                className="m-0 mt-2 min-w-[90%]"
+                component="fieldset"
               >
-                {(optionsData() || []).map((choice: any) => (
-                  <Fragment key={choice.name}>
-                    <FormControlLabel
-                      value={choice.name}
-                      disabled={disabled}
-                      control={<Radio />}
-                      label={choice.name.toString()}
-                    />
-                  </Fragment>
-                ))}
-              </RadioGroup>
-            </FormControl>
+                {!field.helper && (
+                  <FormLabel component="legend">
+                    <Label field={field} error={error} />
+                  </FormLabel>
+                )}
+                <RadioGroup
+                  className="flex w-full flex-row"
+                  aria-label={field.name}
+                  value={option}
+                  onChange={(event) => {
+                    handleChange(event)
+                    onChange(event)
+                  }}
+                  name="radio-buttons-group"
+                >
+                  {(optionsData() || []).map((choice: any) => (
+                    <Fragment key={choice.name}>
+                      <FormControlLabel
+                        value={choice.name}
+                        disabled={disabled}
+                        control={<Radio />}
+                        label={choice.name.toString()}
+                      />
+                    </Fragment>
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            )}
+
             {error && (
               <FormHelperText className="mb-4 text-left font-rubik font-medium text-red-100">
                 Select at least one item from the list
