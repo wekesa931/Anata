@@ -297,8 +297,11 @@ function SingleSelectInput({
       return field.options
     }
 
-    return (airtableMeta[field.parentTableId]?.fields[field.id] || ({} as any))
-      ?.options?.choices
+    const options = (
+      airtableMeta[field.parentTableId]?.fields[field.id] || ({} as any)
+    )?.options?.choices
+
+    return options || []
   }
 
   return (

@@ -14183,7 +14183,7 @@ export default [
           'Classify and prioritize risks based on their nature and potential impact',
       },
       {
-        id: 'fld0zuq9iUcEtU8hG',
+        id: 'fldxhSzc1bRrsS3GC',
         name: 'Severity',
         type: 'select',
         format: '',
