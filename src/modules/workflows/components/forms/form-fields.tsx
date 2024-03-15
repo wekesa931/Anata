@@ -228,10 +228,9 @@ function SingleSelectOption({
   control,
   error,
 }: Form) {
-  const isCheckBoxField =
-    airtableMeta[field.parentTableId]?.fields[field.id]?.type === 'checkbox'
-
   if (airtableMeta) {
+    const isCheckBoxField =
+      airtableMeta[field.parentTableId]?.fields[field.id]?.type === 'checkbox'
     if (isCheckBoxField) {
       return (
         <SingleSelectView
@@ -531,7 +530,7 @@ function TextInputField({
 }: Form) {
   const [shouldShrink, setShouldShrink] = useState(false)
   const [numError, setNumError] = useState(false)
-  const [inputValue, setInputValue] = useState(value ?? '')
+  const [inputValue, setInputValue] = useState(value ?? undefined)
 
   const handleBlur = () => {
     // we save input on blur to optimize for saves
@@ -600,7 +599,7 @@ function TextInputField({
             )}
             {error && (
               <FormHelperText className="mb-4 text-left font-rubik font-medium text-red-100">
-                This field is required
+                {error?.message ?? 'This field is required'}
               </FormHelperText>
             )}
           </>
