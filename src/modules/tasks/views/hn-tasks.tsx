@@ -246,6 +246,7 @@ function Tasks() {
     'Reason for cancellation',
     'Number of Attempts',
     'Task definition',
+    'Member facing name for Task type',
   ]
 
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
@@ -356,6 +357,10 @@ function Tasks() {
       return typeof assigned === 'string' ? assigned : assigned?.fullName || ''
     }
 
+    const getAppointmentName = (val: any) => {
+      return val['Member facing name for Task type']
+    }
+
     const mapHnTaskItem = (val: any) => {
       const filteredRecord = renderTaskRecords(
         mergedRecords,
@@ -402,11 +407,12 @@ function Tasks() {
           taskAttempt: attempt,
         }
 
-      const smsTemplate = resp['SMS Template (from Msg Templates)']
-        ? resp['SMS Template (from Msg Templates)'].replace(
-            /\{Member Name\}/g,
-            getMemberName()
-          )
+      const smsTemplate = resp[
+        'Notification content from template for missed tasks'
+      ]
+        ? resp['Notification content from template for missed tasks'][0]
+            .replace(/\{Member Name\}/g, getMemberName())
+            .replace(/\[Services\]/g, getAppointmentName(task))
         : ' '
 
       const interactionLogTemplate = resp['Interaction log form content']
@@ -427,7 +433,7 @@ function Tasks() {
     const getTaskDefinitionData = async (record_id: string) => {
       const templateFields = [
         'Record ID',
-        'SMS Template (from Msg Templates)',
+        'Notification content from template for missed tasks',
         'Interaction log form content',
         'Default rescheduling number of days',
       ]
