@@ -360,11 +360,9 @@ function SingleSelectView({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
-  const optionsData = () => {
-    return airtableMeta
-      ? airtableMeta[field.parentTableId]?.fields[field.id]?.options?.choices
-      : []
-  }
+  const optionsData = airtableMeta
+    ? airtableMeta[field.parentTableId]?.fields[field.id]?.options?.choices
+    : []
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
@@ -387,7 +385,7 @@ function SingleSelectView({
         return (
           <>
             {field.helper && <HelperText field={field} error={error} />}
-            {field.type ? (
+            {field.type === 'checkbox' ? (
               <FormControlLabel
                 sx={{
                   marginLeft: 0,
@@ -423,7 +421,7 @@ function SingleSelectView({
                   }}
                   name="radio-buttons-group"
                 >
-                  {(optionsData() || []).map((choice: any) => (
+                  {(optionsData || []).map((choice: any) => (
                     <Fragment key={choice.name}>
                       <FormControlLabel
                         value={choice.name}
