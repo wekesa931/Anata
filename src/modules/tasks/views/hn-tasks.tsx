@@ -481,14 +481,16 @@ function Tasks() {
                           let url = hnTask['Open URL']?.url
                           if (url) {
                             const prefills = extractPrefills(url)
-
                             url = url.split('/')[3].split('?')
                             const formMeta = FORMS.find(
                               (fm: any) =>
                                 fm.formId === url[0] || fm.id === url[0]
                             )
-                            formMeta && openForm(formMeta.name, prefills)
+                            formMeta
+                              ? openForm(formMeta.name, prefills)
+                              : window.open(hnTask['Open URL']?.url)
                           }
+
                           e.stopPropagation()
                         }}
                       >
