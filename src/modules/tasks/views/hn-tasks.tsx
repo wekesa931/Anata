@@ -356,11 +356,6 @@ function Tasks() {
     function getAssigneeName(assigned: string | { fullName: string }) {
       return typeof assigned === 'string' ? assigned : assigned?.fullName || ''
     }
-
-    const getAppointmentName = (val: any) => {
-      return val['Member facing name for Task type']
-    }
-
     const mapHnTaskItem = (val: any) => {
       const filteredRecord = renderTaskRecords(
         mergedRecords,
@@ -412,7 +407,7 @@ function Tasks() {
       ]
         ? resp['Notification content from template for missed tasks'][0]
             .replace(/\{Member Name\}/g, getMemberName())
-            .replace(/\[Services\]/g, getAppointmentName(task))
+            .replace(/\[Services\]/g, resp['Member facing name for Task type'])
         : ' '
 
       const interactionLogTemplate = resp['Interaction log form content']
@@ -436,6 +431,7 @@ function Tasks() {
         'Notification content from template for missed tasks',
         'Interaction log form content',
         'Default rescheduling number of days',
+        'Member facing name for Task type',
       ]
 
       const filterArgs = `filterByFormula=OR(FIND("${record_id}",{Record ID}))`
