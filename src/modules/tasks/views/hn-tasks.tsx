@@ -246,7 +246,6 @@ function Tasks() {
     'Reason for cancellation',
     'Number of Attempts',
     'Task definition',
-    'Member facing name for Task type',
   ]
 
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
