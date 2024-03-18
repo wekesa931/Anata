@@ -530,6 +530,11 @@ function TextInputField({
   const [numError, setNumError] = useState(false)
   const [inputValue, setInputValue] = useState(value ?? undefined)
 
+  // update inputValue when the value prop changes
+  useEffect(() => {
+    setInputValue(value ?? '')
+  }, [value])
+
   const handleBlur = () => {
     // we save input on blur to optimize for saves
     setShouldShrink(false)
