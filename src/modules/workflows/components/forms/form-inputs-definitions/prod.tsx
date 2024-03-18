@@ -24093,18 +24093,27 @@ export default [
         helper: '',
         conditionType: '',
         parentKey: 'Scribe Tags',
-        parentValues: ['Internal Appointment', 'Internal Appointment,Referral'],
+        parentValues: [
+          'Internal Appointment',
+          'Internal Appointment,Referral',
+          'Appointment',
+          'Referral',
+        ],
         condition: (values: any) => {
           if (Array.isArray(values['Scribe Tags'])) {
             return [
               'Internal Appointment',
               'Internal Appointment,Referral',
+              'Appointment',
+              'Referral',
             ].some((r) => values['Scribe Tags'].includes(r))
           }
           const tagsValues = values['Scribe Tags']
           return [
             'Internal Appointment',
             'Internal Appointment,Referral',
+            'Appointment',
+            'Referral',
           ].includes(tagsValues?.name ?? tagsValues)
         },
       },

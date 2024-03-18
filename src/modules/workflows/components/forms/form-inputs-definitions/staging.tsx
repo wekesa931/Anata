@@ -20463,6 +20463,7 @@ export default [
           'Internal Appointment',
           'Internal Appointment,Referral',
           'Appointment',
+          'Referral',
         ],
         condition: (values: any) => {
           if (Array.isArray(values['Scribe Tags'])) {
@@ -20470,6 +20471,7 @@ export default [
               'Internal Appointment',
               'Internal Appointment,Referral',
               'Appointment',
+              'Referral',
             ].some((r) => values['Scribe Tags'].includes(r))
           }
           const tagsValues = values['Scribe Tags']
@@ -20477,6 +20479,7 @@ export default [
             'Internal Appointment',
             'Internal Appointment,Referral',
             'Appointment',
+            'Referral',
           ].includes(tagsValues?.name ?? tagsValues)
         },
       },
