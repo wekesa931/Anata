@@ -323,6 +323,9 @@ export const initialFormValues = (
     HIF: {
       'Your Age': member?.ageFull,
     },
+    'Care Team Tasks': {
+      Status: 'Not Started',
+    },
   }
 }
 

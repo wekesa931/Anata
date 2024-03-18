@@ -24070,7 +24070,6 @@ export default [
                 id: args.recordId,
                 name: args?.clinicalPrefferedName,
               },
-              Status: 'Not Started',
             }
           }
 
