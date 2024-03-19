@@ -295,8 +295,6 @@ function Tasks() {
   const apiRecords = useTransformedApiRecords(rawApiRecords)
   const mergedRecords = useMergedRecords(airtableRecords, apiRecords)
 
-  const getMemberName = () => `${member?.firstName} ${member?.lastName}`
-
   function StrikeThrough({ children }: any) {
     return <s className="text-disabled">{children}</s>
   }
@@ -407,8 +405,8 @@ function Tasks() {
 
       const smsTemplate = resp.smsContent
         ? resp.smsContent[0]
-            .replace(/\{Member Name\}/g, getMemberName())
-            .replace(/\[Services\]/g, resp['Member facing name for Task type'])
+            .replace(/\{Member Name\}/g, member?.fullName)
+            .replace(/\[Services\]/g, resp.memberTaskType)
         : ' '
 
       const interactionLogTemplate = resp.interactionLogContent
