@@ -179,7 +179,7 @@ function ListModalView({
                     <Checkbox
                       checked={checkboxes.interactionLogCheck}
                       onChange={(event) => handleCheckboxChange(event, formik)}
-                      disabled={!formik.values.interactionLog?.trim()}
+                      disabled
                       name="interactionLogCheck"
                     />
                     <TextField

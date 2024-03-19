@@ -26,6 +26,10 @@ export const useTasksAPI = () => {
     'Notes',
     'Default team assigned',
     'Status',
+    'Notification content from template for missed tasks',
+    'Interaction log form content',
+    'Default rescheduling number of days',
+    'Member facing name for Task type',
   ]
 
   const getTaskDefinitionTemplates = async () => {

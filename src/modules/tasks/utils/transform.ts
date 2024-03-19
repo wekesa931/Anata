@@ -59,6 +59,12 @@ export const mapRawTaskDefinitionToTaskDefinition = (
     sourceDetails: rawTaskDefinition['Sources details'],
     notes: rawTaskDefinition.Notes,
     defaultTeam: getAssignedTeam(rawTaskDefinition['Default team assigned']),
+    smsContent:
+      rawTaskDefinition['Notification content from template for missed tasks'],
+    interactionLogContent: rawTaskDefinition['Interaction log form content'],
+    defaultReschedulingDays:
+      rawTaskDefinition['Default rescheduling number of days'],
+    memberTaskType: rawTaskDefinition['Member facing name for Task type'],
   }
 }
 

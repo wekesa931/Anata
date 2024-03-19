@@ -46,13 +46,13 @@ function TasksModalContainer({
     dueDate: 1,
     taskAttempt: 0,
     smsCheck: false,
-    interactionLogCheck: false,
+    interactionLogCheck: true,
     rescheduleTaskCheck: false,
   })
   const [dueDate, setDueDate] = useState<number>(1)
   const [checkboxes, setCheckboxes] = useState({
     smsCheck: false,
-    interactionLogCheck: false,
+    interactionLogCheck: true,
     rescheduleTaskCheck: false,
   })
   const [editModes, setEditModes] = useState({
@@ -90,7 +90,7 @@ function TasksModalContainer({
     dueDate: templateData?.defaultReschedulingDays,
     taskAttempt: templateData?.taskAttempt,
     smsCheck: false,
-    interactionLogCheck: false,
+    interactionLogCheck: true,
     rescheduleTaskCheck: false,
   })
 
@@ -126,9 +126,6 @@ function TasksModalContainer({
       const newCheckboxes = { ...checkboxes }
       if (!initialValues.sms) {
         newCheckboxes.smsCheck = false
-      }
-      if (!initialValues.interactionLog) {
-        newCheckboxes.interactionLogCheck = false
       }
       setCheckboxes(newCheckboxes)
     }

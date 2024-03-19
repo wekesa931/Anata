@@ -84,6 +84,10 @@ export type TaskDefinition = {
   messageTemplateTitle?: string
   dueDate?: string
   defaultPeriod: string
+  smsContent: string
+  interactionLogContent: string
+  defaultReschedulingDays: string
+  memberTaskType: string
 }
 
 export enum TaskDefinitionTypes {

@@ -24,6 +24,7 @@ import CachedIcon from '@mui/icons-material/Cached'
 import { useNotifications } from 'src/context/notifications'
 import TaskModal from 'src/modules/tasks/components/task-modal'
 import useTaskModuleData from 'src/modules/tasks/hooks/tasks-module.data'
+import { useAirtableMeta } from 'src/context/airtable-meta'
 import styles from './tasks.module.css'
 
 type RecordWithId = { data: any; id: string }
@@ -228,6 +229,7 @@ function Tasks() {
   ]
   const { member } = useMember()
   const { notify } = useNotifications()
+  const { getTaskDefinitionById } = useAirtableMeta()
 
   const fields = [
     'Type',
@@ -246,6 +248,7 @@ function Tasks() {
     'Reason for cancellation',
     'Number of Attempts',
     'Task definition',
+    'Clinical preferred name',
   ]
 
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
@@ -382,10 +385,11 @@ function Tasks() {
     }
     const handleRescheduleDialog = async (task: any) => {
       const taskDefinition = task?.['Task definition'] || []
-      const [resp] =
+      const taskDefinitionById =
         taskDefinition.length > 0
-          ? await getTaskDefinitionData(taskDefinition[0])
+          ? getTaskDefinitionById(taskDefinition[0])
           : []
+      const resp = taskDefinitionById || []
       setTemplateData(extractTaskTemplate(resp, task) || [])
       setOpenItem(mapHnTaskItem(task))
       setModalOpen(true)
@@ -401,43 +405,27 @@ function Tasks() {
           taskAttempt: attempt,
         }
 
-      const smsTemplate = resp[
-        'Notification content from template for missed tasks'
-      ]
-        ? resp['Notification content from template for missed tasks'][0]
+      const smsTemplate = resp.smsContent
+        ? resp.smsContent[0]
             .replace(/\{Member Name\}/g, getMemberName())
             .replace(/\[Services\]/g, resp['Member facing name for Task type'])
         : ' '
 
-      const interactionLogTemplate = resp['Interaction log form content']
-        ? resp['Interaction log form content'].replace(
-            /\[SMS content\]/g,
-            smsTemplate
-          )
+      const interactionLogTemplate = resp.interactionLogContent
+        ? resp.interactionLogContent
+            .replace(/\[SMS content\]/g, smsTemplate)
+            .replace(
+              /\[Clinical preferred name\]/g,
+              task['Clinical preferred name'][0] || task.Type
+            )
         : ' '
 
       return {
         smsTemplate,
         interactionLogTemplate,
-        defaultReschedulingDays:
-          resp['Default rescheduling number of days'] || 1,
+        defaultReschedulingDays: resp.defaultReschedulingDays || 1,
         taskAttempt: attempt,
       }
-    }
-    const getTaskDefinitionData = async (record_id: string) => {
-      const templateFields = [
-        'Record ID',
-        'Notification content from template for missed tasks',
-        'Interaction log form content',
-        'Default rescheduling number of days',
-        'Member facing name for Task type',
-      ]
-
-      const filterArgs = `filterByFormula=OR(FIND("${record_id}",{Record ID}))`
-
-      return airtableFetch(
-        `tasksDefinition/list?${filterArgs}&${filterFields(templateFields)}`
-      )
     }
     // Display the mergedRecords
     function DisplayInfo({ hnTask }: any) {
@@ -448,17 +436,19 @@ function Tasks() {
               <div
                 className={`text-normal font-medium flex justify-between items-center mt-2 mb-2 ${styles.taskNameWrap}`}
               >
-                <p>{hnTask.Type}</p>
+                <p>{hnTask?.['Clinical preferred name'] || hnTask.Type}</p>
                 <button className="flex btn !mr-0 w-3/4 justify-end">
                   {hnTask.Status !== 'Complete' && (
-                    <Tooltip title="Complete Task">
-                      <DoneIcon
-                        className="bg-[#ebfbed]  text-[#34c759]  w-8 h-9 rounded-sm mr-2"
-                        onClick={(e) => {
-                          e?.stopPropagation()
-                          handleTaskCompletion(hnTask)
-                        }}
-                      />
+                    <>
+                      <Tooltip title="Complete Task">
+                        <DoneIcon
+                          className="bg-[#ebfbed]  text-[#34c759]  w-8 h-9 rounded-sm mr-2"
+                          onClick={(e) => {
+                            e?.stopPropagation()
+                            handleTaskCompletion(hnTask)
+                          }}
+                        />
+                      </Tooltip>
                       <Tooltip title="Missed Task">
                         <CachedIcon
                           className="bg-[#fff5e5] text-[#ff9500] w-8 h-9 rounded-sm mr-2"
@@ -468,7 +458,7 @@ function Tasks() {
                           }}
                         />
                       </Tooltip>
-                    </Tooltip>
+                    </>
                   )}
 
                   {hnTask['Open URL'] && hnTask['Open URL'].url && (
