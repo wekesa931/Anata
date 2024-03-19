@@ -242,7 +242,7 @@ const validationRules = (formMeta: any, isWorkflow: boolean) => {
         case 'checkbox':
           schema = {
             ...schema,
-            [fieldName]: Yup.boolean(),
+            [fieldName]: Yup.boolean().nullable().default(false),
           }
           break
         case 'select':
