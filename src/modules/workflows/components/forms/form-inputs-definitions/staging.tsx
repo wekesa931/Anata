@@ -20459,28 +20459,17 @@ export default [
         helper: '',
         conditionType: '',
         parentKey: 'Scribe Tags',
-        parentValues: [
-          'Internal Appointment',
-          'Internal Appointment,Referral',
-          'Appointment',
-          'Referral',
-        ],
+        parentValues: ['Internal Appointment', 'Appointment', 'Referral'],
         condition: (values: any) => {
           if (Array.isArray(values['Scribe Tags'])) {
-            return [
-              'Internal Appointment',
-              'Internal Appointment,Referral',
-              'Appointment',
-              'Referral',
-            ].some((r) => values['Scribe Tags'].includes(r))
+            return ['Internal Appointment', 'Appointment', 'Referral'].some(
+              (r) => values['Scribe Tags'].includes(r)
+            )
           }
           const tagsValues = values['Scribe Tags']
-          return [
-            'Internal Appointment',
-            'Internal Appointment,Referral',
-            'Appointment',
-            'Referral',
-          ].includes(tagsValues?.name ?? tagsValues)
+          return ['Internal Appointment', 'Appointment', 'Referral'].includes(
+            tagsValues?.name ?? tagsValues
+          )
         },
       },
       {
@@ -20570,17 +20559,15 @@ export default [
         helper: '',
         conditionType: '',
         parentKey: 'Scribe Tags',
-        parentValues: ['Member Task,Health Metric', 'Member Task'],
+        parentValues: ['Member Task'],
         condition: (values: any) => {
           if (Array.isArray(values['Scribe Tags'])) {
-            return ['Member Task,Health Metric', 'Member Task'].some((r) =>
+            return ['Member Task'].some((r) =>
               values['Scribe Tags'].includes(r)
             )
           }
           const tagsValues = values['Scribe Tags']
-          return ['Member Task,Health Metric', 'Member Task'].includes(
-            tagsValues?.name ?? tagsValues
-          )
+          return ['Member Task'].includes(tagsValues?.name ?? tagsValues)
         },
       },
       {

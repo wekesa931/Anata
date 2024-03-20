@@ -229,12 +229,16 @@ function AirtableBasedForm({
       const fields = taskDefinitionsFilterFn(field, getValues())
       return fields
     }
-
     if (field.id === SCRIBE_TAGS_FIELD_ID) {
-      const scribeTags = groupBy(taskDefinitions, 'scribeTags')
-      const definitionOptions = Object.keys(scribeTags).map((k: any) => ({
-        id: k,
-        name: k,
+      const definitionOptions = [
+        ...new Set( // extract unique tags (from duplicated if any)
+          Object.keys(groupBy(taskDefinitions, 'scribeTags')) // group the definitions by scribeTags
+            .map((tag: any) => tag.split(',')) // split by , to extract multiple tags in a single string
+            .flat() // flatten to obtain a single array (may contain duplicated)
+        ),
+      ].map((t) => ({
+        id: t,
+        name: t,
       }))
 
       const parsedField = {
