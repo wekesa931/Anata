@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useMember } from 'src/context/member'
 import { useUser } from 'src/context/user'
-import { useMutation } from '@apollo/client'
-import { SEND_SMS } from 'src/modules/comms/services/gql'
 import dayjs from 'dayjs'
 import { useNotifications } from 'src/context/notifications'
 import { logError } from 'src/utils/logging/logger'
@@ -39,7 +37,8 @@ function TasksModalContainer({
   refetchTasks,
   templateData,
 }: TasksModalProps) {
-  const { handleDataUpdate, submitInteractionLogRequest } = useTaskModuleData()
+  const { handleDataUpdate, submitInteractionLogRequest, submitSmsRequest } =
+    useTaskModuleData()
   const [initialValues, setInitialValues] = useState<any>({
     interactionLog: '',
     sms: '',
@@ -76,8 +75,6 @@ function TasksModalContainer({
       retryCount: number
     }[]
   >([])
-
-  const [sendSms] = useMutation(SEND_SMS)
 
   const { member } = useMember()
   const user = useUser()
@@ -251,10 +248,7 @@ function TasksModalContainer({
     if (checkboxes.smsCheck) {
       tasks.push({
         name: 'Sending SMS',
-        task: () =>
-          sendSms({
-            variables: { message: values.sms, antaraId: member?.antaraId },
-          }),
+        task: () => submitSmsRequest(values.sms, member),
         progressStart: 0,
         progressEnd: 33,
       })

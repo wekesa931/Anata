@@ -282,6 +282,15 @@ export const useModuleAnalytics = () => {
     trackReshedulingDueDate: (item: any) => {
       rightSectionAnalytics.track(`rescheduling date modified - ${item}`)
     },
+    trackAutomaticActionsInteractionLog: (data: any) => {
+      rightSectionAnalytics.track(
+        `automatic next steps interaction log saved`,
+        data
+      )
+    },
+    trackAutomaticActionsSms: (data: any) => {
+      rightSectionAnalytics.track(`automatic next steps sms sent`, data)
+    },
     trackAutomaticActionSubmitted: () => {
       rightSectionAnalytics.track('automatic actions submitted')
     },

@@ -1,6 +1,9 @@
 import airtableFetch from 'src/services/airtable/fetch'
 import { extractUsername } from 'src/modules/interactions/utils'
 import { CREATE_INTERACTION } from 'src/modules/interactions/services/gql'
+import { SEND_SMS } from 'src/modules/comms/services/gql'
+import { useModuleAnalytics } from 'src/modules/analytics'
+
 import { useMutation } from '@apollo/client'
 import dayjs from 'dayjs'
 
@@ -8,6 +11,9 @@ export type TaskModuleData = ReturnType<typeof useTaskModuleData>
 
 const useTaskModuleData = () => {
   const [mutate] = useMutation(CREATE_INTERACTION)
+  const [sendSms] = useMutation(SEND_SMS)
+  const { trackAutomaticActionsInteractionLog, trackAutomaticActionsSms } =
+    useModuleAnalytics()
 
   const handleDataUpdate = async (values: any, taskId: any) => {
     const fullPayload = {
@@ -48,10 +54,31 @@ const useTaskModuleData = () => {
         input,
       },
     })
+
+    if (resp?.data?.createInteraction?.status === 200) {
+      trackAutomaticActionsInteractionLog(input)
+    }
     return resp
   }
+  const submitSmsRequest = async (sms: any, member: any) => {
+    const data = { message: sms, antaraId: member?.antaraId }
+    const response = await sendSms({
+      variables: data,
+    })
 
-  return { handleAirtableUpdate, handleDataUpdate, submitInteractionLogRequest }
+    if (response?.data?.sendSms?.status === 200) {
+      trackAutomaticActionsSms(data)
+    }
+
+    return response
+  }
+
+  return {
+    handleAirtableUpdate,
+    handleDataUpdate,
+    submitInteractionLogRequest,
+    submitSmsRequest,
+  }
 }
 
 export default useTaskModuleData
