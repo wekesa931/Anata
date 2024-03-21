@@ -12,6 +12,7 @@ import { useNotifications } from 'src/context/notifications'
 import TextField from 'src/components/forms/fields/text'
 import { DateTimeField } from 'src/components/forms/fields/date-field'
 import * as yup from 'yup'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 const validationSchema = yup.object().shape({
   status: yup.string().required('Status is required'),
@@ -35,6 +36,7 @@ export function EditLab({ value, labsApi }: Props) {
   const { airtableMeta } = useAirtableMeta()
   const { updateLabRequest, updating, refetch } = labsApi
   const { notify } = useNotifications()
+  const { trackLabRequestUpdated } = useModuleAnalytics()
 
   const initialFormValues: Partial<LabRequest> = {
     status: labStatus,
@@ -80,6 +82,10 @@ export function EditLab({ value, labsApi }: Props) {
     updateLabRequest(rawUpdate)
       .then(() => {
         notify('Lab request updated succesfully')
+        trackLabRequestUpdated({
+          ...rawUpdate.fields,
+          recordId: value?.recordId,
+        })
         refetch()
       })
       .catch((err: any) => {

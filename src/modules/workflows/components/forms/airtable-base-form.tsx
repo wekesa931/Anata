@@ -13,6 +13,7 @@ import CalendlyLink from 'src/modules/workflows/components/forms/calendly-link'
 import { LoadingButton } from '@mui/lab'
 import { useNotifications } from 'src/context/notifications'
 import { TaskDefinition } from 'src/modules/tasks/types'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 const TASK_DEFINITION_FIELD_ID =
   process.env.PROD === 'true' ? 'fldrJeu9BzF1p0thE' : 'fldwYDHowo9JFzkc7'
@@ -41,6 +42,8 @@ function AirtableBasedForm({
     formSchema,
     !!workflow
   )
+
+  const { trackFormSaved } = useModuleAnalytics()
 
   const {
     control,
@@ -123,6 +126,7 @@ function AirtableBasedForm({
 
       await submitForm(form, formSchema, formattedPayload, workflow)
       setIsFormDraft(false)
+      trackFormSaved(form.name, form.workflow?.workflowId)
       handleSubmissionSuccess(false) // ensures that the draft is saved again post submission
     } catch (e) {
       setIsFormDraft(true)

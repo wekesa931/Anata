@@ -293,5 +293,11 @@ export const useModuleAnalytics = () => {
         }
       )
     },
+    trackLabRequestUpdated: (labRequest: any) => {
+      middlesSectionAnalytics.track('lab request updated', labRequest)
+    },
+    trackFormSaved: (form: any, workflowId?: string) => {
+      rightSectionAnalytics.track('form saved', { form, workflowId })
+    },
   }
 }

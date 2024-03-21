@@ -8,6 +8,7 @@ import type { FormProps } from 'src/modules/workflows/types'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useVitalsUpdate } from 'src/modules/vitals/hooks/vitals.update.hook'
 import SelectField from 'src/components/forms/fields/select-field'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 const validationSchema = yup.object().shape({
   timestamp: yup.date().required(),
@@ -43,6 +44,7 @@ function BPReadingForm({
     pulse: '',
     bpReadingType: '',
   })
+  const { trackFormSaved } = useModuleAnalytics()
 
   useEffect(() => {
     if (form?.data) {
@@ -57,6 +59,7 @@ function BPReadingForm({
     handleCreateBloodPressureReading(values)
       .then(async () => {
         await form.markAsCompleted()
+        trackFormSaved(form.name, form.workflow?.workflowId)
         handleSubmissionSuccess(false, values)
       })
       .catch((error) => {

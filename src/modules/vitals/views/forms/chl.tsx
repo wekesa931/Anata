@@ -9,6 +9,7 @@ import type { FormProps } from 'src/modules/workflows/types'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useVitalsUpdate } from 'src/modules/vitals/hooks/vitals.update.hook'
 import dayjs from 'dayjs'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 const validationSchema = yup.object().shape({
   timestamp: yup.date().required(),
@@ -39,6 +40,7 @@ function CHLForm({
   upsertDraft: saveDraft,
 }: FormProps) {
   const { loading, handleCreateCholesterolReading } = useVitalsUpdate()
+  const { trackFormSaved } = useModuleAnalytics()
   const [initialValues, setInitialValues] = React.useState<any>({
     timestamp: dayjs().toDate(),
     lipidPanelTestType: '',
@@ -55,6 +57,7 @@ function CHLForm({
     handleCreateCholesterolReading(values)
       .then(async () => {
         await form.markAsCompleted()
+        trackFormSaved(form.name, form.workflow?.workflowId)
         handleSubmissionSuccess(false)
       })
       .catch((error) => {

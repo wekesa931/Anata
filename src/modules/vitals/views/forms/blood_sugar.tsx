@@ -43,6 +43,7 @@ function DMMonitoring({
   upsertDraft: saveDraft,
 }: FormProps) {
   const { handleCreateDMReading, loading } = useVitalsUpdate()
+  const { trackFormSaved } = useModuleAnalytics()
   const [initialValues, setInitialValues] = React.useState<any>({
     timestamp: dayjs().toDate(),
     preprandialBloodGlucose: '',
@@ -65,6 +66,7 @@ function DMMonitoring({
     handleCreateDMReading(values)
       .then(async () => {
         await form.markAsCompleted()
+        trackFormSaved(form.name, form.workflow?.workflowId)
         handleSubmissionSuccess(false)
       })
       .catch((error) => {
