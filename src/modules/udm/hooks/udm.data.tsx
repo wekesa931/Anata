@@ -139,6 +139,7 @@ export const useUdmData = () => {
         title: docMeta.title,
         recordId: member?.airtableRecordId,
         fileName,
+        otherMetadata: docMeta.otherMetadata,
       }
 
       if (docMeta.shareWith) {

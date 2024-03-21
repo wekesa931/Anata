@@ -32,6 +32,7 @@ export type DocMeta = {
   title: string
   shareWith?: string[]
   folder?: string
+  otherMetadata?: any
 }
 
 export type UploadDocumentOptions = {

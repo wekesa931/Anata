@@ -1,7 +1,7 @@
 type Creator = {
-  name: string
-  id: string
-  email: string
+  name?: string
+  id?: string
+  email?: string
 }
 
 export interface LabRequest {

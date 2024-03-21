@@ -2,16 +2,13 @@ import {
   FormControlLabel,
   Checkbox,
   LinearProgress,
-  Button,
+  Stack,
 } from '@mui/material'
 import { Form } from 'formik'
 import React from 'react'
 import PrimaryButton from 'src/components/buttons/primary'
 import GroupedSearchField from 'src/components/forms/fields/grouped-search-field'
-import {
-  Options,
-  MultiselectField,
-} from 'src/components/forms/fields/select-field'
+import { Options } from 'src/components/forms/fields/select-field'
 import TextField from 'src/components/forms/fields/text'
 import PrimaryForm from 'src/components/forms/primary-form'
 import { DocMeta } from 'src/modules/udm/types'
@@ -20,9 +17,9 @@ import {
   DocumentUploadHook,
 } from 'src/modules/udm/hooks/document-upload'
 import * as yup from 'yup'
-import { LabRequest, LabTypes } from 'src/modules/labs/types'
-import { Plus } from 'react-feather'
-import { useModuleAnalytics } from 'src/modules/analytics'
+import { LabRequest } from 'src/modules/labs/types'
+import { DocumentLabLinkField } from 'src/modules/udm/components/upload/create-lab-request'
+import { CheckCircle, Error } from '@mui/icons-material'
 
 const validationSchema = yup.object().shape({
   docType: yup.string().required('Document type is required'),
@@ -59,120 +56,6 @@ type Props = {
 
 const LAB_REPORT_DOC_TYPE = 'Laboratory Report'
 
-type CreateNewLabRequestProps = {
-  closeWindow: () => void
-  show: boolean
-  toggle: () => void
-  updateLabRequests: (labRequests: LabRequest[]) => void
-  data: DocumentUploadHook
-}
-
-function CreateNewLabRequest({
-  show,
-  toggle,
-  closeWindow,
-  updateLabRequests,
-  data,
-}: CreateNewLabRequestProps) {
-  const [uploading, setUploading] = React.useState(false)
-  const [error, setError] = React.useState<string | null>(null)
-
-  const { labTypes, createNewLabRequests } = data
-  const { trackLabRequestCreatedFromDocs } = useModuleAnalytics()
-
-  const handleSubmit = async (values: any) => {
-    try {
-      setUploading(true)
-      const created = await createNewLabRequests(values.newLabTypes)
-      updateLabRequests(created)
-      trackLabRequestCreatedFromDocs(
-        values.newLabTypes.map((lab: any) => lab.name)
-      )
-      closeWindow()
-    } catch (e: any) {
-      setError(e.message ?? 'An error occurred saving lab requests')
-    } finally {
-      setUploading(false)
-    }
-  }
-
-  const initialValues = {
-    newLabTypes: [],
-  }
-
-  const newLabValidationSchema = yup.object().shape({
-    newLabTypes: yup
-      .array()
-      .typeError('Select a lab type')
-      .of(
-        yup
-          .mixed<LabTypes>()
-          .typeError('Invalid lab type')
-          .test('is-valid', 'Invalid lab type', (value: any) => {
-            return 'name' in value && 'recordId' in value
-          })
-          .required()
-      ),
-  })
-
-  return (
-    <div className="bg-white font-rubik">
-      {show && (
-        <div className="border rounded-md p-2">
-          <PrimaryForm
-            initialValues={initialValues}
-            handleSubmit={handleSubmit}
-            validationSchema={newLabValidationSchema}
-          >
-            {() => {
-              return (
-                <Form>
-                  <MultiselectField
-                    options={labTypes}
-                    name="newLabTypes"
-                    label="Lab Type"
-                  />
-
-                  <div className="flex flex-col gap-2">
-                    <PrimaryButton
-                      onClick={toggle}
-                      className="bg-disabled-grey hover:bg-disabled-grey normal-case text-white font-medium px-4 py-2 rounded-md"
-                    >
-                      Cancel
-                    </PrimaryButton>
-                    <PrimaryButton
-                      className="bg-orange-100 hover:bg-orange-100 normal-case text-white font-medium px-4 py-2 rounded-md"
-                      fullWidth
-                      variant="contained"
-                      type="submit"
-                    >
-                      {uploading ? 'Saving...' : 'Save'}
-                    </PrimaryButton>
-                  </div>
-                  {error && <p className="text-red-100">{error}</p>}
-                </Form>
-              )
-            }}
-          </PrimaryForm>
-        </div>
-      )}
-      <Button
-        fullWidth
-        variant="text"
-        startIcon={<Plus />}
-        className="bg-white mt-1 w-full normal-case flex items-center justify-start text-blue-100 py-2 px-8 font-medium  "
-        onClick={(e: any) => {
-          e?.preventDefault()
-          e?.stopPropagation()
-          toggle()
-        }}
-      >
-        Add new Lab Request
-      </Button>
-    </div>
-  )
-}
-
 function UploadDocumentForm({
   options,
   uploadDocument,
@@ -184,25 +67,14 @@ function UploadDocumentForm({
     uploadDocument,
   })
   const {
-    labRequests,
     submitDocument,
     showProgressFeedback,
     retryCurrentProcess,
     error,
     formValues,
     submittingDocument,
-    progress,
-    currentProcessTitle: processTitle,
-    loadingLabRequests,
+    progressStack,
   } = uploadDocumentHook
-
-  // console.log('Form values  ', formValues)
-
-  const [showCreateLabRequest, setShowCreateLabRequest] = React.useState(false)
-
-  const toggleCreateLabRequest = () => {
-    setShowCreateLabRequest(!showCreateLabRequest)
-  }
 
   return (
     <PrimaryForm
@@ -224,32 +96,7 @@ function UploadDocumentForm({
             />
 
             {formik.values.docType === LAB_REPORT_DOC_TYPE && (
-              <MultiselectField
-                name="linkedLabRequest"
-                options={labRequests}
-                label="Search lab request..."
-                placeholder="Search..."
-                disabled={submittingDocument}
-                required={false}
-                loading={loadingLabRequests}
-                ExtraOptionsComponent={
-                  <CreateNewLabRequest
-                    toggle={toggleCreateLabRequest}
-                    show={showCreateLabRequest}
-                    closeWindow={() => {
-                      setShowCreateLabRequest(false)
-                    }}
-                    data={uploadDocumentHook}
-                    updateLabRequests={(labs: any) => {
-                      formik.setFieldValue('linkedLabRequest', [
-                        ...formik.values.linkedLabRequest,
-                        ...labs,
-                      ])
-                    }}
-                  />
-                }
-                isOpen={showCreateLabRequest}
-              />
+              <DocumentLabLinkField data={uploadDocumentHook} formik={formik} />
             )}
 
             <TextField
@@ -331,20 +178,43 @@ function UploadDocumentForm({
             )}
 
             {showProgressFeedback ? (
-              <div className="w-full flex flex-col gap-2 font-rubik">
-                <div className="w-full flex justify-between items-center text-base text-dark-blue-100">
-                  {processTitle}
-                  <span>{progress} %</span>
-                </div>
-                <LinearProgress
-                  variant="determinate"
-                  value={Math.round(progress)}
-                  sx={{
-                    '& .MuiLinearProgress-bar': {
-                      backgroundColor: error ? '#972323' : '#007AFF',
-                    },
-                  }}
-                />
+              <>
+                <Stack direction="column" spacing={2}>
+                  {progressStack.map((item) => (
+                    <div key={item.pid}>
+                      {item.show && (
+                        <div className="w-full flex flex-col gap-2 font-rubik">
+                          <div className="w-full flex justify-between items-center text-base text-dark-blue-100">
+                            {item.title}
+                            {item.isSuccesful && (
+                              <CheckCircle className="text-green-100" />
+                            )}
+                            {item.errored && (
+                              <Error className="text-[#972323]" />
+                            )}
+                          </div>
+                          <LinearProgress
+                            variant={
+                              item.inProgress ? 'indeterminate' : 'determinate'
+                            }
+                            value={item.isSuccesful ? 100 : undefined}
+                            sx={{
+                              '& .MuiLinearProgress-bar': {
+                                backgroundColor: item.errored
+                                  ? '#972323'
+                                  : '#32d74b',
+                              },
+                              '&.MuiLinearProgress-root': {
+                                height: '8px',
+                                borderRadius: '4px',
+                              },
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </Stack>
                 {error && (
                   <div className="flex flex-col gap-2">
                     <p className="text-xs text-dark-red-100">{error}</p>
@@ -355,7 +225,7 @@ function UploadDocumentForm({
                     </div>
                   </div>
                 )}
-              </div>
+              </>
             ) : (
               <div className="w-full flex justify-end mt-2">
                 <PrimaryButton type="submit" disabled={submittingDocument}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { FieldProps } from 'formik'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
@@ -134,7 +134,6 @@ type MultiselectFieldProps = SelectFieldProps &
   }
 
 export function MultiselectField(props: MultiselectFieldProps) {
-  const [open, setOpen] = useState(!props.options.length)
   const handleValueChange = (values: any, fieldProps: FieldProps) => {
     fieldProps.form.setFieldValue(fieldProps.field.name, values)
 
@@ -150,13 +149,7 @@ export function MultiselectField(props: MultiselectFieldProps) {
     }
   }
 
-  const handleClose = (e: any, reason: string) => {
-    if (reason === 'blur' && props.isOpen) {
-      e.stopPropagation()
-    } else {
-      setOpen(false)
-    }
-  }
+  const [open, setOpen] = React.useState(false)
 
   return (
     <OutlinedField {...props} id="custom-autocomplete">
@@ -165,15 +158,18 @@ export function MultiselectField(props: MultiselectFieldProps) {
           <>
             <Autocomplete
               open={open}
-              onOpen={() => setOpen(true)}
+              onOpen={() => {
+                setOpen(true)
+              }}
+              onClose={() => {
+                setOpen(false)
+              }}
               multiple
-              autoFocus
               options={props.options}
               disableCloseOnSelect
               onChange={(e, newValue) => {
                 handleValueChange(newValue, fieldProps)
               }}
-              onClose={handleClose}
               onBlur={(e: any) => {
                 handleBlur(e, fieldProps)
               }}
@@ -197,7 +193,6 @@ export function MultiselectField(props: MultiselectFieldProps) {
                   <div>
                     <TextField
                       {...params}
-                      autoFocus
                       ref={params.InputProps.ref}
                       inputProps={params.inputProps}
                       placeholder={props.placeholder || 'Search...'}
@@ -222,7 +217,9 @@ export function MultiselectField(props: MultiselectFieldProps) {
               }}
               noOptionsText={
                 props.ExtraOptionsComponent ? (
-                  <>{props.ExtraOptionsComponent} </>
+                  <div role="presentation" onClick={() => setOpen(false)}>
+                    {props.ExtraOptionsComponent}{' '}
+                  </div>
                 ) : (
                   'No options found'
                 )
@@ -251,7 +248,11 @@ export function MultiselectField(props: MultiselectFieldProps) {
                     </div>
                     {index + 1 === props.options.length &&
                       props.ExtraOptionsComponent && (
-                        <div className="w-full mb-0">
+                        <div
+                          className="w-full mb-0"
+                          role="presentation"
+                          onClick={() => setOpen(false)}
+                        >
                           {props.ExtraOptionsComponent}
                         </div>
                       )}

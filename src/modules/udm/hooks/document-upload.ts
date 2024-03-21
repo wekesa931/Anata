@@ -17,29 +17,18 @@ type DocumentUploadHookProps = {
   uploadDocument: (docMeta: DocMeta) => Promise<any>
 }
 
-const totalProcesses = (values: UploadDocumentFormValues) => {
-  let total = 1
-
-  if (values.createReviewTask) {
-    total += 1
-  }
-
-  if (values.linkedLabRequest?.length) {
-    total += 1
-  }
-  return total
-}
-
-const calculateProgressDiff = (oldProgress: number, processCount: number) => {
-  if (oldProgress < 100) {
-    const diff = Math.random() * 10
-    const currentProgress = oldProgress + diff / processCount
-    return Math.round(Math.min(currentProgress, 90))
-  }
-  return Math.round(oldProgress)
-}
-
 export type DocumentUploadHook = ReturnType<typeof useDocumentUpload>
+
+type Progress = {
+  title: string
+  isSuccesful: boolean
+  pid: number
+  inProgress: boolean
+  show: boolean
+  errored?: boolean
+}
+
+type ProgressStack = Progress[]
 
 export const useDocumentUpload = ({
   markAsDone,
@@ -58,11 +47,9 @@ export const useDocumentUpload = ({
     description: '',
     createReviewTask: member?.assignedHn?.atRecordId !== user?.userAirtableId,
   })
-  const [progress, setProgress] = useState<number>(0)
   const [submittingDocument, setSubmittingDocument] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [retryTask, setRetryTask] = useState<Process | null>(null)
-  const [currentProcessTitle, setTitle] = useState<string | null>(null)
   const {
     labRequests,
     markLabRequestAsReceived,
@@ -91,9 +78,41 @@ export const useDocumentUpload = ({
       }))
   }
 
-  const [currentLabRequests, setCurrentLabRequests] = useState<Options[]>(
-    mapLabRequestsToOptions(labRequests)
-  )
+  /** Progress tracking stack */
+  const createLabRequestProgress: Progress = {
+    title: 'Updating lab request status...',
+    inProgress: true,
+    isSuccesful: false,
+    pid: 2,
+    show: false,
+  }
+
+  const uploadDocumentProgress: Progress = {
+    title: 'Uploading document...',
+    inProgress: true,
+    isSuccesful: false,
+    pid: 1,
+    show: false,
+  }
+
+  const createHnTaskProgress: Progress = {
+    title: 'Creating task for assigned HN...',
+    inProgress: true,
+    isSuccesful: false,
+    pid: 3,
+    show: false,
+  }
+  const [progressStack, setProgressStack] = useState<ProgressStack>([
+    uploadDocumentProgress,
+    createLabRequestProgress,
+    createHnTaskProgress,
+  ])
+
+  const [currentLabRequests, setCurrentLabRequests] = useState<Options[]>([])
+
+  useEffect(() => {
+    setCurrentLabRequests(mapLabRequestsToOptions(labRequests))
+  }, [labRequests])
 
   const setProcessError = () => {
     setError(
@@ -108,7 +127,6 @@ export const useDocumentUpload = ({
   }
 
   const uploadDocumentToServer = async (values: UploadDocumentFormValues) => {
-    setTitle('Uploading document...')
     const uploadDocumentMeta: DocMeta = {
       docType: values.docType,
       description: values.description || values.title,
@@ -119,20 +137,28 @@ export const useDocumentUpload = ({
           shareWith: [member?.antaraId],
           folder: values.folder,
         }),
+      ...(values.linkedLabRequest?.length && {
+        otherMetadata: {
+          linkedLabRequests: values?.linkedLabRequest?.map((l) => ({
+            type: l.type,
+            labType: l.labType,
+            recordId: l.recordId,
+            status: l.status,
+          })),
+        },
+      }),
     }
 
     return uploadDocument(uploadDocumentMeta)
   }
 
   const updateLabRequestStatus = async (values: UploadDocumentFormValues) => {
-    setTitle('Updating lab request status...')
     const linkedLabRequests = values.linkedLabRequest || []
 
     return markLabRequestAsReceived(linkedLabRequests)
   }
 
   const createNewReviewTask = async (values: UploadDocumentFormValues) => {
-    setTitle('Creating task for assigned HN...')
     const linkedLabRequests = values.linkedLabRequest || []
 
     return createTaskFromTemplate(
@@ -142,16 +168,42 @@ export const useDocumentUpload = ({
     )
   }
 
+  const updateProgressStack = (progress: Progress) => {
+    setProgressStack((prev) => {
+      return prev.map((p) => {
+        if (p.pid === progress.pid) {
+          return { ...progress, show: true }
+        }
+        return p
+      })
+    })
+  }
+
   const submitDocument = async (values: UploadDocumentFormValues) => {
     const shouldUpdateLabRequest = !!values.linkedLabRequest?.length
     const shouldCreateNewReviewTask = !!values.createReviewTask
     // review task is created if the assigned HN is not the user
     const createNewReviewTaskPath = () => {
+      updateProgressStack({
+        ...createHnTaskProgress,
+        show: true,
+      })
       createNewReviewTask(values)
         .then(() => {
+          updateProgressStack({
+            ...createHnTaskProgress,
+            inProgress: false,
+            isSuccesful: true,
+          })
           completeSubmission()
         })
         .catch((err) => {
+          updateProgressStack({
+            ...createHnTaskProgress,
+            inProgress: false,
+            isSuccesful: false,
+            errored: true,
+          })
           logError(err)
           setProcessError()
           setRetryTask(() => createNewReviewTaskPath)
@@ -159,8 +211,17 @@ export const useDocumentUpload = ({
     }
     // update lab request status if there is a linked lab request
     const updateLabRequestPath = () => {
+      updateProgressStack({
+        ...createLabRequestProgress,
+        show: true,
+      })
       updateLabRequestStatus(values)
         .then(() => {
+          updateProgressStack({
+            ...createLabRequestProgress,
+            inProgress: false,
+            isSuccesful: true,
+          })
           if (shouldCreateNewReviewTask) {
             createNewReviewTaskPath()
           } else {
@@ -168,6 +229,12 @@ export const useDocumentUpload = ({
           }
         })
         .catch((err) => {
+          updateProgressStack({
+            ...createLabRequestProgress,
+            inProgress: false,
+            isSuccesful: false,
+            errored: true,
+          })
           logError(err)
           setProcessError()
           setRetryTask(() => updateLabRequestPath)
@@ -175,8 +242,17 @@ export const useDocumentUpload = ({
     }
 
     const uploadDocumentPath = () => {
+      updateProgressStack({
+        ...uploadDocumentProgress,
+        show: true,
+      })
       uploadDocumentToServer(values)
         .then(() => {
+          updateProgressStack({
+            ...uploadDocumentProgress,
+            inProgress: false,
+            isSuccesful: true,
+          })
           if (shouldUpdateLabRequest) {
             updateLabRequestPath()
           } else if (shouldCreateNewReviewTask) {
@@ -186,6 +262,12 @@ export const useDocumentUpload = ({
           }
         })
         .catch((err) => {
+          updateProgressStack({
+            ...uploadDocumentProgress,
+            inProgress: false,
+            isSuccesful: false,
+            errored: true,
+          })
           logError(err)
           setProcessError()
           setRetryTask(() => uploadDocumentPath)
@@ -197,25 +279,6 @@ export const useDocumentUpload = ({
     setSubmittingDocument(true)
     uploadDocumentPath()
   }
-
-  useEffect(() => {
-    // rudimentary way to track the progress of the upload
-    let timer: NodeJS.Timeout
-
-    if (submittingDocument) {
-      timer = setInterval(() => {
-        setProgress((oldProgress) =>
-          calculateProgressDiff(oldProgress, totalProcesses(formValues))
-        )
-      }, 200)
-    }
-
-    return () => {
-      clearInterval(timer)
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [submittingDocument])
 
   const retryCurrentProcess = () => {
     setSubmittingDocument(true)
@@ -252,10 +315,8 @@ export const useDocumentUpload = ({
 
   return useMemo(() => {
     return {
-      progress,
       error,
       showProgressFeedback: submittingDocument || !!retryTask,
-      currentProcessTitle,
       submitDocument,
       labRequests: currentLabRequests,
       retryCurrentProcess,
@@ -265,8 +326,17 @@ export const useDocumentUpload = ({
       createNewLabRequests,
       updateFormValues,
       loadingLabRequests: loading,
+      progressStack,
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentLabRequests, formValues, error, labTypes, labRequests, loading])
+  }, [
+    currentLabRequests,
+    formValues,
+    error,
+    labTypes,
+    labRequests,
+    loading,
+    progressStack,
+  ])
 }

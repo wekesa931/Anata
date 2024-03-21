@@ -7,12 +7,14 @@ import { LabRequest, UpdateLabRequest } from 'src/modules/labs/types'
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker'
 import type { LabTypes } from 'src/modules/labs/types'
 import dayjs from 'dayjs'
+import { useUser } from 'src/context/user'
 
 export type LabRequestHook = ReturnType<typeof useLabsData>
 
 export const useLabsData = () => {
   const { getAllLabRequests, update, getAllLabsTypes } = useLabManagementAPI()
   const { member } = useMember()
+  const user = useUser()
 
   const [labRequests, setLabRequests] = useState<LabRequest[]>([])
   const [labTypes, setLabTypes] = useState<LabTypes[]>([])
@@ -92,6 +94,10 @@ export const useLabsData = () => {
       Source: 'Scribe: Document upload',
       'Data Source': 'Scribe: Document upload',
       Members: [member?.airtableRecordId],
+      createdBy: {
+        email: user?.email,
+        name: user?.name,
+      },
     }
 
     const newLabs = labRequestTypes.map((labType) => ({

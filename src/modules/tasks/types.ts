@@ -111,4 +111,6 @@ export type NewTask = {
   Assignee: RecordId
   Status: string
   'Task Notes': string
+  Source: string
+  'Data Source': string
 }
