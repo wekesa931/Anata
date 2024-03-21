@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useNotifications } from 'src/context/notifications'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import { useFormsData } from '../forms-data'
 import { Forms as TWorkflowForm } from '../../db/models'
-import { useModuleAnalytics } from 'src/modules/analytics'
 
 export const useFormsRouting = () => {
   const [forms, setForms] = useState<TWorkflowForm[]>([])

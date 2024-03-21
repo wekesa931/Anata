@@ -8,6 +8,7 @@ import type { FormProps } from 'src/modules/workflows/types'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useVitalsUpdate } from 'src/modules/vitals/hooks/vitals.update.hook'
 import dayjs from 'dayjs'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 // set the number field type message to be more specific field must be a number
 yup.setLocale({
