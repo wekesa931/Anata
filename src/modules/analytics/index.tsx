@@ -297,7 +297,16 @@ export const useModuleAnalytics = () => {
       middlesSectionAnalytics.track('lab request updated', labRequest)
     },
     trackFormSaved: (form: any, workflowId?: string) => {
-      rightSectionAnalytics.track('form saved', { form, workflowId })
+      rightSectionAnalytics.track(`${form} form submitted`, {
+        form,
+        workflowId,
+      })
+    },
+    trackFormOpened: (formName: string) => {
+      rightSectionAnalytics.track(`${formName} form opened`)
+    },
+    trackFormClosed: (formName: string) => {
+      rightSectionAnalytics.track(`${formName} form closed`)
     },
   }
 }
