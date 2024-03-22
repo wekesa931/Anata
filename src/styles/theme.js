@@ -30,6 +30,7 @@ module.exports = {
       'green-100': 'var(--green-100)',
       'green-50': 'var(--green-50)',
       'green-10': 'var(--green-10)',
+      'green-20': '#D6F7DB',
       'red-100': 'var(--red-100)',
       'red-50': 'var(--red-50)',
       'red-10': 'var(--red-10)',

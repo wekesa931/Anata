@@ -228,18 +228,42 @@ export class Member extends Model {
   }
 
   get allPhones() {
-    const currentMemberPhones = this.phones || []
-    const primaryMemberPhones = this.primary?.phones || []
+    const currentMemberPhones =
+      this.phones?.map((p, index) => ({
+        name: this.fullName,
+        phone: p.phone,
+        label: `Phone ${index + 1}`,
+      })) || []
+    const primaryMemberPhones =
+      this.primary?.phones?.map((p, index) => ({
+        name: this.primary?.fullName,
+        phone: p.phone,
+        label: `Primary phone ${index + 1}`,
+      })) || []
     const otherDependentsPhones =
-      this.otherDependents?.map((d) => d.phones) || []
+      this.otherDependents?.map((d) =>
+        d?.phones?.map((p) => ({
+          name: d?.fullName,
+          phone: p.phone,
+          label: 'Dependent',
+        }))
+      ) || []
 
-    return {
-      phones: currentMemberPhones,
-      primary: primaryMemberPhones,
-      otherDependents: otherDependentsPhones,
-      emergencyContactPhone: this.emergencyContact?.phoneNumber,
-      caregiverContactPhone: this.caregiverContact?.phoneNumber,
-    }
+    return [
+      ...currentMemberPhones,
+      ...primaryMemberPhones,
+      ...otherDependentsPhones.flat(),
+      {
+        name: this.emergencyContact?.name,
+        phone: this.emergencyContact?.phoneNumber,
+        label: 'Emergency contact',
+      },
+      {
+        name: this.caregiverContact?.name,
+        phone: this.caregiverContact?.phoneNumber,
+        label: 'Caregiver contact',
+      },
+    ]
   }
 
   get isMinor() {

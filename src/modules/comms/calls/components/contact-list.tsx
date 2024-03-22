@@ -1,53 +1,42 @@
 import * as React from 'react'
 import { useCall } from 'src/context/calls'
-import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import Notification from 'src/components/notification'
 import { useMember } from 'src/context/member'
-import OutgoingIcon from 'src/assets/img/icons/phone-outgoing.svg'
+import { X } from 'react-feather'
+import { Button, Divider, Paper, Popper } from '@mui/material'
+import PhoneForwardedIcon from '@mui/icons-material/PhoneForwarded'
+import { useNotifications } from 'src/context/notifications'
+import MemberPreferences from './member-preferences'
 
 export interface IProps {
-  relevantContact: any
-  onCallInitiated: () => void
+  onCallInitiated: (callDetails?: any) => void
   tasksType?: string
+  error?: any
+  setError: (error: any) => void
+  phoneNumbers: any[]
+  handleNewCalls: () => void
+  anchorEl?: any
+  closeWindow: () => void
 }
 
-function ContactList({ relevantContact, onCallInitiated, tasksType }: IProps) {
-  const [isRinging, setisRinging] = React.useState(false)
-  const [notificationError, setnotificationError] = React.useState<
-    string | null
-  >(null)
+function ContactList({
+  onCallInitiated,
+  tasksType,
+  error,
+  setError,
+  phoneNumbers,
+  handleNewCalls,
+  anchorEl,
+  closeWindow,
+}: IProps) {
+  const [isRinging, setisRinging] = React.useState<any>({})
   const { member } = useMember()
   const { initiateCall } = useCall()
-  const numberType = (num: any, isKey: boolean): string => {
-    let value = ''
-    // eslint-disable-next-line
-    for (const key in num) {
-      if (isKey) {
-        value = key
-      } else {
-        value = num[key]
-      }
-    }
-    return value
-  }
-  const formatNum = (num: string) => {
-    if (num) {
-      const formatted = num.replace(/[^a-zA-Z0-9_-]/g, '').match(/.{1,3}/g)
-      if (formatted) {
-        return `+${formatted.join(' ')}`
-      }
-      return num
-    }
-    return 'No number found for member'
-  }
-  const [colorScheme, setcolorScheme] = React.useState({
-    iconColor: '#d1d5db',
-    textColor: '#5d6b82',
-  })
+  const { notify } = useNotifications()
 
-  const calloutChange = async (e: any) => {
+  const calloutChange = async (e: any, relevantContact: any) => {
     e.stopPropagation()
-    setisRinging(!isRinging)
+    setisRinging((prev: any) => ({ ...prev, [relevantContact]: true }))
 
     try {
       initiateCall({
@@ -57,66 +46,110 @@ function ContactList({ relevantContact, onCallInitiated, tasksType }: IProps) {
         type: tasksType,
       })
     } catch (error: any) {
-      setnotificationError(error.message)
-      setTimeout(() => {
-        setnotificationError(null)
-      }, 3000)
+      notify(error.message)
     } finally {
       setTimeout(() => {
-        setisRinging(false)
+        setisRinging((prev: any) => ({ ...prev, [relevantContact]: false }))
       }, 4000)
     }
   }
-  const displayError = notificationError
 
   return (
-    <>
-      <div
-        className="contact-callout d-flex flex-between align-center pointer"
-        data-testid="call-initiator"
-        role="button"
-        onMouseEnter={() =>
-          setcolorScheme({
-            iconColor: '#32d74b',
-            textColor: 'black',
-          })
-        }
-        onMouseLeave={() =>
-          setcolorScheme({
-            iconColor: '#d1d5db',
-            textColor: '#5d6b82',
-          })
-        }
-        style={{
-          color: colorScheme.iconColor,
-        }}
-        tabIndex={0}
-        onKeyDown={calloutChange}
-        onClick={calloutChange}
-      >
-        <div className="d-flex flex-column align-start">
-          <p className="number-type">{numberType(relevantContact, true)}</p>
-          <p
-            className="member-phone-num"
-            style={{
-              color: colorScheme.textColor,
-            }}
-          >
-            {formatNum(numberType(relevantContact, false))}
-          </p>
+    <Popper
+      open={Boolean(anchorEl)}
+      anchorEl={anchorEl}
+      placement="bottom-start"
+      className="z-20 max-w-[30rem] rounded-lg"
+    >
+      <Paper className="rounded-xl p-0">
+        <div className="h-12 bg-dark-blue-70 p-4 w-full text-white text-left text-base rounded-tl-xl rounded-tr-xl font-bold">
+          Outbound call
         </div>
-        {isRinging ? (
-          <LoadingIcon />
-        ) : (
-          <OutgoingIcon className="text-[#d1d5db] w-4 h-4" />
-        )}
-      </div>
-      {displayError && (
-        <div>
-          <Notification title="Info" message={notificationError ?? ''} />
+        <MemberPreferences />
+        <div data-testid="phone-list">
+          {error && (
+            <div className="p-relative">
+              <X
+                className="calls-error"
+                color="var(--red-100)"
+                width={18}
+                height={18}
+                onClick={() => setError(null)}
+              />
+              <Notification
+                title="Error"
+                message={error ?? ''}
+                buttonMargin="0"
+                buttonPadding="15px 8px"
+              />
+            </div>
+          )}
+          <div className="p-2">
+            {member ? (
+              <div>
+                {phoneNumbers.length > 0 ? (
+                  phoneNumbers?.map((con, i) => (
+                    <div
+                      className="flex items-center justify-between gap-2 mb-3 p-2 font-rubik"
+                      key={i}
+                    >
+                      <div className="table flex-grow text-dark-blue-100">
+                        <div className="table-row border-r-dark-blue-20">
+                          <div className="table-cell border-r-4 border-r-dark-blue-20 w-[10rem]">
+                            <p className="text-sm">{con?.name}</p>
+                            <p className="text-xs text-dark-blue-50">
+                              {con?.label}
+                            </p>
+                          </div>
+                          <div className="table-cell pl-2 text-sm">
+                            {con?.phone}
+                          </div>
+                        </div>
+                      </div>
+                      <Button
+                        className="text-blue-100 border-blue-100 font-medium flex items-center gap-2 normal-case"
+                        variant="outlined"
+                        onClick={(e: any) => calloutChange(e, con?.phone)}
+                      >
+                        <PhoneForwardedIcon />
+                        {isRinging[con?.phone] ? 'Calling' : 'Call'}
+                      </Button>
+                    </div>
+                  ))
+                ) : (
+                  <div />
+                )}
+              </div>
+            ) : (
+              <div>
+                <Notification
+                  title="Error"
+                  message="No contact found for member"
+                />
+              </div>
+            )}
+          </div>
+          <Divider />
+          <div className="w-full flex items-center justify-between gap-2 p-2 font-rubik px-4">
+            <Button
+              className="text-white border-blue-100 bg-blue-100 font-medium flex items-center gap-2 normal-case"
+              variant="contained"
+              onClick={handleNewCalls}
+            >
+              <PhoneForwardedIcon />
+              Call another phone
+            </Button>
+            <Button
+              className="text-white font-medium bg-dark-blue-50 normal-case"
+              variant="contained"
+              onClick={closeWindow}
+            >
+              Cancel
+            </Button>
+          </div>
         </div>
-      )}
-    </>
+      </Paper>
+    </Popper>
   )
 }
 

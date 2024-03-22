@@ -318,29 +318,6 @@ function CallProvider({ children }: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pushNotification?.data?.event])
 
-  const numberType = (num: any, isKey: boolean): string => {
-    let value = ''
-    // eslint-disable-next-line
-    for (const key in num) {
-      if (isKey) {
-        value = key
-      } else {
-        value = num[key]
-      }
-    }
-    return value
-  }
-
-  const formatPhoneForSubmission = (num: string): string | null => {
-    if (num) {
-      let phone = num
-      phone = phone.replace(/\s/g, '').replace(/^(0|\+?254)/gi, '')
-      return `+254${phone}`
-    }
-    setcallError('Invalid or No number found for member')
-    return null
-  }
-
   const {
     trackCallEnded,
     trackTransferRequested,
@@ -426,7 +403,7 @@ function CallProvider({ children }: any) {
     ) {
       throw new Error('Call in progress')
     }
-    const phoneNum = formatPhoneForSubmission(numberType(callContact, false))
+    const phoneNum = callContact
     if (phoneNum) {
       initiateConferenceCall({
         variables: {
@@ -450,6 +427,7 @@ function CallProvider({ children }: any) {
               memberContacts,
               memberAntaraId: memberDetails?.antaraId,
             }
+            console.log(call)
             setActiveCall({ ...activeCall, ...call })
             setActiveCallContact(callContact)
             onCallInitiated(response?.data)

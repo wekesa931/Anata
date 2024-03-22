@@ -1,6 +1,6 @@
 /* eslint jsx-a11y/anchor-is-valid: 0 */
 import React, { useState } from 'react'
-import { ChevronRight, Phone, X } from 'react-feather'
+import { Phone, X } from 'react-feather'
 import { Input, InputAdornment } from '@mui/material'
 import Notification from 'src/components/notification'
 import { useMember } from 'src/context/member'
@@ -31,19 +31,8 @@ function CallsCallout({
   const { initiateCall } = useCall()
   const [phoneNumber, setPhoneNumber] = useState<string>('')
   const [phoneError, setPhoneError] = useState<string | null>('')
-  const [colorScheme, setcolorScheme] = React.useState({
-    iconColor: '#d1d5db',
-    textColor: '#5d6b82',
-  })
-  const { trackOutboundCall } = useModuleAnalytics()
 
-  const checkProperties = (obj: any) => {
-    // eslint-disable-next-line
-    for (const key in obj) {
-      if (obj[key] === null || obj[key] === '') return false
-    }
-    return true
-  }
+  const { trackOutboundCall } = useModuleAnalytics()
 
   const onCallInitiated = (outboundCallDetails: any) => {
     setIsPhoneChooserOpen(false)
@@ -51,13 +40,6 @@ function CallsCallout({
     trackOutboundCall(outboundCallDetails)
   }
 
-  const handleCallClick = (e: { stopPropagation: () => void }) => {
-    if (airtableId) {
-      setHistoryRecordId(airtableId)
-    }
-    setIsPhoneChooserOpen(!isPhoneChooserOpen)
-    e.stopPropagation()
-  }
   const handleNewCalls = () => {
     setOpen(!open)
     setIsPhoneChooserOpen(false)
@@ -96,57 +78,6 @@ function CallsCallout({
     }
   }
 
-  const getMemberPhones = () => {
-    if (member) {
-      const { allPhones } = member
-      const {
-        phones = [],
-        emergencyContactPhone,
-        caregiverContactPhone,
-      } = allPhones
-      let parsed = phones.map((phone: any, index: number) => ({
-        [`Phone ${index + 1}`]: phone?.phone,
-      }))
-
-      const { primary = null, otherDependents = [] } = allPhones
-      if (primary) {
-        // eslint-disable-next-line
-        parsed = [
-          ...parsed,
-          ...primary.map((phone: any, index: number) => ({
-            [`Primary phone ${index + 1}`]: phone?.phone,
-          })),
-        ]
-      }
-
-      if (otherDependents.length) {
-        otherDependents.forEach((dependent: any) => {
-          // eslint-disable-next-line
-          const { phones = [] } = dependent
-          parsed = [
-            ...parsed,
-            ...phones.map((phone: any, index: number) => ({
-              [`${dependent?.details?.fullName} phone ${index + 1}`]:
-                phone?.phone,
-            })),
-          ]
-        })
-      }
-
-      const allContacts: any[] = [
-        ...parsed,
-        { 'Emergency 1': emergencyContactPhone },
-        { Caregiver: caregiverContactPhone },
-      ]
-
-      const cleanedContacts = allContacts.filter((con) => checkProperties(con))
-
-      return cleanedContacts
-    }
-
-    return []
-  }
-
   const setPhonevalidation = (phone: string) => {
     setPhoneNumber(phone)
     if (phone) {
@@ -159,10 +90,19 @@ function CallsCallout({
     }
   }
 
+  const [contactListAnchorEl, setContactListAnchorEl] = React.useState(null)
+  const handleCallClick = (e: any) => {
+    if (airtableId) {
+      setHistoryRecordId(airtableId)
+    }
+    setIsPhoneChooserOpen(!isPhoneChooserOpen)
+    e.stopPropagation()
+    setContactListAnchorEl(contactListAnchorEl ? null : e.currentTarget)
+  }
+
   return (
     <div className="relative">
-      <a
-        role="button"
+      <button
         tabIndex={0}
         className="btn call-btn relative"
         data-testid="initiate-call-button"
@@ -170,90 +110,23 @@ function CallsCallout({
           color: isPhoneChooserOpen ? '#32d74b' : '#af9090',
           backgroundColor: isPhoneChooserOpen ? '#d6f7db' : '#e8eaed',
         }}
-        onKeyDown={handleCallClick}
         onClick={handleCallClick}
       >
         <PhoneIcon className="w-4 h-4" fill="#efefef" />
-      </a>
-      {isPhoneChooserOpen && (
-        <DropDownComponent
-          isVisible={isPhoneChooserOpen}
-          setvisibility={setIsPhoneChooserOpen}
-        >
-          <div data-testid="phone-list" className="phone-number-callout">
-            {callError && (
-              <div className="p-relative">
-                <X
-                  className="calls-error"
-                  color="var(--red-100)"
-                  width={18}
-                  height={18}
-                  onClick={() => setcallError(null)}
-                />
-                <Notification
-                  title="Error"
-                  message={callError ?? ''}
-                  buttonMargin="0"
-                  buttonPadding="15px 8px"
-                />
-              </div>
-            )}
-            <div>
-              {member ? (
-                getMemberPhones().length > 0 ? (
-                  getMemberPhones()?.map((con, i) => (
-                    <div className="mb-ten" key={i}>
-                      <ContactList
-                        tasksType={tasksType}
-                        relevantContact={con}
-                        onCallInitiated={onCallInitiated}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <div />
-                )
-              ) : (
-                <div>
-                  <Notification
-                    title="Error"
-                    message="No contact found for member"
-                  />
-                </div>
-              )}
-            </div>
-
-            <button
-              onClick={() => handleNewCalls()}
-              className={styles.btncallotherphone}
-              onMouseEnter={() =>
-                setcolorScheme({
-                  iconColor: '#32d74b',
-                  textColor: 'black',
-                })
-              }
-              onMouseLeave={() =>
-                setcolorScheme({
-                  iconColor: '#d1d5db',
-                  textColor: '#5d6b82',
-                })
-              }
-              style={{
-                color: colorScheme.textColor,
-              }}
-            >
-              Call other phone
-              <ChevronRight
-                width="18px"
-                height="18px"
-                style={{
-                  color: colorScheme.iconColor,
-                }}
-              />
-            </button>
-          </div>
-        </DropDownComponent>
-      )}
+      </button>
+      <ContactList
+        phoneNumbers={member?.allPhones || []}
+        error={callError}
+        setError={setcallError}
+        handleNewCalls={handleNewCalls}
+        tasksType={tasksType}
+        onCallInitiated={onCallInitiated}
+        anchorEl={contactListAnchorEl}
+        closeWindow={() => {
+          setContactListAnchorEl(null)
+          setIsPhoneChooserOpen(false)
+        }}
+      />
 
       {!isPhoneChooserOpen && open && (
         <DropDownComponent isVisible={open} setvisibility={setOpen}>
