@@ -14,6 +14,7 @@ import { User } from 'react-feather'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import ExternalLinkIcon from 'src/assets/img/icons/external-link.svg'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import { useAirtableMeta } from 'src/context/airtable-meta'
 import styles from './appointments.module.css'
 
 const SearchFieldsNameMap: Record<string, any> = {
@@ -41,6 +42,85 @@ function Appointments() {
   const [selected, setSelected] = React.useState(status[0])
   const { trackActionEdited } = useModuleAnalytics()
 
+  const [appointmentEditField, setAppointmenteEditField] = React.useState<
+    AirtableField[]
+  >([])
+  const { airtableMeta, getFieldOptions } = useAirtableMeta()
+
+  useEffect(() => {
+    if (airtableMeta) {
+      const APPOINTMENT_FIELDS: AirtableField[] = [
+        {
+          name: 'Comments',
+          type: 'long-text',
+        },
+        {
+          name: 'start_date_time',
+          helperText: 'Please enter time in UTC+3 (Kenya time zone)',
+          type: 'datetime',
+        },
+        {
+          name: 'Status',
+          type: 'single-select',
+          options: getFieldOptions('Appointments', 'Status') || [],
+          helperText:
+            'Schedule needed: if the appointment has no date and no time and you want our team to schedule it\nScheduled: we know the date and time and it is assigned\nMissed: the member did not pick up the call or picked up but could not do the call without giving a new date and time, we will need to reschedule\nComplete: successful interaction/ consultation has been done (on phone or in person)\nCanceled: we, Antara, decides that the appointment is not relevant anymore.',
+        },
+        {
+          name: 'Assignee',
+          type: 'single-select',
+          options: allAntaraStaffs.map((staff: any) => ({
+            label: staff.fullName,
+            value: staff.atRecordId,
+          })),
+        },
+        {
+          name: 'Assignee Name',
+          type: 'lookup',
+          calculated: true,
+        },
+        {
+          name: 'Reasons for missed or rescheduled meeting',
+          type: 'long-text',
+          condition: (appt: any = {}) => {
+            const { Status } = appt
+            return Status === 'Missed'
+          },
+        },
+        {
+          name: 'Facilities from Provider base',
+          type: 'search',
+          tableId:
+            process.env.PROD === 'true'
+              ? 'tbltmQuqyuKPc4Ffo'
+              : 'tblU94ZnFmMT7S0o0',
+        },
+        {
+          name: 'Specialists from Provider Base',
+          type: 'search',
+          tableId:
+            process.env.PROD === 'true'
+              ? 'tblsixUe3jfbOUMQP'
+              : 'tblPpf5F81JypdC9k',
+        },
+        {
+          name: 'Reason for cancellation',
+          type: 'single-select',
+          options:
+            getFieldOptions('Appointments', 'Reason for cancellation') || [],
+          condition: (appt: any = {}) => {
+            const { Status } = appt
+            return Status === 'Cancelled'
+          },
+          required: true,
+        },
+      ]
+      setAppointmenteEditField(APPOINTMENT_FIELDS)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [airtableMeta])
+
   const allowedFields = [
     'Service',
     'Status',
@@ -67,83 +147,6 @@ function Appointments() {
 
   const { allAntaraStaffs, loading } = useAntaraStaff()
 
-  const APPOINTMENT_FIELDS: AirtableField[] = [
-    {
-      name: 'Comments',
-      type: 'long-text',
-    },
-    {
-      name: 'start_date_time',
-      helperText: 'Please enter time in UTC+3 (Kenya time zone)',
-      type: 'datetime',
-    },
-    {
-      name: 'Status',
-      type: 'single-select',
-      options: [
-        'Scheduled',
-        'Completed',
-        'Missed',
-        'Cancelled',
-        'Schedule needed',
-      ].map((type) => ({ label: type, value: type })),
-      helperText:
-        'Schedule needed: if the appointment has no date and no time and you want our team to schedule it\nScheduled: we know the date and time and it is assigned\nMissed: the member did not pick up the call or picked up but could not do the call without giving a new date and time, we will need to reschedule\nComplete: successful interaction/ consultation has been done (on phone or in person)\nCanceled: we, Antara, decides that the appointment is not relevant anymore.',
-    },
-    {
-      name: 'Assignee',
-      type: 'single-select',
-      options: allAntaraStaffs.map((staff: any) => ({
-        label: staff.fullName,
-        value: staff.atRecordId,
-      })),
-    },
-    {
-      name: 'Assignee Name',
-      type: 'lookup',
-      calculated: true,
-    },
-    {
-      name: 'Reasons for missed or rescheduled meeting',
-      type: 'long-text',
-      condition: (appt: any = {}) => {
-        const { Status } = appt
-        return Status === 'Missed'
-      },
-    },
-    {
-      name: 'Facilities from Provider base',
-      type: 'search',
-      tableId:
-        process.env.PROD === 'true' ? 'tbltmQuqyuKPc4Ffo' : 'tblU94ZnFmMT7S0o0',
-    },
-    {
-      name: 'Specialists from Provider Base',
-      type: 'search',
-      tableId:
-        process.env.PROD === 'true' ? 'tblsixUe3jfbOUMQP' : 'tblPpf5F81JypdC9k',
-    },
-    {
-      name: 'Reason for cancellation',
-      type: 'single-select',
-      options: [
-        'Member unresponsive',
-        'Member not ready',
-        'Refused services',
-        'Appointment done',
-        'Appointment is booked',
-        'Not relevant as per protocol',
-        'No relevant data available',
-        'Member request',
-        'Other',
-      ].map((type) => ({ label: type, value: type })),
-      condition: (appt: any = {}) => {
-        const { Status } = appt
-        return Status === 'Cancelled'
-      },
-      required: true,
-    },
-  ]
   const user = useUser()
   const openCalendar = () => {
     if (member) {
@@ -204,7 +207,7 @@ function Appointments() {
   const includeFieldTypes = (appointment: any) => {
     const parsedFields: any[] = []
 
-    APPOINTMENT_FIELDS.forEach((field) => {
+    appointmentEditField.forEach((field) => {
       const key = field.name
       let value = appointment[key]
 

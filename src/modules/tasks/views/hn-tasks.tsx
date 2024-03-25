@@ -25,6 +25,7 @@ import { useNotifications } from 'src/context/notifications'
 import TaskModal from 'src/modules/tasks/components/task-modal'
 import useTaskModuleData from 'src/modules/tasks/hooks/tasks-module.data'
 import { useAirtableMeta } from 'src/context/airtable-meta'
+import AirtableField from 'src/types/airtable-field'
 import styles from './tasks.module.css'
 
 type RecordWithId = { data: any; id: string }
@@ -283,7 +284,20 @@ function Tasks() {
     { error: apiError, loading: isApiLoading, data: rawApiRecords },
   ] = useLazyQuery(GET_MEMBER_TASKS, {})
 
-  const taskFields = getTaskFields(mapAssigneeToLookup(allAntaraStaffs))
+  const [taskFields, setTaskFields] = useState<AirtableField[]>([])
+  const { airtableMeta, getFieldOptions } = useAirtableMeta()
+
+  useEffect(() => {
+    if (airtableMeta) {
+      setTaskFields(
+        getTaskFields(mapAssigneeToLookup(allAntaraStaffs), getFieldOptions)
+      )
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [airtableMeta])
+
+  // const taskFields = getTaskFields(mapAssigneeToLookup(allAntaraStaffs))
   useEffect(() => {
     if (member?.antaraId) {
       loadTasks({ variables: { antaraId: member?.antaraId } })

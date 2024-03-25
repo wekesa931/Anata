@@ -6,11 +6,14 @@ import { useUser } from 'src/context/user'
 import { keyBy } from 'lodash'
 import { useTasksAPI } from 'src/modules/tasks/services/tasks.service'
 
+export type GetFieldOptionsFn = (tableName: string, fieldName: string) => any
+
 type AirtableMetaType = {
   airtableMeta: any
   loading: boolean
   taskDefinitions: any
   getTaskDefinitionById: (id: string) => any
+  getFieldOptions: GetFieldOptionsFn
 }
 
 const AirtableMetaContext = React.createContext<AirtableMetaType>({
@@ -18,6 +21,7 @@ const AirtableMetaContext = React.createContext<AirtableMetaType>({
   loading: false,
   taskDefinitions: [],
   getTaskDefinitionById: () => null,
+  getFieldOptions: () => null,
 })
 
 type Props = {
@@ -37,12 +41,34 @@ export function AirtableMetaProvider({ children, meta }: Props) {
   const getTaskDefinitionById = (id: string) => {
     return taskDefinitions.find((t: any) => t.recordId === id)
   }
+
+  const findFromObjectValuesByName = (obj: any, value: any) => {
+    return Object.values(obj).find((v: any) => v.name === value)
+  }
+
+  const getFieldOptions = (tableName: string, fieldName: string) => {
+    if (!airtableMeta) return []
+
+    const table: any = findFromObjectValuesByName(airtableMeta, tableName)
+    if (!table) return []
+    const field: any = findFromObjectValuesByName(table?.fields, fieldName)
+    if (!field) return []
+
+    if (field?.options?.choices) {
+      return field.options.choices?.map((choice: any) => ({
+        label: choice?.name,
+        value: choice?.name,
+      }))
+    }
+  }
+
   const providerValue = React.useMemo(
     () => ({
       airtableMeta,
       loading,
       taskDefinitions,
       getTaskDefinitionById,
+      getFieldOptions,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [airtableMeta, loading, taskDefinitions]

@@ -1,113 +1,23 @@
+import { GetFieldOptionsFn } from 'src/context/airtable-meta'
 import AirtableField from 'src/types/airtable-field'
 
-const TASK_TYPES = [
-  'Appointment reminder',
-  'Appointment: Attendance confirmation & empowerment',
-  'Appointment: Attendance reminder',
-  'Appointment: Checkin confirmation',
-  'Appointment: PAFU',
-  'Appointment: Perform',
-  'BP Mon: Collect Data ',
-  'Call Avenue',
-  'Call back: member dropped',
-  'Call back: missed by antara',
-  'Call Member',
-  'Call Member: Appointment missed',
-  'Call member: device follow up',
-  'Call Member: HN task to follow up with member',
-  'Call Member: Refusal of service follow up',
-  'Call member: Vitals follow up',
-  'Chief complaint review',
-  'Collect Chronic Care Consent',
-  'Condition: review and update',
-  'Content Review',
-  'Create new content',
-  'Dr: Review minor HIF',
-  'Escalate member issue',
-  'Flag for Internal clinical review',
-  'Hand over tasks and meetings before holidays',
-  'Health program enrollment',
-  'Healthy program: Follow up call',
-  'HMP Data Collection',
-  'HMP Data Collection Prep',
-  'HMP External Review',
-  'HMP Generation',
-  'HMP HN send Check in message',
-  'HMP HN send condition specific message',
-  'HMP Internal Validation',
-  'HMP Monitoring 1',
-  'HMP Monitoring 2',
-  'HMP Monitoring 3',
-  'Inpatient follow up call',
-  'Intervention: review and update',
-  'ME task type',
-  'Nutrition: Check-in Call',
-  'Nutrition: Content Follow-up',
-  'Nutrition: Create Content ',
-  'Nutrition: Perform Consultation',
-  'Nutrition: Schedule Consultation',
-  'Nutrition: Send Consultation Reminder',
-  'Nutrition: Send Content',
-  'Others',
-  'Post VC: Asthma score',
-  'Post VC: Follow up on In-person review',
-  'Post VC: Follow up on Monitoring data',
-  'Post VC: Follow up on Results',
-  'Post VC: Follow up on Symptom',
-  'Post VC: Health Education',
-  'Post VC: Monitoring BP',
-  'Post VC: Monitoring Glucose',
-  'Post VC: Schedule Follow up VC review',
-  'Post VC: Schedule Hba1c test',
-  'Post VC: Send content',
-  'Prescribe medication',
-  'Reschedule call',
-  'Review incident',
-  'Rx: Followup',
-  'Rx: Refill',
-  'Schedule Avenue visit',
-  'Schedule consultation non-Avenue specialist',
-  'Schedule Fitness consultation',
-  'Schedule Home visit',
-  'Schedule VC consultation',
-  'Schedule: Avenue visit',
-  'Schedule: Fitness consultation',
-  'Schedule: Followup call',
-  'Schedule: Home visit',
-  'Schedule: Mental Health Consultation',
-  'Schedule: non-Avenue specialist',
-  'Schedule: Physiotherapy',
-  'Schedule: VC consultation',
-  'Send Check-in Message #1',
-  'Send clinical summary',
-  'Send clinical summary to AHC',
-  'Send consultation information',
-  'send relevant content',
-  'SMS to members',
-  'SMS to members (Appointment booking)',
-  'SMS to members (BP collection)',
-  'SMS to members (BS collection)',
-  'SMS to members (HN consult reminder)',
-  'SMS to members (MHC reminder)',
-  'SMS to members (Notification of Delivery Scheduled)',
-  'SMS to members (Notification of Next Day Delivery)',
-  'SMS to members (Notification of today Delivery)',
-  'SMS to members (PC reminder)',
-  'SMS to members (screening)',
-  'SMS to members (VC reminder)',
-  'SMS to members (vitals)',
-  'VC: follow up call',
-  'ME - Call - Complete screening follow up: sScreening straggler',
-  'ME - Schedule - Health-check',
-  'Appointment overdue follow up',
-].sort()
+type Option = {
+  label: string
+  value: string
+}
 
-const getTaskFields = (allAntaraStaffs: any[]) => {
+const getTaskFields = (
+  allAntaraStaffs: any[],
+  getFieldOptions: GetFieldOptionsFn
+) => {
+  const types: Option[] = (
+    (getFieldOptions('HN Tasks', 'Type') || []) as Option[]
+  ).sort((a, b) => a.label.localeCompare(b.label))
   const TASK_FIELDS: AirtableField[] = [
     {
       name: 'Type',
       type: 'single-select',
-      options: TASK_TYPES.map((type) => ({ label: type, value: type })),
+      options: types,
       disabled: true,
     },
     {
@@ -117,10 +27,7 @@ const getTaskFields = (allAntaraStaffs: any[]) => {
     {
       name: 'Task Priority',
       type: 'single-select',
-      options: ['High', 'Medium', 'Low'].map((option) => ({
-        label: option,
-        value: option,
-      })),
+      options: getFieldOptions('HN Tasks', 'Task Priority'),
     },
     {
       name: 'Task Notes',
@@ -137,14 +44,7 @@ const getTaskFields = (allAntaraStaffs: any[]) => {
     {
       name: 'Status',
       type: 'single-select',
-      options: [
-        'Not Started',
-        'In Progress',
-        'Complete',
-        'On Hold',
-        'Cancelled',
-        'Not Applicable',
-      ].map((option) => ({ label: option, value: option })),
+      options: getFieldOptions('HN Tasks', 'Status'),
     },
     {
       name: 'Last Status changed at',
@@ -159,17 +59,7 @@ const getTaskFields = (allAntaraStaffs: any[]) => {
     {
       name: 'Reason for cancellation',
       type: 'single-select',
-      options: [
-        'Member unresponsive',
-        'Member not ready',
-        'Refused services',
-        'Appointment done',
-        'Appointment is booked',
-        'Not relevant as per protocol',
-        'No relevant data available',
-        'Member request',
-        'Other',
-      ].map((option) => ({ label: option, value: option })),
+      options: getFieldOptions('HN Tasks', 'Reason for cancellation'),
       condition: (task: any = {}) => {
         const { Status } = task
         return Status === 'Cancelled'
