@@ -1,15 +1,15 @@
 import airtableFetch from 'src/services/airtable/fetch'
-import { NewTask } from 'src/modules/tasks/types'
+import {
+  NewTask,
+  LabManagementRecordId,
+  NewDocumentRecordId,
+} from 'src/modules/tasks/types'
 import { filterFields } from 'src/utils/airtable/field-utils'
 import { useHNOSData } from 'src/modules/workflows/services/workflows.api'
 import TABLE_ROUTES from 'src/config/airtable-tables'
 import { mapRawTaskDefinitionToTaskDefinition } from 'src/modules/tasks/utils/transform'
 
 const TasksTable = TABLE_ROUTES['HN Tasks']
-const LabManagementRecordId =
-  process.env.PROD === 'true' ? 'recR0Rni1WNDiQpj3' : 'rec5i6q30NJAcXOsA'
-const NewDocumentRecordId =
-  process.env.PROD === 'true' ? 'rec0bpNSpRx6huygq' : 'recbDbP099lD9mKw7'
 
 export const useTasksAPI = () => {
   const { createTableEntry } = useHNOSData()

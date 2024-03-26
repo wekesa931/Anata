@@ -5,7 +5,6 @@ import {
   RawUserTask,
   convertPriority,
   TaskDefinition,
-  TaskDefinitionTypes,
   AssigneeTypes,
   NewTask,
 } from 'src/modules/tasks/types'
@@ -71,13 +70,9 @@ export const mapRawTaskDefinitionToTaskDefinition = (
 export const transformRawTaskDefinitionsToTaskDefinitions = (
   rawTaskDefinitions: any[]
 ) => {
-  return rawTaskDefinitions.reduce((acc, rawTaskDefinition) => {
-    const taskDefinition =
-      mapRawTaskDefinitionToTaskDefinition(rawTaskDefinition)
-    const type = taskDefinition.scribeTags as TaskDefinitionTypes
-    acc[type] = taskDefinition
-    return acc
-  }, {} as { [key in TaskDefinitionTypes]: TaskDefinition })
+  return rawTaskDefinitions.map(
+    mapRawTaskDefinitionToTaskDefinition
+  ) as TaskDefinition[]
 }
 
 export const mapTaskDefinitionToNewask = (

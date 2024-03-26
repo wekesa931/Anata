@@ -1,4 +1,3 @@
-import { TaskDefinitionTypes } from 'src/modules/tasks/types'
 import { useTasksAPI } from 'src/modules/tasks/services/tasks.service'
 import {
   transformRawTaskDefinitionsToTaskDefinitions,
@@ -6,6 +5,11 @@ import {
 } from 'src/modules/tasks/utils/transform'
 import { useMember } from 'src/context/member'
 import { logError } from 'src/utils/logging/logger'
+import {
+  LabManagementRecordId,
+  NewDocumentRecordId,
+  TaskDefinitionTypes,
+} from 'src/modules/tasks/types'
 
 export const useTasksData = () => {
   const { getTaskDefinitionTemplates, createTask } = useTasksAPI()
@@ -20,14 +24,18 @@ export const useTasksData = () => {
   const createTaskFromTemplate = async (type: TaskDefinitionTypes) => {
     try {
       const templates = await loadTaskTemplates()
-      const taskDefinition = templates[type]
+      const templateId =
+        type === TaskDefinitionTypes.LabManagement
+          ? LabManagementRecordId
+          : NewDocumentRecordId
+      const taskDefinition = templates.find((t) => t.recordId === templateId)
 
       if (!taskDefinition) {
         throw new Error('Task definition not found')
       }
 
       if (member && member?.airtableRecordId) {
-        const newTask = mapTaskDefinitionToNewask(templates[type], member)
+        const newTask = mapTaskDefinitionToNewask(taskDefinition, member)
 
         return createTask(newTask)
       }
