@@ -113,7 +113,6 @@ function TasksModalContainer({
   }, [openItem])
 
   useEffect(() => {
-    setInitialValues((prevValues: any) => ({ ...prevValues, dueDate }))
     trackReshedulingDueDate(openItem?.id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dueDate])
@@ -239,7 +238,7 @@ function TasksModalContainer({
       'Number of Attempts': templateData.taskAttempt + 1,
       ...(checkboxes.rescheduleTaskCheck
         ? {
-            'Due Date': dayjs().add(values.dueDate, 'day').format('YYYY-MM-DD'),
+            'Due Date': dayjs().add(dueDate, 'day').format('YYYY-MM-DD'),
           }
         : {}),
     }
