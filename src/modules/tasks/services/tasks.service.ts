@@ -51,7 +51,10 @@ export const useTasksAPI = () => {
     )
     if (Array.isArray(definitions)) {
       return definitions
-        .filter((t: any) => t?.Status === 'Live')
+        .filter(
+          (t: any) =>
+            t?.Status === 'Live' && !t?.fields?.['Automated-task-only']
+        )
         .map(mapRawTaskDefinitionToTaskDefinition)
     }
     return []

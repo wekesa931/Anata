@@ -201,6 +201,13 @@ function AirtableBasedForm({
     return prevRequired
   }
 
+  const filterDefinitions = (definitions: any[]) => {
+    return definitions.filter(
+      (t: any) =>
+        t?.fields?.Status === 'Live' && !t?.fields?.['Automated-task-only']
+    )
+  }
+
   const taskDefinitionsFilterFn = (field: any, values: any) => {
     const selectedTag = values?.['Scribe Tags']
     let parsedField = field
@@ -208,6 +215,7 @@ function AirtableBasedForm({
       const definitions = taskDefinitions.filter((taskDefinition: any) =>
         taskDefinition.scribeTags.includes(selectedTag?.name ?? selectedTag)
       )
+
       if (definitions.length) {
         parsedField = {
           ...field,
@@ -222,6 +230,7 @@ function AirtableBasedForm({
       parsedField = {
         ...field,
         type: 'foreignKey',
+        filterResponse: filterDefinitions,
       }
     }
 

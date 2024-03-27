@@ -143,6 +143,7 @@ export type FormField = {
   parentTableId: string
   conditionalOptions?: boolean
   prefills?: (name: string, value: any, airtableMetaData: any) => any
+  filterResponse: (response: any[]) => any[]
 }
 
 export type FormMeta = {

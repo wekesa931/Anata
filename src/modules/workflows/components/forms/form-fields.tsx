@@ -990,13 +990,19 @@ function LinkRecordInputDefault({
   const settingLinkedData = gettingLinkedRecords || !airtableMeta
   const { member } = useMember()
 
+  const fieldNameFromAirtableMeta =
+    airtableMeta[field.foreignTableId]?.primaryFieldName
+
   useEffect(() => {
     if (data) {
       const response = data.globalSearch.data || []
+      const filteredOptions = field?.filterResponse
+        ? field.filterResponse(response)
+        : response
+
       const displayFields: any[] = []
-      response.forEach((fl: any) => {
-        const loadedMeta =
-          fl.fields[airtableMeta[field.foreignTableId].primaryFieldName]
+      filteredOptions.forEach((fl: any) => {
+        const loadedMeta = fl.fields[fieldNameFromAirtableMeta]
         const loadedValue = loadedMeta && typeof loadedMeta === 'string'
         if (loadedValue) {
           displayFields.push({
