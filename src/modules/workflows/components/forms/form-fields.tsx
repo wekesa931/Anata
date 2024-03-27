@@ -539,7 +539,8 @@ function TextInputField({
     // we save input on blur to optimize for saves
     setShouldShrink(false)
     let parsedValue = inputValue === '' ? undefined : inputValue // default to undefined for empty strings
-    parsedValue = field.type === 'number' && parsedValue && Number(parsedValue) // convert the value to number for number fields
+    if (field.type === 'number' && parsedValue)
+      parsedValue = Number(parsedValue) // convert the value to number for number fields
 
     saveInput(field.name, parsedValue)
   }
