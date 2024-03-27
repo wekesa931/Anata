@@ -538,7 +538,10 @@ function TextInputField({
   const handleBlur = () => {
     // we save input on blur to optimize for saves
     setShouldShrink(false)
-    saveInput(field.name, inputValue)
+    let parsedValue = inputValue === '' ? undefined : inputValue // default to undefined for empty strings
+    parsedValue = field.type === 'number' && parsedValue && Number(parsedValue) // convert the value to number for number fields
+
+    saveInput(field.name, parsedValue)
   }
 
   return (
@@ -590,6 +593,7 @@ function TextInputField({
                     return setNumError(true)
                   }
                 }
+                setNumError(false)
                 setInputValue(e.target.value)
               }}
               label={<Label field={field} error={error} />}
