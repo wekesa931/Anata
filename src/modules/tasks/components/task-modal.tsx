@@ -92,7 +92,7 @@ function TasksModalContainer({
   })
 
   const handleIncrement = () =>
-    setDueDate((prevDueDate) => Math.min(prevDueDate + 1, 14))
+    setDueDate((prevDueDate) => Math.min(prevDueDate + 1))
 
   const handleDecrement = () =>
     setDueDate((prevDueDate) => Math.max(prevDueDate - 1, 1))
