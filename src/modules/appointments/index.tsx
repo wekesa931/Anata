@@ -271,16 +271,18 @@ function Appointments() {
                 )}
               </div>
               <span>
-                <Tooltip title="Reschedule">
-                  <a
-                    href={appointment['Calendly Reschedule URL']}
-                    target="__blank"
-                    className="btn-unstyled"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <ExternalLinkIcon className="w-4 h-4 text-blue-50 " />
-                  </a>
-                </Tooltip>
+                {appointment['Calendly Reschedule URL'] && (
+                  <Tooltip title="Reschedule">
+                    <a
+                      href={appointment['Calendly Reschedule URL']}
+                      target="__blank"
+                      className="btn-unstyled"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <ExternalLinkIcon className="w-4 h-4 text-blue-50 " />
+                    </a>
+                  </Tooltip>
+                )}
               </span>
             </div>
           </div>

@@ -90,7 +90,7 @@ const COLUMNS: Column[] = [
     label: 'Appt Date',
     sortable: true,
     type: 'date',
-    format: (v: any) => dayjs(v).format('DD/MM/YYYY'),
+    format: (v: any) => (v ? dayjs(v).format('DD/MM/YYYY') : '-'),
     width: '20%',
   },
   { id: 'Service', label: 'Service', width: '20%' },
@@ -179,7 +179,12 @@ function Appointments() {
 
   useEffect(() => {
     let isCancelled = false
-    let apps = appointments
+    let apps = appointments.map((app) => {
+      if (app.Status === 'Schedule needed' && !app.start_date_time) {
+        return { ...app, start_date_time: undefined }
+      }
+      return app
+    })
     if (filters) {
       if (filters.service) {
         apps = apps.filter((app) => app.Service === filters.service)
