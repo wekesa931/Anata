@@ -249,7 +249,6 @@ function Tasks() {
     'Reason for cancellation',
     'Number of Attempts',
     'Task definition',
-    'Clinical preferred name',
   ]
 
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
@@ -426,10 +425,7 @@ function Tasks() {
       const interactionLogTemplate = resp.interactionLogContent
         ? resp.interactionLogContent
             .replace(/\[SMS content\]/g, smsTemplate)
-            .replace(
-              /\[Clinical preferred name\]/g,
-              task['Clinical preferred name'][0] || task.Type
-            )
+            .replace(/\[Clinical preferred name\]/g, task.Type)
         : ' '
 
       return {
@@ -448,7 +444,7 @@ function Tasks() {
               <div
                 className={`text-normal font-medium flex justify-between items-center mt-2 mb-2 ${styles.taskNameWrap}`}
               >
-                <p>{hnTask?.['Clinical preferred name'] || hnTask.Type}</p>
+                <p>{hnTask.Type}</p>
                 <button className="flex btn !mr-0 w-3/4 justify-end">
                   {hnTask.Status !== 'Complete' && (
                     <>
