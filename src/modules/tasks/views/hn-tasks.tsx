@@ -294,7 +294,7 @@ function Tasks() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [airtableMeta])
+  }, [airtableMeta, allAntaraStaffs, loadingAntaraStaff])
 
   // const taskFields = getTaskFields(mapAssigneeToLookup(allAntaraStaffs))
   useEffect(() => {

@@ -46,7 +46,7 @@ function Appointments() {
     AirtableField[]
   >([])
   const { airtableMeta, getFieldOptions } = useAirtableMeta()
-
+  const { allAntaraStaffs, loading } = useAntaraStaff()
   useEffect(() => {
     if (airtableMeta) {
       const APPOINTMENT_FIELDS: AirtableField[] = [
@@ -119,7 +119,7 @@ function Appointments() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [airtableMeta])
+  }, [airtableMeta, loading, allAntaraStaffs])
 
   const allowedFields = [
     'Service',
@@ -144,8 +144,6 @@ function Appointments() {
     &${filterFields(allowedFields)}`,
     []
   )
-
-  const { allAntaraStaffs, loading } = useAntaraStaff()
 
   const user = useUser()
   const openCalendar = () => {

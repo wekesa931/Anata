@@ -32,6 +32,8 @@ export const mapAssigneeToLookup = (allAntaraStaffs: any[]) => {
 export const useAntaraStaff = () => {
   const [allAntaraStaffs, setAllAntaraStaffs] = useState<any>([])
 
+  const ANTARA_STAFF_KEY = 'ANTARA_STAFF'
+
   const [getAntaraStaff, { loading }] = useLazyQuery(GET_ANTARA_STAFF)
 
   const filterByTeam = (team: string, staffMembers: any[] = []) => {
@@ -59,15 +61,23 @@ export const useAntaraStaff = () => {
     throw new Error('User not found')
   }
 
+  const getFromCache = async () => {
+    try {
+      const cache = sessionStorage.getItem(ANTARA_STAFF_KEY)
+      if (cache) {
+        return setAllAntaraStaffs(JSON.parse(cache))
+      }
+      const { data } = await getAntaraStaff()
+      const fetchedData = extractStaffData(data?.antaraStaff?.edges || [])
+      setAllAntaraStaffs(fetchedData)
+      sessionStorage.setItem(ANTARA_STAFF_KEY, JSON.stringify(fetchedData))
+    } catch (error) {
+      logError(error)
+    }
+  }
+
   useEffect(() => {
-    getAntaraStaff()
-      .then(({ data }) => {
-        const fetchedData = data?.antaraStaff?.edges
-        setAllAntaraStaffs(extractStaffData(fetchedData))
-      })
-      .catch((err) => {
-        logError(err)
-      })
+    getFromCache()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
