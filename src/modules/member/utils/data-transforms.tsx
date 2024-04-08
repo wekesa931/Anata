@@ -195,6 +195,7 @@ export const prepareInsurancesForUpdate = (
     relationshipToPrincipalMember: insurance.relationshipToPrincipalMember,
     priority: insurance.priority,
     toDelete: insurance.toDelete || false,
+    verificationStatus: insurance.verificationStatus,
   }))
 
   return returnInsurances

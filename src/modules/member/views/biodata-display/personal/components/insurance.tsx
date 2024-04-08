@@ -12,6 +12,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   Divider,
   Tooltip,
 } from '@mui/material'
@@ -25,44 +26,55 @@ import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 
 function InsuranceSectionItem({
   insuranceItem,
+  onEdit,
 }: {
   insuranceItem: DbValueTypes.InsuranceType
+  onEdit: () => void
 }) {
   const benefits = insuranceItem?.benefits || []
   const [expanded, setExpanded] = useState<boolean>(false)
   return (
     <div>
-      <div className="flex justify-between items-center">
-        <p className="text-base text-dark-blue-100 text-center font-medium">
-          {' '}
-          {insuranceItem?.insuranceCompany || 'Unknown'}
-        </p>
-        <div className="flex gap-3 justify-start items-center">
-          <p className="text-base text-dark-blue-100 text-center font-medium">
-            {insuranceItem?.insuranceId}
-          </p>
-          <Tooltip
-            title={
-              insuranceItem?.verificationStatus === 'VERIFIED'
-                ? 'This member insurance ID has been verified'
-                : 'We could not find this member insurance ID'
-            }
-            placement="top"
-            arrow
-          >
-            <span
-              className={`
-                text-xs font-rubik font-medium text-center rounded-lg p-1 uppercase
+      <GridItems className="mt-2" single>
+        <Item
+          title="Insurance Provider"
+          child={insuranceItem?.insuranceCompany || 'Unknown'}
+        />
+      </GridItems>
+      <div className="flex gap-3 justify-start items-center">
+        <GridItems className="mt-2" single>
+          <Item title="Insurance ID" child={insuranceItem?.insuranceId} />
+        </GridItems>
+        <Tooltip
+          title={
+            insuranceItem?.verificationStatus === 'VERIFIED'
+              ? 'This member insurance ID has been verified'
+              : 'We could not find this member insurance ID'
+          }
+          placement="top"
+          arrow
+        >
+          <span
+            className={`
+                text-xs font-rubik font-medium text-center rounded-lg p-1 mt-3 uppercase 
                 ${
                   insuranceItem?.verificationStatus === 'VERIFIED'
                     ? 'text-green-100 bg-green-10'
                     : 'text-red-100 bg-red-10'
                 }
               `}
-            >
-              {insuranceItem?.verificationStatus}
-            </span>
-          </Tooltip>
+          >
+            {insuranceItem?.verificationStatus}
+          </span>
+        </Tooltip>
+        <div className="flex items-center justify-end mt-3 ml-auto">
+          <Button
+            variant="text"
+            onClick={onEdit}
+            className="text-blue-100 text-sm font-medium normal-case"
+          >
+            Edit Insurance ID Status
+          </Button>
         </div>
       </div>
       <GridItems className="mt-2" single>
@@ -193,7 +205,11 @@ function InsuranceSection({ member }: InsuranceSectionProps) {
         ) : (
           <>
             {member?.insuranceDetails?.map((insurance, index) => (
-              <InsuranceSectionItem key={index} insuranceItem={insurance} />
+              <InsuranceSectionItem
+                key={index}
+                insuranceItem={insurance}
+                onEdit={() => toggleEditForm(true)}
+              />
             ))}
           </>
         )}

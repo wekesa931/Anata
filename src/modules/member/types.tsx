@@ -367,8 +367,6 @@ export type InsuranceDetailsType = {
   verificationStatus?: string
 }
 
-export type VerificationStatus = 'verified' | 'unverified' | 'pending'
-
 export enum RegistrationFormsNames {
   PRIMARY = 'primary',
   DEPENDENT = 'dependent',

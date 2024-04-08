@@ -297,35 +297,6 @@ export const useUpdateAddressesData = () => {
   }
 }
 
-export const useVerifyInsuranceDetails = () => {
-  const [verify, { loading, error }] = useMutation(UPDATE_MEMBER_INSURANCE, {
-    context: { clientName: 'v2' },
-  })
-
-  const verifyInsuranceDetails = async (values: any, antaraId: string) => {
-    const response = await verify({
-      variables: {
-        memberInsurance: {
-          insuranceDetails: values,
-          antaraId,
-        },
-      },
-    })
-
-    if (response?.data?.updateMemberInsurance?.status !== 200) {
-      throw new Error('Failed to verify insurance details')
-    }
-
-    return response?.data?.updateMemberInsurance?.data?.insuranceDetails
-  }
-
-  return {
-    verifyInsuranceDetails,
-    loading,
-    error,
-  }
-}
-
 export const useUpdateInsuranceDetails = () => {
   const INSURANCE_UPDATE_MUTATION = composeMutations(
     UPDATE_MEMBER_INSURANCE,

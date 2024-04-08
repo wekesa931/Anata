@@ -1,14 +1,10 @@
-import {
-  PhoneType,
-  InsuranceVerificationStatus,
-} from 'src/modules/member/types'
+import { PhoneType } from 'src/modules/member/types'
 import type { Member } from 'src/modules/member/db/models'
 import {
   useCreateMember,
   useUpdateBiodata,
   useUpdateContactsData,
   useUpdateAddressesData,
-  useVerifyInsuranceDetails,
   useUpdateInsuranceDetails,
   useUpdatePhones,
   useUpdateBirthdate,
@@ -26,7 +22,6 @@ import {
   preparePhonesForUpdate,
   prepareAddressesForUpdate,
   prepareInsurancesForUpdate,
-  transformInsurances,
   removeEmpty,
 } from 'src/modules/member/utils/data-transforms'
 import { useMembersData } from 'src/modules/member/hooks/member-data'
@@ -40,8 +35,6 @@ export const useRegistrationData = () => {
     useUpdateContactsData()
   const { updateAddressesData, loading: updatingAddresses } =
     useUpdateAddressesData()
-  const { verifyInsuranceDetails, loading: verifyingInsuranceDetails } =
-    useVerifyInsuranceDetails()
   const { updateInsuranceDetails, loading: updatingInsuranceDetails } =
     useUpdateInsuranceDetails()
   const { createDefaultMemberInstance, createMemberInstance } = useMembersData()
@@ -176,48 +169,6 @@ export const useRegistrationData = () => {
     }
   }
 
-  const handleVerifyInsuranceDetails = async (
-    member: Member,
-    insuranceDetails: any,
-    insuranceId: number
-  ) => {
-    try {
-      const insurances = prepareInsurancesForUpdate(
-        member.insurances || ({} as DbValueTypes.InsuranceDetailsValues),
-        insuranceDetails
-      )
-      const res = await verifyInsuranceDetails(insurances, member.antaraId)
-      const newInsurances = transformInsurances(res)
-
-      // find the insurance with the id and check verificationStatus
-      const insurance = newInsurances.find((i: any) => i.id === insuranceId)
-      let verified = false
-      if (insurance) {
-        verified =
-          insurance.verificationStatus === InsuranceVerificationStatus.VERIFIED
-      }
-
-      const update = {
-        insurances: newInsurances,
-        antaraId: member.antaraId,
-        employer: insuranceDetails.employer,
-      }
-
-      await member.updateMember({
-        insurances: update.insurances,
-        employer: update.employer,
-      })
-
-      return {
-        verified,
-        update,
-      }
-    } catch (error) {
-      logError(error)
-      throw error
-    }
-  }
-
   const handleUpdateInsuranceDetails = async (
     member: Member,
     insuranceDetails: DbValueTypes.InsuranceDetailsValues
@@ -336,19 +287,16 @@ export const useRegistrationData = () => {
     createDefaultMemberInstance,
     handleUpdateContactsData,
     handleUpdateAddresses,
-    handleVerifyInsuranceDetails,
     handleUpdateInsuranceDetails,
     loading:
       creatingMember ||
       updatingMember ||
       updatingContactsData ||
       updatingAddresses ||
-      verifyingInsuranceDetails ||
       updatingInsuranceDetails ||
       updatingPhones ||
       updatingBirthdate ||
       updatingStatus,
-    isVerifyingInsurance: verifyingInsuranceDetails,
     handleUpdatePhones,
     isUpdatingPhones: updatingPhones,
     handleUpdateBirthdate,
