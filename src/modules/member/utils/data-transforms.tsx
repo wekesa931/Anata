@@ -39,7 +39,9 @@ export const preparePhonesForUpdate = (
     phone.priority = highestPriority
   })
 
-  return [...phonesToDelete, ...phonesToAdd, ...phonesToUpdate]
+  return [...phonesToDelete, ...phonesToAdd, ...phonesToUpdate].filter(
+    (phone) => phone.phone !== '' && phone.phone !== null
+  )
 }
 
 export const transformAddressData = (

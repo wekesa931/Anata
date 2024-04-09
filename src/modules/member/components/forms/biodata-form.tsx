@@ -65,7 +65,7 @@ const validationSchema = (isChildRegistration = false) =>
           .typeError('Birth date is required')
           .min(
             dayjs().subtract(18, 'years').toDate(),
-            'Must be 18 years or older'
+            'A child should be 18 years or younger'
           )
           .required('Birth date is required')
       : yup
