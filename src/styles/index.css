@@ -118,7 +118,7 @@ body,
 #root,
 .appContainer {
   height: 100%;
-  font-family: 'Rubik';
+  font-family: 'Rubik' !important;
 }
 
 .dashboard-container {

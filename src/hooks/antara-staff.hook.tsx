@@ -65,7 +65,8 @@ export const useAntaraStaff = () => {
     try {
       const cache = sessionStorage.getItem(ANTARA_STAFF_KEY)
       if (cache) {
-        return setAllAntaraStaffs(JSON.parse(cache))
+        const cached = JSON.parse(cache)
+        if (cached.length > 0) return setAllAntaraStaffs(cached)
       }
       const { data } = await getAntaraStaff()
       const fetchedData = extractStaffData(data?.antaraStaff?.edges || [])
