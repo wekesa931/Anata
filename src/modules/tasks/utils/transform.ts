@@ -103,7 +103,6 @@ export const mapTaskDefinitionToNewask = (
     Member: member?.airtableRecordId ? [member?.airtableRecordId] : [],
     Assignee: assignee ? [assignee] : [],
     'Task definition': [taskDefinition.recordId],
-    Type: taskDefinition.clinicalPrefferedName || taskDefinition.scribeTags,
     'Due Date': getDueDate(),
     'Task Priority': taskDefinition.defaultPriority,
     Status: 'Not Started',

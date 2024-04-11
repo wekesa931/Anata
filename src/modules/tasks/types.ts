@@ -105,7 +105,6 @@ type RecordId = [string] | []
 export type NewTask = {
   Member: RecordId
   'Task definition': RecordId
-  Type: string
   'Due Date': string
   'Task Priority': string
   Assignee: RecordId
