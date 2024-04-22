@@ -16825,6 +16825,42 @@ export default [
         required: true,
         helper:
           'Starting stage should be captured at the first interaction with member (initial diagnosis)',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: [],
+        condition: (values: any) => {
+          const excludedValues = [
+            'recxUYaZEcW0Qpcka',
+            'rec3j2hRFijsozw6n',
+            'rec3vjxYieEDPKSu8',
+            'rec9f9XtaH8Rc5LcA',
+            'recw3qqW2TuGxpxer',
+            'rec8VOK4o3VuLF6wE',
+            'recjEG5O3yovrAZ9H',
+            'recHRnpQOFJvxVCmW',
+            'recdroomItEDYaxgr',
+            'recsAJrt2BHOWx8yw',
+            'recBNK7kLdZoVBz37',
+            'recrMRkSqx73wCFbi',
+            'recXKOlsFXjYlhA2f',
+            'reczWetLRjucnWnaM',
+            'rechK1Jegmzd2RflC',
+            'recUBrSLXdg5iQaqX',
+            'recrdetlxISWD2VGT',
+            'recszkbhbalLxYDDi',
+            'rech9ejeE7BWWux3s',
+            'recK4naxSoUtmixtb',
+            'recOuLk0Jf921APaF',
+            'recHQ4cydmbn20Hh0',
+            'recxTjjfcIM89Xbas',
+          ]
+          if (Array.isArray(values['Conditions master list'])) {
+            return !excludedValues.some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return !excludedValues.includes(values['Conditions master list'])
+        },
       },
       {
         id: 'fldUR3WYE6nqFoFHE',
