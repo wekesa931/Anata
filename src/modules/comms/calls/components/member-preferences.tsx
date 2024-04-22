@@ -20,7 +20,7 @@ function MemberPreferences() {
 
   const isTodayInPrefferedDays = () => {
     const today = dayjs().format('dddd')
-    return memberPreferences?.preferredDays.includes(today)
+    return (memberPreferences?.preferredDays || []).includes(today)
   }
 
   const isCallInTime = () => {
@@ -42,11 +42,6 @@ function MemberPreferences() {
           <div className="text-dark-blue-100 flex justify-between items-center">
             <p className="text-sm font-bold">Member Preferences</p>
           </div>
-          <p className="text-xs">
-            These are things that the member has indicated that they prefer.
-            Please take all of them into account as you deliver healthcare to
-            them.
-          </p>
           {loading ? (
             <div>
               <LoadingComponent message="Loading member preferences" />
@@ -89,7 +84,7 @@ function MemberPreferences() {
                           : 'text-red-100'
                       }`}
                     >
-                      {memberPreferences?.preferredDays?.join(', ')}
+                      {(memberPreferences?.preferredDays || [])?.join(', ')}
                     </p>
                   </div>
                   <div className="table-row">
