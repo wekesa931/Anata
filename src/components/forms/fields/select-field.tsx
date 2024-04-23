@@ -99,6 +99,9 @@ function SelectField({
               disabled={props.disabled}
               autoFocus={props.autoFocus}
               onClick={props.onClick}
+              MenuProps={{
+                style: { zIndex: 99999 },
+              }}
             >
               {props.options.map((option: any) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -172,6 +175,13 @@ export function MultiselectField(props: MultiselectFieldProps) {
               }}
               onBlur={(e: any) => {
                 handleBlur(e, fieldProps)
+              }}
+              slotProps={{
+                popper: {
+                  sx: {
+                    zIndex: 999999,
+                  },
+                },
               }}
               loading={props.loading}
               value={fieldProps.field.value ?? []}

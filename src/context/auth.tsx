@@ -71,6 +71,8 @@ function AuthProvider({ user, children }: Props) {
               ...currentUser,
               userAirtableId: data?.atRecordId,
               fullName: data?.fullName,
+              phone: data?.phone,
+              signature: data?.signature,
               team: toTitleCase(data?.team),
             }
             setCurrentUser(updatedUser)

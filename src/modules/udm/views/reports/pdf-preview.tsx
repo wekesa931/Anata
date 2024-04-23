@@ -16,6 +16,8 @@ import SuccessPrompt from 'src/modules/member/views/member-registration/componen
 import { v4 as uuidV4 } from 'uuid'
 import { DocMeta } from 'src/modules/udm/types'
 import { useUdmData } from 'src/modules/udm/hooks/udm.data'
+import { useTasksData } from 'src/modules/tasks/hooks/tasks.data'
+import { TaskDefinitionTypes } from 'src/modules/tasks/types'
 import { useModuleAnalytics } from 'src/modules/analytics'
 
 type Props = {
@@ -26,6 +28,8 @@ type Props = {
   children: React.ReactElement<any>
   isInPatient?: boolean
   closeWindow: () => void
+  allowEdit?: boolean
+  modalHeader?: string
 }
 
 function PdfPreview({
@@ -36,6 +40,8 @@ function PdfPreview({
   children,
   isInPatient = false,
   closeWindow,
+  allowEdit = true,
+  modalHeader,
 }: Props) {
   const { member } = useMember()
 
@@ -46,6 +52,7 @@ function PdfPreview({
   const [showSuccess, setShowSuccess] = useState(false)
   const [fileId, setFileId] = useState<string>('')
   const { trackNewDocumentGenerated } = useModuleAnalytics()
+  const { createTaskFromTemplate } = useTasksData()
 
   const handleClosePortalWindow = () => {
     setOpen(false)
@@ -75,6 +82,7 @@ function PdfPreview({
           const documentId = res?.data?.id?.toString()
           setFileId(documentId)
           trackNewDocumentGenerated(docMeta, true)
+          createTaskFromTemplate(TaskDefinitionTypes.NewDocument)
         })
         setTimeout(() => {
           setLoading(false)
@@ -109,18 +117,20 @@ function PdfPreview({
           >
             {member?.fullName}
             <DialogActions>
-              <Button
-                autoFocus
-                onClick={() => {
-                  setShowPdfPreview(false)
-                  trackNewDocumentPreviewEdited(docMeta)
-                }}
-              >
-                <Edit className="file-action-btn" />
-                <Typography className="file-action-button-text text-blue-100 font-medium">
-                  Edit Details
-                </Typography>
-              </Button>
+              {allowEdit && (
+                <Button
+                  autoFocus
+                  onClick={() => {
+                    setShowPdfPreview(false)
+                    trackNewDocumentPreviewEdited(docMeta)
+                  }}
+                >
+                  <Edit className="file-action-btn" />
+                  <Typography className="file-action-button-text text-blue-100 font-medium">
+                    Edit Details
+                  </Typography>
+                </Button>
+              )}
               {error ? (
                 <Button
                   autoFocus
@@ -200,7 +210,7 @@ function PdfPreview({
       {showSuccess && open && (
         <PortalWindow
           closeWindow={handleClosePortalWindow}
-          title="Health report generation"
+          title={!modalHeader ? 'Health report generation' : modalHeader}
           height={40}
         >
           <div className="px-4">

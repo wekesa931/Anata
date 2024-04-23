@@ -16,6 +16,7 @@ type Props = {
   title: string
   children: React.ReactElement<any>
   extendedHeader?: boolean
+  customHeader?: boolean
 }
 
 const headerStyles = StyleSheet.create({
@@ -77,11 +78,12 @@ const footerStyles = StyleSheet.create({
   },
 })
 
-function MedicalCampTemplate({
+function CustomDocument({
   member,
   title,
   children,
   extendedHeader = true,
+  customHeader = false,
 }: Props) {
   return (
     <Document
@@ -94,46 +96,52 @@ function MedicalCampTemplate({
       <Page size="A4" style={styles.page}>
         <View>
           <View>
-            <Image src={logoImage} style={styles.logo} />
-            <Divider />
-            <Text style={styles.subTitle}>{title}</Text>
-            <View style={headerStyles.header}>
-              <View style={headerStyles.item}>
-                <Text style={headerStyles.title}>Name: </Text>
-                <Text style={headerStyles.text}>{member?.fullName}</Text>
-              </View>
-
-              <View style={headerStyles.item}>
-                <Text style={headerStyles.title}>Age: </Text>
-                <Text style={headerStyles.text}>{member?.ageFull}</Text>
-              </View>
-
-              {extendedHeader ? (
-                <View>
+            {!customHeader ? (
+              <View>
+                <Image src={logoImage} style={styles.logo} />
+                <Divider />
+                <Text style={styles.subTitle}>{title}</Text>
+                <View style={headerStyles.header}>
                   <View style={headerStyles.item}>
-                    <Text style={headerStyles.title}>Gender: </Text>
-                    <Text style={headerStyles.text}>{member?.sex}</Text>
+                    <Text style={headerStyles.title}>Name: </Text>
+                    <Text style={headerStyles.text}>{member?.fullName}</Text>
                   </View>
 
                   <View style={headerStyles.item}>
-                    <Text style={headerStyles.title}>Phone: </Text>
-                    <Text style={headerStyles.text}>{member?.phone}</Text>
+                    <Text style={headerStyles.title}>Age: </Text>
+                    <Text style={headerStyles.text}>{member?.ageFull}</Text>
                   </View>
 
-                  <View style={headerStyles.item}>
-                    <Text style={headerStyles.title}>Insurance ID: </Text>
-                    <Text style={headerStyles.text}>
-                      {member?.primaryInsuranceId}
-                    </Text>
-                  </View>
+                  {extendedHeader ? (
+                    <View>
+                      <View style={headerStyles.item}>
+                        <Text style={headerStyles.title}>Gender: </Text>
+                        <Text style={headerStyles.text}>{member?.sex}</Text>
+                      </View>
 
-                  <View style={headerStyles.item}>
-                    <Text style={headerStyles.title}>Payor: </Text>
-                    <Text style={headerStyles.text}>{member?.payor?.name}</Text>
-                  </View>
+                      <View style={headerStyles.item}>
+                        <Text style={headerStyles.title}>Phone: </Text>
+                        <Text style={headerStyles.text}>{member?.phone}</Text>
+                      </View>
+
+                      <View style={headerStyles.item}>
+                        <Text style={headerStyles.title}>Insurance ID: </Text>
+                        <Text style={headerStyles.text}>
+                          {member?.primaryInsuranceId}
+                        </Text>
+                      </View>
+
+                      <View style={headerStyles.item}>
+                        <Text style={headerStyles.title}>Payor: </Text>
+                        <Text style={headerStyles.text}>
+                          {member?.payor?.name}
+                        </Text>
+                      </View>
+                    </View>
+                  ) : null}
                 </View>
-              ) : null}
-            </View>
+              </View>
+            ) : null}
 
             {children}
           </View>
@@ -172,4 +180,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default MedicalCampTemplate
+export default CustomDocument

@@ -9,6 +9,8 @@ export type User = {
   exp: number
   name: string
   userAirtableId?: string
+  phone?: string
+  signature?: string
   team?: string
   fullName?: string
 } | null
