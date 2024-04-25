@@ -271,16 +271,25 @@ export const useModuleAnalytics = () => {
 
     // tasks modal
     trackTaskCompletion: (data: any) => {
-      rightSectionAnalytics.track(`complete button clicked`, data)
+      rightSectionAnalytics.track(
+        `complete button clicked for a single task`,
+        data
+      )
     },
     trackMissedTaskClicked: (data: any) => {
-      rightSectionAnalytics.track(`missed button clicked`, data)
+      rightSectionAnalytics.track(
+        `missed button clicked for a single task`,
+        data
+      )
     },
     trackTemplateEdit: (item: any) => {
       rightSectionAnalytics.track(item)
     },
-    trackReshedulingDueDate: (item: any) => {
-      rightSectionAnalytics.track(`rescheduling date modified - ${item}`)
+    trackReshedulingDueDate: (item: any[]) => {
+      item.map((item) => {
+        rightSectionAnalytics.track(`rescheduling date modified - ${item}`)
+        return item
+      })
     },
     trackAutomaticActionsInteractionLog: (data: any) => {
       rightSectionAnalytics.track(
@@ -291,8 +300,31 @@ export const useModuleAnalytics = () => {
     trackAutomaticActionsSms: (data: any) => {
       rightSectionAnalytics.track(`automatic next steps sms sent`, data)
     },
+    trackUpdateAppointment: (data: any) => {
+      rightSectionAnalytics.track(
+        `Appointment linked to a task marked as missed `,
+        data
+      )
+    },
+
     trackAutomaticActionSubmitted: () => {
       rightSectionAnalytics.track('automatic actions submitted')
+    },
+    trackActiveTasksSectionOpened: (tasks: any) =>
+      rightSectionAnalytics.track('Active tasks section clicked', tasks),
+    trackInActiveTasksSectionOpened: (tasks: any) =>
+      rightSectionAnalytics.track('InActive tasks section clicked', tasks),
+    trackTaskCompletionForMultipleTasks: (data: any) => {
+      rightSectionAnalytics.track(
+        `complete button clicked for multiple tasks`,
+        data
+      )
+    },
+    trackMissedTaskClickedForMultipleTasks: (data: any) => {
+      rightSectionAnalytics.track(
+        `missed button clicked for multiple tasks`,
+        data
+      )
     },
     trackLabRequestCreatedFromDocs: (labTypes: any) => {
       middlesSectionAnalytics.track(

@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { UserTask, Priority } from 'src/modules/tasks/types'
 
 export const getIncompleteTasks = (tasks: UserTask[]) => {
@@ -83,4 +84,41 @@ export const sortGroupedDataByColumn = (data: GroupedData, column?: string) => {
   }
 
   return sortGroupedDataAlphabetically(data)
+}
+
+export function getAssigneeName(assigned: string | { fullName: string }) {
+  return typeof assigned === 'string' ? assigned : assigned?.fullName || ''
+}
+
+export const updateTasks = (
+  selectedTasks: any,
+  values: any,
+  checkboxes: any
+) => {
+  return selectedTasks?.map((task: any) => ({
+    id: task?.recordid,
+    fields: {
+      Status: 'In Progress',
+      ...(checkboxes.rescheduleTaskCheck
+        ? {
+            'Due Date': dayjs().add(values.dueDate, 'day').format('YYYY-MM-DD'),
+          }
+        : {}),
+      'Number of Attempts': (task?.['Number of Attempts'] || 0) + 1,
+    },
+  }))
+}
+export const getAppointmentToUpdate = (selectedTasks: any, values: any) => {
+  return selectedTasks
+    ?.filter((task: any) => !!task?.Appointment)
+    .map((task: any) => {
+      const apptId = task?.Appointment?.[0]
+      return {
+        id: apptId,
+        fields: {
+          Status: 'Missed',
+          'Reason for missed': values.reasonForApptMissed,
+        },
+      }
+    })
 }

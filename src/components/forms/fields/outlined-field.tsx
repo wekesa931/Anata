@@ -5,7 +5,7 @@ import parse from 'html-react-parser'
 
 export type OutlinedFieldProps = {
   helperText?: string
-  label?: string
+  label?: string | React.ReactNode
   required?: boolean
   name: string
   placeholder?: string

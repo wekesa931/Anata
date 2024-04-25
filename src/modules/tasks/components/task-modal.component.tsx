@@ -14,10 +14,14 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 import PrimaryButton from 'src/components/buttons/primary'
 import PrimaryForm from 'src/components/forms/primary-form'
 import * as Yup from 'yup'
+import SelectField from 'src/components/forms/fields/select-field'
+import { useAirtableMeta } from 'src/context/airtable-meta'
+import type { InitialValues } from 'src/modules/tasks/types'
 
 const validationSchema = Yup.object().shape({
   smsCheck: Yup.boolean(),
   interactionLogCheck: Yup.boolean(),
+  rescheduleApptCheck: Yup.boolean(),
 
   sms: Yup.string().when('smsCheck', {
     is: true,
@@ -45,22 +49,14 @@ type TCheckboxes = {
   smsCheck: boolean
   interactionLogCheck: boolean
   rescheduleTaskCheck: boolean
-}
-
-type TEditModes = {
-  sms: boolean
-  interactionLog: boolean
+  rescheduleApptCheck: boolean
 }
 
 type ListModalProps = {
-  initialValues: any
+  initialValues: InitialValues
   handleSubmit: (values: any) => void
   handleCheckboxChange: (e: any, data: any) => void
-  handleEditClick: (fieldName: keyof TEditModes, data: any) => void
-  handleIncrement: () => void
-  handleDecrement: () => void
   checkboxes: TCheckboxes
-  editModes: TEditModes
   progress: number
   progressState: string
   stepLabel: string
@@ -68,7 +64,7 @@ type ListModalProps = {
   modalOpen: boolean
   setModalOpen: (value: boolean) => void
   retryFailedTasks: () => void
-  dueDate: number
+  showUpdateAppointment: boolean
 }
 function ModalHeader({
   modalTitle,
@@ -98,9 +94,6 @@ function ListModalView({
   initialValues,
   handleSubmit,
   handleCheckboxChange,
-  handleEditClick,
-  handleIncrement,
-  handleDecrement,
   checkboxes,
   progress,
   progressState,
@@ -109,9 +102,15 @@ function ListModalView({
   modalOpen,
   retryFailedTasks,
   setModalOpen,
-  dueDate,
+  showUpdateAppointment,
 }: ListModalProps) {
   const [editMode, setEditMode] = useState(true)
+  const { airtableMeta, getFieldOptions } = useAirtableMeta()
+
+  const options = airtableMeta
+    ? getFieldOptions('Appointments', 'Reason for missed')
+    : []
+
   const getErrorMessage = () => {
     return 'We encountered an error while finishing this up. Please retry to resolve it. If the issue continues, contact our support team via Slack for help'
   }
@@ -169,9 +168,8 @@ function ListModalView({
                       name="sms"
                       label="SMS"
                       textarea
-                      placeholder="We tried to call for a virtual consulation"
+                      placeholder="We tried to call for a virtual consultation"
                       required={false}
-                      onEditClick={() => handleEditClick('sms', formik)}
                       maxLength={360}
                     />
                   </div>
@@ -186,13 +184,42 @@ function ListModalView({
                       name="interactionLog"
                       label="Interaction log"
                       textarea
-                      placeholder="We tried to call for a virtual consulation"
+                      placeholder="We tried to call for a virtual consultation"
                       required={false}
-                      onEditClick={() =>
-                        handleEditClick('interactionLog', formik)
-                      }
                     />
                   </div>
+                  {showUpdateAppointment ? (
+                    <div className="mb-3 flex items-center ">
+                      <Checkbox
+                        checked={checkboxes.rescheduleApptCheck}
+                        onChange={(event) =>
+                          handleCheckboxChange(event, formik)
+                        }
+                        disabled
+                        name="rescheduleApptCheck"
+                      />
+
+                      <Grid container alignItems="center">
+                        <Grid item xs={12}>
+                          <SelectField
+                            name="reasonForApptMissed"
+                            options={options}
+                            placeholder="-- Select reason --"
+                            label={
+                              <p className="text-gray-500 font-medium text-sm inline-flex items-center">
+                                The appointment linked to the selected tasks
+                                will be marked as{' '}
+                                <span className="status bg-red-10 text-red-500 !m-0 ml-2 mr-2">
+                                  Missed
+                                </span>{' '}
+                                because:
+                              </p>
+                            }
+                          />
+                        </Grid>
+                      </Grid>
+                    </div>
+                  ) : null}
                   <div className="mb-3 flex items-center ">
                     <Checkbox
                       checked={checkboxes.rescheduleTaskCheck}
@@ -207,8 +234,8 @@ function ListModalView({
                       </Grid>
                       <Grid item xs={12}>
                         <div className="flex items-center justify-between">
-                          Select the number of days you want to add to the due
-                          date.
+                          How many days in the future would you like to
+                          reschedule the task(s) to? (From today).
                           <div className="flex items-center justify-between">
                             <RemoveCircleIcon
                               sx={{
@@ -218,10 +245,16 @@ function ListModalView({
                                 color: '#FF9500',
                                 cursor: 'pointer',
                               }}
-                              onClick={handleDecrement}
+                              onClick={() => {
+                                const prevDue = formik.values.dueDate - 1
+                                formik.setFieldValue(
+                                  'dueDate',
+                                  prevDue < 0 ? 0 : prevDue
+                                )
+                              }}
                             />
 
-                            <p className="text-lg">{dueDate}</p>
+                            <p className="text-lg">{formik.values.dueDate}</p>
                             <AddCircleIcon
                               sx={{
                                 width: '31%',
@@ -230,7 +263,12 @@ function ListModalView({
                                 color: '#FF9500',
                                 cursor: 'pointer',
                               }}
-                              onClick={handleIncrement}
+                              onClick={() => {
+                                formik.setFieldValue(
+                                  'dueDate',
+                                  formik.values.dueDate + 1
+                                )
+                              }}
                             />
                           </div>
                         </div>

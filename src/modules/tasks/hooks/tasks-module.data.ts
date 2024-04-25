@@ -3,28 +3,51 @@ import { extractUsername } from 'src/modules/interactions/utils'
 import { CREATE_INTERACTION } from 'src/modules/interactions/services/gql'
 import { SEND_SMS } from 'src/modules/comms/services/gql'
 import { useModuleAnalytics } from 'src/modules/analytics'
-
-import { useMutation } from '@apollo/client'
 import dayjs from 'dayjs'
+import { useMutation } from '@apollo/client'
+import { logError } from 'src/utils/logging/logger'
 
 export type TaskModuleData = ReturnType<typeof useTaskModuleData>
+
+type Update = {
+  id: string
+  fields: { [key: string]: any }
+}
 
 const useTaskModuleData = () => {
   const [mutate] = useMutation(CREATE_INTERACTION)
   const [sendSms] = useMutation(SEND_SMS)
-  const { trackAutomaticActionsInteractionLog, trackAutomaticActionsSms } =
-    useModuleAnalytics()
+  const {
+    trackAutomaticActionsInteractionLog,
+    trackAutomaticActionsSms,
+    trackReshedulingDueDate,
+    trackUpdateAppointment,
+  } = useModuleAnalytics()
 
-  const handleDataUpdate = async (values: any, taskId: any) => {
-    const fullPayload = {
-      id: taskId,
-      fields: values,
+  const handleDataUpdate = async (values: Update[]) => {
+    try {
+      await Promise.allSettled(
+        values.map((v) => handleAirtableUpdate('hntasks', v))
+      )
+      trackReshedulingDueDate(values.map((v) => v.id))
+    } catch (error) {
+      logError(error)
     }
-    return handleAirtableUpdate(fullPayload)
   }
 
-  const handleAirtableUpdate = async (value: any) => {
-    const response = await airtableFetch('hntasks', 'post', value)
+  const handleUpdateAppointmnet = async (appointments: Update[]) => {
+    try {
+      await Promise.allSettled(
+        appointments.map((v) => handleAirtableUpdate('appointments', v))
+      )
+      trackUpdateAppointment(appointments.map((v) => v.id))
+    } catch (error) {
+      logError(error)
+    }
+  }
+
+  const handleAirtableUpdate = async (table: string, value: any) => {
+    const response = await airtableFetch(table, 'post', value)
     return response
   }
 
@@ -58,7 +81,6 @@ const useTaskModuleData = () => {
     if (resp?.data?.createInteraction?.status === 200) {
       trackAutomaticActionsInteractionLog(input)
     }
-    return resp
   }
   const submitSmsRequest = async (sms: any, member: any) => {
     const data = { message: sms, antaraId: member?.antaraId }
@@ -69,8 +91,6 @@ const useTaskModuleData = () => {
     if (response?.data?.sendSms?.status === 200) {
       trackAutomaticActionsSms(data)
     }
-
-    return response
   }
 
   return {
@@ -78,6 +98,7 @@ const useTaskModuleData = () => {
     handleDataUpdate,
     submitInteractionLogRequest,
     submitSmsRequest,
+    handleUpdateAppointmnet,
   }
 }
 

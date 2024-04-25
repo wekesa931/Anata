@@ -1,8 +1,6 @@
 import { FormHelperText, OutlinedInput } from '@mui/material'
 import React from 'react'
 import { FieldProps } from 'formik'
-import EditIcon from '@mui/icons-material/Edit'
-import InputAdornment from '@mui/material/InputAdornment'
 
 import OutlinedField, { OutlinedFieldProps } from './outlined-field'
 
@@ -10,17 +8,11 @@ type TextFieldProps = {
   textarea?: boolean
   rows?: number
   bottomPadding?: boolean
-  editMode?: boolean
-  onEditClick?: () => void
-  editable?: boolean
   maxLength?: number
 } & OutlinedFieldProps
 
 function TextField({
   bottomPadding = true,
-  editMode = false,
-  onEditClick,
-  editable,
   maxLength = 0,
   ...props
 }: TextFieldProps) {
@@ -63,17 +55,7 @@ function TextField({
             onChange={(e: any) => {
               handleValueChange(e, fieldProps)
             }}
-            disabled={props.disabled || editMode}
-            endAdornment={
-              editable && (
-                <InputAdornment position="start" onClick={onEditClick}>
-                  <div className="flex items-center cursor-pointer absolute top-8 right-2 text-blue-500">
-                    <EditIcon sx={{}} />
-                    <span className="text-sm">Edit</span>
-                  </div>
-                </InputAdornment>
-              )
-            }
+            disabled={props.disabled}
           />
           {bottomPadding && (
             <div className="flex justify-between">

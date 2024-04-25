@@ -118,3 +118,15 @@ export const LabManagementRecordId =
   process.env.PROD === 'true' ? 'recR0Rni1WNDiQpj3' : 'rec5i6q30NJAcXOsA'
 export const NewDocumentRecordId =
   process.env.PROD === 'true' ? 'rec0bpNSpRx6huygq' : 'recbDbP099lD9mKw7'
+
+export type InitialValues = {
+  interactionLog: string
+  sms: string
+  dueDate: number
+  taskAttempt: number
+  reasonForApptMissed: string
+  smsCheck: boolean
+  interactionLogCheck: boolean
+  rescheduleTaskCheck: boolean
+  rescheduleApptCheck: boolean
+}

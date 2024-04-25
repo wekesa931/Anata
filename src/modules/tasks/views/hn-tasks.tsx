@@ -22,10 +22,14 @@ import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import DoneIcon from '@mui/icons-material/Done'
 import CachedIcon from '@mui/icons-material/Cached'
 import { useNotifications } from 'src/context/notifications'
-import TaskModal from 'src/modules/tasks/components/task-modal'
+import TaskModal, {
+  TTemplateData,
+} from 'src/modules/tasks/components/task-modal'
 import useTaskModuleData from 'src/modules/tasks/hooks/tasks-module.data'
 import { useAirtableMeta } from 'src/context/airtable-meta'
 import AirtableField from 'src/types/airtable-field'
+import { Checkbox, Tab } from '@mui/material'
+import { TabContext, TabList, TabPanel } from '@mui/lab'
 import styles from './tasks.module.css'
 
 type RecordWithId = { data: any; id: string }
@@ -50,6 +54,7 @@ function useTransformedApiRecords(rawApiRecords: any) {
       lastStatusChangedAt: 'Last Status changed at',
       formUrl: 'Open URL',
       reasonForCancellation: 'Reason for cancellation',
+      taskDefinition: 'Task Definition',
     }
     // TODO: Replace this with a callback so that this custom hook
     // can be reused for other record types
@@ -91,8 +96,8 @@ function useTransformedApiRecords(rawApiRecords: any) {
         assignee: { fullName: string }
         lastStatusChangedAt: string
         formUrl: string
-        reasonForRescheduling: string
         reasonForCancellation: string
+        taskDefinition: string
       }
     ) => {
       const mappedResponse = records.memberHnTasks.edges.reduce(
@@ -196,38 +201,29 @@ function getPriorityStyle(priority: any) {
       return ''
   }
 }
+type CheckedItems = Record<string, any | null>
 
 function Tasks() {
-  const [allTasks, setAllTasks] = useState<any[]>([])
-  const [filteredTasks, setFilteredTasks] = useState<any[]>([])
+  const [activeTasks, setActiveTasks] = useState<any[]>([])
   const { openForm } = useFormsRouting()
 
-  const [upnextTasks, setUpnextTasks] = useState<any[]>([])
+  const [inActiveTasks, setInactiveTasks] = useState<any[]>([])
   const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const [openItem, setOpenItem] = useState<{
-    name: string
-    id: string
-    data: any
-  }>()
-  const [templateData, setTemplateData] = useState({
+
+  const [templateData, setTemplateData] = useState<TTemplateData>({
     smsTemplate: ' ',
     interactionLogTemplate: ' ',
     defaultReschedulingDays: 1,
-    taskAttempt: 0,
   })
 
-  const defaultTaskFilterStatus = 'All Incomplete'
-  const allIncomplete = (value: string) =>
-    value === 'In Progress' || value === 'Not Started' || value === 'On Hold'
+  const allActive = (value: string) =>
+    value === 'In Progress' ||
+    value === 'Not Started' ||
+    value === 'On Hold' ||
+    value === 'Overdue'
+  const allInActive = (value: string) =>
+    value === 'Complete' || value === 'Cancelled' || value === 'Not Applicable'
 
-  const status = [
-    'Not Started',
-    'Complete',
-    'In Progress',
-    'Cancelled',
-    'Not Applicable',
-    'On Hold',
-  ]
   const { member } = useMember()
   const { notify } = useNotifications()
   const { getTaskDefinitionById } = useAirtableMeta()
@@ -249,6 +245,7 @@ function Tasks() {
     'Reason for cancellation',
     'Number of Attempts',
     'Task definition',
+    'Appointment',
   ]
 
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
@@ -274,8 +271,15 @@ function Tasks() {
   const { handleResponses } = useHandleResponses('Tasks')
 
   const { allAntaraStaffs, loading: loadingAntaraStaff } = useAntaraStaff()
-  const { trackActionEdited, trackTaskCompletion, trackMissedTaskClicked } =
-    useModuleAnalytics()
+  const {
+    trackActionEdited,
+    trackTaskCompletion,
+    trackMissedTaskClicked,
+    trackActiveTasksSectionOpened,
+    trackInActiveTasksSectionOpened,
+    trackTaskCompletionForMultipleTasks,
+    trackMissedTaskClickedForMultipleTasks,
+  } = useModuleAnalytics()
   const { handleDataUpdate } = useTaskModuleData()
 
   const [
@@ -285,6 +289,17 @@ function Tasks() {
 
   const [taskFields, setTaskFields] = useState<AirtableField[]>([])
   const { airtableMeta, getFieldOptions } = useAirtableMeta()
+  const [selectedTasks, setSelectedTasks] = useState<CheckedItems>({})
+  const [value, setValue] = React.useState<string>('active')
+  const handleChange = (_: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue)
+    if (newValue === 'active') {
+      trackActiveTasksSectionOpened(activeTasks)
+    }
+    if (newValue === 'inactive') {
+      trackInActiveTasksSectionOpened(inActiveTasks)
+    }
+  }
 
   useEffect(() => {
     if (airtableMeta) {
@@ -325,7 +340,9 @@ function Tasks() {
     }
 
     const re = /prefill_(?<key>[A-Za-z+]*)=(?<value>[A-Za-z0-9%20+ ]*)/gm
-    const matches: MatchType[] = [...url.matchAll(re)].map((r) => r.groups)
+    const matches: MatchType[] = [...url.matchAll(re)].map(
+      (r) => r.groups
+    ) as MatchType[]
 
     // parse the matches
     let data = {}
@@ -365,76 +382,116 @@ function Tasks() {
     return Object.keys(records).map((key) => ({ data: records[key], id: key }))
   }
 
+  const handleTaskCompletion = async (taskIds: string[]) => {
+    const updatedTasks = taskIds.map((taskId) => ({
+      id: taskId,
+      fields: {
+        Status: 'Complete',
+      },
+    }))
+
+    // Update all selected tasks
+    await Promise.all(
+      updatedTasks.map((task) =>
+        handleDataUpdate(updatedTasks).then(() => {
+          trackTaskCompletion(task)
+          trackTaskCompletionForMultipleTasks(task)
+        })
+      )
+    )
+      .then(() => {
+        notify('Selected tasks updated successfully')
+      })
+      .catch((error) => {
+        logError(error)
+        notify(error?.message || 'Something went wrong')
+      })
+      .finally(() => {
+        refetchTasks()
+        setSelectedTasks({}) // Clear selected tasks after completion
+      })
+  }
+
+  const extractTaskTemplate = (taskDefs: any[], tasks: any[]) => {
+    const getDefaultReschedulingDays = (taskDef: any[]) => {
+      return taskDef.length > 0
+        ? Math.max(...taskDef.map((t) => t.defaultReschedulingDays || 0))
+        : 1
+    }
+
+    // const defaultReschedulingDays =
+    //   taskDef.length > 0 ? taskDef[0].defaultReschedulingDays : 1
+    const defaultReschedulingDays = getDefaultReschedulingDays(taskDefs)
+
+    let smsTemplate = ''
+    if (taskDefs.length > 0 && taskDefs[0].smsContent) {
+      const memberTaskType = taskDefs
+        .map((taskDef) => taskDef.memberTaskType)
+        .join(', ')
+      smsTemplate = taskDefs[0].smsContent[0]
+        .replace(/\{Member Name\}/g, member?.fullName)
+        .replace(/\[Services\]/g, memberTaskType)
+    } else {
+      smsTemplate = ' '
+    }
+
+    // Build the interaction log content with clinical preferred names
+    let interactionLogContent = ''
+    if (taskDefs.length > 0 && taskDefs[0].interactionLogContent) {
+      interactionLogContent = taskDefs[0].interactionLogContent.replace(
+        /\[SMS content\]/g,
+        smsTemplate
+      )
+
+      // Loop through tasks to include all clinical preferred names
+      const clinicalPreferredNames = tasks.map((task) => task.Type).join(', ')
+      interactionLogContent = interactionLogContent.replace(
+        /\[Clinical preferred name\]/g,
+        clinicalPreferredNames
+      )
+    } else {
+      interactionLogContent = ' '
+    }
+
+    const interactionLogTemplate = interactionLogContent
+
+    return {
+      smsTemplate,
+      interactionLogTemplate,
+      defaultReschedulingDays,
+    }
+  }
+
+  const handleRescheduleDialog = async (tasks: any[]) => {
+    // Fetch task definitions for all tasks
+    const taskDefinitions = [
+      ...new Set(
+        tasks
+          .map((task) => {
+            const taskDefinition = task?.['Task definition'] || []
+            const taskDefinitionById =
+              taskDefinition.length > 0
+                ? getTaskDefinitionById(taskDefinition[0])
+                : []
+            return taskDefinitionById
+          })
+          .filter((definition) => definition !== null) || []
+      ),
+    ]
+
+    setTemplateData(extractTaskTemplate(taskDefinitions, tasks))
+    setModalOpen(true)
+
+    // Track missed task clicked for all tasks
+    tasks.forEach((task) => trackMissedTaskClicked(task))
+    trackMissedTaskClickedForMultipleTasks(tasks)
+  }
+
   useEffect(() => {
     function getAssigneeName(assigned: string | { fullName: string }) {
       return typeof assigned === 'string' ? assigned : assigned?.fullName || ''
     }
-    const mapHnTaskItem = (val: any) => {
-      const filteredRecord = renderTaskRecords(
-        mergedRecords,
-        renderTaskRecord
-      ).filter((obj) => obj.id === val.airtId)
 
-      return filteredRecord[0]
-    }
-    const handleTaskCompletion = async (task: any) => {
-      const updatedValue = {
-        Status: 'Complete',
-      }
-      await handleDataUpdate(updatedValue, task.recordid)
-        .then(() => {
-          notify('Updated successfully')
-          trackTaskCompletion(task)
-        })
-        .catch((error) => {
-          logError(error)
-          notify(error?.message || 'Something went wrong')
-        })
-        .finally(() => {
-          return refetchTasks()
-        })
-    }
-    const handleRescheduleDialog = async (task: any) => {
-      const taskDefinition = task?.['Task definition'] || []
-      const taskDefinitionById =
-        taskDefinition.length > 0
-          ? getTaskDefinitionById(taskDefinition[0])
-          : []
-      const resp = taskDefinitionById || []
-      setTemplateData(extractTaskTemplate(resp, task) || [])
-      setOpenItem(mapHnTaskItem(task))
-      setModalOpen(true)
-      trackMissedTaskClicked(task)
-    }
-    const extractTaskTemplate = (resp: any, task: any) => {
-      const attempt = task?.['Number of Attempts'] || 0
-      if (!resp)
-        return {
-          smsTemplate: ' ',
-          interactionLogTemplate: ' ',
-          defaultReschedulingDays: 1,
-          taskAttempt: attempt,
-        }
-
-      const smsTemplate = resp.smsContent
-        ? resp.smsContent[0]
-            .replace(/\{Member Name\}/g, member?.fullName)
-            .replace(/\[Services\]/g, resp.memberTaskType)
-        : ' '
-
-      const interactionLogTemplate = resp.interactionLogContent
-        ? resp.interactionLogContent
-            .replace(/\[SMS content\]/g, smsTemplate)
-            .replace(/\[Clinical preferred name\]/g, task.Type)
-        : ' '
-
-      return {
-        smsTemplate,
-        interactionLogTemplate,
-        defaultReschedulingDays: resp.defaultReschedulingDays || 1,
-        taskAttempt: attempt,
-      }
-    }
     // Display the mergedRecords
     function DisplayInfo({ hnTask }: any) {
       return (
@@ -444,30 +501,65 @@ function Tasks() {
               <div
                 className={`text-normal font-medium flex justify-between items-center mt-2 mb-2 ${styles.taskNameWrap}`}
               >
+                {allActive(hnTask.Status) && (
+                  <Tooltip>
+                    <Checkbox
+                      onChange={() => {
+                        setSelectedTasks((prev) => {
+                          const prevChecked = prev?.[hnTask.recordid] || null
+
+                          return {
+                            ...prev,
+                            [hnTask.recordid]: prevChecked
+                              ? null
+                              : { ...hnTask, selected: true },
+                          }
+                        })
+                      }}
+                      checked={
+                        !!selectedTasks?.[hnTask.recordid] &&
+                        !!selectedTasks?.[hnTask.recordid]?.selected
+                      }
+                      sx={{
+                        '&.Mui-checked': {
+                          color: 'var(--blue-100)',
+                        },
+                        color: 'var(--dark-blue-50)',
+                      }}
+                      // className="bg-[#ebfbed]  text-[#34c759]  w-8 h-9 rounded-sm mr-2"
+                      onClick={(e) => {
+                        e?.stopPropagation()
+                      }}
+                    />
+                  </Tooltip>
+                )}
+
                 <p>{hnTask.Type}</p>
                 <button className="flex btn !mr-0 w-3/4 justify-end">
-                  {hnTask.Status !== 'Complete' && (
-                    <>
-                      <Tooltip title="Complete Task">
-                        <DoneIcon
-                          className="bg-[#ebfbed]  text-[#34c759]  w-8 h-9 rounded-sm mr-2"
-                          onClick={(e) => {
-                            e?.stopPropagation()
-                            handleTaskCompletion(hnTask)
-                          }}
-                        />
-                      </Tooltip>
-                      <Tooltip title="Missed Task">
-                        <CachedIcon
-                          className="bg-[#fff5e5] text-[#ff9500] w-8 h-9 rounded-sm mr-2"
-                          onClick={(e) => {
-                            e?.stopPropagation()
-                            handleRescheduleDialog(hnTask)
-                          }}
-                        />
-                      </Tooltip>
-                    </>
-                  )}
+                  {allActive(hnTask.Status) &&
+                    Object.values(selectedTasks).every((c) => !c?.selected) && (
+                      <>
+                        <Tooltip title="Complete Task">
+                          <DoneIcon
+                            className="bg-[#ebfbed]  text-[#34c759]  w-8 h-9 rounded-sm mr-2"
+                            onClick={(e) => {
+                              e?.stopPropagation()
+                              handleTaskCompletion(hnTask)
+                            }}
+                          />
+                        </Tooltip>
+                        <Tooltip title="Missed Task">
+                          <CachedIcon
+                            className="bg-[#fff5e5] text-[#ff9500] w-8 h-9 rounded-sm mr-2"
+                            onClick={(e) => {
+                              e?.stopPropagation()
+                              setSelectedTasks({ [hnTask.recordid]: hnTask })
+                              handleRescheduleDialog([hnTask])
+                            }}
+                          />
+                        </Tooltip>
+                      </>
+                    )}
 
                   {hnTask['Open URL'] && hnTask['Open URL'].url && (
                     <Tooltip title="Open URL">
@@ -579,29 +671,25 @@ function Tasks() {
         mergedRecords,
         renderTaskRecord
       )
-      setAllTasks(recordsToDisplay)
-      setFilteredTasks(
+      setActiveTasks(
         recordsToDisplay.filter((task) =>
           task.data.find(
-            ({ name, value }: any) => name === 'Status' && allIncomplete(value)
+            ({ name, value }: any) => name === 'Status' && allActive(value)
           )
         )
       )
 
-      setUpnextTasks(
-        recordsToDisplay
-          .filter((task) =>
-            task.data.find(
-              ({ name, value }: any) =>
-                name === 'Status' && value === 'Not Started'
-            )
+      setInactiveTasks(
+        recordsToDisplay.filter((task) =>
+          task.data.find(
+            ({ name, value }: any) => name === 'Status' && allInActive(value)
           )
-          .slice(0, 2)
+        )
       )
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mergedRecords])
+  }, [mergedRecords, selectedTasks])
 
   const getTaskNotes = (record: any) => {
     if (record.Status !== 'Complete') {
@@ -636,21 +724,6 @@ function Tasks() {
       })
   }
 
-  const filterByStatus = (val: string) => {
-    if (val === 'All Incomplete') {
-      return allTasks.filter((task) =>
-        task.data.find(
-          ({ name, value }: any) => name === 'Status' && allIncomplete(value)
-        )
-      )
-    }
-    return allTasks.filter((task) =>
-      task.data.find(
-        ({ name, value }: any) => name === 'Status' && value === val
-      )
-    )
-  }
-
   const isReadytoShowTasks =
     !isAirtableLoading &&
     !isApiLoading &&
@@ -662,48 +735,88 @@ function Tasks() {
     <div className="margin-top-0">
       {isReadytoShowTasks && (
         <>
-          <p className="up-next">Up next</p>
-          <div data-testid="data-list-2">
-            <List
-              list={upnextTasks}
-              getTopRightText={getTaskNotes}
-              modalTitle="Task"
-              emptyListText="No tasks found."
-              editable
-              onEdit={updateTask}
-            />
+          <div className="flex flex-col h-full">
+            <TabContext value={value}>
+              <div className="flex justify-between items-center font-rubik font-medium">
+                <TabList onChange={handleChange}>
+                  <Tab label="Active" className="uppercase" value="active" />
+                  <Tab
+                    label="Inactive"
+                    className="uppercase"
+                    value="inactive"
+                  />
+                </TabList>
+              </div>
+              <div className="flex justify-between items-center font-rubik font-medium mt-3">
+                {value === 'active' &&
+                  Object.values(selectedTasks).some((c) => !!c?.selected) && (
+                    <>
+                      <p className="text-dark-blue-50 mr-2">
+                        Mark selected tasks as
+                      </p>
+                      <button className="flex w-3 justify-end">
+                        <Tooltip>
+                          <button
+                            onClick={() => {
+                              const checkedTaskIds = Object.keys(
+                                selectedTasks
+                              ).filter((taskId) => selectedTasks[taskId])
+                              handleTaskCompletion(checkedTaskIds)
+                            }}
+                            className="flex items-center bg-[#34c759] text-[#ebfbed] h-[35px] p-[3px] rounded mr-2"
+                          >
+                            <DoneIcon />
+                            <span className="font-bold text-base">Done</span>
+                          </button>
+                        </Tooltip>
+
+                        <Tooltip>
+                          <button
+                            onClick={() => {
+                              const checkedTasks = Object.values(
+                                selectedTasks
+                              ).filter((task) => !!task)
+                              handleRescheduleDialog(checkedTasks)
+                            }}
+                            className="flex items-center bg-[#ff9500] text-[#fff5e5] h-[35px] p-[5px] rounded"
+                          >
+                            <CachedIcon />
+                            <span className="font-bold text-base">Missed</span>
+                          </button>
+                        </Tooltip>
+                      </button>
+                    </>
+                  )}
+              </div>
+              <div>
+                <TabPanel value="active" className="p-0">
+                  <List
+                    list={activeTasks}
+                    getTopRightText={getTaskNotes}
+                    modalTitle="Task"
+                    data-testid="data-list-1"
+                    emptyListText="No tasks found."
+                    editable
+                    onEdit={updateTask}
+                  />
+                </TabPanel>
+              </div>
+              <div>
+                <TabPanel value="inactive" className="p-0">
+                  <List
+                    list={inActiveTasks}
+                    getTopRightText={getTaskNotes}
+                    modalTitle="Task"
+                    data-testid="data-list-1"
+                    emptyListText="No tasks found."
+                    editable
+                    onEdit={updateTask}
+                  />
+                </TabPanel>
+              </div>
+            </TabContext>
           </div>
         </>
-      )}
-      <div className="d-flex flex-align-center justify-start">
-        <h4>Tasks</h4>
-        <div>
-          <select
-            onChange={(e) => setFilteredTasks(filterByStatus(e.target.value))}
-            className="remove-border form-control"
-            data-testid="status-filter"
-          >
-            <option key={defaultTaskFilterStatus}>
-              {defaultTaskFilterStatus}
-            </option>
-            {status.map((stat) => (
-              <option key={stat}>{stat}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-      {isReadytoShowTasks && (
-        <div data-testid="data-list-1">
-          <List
-            list={filteredTasks}
-            getTopRightText={getTaskNotes}
-            modalTitle="Task"
-            data-testid="data-list-1"
-            emptyListText="No tasks found."
-            editable
-            onEdit={updateTask}
-          />
-        </div>
       )}
       {/* Only show the Loading Message if either data sources are loading */}
       {(isAirtableLoading || isApiLoading) && (
@@ -718,14 +831,17 @@ function Tasks() {
           An error occurred while fetching tasks, please refresh the page.
         </p>
       )}
-      {modalOpen && openItem && (
+      {modalOpen && (
         <TaskModal
           modalOpen={modalOpen}
           setModalOpen={setModalOpen}
-          openItem={openItem}
           modalTitle="Task"
-          refetchTasks={refetchTasks}
+          refetchTasks={() => {
+            refetchTasks()
+            setSelectedTasks({})
+          }}
           templateData={templateData}
+          selectedTasks={Object.values(selectedTasks).filter((task) => !!task)}
         />
       )}
     </div>

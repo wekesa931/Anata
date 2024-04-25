@@ -1,31 +1,27 @@
 import React, { useState, useEffect } from 'react'
 import { useMember } from 'src/context/member'
 import { useUser } from 'src/context/user'
-import dayjs from 'dayjs'
 import { useNotifications } from 'src/context/notifications'
 import { logError } from 'src/utils/logging/logger'
 import useTaskModuleData from 'src/modules/tasks/hooks/tasks-module.data'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import type { InitialValues } from 'src/modules/tasks/types'
+import { updateTasks, getAppointmentToUpdate } from 'src/modules/tasks/utils'
 import TaskModalView from './task-modal.component'
 
-type TOpenItem = {
-  name: string
-  id: string
-  data: any[]
-}
+type Task = any
 
-type TTemplateData = {
+export type TTemplateData = {
   smsTemplate: string
   interactionLogTemplate: string
   defaultReschedulingDays: number
-  taskAttempt: number
 }
 
 type TasksModalProps = {
   modalOpen: boolean
   setModalOpen: (value: boolean) => void
   modalTitle?: string
-  openItem?: TOpenItem
+  selectedTasks: Task[]
   refetchTasks: () => void
   templateData: TTemplateData
 }
@@ -33,36 +29,35 @@ type TasksModalProps = {
 function TasksModalContainer({
   modalOpen,
   setModalOpen,
-  openItem,
+  selectedTasks,
   refetchTasks,
   templateData,
 }: TasksModalProps) {
-  const { handleDataUpdate, submitInteractionLogRequest, submitSmsRequest } =
-    useTaskModuleData()
-  const [initialValues, setInitialValues] = useState<any>({
+  const {
+    handleDataUpdate,
+    submitInteractionLogRequest,
+    submitSmsRequest,
+    handleUpdateAppointmnet,
+  } = useTaskModuleData()
+  const [initialValues, setInitialValues] = useState<InitialValues>({
     interactionLog: '',
     sms: '',
     dueDate: 1,
     taskAttempt: 0,
+    reasonForApptMissed: '',
     smsCheck: false,
     interactionLogCheck: true,
     rescheduleTaskCheck: false,
+    rescheduleApptCheck: true,
   })
-  const [dueDate, setDueDate] = useState<number>(1)
   const [checkboxes, setCheckboxes] = useState({
     smsCheck: false,
     interactionLogCheck: true,
     rescheduleTaskCheck: false,
+    rescheduleApptCheck: true,
   })
-  const [editModes, setEditModes] = useState({
-    sms: true,
-    interactionLog: true,
-  })
-  const {
-    trackTemplateEdit,
-    trackReshedulingDueDate,
-    trackAutomaticActionSubmitted,
-  } = useModuleAnalytics()
+
+  const { trackAutomaticActionSubmitted } = useModuleAnalytics()
   const [progress, setProgress] = useState(0)
   const [stepLabel, setStepLabel] = useState('')
   const [progressState, setProgressState] = useState('active')
@@ -81,21 +76,18 @@ function TasksModalContainer({
 
   const { notify } = useNotifications()
 
-  const getInitialValues = () => ({
-    interactionLog: templateData?.interactionLogTemplate || '',
-    sms: templateData?.smsTemplate || '',
-    dueDate: templateData?.defaultReschedulingDays,
-    taskAttempt: templateData?.taskAttempt,
-    smsCheck: false,
-    interactionLogCheck: true,
-    rescheduleTaskCheck: false,
-  })
-
-  const handleIncrement = () =>
-    setDueDate((prevDueDate) => Math.min(prevDueDate + 1))
-
-  const handleDecrement = () =>
-    setDueDate((prevDueDate) => Math.max(prevDueDate - 1, 1))
+  const getInitialValues = () => {
+    return {
+      interactionLog: templateData?.interactionLogTemplate || '',
+      sms: templateData?.smsTemplate || '',
+      dueDate: templateData?.defaultReschedulingDays || 1,
+      reasonForApptMissed: '',
+      smsCheck: false,
+      interactionLogCheck: true,
+      rescheduleTaskCheck: false,
+      rescheduleApptCheck: true,
+    }
+  }
 
   const handleCheckboxChange = (event: any, formik: any) => {
     const { name, checked } = event.target
@@ -106,16 +98,13 @@ function TasksModalContainer({
       [name]: checked,
     }))
   }
-
   useEffect(() => {
-    if (openItem?.data) setInitialValues(getInitialValues())
+    const initValues = getInitialValues()
+    if (initValues) {
+      setInitialValues(initValues as InitialValues)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openItem])
-
-  useEffect(() => {
-    trackReshedulingDueDate(openItem?.id)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dueDate])
+  }, [templateData, selectedTasks])
 
   useEffect(() => {
     const updateCheckboxes = () => {
@@ -130,16 +119,6 @@ function TasksModalContainer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialValues])
 
-  const handleEditClick = (fieldName: any, data: any) => {
-    setInitialValues(data.values)
-    setEditModes((prevEditModes: any) => ({
-      ...prevEditModes,
-      [fieldName]: !prevEditModes[fieldName],
-    }))
-    trackTemplateEdit(
-      `${fieldName} template edited - ${initialValues[fieldName]}`
-    )
-  }
   const [count, setCount] = useState(0)
 
   useEffect(() => {
@@ -165,7 +144,7 @@ function TasksModalContainer({
       setStepLabel(`${taskName} ...`)
       await task()
       setProgress(progressEnd)
-    } catch (error) {
+    } catch (error: any) {
       logError(error)
       notify(`Error executing ${taskName}`)
       setFailedTasks((prevFailedTasks) => [
@@ -204,7 +183,7 @@ function TasksModalContainer({
         task.progressEnd,
         task.retryCount
       )
-    } catch (error) {
+    } catch (error: any) {
       setProgressState('error')
       logError(error)
       notify(`Error retrying failed task : ${error?.message}`)
@@ -233,23 +212,17 @@ function TasksModalContainer({
   }
 
   const prepareTasks = (values: any) => {
-    const updatedValue = {
-      Status: 'In Progress',
-      'Number of Attempts': templateData.taskAttempt + 1,
-      ...(checkboxes.rescheduleTaskCheck
-        ? {
-            'Due Date': dayjs().add(dueDate, 'day').format('YYYY-MM-DD'),
-          }
-        : {}),
-    }
-    const tasks = []
+    const updatedValues = updateTasks(selectedTasks, values, checkboxes)
+    const appointmentToUpdate = getAppointmentToUpdate(selectedTasks, values)
+
+    let tasks = []
 
     if (checkboxes.smsCheck) {
       tasks.push({
         name: 'Sending SMS',
         task: () => submitSmsRequest(values.sms, member),
         progressStart: 0,
-        progressEnd: 33,
+        progressEnd: 25,
       })
     }
 
@@ -257,17 +230,33 @@ function TasksModalContainer({
       tasks.push({
         name: 'Submitting Interaction Log',
         task: () => submitInteractionLogRequest(values, user, member),
-        progressStart: 33,
-        progressEnd: 66,
+        progressStart: 25,
+        progressEnd: 50,
       })
     }
+    if (updatedValues?.length) {
+      tasks = [
+        ...tasks,
+        {
+          name: 'Rescheduling task, changing status, and increasing attempt',
+          task: () => handleDataUpdate(updatedValues),
+          progressStart: 50,
+          progressEnd: appointmentToUpdate?.length ? 75 : 100,
+        },
+      ]
+    }
 
-    tasks.push({
-      name: 'Rescheduling task, changing status, and increasing attempt',
-      task: () => handleDataUpdate(updatedValue, openItem?.id),
-      progressStart: 66,
-      progressEnd: 100,
-    })
+    if (appointmentToUpdate?.length) {
+      tasks = [
+        ...tasks,
+        {
+          name: 'Updating appointment status',
+          task: () => handleUpdateAppointmnet(appointmentToUpdate),
+          progressStart: 75,
+          progressEnd: 100,
+        },
+      ]
+    }
 
     return tasks
   }
@@ -281,16 +270,13 @@ function TasksModalContainer({
       notify('Error submitting actions')
     }
   }
+
   return (
     <TaskModalView
       initialValues={initialValues}
       handleSubmit={handleSubmit}
       handleCheckboxChange={handleCheckboxChange}
-      handleEditClick={handleEditClick}
-      handleIncrement={handleIncrement}
-      handleDecrement={handleDecrement}
       checkboxes={checkboxes}
-      editModes={editModes}
       progress={progress}
       progressState={progressState}
       stepLabel={stepLabel}
@@ -298,7 +284,9 @@ function TasksModalContainer({
       modalOpen={modalOpen}
       setModalOpen={setModalOpen}
       retryFailedTasks={retryFailedTasks}
-      dueDate={dueDate}
+      showUpdateAppointment={
+        selectedTasks?.some((task) => task?.Appointment) || false
+      }
     />
   )
 }
