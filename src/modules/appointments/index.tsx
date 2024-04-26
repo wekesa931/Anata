@@ -80,12 +80,14 @@ function Appointments() {
           calculated: true,
         },
         {
-          name: 'Reasons for missed or rescheduled meeting',
-          type: 'long-text',
+          name: 'Reason for missed',
+          type: 'single-select',
+          options: getFieldOptions('Appointments', 'Reason for missed') || [],
           condition: (appt: any = {}) => {
             const { Status } = appt
             return Status === 'Missed'
           },
+          required: true,
         },
         {
           name: 'Facilities from Provider base',
@@ -136,6 +138,7 @@ function Appointments() {
     'Specialist name from Provider base',
     'Assignee Name',
     'Reason for cancellation',
+    'Reason for missed',
   ]
 
   const { data, isLoading, isError, refresh } = useAirtableFetch(

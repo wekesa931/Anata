@@ -419,26 +419,31 @@ function Tasks() {
         : 1
     }
 
-    // const defaultReschedulingDays =
-    //   taskDef.length > 0 ? taskDef[0].defaultReschedulingDays : 1
     const defaultReschedulingDays = getDefaultReschedulingDays(taskDefs)
 
     let smsTemplate = ''
-    if (taskDefs.length > 0 && taskDefs[0].smsContent) {
+    const smsContent = taskDefs.find(
+      (taskDef) => taskDef.smsContent && taskDef.smsContent.length > 0
+    )?.smsContent[0]
+    if (smsContent) {
       const memberTaskType = taskDefs
         .map((taskDef) => taskDef.memberTaskType)
+        .filter(Boolean) // Filter out empty values
         .join(', ')
-      smsTemplate = taskDefs[0].smsContent[0]
+      smsTemplate = smsContent
         .replace(/\{Member Name\}/g, member?.fullName)
-        .replace(/\[Services\]/g, memberTaskType)
+        .replace(/\[Services\]/g, memberTaskType.trim())
     } else {
       smsTemplate = ' '
     }
 
     // Build the interaction log content with clinical preferred names
     let interactionLogContent = ''
-    if (taskDefs.length > 0 && taskDefs[0].interactionLogContent) {
-      interactionLogContent = taskDefs[0].interactionLogContent.replace(
+    const interactionLogDetails = taskDefs.find(
+      (taskDef) => taskDef.interactionLogContent
+    )?.interactionLogContent
+    if (interactionLogDetails) {
+      interactionLogContent = interactionLogDetails.replace(
         /\[SMS content\]/g,
         smsTemplate
       )
@@ -502,7 +507,7 @@ function Tasks() {
                 className={`text-normal font-medium flex justify-between items-center mt-2 mb-2 ${styles.taskNameWrap}`}
               >
                 {allActive(hnTask.Status) && (
-                  <Tooltip>
+                  <Tooltip title="Select">
                     <Checkbox
                       onChange={() => {
                         setSelectedTasks((prev) => {
@@ -521,8 +526,11 @@ function Tasks() {
                         !!selectedTasks?.[hnTask.recordid]?.selected
                       }
                       sx={{
+                        '&:hover': {
+                          color: 'var(--dark-blue-70)',
+                        },
                         '&.Mui-checked': {
-                          color: 'var(--blue-100)',
+                          color: 'var(--dark-blue-70)',
                         },
                         color: 'var(--dark-blue-50)',
                       }}
@@ -544,7 +552,7 @@ function Tasks() {
                             className="bg-[#ebfbed]  text-[#34c759]  w-8 h-9 rounded-sm mr-2"
                             onClick={(e) => {
                               e?.stopPropagation()
-                              handleTaskCompletion(hnTask)
+                              handleTaskCompletion([hnTask.recordid])
                             }}
                           />
                         </Tooltip>
