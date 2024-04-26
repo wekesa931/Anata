@@ -12,6 +12,7 @@ import {
   TextField,
 } from '@mui/material'
 import { SearchOutlined } from '@mui/icons-material'
+import { Loader } from 'react-feather'
 import OutlinedField, { OutlinedFieldProps } from './outlined-field'
 
 export type Options = {
@@ -26,6 +27,7 @@ export type SelectFieldProps = {
   onClick?: (e: any) => void
   loading?: boolean
   bottomPadding?: boolean
+  loadingText?: string
 }
 
 export function ValueRenderer({ selected, props }: any) {
@@ -50,6 +52,8 @@ export function ValueRenderer({ selected, props }: any) {
 
 function SelectField({
   bottomPadding = true,
+  loading = false,
+  loadingText = 'Loading...',
   ...props
 }: OutlinedFieldProps & SelectFieldProps) {
   const handleValueChange = (e: any, fieldProps: FieldProps) => {
@@ -103,18 +107,27 @@ function SelectField({
                 style: { zIndex: 99999 },
               }}
             >
-              {props.options.map((option: any) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {props?.multiple && (
-                    <Checkbox
-                      checked={
-                        fieldProps.field?.value?.indexOf(option.value) > -1
-                      }
-                    />
-                  )}
-                  {option.label}
+              {loading ? (
+                <MenuItem>
+                  <Loader className="text-[#FF9500] mr-3" />
+                  <span className="#444444">{loadingText}</span>
                 </MenuItem>
-              ))}
+              ) : props.options.length === 0 ? (
+                <MenuItem disabled>No options</MenuItem>
+              ) : (
+                props.options.map((option: any) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {props?.multiple && (
+                      <Checkbox
+                        checked={
+                          fieldProps.field?.value?.indexOf(option.value) > -1
+                        }
+                      />
+                    )}
+                    {option.label}
+                  </MenuItem>
+                ))
+              )}
             </Select>
             {bottomPadding && (
               <FormHelperText error={!!fieldProps.meta.error}>

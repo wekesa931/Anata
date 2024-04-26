@@ -48,9 +48,6 @@ function MedicationListing({
 
   return (
     <>
-      <h2 className="font-medium text-[#FF9500] text-lg mt-6">
-        Prescription Details
-      </h2>
       {!showMedication ? (
         <PrimaryForm initialValues={{}} handleSubmit={showMedicationView}>
           {(formik) => (

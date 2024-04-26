@@ -42,12 +42,11 @@ function ModalHeader({
 }: {
   setShowPrescription: (value: boolean) => void
 }): React.ReactElement {
-  const { member } = useMember()
   return (
     <>
       <div className="full-width flex text-center justify-between">
         <h3 className="font-medium text-[#000000] text-xl">
-          {member?.fullName}
+          Prescription Generation
         </h3>
         <CloseIcon onClick={() => setShowPrescription(false)} />
       </div>
