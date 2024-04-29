@@ -7,6 +7,7 @@ import { DocMeta } from 'src/modules/udm/types'
 import PdfPreview from 'src/modules/udm/views/reports/pdf-preview'
 import { logError } from 'src/utils/logging/logger'
 import { useNotifications } from 'src/context/notifications'
+import PrimaryButton from 'src/components/buttons/primary'
 import MedicationListing from './medication-listing'
 import PrescriptionGenerationView from './prescription-generation-pdf'
 import useMedicationListingData from '../hooks/medication-listing'
@@ -124,6 +125,7 @@ function PrescriptionDetailsView({
       )
     )
   }
+  const customButton = <PrimaryButton>Save in UDM </PrimaryButton>
 
   return modalOpen ? (
     <>
@@ -157,7 +159,9 @@ function PrescriptionDetailsView({
           docMeta={getDocMeta()}
           closeWindow={handleClose}
           allowEdit={false}
-          modalHeader="Prescription generation"
+          modalHeader="Prescription PDF preview"
+          modalLabel="Prescription generation"
+          generatePDFCustomBtn={customButton}
         >
           <PrescriptionGenerationView
             prescriptionMedications={prescriptionMedications}

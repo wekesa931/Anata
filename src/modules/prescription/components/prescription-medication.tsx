@@ -17,6 +17,7 @@ type TMedicationsItem = {
   instructions: any
   refillable: any
   medicationName: any
+  brandName: any
 }
 function MedicationListing({
   prescriptionMedications,
@@ -36,7 +37,9 @@ function MedicationListing({
       <div className="bg-[#FFFFFF] border border-solid border-[#444444] p-3 rounded-2xl mb-3 flex justify-between">
         <div className="w-[90%]">
           <h1 className="font-medium text-[#222222] text-sm">
-            {medication?.medicationName || 'Unknown Name'}
+            {medication.brandName
+              ? `${medication.medicationName}  |  ${medication.brandName}`
+              : medication.medicationName}
           </h1>
           <div className="flex justify-between mt-3 text-xs leading-8 w-[60%]">
             {sections.map((section, index) => (

@@ -1057,6 +1057,14 @@ html,
   height: 100vh !important;
 }
 
+.h-\[70\%\] {
+  height: 70% !important;
+}
+
+.h-\[60\%\] {
+  height: 60% !important;
+}
+
 .max-h-\[150px\] {
   max-height: 150px !important;
 }

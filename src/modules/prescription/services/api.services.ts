@@ -21,16 +21,12 @@ export const usePrescriptionsAPI = () => {
     let filterFormula = ''
 
     if (!prescriptions) {
-      filterFormula = `FIND("${member?.airtableRecordId}", {Member Record ID})`
+      filterFormula = `AND(FIND("${member?.airtableRecordId}", {Member Record ID}), {Status} != "STOPPED")`
     } else {
       filterFormula = `OR(${prescriptions
-        .map(
-          (prescriptionId) =>
-            `FIND("${prescriptionId}", {Record ID}), {Status} != "STOPPED"`
-        )
+        .map((prescriptionId) => `FIND("${prescriptionId}", {Record ID})`)
         .join(',')})`
     }
-
     const records = await airtableFetch(
       `medications/list?&filterByFormula=${encodeURIComponent(
         filterFormula

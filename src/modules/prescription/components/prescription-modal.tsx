@@ -9,6 +9,7 @@ import { useMember } from 'src/context/member'
 import { useNotifications } from 'src/context/notifications'
 import { logError } from 'src/utils/logging/logger'
 import ErrorComponent from 'src/components/feedbacks/error-component'
+import { Loader } from 'react-feather'
 import useMedicationListingData from '../hooks/medication-listing'
 
 type ModalProps = {
@@ -16,6 +17,7 @@ type ModalProps = {
   modalOpen: boolean
   closePrescriptionModal: (values: any) => void
   handlePrescriptionDetails: (values: any) => void
+  nextLoad: boolean
 }
 function ModalHeader({
   modalTitle,
@@ -46,6 +48,7 @@ function PrescriptionModalView({
   setModalOpen,
   closePrescriptionModal,
   handlePrescriptionDetails,
+  nextLoad,
 }: ModalProps) {
   const { getConsultationData } = useMedicationListingData()
   const { notify } = useNotifications()
@@ -150,7 +153,10 @@ function PrescriptionModalView({
                     >
                       Cancel
                     </Button>
-                    <PrimaryButton type="submit">Next</PrimaryButton>
+                    <PrimaryButton type="submit">
+                      {nextLoad && <Loader className="mr-2" />}
+                      Next
+                    </PrimaryButton>
                   </div>
                 )}
               </div>

@@ -16,6 +16,7 @@ function PrescriptionComponent({ closeModal, getDocMeta }: Props) {
   const [modalOpen, setModalOpen] = useState(true)
   const [showPrescription, setShowPrescription] = useState(false)
   const { getMedications } = useMedicationListingData()
+  const [loading, setLoading] = useState<boolean>(false)
 
   const [medications, setMedications] = useState<any[]>([])
 
@@ -25,11 +26,14 @@ function PrescriptionComponent({ closeModal, getDocMeta }: Props) {
 
   const handlePrescriptionDetails = async (values: any) => {
     const dataArray = values?.vcConsultation
+    setLoading(true)
     try {
       const medicationData = await getMedications(dataArray)
       setMedications(medicationData)
+      setLoading(false)
       setShowPrescription(true)
     } catch (err) {
+      setLoading(false)
       logError(err)
       notify('Error loading medications')
     }
@@ -43,6 +47,7 @@ function PrescriptionComponent({ closeModal, getDocMeta }: Props) {
           setModalOpen={setModalOpen}
           closePrescriptionModal={closePrescriptionModal}
           handlePrescriptionDetails={handlePrescriptionDetails}
+          nextLoad={loading}
         />
       ) : (
         <PrescriptionDetails

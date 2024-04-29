@@ -84,7 +84,7 @@ function MedicationListing({
                   </div>
                   {showCheckboxes && (
                     <div
-                      className="bg-[#ffffff] p-2 absolute !w-[86%]"
+                      className="bg-[#ffffff] p-2 absolute !w-[86%] h-[60%]"
                       tabIndex={0}
                       role="button"
                     >
@@ -103,7 +103,7 @@ function MedicationListing({
                         </ErrorComponent>
                       )}
                       {userError ? (
-                        <div className="flex justify-end mt-6">
+                        <div className="flex justify-end mt-6 absolute w-full bottom-0">
                           <PrimaryButton
                             fullWidth
                             className="w-[20%]"
@@ -115,7 +115,7 @@ function MedicationListing({
                           </PrimaryButton>
                         </div>
                       ) : (
-                        <div className="flex justify-end mt-6">
+                        <div className="flex justify-end mt-6 absolute w-full bottom-0">
                           <PrimaryButton
                             disabled={
                               !formik.values.linkedMedications ||
