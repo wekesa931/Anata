@@ -30,6 +30,8 @@ type Props = {
   closeWindow: () => void
   allowEdit?: boolean
   modalHeader?: string
+  generatePDFCustomBtn?: React.ReactNode
+  modalLabel?: string
 }
 
 function PdfPreview({
@@ -42,6 +44,8 @@ function PdfPreview({
   closeWindow,
   allowEdit = true,
   modalHeader,
+  generatePDFCustomBtn,
+  modalLabel,
 }: Props) {
   const { member } = useMember()
 
@@ -115,7 +119,7 @@ function PdfPreview({
             id="scroll-dialog-title"
             className="d-flex align-center flex-between text-left border border-solid font-bold text-dark-blue-100"
           >
-            {member?.fullName}
+            {modalHeader || member?.fullName}
             <DialogActions>
               {allowEdit && (
                 <Button
@@ -153,10 +157,15 @@ function PdfPreview({
                     </>
                   ) : (
                     <>
-                      <Download className="file-action-btn" />
-                      <Typography className="file-action-button-text text-blue-100 font-medium">
-                        Generate Report
-                      </Typography>
+                      {generatePDFCustomBtn || (
+                        <>
+                          <Download className="file-action-btn" />
+
+                          <Typography className="file-action-button-text text-blue-100 font-medium">
+                            Generate Report
+                          </Typography>
+                        </>
+                      )}
                     </>
                   )}
                 </Button>
@@ -210,7 +219,7 @@ function PdfPreview({
       {showSuccess && open && (
         <PortalWindow
           closeWindow={handleClosePortalWindow}
-          title={!modalHeader ? 'Health report generation' : modalHeader}
+          title={!modalHeader ? 'Health report generation' : modalLabel}
           height={40}
         >
           <div className="px-4">

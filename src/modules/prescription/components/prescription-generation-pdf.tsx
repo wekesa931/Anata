@@ -195,7 +195,9 @@ function MedicationListing({
               {prescriptionMedications.map((medication: any, index: any) => (
                 <View key={index} style={styles.medicationLabel}>
                   <Text style={styles.medicationHeader}>
-                    {medication.medicationName}
+                    {medication.brandName
+                      ? `${medication.medicationName} | ${medication.brandName}`
+                      : medication.medicationName}
                   </Text>
 
                   <MedicationItem key={index} medication={medication} />
