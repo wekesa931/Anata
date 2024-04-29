@@ -546,6 +546,13 @@ function Tasks() {
                     />
                   </Tooltip>
                 )}
+                <span
+                  className={`status !m-0 mr-4 ${getPriorityStyle(
+                    hnTask['Task Priority']
+                  )}`}
+                >
+                  {getPriorityLabel(hnTask['Task Priority'])}
+                </span>
 
                 <p>{hnTask.Type}</p>
                 <button className="flex btn !mr-0 w-3/4 justify-end">
@@ -609,17 +616,6 @@ function Tasks() {
           </div>
           <div className="border-b border-solid border-[#d9d9d9] mt-2  w-[95%]" />
           <div className="flex justify-between mt-3 text-xs w-full">
-            <section>
-              <p className="text-dark-blue-50">Priority</p>
-              <span
-                className={`status !m-0 mt-2 ${getPriorityStyle(
-                  hnTask['Task Priority']
-                )}`}
-              >
-                {getPriorityLabel(hnTask['Task Priority'])}
-              </span>
-            </section>
-            <div className="border-r border-solid border-[#d9d9d9] m-2" />
             <section>
               <p className="text-dark-blue-50"> Status</p>
               <span className="status !m-0 mt-2">{hnTask.Status}</span>
