@@ -1,10 +1,13 @@
 import airtableFetch from 'src/services/airtable/fetch'
 import filterFields from 'src/utils/airtable/field-utils'
+import { useMember } from 'src/context/member'
 import { transformMedicationRecord } from '../utils/transform'
 import { RawMedicationRecord, CustomMedication } from '../types'
 import { getMedicationName, formatDate } from '../utils'
 
 export const usePrescriptionsAPI = () => {
+  const { member } = useMember()
+
   const fetchMedications = async (
     prescriptions: Array<string>
   ): Promise<Array<CustomMedication>> => {
@@ -15,9 +18,18 @@ export const usePrescriptionsAPI = () => {
       'Record ID',
     ]
 
-    const filterFormula = `OR(${prescriptions
-      .map((prescriptionId) => `FIND("${prescriptionId}", {Record ID})`)
-      .join(',')})`
+    let filterFormula = ''
+
+    if (!prescriptions) {
+      filterFormula = `FIND("${member?.airtableRecordId}", {Member Record ID})`
+    } else {
+      filterFormula = `OR(${prescriptions
+        .map(
+          (prescriptionId) =>
+            `FIND("${prescriptionId}", {Record ID}), {Status} != "STOPPED"`
+        )
+        .join(',')})`
+    }
 
     const records = await airtableFetch(
       `medications/list?&filterByFormula=${encodeURIComponent(

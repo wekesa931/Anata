@@ -110,7 +110,7 @@ function PrescriptionModalView({
       closeOption={false}
     >
       <PrimaryForm initialValues={{}} handleSubmit={handlePrescriptionDetails}>
-        {(formik) => (
+        {() => (
           <Form key="list-edit-form">
             {editMode ? (
               <div>
@@ -150,12 +150,7 @@ function PrescriptionModalView({
                     >
                       Cancel
                     </Button>
-                    <PrimaryButton
-                      disabled={!formik.values.vcConsultation}
-                      type="submit"
-                    >
-                      Next
-                    </PrimaryButton>
+                    <PrimaryButton type="submit">Next</PrimaryButton>
                   </div>
                 )}
               </div>
