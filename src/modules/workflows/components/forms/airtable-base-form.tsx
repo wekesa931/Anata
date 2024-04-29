@@ -271,6 +271,11 @@ function AirtableBasedForm({
         return [fieldValue?.id]
       }
     }
+
+    if (field.type === 'collaborator') {
+      return fieldValue
+    }
+
     return fieldValue?.name ?? fieldValue
   }
 
