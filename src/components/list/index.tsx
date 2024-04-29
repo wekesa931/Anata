@@ -31,6 +31,7 @@ type ListProps = {
   conditionComponent?: boolean
   filterByDate?: boolean
   isItemEditable?: (item?: { name: string; data: any }) => boolean
+  selectedTasks?: any[]
 }
 
 function List({
@@ -50,6 +51,7 @@ function List({
   conditionComponent,
   filterByDate = false,
   isItemEditable,
+  selectedTasks,
 }: ListProps) {
   const [isHovering, setIsHovering] = useState<number>()
   const [openItem, setOpenItem] = useState<{
@@ -168,7 +170,13 @@ function List({
                       {getTopRightText && getTopRightText(item.data)}
                     </div>
                   </div>
-                  <div className={`${styles.notes} overflow-auto`}>
+                  <div
+                    className={`${styles.notes} overflow-auto bg-${
+                      selectedTasks?.some((task) => task.recordid === item.id)
+                        ? 'blue-10'
+                        : 'white'
+                    }`}
+                  >
                     {modalTitle !== 'Task' && (
                       <Tooltip title="Expand Record">
                         <div

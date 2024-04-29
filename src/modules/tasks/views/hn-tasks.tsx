@@ -500,12 +500,17 @@ function Tasks() {
     // Display the mergedRecords
     function DisplayInfo({ hnTask }: any) {
       return (
-        <div className={`${styles.taskContainer} ml-2`}>
+        <div
+          className={`${styles.taskContainer} ml-2 p-0 bg-${
+            allActive(hnTask.Status) &&
+            !!selectedTasks?.[hnTask.recordid]?.selected
+              ? 'blue-10'
+              : 'white'
+          }`}
+        >
           <div className={`${styles.taskContainerInner} !p-0`}>
             <div>
-              <div
-                className={`text-normal font-medium flex justify-between items-center mt-2 mb-2 ${styles.taskNameWrap}`}
-              >
+              <div className="text-normal font-medium flex justify-between items-center">
                 {allActive(hnTask.Status) && (
                   <Tooltip title="Select">
                     <Checkbox
@@ -645,6 +650,11 @@ function Tasks() {
                 </section>
               </div>
             )}
+            <div className="border-r border-solid border-[#d9d9d9] m-2" />
+            <section>
+              <p className="text-dark-blue-50"> # attempts</p>
+              <span className="mt-2">{hnTask['Number of Attempts'] || 0} </span>
+            </section>
           </div>
         </div>
       )
@@ -806,6 +816,9 @@ function Tasks() {
                     emptyListText="No tasks found."
                     editable
                     onEdit={updateTask}
+                    selectedTasks={Object.values(selectedTasks).filter(
+                      (task) => !!task
+                    )}
                   />
                 </TabPanel>
               </div>
