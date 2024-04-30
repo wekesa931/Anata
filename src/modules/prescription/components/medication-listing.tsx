@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Form } from 'formik'
 import PrimaryForm from 'src/components/forms/primary-form'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -26,6 +26,7 @@ type ListingProps = {
   removeMedicationFromList: (medication: any) => void
   userError: string | null
   setUserError: (values: any) => void
+  setShowMedication: (values: any) => void
 }
 function MedicationListing({
   showMedication,
@@ -38,18 +39,44 @@ function MedicationListing({
   generatePrescription,
   userError,
   setUserError,
+  setShowMedication,
 }: ListingProps) {
-  const options =
-    medications?.map((item) => ({
-      label: item.label,
-      value: item.value,
-      key: item.value,
-    })) || []
+  const [initialValues, setInitialValues] = React.useState<any>({
+    linkedMedications: [],
+  })
+  const generateOptions = (raw_medications: any) => {
+    return (
+      raw_medications?.map((item) => ({
+        label: item.label || item.medicationName,
+        value: item.value,
+        key: item.value,
+      })) || []
+    )
+  }
+
+  const addNewMedicationToList = (values: any) => {
+    setInitialValues({
+      linkedMedications: generateOptions(values),
+    })
+    setShowMedication(false)
+  }
+  useEffect(() => {
+    if (prescriptionMedications) {
+      setInitialValues({
+        linkedMedications: [...prescriptionMedications],
+      })
+    }
+  }, [prescriptionMedications])
+
+  const options = generateOptions(medications)
 
   return (
     <>
       {!showMedication ? (
-        <PrimaryForm initialValues={{}} handleSubmit={showMedicationView}>
+        <PrimaryForm
+          initialValues={initialValues}
+          handleSubmit={showMedicationView}
+        >
           {(formik) => (
             <Form key="list-edit-form">
               <div>
@@ -84,7 +111,7 @@ function MedicationListing({
                   </div>
                   {showCheckboxes && (
                     <div
-                      className="bg-[#ffffff] p-2 absolute !w-[86%] h-[60%]"
+                      className="bg-[#ffffff] p-2 absolute !w-[86%] h-[70%]"
                       tabIndex={0}
                       role="button"
                     >
@@ -142,6 +169,7 @@ function MedicationListing({
           prescriptionMedications={prescriptionMedications}
           generatePrescription={generatePrescription}
           removeMedicationFromList={removeMedicationFromList}
+          addNewMedicationToList={addNewMedicationToList}
         />
       )}
     </>

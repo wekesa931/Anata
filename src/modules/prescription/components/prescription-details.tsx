@@ -37,6 +37,7 @@ type DetailsProps = {
   medications?: Array<TMedicationsItem>
   getDocMeta: (date?: Date | string) => DocMeta
   closePrescriptionModal: (values: any) => void
+  addNewMedicationToList: (value: any) => void
 }
 function ModalHeader({
   setShowPrescription,
@@ -149,6 +150,7 @@ function PrescriptionDetailsView({
             prescriptionMedications={prescriptionMedications}
             generatePrescription={generatePrescription}
             removeMedicationFromList={removeMedicationFromList}
+            setShowMedication={setShowMedication}
             userError={userError}
             setUserError={setUserError}
           />

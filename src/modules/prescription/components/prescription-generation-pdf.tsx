@@ -160,7 +160,7 @@ function MedicationListing({
     )
   }
   return (
-    <Document title="" member={member} customHeader>
+    <Document title="" member={member} customHeader displayPDFFooter={false}>
       <View>
         <View style={styles.section}>
           <View style={styles.subSection}>

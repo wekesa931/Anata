@@ -1065,6 +1065,10 @@ html,
   height: 60% !important;
 }
 
+.h-\[65\%\] {
+  height: 65% !important;
+}
+
 .max-h-\[150px\] {
   max-height: 150px !important;
 }

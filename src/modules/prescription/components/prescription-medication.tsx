@@ -2,11 +2,14 @@ import React from 'react'
 import PrimaryButton from 'src/components/buttons/primary'
 import Tooltip from 'src/components/tooltip'
 import DeleteIcon from '@mui/icons-material/Delete'
+import AddIcon from '@mui/icons-material/Add'
+import { Button } from '@mui/material'
 
 type ListingProps = {
   prescriptionMedications: any
   generatePrescription: () => void
   removeMedicationFromList: (value: any) => void
+  addNewMedicationToList: any
 }
 type TMedicationsItem = {
   quantity: any
@@ -23,6 +26,7 @@ function MedicationListing({
   prescriptionMedications,
   generatePrescription,
   removeMedicationFromList,
+  addNewMedicationToList,
 }: ListingProps) {
   function MedicationItem({ medication }: { medication: TMedicationsItem }) {
     const sections = [
@@ -66,6 +70,9 @@ function MedicationListing({
       </div>
     )
   }
+  const selectMoreMedication = () => {
+    addNewMedicationToList(prescriptionMedications)
+  }
   return (
     <>
       <div className="mt-4 overflow-scroll max-h-[30rem]">
@@ -73,6 +80,20 @@ function MedicationListing({
           <MedicationItem key={index} medication={medication} />
         ))}
       </div>
+      <Button
+        className="border "
+        sx={{
+          backgroundColor: '#ffff',
+          border: 'none',
+          color: '#205284',
+        }}
+        onClick={() => {
+          selectMoreMedication()
+        }}
+      >
+        <AddIcon />
+        Select more
+      </Button>
       <div className="flex justify-end mt-6 bottom-[5%] right-[2%]">
         <PrimaryButton
           className="w-[20%]"
