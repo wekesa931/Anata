@@ -21,6 +21,7 @@ type TMedicationsItem = {
   refillable: any
   medicationName: any
   brandName: any
+  additionalInstructions?: any
 }
 function MedicationListing({
   prescriptionMedications,
@@ -35,6 +36,10 @@ function MedicationListing({
       { label: 'Route', value: medication.route },
       { label: 'Duration', value: `${medication.duration} days` },
       { label: 'Instructions', value: medication.instructions },
+      {
+        label: 'Additional Instructions',
+        value: medication.additionalInstructions,
+      },
     ]
 
     return (
@@ -48,7 +53,7 @@ function MedicationListing({
           <div className="flex justify-between mt-3 text-xs leading-8 w-[60%]">
             {sections.map((section, index) => (
               <React.Fragment key={index}>
-                {index > 0 && (
+                {index > 0 && section.value && (
                   <div className="border-r border-solid border-[#777777] m-2" />
                 )}
                 <section>
