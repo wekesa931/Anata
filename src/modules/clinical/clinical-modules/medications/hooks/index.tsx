@@ -25,6 +25,7 @@ const useMedicationData = () => {
 
   const getMedications = async (antaraId: string) => {
     const allowedFields: string[] = [
+      'Record ID',
       'Autonumber',
       'Change of medication',
       'Check-ups Unit Price (from Medication)',
