@@ -4,6 +4,7 @@ import PrescriptionDetails from 'src/modules/prescription/components/prescriptio
 import { DocMeta } from 'src/modules/udm/types'
 import { useNotifications } from 'src/context/notifications'
 import { logError } from 'src/utils/logging/logger'
+import dayjs from 'dayjs'
 import useMedicationListingData from '../hooks/medication-listing'
 
 type Props = {
@@ -17,6 +18,7 @@ function PrescriptionComponent({ closeModal, getDocMeta }: Props) {
   const [showPrescription, setShowPrescription] = useState(false)
   const { getMedications } = useMedicationListingData()
   const [loading, setLoading] = useState<boolean>(false)
+  const [startTime, setStartTime] = useState(dayjs())
 
   const [medications, setMedications] = useState<any[]>([])
 
@@ -32,6 +34,7 @@ function PrescriptionComponent({ closeModal, getDocMeta }: Props) {
       setMedications(medicationData)
       setLoading(false)
       setShowPrescription(true)
+      setStartTime(dayjs())
     } catch (err) {
       setLoading(false)
       logError(err)
@@ -58,6 +61,7 @@ function PrescriptionComponent({ closeModal, getDocMeta }: Props) {
           medications={medications}
           getDocMeta={getDocMeta}
           closePrescriptionModal={closePrescriptionModal}
+          startTime={startTime}
         />
       )}
     </>
