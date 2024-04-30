@@ -19,6 +19,7 @@ import { useUdmData } from 'src/modules/udm/hooks/udm.data'
 import { useTasksData } from 'src/modules/tasks/hooks/tasks.data'
 import { TaskDefinitionTypes } from 'src/modules/tasks/types'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import dayjs from 'dayjs'
 
 type Props = {
   loadingData?: boolean
@@ -32,6 +33,7 @@ type Props = {
   modalHeader?: string
   generatePDFCustomBtn?: React.ReactNode
   modalLabel?: string
+  startTime?: any
 }
 
 function PdfPreview({
@@ -46,6 +48,7 @@ function PdfPreview({
   modalHeader,
   generatePDFCustomBtn,
   modalLabel,
+  startTime,
 }: Props) {
   const { member } = useMember()
 
@@ -55,7 +58,8 @@ function PdfPreview({
 
   const [showSuccess, setShowSuccess] = useState(false)
   const [fileId, setFileId] = useState<string>('')
-  const { trackNewDocumentGenerated } = useModuleAnalytics()
+  const { trackNewDocumentGenerated, trackPeriodToDocumentGeneration } =
+    useModuleAnalytics()
   const { createTaskFromTemplate } = useTasksData()
 
   const handleClosePortalWindow = () => {
@@ -75,6 +79,15 @@ function PdfPreview({
     }
     return handleUploadDocument(options)
   }
+  const prescriptionGenerationEvent = () => {
+    const shouldTrackDuration = modalLabel === 'Prescription generation'
+    const endTime = dayjs()
+
+    if (shouldTrackDuration) {
+      const durationInSeconds = endTime.diff(startTime, 'seconds')
+      trackPeriodToDocumentGeneration(docMeta, durationInSeconds)
+    }
+  }
 
   const handleSaveReport = () => {
     setLoading(true)
@@ -87,6 +100,7 @@ function PdfPreview({
           setFileId(documentId)
           trackNewDocumentGenerated(docMeta, true)
           createTaskFromTemplate(TaskDefinitionTypes.NewDocument)
+          prescriptionGenerationEvent()
         })
         setTimeout(() => {
           setLoading(false)
@@ -219,7 +233,7 @@ function PdfPreview({
       {showSuccess && open && (
         <PortalWindow
           closeWindow={handleClosePortalWindow}
-          title={!modalHeader ? 'Health report generation' : modalLabel}
+          title={!modalLabel ? 'Health report generation' : modalLabel}
           height={40}
         >
           <div className="px-4">
