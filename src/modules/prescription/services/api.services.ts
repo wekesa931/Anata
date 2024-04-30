@@ -56,6 +56,7 @@ export const usePrescriptionsAPI = () => {
       'Duration',
       'Instructions',
       'Refillable',
+      'Additional Instructions',
     ]
 
     const prescriptionValues = prescriptions.map(
@@ -88,6 +89,7 @@ export const usePrescriptionsAPI = () => {
         route: record.Route,
         duration: record.Duration,
         instructions: medicationInstructions,
+        additionalInstructions: record['Additional Instructions'],
         refillable: refillableStatus,
         dosageStrength:
           record['Dosage Strength (from Clean Molecule) (from Medication)'],
