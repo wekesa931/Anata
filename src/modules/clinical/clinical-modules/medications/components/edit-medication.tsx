@@ -22,6 +22,7 @@ export function EditMedication({ value }: any) {
   const [statusOptions, setStatusOptions] = useState<LookupOption[]>([])
   const { notify } = useNotifications()
   const initialValues = {
+    id: value?.['Record ID'],
     'Start Date': dayjs(value?.['Start Date']).toDate(),
     Status: value?.Status || '',
     refillFacility: {
