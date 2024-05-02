@@ -50,6 +50,7 @@ function ContactList({
     } finally {
       setTimeout(() => {
         setisRinging((prev: any) => ({ ...prev, [relevantContact]: false }))
+        closeWindow()
       }, 4000)
     }
   }
