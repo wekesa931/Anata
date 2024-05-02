@@ -6,6 +6,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import PrimaryButton from 'src/components/buttons/primary'
 import { MultiselectField } from 'src/components/forms/fields/select-field'
 import ErrorComponent from 'src/components/feedbacks/error-component'
+import { Loader } from 'react-feather'
 import PrescriptionMedication from './prescription-medication'
 
 type TMedicationsItem = {
@@ -27,6 +28,7 @@ type ListingProps = {
   userError: string | null
   setUserError: (values: any) => void
   setShowMedication: (values: any) => void
+  loading: boolean
 }
 function MedicationListing({
   showMedication,
@@ -40,6 +42,7 @@ function MedicationListing({
   userError,
   setUserError,
   setShowMedication,
+  loading,
 }: ListingProps) {
   const [initialValues, setInitialValues] = React.useState<any>({
     linkedMedications: [],
@@ -146,13 +149,15 @@ function MedicationListing({
                           <PrimaryButton
                             disabled={
                               !formik.values.linkedMedications ||
-                              formik.values.linkedMedications.length === 0
+                              formik.values.linkedMedications.length === 0 ||
+                              loading
                             }
                             className="w-[20%]"
                             fullWidth
                             variant="contained"
                             type="submit"
                           >
+                            {loading && <Loader className="mr-2" />}
                             Proceed
                           </PrimaryButton>
                         </div>

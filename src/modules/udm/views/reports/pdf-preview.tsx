@@ -244,6 +244,7 @@ function PdfPreview({
               customMessage="Sharing will make the document available in the app for the member"
               handleClose={handleClosePortalWindow}
               fileId={fileId}
+              folder={docMeta?.folder}
             />
           </div>
         </PortalWindow>

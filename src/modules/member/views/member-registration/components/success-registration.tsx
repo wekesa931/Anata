@@ -22,6 +22,7 @@ type SuccessfulProps = {
   handleClose?: () => void
   fileId?: string
   primaryMember?: Member
+  folder?: string
 }
 
 function SuccessPrompt({
@@ -36,6 +37,7 @@ function SuccessPrompt({
   handleClose,
   fileId,
   primaryMember,
+  folder = 'Health Reports',
 }: SuccessfulProps) {
   const analytics = useAnalytics('Member registration')
 
@@ -56,7 +58,7 @@ function SuccessPrompt({
   const { notify } = useNotifications()
 
   const shareFile = () => {
-    findFolderByName('Health Reports').then((res) => {
+    findFolderByName(folder).then((res) => {
       const folderId = res?.node?.id
       handleShareFile(fileId, folderId)
         .then((response) => {
