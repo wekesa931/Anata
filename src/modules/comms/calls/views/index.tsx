@@ -47,6 +47,11 @@ function CallsCallout({
     setPhoneError(null)
   }
 
+  const closeWindow = () => {
+    setContactListAnchorEl(null)
+    setIsPhoneChooserOpen(false)
+  }
+
   const calloutChange = (e: { stopPropagation: () => void }) => {
     e.stopPropagation()
     setisRinging(!isRinging)
@@ -59,11 +64,9 @@ function CallsCallout({
     } else {
       try {
         initiateCall({
-          callContact: {
-            phoneNumber: `+254${phoneNumber
-              .replace(/\s/g, '')
-              .replace(/^(0|\+?254)/gi, '')}`,
-          },
+          callContact: `+254${phoneNumber
+            .replace(/\s/g, '')
+            .replace(/^(0|\+?254)/gi, '')}`,
           onCallInitiated,
           memberDetails: member,
           type: 'OUTBOUND',
@@ -71,6 +74,7 @@ function CallsCallout({
           memberContacts: member?.phones || member?.primary?.phones || [],
         })
       } finally {
+        closeWindow()
         setTimeout(() => {
           setisRinging(false)
         }, 1000)
@@ -122,10 +126,7 @@ function CallsCallout({
         tasksType={tasksType}
         onCallInitiated={onCallInitiated}
         anchorEl={contactListAnchorEl}
-        closeWindow={() => {
-          setContactListAnchorEl(null)
-          setIsPhoneChooserOpen(false)
-        }}
+        closeWindow={closeWindow}
       />
 
       {!isPhoneChooserOpen && open && (
