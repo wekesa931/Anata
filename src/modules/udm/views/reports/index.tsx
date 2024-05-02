@@ -62,12 +62,14 @@ function ReportGenerator() {
     documentType: string,
     title: string,
     description?: string,
-    date?: string | Date
+    date?: string | Date,
+    folder: string = 'Health Reports'
   ): DocMeta => {
     return {
       docType: documentType,
       description: description || title,
       title: `${title} - ${dayjs(date).format('DD-MM-YYYY')}`,
+      folder,
     } as DocMeta
   }
 
@@ -87,12 +89,19 @@ function ReportGenerator() {
       case DocTypes.SPECIALIST:
         return createDocMeta('Medical Progress Report', 'Specialist report')
       case DocTypes.PRESCRIPTION:
-        return createDocMeta('Prescription', 'Prescription report')
+        return createDocMeta(
+          'Prescription',
+          'Prescription report',
+          '',
+          date,
+          'Prescription'
+        )
       default:
         return {
           docType: '',
           description: '',
           title: '',
+          folder: '',
         }
     }
   }

@@ -71,6 +71,7 @@ function PrescriptionDetailsView({
   const [displayPDF, setdisplayPDF] = useState(false)
   const [userError, setUserError] = useState<string | null>(null)
   const { notify } = useNotifications()
+  const [loading, setLoading] = useState<boolean>(false)
 
   const [prescriptionMedications, setPrescriptionMedications] = useState<
     PrescriptionMedication[]
@@ -93,6 +94,7 @@ function PrescriptionDetailsView({
   }
 
   const showMedicationView = async (values: any) => {
+    setLoading(true)
     try {
       const medicationList = await getMedicationDetails(
         values.linkedMedications
@@ -100,10 +102,12 @@ function PrescriptionDetailsView({
       setUserError(null)
       setPrescriptionMedications(medicationList)
       setShowMedication(true)
+      setLoading(false)
     } catch (error) {
       setUserError(`Error loading medication details : ${error}`)
       logError(error)
       notify('Error loading medication details')
+      setLoading(false)
     }
   }
 
@@ -154,6 +158,7 @@ function PrescriptionDetailsView({
             setShowMedication={setShowMedication}
             userError={userError}
             setUserError={setUserError}
+            loading={loading}
           />
         </Modal>
       ) : (
