@@ -23,6 +23,7 @@ type TMedicationsItem = {
   instructions: any
   refillable: any
   medicationName: any
+  additionalInstructions?: any
 }
 Font.register({
   family: 'Ubuntu',
@@ -146,13 +147,19 @@ function MedicationListing({
       { label: 'Route', value: medication.route },
       { label: 'Duration', value: `${medication.duration} days` },
       { label: 'Instructions', value: medication.instructions },
+      {
+        label: 'Additional Instructions',
+        value: medication.additionalInstructions,
+      },
     ]
 
     return (
       <View style={styles.medicationsView}>
         {sections.map((section, index) => (
           <React.Fragment key={index}>
-            {index > 0 && <Text style={styles.textDivider}>|</Text>}
+            {index > 0 && section.value && (
+              <Text style={styles.textDivider}>|</Text>
+            )}
             <Text style={styles.textLabel}>{section.value}</Text>
           </React.Fragment>
         ))}
@@ -160,7 +167,7 @@ function MedicationListing({
     )
   }
   return (
-    <Document title="" member={member} customHeader>
+    <Document title="" member={member} customHeader displayPDFFooter={false}>
       <View>
         <View style={styles.section}>
           <View style={styles.subSection}>
@@ -169,7 +176,7 @@ function MedicationListing({
               <Text style={(styles.text, styles.textHighlight)}>
                 Dr. {user?.name || user?.fullName || user?.given_name}
               </Text>
-              <Text style={styles.text}>+254 700 536 660</Text>
+              <Text style={styles.text}>{user?.phone}</Text>
               <Text style={styles.text}>{user?.email}</Text>
             </View>
             <View>

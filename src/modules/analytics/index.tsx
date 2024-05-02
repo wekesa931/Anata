@@ -86,6 +86,15 @@ export const useModuleAnalytics = () => {
         { document }
       )
     },
+    trackPeriodToDocumentGeneration: (
+      document: any,
+      durationInSeconds: any
+    ) => {
+      middlesSectionAnalytics.track('New prescription document generated', {
+        document,
+        durationInSeconds,
+      })
+    },
     trackNewDocumentPreviewEdited: (document: any) => {
       middlesSectionAnalytics.track('New document preview edited', { document })
     },

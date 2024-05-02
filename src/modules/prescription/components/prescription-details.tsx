@@ -37,6 +37,7 @@ type DetailsProps = {
   medications?: Array<TMedicationsItem>
   getDocMeta: (date?: Date | string) => DocMeta
   closePrescriptionModal: (values: any) => void
+  startTime: any
 }
 function ModalHeader({
   setShowPrescription,
@@ -62,6 +63,7 @@ function PrescriptionDetailsView({
   setShowPrescription,
   getDocMeta,
   closePrescriptionModal,
+  startTime,
 }: DetailsProps) {
   const [selectedItems, setSelectedItems] = useState<string[]>([])
   const [showCheckboxes, setShowCheckboxes] = useState(false)
@@ -149,6 +151,7 @@ function PrescriptionDetailsView({
             prescriptionMedications={prescriptionMedications}
             generatePrescription={generatePrescription}
             removeMedicationFromList={removeMedicationFromList}
+            setShowMedication={setShowMedication}
             userError={userError}
             setUserError={setUserError}
           />
@@ -162,6 +165,7 @@ function PrescriptionDetailsView({
           modalHeader="Prescription PDF preview"
           modalLabel="Prescription generation"
           generatePDFCustomBtn={customButton}
+          startTime={startTime}
         >
           <PrescriptionGenerationView
             prescriptionMedications={prescriptionMedications}

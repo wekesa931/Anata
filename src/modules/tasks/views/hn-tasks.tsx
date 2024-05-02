@@ -628,10 +628,10 @@ function Tasks() {
               </p>
             </section>
             <div className="border-r border-solid border-[#d9d9d9] m-2" />
-            {hnTask['Assignee Name'] && (
-              <div>
-                <section>
-                  <p className="text-dark-blue-50">Assigned to</p>
+            <div>
+              <section>
+                <p className="text-dark-blue-50">Assigned to</p>
+                {hnTask['Assignee Name'] ? (
                   <p className="mt-2">
                     {Array.isArray(hnTask['Assignee Name']) &&
                       hnTask['Assignee Name'].map(
@@ -643,13 +643,15 @@ function Tasks() {
                         )
                       )}
                   </p>
-                </section>
-              </div>
-            )}
+                ) : (
+                  <p className="mt-2">-</p>
+                )}
+              </section>
+            </div>
             <div className="border-r border-solid border-[#d9d9d9] m-2" />
             <section>
               <p className="text-dark-blue-50"> # attempts</p>
-              <span className="mt-2">{hnTask['Number of Attempts'] || 0} </span>
+              <p className="mt-2">{hnTask['Number of Attempts'] || 0} </p>
             </section>
           </div>
         </div>

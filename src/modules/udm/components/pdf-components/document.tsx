@@ -17,6 +17,7 @@ type Props = {
   children: React.ReactElement<any>
   extendedHeader?: boolean
   customHeader?: boolean
+  displayPDFFooter?: boolean
 }
 
 const headerStyles = StyleSheet.create({
@@ -84,6 +85,7 @@ function CustomDocument({
   children,
   extendedHeader = true,
   customHeader = false,
+  displayPDFFooter = true,
 }: Props) {
   return (
     <Document
@@ -145,17 +147,21 @@ function CustomDocument({
 
             {children}
           </View>
-          <View style={footerStyles.footer} wrap={false}>
-            <Text style={footerStyles.header}>Antara Health</Text>
-            <Text style={footerStyles.header}>
-              Email:{' '}
-              <Text style={footerStyles.text}>navigation@antarahealth.com</Text>
-            </Text>
-            <Text style={footerStyles.text}>
-              Please call or email us if you&apos;d like to verify the
-              authenticity of this document.
-            </Text>
-          </View>
+          {displayPDFFooter ? (
+            <View style={footerStyles.footer} wrap={false}>
+              <Text style={footerStyles.header}>Antara Health</Text>
+              <Text style={footerStyles.header}>
+                Email:{' '}
+                <Text style={footerStyles.text}>
+                  navigation@antarahealth.com
+                </Text>
+              </Text>
+              <Text style={footerStyles.text}>
+                Please call or email us if you&apos;d like to verify the
+                authenticity of this document.
+              </Text>
+            </View>
+          ) : null}
         </View>
       </Page>
     </Document>

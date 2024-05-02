@@ -2,11 +2,14 @@ import React from 'react'
 import PrimaryButton from 'src/components/buttons/primary'
 import Tooltip from 'src/components/tooltip'
 import DeleteIcon from '@mui/icons-material/Delete'
+import AddIcon from '@mui/icons-material/Add'
+import { Button } from '@mui/material'
 
 type ListingProps = {
   prescriptionMedications: any
   generatePrescription: () => void
   removeMedicationFromList: (value: any) => void
+  addNewMedicationToList: any
 }
 type TMedicationsItem = {
   quantity: any
@@ -18,11 +21,13 @@ type TMedicationsItem = {
   refillable: any
   medicationName: any
   brandName: any
+  additionalInstructions?: any
 }
 function MedicationListing({
   prescriptionMedications,
   generatePrescription,
   removeMedicationFromList,
+  addNewMedicationToList,
 }: ListingProps) {
   function MedicationItem({ medication }: { medication: TMedicationsItem }) {
     const sections = [
@@ -31,6 +36,10 @@ function MedicationListing({
       { label: 'Route', value: medication.route },
       { label: 'Duration', value: `${medication.duration} days` },
       { label: 'Instructions', value: medication.instructions },
+      {
+        label: 'Additional Instructions',
+        value: medication.additionalInstructions,
+      },
     ]
 
     return (
@@ -44,7 +53,7 @@ function MedicationListing({
           <div className="flex justify-between mt-3 text-xs leading-8 w-[60%]">
             {sections.map((section, index) => (
               <React.Fragment key={index}>
-                {index > 0 && (
+                {index > 0 && section.value && (
                   <div className="border-r border-solid border-[#777777] m-2" />
                 )}
                 <section>
@@ -66,6 +75,9 @@ function MedicationListing({
       </div>
     )
   }
+  const selectMoreMedication = () => {
+    addNewMedicationToList(prescriptionMedications)
+  }
   return (
     <>
       <div className="mt-4 overflow-scroll max-h-[30rem]">
@@ -73,6 +85,20 @@ function MedicationListing({
           <MedicationItem key={index} medication={medication} />
         ))}
       </div>
+      <Button
+        className="border "
+        sx={{
+          backgroundColor: '#ffff',
+          border: 'none',
+          color: '#205284',
+        }}
+        onClick={() => {
+          selectMoreMedication()
+        }}
+      >
+        <AddIcon />
+        Select more
+      </Button>
       <div className="flex justify-end mt-6 bottom-[5%] right-[2%]">
         <PrimaryButton
           className="w-[20%]"
