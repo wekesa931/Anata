@@ -16,29 +16,8 @@ import { logError } from 'src/utils/logging/logger'
 import type { ConditionInterventions } from 'src/storage/indexeddb/watermelon/relations-models'
 import { useInterventionData } from 'src/modules/interventions/hooks/intervention.data'
 import { diffRecordsById } from 'src/utils/diff'
-
-const buildCondition = (condition: Condition, data: TCondition) => {
-  condition.antaraId = data.antaraId
-  condition.condition = data?.condition
-  condition.dateOfDiagnosis = data?.dateOfDiagnosis
-  condition.acuteVsChronic = data?.acuteVsChronic
-  condition.conditionStatus = data?.conditionStatus
-  condition.icd10Code = data?.icd10Code
-  condition.keyGoal = data?.keyGoal
-  condition.diagnosisStage = data?.diagnosisStage
-  condition.startingStage = data?.startingStage
-  condition.startingClinicalStatus = data?.startingClinicalStatus
-  condition.engagementLevel = data?.engagementLevel
-  condition.currentStage = data?.currentStage
-  condition.currentClinicalStatus = data?.currentClinicalStatus
-  condition.medication = data?.medication
-  // eslint-disable-next-line no-underscore-dangle
-  condition._raw.id = data?.id
-  condition.asthmaStartingScore = data?.asthmaStartingScore
-  condition.lowerBackPainScore = data?.lowerBackPainScore
-  condition.lowerBackPainStartingScore = data?.lowerBackPainStartingScore
-  condition.osteoarthritisStartingScore = data?.osteoarthritisStartingScore
-}
+import { buildCondition } from 'src/modules/conditions/utils'
+import { ConditionsObserver } from 'src/services/observers'
 
 export const useConditionData = () => {
   const { member } = useMember()
@@ -64,11 +43,6 @@ export const useConditionData = () => {
         logError(err)
       })
   }
-
-  useEffect(() => {
-    getAllConditionsFromDb()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member])
 
   const deleteAllConditions = async () => {
     await database.write(async () => {
@@ -292,22 +266,39 @@ export const useConditionData = () => {
     )
   }
 
+  const hydrateAndLoadConditions = async (member: Member) => {
+    try {
+      setLoading(true)
+      await hydrateConditions(member)
+      await getAllConditionsFromDb()
+    } catch (error) {
+      logError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     if (member) {
-      setLoading(true)
-      hydrateConditions(member)
-        .then(getAllConditionsFromDb)
-        .catch(logError)
-        .finally(() => {
-          setLoading(false)
-        })
+      hydrateAndLoadConditions(member)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member])
 
-  // useEffect(() => {
-  //   deleteAllConditions()
-  // }, [])
+  useEffect(() => {
+    getAllConditionsFromDb()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member])
+
+  useEffect(() => {
+    if (member) {
+      ConditionsObserver.subscribe(() => {
+        hydrateAndLoadConditions(member)
+      })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member])
 
   return {
     loading: loading || isLoading,

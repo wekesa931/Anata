@@ -8,7 +8,11 @@ import type { FormProps } from 'src/modules/workflows/types'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useVitalsUpdate } from 'src/modules/vitals/hooks/vitals.update.hook'
 import SelectField from 'src/components/forms/fields/select-field'
+import { Subject } from 'rxjs'
+import { BP_OBSERVER } from 'src/modules/vitals/services/observers'
 import { useModuleAnalytics } from 'src/modules/analytics'
+
+export const bpUpdateSubject = new Subject<void>()
 
 const validationSchema = yup.object().shape({
   timestamp: yup.date().required(),
@@ -59,6 +63,7 @@ function BPReadingForm({
     handleCreateBloodPressureReading(values)
       .then(async () => {
         await form.markAsCompleted()
+        BP_OBSERVER.next()
         trackFormSaved(form.name, form.workflow?.workflowId)
         handleSubmissionSuccess(false, values)
       })

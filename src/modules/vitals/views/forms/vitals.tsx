@@ -9,6 +9,7 @@ import type { FormProps } from 'src/modules/workflows/types'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useVitalsUpdate } from 'src/modules/vitals/hooks/vitals.update.hook'
 import dayjs from 'dayjs'
+import { VITALS_OBSERVER } from 'src/modules/vitals/services/observers'
 import { useModuleAnalytics } from 'src/modules/analytics'
 
 const validationSchema = yup.object().shape({
@@ -84,6 +85,7 @@ function VitalsCollection({
     handleCreateVitalsReading(values)
       .then(async () => {
         await form.markAsCompleted()
+        VITALS_OBSERVER.next()
         trackFormSaved(form.name, form.workflow?.workflowId)
         handleSubmissionSuccess(false)
       })

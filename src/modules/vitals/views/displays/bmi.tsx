@@ -12,23 +12,31 @@ import {
   ReferenceDomain,
 } from 'src/modules/vitals/types/clusters.types'
 import { getTickCount, getTimeFormat } from 'src/modules/vitals/utils'
+import {
+  VITALS_OBSERVER,
+  useClustersObserver,
+} from 'src/modules/vitals/services/observers'
 
 dayjs.extend(advancedFormat)
 
 export function BMICharts() {
-  const { isLoading, getBmiData, getRanges } = useClustersData()
-  const [bmiData, setBmiData] = useState<any[]>([])
+  const { getBmiData, getRanges, isLoading } = useClustersData()
   const [xDomain, setXDomain] = useState<[number, number]>([
     dayjs().subtract(1, 'month').valueOf(),
     dayjs().valueOf(),
   ])
-  const [currentTimeFilter, setCurrentTimeFilter] = useState<TimeFilters>(
-    TimeFilters.ONE_MONTH
-  )
+
   const [bmiReferences, setBmiReferences] = useState<ReferenceDomain>({
     domain: [0, 50],
     referenceRanges: [],
   })
+
+  const {
+    loading,
+    clusters,
+    currentTimeFilter,
+    updateRangeFilterControls: setRangeFilterControls,
+  } = useClustersObserver(VITALS_OBSERVER, getBmiData)
 
   useEffect(() => {
     getRanges(HealthMetricNames.BMI).then((data) => {
@@ -40,11 +48,8 @@ export function BMICharts() {
 
   const handleTimeRangeChange = (range: TimeRange, filter: TimeFilters) => {
     if (range[0] === null || range[1] === null) return
-    setCurrentTimeFilter(filter)
+    setRangeFilterControls({ range, filter })
     setXDomain([range[0].valueOf(), range[1].valueOf()])
-    getBmiData(range, currentTimeFilter).then((data) => {
-      setBmiData(data)
-    })
   }
   const CustomBpDot = withCustomBmiDot({
     filter: currentTimeFilter,
@@ -54,19 +59,19 @@ export function BMICharts() {
   return (
     <div>
       <TimeRangeFilter onRangeChange={handleTimeRangeChange} type="BMI" />
-      {isLoading ? (
+      {loading || isLoading ? (
         <div className="h-[300px]">
           <Loading message="Loading BMI Data ..." />
         </div>
       ) : (
         <div className="relative">
-          {!bmiData.length ? (
+          {!clusters.length ? (
             <div className="flex flex-col items-center justify-center h-[300px]">
               <p className="text-gray-400">No BMI Data within this period</p>
             </div>
           ) : (
             <LineSeriesChat
-              data={bmiData}
+              data={clusters}
               xAxisDataKey={{
                 key: 'timestamp',
                 formatter: getTimeFormat(currentTimeFilter),

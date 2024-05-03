@@ -17,6 +17,7 @@ import { TimeFilters, TimeRange } from '../types'
 import {
   BPAggregatedMetricData,
   HealthMetricNames,
+  ReferenceDomain,
 } from '../types/clusters.types'
 
 const adjustExclusiveDates = (range: TimeRange) => {
@@ -36,20 +37,25 @@ export const useClustersData = () => {
   } = useClustersApi()
   const { getReferences, loading, getBsReferences } = useReferenceRanges()
 
-  const getBpClusters = async (range: TimeRange, filter: TimeFilters) => {
+  const getBpClusters = async (
+    range: TimeRange,
+    filter: TimeFilters,
+    refetch: boolean = false
+  ) => {
     if (member) {
       if (range[0] === null || range[1] === null) {
         return []
       }
 
       // due to dates being exclusive, we need to add a day to the end date and subtract a day from the start date
-      const [start, end] = adjustExclusiveDates(range)
+      const [startDate, endDate] = adjustExclusiveDates(range)
 
-      const data = await getAggregateBPMetrics(
-        start,
-        end,
-        filter === TimeFilters.ONE_MONTH
-      )
+      const data = await getAggregateBPMetrics({
+        startDate,
+        endDate,
+        refetch,
+        dailyMetrics: filter === TimeFilters.ONE_MONTH,
+      })
 
       const metrics: BPAggregatedMetricData[] =
         transformBpAggregateMetrics(data)
@@ -60,20 +66,25 @@ export const useClustersData = () => {
     return []
   }
 
-  const getBsClusters = async (range: TimeRange, filter: TimeFilters) => {
+  const getBsClusters = async (
+    range: TimeRange,
+    filter: TimeFilters,
+    refetch: boolean = false
+  ) => {
     if (member) {
       if (range[0] === null || range[1] === null) {
         return []
       }
 
       // due to dates being exclusive, we need to add a day to the end date and subtract a day from the start date
-      const [start, end] = adjustExclusiveDates(range)
+      const [startDate, endDate] = adjustExclusiveDates(range)
 
-      const data = await getAggregateBsMetrics(
-        start,
-        end,
-        filter === TimeFilters.ONE_MONTH
-      )
+      const data = await getAggregateBsMetrics({
+        startDate,
+        endDate,
+        dailyMetrics: filter === TimeFilters.ONE_MONTH,
+        refetch,
+      })
 
       const metrics: any[] = transformBSAggregateMetrics(data)
       metrics.sort((a, b) => a.timestamp - b.timestamp)
@@ -82,19 +93,24 @@ export const useClustersData = () => {
     return []
   }
 
-  const getBmiData = async (range: TimeRange, filter: TimeFilters) => {
+  const getBmiData = async (
+    range: TimeRange,
+    filter: TimeFilters,
+    refetch: boolean = false
+  ) => {
     if (member) {
       if (range[0] === null || range[1] === null) {
         return []
       }
 
-      const [start, end] = adjustExclusiveDates(range)
-      const data = await getAggregateMetrics(
-        HealthMetricNames.BMI,
-        start,
-        end,
-        filter === TimeFilters.ONE_MONTH
-      )
+      const [startDate, endDate] = adjustExclusiveDates(range)
+      const data = await getAggregateMetrics({
+        healthMetric: HealthMetricNames.BMI,
+        startDate,
+        endDate,
+        dailyMetrics: filter === TimeFilters.ONE_MONTH,
+        refetch,
+      })
       const metrics = transformBMIAggregateMetrics(data)
       metrics.sort((a, b) => a.timestamp - b.timestamp)
       return metrics
@@ -102,9 +118,9 @@ export const useClustersData = () => {
     return []
   }
 
-  const getLipidsClusters = async () => {
+  const getLipidsClusters = async (refetch: boolean = false) => {
     if (member) {
-      const data = await getChlMeasurementsData()
+      const data = await getChlMeasurementsData(refetch)
       const metrics = transformChlMeasurements(data)
       metrics.sort((a, b) => a.timestamp - b.timestamp)
       return metrics
@@ -117,7 +133,7 @@ export const useClustersData = () => {
       const data = await getReferences(healthMetric)
       return transformReferenceRanges(data?.referenceRanges?.edges || [])
     }
-    return []
+    return {} as ReferenceDomain
   }
 
   const getBsReference = async () => {
@@ -128,19 +144,24 @@ export const useClustersData = () => {
     return []
   }
 
-  const getHba1cClusters = async (range: TimeRange, filter: TimeFilters) => {
+  const getHba1cClusters = async (
+    range: TimeRange,
+    filter: TimeFilters,
+    refetch: boolean = false
+  ) => {
     if (member) {
       if (range[0] === null || range[1] === null) {
         return []
       }
 
-      const [start, end] = adjustExclusiveDates(range)
-      const data = await getAggregateMetrics(
-        HealthMetricNames.HbA1c,
-        start,
-        end,
-        filter === TimeFilters.ONE_MONTH
-      )
+      const [startDate, endDate] = adjustExclusiveDates(range)
+      const data = await getAggregateMetrics({
+        healthMetric: HealthMetricNames.HbA1c,
+        startDate,
+        endDate,
+        dailyMetrics: filter === TimeFilters.ONE_MONTH,
+        refetch,
+      })
       const metrics = transformHbMeasurements(data)
       metrics.sort((a, b) => a.timestamp - b.timestamp)
       return metrics

@@ -31,23 +31,23 @@ export const useGetVitalsReadingApi = () => {
 
   const [
     getVitalsData,
-    { loading: vitalsLoading, error: vitalsError, refetch },
+    { loading: vitalsLoading, error: vitalsError, refetch: refetchVitals },
   ] = useLazyQuery(GET_VITALS, {
     context,
   })
   const [
     getBPData,
-    { loading: bpLoading, error: bpError, refetch: refetchBs },
+    { loading: bpLoading, error: bpError, refetch: refetchBp },
   ] = useLazyQuery(GET_BP_PANEL, {
     context,
   })
 
-  const [getBsData, { loading: bsLoading, error: bsError }] = useLazyQuery(
-    GET_BS_PANEL,
-    {
-      context,
-    }
-  )
+  const [
+    getBsData,
+    { loading: bsLoading, error: bsError, refetch: refetchBs },
+  ] = useLazyQuery(GET_BS_PANEL, {
+    context,
+  })
 
   const parseBsReadings = (input: any = {}) => {
     const bsEdges = input?.bs?.edges?.map((item: any) => item.node)
@@ -79,76 +79,66 @@ export const useGetVitalsReadingApi = () => {
     return returnData
   }
 
-  const getBsReadings = async (antaraId: string) => {
+  const getBsReadings = async (antaraId: string, refetch: boolean = false) => {
     if (!antaraId) throw new Error('Antara ID is required')
+    let data: any
 
-    const { data } = await getBsData({
-      variables: {
-        antaraId,
-      },
-    })
+    if (refetch) {
+      data = (await refetchBs()).data
+    }
+
+    data = (
+      await getBsData({
+        variables: {
+          antaraId,
+        },
+      })
+    ).data
 
     return parseBsReadings(data)
   }
 
-  const refetchBsReadings = async (antaraId: string) => {
+  const getBPReadings = async (antaraId: string, refetch: boolean = false) => {
     if (!antaraId) throw new Error('Antara ID is required')
 
-    const { data } = await refetchBs({
-      variables: {
-        antaraId,
-      },
-    })
+    let data: any
 
-    return parseBsReadings(data)
-  }
+    if (refetch) {
+      data = (await refetchBp()).data
+    }
 
-  const getBPReadings = async (antaraId: string) => {
-    if (!antaraId) throw new Error('Antara ID is required')
-
-    const { data } = await getBPData({
-      variables: {
-        antaraId,
-      },
-    })
+    data = (
+      await getBPData({
+        variables: {
+          antaraId,
+        },
+      })
+    ).data
 
     return data?.bloodPressureMonitoring?.edges?.map((item: any) => item.node)
   }
 
-  const refetchBPReadings = async (antaraId: string) => {
+  const getVitalsReadings = async (
+    antaraId: string,
+    refetch: boolean = false
+  ) => {
     if (!antaraId) throw new Error('Antara ID is required')
 
-    const { data } = await getBPData({
-      variables: {
-        antaraId,
-      },
-    })
+    let data: any
 
-    return data?.bloodPressureMonitoring?.edges?.map((item: any) => item.node)
-  }
+    if (refetch) {
+      data = (await refetchVitals()).data
+    }
 
-  const getVitalsReadings = async (antaraId: string) => {
-    if (!antaraId) throw new Error('Antara ID is required')
-
-    const { data } = await getVitalsData({
-      variables: {
-        antaraId,
-      },
-    })
+    data = (
+      await getVitalsData({
+        variables: {
+          antaraId,
+        },
+      })
+    ).data
 
     return data?.vitals?.edges?.map((item: any) => item?.node)
-  }
-
-  const refetchVitalsReadings = async (antaraId: string) => {
-    if (!antaraId) throw new Error('Antara ID is required')
-
-    const { data } = await refetch({
-      variables: {
-        antaraId,
-      },
-    })
-
-    return data?.vitals?.edges?.map((item: any) => item.node)
   }
 
   const getAllVitalsReadings = async (antaraId: string) => {
@@ -196,15 +186,12 @@ export const useGetVitalsReadingApi = () => {
     getAllVitalsReadings,
     vitalsLoading,
     vitalsError,
-    refetchVitalsReadings,
     getBPReadings,
     bpLoading,
     bpError,
-    refetchBPReadings,
     getBsReadings,
     bsLoading,
     bsError,
-    refetchBsReadings,
   }
 }
 export const useCreateVitalsReadingApi = () => {

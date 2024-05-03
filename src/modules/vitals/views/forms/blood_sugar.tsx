@@ -8,6 +8,7 @@ import type { FormProps } from 'src/modules/workflows/types'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useVitalsUpdate } from 'src/modules/vitals/hooks/vitals.update.hook'
 import dayjs from 'dayjs'
+import { BS_OBSERVER } from 'src/modules/vitals/services/observers'
 import { useModuleAnalytics } from 'src/modules/analytics'
 
 // set the number field type message to be more specific field must be a number
@@ -67,6 +68,7 @@ function DMMonitoring({
     handleCreateDMReading(values)
       .then(async () => {
         await form.markAsCompleted()
+        BS_OBSERVER.next()
         trackFormSaved(form.name, form.workflow?.workflowId)
         handleSubmissionSuccess(false)
       })

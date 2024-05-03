@@ -1,11 +1,9 @@
 import dayjs from 'dayjs'
-import { useEffect, useState } from 'react'
 import { useMember } from 'src/context/member'
 import {
   useGetVitalsReadingApi,
   useGetLabsRanges,
 } from 'src/modules/vitals/services/vitals.api'
-import { logError } from 'src/utils/logging/logger'
 import { ReportGenNormalRangeVariables } from '../types'
 
 const BMI_TABLE_KEYS = ['bmi', 'height', 'weight', 'bmi_percentile']
@@ -30,28 +28,10 @@ const OTHER_VITALS_KEYS = [
 ]
 
 export const useTablesData = () => {
-  const {
-    getVitalsReadings,
-    vitalsLoading,
-    vitalsError,
-    refetchVitalsReadings,
-    getBPReadings,
-    bpLoading,
-    bpError,
-    refetchBPReadings,
-    getBsReadings,
-    refetchBsReadings,
-    bsLoading,
-    bsError,
-  } = useGetVitalsReadingApi()
+  const { getVitalsReadings, getBPReadings, getBsReadings } =
+    useGetVitalsReadingApi()
   const { member } = useMember()
 
-  const [vitals, setVitals] = useState<any>({})
-  const [bloodPressure, setBloodPressure] = useState<any>([])
-  const [vitalError, setVitalsError] = useState<any>(null)
-  const [bloodPressureError, setBloodPressureError] = useState<any>(null)
-  const [bloodSugar, setBloodSugar] = useState<any>([])
-  const [bloodSugarError, setBloodSugarError] = useState<any>(null)
   const { getReportGenMeasurementsRangesData, loading: loadingRanges } =
     useGetLabsRanges()
 
@@ -86,18 +66,9 @@ export const useTablesData = () => {
     })
   }
 
-  const getBsData = async () => {
+  const getBsData = async (refetch: boolean = false) => {
     if (!member?.antaraId) return
-    setBloodSugarError(null)
-    const tableData = await getBsReadings(member.antaraId)
-
-    return processBsData(tableData)
-  }
-
-  const refetchBsData = async () => {
-    if (!member?.antaraId) return
-    setBloodSugarError(null)
-    const tableData = await refetchBsReadings(member.antaraId)
+    const tableData = await getBsReadings(member.antaraId, refetch)
 
     return processBsData(tableData)
   }
@@ -204,93 +175,24 @@ export const useTablesData = () => {
     })
   }
 
-  const getVitalsData = async () => {
+  const getVitalsData = async (refetch: boolean = false) => {
     if (!member?.antaraId) return
-    setVitalsError(null)
-
-    const tableData = await getVitalsReadings(member.antaraId)
+    const tableData = await getVitalsReadings(member.antaraId, refetch)
     return processVitalsData(tableData)
   }
 
-  const refetchVitalsData = async () => {
-    if (!member?.antaraId) return
-    setVitalsError(null)
-
-    const tableData = await refetchVitalsReadings(member.antaraId)
-    return processVitalsData(tableData)
-  }
-
-  const getBpData = async () => {
+  const getBpData = async (refetch: boolean = false) => {
     if (!member?.antaraId) return []
-    setBloodPressureError(null)
 
-    const bpData = await getBPReadings(member.antaraId)
+    const bpData = await getBPReadings(member.antaraId, refetch)
     return processBpData(bpData)
   }
-
-  const refetchBpData = async () => {
-    if (!member?.antaraId) return []
-    setBloodPressureError(null)
-
-    const bpData = await refetchBPReadings(member.antaraId)
-    return processBpData(bpData)
-  }
-
-  useEffect(() => {
-    getBpData()
-      .then(setBloodPressure)
-      .catch((err) => {
-        logError(err)
-      })
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member?.antaraId])
-
-  const getTableData = async () => {
-    const [vitalsData, bloodPressureData, bloodSugarData] =
-      await Promise.allSettled([getVitalsData(), getBpData(), getBsData()])
-
-    if (vitalsData.status === 'fulfilled') {
-      setVitals(vitalsData.value)
-    } else {
-      setVitalsError(vitalsData.reason)
-    }
-
-    if (bloodPressureData.status === 'fulfilled') {
-      setBloodPressure(bloodPressureData.value)
-    } else {
-      setBloodPressureError(bloodPressureData.reason)
-    }
-
-    if (bloodSugarData.status === 'fulfilled') {
-      setBloodSugar(bloodSugarData.value)
-    } else {
-      setBloodSugarError(bloodSugarData.reason)
-    }
-  }
-
-  useEffect(() => {
-    getTableData().catch((err) => {
-      logError(err)
-    })
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member?.antaraId])
 
   return {
-    loading: vitalsLoading || loadingRanges,
-    vitalsError: vitalsError || vitalError,
-    bpError: bpError || bloodPressureError,
-    refetchVitalsData,
-    vitals,
-    bloodPressure,
-    bpLoading: bpLoading || loadingRanges,
-    refetchBpData,
-    refetchBsData,
-    bloodSugar,
-    bloodSugarLoading: bsLoading || loadingRanges,
-    bloodSugarError: bsError || bloodSugarError,
     loadingRanges,
     getRanges,
+    getBpData,
+    getBsData,
+    getVitalsData,
   }
 }

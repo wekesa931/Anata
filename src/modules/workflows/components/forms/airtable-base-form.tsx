@@ -12,6 +12,7 @@ import { useAirtableMeta } from 'src/context/airtable-meta'
 import CalendlyLink from 'src/modules/workflows/components/forms/calendly-link'
 import { LoadingButton } from '@mui/lab'
 import { useNotifications } from 'src/context/notifications'
+import { triggerRefresh } from 'src/services/observers'
 import { TaskDefinition } from 'src/modules/tasks/types'
 import { useModuleAnalytics } from 'src/modules/analytics'
 
@@ -126,6 +127,7 @@ function AirtableBasedForm({
 
       await submitForm(form, formSchema, formattedPayload, workflow)
       setIsFormDraft(false)
+      triggerRefresh(form.name) // refreshes the display data
       trackFormSaved(form.name, form.workflow?.workflowId)
       handleSubmissionSuccess(false) // ensures that the draft is saved again post submission
     } catch (e) {

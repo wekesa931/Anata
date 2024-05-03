@@ -8,25 +8,31 @@ import Loading from 'src/components/loaders/centered'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import { withCustomBmiDot } from 'src/modules/vitals/components/custom-bmi-dot'
 import { getTickCount, getTimeFormat } from 'src/modules/vitals/utils'
+import {
+  BS_OBSERVER,
+  useClustersObserver,
+} from 'src/modules/vitals/services/observers'
 import { HealthMetricNames, ReferenceDomain } from '../../types/clusters.types'
 
 dayjs.extend(advancedFormat)
 
 function HBA1CView() {
-  const { getHba1cClusters, isLoading, getRanges } = useClustersData()
-  const [data, setData] = useState<any[]>([])
+  const { getHba1cClusters, getRanges, isLoading } = useClustersData()
   const [xDomain, setXDomain] = useState<[number, number]>([
     dayjs().subtract(1, 'month').valueOf(),
     dayjs().valueOf(),
   ])
-  const [currentTimeFilter, setCurrentTimeFilter] = useState<TimeFilters>(
-    TimeFilters.ONE_MONTH
-  )
 
   const [references, setReferences] = useState<ReferenceDomain>({
     domain: [0, 100],
     referenceRanges: [],
   })
+  const {
+    loading,
+    clusters,
+    currentTimeFilter,
+    updateRangeFilterControls: setRangeFilterControls,
+  } = useClustersObserver(BS_OBSERVER, getHba1cClusters)
 
   useEffect(() => {
     getRanges(HealthMetricNames.HbA1c).then((res) => {
@@ -38,12 +44,8 @@ function HBA1CView() {
 
   const handleTimeRangeChange = (range: TimeRange, filter: TimeFilters) => {
     if (range[0] === null || range[1] === null) return
-    setCurrentTimeFilter(filter)
+    setRangeFilterControls({ range, filter })
     setXDomain([range[0].valueOf(), range[1].valueOf()])
-
-    getHba1cClusters(range, currentTimeFilter).then((bmi) => {
-      setData(bmi)
-    })
   }
   const chartType = 'HB1AC'
 
@@ -55,19 +57,19 @@ function HBA1CView() {
   return (
     <div>
       <TimeRangeFilter onRangeChange={handleTimeRangeChange} type={chartType} />
-      {isLoading ? (
+      {loading || isLoading ? (
         <div className="h-[300px]">
           <Loading message="Loading HbA1c Data ..." />
         </div>
       ) : (
         <div className="relative">
-          {!data.length ? (
+          {!clusters.length ? (
             <div className="flex flex-col items-center justify-center h-[300px]">
               <p className="text-gray-400">No HbA1c Data within this period</p>
             </div>
           ) : (
             <LineSeriesChat
-              data={data}
+              data={clusters}
               xAxisDataKey={{
                 formatter: getTimeFormat(currentTimeFilter),
                 key: 'timestamp',

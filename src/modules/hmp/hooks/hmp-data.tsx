@@ -5,21 +5,10 @@ import { Collection, Q } from '@nozbe/watermelondb'
 import type { HMP } from 'src/modules/hmp/db/models'
 import { CollectionType } from 'src/storage/types'
 import type { Member } from 'src/modules/member/db/models'
-import { HMPType } from 'src/modules/hmp/types'
 import { logError } from 'src/utils/logging/logger'
 import { useHmpApi } from 'src/modules/hmp/services/hmp.api'
-
-const buildHmp = (hmp: HMP, data: HMPType) => {
-  hmp.antaraId = data.antaraId
-  hmp.hmpDay = data?.hmpDay
-  hmp.hmpSendDate = data?.hmpSendDate
-  hmp.hmpNumber = data?.hmpNumber
-  hmp.hmpLastReviewDate = data?.hmpLastReviewDate
-  hmp.hmpLink = data?.hmpLink
-  hmp.hmpState = data?.hmpState
-  // eslint-disable-next-line no-underscore-dangle
-  hmp._raw.id = data.id
-}
+import { buildHmp } from 'src/modules/hmp/utils'
+import { HMPObserver } from 'src/services/observers'
 
 export const useHmpData = () => {
   const { member } = useMember()
@@ -125,25 +114,37 @@ export const useHmpData = () => {
     }
   }
 
+  const hydrateAndLoadHmps = async (currentMember: Member) => {
+    try {
+      setLoading(true)
+      await hydrateHmps(currentMember)
+      await getHmpsFromDb(currentMember?.antaraId)
+    } catch (error) {
+      logError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     setLoading(true)
     if (member) {
-      hydrateHmps(member)
-        .then(() => {
-          getHmpsFromDb(member?.antaraId)
-        })
-        .catch(logError)
-        .finally(() => {
-          setLoading(false)
-        })
+      hydrateAndLoadHmps(member)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member])
 
-  // useEffect(() => {
-  //   deleteAllHmps()
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [])
+  useEffect(
+    () => {
+      if (member) {
+        HMPObserver.subscribe(() => {
+          hydrateAndLoadHmps(member)
+        })
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [member]
+  )
 
   return {
     loading: loading || isLoading,
