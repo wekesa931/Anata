@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
   stampImage: {
     height: '80%',
     width: '100',
+    objectFit: 'contain',
   },
   textDivider: {
     fontSize: 9,
@@ -110,7 +111,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '70%',
   },
   prescriptionsSection: {
     marginTop: 4,

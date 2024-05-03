@@ -102,24 +102,18 @@ export const usePrescriptionsAPI = () => {
     return medicationList
   }
 
-  const fetchConsultationData = async (member: any) => {
+  const fetchConsultationData = async () => {
     const allowedFields = [
-      'Date of Consultation',
-      'Interaction type',
-      'Consultation Type',
       'Created',
-      'Record ID (from Appointments)',
       'Status (from Appointments)',
-      "Doctor's Name",
-      'created_by',
       'Prescriptions',
-      'Antara ID (from Member)',
-      'Case ID',
     ]
     const memberConsultation = await airtableFetch(
-      `clinicalconsultation/list?&filterByFormula=FIND("${
+      `clinicalconsultation/list?&filterByFormula=AND(FIND("${
         member?.antaraId
-      }", {Antara ID (from Member)})&${filterFields(allowedFields)}`
+      }", {Antara ID (from Member)}), {Status (from Appointments)} != "Completed")&${filterFields(
+        allowedFields
+      )}`
     )
 
     const filteredConsultationData = memberConsultation.filter(
