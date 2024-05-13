@@ -1,15 +1,11 @@
 import { RawMedicationRecord, CustomMedication } from '../types'
+import { getMedicationName } from './index'
 
 export const transformMedicationRecord = (
   record: RawMedicationRecord
 ): CustomMedication => {
-  const medicationName =
-    record['Medication Name (from Medication Base)'] ||
-    record['Other Medication'] ||
-    'Other'
-
   return {
-    label: Array.isArray(medicationName) ? medicationName[0] : medicationName,
+    label: getMedicationName(record),
     value: record['Record ID'],
   }
 }

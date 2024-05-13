@@ -45,18 +45,18 @@ function MedicationListing({
     return (
       <div className="bg-[#FFFFFF] border border-solid border-[#444444] p-3 rounded-2xl mb-3 flex justify-between">
         <div className="w-[90%]">
-          <h1 className="font-medium text-[#222222] text-sm">
+          <h1 className="font-medium text-[#222222] text-sm ml-2">
             {medication.brandName
               ? `${medication.medicationName}  |  ${medication.brandName}`
               : medication.medicationName}
           </h1>
-          <div className="flex justify-between mt-3 text-xs leading-8 w-[60%]">
+          <div className="flex justify-start mt-3 text-xs leading-8">
             {sections.map((section, index) => (
               <React.Fragment key={index}>
                 {index > 0 && section.value && (
                   <div className="border-r border-solid border-[#777777] m-2" />
                 )}
-                <section>
+                <section className="ml-2 mr-2">
                   <p className="text-dark-blue-50 uppercase">{section.value}</p>
                 </section>
               </React.Fragment>

@@ -19,18 +19,21 @@ export const usePrescriptionsAPI = () => {
     ]
 
     let filterFormula = ''
+    const baseFilter = `{Status} = "ONGOING" , {Refillable} = "Yes"`
 
     if (!prescriptions) {
-      filterFormula = `AND(FIND("${member?.airtableRecordId}", {Member Record ID}), {Status} != "STOPPED")`
+      filterFormula = `AND(FIND("${member?.airtableRecordId}", {Member Record ID}), ${baseFilter})`
     } else {
-      filterFormula = `OR(${prescriptions
+      filterFormula = `AND(OR(${prescriptions
         .map((prescriptionId) => `FIND("${prescriptionId}", {Record ID})`)
-        .join(',')})`
+        .join(',')}),  ${baseFilter})`
     }
     const records = await airtableFetch(
       `medications/list?&filterByFormula=${encodeURIComponent(
         filterFormula
-      )}&${filterFields(medicationFields)}`
+      )}&${filterFields(
+        medicationFields
+      )}&sort=[{"field":"created_at", "direction":"desc"}]`
     )
     const medicationList: Array<CustomMedication> = records.map(
       (record: RawMedicationRecord) => transformMedicationRecord(record)
@@ -75,7 +78,7 @@ export const usePrescriptionsAPI = () => {
 
     const medicationList = records.map((record: any) => {
       const medicationName = getMedicationName(record)
-      const medicationInstructions = record.Instructions || 'As Directed'
+      const medicationInstructions = record.Instructions
       const refillableStatus =
         record.Refillable === 'Yes' ? 'Refillable' : 'Not Refillable'
 

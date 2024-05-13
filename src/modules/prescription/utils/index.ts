@@ -3,13 +3,19 @@ import dayjs from 'dayjs'
 export const getMedicationName = (record: any): string => {
   const medicationBaseName = record['Medication Name (from Medication Base)']
   if (Array.isArray(medicationBaseName) && medicationBaseName.length > 0) {
+    if (medicationBaseName[0].toLowerCase() === 'other') {
+      return (
+        record['Molecule Name (from Clean Molecule) (from Medication)'] ||
+        record['Other Medication'] ||
+        'Other'
+      )
+    }
     return medicationBaseName[0]
   }
 
   return (
     record['Molecule Name (from Clean Molecule) (from Medication)'] ||
-    record['Other Medication'] ||
-    'Other'
+    record['Other Medication']
   )
 }
 
