@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
     color: '#444444',
     fontWeight: 700,
     lineHeight: 2,
+    marginLeft: 2,
   },
   textHighlight: {
     color: '#007AFF',
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     fontWeight: 700,
   },
   stampImage: {
-    height: '80%',
+    maxHeight: '80%',
     width: '100',
     objectFit: 'contain',
   },
@@ -99,6 +100,8 @@ const styles = StyleSheet.create({
   textLabel: {
     fontSize: 9,
     color: '#333333',
+    marginLeft: 2,
+    marginRight: 2,
   },
   medicationLabel: {
     backgroundColor: '#FFFFFF',
@@ -127,9 +130,8 @@ const styles = StyleSheet.create({
   },
   medicationsView: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     marginTop: 4,
-    width: '70%',
   },
 })
 
