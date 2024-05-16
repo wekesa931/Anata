@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginLeft: 2,
     marginRight: 2,
+    marginBottom: 8,
   },
   medicationLabel: {
     backgroundColor: '#FFFFFF',
@@ -130,8 +131,9 @@ const styles = StyleSheet.create({
   },
   medicationsView: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
     marginTop: 4,
+    maxWidth: '100%',
   },
 })
 

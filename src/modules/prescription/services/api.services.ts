@@ -19,14 +19,13 @@ export const usePrescriptionsAPI = () => {
     ]
 
     let filterFormula = ''
-    const baseFilter = `{Status} = "ONGOING" , {Refillable} = "Yes"`
 
     if (!prescriptions) {
-      filterFormula = `AND(FIND("${member?.airtableRecordId}", {Member Record ID}), ${baseFilter})`
+      filterFormula = `AND(FIND("${member?.airtableRecordId}", {Member Record ID}))`
     } else {
       filterFormula = `AND(OR(${prescriptions
         .map((prescriptionId) => `FIND("${prescriptionId}", {Record ID})`)
-        .join(',')}),  ${baseFilter})`
+        .join(',')}))`
     }
     const records = await airtableFetch(
       `medications/list?&filterByFormula=${encodeURIComponent(
@@ -114,9 +113,7 @@ export const usePrescriptionsAPI = () => {
     const memberConsultation = await airtableFetch(
       `clinicalconsultation/list?&filterByFormula=AND(FIND("${
         member?.antaraId
-      }", {Antara ID (from Member)}), {Status (from Appointments)} != "Completed")&${filterFields(
-        allowedFields
-      )}`
+      }", {Antara ID (from Member)}))&${filterFields(allowedFields)}`
     )
 
     const filteredConsultationData = memberConsultation.filter(
