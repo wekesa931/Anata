@@ -34,6 +34,7 @@ type Props = {
   generatePDFCustomBtn?: React.ReactNode
   modalLabel?: string
   startTime?: any
+  createReviewTask?: boolean
 }
 
 function PdfPreview({
@@ -49,6 +50,7 @@ function PdfPreview({
   generatePDFCustomBtn,
   modalLabel,
   startTime,
+  createReviewTask = true,
 }: Props) {
   const { member } = useMember()
 
@@ -89,6 +91,9 @@ function PdfPreview({
     }
   }
 
+  const createDocumentReviewTask = () =>
+    createReviewTask && createTaskFromTemplate(TaskDefinitionTypes.NewDocument)
+
   const handleSaveReport = () => {
     setLoading(true)
 
@@ -99,7 +104,7 @@ function PdfPreview({
           const documentId = res?.data?.id?.toString()
           setFileId(documentId)
           trackNewDocumentGenerated(docMeta, true)
-          createTaskFromTemplate(TaskDefinitionTypes.NewDocument)
+          createDocumentReviewTask()
           prescriptionGenerationEvent()
         })
         setTimeout(() => {

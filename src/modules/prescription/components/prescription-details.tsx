@@ -171,6 +171,7 @@ function PrescriptionDetailsView({
           modalLabel="Prescription generation"
           generatePDFCustomBtn={customButton}
           startTime={startTime}
+          createReviewTask={false}
         >
           <PrescriptionGenerationView
             prescriptionMedications={prescriptionMedications}
