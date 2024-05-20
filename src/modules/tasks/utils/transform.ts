@@ -19,7 +19,7 @@ const mapRawTaskToUserTask = (rawTask: RawUserTask): UserTask => {
     return undefined
   }
   return {
-    type: rawTask.Type,
+    task_definition: extractFromArray(rawTask.Type),
     due_date: rawTask['Due Date'],
     notes: rawTask['Task Notes'],
     status: rawTask.Status,

@@ -1,23 +1,21 @@
 import { GetFieldOptionsFn } from 'src/context/airtable-meta'
 import AirtableField from 'src/types/airtable-field'
 
-type Option = {
-  label: string
-  value: string
-}
-
 const getTaskFields = (
   allAntaraStaffs: any[],
-  getFieldOptions: GetFieldOptionsFn
+  getFieldOptions: GetFieldOptionsFn,
+  taskDefinition: any[]
 ) => {
-  const types: Option[] = (
-    (getFieldOptions('HN Tasks', 'Type') || []) as Option[]
-  ).sort((a, b) => a.label.localeCompare(b.label))
   const TASK_FIELDS: AirtableField[] = [
     {
-      name: 'Type',
+      name: 'Task definition',
       type: 'single-select',
-      options: types,
+      options: taskDefinition
+        .map((taskDef) => ({
+          label: taskDef.clinicalPrefferedName,
+          value: taskDef.recordId,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
       disabled: true,
     },
     {

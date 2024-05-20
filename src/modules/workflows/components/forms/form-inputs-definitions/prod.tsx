@@ -3444,7 +3444,7 @@ export default [
         foreignTableId: null,
         required: true,
         helper:
-          'Please look for ICD10 codes here: <a href="https://icd10cmtool.cdc.gov/?fy=FY2023" target="_blank">https://icd10cmtool.cdc.gov/?fy=FY2023</a>\nand enter it in the field. Examples: I10 or E10 or E11',
+          'Please look for ICD10 codes here: <a href="https://icd.who.int/browse/2024-01/mms/en#1656445230" target="_blank">https://icd.who.int/browse/2024-01/mms/en#1656445230</a>\nand enter it in the field. Examples: I10 or E10 or E11',
       },
       {
         id: 'fldOxXWdy7eBWoaon',

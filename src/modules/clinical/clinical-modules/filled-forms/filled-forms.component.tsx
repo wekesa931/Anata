@@ -163,6 +163,14 @@ function FilledForms() {
               name: 'Lab/imaging management',
               data: response[forms.indexOf('labs')],
             },
+            {
+              name: 'Incident reports',
+              data: response[forms.indexOf('incident')],
+            },
+            {
+              name: 'Logistics Tasks',
+              data: response[forms.indexOf('logisticsTasks')],
+            },
           ]
           setFilledForms(formResponses)
         }

@@ -1,5 +1,5 @@
 export type UserTask = {
-  type: string
+  task_definition?: string
   due_date: string
   notes: string
   status: string
@@ -12,7 +12,7 @@ export type UserTask = {
 }
 
 export type RawUserTask = {
-  Type: string
+  Type?: string[]
   'Due Date': string
   'Task Notes': string
   Status: string

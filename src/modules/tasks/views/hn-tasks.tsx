@@ -54,7 +54,7 @@ function useTransformedApiRecords(rawApiRecords: any) {
       lastStatusChangedAt: 'Last Status changed at',
       formUrl: 'Open URL',
       reasonForCancellation: 'Reason for cancellation',
-      taskDefinition: 'Task Definition',
+      taskDefinition: 'Task definition',
     }
     // TODO: Replace this with a callback so that this custom hook
     // can be reused for other record types
@@ -288,7 +288,7 @@ function Tasks() {
   ] = useLazyQuery(GET_MEMBER_TASKS, {})
 
   const [taskFields, setTaskFields] = useState<AirtableField[]>([])
-  const { airtableMeta, getFieldOptions } = useAirtableMeta()
+  const { airtableMeta, getFieldOptions, taskDefinitions } = useAirtableMeta()
   const [selectedTasks, setSelectedTasks] = useState<CheckedItems>({})
   const [value, setValue] = React.useState<string>('active')
   const handleChange = (_: React.SyntheticEvent, newValue: string) => {
@@ -304,7 +304,11 @@ function Tasks() {
   useEffect(() => {
     if (airtableMeta) {
       setTaskFields(
-        getTaskFields(mapAssigneeToLookup(allAntaraStaffs), getFieldOptions)
+        getTaskFields(
+          mapAssigneeToLookup(allAntaraStaffs),
+          getFieldOptions,
+          taskDefinitions
+        )
       )
     }
 
@@ -326,7 +330,6 @@ function Tasks() {
   function StrikeThrough({ children }: any) {
     return <s className="text-disabled">{children}</s>
   }
-
   const includeFieldTypes = (data: { [x: string]: any }) => {
     return taskFields.map((field) => ({
       ...field,

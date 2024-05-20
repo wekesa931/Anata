@@ -287,6 +287,9 @@ function TasksModalContainer({
       showUpdateAppointment={
         selectedTasks?.some((task) => task?.Appointment) || false
       }
+      taskType={selectedTasks?.some((task) => {
+        return task?.Type?.includes('Appointment: Perform')
+      })}
     />
   )
 }

@@ -16809,7 +16809,7 @@ export default [
         foreignTableId: null,
         required: true,
         helper:
-          'Please look for ICD10 codes here: <a href="https://icdcodelookup.com/icd-10/codes" target="_blank">https://icdcodelookup.com/icd-10/codes</a>\nand enter it in the field. Examples: I10 or E10 or E11',
+          'Please look for ICD10 codes here: <a href="https://icd.who.int/browse/2024-01/mms/en#1656445230" target="_blank">https://icd.who.int/browse/2024-01/mms/en#1656445230</a>\nand enter it in the field. Examples: I10 or E10 or E11',
       },
       {
         id: 'fldxLWSXo9I3cpHJm',

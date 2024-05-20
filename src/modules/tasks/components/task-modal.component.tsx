@@ -65,6 +65,7 @@ type ListModalProps = {
   setModalOpen: (value: boolean) => void
   retryFailedTasks: () => void
   showUpdateAppointment: boolean
+  taskType: boolean
 }
 function ModalHeader({
   modalTitle,
@@ -103,6 +104,7 @@ function ListModalView({
   retryFailedTasks,
   setModalOpen,
   showUpdateAppointment,
+  taskType,
 }: ListModalProps) {
   const [editMode, setEditMode] = useState(true)
   const { airtableMeta, getFieldOptions } = useAirtableMeta()
@@ -188,7 +190,7 @@ function ListModalView({
                       required={false}
                     />
                   </div>
-                  {showUpdateAppointment ? (
+                  {showUpdateAppointment && taskType ? (
                     <div className="mb-3 flex items-center ">
                       <Checkbox
                         checked={checkboxes.rescheduleApptCheck}
