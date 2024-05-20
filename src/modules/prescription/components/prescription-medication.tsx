@@ -54,7 +54,7 @@ function MedicationListing({
             {sections.map((section, index) => (
               <React.Fragment key={index}>
                 {index > 0 && section.value && (
-                  <div className="border-r border-solid border-[#777777] m-2" />
+                  <div className="border-r border-solid border-[#777777] m-1" />
                 )}
                 <section className="ml-2 mr-2">
                   <p className="text-dark-blue-50 uppercase">{section.value}</p>

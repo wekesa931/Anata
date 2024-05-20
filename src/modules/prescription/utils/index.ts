@@ -22,3 +22,15 @@ export const getMedicationName = (record: any): string => {
 export const formatDate = (dateString: any): string => {
   return dayjs(dateString).format('hh:mma  YYYY-MM-DD')
 }
+
+export const getRoute = (record: any): string => {
+  return record.Route.toLowerCase() === 'other'
+    ? record['Other route']
+    : record.Route
+}
+
+export const getFrequency = (record: any): string => {
+  return record.Frequency.toLowerCase() === 'other'
+    ? record['Other frequency']
+    : record.Frequency
+}

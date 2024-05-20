@@ -3,7 +3,7 @@ import filterFields from 'src/utils/airtable/field-utils'
 import { useMember } from 'src/context/member'
 import { transformMedicationRecord } from '../utils/transform'
 import { RawMedicationRecord, CustomMedication } from '../types'
-import { getMedicationName, formatDate } from '../utils'
+import { getMedicationName, formatDate, getFrequency, getRoute } from '../utils'
 
 export const usePrescriptionsAPI = () => {
   const { member } = useMember()
@@ -59,6 +59,8 @@ export const usePrescriptionsAPI = () => {
       'Instructions',
       'Refillable',
       'Additional Instructions',
+      'Other route',
+      'Other frequency',
     ]
 
     const prescriptionValues = prescriptions.map(
@@ -87,8 +89,8 @@ export const usePrescriptionsAPI = () => {
         recordId: record['Record ID'],
         quantity: record.Quantity,
         unit: record['Quantity Units'],
-        frequency: record.Frequency,
-        route: record.Route,
+        frequency: getFrequency(record),
+        route: getRoute(record),
         duration: record.Duration,
         instructions: medicationInstructions,
         additionalInstructions: record['Additional Instructions'],
