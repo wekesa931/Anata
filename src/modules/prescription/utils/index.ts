@@ -24,13 +24,13 @@ export const formatDate = (dateString: any): string => {
 }
 
 export const getRoute = (record: any): string => {
-  return record.Route.toLowerCase() === 'other'
-    ? record['Other route']
-    : record.Route
+  const route = record.Route?.toLowerCase() ?? 'not provided'
+  return route === 'other' ? record['Other route'] : record?.Route || ''
 }
 
 export const getFrequency = (record: any): string => {
-  return record.Frequency.toLowerCase() === 'other'
+  const frequency = record.Frequency?.toLowerCase() ?? 'not provided'
+  return frequency === 'other'
     ? record['Other frequency']
-    : record.Frequency
+    : record?.Frequency || ''
 }
