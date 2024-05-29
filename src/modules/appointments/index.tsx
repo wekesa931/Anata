@@ -156,7 +156,8 @@ function Appointments() {
       const email = member?.email || ''
       const memberEmail = email || 'navigation@antarahealth.com'
       const memberPhone = member?.phone
-      const link = `https://calendly.com/antara-health?name=${urlName}&email=${memberEmail}&a1=${memberPhone}&utm_source=src-${user?.name}`
+      const antaraId = member?.antaraId
+      const link = `https://calendly.com/antara-health?name=${urlName}&email=${memberEmail}&a1=${memberPhone}&utm_source=src-${user?.name}&utm_content=${antaraId}`
 
       const newWindow = window.open(link, '_blank', 'noopener,noreferrer')
       if (newWindow) newWindow.opener = null
