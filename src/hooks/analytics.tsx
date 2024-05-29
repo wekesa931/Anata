@@ -2,7 +2,6 @@ import analytics from 'src/config/analytics'
 import { useUser } from 'src/context/user'
 import { Member } from 'src/modules/member/db/models'
 import { User } from 'src/types/user'
-import { useEffect } from 'react'
 
 type EventProperties = {
   staff: any
@@ -17,15 +16,6 @@ export const useAnalytics = (object?: string) => {
         staff: user,
       }
     : null
-
-  useEffect(() => {
-    return () => {
-      // reset to avoid detatched nodes
-      analytics.reset()
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
 
   return {
     track: (action: string, properties?: Record<string, unknown>) => {
