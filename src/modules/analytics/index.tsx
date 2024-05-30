@@ -285,11 +285,11 @@ export const useModuleAnalytics = () => {
         data
       )
     },
-    trackMissedTaskClicked: (data: any) => {
-      rightSectionAnalytics.track(
-        `missed button clicked for a single task`,
-        data
-      )
+    trackMissedTaskClicked: (data: any, tasksLength: any) => {
+      rightSectionAnalytics.track(`missed button clicked`, {
+        data,
+        tasksLength,
+      })
     },
     trackTemplateEdit: (item: any) => {
       rightSectionAnalytics.track(item)
@@ -326,12 +326,6 @@ export const useModuleAnalytics = () => {
     trackTaskCompletionForMultipleTasks: (data: any) => {
       rightSectionAnalytics.track(
         `complete button clicked for multiple tasks`,
-        data
-      )
-    },
-    trackMissedTaskClickedForMultipleTasks: (data: any) => {
-      rightSectionAnalytics.track(
-        `missed button clicked for multiple tasks`,
         data
       )
     },

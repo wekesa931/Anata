@@ -278,7 +278,6 @@ function Tasks() {
     trackActiveTasksSectionOpened,
     trackInActiveTasksSectionOpened,
     trackTaskCompletionForMultipleTasks,
-    trackMissedTaskClickedForMultipleTasks,
   } = useModuleAnalytics()
   const { handleDataUpdate } = useTaskModuleData()
 
@@ -491,8 +490,8 @@ function Tasks() {
     setModalOpen(true)
 
     // Track missed task clicked for all tasks
-    tasks.forEach((task) => trackMissedTaskClicked(task))
-    trackMissedTaskClickedForMultipleTasks(tasks)
+    tasks.forEach((task) => trackMissedTaskClicked(task, tasks.length))
+    trackMissedTaskClicked(tasks, tasks.length)
   }
 
   useEffect(() => {
