@@ -252,10 +252,9 @@ export const initialFormValues = (
       'BP Reading Type': isOnsite ? 'Ad hoc BP measurement' : null,
       'Type of reading': isOnsite ? 'Measured by Antara' : null,
     },
-    Baseline: {
+    'Health Check': {
       'Health Navigator': [user.userAirtableId],
       Gender: member?.sex,
-      'Is the BN a minor': member?.isMinor ? 'Yes' : 'No',
       'Date of baseline': dayjs().format('YYYY-MM-DD'),
     },
     Vitals: {
@@ -415,7 +414,7 @@ export const formNames: Record<string, string> = {
   'BP Mon': 'BP Monitoring',
   'CHL Mon': 'CHL Monitoring',
   'DM Mon': 'DM Monitoring',
-  Baseline: 'Baseline',
+  'Health Check': 'Health Check',
   Conditions: 'Condition Diagnosis',
   'Conditions Data tracking': 'Conditions Data Tracking',
   HIF: 'HIF',

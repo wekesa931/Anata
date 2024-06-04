@@ -94,7 +94,7 @@ function FilledForms() {
           setFilledForms([])
         } else {
           const formResponses = [
-            { name: 'Baseline', data: response[forms.indexOf('baseline')] },
+            { name: 'Health Check', data: response[forms.indexOf('baseline')] },
             { name: 'HIF', data: response[forms.indexOf('hif')] },
             {
               name: 'Nutritional Consultation',

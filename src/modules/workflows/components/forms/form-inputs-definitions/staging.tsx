@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 
 export default [
   {
-    name: 'Baseline',
+    name: 'Health Check',
     id: 'tblQKOtAe0RqE5KFn',
     formId: 'shrTABmC46zid89Uh',
     fields: [
@@ -78,20 +78,6 @@ export default [
         helper: '',
       },
       {
-        id: 'fld6JKnsLi3zmxK4T',
-        name: 'Is the BN a minor',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
         id: 'flduy9NCClJwBE00p',
         name: 'Interaction type',
         type: 'select',
@@ -148,7 +134,7 @@ export default [
       },
       {
         id: 'flddZHssUatiOZXKL',
-        name: 'PMH - Past Medical History',
+        name: 'Past Medical/Surgical History',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -174,13 +160,40 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'PMH',
+        parentKey: 'Past Medical/Surgical History',
         parentValues: ['Yes'],
         condition: (values: any) => {
-          if (Array.isArray(values.PMH)) {
-            return ['Yes'].some((r) => values.PMH.includes(r))
+          if (Array.isArray(values['Past Medical/Surgical History'])) {
+            return ['Yes'].some((r) =>
+              values['Past Medical/Surgical History'].includes(r)
+            )
           }
-          return ['Yes'].includes(values.PMH)
+          return ['Yes'].includes(values['Past Medical/Surgical History'])
+        },
+      },
+      {
+        id: 'fldgx2GVBMeyYC4h5',
+        name: 'Describe any medical/surgical history',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Past Medical/Surgical History',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Past Medical/Surgical History'])) {
+            return ['Yes'].some((r) =>
+              values['Past Medical/Surgical History'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Past Medical/Surgical History'])
         },
       },
       {
@@ -373,45 +386,6 @@ export default [
             )
           }
           return ['Out of school'].includes(values['Educational Status'])
-        },
-      },
-      {
-        id: 'fldiCb2egrjuvp9wF',
-        name: 'Have you ever had surgery',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldgx2GVBMeyYC4h5',
-        name: 'Please describe any surgeries you may have had?',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Have you ever had surgery',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Have you ever had surgery'])) {
-            return ['Yes'].some((r) =>
-              values['Have you ever had surgery'].includes(r)
-            )
-          }
-          return ['Yes'].includes(values['Have you ever had surgery'])
         },
       },
       {
@@ -1951,53 +1925,6 @@ export default [
         },
       },
       {
-        id: 'fldWm6rmjATY4WQFS',
-        name: 'Access to a gym',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '"Do you have access to a gym or currently have a gym membership?"',
-        conditionType: '',
-        parentKey: 'Is the BN a minor',
-        parentValues: ['No'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Is the BN a minor'])) {
-            return ['No'].some((r) => values['Is the BN a minor'].includes(r))
-          }
-          return ['No'].includes(values['Is the BN a minor'])
-        },
-      },
-      {
-        id: 'fldMTns5CJz3iLFUM',
-        name: 'Gym usage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: 'Are you using to the gym?',
-        conditionType: '',
-        parentKey: 'Access to a gym',
-        parentValues: ['True'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Access to a gym'])) {
-            return ['True'].some((r) => values['Access to a gym'].includes(r))
-          }
-          return ['True'].includes(values['Access to a gym'])
-        },
-      },
-      {
         id: 'fld9uHzUEN0N1vQbO',
         name: 'Social History',
         type: 'multiSelect',
@@ -2330,54 +2257,6 @@ export default [
           'Risk factors include a family history, prior abnormal readings, smoking, eating habits etc.\n\nIf the response is yes, click here: \n<a href="https://airtable.com/shreJWFrTNVXs6RKW" target="_blank">https://airtable.com/shreJWFrTNVXs6RKW</a> ',
       },
       {
-        id: 'fldh6jX8FztBouh0T',
-        name: 'If you could work on one aspect of your health?',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'IF NOT PRE-FILLED:\n"Have you ever thought about personal health goals? \nDo you have any?\nIs there any aspect of your health that you’d like to work on or work towards?  \nIt’s okay if you don’t have an answer right now. If something comes to mind, you can always reach out to me and we can talk about how I can help."\n\nIF PRE-FILLED:\n"It is great that you want to work on [insert health goal]. \nHave you already started to work towards, [insert health goal]?\nWere you able to achieve the goal? \nWhat was it like trying to reach that goal?"\n\nIF SUCCEEDED: \n"Do you have any new goals you would like to achieve now?\nWonderful, let’s work together on that"\n\nIF FAILED:\n"Would you like to keep trying with my support?"\n\nIf it is a nutritional goal, tell the member you will set up an appointment with the nutritionist.\nIf fitness, sell the virtues of the Nike app if non-gym type. If gym type, find out what they would like to achieve and walk them through how you will support them to achieve the goal. ',
-      },
-      {
-        id: 'fldAxV875t3dDatQF',
-        name: 'Other health goals',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'If you could work on one aspect of your health?',
-        parentValues: ['Other'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['If you could work on one aspect of your health?']
-            )
-          ) {
-            return ['Other'].some((r) =>
-              values[
-                'If you could work on one aspect of your health?'
-              ].includes(r)
-            )
-          }
-          return ['Other'].includes(
-            values['If you could work on one aspect of your health?']
-          )
-        },
-      },
-      {
         id: 'fldencAWEJaRGxdCh',
         name: 'Mental Health Phase',
         type: 'select',
@@ -2470,55 +2349,6 @@ export default [
         foreignTableId: null,
         required: false,
         helper: 'Fill in the Primary doctor not found',
-      },
-      {
-        id: 'fldhKJ7vAc79y1sWR',
-        name: 'Does the beneficiary require Ancillary services?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'HN makes a determination regarding the need for additional services on the basis of the responses to prior questions',
-      },
-      {
-        id: 'fld34icr6Q9NBiJ50',
-        name: 'Ancillary Services',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '[If you need to book any appointments with Antara (Nutrition, Mental Health, Virtual Consult, Physio...) please go to the members view in Scribe and use the Calendly links (buttons)]',
-        conditionType: '',
-        parentKey: 'Does the beneficiary require Ancillary services?',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Does the beneficiary require Ancillary services?']
-            )
-          ) {
-            return ['Yes'].some((r) =>
-              values[
-                'Does the beneficiary require Ancillary services?'
-              ].includes(r)
-            )
-          }
-          return ['Yes'].includes(
-            values['Does the beneficiary require Ancillary services?']
-          )
-        },
       },
       {
         id: 'fldse3MLimCctR0HA',
@@ -2615,20 +2445,6 @@ export default [
       {
         id: 'fld7favH3DrAxdLqY',
         name: 'What is your preferred time for communication',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fld3YXedBQKWsZpw3',
-        name: 'How to share your plan?',
         type: 'select',
         format: '',
         isDateTime: false,

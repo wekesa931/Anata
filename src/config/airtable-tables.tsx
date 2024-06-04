@@ -2,7 +2,7 @@ const TABLE_ROUTES: Record<string, string> = {
   Members: 'members',
   HIF: 'hif',
   HMP: 'hmp',
-  Baseline: 'baseline',
+  'Health Check': 'baseline',
   Conditions: 'conditions',
   'VC condition diagnosis': 'conditions',
   'Conditions Data tracking': 'conditionsDataTracking',
