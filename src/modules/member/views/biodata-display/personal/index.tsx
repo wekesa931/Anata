@@ -5,6 +5,7 @@ import ContactsSection from 'src/modules/member/views/biodata-display/personal/c
 import StatusesSection from 'src/modules/member/views/biodata-display/personal/components/statuses'
 import AddressesSection from 'src/modules/member/views/biodata-display/personal/components/addresses'
 import DependentsSection from 'src/modules/member/views/biodata-display/personal/components/dependents'
+import BillingSection from 'src/modules/member/views/biodata-display/personal/components/billing'
 import type { Member } from 'src/modules/member/db/models'
 
 type PersonalSectionProps = {
@@ -18,6 +19,7 @@ function PersonalSection({ member }: PersonalSectionProps) {
       <SummarySection member={member} />
       <ContactsSection member={member} />
       <InsuranceSection member={member} />
+      <BillingSection member={member} />
       <AddressesSection member={member} />
       <DependentsSection member={member} />
     </div>

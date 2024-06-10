@@ -3,6 +3,8 @@ import {
   V2MemberType,
   PayorQueryType,
   PayorType,
+  MemberCohortType,
+  MemberCohortQueryType,
 } from 'src/modules/member/types'
 import { getAgeFull } from 'src/utils/date-time/helpers'
 
@@ -20,6 +22,32 @@ const parsePayor = (payor: PayorQueryType): PayorType => {
     type: payor?.payorType?.payorType,
     status: payor?.payorStatus?.payorStatus,
   }
+}
+
+export const parseMemberCohort = (
+  cohort: MemberCohortQueryType[]
+): MemberCohortType[] => {
+  return cohort?.map((c) => ({
+    name: c?.name,
+    billingStartedAt: c?.billingStartedAt,
+    skuRate: c?.skuRate,
+    billingFrequency: c?.billingFrequency,
+    subscriptionStatus: c?.subscriptionStatus,
+    isOptInRequired: c?.isOptInRequired,
+    optedInAt: c?.optedInAt,
+    optedOutAt: c?.optedOutAt,
+    nextBilledAt: c?.nextBilledAt,
+    billingMethod: c?.billingMethod,
+    activatedAt: c?.activatedAt,
+    activatedBy: c?.activatedBy,
+    pausedAt: c?.pausedAt,
+    pausedBy: c?.pausedBy,
+    cancelledAt: c?.cancelledAt,
+    cancelledBy: c?.cancelledBy,
+    remarks: c?.remarks,
+    billingEvents: c?.billingEvents,
+    revenueModelName: c?.revenueModelName,
+  }))
 }
 
 /**

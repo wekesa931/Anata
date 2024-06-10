@@ -285,3 +285,42 @@ export const CREATE_MEMBER = gql`
     }
   }
 `
+
+export const MEMBER_COHORT = gql`
+  query memberCohorts($antaraId: String!) {
+    memberCohorts(antaraId: $antaraId) {
+      edges {
+        node {
+          id
+          billingStartedAt
+          name
+          optedInAt
+          optedOutAt
+          isOptInRequired
+          subscriptionStatus
+          skuRate
+          nextBilledAt
+          billingFrequency
+          billingMethod
+          accreditedAntaraServices {
+            name
+          }
+          activatedAt
+          activatedBy
+          pausedAt
+          pausedBy
+          cancelledAt
+          cancelledBy
+          remarks
+          billingEvents {
+            amount
+            billingPeriodStartDate
+            billingPeriodEndDate
+            createdAt
+          }
+          revenueModelName
+        }
+      }
+    }
+  }
+`

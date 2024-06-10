@@ -9,6 +9,7 @@ import {
   EmployerType,
   RosterMemberType,
   PayorType,
+  MemberCohortType,
 } from 'src/modules/member/types'
 import dayjs from 'dayjs'
 import {
@@ -83,7 +84,8 @@ type MemberInfo = Partial<Record<keyof Member, any>>
 
 export const createOrUpdateMember = (
   member: Member,
-  memberData: V2MemberType
+  memberData: V2MemberType,
+  memberCohorts: MemberCohortType[]
 ) => {
   member.antaraId = memberData?.antaraId
   member.firstName = memberData?.firstName
@@ -128,6 +130,7 @@ export const createOrUpdateMember = (
   member.kenyaNationalId = memberData?.kenyaNationalId
   member.caregiverContact = mergeCaregiverContact(member, memberData)
   member.nhifNumber = memberData?.nhifNumber
+  member.membercohortSet = memberCohorts
 
   return member
 }
@@ -209,6 +212,8 @@ export class Member extends Model {
   @json('caregiver_contact', identityJson) caregiverContact?: CaregiverContact
 
   @text('nhif_number') nhifNumber?: string
+
+  @json('member_cohorts', identityJson) membercohortSet?: MemberCohortType[]
 
   @writer async destroy() {
     await super.destroyPermanently()
@@ -335,7 +340,7 @@ export class Member extends Model {
   @writer async reset() {
     // reset all the properties to their default values
     await this.update((member) => {
-      createOrUpdateMember(member, {} as V2MemberType)
+      createOrUpdateMember(member, {} as V2MemberType, [])
     })
   }
 

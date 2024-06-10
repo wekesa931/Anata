@@ -35,6 +35,34 @@ export type InsuranceCompanyType = {
   name?: string
   logo?: string
 }
+export type IndividualBillableEventType = {
+  amount: string
+  billingPeriodStartDate: string
+  billingPeriodEndDate: string
+  createdAt?: string
+}
+export type MemberCohortType = {
+  id?: string
+  name?: string
+  billingStartedAt?: string
+  optedInAt?: string
+  optedOutAt?: string
+  isOptInRequired?: string
+  subscriptionStatus?: string
+  skuRate?: string
+  nextBilledAt?: string
+  billingFrequency?: string
+  billingMethod?: string
+  activatedAt?: string
+  activatedBy?: string
+  pausedAt?: string
+  pausedBy?: string
+  cancelledAt?: string
+  cancelledBy?: string
+  remarks?: string
+  billingEvents?: IndividualBillableEventType[]
+  revenueModelName?: string
+}
 
 export type RosterMemberType = {
   rosterMemberId: number
@@ -62,6 +90,7 @@ export type RosterMemberType = {
     name: string
   }
   tags: string
+  memberCohort: MemberCohortType[]
 }
 
 export type PayorType = {
@@ -137,6 +166,7 @@ export type V2MemberType = {
   caregiverName?: string
   caregiverNumber?: string
   nhifNumber?: string
+  memberCohort?: MemberCohortType[]
 }
 
 type RawPhoneType = {
@@ -186,6 +216,29 @@ export type PayorQueryType = {
   payorStatus?: {
     payorStatus?: string
   }
+}
+
+export type MemberCohortQueryType = {
+  id?: string
+  billingStartedAt?: string
+  name?: string
+  optedInAt?: string
+  optedOutAt?: string
+  isOptInRequired?: string
+  subscriptionStatus?: string
+  skuRate?: string
+  nextBilledAt?: string
+  billingFrequency?: string
+  billingMethod?: string
+  activatedAt?: string
+  activatedBy?: string
+  pausedAt?: string
+  pausedBy?: string
+  cancelledAt?: string
+  cancelledBy?: string
+  remarks?: string
+  billingEvents?: IndividualBillableEventType[]
+  revenueModelName?: string
 }
 
 export type V2MemberQueryType = {
@@ -280,6 +333,11 @@ export type V2MemberQueryType = {
   otherDependents: V2MemberQueryType[]
   rosterMember: RosterMemberType[]
   payor: PayorQueryType
+  membercohortSet: {
+    edges: {
+      node: MemberCohortQueryType
+    }[]
+  }
 }
 
 export type BirthdateUpdateValues = {

@@ -11,6 +11,7 @@ import {
   MEMBER_DETAILS_QUERY,
   UPDATE_MEMBER_STAFF,
   CREATE_COMPANY,
+  MEMBER_COHORT,
 } from 'src/modules/member/services/gql'
 import type {
   BiodataValues,
@@ -376,5 +377,25 @@ export const useUpdateStatus = () => {
     loading,
     error,
     updateStatus,
+  }
+}
+
+export const useMemberCohorts = () => {
+  const [getData, { loading, error }] = useLazyQuery(MEMBER_COHORT)
+
+  const fetchMemberCohorts = async (antaraId: string) => {
+    const response = await getData({
+      variables: { antaraId },
+      context: {
+        clientName: 'v2',
+      },
+    })
+    return response
+  }
+
+  return {
+    fetchMemberCohorts,
+    loading,
+    error,
   }
 }

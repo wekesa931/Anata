@@ -33,7 +33,7 @@ function UpdateForm({
             className="text-blue-100 mr-2 font-rubik normal-case"
             onClick={handleOpen}
           >
-            Add
+            +<span> Add </span>
           </Button>
         </EmptyBlock>
       </div>

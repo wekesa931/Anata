@@ -6,6 +6,7 @@ type LayoutContextType = {
   contacts: any
   address: any
   insurance: any
+  billing: any
 }
 
 const LayoutContext = createContext<LayoutContextType>({
@@ -13,6 +14,7 @@ const LayoutContext = createContext<LayoutContextType>({
   contacts: null,
   address: null,
   insurance: null,
+  billing: null,
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -39,6 +41,12 @@ export function InsuranceSection({ children }: any) {
   return <div>{insurance}</div>
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function BillingSection({ children }: any) {
+  const { billing } = React.useContext(LayoutContext)
+  return <div>{billing}</div>
+}
+
 type MemberRegistrationLayoutProps = {
   children: any
   title: string
@@ -60,6 +68,8 @@ export function MemberRegistrationWizardLayout({
         acc.address = child.props.children
       } else if (child.type === InsuranceSection) {
         acc.insurance = child.props.children
+      } else if (child.type === BillingSection) {
+        acc.insurance = child.props.children
       }
       return acc
     },
@@ -79,6 +89,9 @@ export function MemberRegistrationWizardLayout({
           <AddressSection>{sections.address}</AddressSection>
         </WizardStep>
         <WizardStep label="Insurance & Employer">
+          <InsuranceSection>{sections.insurance}</InsuranceSection>
+        </WizardStep>
+        <WizardStep label="Billing and Service">
           <InsuranceSection>{sections.insurance}</InsuranceSection>
         </WizardStep>
       </Wizard>
