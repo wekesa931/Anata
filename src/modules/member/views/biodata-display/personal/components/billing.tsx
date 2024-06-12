@@ -20,6 +20,7 @@ import Tooltip from 'src/components/tooltip'
 import { GridCloseIcon } from '@mui/x-data-grid'
 import { format } from 'date-fns'
 import dayjs from 'dayjs'
+import EmptyDataIcon from 'src/assets/img/icons/empty-data.svg'
 
 function formatDate(dateString: any) {
   return format(new Date(dateString), 'MMMM yyyy')
@@ -234,9 +235,15 @@ function BillingSection({ member }: BillingSectionProps) {
         </div>
 
         {memberCohortDetails.length === 0 ? (
-          <div className="justify-center items-center flex w-full p-2">
-            <p className="text-dark-blue-50 font-rubik text-center text-xs">
-              This member is not in a cohort
+          <div className="flex flex-col justify-start items-center font-rubik my-2">
+            <EmptyDataIcon />
+            <p className="text-base font-medium">Missing cohort</p>
+            <p className="text-sm text-dark-blue-100">
+              {' '}
+              It seems like this member does not belong to a billing cohort
+            </p>
+            <p className="text-sm text-dark-blue-100">
+              Please resolve that and check back
             </p>
           </div>
         ) : (
