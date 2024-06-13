@@ -144,6 +144,7 @@ export type FormField = {
   conditionalOptions?: boolean
   prefills?: (name: string, value: any, airtableMetaData: any) => any
   filterResponse: (response: any[]) => any[]
+  hide?: boolean
 }
 
 export type FormMeta = {

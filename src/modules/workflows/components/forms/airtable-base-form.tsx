@@ -163,8 +163,7 @@ function AirtableBasedForm({
         })
       }
     })
-
-    return returnFields
+    return returnFields.filter((f: any) => !f?.field?.hide)
   }
 
   const generateFromState = () => {

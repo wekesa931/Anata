@@ -256,6 +256,7 @@ export const initialFormValues = (
       'Health Navigator': [user.userAirtableId],
       Gender: member?.sex,
       'Date of baseline': dayjs().format('YYYY-MM-DD'),
+      'Is the BN a minor': member?.isMinor ? 'Yes' : 'No',
     },
     Vitals: {
       Staff: isOnsite
@@ -314,7 +315,10 @@ export const initialFormValues = (
     },
     'Prescriptions VC': {
       'Start Date': todayFormattedDate(new Date()),
-      'Prescribing facility from Provider base': ['recnjX3KGmGvKv7Ek'],
+      'Prescribing facility from Provider base':
+        process.env.PROD === 'true'
+          ? ['recnjX3KGmGvKv7Ek']
+          : ['recFp5U0cAetcColo'],
     },
     'Healthy triage form': {
       Gender: member?.sex,

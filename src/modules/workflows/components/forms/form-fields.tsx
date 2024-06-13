@@ -147,6 +147,7 @@ function WorkflowFormsFields({
           error={error}
         />
       )
+
     case 'multiSelect':
     case 'multipleSelects':
       if (airtableMeta) {

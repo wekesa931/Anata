@@ -290,6 +290,9 @@ function Tasks() {
   const { airtableMeta, getFieldOptions, taskDefinitions } = useAirtableMeta()
   const [selectedTasks, setSelectedTasks] = useState<CheckedItems>({})
   const [value, setValue] = React.useState<string>('active')
+  const [isCompletingTasks, setIsCompletingTasks] = useState<string | boolean>(
+    false
+  )
   const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
     if (newValue === 'active') {
@@ -385,6 +388,8 @@ function Tasks() {
   }
 
   const handleTaskCompletion = async (taskIds: string[]) => {
+    setIsCompletingTasks(taskIds.length ? taskIds[0] : false)
+
     const updatedTasks = taskIds.map((taskId) => ({
       id: taskId,
       fields: {
@@ -409,6 +414,7 @@ function Tasks() {
         notify(error?.message || 'Something went wrong')
       })
       .finally(() => {
+        setIsCompletingTasks(false)
         refetchTasks()
         setSelectedTasks({}) // Clear selected tasks after completion
       })
@@ -561,15 +567,19 @@ function Tasks() {
                   {allActive(hnTask.Status) &&
                     Object.values(selectedTasks).every((c) => !c?.selected) && (
                       <>
-                        <Tooltip title="Complete Task">
-                          <DoneIcon
-                            className="bg-[#ebfbed]  text-[#34c759]  w-8 h-9 rounded-sm mr-2"
-                            onClick={(e) => {
-                              e?.stopPropagation()
-                              handleTaskCompletion([hnTask.recordid])
-                            }}
-                          />
-                        </Tooltip>
+                        {isCompletingTasks === hnTask.recordid ? (
+                          <LoadingIcon className="bg-white-100 w-8 h-9" />
+                        ) : (
+                          <Tooltip title="Complete Task">
+                            <DoneIcon
+                              className="bg-[#ebfbed]  text-[#34c759]  w-8 h-9 rounded-sm mr-2"
+                              onClick={(e) => {
+                                e?.stopPropagation()
+                                handleTaskCompletion([hnTask.recordid])
+                              }}
+                            />
+                          </Tooltip>
+                        )}
                         <Tooltip title="Missed Task">
                           <CachedIcon
                             className="bg-[#fff5e5] text-[#ff9500] w-8 h-9 rounded-sm mr-2"
@@ -707,7 +717,7 @@ function Tasks() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mergedRecords, selectedTasks])
+  }, [mergedRecords, selectedTasks, isCompletingTasks])
 
   const getTaskNotes = (record: any) => {
     if (record.Status !== 'Complete') {
@@ -781,10 +791,22 @@ function Tasks() {
                               ).filter((taskId) => selectedTasks[taskId])
                               handleTaskCompletion(checkedTaskIds)
                             }}
-                            className="flex items-center bg-[#34c759] text-[#ebfbed] h-[35px] p-[3px] rounded mr-2"
+                            className={`flex items-center text-[#ebfbed] h-[35px] p-[3px] rounded mr-2 ${
+                              isCompletingTasks
+                                ? 'bg-white-100'
+                                : 'bg-[#34c759]'
+                            }`}
                           >
-                            <DoneIcon />
-                            <span className="font-bold text-base">Done</span>
+                            {isCompletingTasks ? (
+                              <LoadingIcon />
+                            ) : (
+                              <>
+                                <DoneIcon />
+                                <span className="font-bold text-base">
+                                  Done
+                                </span>
+                              </>
+                            )}
                           </button>
                         </Tooltip>
 
