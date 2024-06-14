@@ -775,14 +775,14 @@ function Tasks() {
                   />
                 </TabList>
               </div>
-              <div className="flex justify-between items-center font-rubik font-medium mt-3">
+              <div className="flex justify-between items-center font-rubik font-medium mt-3 ">
                 {value === 'active' &&
                   Object.values(selectedTasks).some((c) => !!c?.selected) && (
                     <>
-                      <p className="text-dark-blue-50 mr-2">
+                      <p className="text-dark-blue-50 mr-2 whitespace-pre-wrap">
                         Mark selected tasks as
                       </p>
-                      <button className="flex w-3 justify-end">
+                      <button className="flex justify-end">
                         <Tooltip>
                           <button
                             onClick={() => {
@@ -791,7 +791,7 @@ function Tasks() {
                               ).filter((taskId) => selectedTasks[taskId])
                               handleTaskCompletion(checkedTaskIds)
                             }}
-                            className={`flex items-center text-[#ebfbed] h-[35px] p-[3px] rounded mr-2 ${
+                            className={`flex items-center text-[#ebfbed] h-9 p-[5px] rounded mr-2 ${
                               isCompletingTasks
                                 ? 'bg-white-100'
                                 : 'bg-[#34c759]'
@@ -818,7 +818,7 @@ function Tasks() {
                               ).filter((task) => !!task)
                               handleRescheduleDialog(checkedTasks)
                             }}
-                            className="flex items-center bg-[#ff9500] text-[#fff5e5] h-[35px] p-[5px] rounded"
+                            className="flex items-center bg-[#ff9500] text-[#fff5e5] h-9 p-[5px] rounded"
                           >
                             <CachedIcon />
                             <span className="font-bold text-base">Missed</span>

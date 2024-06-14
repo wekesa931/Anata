@@ -1065,6 +1065,10 @@ html,
   height: 100vh !important;
 }
 
+.h-2 {
+  height: 0.5rem !important;
+}
+
 .max-h-\[150px\] {
   max-height: 150px !important;
 }
@@ -1219,6 +1223,10 @@ html,
 
 .w-xl {
   width: 36rem !important;
+}
+
+.w-2 {
+  width: 0.5rem !important;
 }
 
 .min-w-1\/2 {
@@ -1489,6 +1497,10 @@ html,
 
 .whitespace-pre-line {
   white-space: pre-line !important;
+}
+
+.whitespace-pre-wrap {
+  white-space: pre-wrap !important;
 }
 
 .break-normal {

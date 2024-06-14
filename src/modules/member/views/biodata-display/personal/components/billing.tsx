@@ -73,7 +73,7 @@ function BillingSectionItem({
           <>
             <Divider />
             <GridItems single className="mt-5">
-              <div className="flex items-center justify-between gap-1 mb-4">
+              <div className="flex items-center justify-between gap-1">
                 <p className="text-dark-blue-100"> Billing method </p>
                 <ItemChild
                   child={memberCohortItem?.billingMethod}
@@ -82,7 +82,7 @@ function BillingSectionItem({
               </div>
             </GridItems>
             <GridItems single>
-              <div className="flex items-center justify-between gap-1 mb-4">
+              <div className="flex items-center justify-between gap-1">
                 <p className="text-dark-blue-100">Amount </p>
                 <ItemChild
                   child={`KES ${memberCohortItem?.skuRate}`}
@@ -91,7 +91,7 @@ function BillingSectionItem({
               </div>
             </GridItems>
             <GridItems single>
-              <div className="flex items-center justify-between gap-1 mb-4">
+              <div className="flex items-center justify-between gap-1">
                 <p className="text-dark-blue-100"> Frequency</p>
                 <ItemChild
                   child={memberCohortItem?.billingFrequency}
@@ -100,7 +100,7 @@ function BillingSectionItem({
               </div>
             </GridItems>
             <GridItems single>
-              <div className="flex items-center justify-between gap-1 mb-4">
+              <div className="flex items-center justify-between gap-1">
                 <p className="text-dark-blue-100"> Status</p>
                 <ItemChild
                   child={memberCohortItem?.subscriptionStatus}
@@ -109,7 +109,7 @@ function BillingSectionItem({
               </div>
             </GridItems>
             <GridItems single>
-              <div className="flex items-center justify-between gap-1 mb-4">
+              <div className="flex items-center justify-between gap-1">
                 <p className="text-dark-blue-100"> Member Consent</p>
                 <ItemChild
                   child={memberConsent ? 'Agree' : '-'}
@@ -174,7 +174,7 @@ function BillingSection({ member }: BillingSectionProps) {
           <ItemTitle title="Billing and Service" />
         </div>
         <GridItems single>
-          <div className="flex items-center justify-between gap-1 mb-4">
+          <div className="flex items-center justify-between gap-1">
             <p className="text-dark-blue-100">Antara service eligibility:</p>
             <div className="flex items-center gap-2">
               <ItemChild
@@ -183,16 +183,16 @@ function BillingSection({ member }: BillingSectionProps) {
               />
               <Tooltip>
                 {verification === 'Eligible' ? (
-                  <DoneIcon className="text-[#ebfbed] bg-[#34c759] w-6 h-6 rounded-2xl" />
+                  <DoneIcon className="text-[#ebfbed] bg-[#34c759] w-4 h-4 rounded-2xl" />
                 ) : (
-                  <GridCloseIcon className="text-[#ebfbed] bg-rose-500 w-6 h-6 rounded-2xl" />
+                  <GridCloseIcon className="text-[#ebfbed] bg-rose-500 w-4 h-4 rounded-2xl" />
                 )}
               </Tooltip>
             </div>
           </div>
         </GridItems>
         <GridItems single>
-          <div className="flex items-center justify-between gap-1 mb-4">
+          <div className="flex items-center justify-between gap-1 mb-2">
             <p className="text-dark-blue-100">Billing Eligibility:</p>
             {memberCohortDetails.length === 0 ? (
               <div className="flex items-center gap-2">
@@ -200,7 +200,7 @@ function BillingSection({ member }: BillingSectionProps) {
                   child="Not eligible"
                   className="ml-2 text-dark-blue-50"
                 />
-                <GridCloseIcon className="text-[#ebfbed] bg-rose-500 w-6 h-6 rounded-2xl" />
+                <GridCloseIcon className="text-[#ebfbed] bg-rose-500 w-4 h-4 rounded-2xl" />
               </div>
             ) : (
               <>
@@ -217,9 +217,9 @@ function BillingSection({ member }: BillingSectionProps) {
                       />
                       <Tooltip>
                         {billingStatus === 'Not eligible' ? (
-                          <GridCloseIcon className="text-[#ebfbed] bg-rose-500 w-6 h-6 rounded-2xl" />
+                          <GridCloseIcon className="text-[#ebfbed] bg-rose-500 w-4 h-4 rounded-2xl" />
                         ) : (
-                          <DoneIcon className="text-[#ebfbed] bg-[#34c759] w-6 h-6 rounded-2xl" />
+                          <DoneIcon className="text-[#ebfbed] bg-[#34c759] w-4 h-4 rounded-2xl" />
                         )}
                       </Tooltip>
                     </div>
@@ -235,16 +235,15 @@ function BillingSection({ member }: BillingSectionProps) {
         </div>
 
         {memberCohortDetails.length === 0 ? (
-          <div className="flex flex-col justify-start items-center font-rubik my-2">
+          <div className="flex flex-col justify-center items-center font-rubik my-2">
             <EmptyDataIcon />
-            <p className="text-base font-medium">Missing cohort</p>
-            <p className="text-sm text-dark-blue-100">
-              {' '}
-              It seems like this member does not belong to a billing cohort
-            </p>
-            <p className="text-sm text-dark-blue-100">
-              Please resolve that and check back
-            </p>
+            <p className="text-base font-medium text-center">Missing cohort</p>
+            <div className="text-sm text-dark-blue-100 text-center">
+              <p>
+                It seems like this member does not belong to a billing cohort
+              </p>
+              <p>Please resolve that and check back</p>
+            </div>
           </div>
         ) : (
           <>

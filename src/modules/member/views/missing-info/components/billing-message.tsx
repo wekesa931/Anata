@@ -5,7 +5,7 @@ import React from 'react'
 function BillingMessage() {
   return (
     <div className="justify-between h-16 bg-red-10 mx-3 rounded-lg flex items-center font-rubik text-dark-blue-100">
-      <div className="ml-2 text-md text-left">
+      <div className="ml-2 text-md text-left flex items-center">
         <ReportProblem className="text-rose-500 mr-1" />
         <span>Member is not eligible for billing! </span>
       </div>
@@ -16,7 +16,7 @@ function BillingMessage() {
             element.scrollIntoView({ behavior: 'smooth' })
           }
         }}
-        className="underline cursor-pointer mr-2"
+        className="underline cursor-pointer mr-2 whitespace-nowrap w-8 h-9"
       >
         See why
       </Button>
