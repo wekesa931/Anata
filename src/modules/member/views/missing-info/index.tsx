@@ -16,11 +16,11 @@ export default function MissingInfoBlock({
   showForm = true,
 }: MissingInfoBlockProps) {
   const displayBillingMessage =
-    (member?.membercohortSet?.some(
-      (cohort) => cohort.subscriptionStatus !== 'ACTIVE'
-    ) ??
-      false) ||
-    !member?.membercohortSet?.length
+    !(
+      member?.membercohortSet?.some(
+        (cohort) => cohort.subscriptionStatus === 'ACTIVE'
+      ) ?? false
+    ) || !member?.membercohortSet?.length
   return (
     <div className="flex flex-col gap-1 mt-2">
       {displayBillingMessage && showForm && (

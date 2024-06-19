@@ -118,6 +118,9 @@ function BillingSection({ member }: BillingSectionProps) {
   const cohortsWithRemarks = memberCohortDetails.filter(
     (cohort) => cohort.remarks
   )
+  const remarks = Array.from(
+    new Set(cohortsWithRemarks.map((cohort) => cohort.remarks))
+  )
 
   const billingEligibility = () => {
     const activeCohorts = memberCohortDetails.filter(
@@ -180,8 +183,8 @@ function BillingSection({ member }: BillingSectionProps) {
               <div className="mb-4">
                 <ItemTitle title="Reason(s)" />
               </div>
-              {memberCohortDetails.map((cohort, index) => (
-                <p key={index}>{cohort.remarks}</p>
+              {remarks.map((remark, index) => (
+                <p key={index}>{remark}</p>
               ))}
             </div>
           )}
