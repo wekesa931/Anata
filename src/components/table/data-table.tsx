@@ -570,7 +570,7 @@ export function DataTable({
     setGroupedData(getGroupedData())
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [groupByColumn])
+  }, [groupByColumn, order])
   const getGroupedData = () => {
     const groupedData = _.groupBy(data, groupByColumn)
     if (groupByColumn) {
