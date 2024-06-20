@@ -311,7 +311,9 @@ export const MEMBER_COHORT = gql`
           pausedBy
           cancelledAt
           cancelledBy
-          remarks
+          remarks {
+            remark
+          }
           billingEvents {
             amount
             billingPeriodStartDate

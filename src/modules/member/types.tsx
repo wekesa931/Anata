@@ -41,6 +41,9 @@ export type IndividualBillableEventType = {
   billingPeriodEndDate: string
   createdAt?: string
 }
+export type RemarkType = {
+  remark: string
+}
 export type MemberCohortType = {
   id?: string
   name?: string
@@ -59,7 +62,7 @@ export type MemberCohortType = {
   pausedBy?: string
   cancelledAt?: string
   cancelledBy?: string
-  remarks?: string
+  remarks?: RemarkType[]
   billingEvents?: IndividualBillableEventType[]
   revenueModelName?: string
 }
@@ -236,7 +239,7 @@ export type MemberCohortQueryType = {
   pausedBy?: string
   cancelledAt?: string
   cancelledBy?: string
-  remarks?: string
+  remarks?: RemarkType[]
   billingEvents?: IndividualBillableEventType[]
   revenueModelName?: string
 }

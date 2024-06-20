@@ -20,22 +20,27 @@ import Tooltip from 'src/components/tooltip'
 import { GridCloseIcon } from '@mui/x-data-grid'
 import EmptyDataIcon from 'src/assets/img/icons/empty-data.svg'
 import dayjs from 'dayjs'
+import { toTitleCase } from 'src/utils/text-utils'
 
 function BillingSectionItem({
   memberCohortItem,
+  expanded,
+  handleChange,
 }: {
   memberCohortItem: MemberCohortType
+  expanded: boolean
+  handleChange: (event: React.SyntheticEvent, isExpanded: boolean) => void
 }) {
-  const [expanded, setExpanded] = useState<boolean>(false)
   const memberConsent =
     memberCohortItem?.isOptInRequired === 'Yes' ? 'Agree' : 'Not required'
+  const activeStatus = memberCohortItem?.subscriptionStatus === 'ACTIVE'
 
   return (
     <div>
       <Accordion
         expanded={expanded}
-        onChange={() => setExpanded(!expanded)}
-        className="block border rounded-xl border-solid border-dark-blue-10 my-1 mb-4 shadow-none"
+        onChange={handleChange}
+        className="block border rounded-xl border-solid border-dark-blue-10 my-1 mb-2 shadow-none"
         sx={{
           '&:before': {
             display: 'none',
@@ -43,19 +48,28 @@ function BillingSectionItem({
         }}
       >
         <AccordionSummary expandIcon={<ExpandMoreOutlined />}>
-          <div>
+          <div className="mb-1">
             <h4 className="text-dark-blue-100 mt-2">
               {memberCohortItem?.name?.toUpperCase().split('KES')[0].trim()}{' '}
             </h4>
-            <p className="text-dark-blue-50 mt-1 mb-2 text-sm">
+            <p className="text-dark-blue-50 text-sm mt-2 mb-2">
               {memberCohortItem?.revenueModelName}
             </p>
+            <span
+              className={`inline-block px-4 py-1 mt-2 gap-4 text-xs font-medium rounded-full ${
+                activeStatus
+                  ? 'bg-[#ebfbed] text-[#34c759]'
+                  : 'text-red-100 bg-red-10'
+              }`}
+            >
+              {toTitleCase(memberCohortItem?.subscriptionStatus)}
+            </span>
           </div>
         </AccordionSummary>
         <AccordionDetails>
           <>
             <Divider />
-            <GridItems single className="mt-5">
+            <GridItems single className="mt-2">
               <div className="flex items-center justify-between gap-1">
                 <p className="text-dark-blue-100"> Billing method </p>
                 <ItemChild
@@ -84,25 +98,6 @@ function BillingSectionItem({
             </GridItems>
             <GridItems single>
               <div className="flex items-center justify-between gap-1">
-                <p className="text-dark-blue-100"> Status</p>
-                <ItemChild
-                  child={memberCohortItem?.subscriptionStatus}
-                  className="text-dark-blue-50"
-                />
-              </div>
-            </GridItems>
-            {memberCohortItem?.subscriptionStatus !== 'Active' && (
-              <GridItems single>
-                <div className="flex justify-between items-start">
-                  <p className="text-dark-blue-100 shrink"> Reason</p>
-                  <div className="text-dark-blue-50 ml-20 text-base font-rubik flex justify-end">
-                    {memberCohortItem?.remarks ?? '-'}
-                  </div>
-                </div>
-              </GridItems>
-            )}
-            <GridItems single>
-              <div className="flex items-center justify-between gap-1">
                 <p className="text-dark-blue-100"> Member Consent</p>
                 <ItemChild
                   child={memberConsent}
@@ -123,6 +118,29 @@ function BillingSectionItem({
                 </div>
               </GridItems>
             )}
+            <GridItems single>
+              <div className="flex items-center justify-between gap-1">
+                <p className="text-dark-blue-100"> Status</p>
+                <ItemChild
+                  child={toTitleCase(memberCohortItem?.subscriptionStatus)}
+                  className="text-dark-blue-50"
+                />
+              </div>
+            </GridItems>
+            {memberCohortItem?.subscriptionStatus !== 'ACTIVE' && (
+              <>
+                {memberCohortItem?.remarks?.map((res) => (
+                  <GridItems single key={res?.remark}>
+                    <div className="flex flex-col gap-2 bg-table-col-grey rounded-xl px-2 py-2">
+                      <p className="text-dark-blue-70 font-medium">{`Cohort ${memberCohortItem?.subscriptionStatus?.toLowerCase()} reason(s)`}</p>
+                      <div className="text-dark-blue-70 font-rubik text-base font-normal">
+                        {res?.remark}
+                      </div>
+                    </div>
+                  </GridItems>
+                ))}
+              </>
+            )}
           </>
         </AccordionDetails>
       </Accordion>
@@ -135,17 +153,18 @@ type BillingSectionProps = {
 }
 
 function BillingSection({ member }: BillingSectionProps) {
+  const [expandedAccordion, setExpandedAccordion] = useState<string | false>(
+    false
+  )
+
+  const handleAccordionChange =
+    (panel: string) => (_: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpandedAccordion(isExpanded ? panel : false)
+    }
   const verification =
     member?.verificationStatus === 'VERIFIED' ? 'Eligible' : 'Not eligible'
   const memberStatus = member?.status
   const memberCohortDetails: MemberCohortType[] = member?.membercohortSet || []
-
-  const cohortsWithRemarks = memberCohortDetails.filter(
-    (cohort) => cohort.remarks
-  )
-  const remarks = Array.from(
-    new Set(cohortsWithRemarks.map((cohort) => cohort.remarks))
-  )
 
   const billingEligibility = () => {
     const activeCohorts = memberCohortDetails.filter(
@@ -202,18 +221,6 @@ function BillingSection({ member }: BillingSectionProps) {
           </div>
         </GridItems>
 
-        {billingEligibility() === 'Not eligible' &&
-          cohortsWithRemarks.length > 0 && (
-            <div className="flex flex-col h-full">
-              <div className="mb-4">
-                <ItemTitle title="Reason(s)" />
-              </div>
-              {remarks.map((remark, index) => (
-                <p key={index}>{remark}</p>
-              ))}
-            </div>
-          )}
-
         <div className="mb-4 mt-5">
           <ItemTitle title="Cohorts" />
         </div>
@@ -232,7 +239,12 @@ function BillingSection({ member }: BillingSectionProps) {
         ) : (
           <>
             {memberCohortDetails.map((cohort, index) => (
-              <BillingSectionItem memberCohortItem={cohort} key={index} />
+              <BillingSectionItem
+                memberCohortItem={cohort}
+                key={index}
+                expanded={expandedAccordion === `panel${index}`}
+                handleChange={handleAccordionChange(`panel${index}`)}
+              />
             ))}
           </>
         )}
