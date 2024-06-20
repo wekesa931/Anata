@@ -2,6 +2,7 @@ import React from 'react'
 import Button from 'src/components/buttons/html-button'
 import PortalWindow from 'src/components/portal'
 import EmptyBlock from 'src/modules/member/components/empty-block'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 type ModalChildProps = {
   handleClose: () => void
@@ -21,7 +22,11 @@ function UpdateForm({
   children,
 }: MissingInfoBlockProps) {
   const [open, setOpen] = React.useState(false)
-  const handleOpen = () => setOpen(true)
+  const { trackAddButtonClicked } = useModuleAnalytics()
+  const handleOpen = () => {
+    setOpen(true)
+    trackAddButtonClicked(modalTitle)
+  }
   const handleClose = () => setOpen(false)
   const [isEdited, setIsEdited] = React.useState(false)
 

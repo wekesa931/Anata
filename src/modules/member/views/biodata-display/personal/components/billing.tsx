@@ -19,6 +19,7 @@ import DoneIcon from '@mui/icons-material/Done'
 import Tooltip from 'src/components/tooltip'
 import { GridCloseIcon } from '@mui/x-data-grid'
 import EmptyDataIcon from 'src/assets/img/icons/empty-data.svg'
+import dayjs from 'dayjs'
 
 function BillingSectionItem({
   memberCohortItem,
@@ -27,7 +28,7 @@ function BillingSectionItem({
 }) {
   const [expanded, setExpanded] = useState<boolean>(false)
   const memberConsent =
-    memberCohortItem?.isOptInRequired === 'Yes' && !!memberCohortItem?.optedInAt
+    memberCohortItem?.isOptInRequired === 'Yes' ? 'Agree' : 'Not required'
 
   return (
     <div>
@@ -90,15 +91,38 @@ function BillingSectionItem({
                 />
               </div>
             </GridItems>
+            {memberCohortItem?.subscriptionStatus !== 'Active' && (
+              <GridItems single>
+                <div className="flex justify-between items-start">
+                  <p className="text-dark-blue-100 shrink"> Reason</p>
+                  <div className="text-dark-blue-50 ml-20 text-base font-rubik flex justify-end">
+                    {memberCohortItem?.remarks ?? '-'}
+                  </div>
+                </div>
+              </GridItems>
+            )}
             <GridItems single>
               <div className="flex items-center justify-between gap-1">
                 <p className="text-dark-blue-100"> Member Consent</p>
                 <ItemChild
-                  child={memberConsent ? 'Agree' : '-'}
+                  child={memberConsent}
                   className="text-dark-blue-50"
                 />
               </div>
             </GridItems>
+            {memberConsent === 'Agree' && (
+              <GridItems single>
+                <div className="flex items-center justify-between gap-1">
+                  <p className="text-dark-blue-100"> Opted in at </p>
+                  <ItemChild
+                    child={dayjs(memberCohortItem?.optedInAt).format(
+                      'DD MMMM YYYY'
+                    )}
+                    className="text-dark-blue-50"
+                  />
+                </div>
+              </GridItems>
+            )}
           </>
         </AccordionDetails>
       </Accordion>
@@ -113,6 +137,7 @@ type BillingSectionProps = {
 function BillingSection({ member }: BillingSectionProps) {
   const verification =
     member?.verificationStatus === 'VERIFIED' ? 'Eligible' : 'Not eligible'
+  const memberStatus = member?.status
   const memberCohortDetails: MemberCohortType[] = member?.membercohortSet || []
 
   const cohortsWithRemarks = memberCohortDetails.filter(
@@ -126,7 +151,7 @@ function BillingSection({ member }: BillingSectionProps) {
     const activeCohorts = memberCohortDetails.filter(
       (cohort) => cohort.subscriptionStatus === 'ACTIVE'
     )
-    if (activeCohorts.length > 0) {
+    if (activeCohorts.length > 0 && memberStatus === 'Active') {
       return 'Eligible'
     }
 

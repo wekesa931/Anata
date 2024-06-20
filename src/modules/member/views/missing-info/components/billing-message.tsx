@@ -1,8 +1,10 @@
 import { ReportProblem } from '@mui/icons-material'
 import { Button } from '@mui/material'
 import React from 'react'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 function BillingMessage() {
+  const { trackSeeWhyButtonClicked } = useModuleAnalytics()
   return (
     <div className="justify-between h-16 bg-red-10 mx-3 rounded-lg flex items-center font-rubik text-dark-blue-100">
       <div className="ml-2 text-md text-left flex items-center">
@@ -15,6 +17,7 @@ function BillingMessage() {
           if (element) {
             element.scrollIntoView({ behavior: 'smooth' })
           }
+          trackSeeWhyButtonClicked()
         }}
         className="underline cursor-pointer mr-2 whitespace-nowrap w-8 h-9"
       >

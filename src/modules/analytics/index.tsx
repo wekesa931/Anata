@@ -20,6 +20,12 @@ export const useModuleAnalytics = () => {
       // eslint-disable-next-line no-underscore-dangle
       leftSectionAnalytics.track('Personal section accessed', member?._raw)
     },
+    trackSeeWhyButtonClicked: () => {
+      leftSectionAnalytics.track('See why button clicked')
+    },
+    trackAddButtonClicked: (title: any) => {
+      leftSectionAnalytics.track('Add button clicked', title)
+    },
 
     trackClinicalSectionAccessed: () => {
       // eslint-disable-next-line no-underscore-dangle
