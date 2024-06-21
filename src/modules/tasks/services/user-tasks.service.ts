@@ -17,7 +17,7 @@ export const useUserTasksAPI = () => {
   ]
   const sortArg = `sort=[{"field":"Due Date","direction":"asc"}]`
 
-  const statusFilter = `FIND("Not Applicable", {Status}) = 0, FIND("Cancelled", {Status}) = 0, FIND("Terminated", {member_status}) = 0, OR(FIND("Complete", {Status}) = 0, AND(FIND("Complete", {Status}) != 0, IS_SAME(LAST_MODIFIED_TIME(), TODAY(), 'day'))),`
+  const statusFilter = `FIND("Not Applicable", {Status}) = 0, FIND("Cancelled", {Status}) = 0, FIND("Terminated", {member_status}) = 0, {is_test_member (from Member)} = 0, OR(FIND("Complete", {Status}) = 0, AND(FIND("Complete", {Status}) != 0, IS_SAME(LAST_MODIFIED_TIME(), TODAY(), 'day'))),`
 
   const filterTasks = async (filterArg: string) => {
     return airtableFetch(
