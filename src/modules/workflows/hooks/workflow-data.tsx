@@ -371,12 +371,6 @@ export const useWorkflowData = () => {
       workflowFromAPi.template.name
     )
     const cachedForms = await workflowFromDb.forms.fetch()
-    console.log(
-      'Workflow: ',
-      workflowFromAPi.workflowId,
-      'Current forms: ',
-      cachedForms
-    )
     const currentWorkflowForms = workflowFromAPi.forms || []
 
     await Promise.all(
