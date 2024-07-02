@@ -253,7 +253,7 @@ function Tasks() {
       return ''
     }
     const sortArg = `sort=[{"field":"Due Date","direction":"asc"}]`
-    const filterArg = `filterByFormula=FIND("${memberRecordId}", {Member Record ID})`
+    const filterArg = `filterByFormula=AND(FIND("${memberRecordId}", {Member Record ID}), FIND("Antara Bot", {Assignee Name})=0)`
 
     // Avoid fetching Complete tasks from Airtable in order to test that they are fetched from API
     // const filterArg = `filterByFormula=AND(FIND("${memberRecordId}", {Member Record ID}), {Status} != "Complete")`
