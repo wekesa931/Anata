@@ -28,7 +28,7 @@ export default function MissingInfoBlock({
           <BillingMessage />
         </div>
       )}
-      {member?.hasAnyRejectedInsurance && (
+      {member?.hasAnyRejectedInsurance && !member?.hasPrimary && (
         <div className="w-full">
           <MissingInsurance member={member} />
         </div>
@@ -49,11 +49,6 @@ export default function MissingInfoBlock({
       {!member?.hasAddress && showForm && (
         <div className="w-full">
           <MissingAddessForms member={member} />
-        </div>
-      )}
-      {!member?.hasPrimary && (
-        <div className="w-full">
-          <MissingInsurance member={member} />
         </div>
       )}
     </div>
