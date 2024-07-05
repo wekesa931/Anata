@@ -160,6 +160,7 @@ const isAllowedField = (name: string) => {
     'Data Source',
     'Member',
     'Assignee',
+    'HIF Completed',
   ]
   return allowedFields.includes(name)
 }
