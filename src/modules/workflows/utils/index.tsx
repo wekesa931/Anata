@@ -161,6 +161,7 @@ const isAllowedField = (name: string) => {
     'Member',
     'Assignee',
     'HIF Completed',
+    'Status',
   ]
   return allowedFields.includes(name)
 }
@@ -320,6 +321,10 @@ export const initialFormValues = (
         process.env.PROD === 'true'
           ? ['recnjX3KGmGvKv7Ek']
           : ['recFp5U0cAetcColo'],
+      Status: 'ONGOING',
+    },
+    Prescriptions: {
+      Status: 'ONGOING',
     },
     'Healthy triage form': {
       Gender: member?.sex,
@@ -441,6 +446,7 @@ export const formNames: Record<string, string> = {
   'Healthy triage form': 'Healthy triage form',
   'Lab/imaging management': 'Lab/imaging management',
   'Care Team Tasks': 'Care Team Tasks',
+  'Health Metrics': 'Health Metrics',
 }
 
 export const interactionlogform = {

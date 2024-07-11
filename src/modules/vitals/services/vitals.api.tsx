@@ -1,5 +1,7 @@
 import { useMutation, useLazyQuery } from '@apollo/client'
+import dayjs from 'dayjs'
 import { groupBy } from 'lodash'
+import { useMember } from 'src/context/member'
 import {
   CREATE_VITALS_READING,
   CREATE_BLOOD_PRESSURE_READING,
@@ -11,6 +13,7 @@ import {
   GET_VITALS,
   GET_BP_PANEL,
   GET_BS_PANEL,
+  GET_HEALTH_METRICS,
 } from 'src/modules/vitals/services/gql'
 import { GET_REPORT_GEN_MEASUREMENTS_RANGES } from 'src/modules/vitals/services/report-generation.gql'
 import {
@@ -437,5 +440,49 @@ export const useGetLabsRanges = () => {
   return {
     loading,
     getReportGenMeasurementsRangesData,
+  }
+}
+
+export const useGetHealthMetrics = () => {
+  const [load] = useLazyQuery(GET_HEALTH_METRICS, {
+    context: {
+      clientName: 'v2',
+    },
+  })
+  const { member } = useMember()
+
+  const getHealthMetrics = async () => {
+    if (!member) return { references: [], metrics: [] }
+    const sex = member?.sex || 'Unknown'
+    const ageInMonths = dayjs().diff(member?.birthDate, 'month')
+    const variables = {
+      sex,
+      ageInMonths,
+    }
+
+    const { data } = await load({
+      variables,
+    })
+
+    const { references, metrics } = data
+    const b = references?.edges?.map(({ node }: any) => ({
+      ...node,
+      healthMetric: node?.healthMetric.name,
+    }))
+
+    const m = metrics?.edges?.map(({ node }: any) => ({
+      ...node,
+      isInPanel: !!node?.measurementPanelType?.edges?.length,
+      measurementUnit: node?.measurementUnit?.name,
+    }))
+
+    return {
+      references: b,
+      metrics: m,
+    }
+  }
+
+  return {
+    getHealthMetrics,
   }
 }

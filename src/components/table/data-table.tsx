@@ -21,7 +21,6 @@ import {
 import { visuallyHidden } from '@mui/utils'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Order, getComparator, stableSort } from 'src/utils/sort/stable'
-import EmptyDataIcon from 'src/assets/img/icons/empty-data.svg'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import _, { isEmpty } from 'lodash'
 import {
@@ -37,6 +36,7 @@ import {
 import { ArrowDropDown, ArrowRight } from '@mui/icons-material'
 import { toTitleCase } from 'src/utils/text-utils'
 import Loading from 'src/components/loaders/centered'
+import EmptyData from '../feedbacks/empty-data'
 
 export type Column = {
   label: string
@@ -303,20 +303,6 @@ function DataTableDetailedRow({
         </TableRow>
       )}
     </>
-  )
-}
-
-function EmptyData({ title }: { title?: string }) {
-  return (
-    <div className="flex flex-col justify-start items-center font-rubik my-2">
-      <EmptyDataIcon />
-      <p className="text-base font-medium">No data</p>
-      <p className="text-sm text-dark-blue-100">
-        {' '}
-        Looks like there are no {title || 'data'} for this member
-      </p>
-      <p>Please check back again later</p>
-    </div>
   )
 }
 

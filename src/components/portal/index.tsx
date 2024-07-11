@@ -25,7 +25,7 @@ type PortalWindowTypes = {
 
 function PortalWindow({
   title,
-  width = 40,
+  width = 50,
   index = 0,
   closeWindow,
   children,
@@ -103,7 +103,7 @@ function PortalWindow({
 
   const handleLeave = () => {
     setOpen(false)
-    setIsEdited(false)
+    setIsEdited && setIsEdited(false)
     closeWindow()
   }
 

@@ -1,9 +1,9 @@
 import { useMember } from 'src/context/member'
 import { useEffect, useState } from 'react'
-import { useConditionsApi } from 'src/modules/conditions/services/conditions.api'
+import { useConditionsApi } from 'src/modules/conditions(deprecated)/services/conditions.api'
 import { useDatabase } from '@nozbe/watermelondb/hooks'
 import { Collection, Q } from '@nozbe/watermelondb'
-import { Condition } from 'src/modules/conditions/db/models'
+import { Condition } from 'src/modules/conditions(deprecated)/db/models'
 import { CollectionType } from 'src/storage/types'
 import type { Member } from 'src/modules/member/db/models'
 import {
@@ -11,12 +11,12 @@ import {
   AcuteVsChronic,
   ConditionStatus,
   Condition as TCondition,
-} from 'src/modules/conditions/types'
+} from 'src/modules/conditions(deprecated)/types'
 import { logError } from 'src/utils/logging/logger'
 import type { ConditionInterventions } from 'src/storage/indexeddb/watermelon/relations-models'
 import { useInterventionData } from 'src/modules/interventions/hooks/intervention.data'
 import { diffRecordsById } from 'src/utils/diff'
-import { buildCondition } from 'src/modules/conditions/utils'
+import { buildCondition } from 'src/modules/conditions(deprecated)/utils'
 import { ConditionsObserver } from 'src/services/observers'
 
 export const useConditionData = () => {

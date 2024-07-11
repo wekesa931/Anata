@@ -12,6 +12,7 @@ function PhoneField({
   handleChange,
   handleBlur,
   autoFocus = false,
+  xs,
 }: OutlinedFieldProps) {
   const handleValueBlur = (e: any, fieldProps: FieldProps) => {
     fieldProps.form.setFieldTouched(fieldProps.field.name, true)
@@ -47,6 +48,7 @@ function PhoneField({
           }}
           size="small"
           autoFocus={autoFocus}
+          className={xs ? 'w-6' : ''}
         />
       )}
     </OutlinedField>

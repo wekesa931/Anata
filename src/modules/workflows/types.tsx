@@ -165,6 +165,7 @@ export type Form = {
   error: any
   saveInput: (name: string, value: any) => void
   isWorkflow?: boolean
+  relationship?: 'one' | 'many' | null
 }
 
 export type NotifyFn = (message: string) => void

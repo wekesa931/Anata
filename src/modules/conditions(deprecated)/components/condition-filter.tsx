@@ -4,7 +4,7 @@ import {
   AcuteVsChronic,
   ConditionStatus,
   Filter,
-} from 'src/modules/conditions/types'
+} from 'src/modules/conditions(deprecated)/types'
 
 type ConditionFilterProps = {
   filter: Filter

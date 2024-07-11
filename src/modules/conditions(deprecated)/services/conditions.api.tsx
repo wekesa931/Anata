@@ -1,5 +1,5 @@
 import airtableFetch from 'src/services/airtable/fetch'
-import type { Condition } from 'src/modules/conditions/types'
+import type { Condition } from 'src/modules/conditions(deprecated)/types'
 import type { Member } from 'src/modules/member/db/models'
 import { useMember } from 'src/context/member'
 import { useState } from 'react'

@@ -11,11 +11,11 @@ import Nutrition from 'src/modules/nutrition'
 import ErrorBoundary from 'src/components/error-boundary'
 import CallLog from 'src/modules/comms/calls/views/call-logs'
 import { withTabRouter } from 'src/utils/routing/tab-router'
-import ConditionsSection from 'src/modules/conditions/views/condition-details'
 import InterventionSection from 'src/modules/interventions/views/intervention-details'
 import MemberTasks from 'src/modules/tasks/components/member-tasks.component'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import _ from 'lodash'
+import ConditionsView from 'src/modules/conditions/views/conditions'
 import styles from './views.module.css'
 
 const Files = React.lazy(() => import('src/modules/udm'))
@@ -69,7 +69,7 @@ function Views({ view, handleChange }: any) {
           </TabPanel>
           <TabPanel value="conditions">
             <ErrorBoundary>
-              <ConditionsSection />
+              <ConditionsView />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel value="interventions">

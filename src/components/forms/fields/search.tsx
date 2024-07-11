@@ -20,6 +20,7 @@ type SearchFieldProps<T extends Searchable> = {
   label: string
   initialValue?: T
   disabled?: boolean
+  xs?: boolean
 }
 
 export default function SearchField<T extends Searchable>({
@@ -28,6 +29,7 @@ export default function SearchField<T extends Searchable>({
   label,
   initialValue,
   disabled,
+  xs,
 }: SearchFieldProps<T>) {
   const [options, setOptions] = useState<T[]>([])
   const [loading, setLoading] = useState(false)
@@ -99,6 +101,7 @@ export default function SearchField<T extends Searchable>({
             fullWidth
             error={!!error}
             placeholder="Type to search"
+            className={xs ? 'h-6' : ''}
             helperText={error}
             disabled={disabled}
             InputProps={{

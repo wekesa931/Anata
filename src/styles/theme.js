@@ -69,6 +69,7 @@ module.exports = {
     minWidth: {
       200: '200px',
       '1/2': '50%',
+      auto: 'auto',
     },
     boxShadow: {
       template: `0 2.8px 2.2px 0 rgba(0, 0, 0, 0.02), 0 6.7px 5.3px 0 rgba(0, 0, 0, 0.03), 0 12.5px 10px 0 rgba(0, 0, 0, 0.04),

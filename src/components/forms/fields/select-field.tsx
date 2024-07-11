@@ -12,7 +12,6 @@ import {
   TextField,
 } from '@mui/material'
 import { SearchOutlined } from '@mui/icons-material'
-import { Loader } from 'react-feather'
 import OutlinedField, { OutlinedFieldProps } from './outlined-field'
 
 export type Options = {
@@ -27,7 +26,13 @@ export type SelectFieldProps = {
   onClick?: (e: any) => void
   loading?: boolean
   bottomPadding?: boolean
+  CustomOptionRenderer?: React.FC<CustomOptionRendererProps>
   loadingText?: string
+  displayHelper?: boolean
+}
+
+export type CustomOptionRendererProps = {
+  option: Options
 }
 
 export function ValueRenderer({ selected, props }: any) {
@@ -46,14 +51,19 @@ export function ValueRenderer({ selected, props }: any) {
     )
   }
 
-  const selectedOption = props.options.find((o: any) => o.value === selected)
-  return selectedOption?.label || selected
+  const selectedOption = props.options.find(
+    (o: any) => o.value === selected || o.value === selected?.value
+  )
+  return props.CustomOptionRenderer ? (
+    <props.CustomOptionRenderer option={selectedOption} />
+  ) : (
+    <>{selectedOption?.label || selected}</>
+  )
 }
 
-function SelectField({
+export function SelectField({
   bottomPadding = true,
-  loading = false,
-  loadingText = 'Loading...',
+  displayHelper = true,
   ...props
 }: OutlinedFieldProps & SelectFieldProps) {
   const handleValueChange = (e: any, fieldProps: FieldProps) => {
@@ -78,63 +88,84 @@ function SelectField({
       {(fieldProps: FieldProps) => {
         return (
           <>
-            <Select
-              {...fieldProps.field}
-              size="small"
-              multiple={props.multiple}
-              onChange={(e) => {
-                handleValueChange(e, fieldProps)
-              }}
-              error={!!fieldProps.meta.error}
-              input={
-                <OutlinedInput
-                  placeholder={props.placeholder}
-                  error={!!fieldProps.meta.error}
+            {props.displayMode ? (
+              <>
+                {props.CustomOptionRenderer ? (
+                  <props.CustomOptionRenderer
+                    option={
+                      props.options.find(
+                        (o: any) => o.value === fieldProps.field.value
+                      ) || fieldProps.field.value
+                    }
+                  />
+                ) : (
+                  <>
+                    <>{fieldProps.field.value}</>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <Select
+                  {...fieldProps.field}
                   size="small"
-                />
-              }
-              onBlur={(e: any) => {
-                handleBlur(e, fieldProps)
-              }}
-              displayEmpty
-              renderValue={(selected: any) => (
-                <ValueRenderer selected={selected} props={props} />
-              )}
-              disabled={props.disabled}
-              autoFocus={props.autoFocus}
-              onClick={props.onClick}
-              MenuProps={{
-                style: { zIndex: 99999 },
-              }}
-            >
-              {loading ? (
-                <MenuItem>
-                  <Loader className="text-[#FF9500] mr-3" />
-                  <span className="#444444">{loadingText}</span>
-                </MenuItem>
-              ) : props.options.length === 0 ? (
-                <MenuItem disabled>No options</MenuItem>
-              ) : (
-                props.options.map((option: any) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {props?.multiple && (
-                      <Checkbox
-                        checked={
-                          fieldProps.field?.value?.indexOf(option.value) > -1
-                        }
-                      />
-                    )}
-                    {option.label}
-                  </MenuItem>
-                ))
-              )}
-            </Select>
-            {bottomPadding && (
-              <FormHelperText error={!!fieldProps.meta.error}>
-                {!!fieldProps.meta.error && !!fieldProps.meta.error
-                  ? fieldProps.meta.error
-                  : ' '}
-              </FormHelperText>
+                  multiple={props.multiple}
+                  onChange={(e) => {
+                    handleValueChange(e, fieldProps)
+                  }}
+                  className={props.xs ? 'h-8 w-full' : ''}
+                  error={!!fieldProps.meta.error}
+                  input={
+                    <OutlinedInput
+                      placeholder={props.placeholder}
+                      error={!!fieldProps.meta.error}
+                      size="small"
+                    />
+                  }
+                  onBlur={(e: any) => {
+                    handleBlur(e, fieldProps)
+                  }}
+                  displayEmpty
+                  renderValue={(selected: any) => (
+                    <ValueRenderer selected={selected} props={props} />
+                  )}
+                  disabled={props.disabled}
+                  autoFocus={props.autoFocus}
+                  onClick={props.onClick}
+                  MenuProps={{
+                    style: { zIndex: 99999 },
+                  }}
+                >
+                  {props.options.length ? (
+                    props.options.map((option: any) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {props?.multiple && (
+                          <Checkbox
+                            checked={
+                              fieldProps.field?.value?.indexOf(option.value) >
+                              -1
+                            }
+                          />
+                        )}
+                        {props.CustomOptionRenderer ? (
+                          <props.CustomOptionRenderer option={option} />
+                        ) : (
+                          <>{option.label}</>
+                        )}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem> No options available</MenuItem>
+                  )}
+                </Select>
+                {bottomPadding && displayHelper && (
+                  <FormHelperText error={!!fieldProps.meta.error}>
+                    {!!fieldProps.meta.error && !!fieldProps.meta.error
+                      ? fieldProps.meta.error
+                      : ' '}
+                  </FormHelperText>
+                )}
+              </>
             )}
           </>
         )
@@ -149,7 +180,10 @@ type MultiselectFieldProps = SelectFieldProps &
     isOpen?: boolean
   }
 
-export function MultiselectField(props: MultiselectFieldProps) {
+export function MultiselectField({
+  multiple = true,
+  ...props
+}: MultiselectFieldProps) {
   const handleValueChange = (values: any, fieldProps: FieldProps) => {
     fieldProps.form.setFieldValue(fieldProps.field.name, values)
 
@@ -180,9 +214,10 @@ export function MultiselectField(props: MultiselectFieldProps) {
               onClose={() => {
                 setOpen(false)
               }}
-              multiple
+              getOptionLabel={(option) => option.label || ''}
+              multiple={multiple}
               options={props.options}
-              disableCloseOnSelect
+              disableCloseOnSelect={multiple}
               onChange={(e, newValue) => {
                 handleValueChange(newValue, fieldProps)
               }}
@@ -247,25 +282,32 @@ export function MultiselectField(props: MultiselectFieldProps) {
                   'No options found'
                 )
               }
+              disabled={props.disabled}
               renderOption={(optionProps, option, options) => {
                 const { selected, index } = options
                 return (
                   <div>
-                    <div className="border-b border-b-dark-blue-100">
+                    <div
+                      className={
+                        multiple ? 'border-b border-b-dark-blue-100' : ''
+                      }
+                    >
                       <MenuItem
                         {...optionProps}
                         className="flex items-center gap-2 text-sm overflow-hidden "
                         selected={selected}
                       >
-                        <Checkbox
-                          checked={selected}
-                          sx={{
-                            '&.Mui-checked': {
+                        {multiple && (
+                          <Checkbox
+                            checked={selected}
+                            sx={{
+                              '&.Mui-checked': {
+                                color: '#ff9800',
+                              },
                               color: '#ff9800',
-                            },
-                            color: '#ff9800',
-                          }}
-                        />
+                            }}
+                          />
+                        )}
                         <p>{option?.label}</p>
                       </MenuItem>
                     </div>

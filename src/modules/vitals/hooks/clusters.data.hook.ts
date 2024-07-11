@@ -3,7 +3,6 @@ import {
   useClustersApi,
   useReferenceRanges,
 } from 'src/modules/vitals/services/clusters.api'
-import dayjs from 'dayjs'
 import {
   transformBpAggregateMetrics,
   transformBMIAggregateMetrics,
@@ -13,18 +12,13 @@ import {
   mapBsRefsToDomain,
   transformHbMeasurements,
 } from 'src/modules/vitals/utils/data-transforms/query'
+import { adjustExclusiveDates } from 'src/utils/date-time/helpers'
 import { TimeFilters, TimeRange } from '../types'
 import {
   BPAggregatedMetricData,
   HealthMetricNames,
   ReferenceDomain,
 } from '../types/clusters.types'
-
-const adjustExclusiveDates = (range: TimeRange) => {
-  const start = dayjs(range[0]).subtract(1, 'day').toDate()
-  const end = dayjs(range[1]).add(1, 'day').toDate()
-  return [start, end]
-}
 
 export const useClustersData = () => {
   const { member } = useMember()

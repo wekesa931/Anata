@@ -24,7 +24,7 @@ function TaskFilterComponent({ filter, setFilter }: Props) {
         <Select
           labelId="filter-select-label"
           id="filter-select"
-          className="h-8 font-rubik text-sm"
+          className="h-6 font-rubik text-sm"
           value={filter}
           onChange={handleFilterChange}
           displayEmpty

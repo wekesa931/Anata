@@ -1,0 +1,19 @@
+.custom-html-content a {
+  color: var(--blue-100);
+  text-decoration: underline;
+}
+
+.custom-html-content ul {
+  list-style-type: disc !important;
+  padding-left: 20px;
+}
+
+.custom-html-content ol {
+  list-style-type: decimal !important;
+  padding-left: 20px;
+}
+
+.custom-html-content li {
+  margin-bottom: 5px;
+  list-style: inherit !important;
+}

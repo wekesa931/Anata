@@ -158,11 +158,12 @@ function CHLForm({
             disabled={disabled}
           />
 
-          <div className="flex justify-end">
+          <div className="flex items-center mt-8">
             <PrimaryButton
               loading={loading}
               disabled={loading || disabled}
               type="submit"
+              fullWidth
             >
               Submit form
             </PrimaryButton>

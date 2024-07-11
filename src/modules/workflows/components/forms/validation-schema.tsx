@@ -251,6 +251,7 @@ const validationRules = (formMeta: any, isWorkflow: boolean) => {
         case 'text':
         case 'multilineText':
         case 'singleLineText':
+        case 'conditions':
         case 'richText': {
           const fieldType = fl?.isMixed ? Yup.mixed : Yup.string
           if (fl.parentKey) {

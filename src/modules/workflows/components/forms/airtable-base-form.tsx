@@ -10,11 +10,11 @@ import ButtonField from 'src/modules/workflows/components/forms/button-field'
 import WorkflowFormsFields from 'src/modules/workflows/components/forms/form-fields'
 import { useAirtableMeta } from 'src/context/airtable-meta'
 import CalendlyLink from 'src/modules/workflows/components/forms/calendly-link'
-import { LoadingButton } from '@mui/lab'
 import { useNotifications } from 'src/context/notifications'
 import { triggerRefresh } from 'src/services/observers'
 import { TaskDefinition } from 'src/modules/tasks/types'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import PrimaryButton from 'src/components/buttons/primary'
 
 const TASK_DEFINITION_FIELD_ID =
   process.env.PROD === 'true' ? 'fldrJeu9BzF1p0thE' : 'fldwYDHowo9JFzkc7'
@@ -308,11 +308,9 @@ function AirtableBasedForm({
             </div>
           ))}
 
-          <div className="flex items-center justify-end">
-            <LoadingButton
-              className={`rounded-xl font-rubik text-sm font-medium normal-case text-white ${
-                !disabled ? 'bg-blue-100 ' : 'bg-disabled-grey'
-              }`}
+          <div className="flex items-center mt-8">
+            <PrimaryButton
+              fullWidth
               disabled={disabled}
               onClick={() => {
                 if (canSubmitForm) {
@@ -324,7 +322,7 @@ function AirtableBasedForm({
               loading={isSubmitting || submittingForm}
             >
               Submit form
-            </LoadingButton>
+            </PrimaryButton>
           </div>
         </form>
       )}

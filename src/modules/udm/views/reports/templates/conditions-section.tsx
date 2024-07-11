@@ -1,10 +1,9 @@
 import { View, StyleSheet, Text } from '@react-pdf/renderer'
 import React from 'react'
-import type { Condition } from 'src/modules/conditions/db/models'
 import Table from 'src/modules/udm/components/pdf-components/table'
 
 type Props = {
-  conditions: Condition[]
+  conditions: any[]
 }
 
 const styles = StyleSheet.create({

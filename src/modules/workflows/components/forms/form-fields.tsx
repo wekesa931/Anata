@@ -38,6 +38,7 @@ import {
 } from 'src/gql/search'
 import { INDEXES } from 'src/modules/workflows/utils'
 import { useMember } from 'src/context/member'
+import useConditionsData from 'src/modules/conditions/hooks/conditions.data'
 import styles from './styles.module.css'
 
 const icon = <Square width={18} height={18} />
@@ -215,9 +216,87 @@ function WorkflowFormsFields({
           error={error}
         />
       )
+    case 'conditions':
+      return (
+        <ConditionSelectOption
+          disabled={disabled}
+          field={field}
+          saveInput={saveInput}
+          control={control}
+          error={error}
+          relationship={field.relationship}
+        />
+      )
     default:
       return <></>
   }
+}
+
+function ConditionSelectOption({
+  field,
+  disabled,
+  saveInput,
+  control,
+  error,
+  relationship,
+  value,
+}: Form) {
+  const isMultiple = relationship === 'many'
+  const [option, setOption] = useState<any>(isMultiple ? [] : null)
+
+  const { allConditions, loading } = useConditionsData()
+
+  const handleChange = (value: any) => {
+    if (value) {
+      const valueToWrite = isMultiple ? value?.join(',') : value
+      saveInput(field.name, valueToWrite)
+      setOption(value)
+    }
+  }
+
+  return (
+    <Controller
+      name={field.name}
+      defaultValue={value}
+      control={control}
+      rules={{ required: true }}
+      render={({ field: { onChange } }) => (
+        <Autocomplete
+          className="mb-4"
+          disabled={disabled}
+          disablePortal
+          value={option}
+          id="combo-box-demo"
+          options={allConditions.map((opt) => opt.name)}
+          onChange={(event: any, newValue: string) => {
+            handleChange(newValue)
+            onChange(newValue)
+          }}
+          loading={loading}
+          loadingText={
+            <div className="flex text-xs">
+              <LoadingIcon /> Loading member conditions...
+            </div>
+          }
+          multiple={isMultiple}
+          renderInput={(params) => (
+            <>
+              {field.helper && <HelperText field={field} error={error} />}
+              <TextField
+                {...params}
+                label={<Label field={field} error={error} />}
+              />
+              {error && (
+                <FormHelperText className="mb-6 text-left font-rubik text-xs font-medium text-red-100">
+                  Select at least one item
+                </FormHelperText>
+              )}
+            </>
+          )}
+        />
+      )}
+    />
+  )
 }
 
 function SingleSelectOption({
@@ -298,7 +377,7 @@ function SingleSelectInput({
     }
 
     const options = (
-      airtableMeta[field.parentTableId]?.fields[field.id] || ({} as any)
+      airtableMeta?.[field.parentTableId]?.fields[field.id] || ({} as any)
     )?.options?.choices
 
     return options || []
@@ -991,8 +1070,9 @@ function LinkRecordInputDefault({
   const settingLinkedData = gettingLinkedRecords || !airtableMeta
   const { member } = useMember()
 
-  const fieldNameFromAirtableMeta =
-    airtableMeta[field.foreignTableId]?.primaryFieldName
+  const fieldNameFromAirtableMeta = airtableMeta
+    ? airtableMeta?.[field.foreignTableId]?.primaryFieldName
+    : ''
 
   useEffect(() => {
     if (data) {
@@ -1027,7 +1107,7 @@ function LinkRecordInputDefault({
       'Antara ID (from Member)',
     ]
     let presentKey = ''
-    const metaFields = airtableMeta[field.foreignTableId]?.fields
+    const metaFields = airtableMeta?.[field.foreignTableId]?.fields
     if (metaFields) {
       Object.keys(metaFields).forEach((ky) => {
         validKeys.forEach((vl) => {

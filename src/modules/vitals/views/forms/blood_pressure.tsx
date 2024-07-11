@@ -137,11 +137,12 @@ function BPReadingForm({
               disabled={disabled}
             />
 
-            <div className="flex justify-end items-center gap-4 mt-3">
+            <div className="flex items-center flex-col gap-4 mt-8">
               <PrimaryButton
                 loading={loading}
                 disabled={loading || disabled}
                 type="submit"
+                fullWidth
               >
                 Submit form
               </PrimaryButton>

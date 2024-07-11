@@ -4,16 +4,17 @@ import {
 } from '@nozbe/watermelondb/Schema/migrations'
 import { membersTableColumns } from 'src/modules/member/db/schema'
 import { CollectionType } from 'src/storage/types'
-import { conditionColumns } from 'src/modules/conditions/db/schema'
+import { conditionColumns } from 'src/modules/conditions(deprecated)/db/schema'
 import { interventionColumns } from 'src/modules/interventions/db/schema'
 import { conditionsInterventionsColumn } from 'src/storage/indexeddb/watermelon/relation-schema'
 import { hmpColumns } from 'src/modules/hmp/db/schema'
 import { vitalsTableColumns } from 'src/modules/vitals/db/schema'
+import { lookupColumns } from 'src/modules/conditions/db/schema'
 
 export default schemaMigrations({
   migrations: [
     {
-      toVersion: 8,
+      toVersion: 9,
       steps: [
         createTable({
           name: CollectionType.MEMBERS,
@@ -38,6 +39,10 @@ export default schemaMigrations({
         createTable({
           name: CollectionType.VITALS,
           columns: vitalsTableColumns,
+        }),
+        createTable({
+          name: CollectionType.LOOKUPS,
+          columns: lookupColumns,
         }),
       ],
     },

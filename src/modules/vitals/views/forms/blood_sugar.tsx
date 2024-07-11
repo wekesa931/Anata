@@ -147,11 +147,12 @@ function DMMonitoring({
             `}
             disabled={disabled}
           />
-          <div className="flex justify-end">
+          <div className="flex items-center mt-8">
             <PrimaryButton
               type="submit"
               disabled={loading || disabled}
               loading={loading}
+              fullWidth
             >
               Submit form
             </PrimaryButton>

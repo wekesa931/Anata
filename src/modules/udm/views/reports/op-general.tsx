@@ -6,10 +6,11 @@ import { useMember } from 'src/context/member'
 import { DocMeta } from 'src/modules/udm/types'
 import OpGeneralPDFTemplate from 'src/modules/udm/views/reports/templates/op-general'
 import useClinicalSummary from 'src/modules/member/hooks/clinical-summary'
-import useConditionData from 'src/modules/conditions/hooks/condition.data'
 import { useReportsGenerationData } from 'src/modules/vitals/hooks/report-generation.hook'
 import useInterventionData from 'src/modules/interventions/hooks/intervention.data'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import { useConditionsData } from 'src/modules/conditions/hooks/conditions.data'
+import { Condition } from 'src/modules/conditions/types'
 
 type Props = {
   loading?: boolean
@@ -43,12 +44,22 @@ function OpGeneralComponent({
   const [error, setError] = useState<any>(null)
   const { member } = useMember()
   const clinicalData = useClinicalSummary()
-  const { memberConditions, loading: loadingConditions } = useConditionData()
+  const { allConditions, loading: loadingConditions } = useConditionsData()
   const { getLabsAndVitalsProgressReport, loadingProgressReport: loading } =
     useReportsGenerationData()
   const { memberInterventions, loading: loadingInterventions } =
     useInterventionData()
   const { trackNewDocumentPreviewed } = useModuleAnalytics()
+
+  const parseMemberCondition = (conditions: Condition[]) => {
+    return (
+      conditions.map((c) => ({
+        condition: c.name,
+        currentStage: c.currentStage?.name,
+        dateOfDiagnosis: c.diagnosisDate,
+      })) || []
+    )
+  }
 
   const handleSuccessShowPdf = () => {
     setError(null)
@@ -101,7 +112,7 @@ function OpGeneralComponent({
           labsAndVitalsData={labsAndVitalsData}
           formData={formData}
           clinicalData={clinicalData}
-          conditions={memberConditions}
+          conditions={parseMemberCondition(allConditions)}
           interventions={memberInterventions}
           isInPatient={isInPatient}
         />

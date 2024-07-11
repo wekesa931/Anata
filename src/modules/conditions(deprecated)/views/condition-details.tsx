@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Item, ItemTitle } from 'src/components/layouts/display-items.component'
 import { BlockSekeleton } from 'src/modules/member/components/skeleton-loaders'
-import useConditionData from 'src/modules/conditions/hooks/condition.data'
-import ConditionFilter from 'src/modules/conditions/components/condition-filter'
-import type { Condition } from 'src/modules/conditions/db/models'
+import useConditionData from 'src/modules/conditions(deprecated)/hooks/condition.data'
+import ConditionFilter from 'src/modules/conditions(deprecated)/components/condition-filter'
+import type { Condition } from 'src/modules/conditions(deprecated)/db/models'
 import {
   AcuteVsChronic,
   ConditionStatus,
   Filter,
-} from 'src/modules/conditions/types'
+} from 'src/modules/conditions(deprecated)/types'
 import { useMember } from 'src/context/member'
 import {
   Accordion,
