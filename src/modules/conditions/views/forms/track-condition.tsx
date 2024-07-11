@@ -212,9 +212,15 @@ export function TrackCondition({
     }
   }, [initialCondition])
 
-  const allowedConditionsToTrack = () =>
-    initialCondition.clinicalStatus?.label === 'Active' &&
-    initialCondition.verificationStatus?.label === 'Confirmed'
+  const allowedConditionsToTrack = () => {
+    const validStatuses = ['Active', 'Recurrence']
+    const label = initialCondition.clinicalStatus?.label
+
+    return (
+      validStatuses.includes(label) &&
+      initialCondition.verificationStatus?.label === 'Confirmed'
+    )
+  }
 
   useEffect(() => {
     if (errorState) {
