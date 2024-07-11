@@ -62,8 +62,9 @@ function AlertDialog({ open, handleClose }: alertProps) {
           id="alert-dialog-slide-description"
           className="text-sm text-gray-600"
         >
-          You can only track conditions that have an Active Clinical Status and
-          a Confirmed Verification Status. Kindly update to track.
+          You can only track conditions that have an Active or Recurrent
+          Clinical Status and a Confirmed Verification Status. Kindly update to
+          track.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
