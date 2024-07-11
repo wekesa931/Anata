@@ -123,7 +123,7 @@ export const useConditionsData = () => {
             : null,
           targetAchievementStatusId:
             values.achievementStatus?.value || values.achievementStatus,
-          targetId: values.targetId?.value || values.targetId,
+          targetId: values.currentTarget?.value || values.currentTarget,
           isNewlyDiagnosed: values.isNewlyDiagnosed === 'yes',
           shouldSystemAutoUpdate: values.shouldSystemAutoUpdate,
           reasonForClinicalStatusChange: values.reasonForClinicalStatusChange,
