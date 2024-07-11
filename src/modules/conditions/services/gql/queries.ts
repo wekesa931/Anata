@@ -40,6 +40,11 @@ export const CONDITIONSV2_QUERY = gql`
         createdAt
       }
 
+      target {
+        targetId
+        name
+      }
+
       startingObservation {
         displayItems
       }

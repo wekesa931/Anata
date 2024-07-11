@@ -117,6 +117,10 @@ export type RawCondition = {
   verificationStatus: { name: string; conditionVerificationStatusId: number }
   id: string
   reasonForClinicalStatusChange: string | null
+  target: {
+    targetId: number
+    name: string
+  }
 }
 
 export type NewConditionValues = {

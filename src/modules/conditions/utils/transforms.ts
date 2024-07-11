@@ -26,12 +26,13 @@ export const formatDateTime = (date: string): string => {
 const transformStage = (
   stage: any,
   rawAchievement: any,
-  rawObservations: any
+  rawObservations: any,
+  rawTarget: any
 ): Stage => {
   return {
     id: stage?.id || null,
     name: stage?.name || '',
-    target: transformStatus(stage?.target, 'targetId'),
+    target: transformStatus(rawTarget, 'targetId'),
     achievement: transformStatus(rawAchievement, 'targetAchievementStatusId'),
     observations: rawObservations?.displayItems || [],
     date: stage?.createdAt,
@@ -74,12 +75,14 @@ export const transformRawCondition = (
     currentStage: transformStage(
       rawCondition.stage,
       rawCondition.targetAchievementStatus,
-      rawCondition.currentObservation
+      rawCondition.currentObservation,
+      rawCondition.target
     ),
     initialStage: transformStage(
       rawCondition.startingStage,
       rawCondition.targetAchievementStatus,
-      rawCondition.startingObservation
+      rawCondition.startingObservation,
+      rawCondition.target
     ),
     isChronic: rawCondition.isChronic,
     shouldSystemAutoUpdate: !!rawCondition.shouldSystemAutoUpdate,
