@@ -106,6 +106,7 @@ export type PayorType = {
 
 export type V2MemberType = {
   antaraId: string
+  healthStatus: string
   birthDate: string
   firstName?: string
   middleName?: string
@@ -247,6 +248,7 @@ export type MemberCohortQueryType = {
 export type V2MemberQueryType = {
   antaraId: string
   birthDate?: string
+  healthStatus?: string
   details: {
     fullName?: string
     firstName?: string

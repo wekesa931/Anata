@@ -131,6 +131,7 @@ export const createOrUpdateMember = (
   member.caregiverContact = mergeCaregiverContact(member, memberData)
   member.nhifNumber = memberData?.nhifNumber
   member.membercohortSet = memberCohorts
+  member.healthStatus = memberData.healthStatus
 
   return member
 }
@@ -214,6 +215,8 @@ export class Member extends Model {
   @text('nhif_number') nhifNumber?: string
 
   @json('member_cohorts', identityJson) membercohortSet?: MemberCohortType[]
+
+  @text('health_status') healthStatus?: string
 
   @writer async destroy() {
     await super.destroyPermanently()

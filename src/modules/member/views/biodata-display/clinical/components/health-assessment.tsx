@@ -4,14 +4,16 @@ import {
   Item,
   GridItems,
 } from 'src/components/layouts/display-items.component'
+import { useMember } from 'src/context/member'
 import useClinicalSummary from 'src/modules/member/hooks/clinical-summary'
 
 function HealthAssessmentSection() {
-  const { healthStatus, riskScore, healthGoals } = useClinicalSummary()
+  const { riskScore, healthGoals } = useClinicalSummary()
+  const { member } = useMember()
   return (
     <SectionItem>
       <GridItems>
-        <Item title="Health Status" child={healthStatus} />
+        <Item title="Health Status" child={member?.healthStatus} />
         <Item title="Risk Score" child={riskScore} />
       </GridItems>
       <GridItems single>

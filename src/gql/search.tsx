@@ -42,6 +42,7 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
     antaraId
     birthDate
     lastSeen
+    healthStatus
     details {
       fullName
       firstName

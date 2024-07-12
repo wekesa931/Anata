@@ -64,6 +64,7 @@ export const parseV2MemberData = (
   const birthDate = memberData?.birthDate || ''
   member.antaraId = memberData?.antaraId
   member.birthDate = birthDate
+  member.healthStatus = memberData?.healthStatus
 
   // details information
   const { details = {} } = memberData
