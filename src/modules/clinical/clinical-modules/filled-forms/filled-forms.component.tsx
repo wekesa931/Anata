@@ -44,28 +44,10 @@ function FilledForms() {
   const forms = [
     'baseline',
     'hif',
-    'ncf',
-    'minorhif',
-    'hntasks',
     'pafu',
-    'medications',
-    'appointments',
-    'vitals',
-    'bp',
-    'chl',
-    'dm',
-    'conditions',
-    'hmp',
-    'clinicalrounds',
-    'interventions',
-    'interventions_tracking',
     'mhc',
-    'physio',
     'minor_health_check',
-    'minorhifv2',
-    'healthTriageForm',
     'incident',
-    'logisticsTasks',
   ]
 
   useEffect(() => {
