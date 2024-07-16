@@ -77,6 +77,9 @@ export default ({ mode }: any) => {
       chunkSizeWarningLimit: 1800,
       rollupOptions: {
         output: {
+          entryFileNames: 'assets/[name].[hash].js',
+          chunkFileNames: 'assets/[name].[hash].js',
+          assetFileNames: 'assets/[name].[hash].[ext]',
           manualChunks: {},
         },
       },
