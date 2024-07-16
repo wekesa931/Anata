@@ -4,7 +4,6 @@ import path from 'path'
 import dns from 'dns'
 import svgr from 'vite-plugin-svgr'
 import { ViteMinifyPlugin } from 'vite-plugin-minify'
-// import { VitePWA } from 'vite-plugin-pwa'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 dns.setDefaultResultOrder('verbatim')
@@ -68,56 +67,6 @@ export default ({ mode }: any) => {
           ],
         },
       }),
-      // VitePWA({
-      //   registerType: 'autoUpdate',
-      //   manifest: {
-      //     name: 'Scribe Web Application',
-      //     short_name: 'scribe-app',
-      //     icons: [
-      //       {
-      //         src: '/manifest-icons/maskable_icon.png',
-      //         type: 'image/png',
-      //         sizes: '96x96',
-      //       },
-      //       {
-      //         src: '/manifest-icons/android-chrome-192x192.png',
-      //         type: 'image/png',
-      //         sizes: '192x192',
-      //         purpose: 'favicon',
-      //       },
-      //       {
-      //         src: '/manifest-icons/android-chrome-512x512.png',
-      //         type: 'image/png',
-      //         sizes: '512x512',
-      //         purpose: 'favicon',
-      //       },
-      //       {
-      //         src: '/manifest-icons/favicon-32x32.png',
-      //         type: 'image/png',
-      //         sizes: '32x32',
-      //       },
-      //       {
-      //         src: '/manifest-icons/favicon-16x16.png',
-      //         type: 'image/png',
-      //         sizes: '16x16',
-      //       },
-      //       {
-      //         src: '/manifest-icons/mstile-144x144.png',
-      //         type: 'image/png',
-      //         sizes: '144x144',
-      //       },
-      //     ],
-      //     theme_color: '#171717',
-      //     background_color: '#f0e7db',
-      //     display: 'standalone',
-      //     scope: '/',
-      //     start_url: '/',
-      //     orientation: 'portrait',
-      //   },
-      //   injectManifest: {
-      //     injectionPoint: undefined,
-      //   },
-      // }),
     ],
     css: {
       modules: {
@@ -131,6 +80,8 @@ export default ({ mode }: any) => {
           manualChunks: {},
         },
       },
+      assetsDir: 'assets',
+      manifest: true,
     },
     server: {
       watch: {

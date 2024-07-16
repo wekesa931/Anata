@@ -6,6 +6,12 @@ import { datadogRum } from '@datadog/browser-rum'
 const { DATADOG_APPLICATION_ID, DATADOG_CLIENT_TOKEN } = process.env
 
 if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    registrations.forEach((registration) => {
+      registration.unregister()
+    })
+  })
+
   if ('caches' in window) {
     caches.keys().then((cacheNames) => {
       cacheNames.forEach((cacheName) => {
