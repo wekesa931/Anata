@@ -10,7 +10,8 @@ import { useMember } from 'src/context/member'
 import DataTable, { Column } from 'src/components/table/data-table'
 import dayjs from 'dayjs'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
-import filterFields from 'src/utils/airtable/field-utils'
+import { useAppointmentsData } from 'src/modules/clinical/clinical-modules/appointments/hooks/appointments-data'
+import logError from 'src/utils/logging/logger'
 
 function PafuView({ data }: any) {
   const [showPafu, setShowPafu] = useState(false)
@@ -27,6 +28,8 @@ function PafuView({ data }: any) {
         })
         .finally(() => setLoading(false))
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pafuRecordId])
 
   const openPafu = (e: any) => {
@@ -111,70 +114,36 @@ function Appointments() {
   const recId = member?.airtableRecordId
   const [appointments, setAppointments] = useState<any[]>([])
   const [filteredAppointments, setFilteredAppointments] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const {
     ops: {
       filters: { appointments: filters },
     },
   } = useSortFilter()
+  const { getAppointments } = useAppointmentsData()
 
   useEffect(() => {
     let isCancelled = false
-    const allowedFields = [
-      'App Sign-up (from Member)',
-      'Assignee Name',
-      'Calendly Cancellation URL',
-      'Calendly Reschedule URL',
-      'Calendly event ID',
-      'Clinical Consultation',
-      'Comments',
-      'Consultation Type (from Clinical Consultation)',
-      'Data Source',
-      'Days left before Appointment',
-      'DaysSinceLastStatusUpdate',
-      'Internal vs External',
-      'LastStatusUpdate',
-      'Minor Health Check (from Member)',
-      'Plan (from Clinical Consultations)',
-      'Primary Diagnosis (from Clinical Consultations)',
-      'Service',
-      'Baseline',
-      'Source',
-      'Start_date_time_month_of_the_year',
-      'State Machine ID',
-      'Status',
-      'Summary',
-      'Tags (from Member)',
-      'Tasks',
-      'created_by',
-      'created_at',
-      'end_date_time',
-      'last_modified_by_',
-      'start_date_time',
-      'start_day_of_week_int',
-      'start_time_hour_int',
-      'status_last_modified_at',
-      'updated_by',
-      'Rescheduled',
-      'Missed',
-      'PAFU',
-    ]
+
     if (recId) {
-      airtableFetch(
-        `appointments/list?filterByFormula=FIND("${recId}", {Member Record ID})&${filterFields(
-          allowedFields
-        )}`
-      ).then((response) => {
-        if (!isCancelled) {
-          const apps = Object.keys(response).map((key) => response[key])
-          setAppointments(apps)
+      setLoading(true)
+      getAppointments()
+        .then((data: any[]) => {
+          if (!isCancelled) {
+            setAppointments(data)
+          }
+        })
+        .catch(logError)
+        .finally(() => {
           setLoading(false)
-        }
-      })
+        })
     }
+
     return () => {
       isCancelled = true
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recId])
 
   useEffect(() => {

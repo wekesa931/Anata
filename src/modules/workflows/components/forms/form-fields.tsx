@@ -31,15 +31,12 @@ import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
 import { debounce } from 'lodash'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import { Form } from 'src/modules/workflows/types'
-import {
-  GLOBAL_SEARCH,
-  OPTIMIZED_SEARCH,
-  GET_DOCUMENT_OPENSEARCH,
-} from 'src/gql/search'
+import { OPTIMIZED_SEARCH, GET_DOCUMENT_OPENSEARCH } from 'src/gql/search'
 import { INDEXES } from 'src/modules/workflows/utils'
 import { useMember } from 'src/context/member'
 import useConditionsData from 'src/modules/conditions/hooks/conditions.data'
 import styles from './styles.module.css'
+import { useForeignKeyDataHandler } from '../../hooks/foreign-key-data-handler'
 
 const icon = <Square width={18} height={18} />
 const checkedIcon = <CheckSquare width={18} height={18} />
@@ -92,22 +89,16 @@ function WorkflowFormsFields({
   disabled,
   control,
   error,
-  isWorkflow,
   airtableMeta,
   saveInput,
 }: Form) {
-  const isMemberField =
-    field.name === 'Member' ||
-    field.name === 'member' ||
-    field.name === 'Members'
-  // eslint-disable-next-line no-underscore-dangle
-  const isWorkflowForm = !isMemberField && isWorkflow
-  const isNormalForm =
-    // eslint-disable-next-line no-underscore-dangle
-    field.name !== 'Case ID' && !isMemberField && !isWorkflow
+  const notIn = (arr: string[]) => !arr.includes(field.foreignTableId)
+  const notCaseIdField = () => notIn(['tbl7Kh4tVrQp9JdUc', 'tblpQpVJrFonBQuBg'])
+  const notMemberField = () => notIn(['tblAjKAJOCIDk5Nco', 'tblidCJtioaFSYwvk'])
+
   switch (field.type) {
     case 'foreignKey':
-      if (isWorkflowForm || isNormalForm) {
+      if (notMemberField() && notCaseIdField()) {
         return (
           <LinkRecordInput
             value={value}
@@ -121,19 +112,6 @@ function WorkflowFormsFields({
         )
       }
       return <></>
-    case 'collaborator':
-      return (
-        <CollaboratorInput
-          value={value}
-          disabled={disabled}
-          field={field}
-          airtableMeta={airtableMeta}
-          saveInput={saveInput}
-          control={control}
-          error={error}
-        />
-      )
-
     case 'select':
     case 'checkbox':
     case 'singleSelect':
@@ -1065,85 +1043,40 @@ function LinkRecordInputDefault({
   handleChange,
   setLinkedRecords,
 }: any) {
-  const [getLinkedRecords, { data, loading: gettingLinkedRecords }] =
-    useLazyQuery(GLOBAL_SEARCH)
+  const [gettingLinkedRecords, setLoading] = useState(false)
+  const [loadingError, setLoadingError] = useState(null)
+
   const settingLinkedData = gettingLinkedRecords || !airtableMeta
   const { member } = useMember()
 
-  const fieldNameFromAirtableMeta = airtableMeta
-    ? airtableMeta?.[field.foreignTableId]?.primaryFieldName
-    : ''
+  const getTableFromName = () => {
+    const tableId = field.foreignTableId
+    const table = airtableMeta?.[tableId]
 
-  useEffect(() => {
-    if (data) {
-      const response = data.globalSearch.data || []
-      const filteredOptions = field?.filterResponse
-        ? field.filterResponse(response)
-        : response
-
-      const displayFields: any[] = []
-      filteredOptions.forEach((fl: any) => {
-        const loadedMeta = fl.fields[fieldNameFromAirtableMeta]
-        const loadedValue = loadedMeta && typeof loadedMeta === 'string'
-        if (loadedValue) {
-          displayFields.push({
-            id: fl.id,
-            name: loadedMeta?.toLocaleString(),
-          })
-        }
-      })
-      setLinkedRecords(displayFields)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
-  const checkAntaraIdKey = () => {
-    const validKeys = [
-      'Antara ID (from member)',
-      'Antara ID (from Members)',
-      'antara_id',
-      'Antara ID',
-      'antara_member_id',
-      'Antara Member ID',
-      'Antara ID (from Member)',
-    ]
-    let presentKey = ''
-    const metaFields = airtableMeta?.[field.foreignTableId]?.fields
-    if (metaFields) {
-      Object.keys(metaFields).forEach((ky) => {
-        validKeys.forEach((vl) => {
-          if (metaFields[ky].name === vl) {
-            presentKey = vl
-          }
-        })
-      })
-    }
-
-    return presentKey
+    return table
   }
 
+  const { getLinkedData } = useForeignKeyDataHandler()
+
   useEffect(() => {
-    if (airtableMeta) {
-      let airtableField = airtableMeta[field.foreignTableId]?.primaryFieldName
-      let searchParam = ''
-      if (
-        field.foreignTableId === 'tblHs6JxFnMGAjNNC' &&
-        field.name === 'Consulting Clinician'
-      ) {
-        airtableField = 'Team'
-        searchParam = 'Doctor'
+    if (airtableMeta && member) {
+      const table = getTableFromName()
+      setLoading(true)
+      if (table) {
+        setLoadingError(null)
+        getLinkedData({ ...table, fieldId: field.id })
+          .then((options) => {
+            setLinkedRecords(options)
+          })
+          .catch(setLoadingError)
+          .finally(() => {
+            setLoading(false)
+          })
       }
-      getLinkedRecords({
-        variables: {
-          table: field.foreignTableId,
-          field: airtableField,
-          searchParam,
-          antaraIdKey: checkAntaraIdKey(),
-          antaraIdValue: checkAntaraIdKey() ? member?.antaraId || '' : '',
-        },
-      })
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [airtableMeta])
+  }, [airtableMeta, member])
 
   return (
     <Controller
@@ -1155,7 +1088,7 @@ function LinkRecordInputDefault({
         <>
           {field.helper && (
             <InputLabel>
-              <HelperText field={field} error={error} />
+              <HelperText field={field} error={error || loadingError} />
             </InputLabel>
           )}
           <Autocomplete
@@ -1210,149 +1143,6 @@ function LinkRecordInputDefault({
   )
 }
 
-function CollaboratorInput({
-  value: linkedValue,
-  field,
-  saveInput,
-  airtableMeta,
-  disabled,
-  control,
-  error,
-}: Form) {
-  const [selectedChoices, setSelectedChoices] = useState<any>(() => {
-    if (field.relationship === 'many') {
-      return []
-    }
-    return null
-  })
-  const [linkedRecords, setLinkedRecords] = useState<any[]>([])
-  const filterOptions = createFilterOptions({
-    matchFrom: 'any',
-    limit: 50,
-  })
-  const [getLinkedRecords, { data, loading: gettingLinkedRecords }] =
-    useLazyQuery(GLOBAL_SEARCH)
-  const settingLinkedData = gettingLinkedRecords || !airtableMeta
-  useEffect(() => {
-    if (data) {
-      const response = data.globalSearch.data
-      const loadedMeta = response.map((res) => {
-        return {
-          email: res.fields.Email,
-          name: res.fields.Name,
-        }
-      })
-
-      setLinkedRecords(loadedMeta)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
-
-  useEffect(() => {
-    if (airtableMeta) {
-      const airtableField = airtableMeta[field.foreignTableId]?.primaryFieldName
-
-      getLinkedRecords({
-        variables: {
-          table: field.foreignTableId,
-          field: airtableField,
-          searchParam: '',
-          antaraIdKey: '',
-          antaraIdValue: '',
-        },
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [airtableMeta])
-
-  useEffect(() => {
-    if (linkedValue && linkedRecords.length > 0) {
-      const recordValue = linkedRecords.filter(
-        (rec: any) => rec.name === linkedValue.name
-      )
-      if (field.relationship === 'many') {
-        setSelectedChoices(recordValue)
-      } else {
-        setSelectedChoices(recordValue[0])
-      }
-    } else if (field.relationship === 'many') {
-      setSelectedChoices([])
-    } else {
-      setSelectedChoices(null)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [linkedValue, linkedRecords])
-  const handleChange = (onChange: (val: any) => any, value: any) => {
-    if (value) {
-      onChange(value)
-      saveInput(field.name, value)
-    }
-  }
-
-  return (
-    <Controller
-      name={field.name}
-      defaultValue={linkedValue}
-      control={control}
-      rules={{ required: true }}
-      render={({ field: { onChange } }) => (
-        <>
-          {field.helper && (
-            <InputLabel>
-              <HelperText field={field} error={error} />
-            </InputLabel>
-          )}
-          <Autocomplete
-            multiple={field.relationship === 'many'}
-            disablePortal
-            filterOptions={filterOptions}
-            disabled={disabled}
-            loading={settingLinkedData}
-            loadingText={
-              <div className="flex text-xs">
-                <LoadingIcon /> Loading {field.name} records
-              </div>
-            }
-            id="combo-box-demo"
-            options={linkedRecords}
-            value={selectedChoices}
-            disableCloseOnSelect={field.relationship === 'many'}
-            sx={{ marginBottom: 2 }}
-            onChange={(event: SyntheticEvent<Element, Event>, value: any) =>
-              handleChange(onChange, value)
-            }
-            getOptionLabel={(option) => option?.name || ''}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={<Label field={field} error={error} />}
-              />
-            )}
-            renderOption={(props, option, { selected }) => {
-              return (
-                <li {...props}>
-                  <Checkbox
-                    key={option.id}
-                    icon={icon}
-                    checkedIcon={checkedIcon}
-                    style={{ marginRight: 8 }}
-                    checked={selected}
-                  />
-                  {option.name}
-                </li>
-              )
-            }}
-          />
-          {error && (
-            <FormHelperText className="mb-4 text-left font-rubik font-medium text-red-100">
-              This field is required
-            </FormHelperText>
-          )}
-        </>
-      )}
-    />
-  )
-}
 function DateInputField({
   value: dateValue,
   field,

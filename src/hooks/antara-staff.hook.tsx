@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useLazyQuery } from '@apollo/client'
 import { GET_ANTARA_STAFF } from 'src/gql/staff'
-import logError from 'src/utils/logging/logger'
 import { User } from 'src/types/user'
 
 const mapAssigneeTeam = (antaraStaff: any[]) => {
@@ -29,6 +28,8 @@ export const mapAssigneeToLookup = (allAntaraStaffs: any[]) => {
       label: fullName,
       value: emailUsername,
       recordId: atRecordId,
+      id: atRecordId,
+      name: fullName,
     })
   )
 }
@@ -66,19 +67,30 @@ export const useAntaraStaff = () => {
   }
 
   const getFromCache = async () => {
-    try {
-      const cache = sessionStorage.getItem(ANTARA_STAFF_KEY)
-      if (cache) {
-        const cached = JSON.parse(cache)
-        if (cached.length > 0) return setAllAntaraStaffs(cached)
+    const cache = sessionStorage.getItem(ANTARA_STAFF_KEY)
+    if (cache) {
+      const cached = JSON.parse(cache)
+      if (cached.length > 0) {
+        setAllAntaraStaffs(cached)
+        return cached
       }
-      const { data } = await getAntaraStaff()
-      const fetchedData = extractStaffData(data?.antaraStaff?.edges || [])
-      setAllAntaraStaffs(fetchedData)
-      sessionStorage.setItem(ANTARA_STAFF_KEY, JSON.stringify(fetchedData))
-    } catch (error) {
-      logError(error)
     }
+    const { data } = await getAntaraStaff()
+    const fetchedData = extractStaffData(data?.antaraStaff?.edges || [])
+    setAllAntaraStaffs(fetchedData)
+    sessionStorage.setItem(ANTARA_STAFF_KEY, JSON.stringify(fetchedData))
+
+    return fetchedData
+  }
+
+  const getStaffData = async () => {
+    const data = await getFromCache()
+
+    return data.map((d: any) => ({
+      ...d,
+      name: d.fullName,
+      id: d.atRecordId,
+    }))
   }
 
   useEffect(() => {
@@ -104,6 +116,7 @@ export const useAntaraStaff = () => {
       ),
       antaraLogistics: filterByTeam(['LOGISTICS'], allAntaraStaffs),
       getStaffByUser,
+      getStaffData,
     }),
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
