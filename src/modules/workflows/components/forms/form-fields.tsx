@@ -2,7 +2,10 @@ import React, {
   ChangeEvent,
   Fragment,
   SyntheticEvent,
+  useCallback,
   useEffect,
+  useMemo,
+  useRef,
   useState,
 } from 'react'
 import Box from '@mui/material/Box'
@@ -35,6 +38,7 @@ import { OPTIMIZED_SEARCH, GET_DOCUMENT_OPENSEARCH } from 'src/gql/search'
 import { INDEXES } from 'src/modules/workflows/utils'
 import { useMember } from 'src/context/member'
 import useConditionsData from 'src/modules/conditions/hooks/conditions.data'
+import logError from 'src/utils/logging/logger'
 import styles from './styles.module.css'
 import { useForeignKeyDataHandler } from '../../hooks/foreign-key-data-handler'
 
@@ -924,41 +928,69 @@ function LinkRecordInputOptimizedSearch({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const [search, { loading: searching }] = useLazyQuery(OPTIMIZED_SEARCH, {
-    context: {
-      clientName: 'search',
-    },
-    onCompleted: (data) => {
-      const response = data.optimizedSearch.data || {}
-      const displayKey = response?.displayName || 'name'
+  const [search, { loading: searching }] = useLazyQuery(OPTIMIZED_SEARCH)
+  const abortControllerRef = useRef<AbortController | null>(null)
+  const [loadingError, setLoadingError] = useState<string | undefined>()
 
-      const searchResults = response?.results || []
-      setLinkedRecords((prev: any[]) =>
-        getUniqueRecords([
-          ...prev,
-          ...searchResults.map((rec: any) => ({
-            id: rec.id,
-            name: rec[displayKey],
-          })),
-        ])
-      )
-    },
-  })
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(async (keyword: string) => {
+        if (keyword.length < 4) return
+
+        // cancel any pending requests
+        if (abortControllerRef.current) {
+          abortControllerRef.current.abort()
+        }
+
+        abortControllerRef.current = new AbortController()
+        const signal = abortControllerRef.current?.signal
+
+        try {
+          setLoadingError(undefined)
+          const { data } = await search({
+            variables: { keyword, table: indexId },
+            context: {
+              clientName: 'search',
+              fetchOptions: {
+                signal,
+              },
+            },
+          })
+
+          const response = data?.optimizedSearch?.data || {}
+          const displayKey = response?.displayName || 'name'
+
+          const searchResults = response?.results || []
+          setLinkedRecords((prev: any[]) =>
+            getUniqueRecords([
+              ...prev,
+              ...searchResults.map((rec: any) => ({
+                id: rec.id,
+                name: rec[displayKey],
+              })),
+            ])
+          )
+        } catch (error: any) {
+          if (error?.name !== 'AbortError') {
+            logError(error)
+            setLoadingError(error?.message ?? 'Error loading records')
+          }
+        }
+      }, 500),
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [search]
+  )
 
   const settingLinkedData = searching || !airtableMeta
 
-  const debouncedSearch = debounce((keyword: string) => {
-    if (keyword.length < 3) return
-    search({ variables: { keyword, table: indexId } })
-  }, 500)
-
-  const handleSearch = (
-    event: SyntheticEvent<Element, Event>,
-    value: string
-  ) => {
-    setSearchKey(value)
-    debouncedSearch(value)
-  }
+  const handleSearch = useCallback(
+    (event: SyntheticEvent<Element, Event>, value: string) => {
+      setSearchKey(value)
+      debouncedSearch(value)
+    },
+    [debouncedSearch]
+  )
 
   return (
     <Controller
@@ -970,7 +1002,7 @@ function LinkRecordInputOptimizedSearch({
         <>
           {field.helper && (
             <InputLabel>
-              <HelperText field={field} error={error} />
+              <HelperText field={field} error={error || loadingError} />
             </InputLabel>
           )}
           <Autocomplete
