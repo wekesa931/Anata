@@ -14283,7 +14283,7 @@ export default [
         symmetricColumnId: null,
         unreversed: false,
         relationship: null,
-        foreignTableId: 'tblHs6JxFnMGAjNNC',
+        foreignTableId: 'tblZyeANbBkE2q4uG',
         required: false,
         helper:
           'Please tag the staff member who was in charge of the member or who was linked to the incident',
