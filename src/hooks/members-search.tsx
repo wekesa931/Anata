@@ -102,6 +102,9 @@ export const useMemberSearch = () => {
       variables: {
         query: q,
       },
+      context: {
+        clientName: 'v2',
+      },
     })
 
     if (res?.data) {
