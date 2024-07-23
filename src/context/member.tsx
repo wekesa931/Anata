@@ -98,7 +98,7 @@ export function MemberProvider({ antaraId, children }: Props) {
   const providerValue = {
     member,
     memberNotFound,
-    isLoading,
+    isLoading: !member,
   }
 
   const showMemberNotSyncedToHNOSAlert = !!memberNotSyncedToHNOS && !!antaraId
