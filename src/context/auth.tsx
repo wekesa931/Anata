@@ -43,11 +43,18 @@ function AuthProvider({ user, children }: Props) {
 
   const { getStaffByUser } = useAntaraStaff()
   const [currentUser, setCurrentUser] = useState(user || loggedInUser)
+
+  // clear cache storage on logout
+  const clearCache = () => {
+    localStorage.clear()
+  }
+
   const logout = async () => {
     storage.removeAll()
     setCurrentUser(null)
     googleLogout()
     analytics.reset()
+    clearCache()
     navigate('/login')
   }
 

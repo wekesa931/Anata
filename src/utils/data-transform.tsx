@@ -65,7 +65,7 @@ export const parseSearchData = (memberData: V2MemberQueryType) => {
   }) - ${age} [${getSexAccronym(sex || '')}] - ${employerName}`
 
   return {
-    displayName: displayName,
+    displayName,
     antaraId: memberData?.antaraId,
   }
 }
