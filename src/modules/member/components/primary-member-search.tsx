@@ -35,7 +35,7 @@ export default function PrimaryMemberSearch({
 
   const handleChange = (value: V2MemberType) => {
     if (value) {
-      createMemberInstance(null, value)
+      createMemberInstance(null, value, [])
         .then((newPrimary) => {
           setPrimaryMember(newPrimary)
         })

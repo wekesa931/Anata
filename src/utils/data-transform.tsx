@@ -50,6 +50,26 @@ export const parseMemberCohort = (
   }))
 }
 
+export const parseSearchData = (memberData: V2MemberQueryType) => {
+  const details = memberData.details || {}
+  const status = memberData.status || { employer: { name: '' } }
+  const birthDate = memberData?.birthDate || ''
+  const sex = details?.sex?.sex || ''
+
+  const fullName = details?.fullName
+  const age = getAgeFull(birthDate)
+
+  const employerName = status?.employer?.name || ''
+  const displayName = `${fullName} (${
+    memberData?.antaraId
+  }) - ${age} [${getSexAccronym(sex || '')}] - ${employerName}`
+
+  return {
+    displayName: displayName,
+    antaraId: memberData?.antaraId,
+  }
+}
+
 /**
  * Extract member details from graphql response structure
  */

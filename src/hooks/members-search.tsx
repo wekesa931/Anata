@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { useLazyQuery } from '@apollo/client'
-import { SEARCH_MEMBERS } from 'src/gql/search'
+import { SEARCH_MEMBERS, SEARCH_MEMBERS_FULL } from 'src/gql/search'
 import { MEMBER_DETAILS_QUERY } from 'src/modules/member/services/gql'
 import type { V2MemberQueryType, V2MemberType } from 'src/modules/member/types'
-import { parseV2MemberData } from 'src/utils/data-transform'
+import { parseSearchData, parseV2MemberData } from 'src/utils/data-transform'
 import { debounce } from 'lodash'
 
 interface ResultItemType {
@@ -11,13 +11,8 @@ interface ResultItemType {
 }
 
 export interface SearchResultType {
-  fullName: string
   antaraId: string
-  age: number
-  sex: string
-  airtableRecordId: string
   displayName: string
-  employerName: string
 }
 
 export const useMemberSearch = () => {
@@ -25,6 +20,8 @@ export const useMemberSearch = () => {
   const [memberDetails, setMemberDetails] = useState<V2MemberType | null>(null)
 
   const [search, { loading, error }] = useLazyQuery(SEARCH_MEMBERS)
+  const [fullSearch, { loading: loadingFull, error: errorFull }] =
+    useLazyQuery(SEARCH_MEMBERS_FULL)
 
   const [
     getMember,
@@ -81,7 +78,7 @@ export const useMemberSearch = () => {
           if (data) {
             const searchResults =
               data?.membersSearch?.edges?.map(({ node }: ResultItemType) =>
-                parseV2MemberData(node)
+                parseSearchData(node)
               ) || []
             setResults(searchResults)
           }
@@ -98,7 +95,7 @@ export const useMemberSearch = () => {
   )
 
   const querySearch = async (q: string) => {
-    const res = await search({
+    const res = await fullSearch({
       variables: {
         query: q,
       },
@@ -120,8 +117,8 @@ export const useMemberSearch = () => {
   return {
     search: searchMembers,
     results,
-    loading,
-    error,
+    loading: loading || loadingFull,
+    error: error || errorFull,
     loadingMember,
     getMemberDetails,
     memberDetails,
