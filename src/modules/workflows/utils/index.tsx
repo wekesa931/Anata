@@ -207,6 +207,19 @@ export const generatePayload = (
       `The following fields are missing on airtable and have not been saved ${affectedFields}`
     )
   }
+
+  const containsNull = (obj: any, k: string) => {
+    if (obj?.[k] === null) return true
+
+    const all_null = (arr: any[]) =>
+      arr.every(function (v: any) {
+        return v === null
+      })
+
+    if (Array.isArray(obj?.[k]) && all_null(obj?.[k])) return true
+
+    return false
+  }
   /**
    * Remove fields that are not defined in the local schema
    */
@@ -215,8 +228,9 @@ export const generatePayload = (
   )
   Object.keys(mappedPayload)?.forEach((k) => {
     if (
-      !currentFieldOptionsInLocalSchema.includes(k) &&
-      !isAllowedField(findById(k))
+      (!currentFieldOptionsInLocalSchema.includes(k) &&
+        !isAllowedField(findById(k))) ||
+      containsNull(mappedPayload, k)
     ) {
       delete mappedPayload[k]
     }
