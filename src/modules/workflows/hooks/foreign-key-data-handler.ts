@@ -61,7 +61,7 @@ export const useForeignKeyDataHandler = () => {
     ) => {
       let filterFormula = ''
       if (hasAntaraId) {
-        filterFormula = `filterByFormula=FIND("${member?.antaraId}, {Antara ID})&"`
+        filterFormula = `filterByFormula=FIND('${member?.antaraId}',{Antara ID})&`
       }
 
       return `${tablePath}/list?${filterFormula}${filterFields(fields)}`
