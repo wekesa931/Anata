@@ -5,11 +5,7 @@ import {
   parseDataToOptions,
   parseLookupEntries,
 } from 'src/modules/member/utils/data-transforms'
-
-enum CACHE_KEYS {
-  LOOKUPS = 'LOOKUPS',
-  INSURANCES = 'INSURANCES',
-}
+import { CACHE_KEYS, getFromCache } from 'src/storage/localstorage-cache'
 
 export const useGetLookupEntries = () => {
   const [loadLookupEntries, { loading: loadingEntries }] = useLazyQuery(
@@ -23,18 +19,6 @@ export const useGetLookupEntries = () => {
   const [loadInsuranceCompanies, { loading }] = useLazyQuery(
     GET_INSURANCE_COMPANIES
   )
-
-  const getFromCache = async (key: CACHE_KEYS, fn: () => Promise<any>) => {
-    const cached = localStorage.getItem(key)
-
-    if (cached) {
-      return JSON.parse(cached)
-    }
-
-    const data = await fn()
-    localStorage.setItem(key, JSON.stringify(data))
-    return data
-  }
 
   const getInsuranceCompaniesAPI = async () => {
     const res = await loadInsuranceCompanies()

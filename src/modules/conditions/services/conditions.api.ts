@@ -14,6 +14,7 @@ import {
 import { NewConditionValues } from 'src/modules/conditions/types'
 import { useMember } from 'src/context/member'
 import { camelCase } from 'lodash'
+import { CACHE_KEYS, getFromCache } from 'src/storage/localstorage-cache'
 
 const API_CONFIG = {
   context: {
@@ -103,7 +104,7 @@ export const useConditionsApi = () => {
     ],
   })
 
-  const fetchConditionsDefinitions = async () => {
+  const fetchConditionsDefinitionsAPI = async () => {
     const { data } = await fetchConditionsDefinitionQuery()
 
     return transformRawConditionDefinitions(
@@ -111,7 +112,9 @@ export const useConditionsApi = () => {
     )
   }
 
-  const fetchLookups = async () => {
+  const fetchConditionsDefinitions = async () => getFromCache(CACHE_KEYS.CONDITION_DEFINITIONS, fetchConditionsDefinitionsAPI)
+
+  const fetchLookupsAPI = async () => {
     const { data } = await fetchLookupsQuery()
 
     return Object.keys(data).reduce((acc: any, key) => {
@@ -122,6 +125,8 @@ export const useConditionsApi = () => {
       return acc
     }, {})
   }
+
+  const fetchLookups = async () => getFromCache(CACHE_KEYS.CONDITION_LOOKUPS, fetchLookupsAPI)
 
   const throwGraphErrors = (error: any) => {
     const allErrors = error?.graphQLErrors?.map((e: any) => {
