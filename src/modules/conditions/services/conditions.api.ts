@@ -112,7 +112,11 @@ export const useConditionsApi = () => {
     )
   }
 
-  const fetchConditionsDefinitions = async () => getFromCache(CACHE_KEYS.CONDITION_DEFINITIONS, fetchConditionsDefinitionsAPI)
+  const fetchConditionsDefinitions = async () =>
+    getFromCache(
+      CACHE_KEYS.CONDITION_DEFINITIONS,
+      fetchConditionsDefinitionsAPI
+    )
 
   const fetchLookupsAPI = async () => {
     const { data } = await fetchLookupsQuery()
@@ -126,7 +130,8 @@ export const useConditionsApi = () => {
     }, {})
   }
 
-  const fetchLookups = async () => getFromCache(CACHE_KEYS.CONDITION_LOOKUPS, fetchLookupsAPI)
+  const fetchLookups = async () =>
+    getFromCache(CACHE_KEYS.CONDITION_LOOKUPS, fetchLookupsAPI)
 
   const throwGraphErrors = (error: any) => {
     const allErrors = error?.graphQLErrors?.map((e: any) => {

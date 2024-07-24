@@ -72,15 +72,16 @@ export const useForeignKeyDataHandler = () => {
 
     const airtablePath = constructFilterFormula(
       tablePath,
-      [primaryField],
+      [primaryField, 'Record ID'],
       hasAMembersField(opts.fields)
     )
     const res = await airtableFetch(airtablePath)
+    console.log(res)
 
     if (Array.isArray(res)) {
       return res.map((r) => ({
         name: r[primaryField],
-        id: r.id,
+        id: r?.['Record ID'],
       }))
     }
 
