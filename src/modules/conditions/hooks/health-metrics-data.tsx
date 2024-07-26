@@ -85,6 +85,7 @@ export const useHealthMetricsData = () => {
       label: m?.name,
       helperText: m?.helperText,
       value: m?.name,
+      unit: m?.measurementUnit,
     }))
   }
 

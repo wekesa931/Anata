@@ -12,6 +12,8 @@ import InfoIcon from '@mui/icons-material/Info'
 import useHealthMetricsData from 'src/modules/conditions/hooks/health-metrics-data'
 import { DateTimeField } from 'src/components/forms/fields/date-field'
 
+const textValidationUnitMetrics = ['Categorical']
+
 type InitialValues = {
   healthMetrics: HealthMetric[]
   metricsCreatedDate?: string
@@ -28,6 +30,7 @@ interface HealthMetric {
   label: string
   helperText: string | null
   value: string
+  unit: string
 }
 
 const customValidation = (options: any) => {
@@ -35,10 +38,17 @@ const customValidation = (options: any) => {
 
   const dynamicSchema = initialValues.healthMetrics.reduce(
     (acc: any, metric: any) => {
-      acc[metric.value] = yup
-        .number()
-        .min(0, 'Value must be 0 or higher')
-        .required(`${metric.label} is required`)
+      if (textValidationUnitMetrics.includes(metric.unit)) {
+        acc[metric.value] = yup
+          .string()
+          .matches(/^[^\d]*$/, 'Value must be a text')
+          .required(`${metric.label} is required`)
+      } else {
+        acc[metric.value] = yup
+          .number()
+          .min(0, 'Value must be 0 or higher')
+          .required(`${metric.label} is required`)
+      }
       return acc
     },
     {}
@@ -185,7 +195,11 @@ export function HealthMetricsForm({
                         <TextField
                           name={p.value}
                           label={transformLabel(p.label)}
-                          placeholder="Please input a number..."
+                          placeholder={
+                            textValidationUnitMetrics.includes(p.unit)
+                              ? 'Please provide text'
+                              : 'Please input a number...'
+                          }
                           key={index}
                           helperText={p?.helperText}
                           saveInput={handleInputChange}
