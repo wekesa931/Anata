@@ -7416,7 +7416,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblYSNrfZJnzdSwmx',
-        required: true,
+        required: false,
         helper:
           'Note: you can select several conditions that are related to this intervention',
       },
