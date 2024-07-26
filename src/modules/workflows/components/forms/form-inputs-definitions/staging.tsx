@@ -14342,7 +14342,7 @@ export default [
     fields: [
       {
         id: 'fldKWwumVnBLYBpTk',
-        name: 'Full name',
+        name: 'Member',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
@@ -16958,7 +16958,7 @@ export default [
     fields: [
       {
         id: 'fldOay3WV9hFM9qiN',
-        name: 'Full name',
+        name: 'Member',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
