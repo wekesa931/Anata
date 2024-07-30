@@ -351,6 +351,7 @@ export type BirthdateUpdateValues = {
   firstName: string
   middleName: string
   lastName: string
+  sex?: string
 }
 
 export type BiodataValues = BirthdateUpdateValues & {

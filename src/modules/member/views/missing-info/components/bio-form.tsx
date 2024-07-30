@@ -8,20 +8,25 @@ import PrimaryButton from 'src/components/buttons/primary'
 import { useRegistrationData } from 'src/modules/member/hooks/registration'
 import { useNotifications } from 'src/context/notifications'
 import { logError } from 'src/utils/logging/logger'
+import { SelectField } from 'src/components/forms/fields'
+import { useRegistrationForm } from 'src/context/member-registration'
 
 type MissingInfoBlockProps = {
   member: Member | null
+  missingInfo?: 'birthday' | 'gender'
 }
 
-export default function MissingBirthdateForm({
+export default function MissingBioInfoForm({
   member,
+  missingInfo = 'birthday',
 }: MissingInfoBlockProps) {
   const { handleUpdateBirthdate } = useRegistrationData()
   const { notify } = useNotifications()
+  const { lookupOptions } = useRegistrationForm()
 
   const handleSubmit = (values: any, props: any) => {
     if (member) {
-      handleUpdateBirthdate(member, values.birthDate)
+      handleUpdateBirthdate(member, values)
         .then(() => {
           notify('Birthdate updated successfully')
           props.setIsEdited(false)
@@ -34,7 +39,7 @@ export default function MissingBirthdateForm({
     }
   }
   return (
-    <UpdateForms title="Missing birthdate">
+    <UpdateForms title={`Missing ${missingInfo}`}>
       {({ setIsEdited, handleClose }) => (
         <PrimaryForm
           initialValues={{
@@ -50,13 +55,23 @@ export default function MissingBirthdateForm({
         >
           {({ isSubmitting, isValidating }) => (
             <Form>
-              <DateField
-                name="birthDate"
-                label="Birthdate"
-                placeholder="Enter the date of birth"
-                handleBlur={() => setIsEdited(true)}
-                maxDate={new Date()}
-              />
+              {missingInfo === 'birthday' && (
+                <DateField
+                  name="birthDate"
+                  label="Birthdate"
+                  placeholder="Enter the date of birth"
+                  handleBlur={() => setIsEdited(true)}
+                  maxDate={new Date()}
+                />
+              )}
+              {missingInfo === 'gender' && (
+                <SelectField
+                  name="sex"
+                  label="Gender"
+                  options={lookupOptions?.sexes || []}
+                  placeholder="--Select--"
+                />
+              )}
 
               <PrimaryButton
                 type="submit"

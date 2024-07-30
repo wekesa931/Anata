@@ -229,12 +229,14 @@ export const useRegistrationData = () => {
 
   const handleUpdateBirthdate = async (
     member: Member,
-    birthDate: Date | null
+    values: Pick<BiodataValues, 'birthDate' | 'sex'>
   ) => {
+    const { birthDate, sex } = values
     try {
       const payload = {
         antaraId: member?.antaraId,
         birthDate,
+        sex,
         firstName: member?.firstName || '',
         lastName: member?.lastName || '',
         middleName: member?.middleName || '',
@@ -243,6 +245,7 @@ export const useRegistrationData = () => {
       await updateBirthdate(payload)
       return member.updateMember({
         birthDate: dayjs(birthDate).format('YYYY-MM-DD'),
+        sex,
       })
     } catch (error) {
       logError(error)

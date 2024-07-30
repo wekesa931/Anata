@@ -76,7 +76,7 @@ export const useUdmData = () => {
     )
   }
 
-  const handleShareFile = async (fileId: string, folderId: string) => {
+  const handleShareFile = async (fileId?: string, folderId: string) => {
     if (member) {
       const sharedFiled = shareFile({
         fileId,

@@ -2,7 +2,7 @@ import React from 'react'
 import MissingInsurance from 'src/modules/member/views/missing-info/components/insurance-forms'
 import type { Member } from 'src/modules/member/db/models'
 import MissingPhoneForm from 'src/modules/member/views/missing-info/components/phones-form'
-import MissingBirthdateForm from 'src/modules/member/views/missing-info/components/birthday-form'
+import MissingBioInfoForm from 'src/modules/member/views/missing-info/components/bio-form'
 import MissingAddessForms from 'src/modules/member/views/missing-info/components/address-forms'
 import BillingMessage from 'src/modules/member/views/missing-info/components/billing-message'
 
@@ -15,15 +15,9 @@ export default function MissingInfoBlock({
   member,
   showForm = true,
 }: MissingInfoBlockProps) {
-  const displayBillingMessage =
-    !(
-      member?.membercohortSet?.some(
-        (cohort) => cohort.subscriptionStatus === 'ACTIVE'
-      ) ?? false
-    ) || !member?.membercohortSet?.length
   return (
     <div className="flex flex-col gap-1 mt-2">
-      {displayBillingMessage && showForm && (
+      {!member?.isEligible && showForm && (
         <div className="w-full">
           <BillingMessage />
         </div>
@@ -42,7 +36,12 @@ export default function MissingInfoBlock({
 
       {!member?.birthDate && (
         <div className="w-full">
-          <MissingBirthdateForm member={member} />
+          <MissingBioInfoForm member={member} />
+        </div>
+      )}
+      {!member?.hasGender && (
+        <div className="w-full">
+          <MissingBioInfoForm member={member} missingInfo="gender" />
         </div>
       )}
 

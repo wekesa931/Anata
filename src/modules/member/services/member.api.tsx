@@ -196,6 +196,7 @@ export const useUpdateBirthdate = () => {
         firstName: values.firstName,
         middleName: values.middleName,
         lastName: values.lastName,
+        sex: values.sex,
       },
     }
 

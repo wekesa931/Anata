@@ -231,6 +231,16 @@ export class Member extends Model {
     })
   }
 
+  get isEligible() {
+    return this.membercohortSet?.some(
+      (cohort) => cohort.subscriptionStatus === 'ACTIVE'
+    )
+  }
+
+  get hasGender() {
+    return this.sex && this.sex !== 'Unknown'
+  }
+
   get fullName() {
     return `${this.firstName} ${this.middleName || ''} ${this.lastName}`
   }
