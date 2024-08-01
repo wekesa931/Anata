@@ -5,7 +5,7 @@ import { useMember } from 'src/context/member'
 import { useUpdateMedications } from 'src/modules/clinical/clinical-modules/medications/services'
 import filterFields from 'src/utils/airtable/field-utils'
 
-const useMedicationData = () => {
+const useMedicationData = (loadMedication = true) => {
   const [medicationsData, setMedicationsData] = useState<any[]>([])
   const { member } = useMember()
   const [loading, setLoading] = useState(true)
@@ -29,7 +29,7 @@ const useMedicationData = () => {
       'Autonumber',
       'Change of medication',
       'Check-ups Unit Price (from Medication)',
-      'Condition (from Associated condition(s))',
+      'Associated condition(s) (from memberDB)',
       'County (from Member)',
       'Created time',
       'Data Source',
@@ -89,7 +89,7 @@ const useMedicationData = () => {
   }
 
   useEffect(() => {
-    if (member?.antaraId) {
+    if (member?.antaraId && loadMedication) {
       getMedications(member?.antaraId)
     }
 
