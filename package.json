@@ -187,6 +187,7 @@
     "mui-daterange-picker": "^1.0.5",
     "node-fetch": "^2.6.0",
     "node-polyfill-webpack-plugin": "^2.0.1",
+    "notistack": "^3.0.1",
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-date-range": "^1.4.0",

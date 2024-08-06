@@ -98,7 +98,7 @@ export const useHealthMetricsData = () => {
           setHealthMetricOptions(m)
         })
         .catch((e: any) => {
-          notify('An error occurred fetching metrics')
+          notify('An error occurred fetching metrics', 'error')
           setError(e?.message ?? 'Cannot fetch health metrics')
         })
         .finally(() => {

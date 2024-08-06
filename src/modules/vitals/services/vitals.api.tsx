@@ -23,6 +23,7 @@ import {
   DMMonitoringFormInputs,
   ReportGenNormalRangeVariables,
 } from 'src/modules/vitals/types'
+import { throwGraphErrors } from 'src/utils/error-handling'
 
 export const useGetVitalsReadingApi = () => {
   const context = {
@@ -366,40 +367,22 @@ export const useCreateDMReadingApi = () => {
     throw new Error('Neither blood glucose nor hba1c is present')
   }
 
-  const parseDmErrors = (data: any = {}) => {
-    const { uploadBloodGlucoseReading, uploadHba1cReading } = data
-    const errors = []
-    const successMessage = []
-    if (uploadBloodGlucoseReading?.errors) {
-      errors.push(uploadBloodGlucoseReading?.errors)
-    } else {
-      successMessage.push('Blood Glucose Reading Uploaded Successfully')
-    }
-
-    if (uploadHba1cReading?.errors) {
-      errors.push(uploadHba1cReading?.errors)
-    } else {
-      successMessage.push('HBA1C Reading Uploaded Successfully')
-    }
-
-    return {
-      errors,
-      successMessage,
-    }
-  }
-
   const createDMReadings = async (input: DMMonitoringFormInputs) => {
     const variables = parseDMReadings(input)
     if (isObjectEmpty(variables)) {
       throw new Error('No data to upload')
     }
 
-    const { data } = await mutate({
-      mutation: selectMutation(variables),
-      variables: selectVariables(variables),
-    })
+    try {
+      const { data } = await mutate({
+        mutation: selectMutation(variables),
+        variables: selectVariables(variables),
+      })
 
-    return parseDmErrors(data)
+      return data
+    } catch (error) {
+      return throwGraphErrors(error)
+    }
   }
 
   return {

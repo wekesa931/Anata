@@ -309,12 +309,13 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     notify(
       err?.message && typeof err?.message === 'string'
         ? err?.message
-        : 'There was an error submitting your form. Please try again.'
+        : 'There was an error submitting your form. Please try again.',
+      'error'
     )
   }
 
   const notifySubmissionSuccess = () => {
-    notify('Form submitted succesfully.')
+    notify('Form submitted succesfully.', 'success')
     setIsEdited(false)
   }
 
@@ -329,11 +330,12 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
               .then(() => {
                 notifySubmissionSuccess()
               })
-              .catch((err) => {
+              .catch((err: any) => {
                 notify(
                   err?.message && typeof err?.message === 'string'
                     ? err?.message
-                    : 'An error occured while saving workflow data. Please try again'
+                    : 'An error occured while saving workflow data. Please try again',
+                  'error'
                 )
                 logError(err)
               })

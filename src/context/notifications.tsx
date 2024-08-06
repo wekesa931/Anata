@@ -1,11 +1,10 @@
 import React from 'react'
-import ToastNotification, {
-  ToastMessage,
-  defaultToastMessage,
-} from 'src/components/toasts/toast-notification'
+import { useSnackbar } from 'notistack'
+
+type MessageVariants = 'default' | 'success' | 'error' | 'warning' | 'info'
 
 type NotificationsContextType = {
-  notify: (text: string, time?: number) => void
+  notify: (text: string, variant?: MessageVariants, time?: number) => void
 }
 
 const NotificationsContext = React.createContext<NotificationsContextType>({
@@ -13,16 +12,21 @@ const NotificationsContext = React.createContext<NotificationsContextType>({
 })
 
 function NotificationsProvider({ children }: any) {
-  const [toastMessage, setToastMessage] =
-    React.useState<ToastMessage>(defaultToastMessage)
+  const { enqueueSnackbar } = useSnackbar()
 
-  const notify = (text: string, time = 5000) => {
-    setToastMessage({
-      ...toastMessage,
-      message: text,
-      type: 'GENERAL',
-      time,
-    })
+  const notify = (
+    text: string,
+    variant: MessageVariants = 'default',
+    time = 5000
+  ) => {
+    const allMessages = text?.split(';')
+
+    allMessages.map((m) =>
+      enqueueSnackbar(m, {
+        autoHideDuration: time,
+        variant,
+      })
+    )
   }
 
   const providerValue = React.useMemo(() => {
@@ -34,14 +38,6 @@ function NotificationsProvider({ children }: any) {
 
   return (
     <NotificationsContext.Provider value={providerValue}>
-      {toastMessage.type === 'GENERAL' && (
-        <ToastNotification
-          message={toastMessage}
-          isOpen={!!toastMessage.message}
-          handleToastClose={() => setToastMessage(defaultToastMessage)}
-        />
-      )}
-
       {children}
     </NotificationsContext.Provider>
   )

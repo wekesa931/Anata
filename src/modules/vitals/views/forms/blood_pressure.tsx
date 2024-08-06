@@ -81,7 +81,7 @@ function BPReadingForm({
       handleSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      {() => {
+      {({ errors }) => {
         return (
           <Form>
             <DateTimeField
@@ -136,6 +136,12 @@ function BPReadingForm({
               required={false}
               disabled={disabled}
             />
+            <div className="flex items-center mt-8">
+              <p className="text-sm font-rubik text-dark-red-100">
+                {Object.values(errors).length > 0 &&
+                  'Please fill all required fields'}
+              </p>
+            </div>
 
             <div className="flex items-center flex-col gap-4 mt-8">
               <PrimaryButton

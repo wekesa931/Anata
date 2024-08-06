@@ -112,7 +112,7 @@ function VitalsCollection({
       handleSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      {() => (
+      {({ errors }) => (
         <Form>
           <DateTimeField
             name="timestamp"
@@ -284,6 +284,13 @@ function VitalsCollection({
             ]}
             disabled={disabled}
           />
+
+          <div className="flex items-center mt-8">
+            <p className="text-sm font-rubik text-dark-red-100">
+              {Object.values(errors).length > 0 &&
+                'Please fill all required fields'}
+            </p>
+          </div>
 
           <div className="flex items-center mt-8">
             <PrimaryButton
