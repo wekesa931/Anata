@@ -192,11 +192,21 @@ export const generatePayload = (
   const findById = (id: string) => findBy('id', id)?.name || null
 
   Object.keys(initialPayload)?.forEach((k) => {
+    const getValue = (v: any) => {
+      if (v?.id && v.email) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, ...rest } = v
+        return rest
+      }
+
+      return v
+    }
+
     const fieldId = findFieldId(k)
     if (fieldId) {
-      mappedPayload[fieldId] = initialPayload[k]
+      mappedPayload[fieldId] = getValue(initialPayload[k])
     } else if (isAllowedField(k)) {
-      mappedPayload[k] = initialPayload[k]
+      mappedPayload[k] = getValue(initialPayload[k])
     } else {
       erroredFields.push(k)
     }

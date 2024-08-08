@@ -14287,6 +14287,7 @@ export default [
         required: false,
         helper:
           'Please tag the staff member who was in charge of the member or who was linked to the incident',
+        valueType: 'collaborator',
       },
       {
         id: 'fldPryFGCNKcM0iAL',

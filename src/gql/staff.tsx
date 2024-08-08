@@ -12,6 +12,7 @@ const GET_ANTARA_STAFF = gql`
           atRecordId
           phone
           signature
+          email
         }
       }
     }

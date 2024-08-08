@@ -15756,11 +15756,12 @@ export default [
         options: [],
         symmetricColumnId: null,
         unreversed: false,
-        relationship: null,
+        relationship: 'one',
         foreignTableId: 'tblHs6JxFnMGAjNNC',
         required: false,
         helper:
           'Please tag the staff member who was in charge of the member or who was linked to the incident',
+        valueType: 'collaborator',
       },
       {
         id: 'fldxlqOq6zcekT1TH',

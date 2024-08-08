@@ -145,6 +145,7 @@ export type FormField = {
   prefills?: (name: string, value: any, airtableMetaData: any) => any
   filterResponse: (response: any[]) => any[]
   hide?: boolean
+  valueType?: 'collaborator' | 'default'
 }
 
 export type FormMeta = {

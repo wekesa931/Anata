@@ -805,30 +805,45 @@ function LinkRecordInput({
     field?.foreignTableId
   )
 
-  const dataSave = (onChange: (val: any) => any, nameId: any, name: any) => {
+  const dataSave = (onChange: (val: any) => any, nameId: any, value: any) => {
     onChange(nameId)
-    setSelectedChoices(name)
-    saveInput(field.name, nameId)
+    setSelectedChoices(value)
+
+    if (field?.valueType === 'collaborator') {
+      // save the value as an email
+      saveInput(field.name, {
+        email: value?.email || '',
+        id: nameId,
+      })
+    } else {
+      saveInput(field.name, nameId)
+    }
+    // saveInput(field.name, nameId)
   }
   const handleChange = (onChange: (val: any) => any, value: any) => {
+    const saveValue = (v: any) => {
+      dataSave(onChange, v, value)
+    }
+
     if (value) {
       if (Array.isArray(value)) {
         const recordId = value.map((rec) => rec.id)
-        dataSave(onChange, recordId, value)
+        saveValue(recordId)
       } else {
-        dataSave(onChange, [value.id], value)
+        saveValue([value.id])
       }
     } else {
-      dataSave(onChange, value, value)
+      saveValue(value)
     }
   }
 
   useEffect(() => {
     if (linkedValue && linkedRecords.length > 0) {
+      const parsedLinkedValue = linkedValue?.id ?? linkedValue
       const recordValue = linkedRecords.filter(
         (rec: any) =>
-          Array.isArray(linkedValue) &&
-          linkedValue.some((val: any) => rec.id === val)
+          Array.isArray(parsedLinkedValue) &&
+          parsedLinkedValue.some((val: any) => rec.id === val)
       )
       if (field.relationship === 'many') {
         setSelectedChoices(recordValue)
@@ -1110,10 +1125,12 @@ function LinkRecordInputDefault({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [airtableMeta, member])
 
+  const defaultValue = linkedValue?.id ?? linkedValue
+
   return (
     <Controller
       name={field.name}
-      defaultValue={linkedValue}
+      defaultValue={defaultValue}
       control={control}
       rules={{ required: true }}
       render={({ field: { onChange } }) => (

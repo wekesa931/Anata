@@ -11,8 +11,11 @@ import { BrowserRouter } from 'react-router-dom'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { datadogRum } from '@datadog/browser-rum'
 import Routes from './routes'
+import { useCheckAppUpdate } from './hooks/force-update'
 
 function App() {
+  useCheckAppUpdate() // clear cache if there was an update requiring it
+
   useEffect(() => {
     datadogRum.startSessionReplayRecording()
 
