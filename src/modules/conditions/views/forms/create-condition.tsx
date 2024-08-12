@@ -18,9 +18,9 @@ import {
 } from 'src/modules/conditions/utils'
 import type { FormProps } from 'src/modules/workflows/types'
 
-const getProvisionedStatusValue = (lookups: any) => {
-  return lookups.conditionVerificationStatuses.find(
-    (status: any) => status.label === 'Provisioned'
+const getProvisionedStatusValue = (lookups: any = {}) => {
+  return lookups?.conditionVerificationStatuses?.find(
+    (status: any) => status?.label === 'Provisioned'
   )?.value
 }
 
