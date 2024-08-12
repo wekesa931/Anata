@@ -18,6 +18,12 @@ import {
 } from 'src/modules/conditions/utils'
 import type { FormProps } from 'src/modules/workflows/types'
 
+const getProvisionedStatusValue = (lookups: any) => {
+  return lookups.conditionVerificationStatuses.find(
+    (status: any) => status.label === 'Provisioned'
+  )?.value
+}
+
 const validationSchema = (conditions: string[], lookups: any) => {
   return yup.object().shape({
     condition: yup
@@ -43,9 +49,7 @@ const validationSchema = (conditions: string[], lookups: any) => {
         'Verification status cannot be Provisioned if Stage at diagnosis is set',
         function invalidVerificationStatusTest(value) {
           const { startingStageId } = this.parent
-          const provisionedStatus = lookups?.conditionVerificationStatuses.find(
-            (status: any) => status.label === 'Provisioned'
-          )?.value
+          const provisionedStatus = getProvisionedStatusValue(lookups)
           return !(startingStageId !== -1 && value === provisionedStatus)
         }
       ),
@@ -62,8 +66,22 @@ const validationSchema = (conditions: string[], lookups: any) => {
     newlyDiagnosed: yup.string().required('Newly diagnosed is required'),
     icd11Code: yup.string().required('ICD-11 code is required'),
     acuteVsChronic: yup.string().required('Acute vs Chronic is required'),
-    startingStageId: yup.number().required('Starting stage is required'),
-    targetId: yup.number().required('Starting target is required'),
+    startingStageId: yup.number().when('verificationStatus', {
+      is: (value: number) => {
+        const provisioned = getProvisionedStatusValue(lookups)
+        return value === provisioned
+      },
+      then: yup.number().notRequired(),
+      otherwise: yup.number().required('Starting stage is required'),
+    }),
+    targetId: yup.number().when('verificationStatus', {
+      is: (value: number) => {
+        const provisioned = getProvisionedStatusValue(lookups)
+        return value === provisioned
+      },
+      then: yup.number().notRequired(),
+      otherwise: yup.number().required('Starting stage is required'),
+    }),
     atRiskFromIds: yup
       .array()
       .of(yup.number())
@@ -208,6 +226,11 @@ export function CreateCondition({
 
   const disabled = !form?.data?.isDraft || isWorkflowComplete
 
+  const makeTargetAndStageOptional = (verificationStatus: number) => {
+    const provisioned = getProvisionedStatusValue(lookups)
+    return verificationStatus !== provisioned
+  }
+
   return (
     <div className="p-4 relative overflow-auto">
       <PrimaryForm
@@ -257,7 +280,9 @@ export function CreateCondition({
                   dedupOptions(values.condition?.possibleStages || [])
                 )}
                 name="startingStageId"
-                required
+                required={makeTargetAndStageOptional(
+                  values?.verificationStatus
+                )}
                 placeholder="-- Select --"
                 saveInput={saveInput}
                 disabled={disabled}
@@ -269,7 +294,9 @@ export function CreateCondition({
                   dedupOptions(values?.condition?.possibleTargets || [])
                 )}
                 name="targetId"
-                required
+                required={makeTargetAndStageOptional(
+                  values?.verificationStatus
+                )}
                 placeholder="-- Select --"
                 saveInput={saveInput}
                 disabled={disabled}
