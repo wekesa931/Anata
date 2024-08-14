@@ -353,9 +353,9 @@ export function InsuranceForm({
                                 label="Insurance verification status"
                                 placeholder="--Select--"
                                 options={[
-                                  { label: 'VERIFIED', value: 'VERIFIED' },
-                                  { label: 'PENDING', value: 'PENDING' },
-                                  { label: 'REJECTED', value: 'REJECTED' },
+                                  { label: 'VERIFIED', value: 'Verified' },
+                                  { label: 'PENDING', value: 'Pending' },
+                                  { label: 'REJECTED', value: 'Rejected' },
                                 ]}
                                 required={false}
                                 autoFocus={index === 0}

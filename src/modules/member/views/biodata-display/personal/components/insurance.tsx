@@ -47,7 +47,7 @@ function InsuranceSectionItem({
         </GridItems>
         <Tooltip
           title={
-            insuranceItem?.verificationStatus === 'VERIFIED'
+            insuranceItem?.verificationStatus === 'Verified'
               ? 'This member insurance ID has been verified'
               : 'We could not find this member insurance ID'
           }
@@ -58,7 +58,7 @@ function InsuranceSectionItem({
             className={`
                 text-xs font-rubik font-medium text-center rounded-lg p-1 mt-3 uppercase 
                 ${
-                  insuranceItem?.verificationStatus === 'VERIFIED'
+                  insuranceItem?.verificationStatus === 'Verified'
                     ? 'text-green-100 bg-green-10'
                     : 'text-red-100 bg-red-10'
                 }
