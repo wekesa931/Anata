@@ -7,6 +7,7 @@ import {
   MemberCohortQueryType,
 } from 'src/modules/member/types'
 import { getAgeFull } from 'src/utils/date-time/helpers'
+import { toTitleCase } from './text-utils'
 
 const getSexAccronym = (sex: string) => {
   if (sex?.toLowerCase() === 'male') return 'M'
@@ -131,8 +132,17 @@ export const parseV2MemberData = (
   member = { ...member, ...contact }
 
   // insurance details
-  const { insuranceDetails = {} } = memberData
-  member = { ...member, insuranceDetails }
+  const { insuranceDetails = [] } = memberData
+
+  const parseVerificationStatus = (insurance: any) => ({
+    ...insurance,
+    verificationStatus: toTitleCase(insurance?.verificationStatus),
+  })
+
+  member = {
+    ...member,
+    insuranceDetails: insuranceDetails.map(parseVerificationStatus),
+  }
 
   // dependents and primary
   const { otherDependents = [], primary = null, dependents = [] } = memberData
