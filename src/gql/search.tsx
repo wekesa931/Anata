@@ -300,8 +300,6 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
       insuranceCompany {
         code
         name
-        phone
-        smartCode
       }
       relationshipToPrinciple
     }
