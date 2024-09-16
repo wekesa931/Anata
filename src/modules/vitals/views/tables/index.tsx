@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useTablesData } from 'src/modules/vitals/hooks/tables.data.hook'
 import Loading from 'src/components/loaders/centered'
 import Table, { Column } from 'src/components/table/data-table'
@@ -9,6 +9,13 @@ import {
   ValueHelperText,
   TableHeadHelpertext,
 } from 'src/modules/vitals/components/helper-texts'
+import {
+  BP_OBSERVER,
+  BS_OBSERVER,
+  VITALS_OBSERVER,
+  CHL_OBSERVER,
+  useLabsAndVitalsObserver,
+} from 'src/modules/vitals/services/observers'
 
 type TableProps = {
   data: any[]
@@ -245,25 +252,33 @@ const LIPIDS_COLUMNS: Column[] = [
 ]
 
 export function LipidsTable() {
-  const { isLoading, getLipidsClusters } = useClustersData()
-  const [lipids, setLipids] = useState<any[]>([])
+  const { getLipidsClusters } = useClustersData()
 
-  useEffect(() => {
-    getLipidsClusters().then((data) => {
-      setLipids(data)
-    })
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const { data, loading, error } = useLabsAndVitalsObserver(
+    CHL_OBSERVER,
+    getLipidsClusters,
+    () => getLipidsClusters(true)
+  )
 
   return (
-    <DataTable
-      data={lipids}
-      loading={isLoading}
-      columns={LIPIDS_COLUMNS}
-      title="Lipids"
-      defaultSortColumn="day"
-    />
+    <div>
+      {error ? (
+        <div>
+          <p className="text-lg text-left mb-1">Glucose Monitoring</p>
+          <ErrorComponent retry={getLipidsClusters} />
+        </div>
+      ) : (
+        <div className="my-2">
+          <DataTable
+            data={data}
+            loading={loading}
+            columns={LIPIDS_COLUMNS}
+            title="Lipids"
+            defaultSortColumn="day"
+          />
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -309,12 +324,19 @@ const BS_COLUMNS: Column[] = [
 ]
 
 export function BloodGlucoseTable() {
-  const { bloodSugar, bloodSugarError, bloodSugarLoading, refetchBsData } =
-    useTablesData()
+  const { getBsData } = useTablesData()
+
+  const refetchBsData = () => getBsData(true)
+
+  const { data, loading, error } = useLabsAndVitalsObserver(
+    BS_OBSERVER,
+    getBsData,
+    refetchBsData
+  )
 
   return (
     <div>
-      {bloodSugarError ? (
+      {error ? (
         <div>
           <p className="text-lg text-left mb-1">Glucose Monitoring</p>
           <ErrorComponent retry={refetchBsData} />
@@ -322,9 +344,9 @@ export function BloodGlucoseTable() {
       ) : (
         <div className="my-2">
           <DataTable
-            data={bloodSugar}
+            data={data}
             columns={BS_COLUMNS}
-            loading={bloodSugarLoading}
+            loading={loading}
             title="Glucose Monitoring"
           />
         </div>
@@ -371,11 +393,19 @@ const BP_Columns: Column[] = [
 ]
 
 export function BloodPressureTable() {
-  const { bpError, bpLoading, bloodPressure, refetchBpData } = useTablesData()
+  const { getBpData } = useTablesData()
+
+  const refetchBpData = () => getBpData(true)
+
+  const { data, error, loading } = useLabsAndVitalsObserver(
+    BP_OBSERVER,
+    getBpData,
+    refetchBpData
+  )
 
   return (
     <div>
-      {bpError ? (
+      {error ? (
         <div>
           <p className="text-lg text-left mb-1">Blood Pressure</p>
           <ErrorComponent retry={refetchBpData} />
@@ -383,9 +413,9 @@ export function BloodPressureTable() {
       ) : (
         <div className="my-2">
           <DataTable
-            data={bloodPressure}
+            data={data}
             columns={BP_Columns}
-            loading={bpLoading}
+            loading={loading}
             title="Blood Pressure"
           />
         </div>
@@ -395,11 +425,20 @@ export function BloodPressureTable() {
 }
 
 function VitalsTable() {
-  const { loading, refetchVitalsData, vitals, vitalsError } = useTablesData()
+  const { getVitalsData } = useTablesData()
+
+  const refetchVitalsData = () => getVitalsData(true)
+
+  const { data, loading, error } = useLabsAndVitalsObserver(
+    VITALS_OBSERVER,
+    getVitalsData,
+    refetchVitalsData,
+    {}
+  )
 
   return (
     <div>
-      {vitalsError ? (
+      {error ? (
         <div>
           <p className="text-lg text-left mb-1">Labs and Vitals</p>
           <ErrorComponent retry={refetchVitalsData} />
@@ -408,7 +447,7 @@ function VitalsTable() {
         <>
           <div className="my-2">
             <DataTable
-              data={vitals?.bmiData || []}
+              data={data?.bmiData || []}
               columns={BMI_COLUMNS}
               loading={loading}
               title="BMI"
@@ -416,7 +455,7 @@ function VitalsTable() {
           </div>
           <div className="my-2">
             <DataTable
-              data={vitals?.bodyCompositionData || []}
+              data={data?.bodyCompositionData || []}
               columns={BODY_COMPOSITION_COLUMNS}
               loading={loading}
               title="Body Composition"
@@ -424,7 +463,7 @@ function VitalsTable() {
           </div>
           <div className="my-2">
             <DataTable
-              data={vitals?.otherVitalsData || []}
+              data={data?.otherVitalsData || []}
               columns={OTHER_VITALS}
               loading={loading}
               title="Other vitals"

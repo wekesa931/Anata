@@ -9,6 +9,8 @@ import type { FormProps } from 'src/modules/workflows/types'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useVitalsUpdate } from 'src/modules/vitals/hooks/vitals.update.hook'
 import dayjs from 'dayjs'
+import { CHL_OBSERVER } from 'src/modules/vitals/services/observers'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 const validationSchema = yup.object().shape({
   timestamp: yup.date().required(),
@@ -39,6 +41,7 @@ function CHLForm({
   upsertDraft: saveDraft,
 }: FormProps) {
   const { loading, handleCreateCholesterolReading } = useVitalsUpdate()
+  const { trackFormSaved } = useModuleAnalytics()
   const [initialValues, setInitialValues] = React.useState<any>({
     timestamp: dayjs().toDate(),
     lipidPanelTestType: '',
@@ -55,6 +58,8 @@ function CHLForm({
     handleCreateCholesterolReading(values)
       .then(async () => {
         await form.markAsCompleted()
+        CHL_OBSERVER.next()
+        trackFormSaved(form.name, form.workflow?.workflowId)
         handleSubmissionSuccess(false)
       })
       .catch((error) => {
@@ -77,7 +82,7 @@ function CHLForm({
       handleSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      {() => (
+      {({ errors }) => (
         <Form>
           <DateTimeField
             name="timestamp"
@@ -95,6 +100,7 @@ function CHLForm({
             ]}
             saveInput={saveInput}
             disabled={disabled}
+            required
           />
           <TextField
             name="hdl"
@@ -153,11 +159,19 @@ function CHLForm({
             disabled={disabled}
           />
 
-          <div className="flex justify-end">
+          <div className="flex items-center mt-8">
+            <p className="text-sm font-rubik text-dark-red-100">
+              {Object.values(errors).length > 0 &&
+                'Please fill all required fields'}
+            </p>
+          </div>
+
+          <div className="flex items-center mt-8">
             <PrimaryButton
               loading={loading}
               disabled={loading || disabled}
               type="submit"
+              fullWidth
             >
               Submit form
             </PrimaryButton>

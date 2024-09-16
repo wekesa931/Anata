@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useLazyQuery } from '@apollo/client'
 import { GET_ANTARA_STAFF } from 'src/gql/staff'
-import logError from 'src/utils/logging/logger'
 import { User } from 'src/types/user'
 
 const mapAssigneeTeam = (antaraStaff: any[]) => {
@@ -11,6 +10,10 @@ const mapAssigneeTeam = (antaraStaff: any[]) => {
     'HEALTH_NAVIGATOR',
     'MEMBER_EXPERIENCE',
     'LOGISTICS',
+    'ME_TEAM_LEAD',
+    'HN_TEAM_LEAD',
+    'NUTRITIONIST_TEAM_LEAD',
+    'HN_TEAM_LEAD',
   ]
   return antaraStaff
     .filter(({ team }: any) => {
@@ -25,6 +28,8 @@ export const mapAssigneeToLookup = (allAntaraStaffs: any[]) => {
       label: fullName,
       value: emailUsername,
       recordId: atRecordId,
+      id: atRecordId,
+      name: fullName,
     })
   )
 }
@@ -32,10 +37,12 @@ export const mapAssigneeToLookup = (allAntaraStaffs: any[]) => {
 export const useAntaraStaff = () => {
   const [allAntaraStaffs, setAllAntaraStaffs] = useState<any>([])
 
+  const ANTARA_STAFF_KEY = 'ANTARA_STAFF'
+
   const [getAntaraStaff, { loading }] = useLazyQuery(GET_ANTARA_STAFF)
 
-  const filterByTeam = (team: string, staffMembers: any[] = []) => {
-    return staffMembers.filter((e: any) => e?.team === team)
+  const filterByTeam = (team: any[], staffMembers: any[] = []) => {
+    return staffMembers.filter((e: any) => team.includes(e?.team))
   }
 
   const extractStaffData = (staffMembers: any[] = []) => {
@@ -59,15 +66,35 @@ export const useAntaraStaff = () => {
     throw new Error('User not found')
   }
 
+  const getFromCache = async () => {
+    const cache = sessionStorage.getItem(ANTARA_STAFF_KEY)
+    if (cache) {
+      const cached = JSON.parse(cache)
+      if (cached.length > 0) {
+        setAllAntaraStaffs(cached)
+        return cached
+      }
+    }
+    const { data } = await getAntaraStaff()
+    const fetchedData = extractStaffData(data?.antaraStaff?.edges || [])
+    setAllAntaraStaffs(fetchedData)
+    sessionStorage.setItem(ANTARA_STAFF_KEY, JSON.stringify(fetchedData))
+
+    return fetchedData
+  }
+
+  const getStaffData = async () => {
+    const data = await getFromCache()
+
+    return data.map((d: any) => ({
+      ...d,
+      name: d.fullName,
+      id: d.atRecordId,
+    }))
+  }
+
   useEffect(() => {
-    getAntaraStaff()
-      .then(({ data }) => {
-        const fetchedData = data?.antaraStaff?.edges
-        setAllAntaraStaffs(extractStaffData(fetchedData))
-      })
-      .catch((err) => {
-        logError(err)
-      })
+    getFromCache()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -75,11 +102,21 @@ export const useAntaraStaff = () => {
     () => ({
       allAntaraStaffs,
       loading,
-      antaraHNs: filterByTeam('HEALTH_NAVIGATOR', allAntaraStaffs),
-      antaraMEs: filterByTeam('MEMBER_EXPERIENCE', allAntaraStaffs),
-      antaraNutritionists: filterByTeam('NUTRITIONIST', allAntaraStaffs),
-      antaraLogistics: filterByTeam('LOGISTICS', allAntaraStaffs),
+      antaraHNs: filterByTeam(
+        ['HEALTH_NAVIGATOR', 'HN_TEAM_LEAD'],
+        allAntaraStaffs
+      ),
+      antaraMEs: filterByTeam(
+        ['MEMBER_EXPERIENCE', 'ME_TEAM_LEAD'],
+        allAntaraStaffs
+      ),
+      antaraNutritionists: filterByTeam(
+        ['NUTRITIONIST', 'NUTRITIONIST_TEAM_LEAD'],
+        allAntaraStaffs
+      ),
+      antaraLogistics: filterByTeam(['LOGISTICS'], allAntaraStaffs),
       getStaffByUser,
+      getStaffData,
     }),
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

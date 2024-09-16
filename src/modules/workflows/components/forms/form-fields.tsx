@@ -2,7 +2,10 @@ import React, {
   ChangeEvent,
   Fragment,
   SyntheticEvent,
+  useCallback,
   useEffect,
+  useMemo,
+  useRef,
   useState,
 } from 'react'
 import Box from '@mui/material/Box'
@@ -31,14 +34,13 @@ import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
 import { debounce } from 'lodash'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import { Form } from 'src/modules/workflows/types'
-import {
-  GLOBAL_SEARCH,
-  OPTIMIZED_SEARCH,
-  GET_DOCUMENT_OPENSEARCH,
-} from 'src/gql/search'
+import { OPTIMIZED_SEARCH, GET_DOCUMENT_OPENSEARCH } from 'src/gql/search'
 import { INDEXES } from 'src/modules/workflows/utils'
 import { useMember } from 'src/context/member'
+import useConditionsData from 'src/modules/conditions/hooks/conditions.data'
+import logError from 'src/utils/logging/logger'
 import styles from './styles.module.css'
+import { useForeignKeyDataHandler } from '../../hooks/foreign-key-data-handler'
 
 const icon = <Square width={18} height={18} />
 const checkedIcon = <CheckSquare width={18} height={18} />
@@ -91,22 +93,16 @@ function WorkflowFormsFields({
   disabled,
   control,
   error,
-  isWorkflow,
   airtableMeta,
   saveInput,
 }: Form) {
-  const isMemberField =
-    field.name === 'Member' ||
-    field.name === 'member' ||
-    field.name === 'Members'
-  // eslint-disable-next-line no-underscore-dangle
-  const isWorkflowForm = !isMemberField && isWorkflow
-  const isNormalForm =
-    // eslint-disable-next-line no-underscore-dangle
-    field.name !== 'Case ID' && !isMemberField && !isWorkflow
+  const notIn = (arr: string[]) => !arr.includes(field.foreignTableId)
+  const notCaseIdField = () => notIn(['tbl7Kh4tVrQp9JdUc', 'tblpQpVJrFonBQuBg'])
+  const notMemberField = () => notIn(['tblAjKAJOCIDk5Nco', 'tblidCJtioaFSYwvk'])
+
   switch (field.type) {
     case 'foreignKey':
-      if (isWorkflowForm || isNormalForm) {
+      if (notMemberField() && notCaseIdField()) {
         return (
           <LinkRecordInput
             value={value}
@@ -120,19 +116,6 @@ function WorkflowFormsFields({
         )
       }
       return <></>
-    case 'collaborator':
-      return (
-        <CollaboratorInput
-          value={value}
-          disabled={disabled}
-          field={field}
-          airtableMeta={airtableMeta}
-          saveInput={saveInput}
-          control={control}
-          error={error}
-        />
-      )
-
     case 'select':
     case 'checkbox':
     case 'singleSelect':
@@ -147,6 +130,7 @@ function WorkflowFormsFields({
           error={error}
         />
       )
+
     case 'multiSelect':
     case 'multipleSelects':
       if (airtableMeta) {
@@ -214,9 +198,87 @@ function WorkflowFormsFields({
           error={error}
         />
       )
+    case 'conditions':
+      return (
+        <ConditionSelectOption
+          disabled={disabled}
+          field={field}
+          saveInput={saveInput}
+          control={control}
+          error={error}
+          relationship={field.relationship}
+        />
+      )
     default:
       return <></>
   }
+}
+
+function ConditionSelectOption({
+  field,
+  disabled,
+  saveInput,
+  control,
+  error,
+  relationship,
+  value,
+}: Form) {
+  const isMultiple = relationship === 'many'
+  const [option, setOption] = useState<any>(isMultiple ? [] : null)
+
+  const { allConditions, loading } = useConditionsData()
+
+  const handleChange = (value: any) => {
+    if (value) {
+      const valueToWrite = isMultiple ? value?.join(',') : value
+      saveInput(field.name, valueToWrite)
+      setOption(value)
+    }
+  }
+
+  return (
+    <Controller
+      name={field.name}
+      defaultValue={value}
+      control={control}
+      rules={{ required: true }}
+      render={({ field: { onChange } }) => (
+        <Autocomplete
+          className="mb-4"
+          disabled={disabled}
+          disablePortal
+          value={option}
+          id="combo-box-demo"
+          options={allConditions.map((opt) => opt.name)}
+          onChange={(event: any, newValue: string) => {
+            handleChange(newValue)
+            onChange(newValue)
+          }}
+          loading={loading}
+          loadingText={
+            <div className="flex text-xs">
+              <LoadingIcon /> Loading member conditions...
+            </div>
+          }
+          multiple={isMultiple}
+          renderInput={(params) => (
+            <>
+              {field.helper && <HelperText field={field} error={error} />}
+              <TextField
+                {...params}
+                label={<Label field={field} error={error} />}
+              />
+              {error && (
+                <FormHelperText className="mb-6 text-left font-rubik text-xs font-medium text-red-100">
+                  Select at least one item
+                </FormHelperText>
+              )}
+            </>
+          )}
+        />
+      )}
+    />
+  )
 }
 
 function SingleSelectOption({
@@ -229,35 +291,35 @@ function SingleSelectOption({
   error,
 }: Form) {
   if (airtableMeta) {
-    if (
-      airtableMeta[field.parentTableId]?.fields[field.id].type !== 'checkbox' &&
-      airtableMeta[field.parentTableId]?.fields[field.id].options?.choices
-        .length > 2
-    ) {
+    const isCheckBoxField =
+      airtableMeta[field.parentTableId]?.fields[field.id]?.type === 'checkbox'
+    if (isCheckBoxField) {
       return (
-        <SingleSelectInput
+        <SingleSelectView
           value={value}
           disabled={disabled}
-          field={field}
           airtableMeta={airtableMeta}
+          field={field}
           saveInput={saveInput}
           control={control}
           error={error}
         />
       )
     }
+
     return (
-      <SingleSelectView
+      <SingleSelectInput
         value={value}
         disabled={disabled}
-        airtableMeta={airtableMeta}
         field={field}
+        airtableMeta={airtableMeta}
         saveInput={saveInput}
         control={control}
         error={error}
       />
     )
   }
+
   return <LoaderOption field={field} airtableMeta={airtableMeta} />
 }
 
@@ -281,11 +343,27 @@ function SingleSelectInput({
   }, [value])
   const handleChange = (newValue: any) => {
     setOption(newValue)
-    saveInput(field.name, newValue)
+    if (field.conditionalOptions) {
+      const option = field?.options?.find((f: any) => f.name === newValue)
+      if (option) {
+        saveInput(field.name, option)
+      }
+    } else {
+      saveInput(field.name, newValue)
+    }
   }
-  const optionsData = airtableMeta
-    ? airtableMeta[field.parentTableId]?.fields[field.id].options?.choices
-    : []
+
+  const getFieldOptions = () => {
+    if (field.conditionalOptions) {
+      return field.options
+    }
+
+    const options = (
+      airtableMeta?.[field.parentTableId]?.fields[field.id] || ({} as any)
+    )?.options?.choices
+
+    return options || []
+  }
 
   return (
     <Controller
@@ -300,7 +378,7 @@ function SingleSelectInput({
           disablePortal
           value={option}
           id="combo-box-demo"
-          options={optionsData.map((opt) => opt.name)}
+          options={getFieldOptions().map((opt: any) => opt.name)}
           onChange={(event: any, newValue: string) => {
             handleChange(newValue)
             onChange(newValue)
@@ -335,6 +413,7 @@ function SingleSelectView({
   error,
 }: Form) {
   const [option, setOption] = useState<string | null>(null)
+  const [checked, setChecked] = useState<boolean>(false)
   useEffect(() => {
     if (value) {
       setOption(value)
@@ -343,33 +422,17 @@ function SingleSelectView({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
-  const optionsData = () => {
-    let fieldOptions = []
-    if (field.type === 'checkbox') {
-      fieldOptions = [
-        {
-          name: true,
-        },
-        {
-          name: false,
-        },
-      ]
-    } else {
-      fieldOptions = airtableMeta
-        ? airtableMeta[field.parentTableId]?.fields[field.id].options?.choices
-        : []
-    }
-
-    return fieldOptions
-  }
+  const optionsData = airtableMeta
+    ? airtableMeta[field.parentTableId]?.fields[field.id]?.options?.choices
+    : []
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
-    setOption(event.target.value)
-
     if (field.type === 'checkbox') {
-      saveInput(field.name, event.target.value === 'true')
+      setChecked(event.target.checked)
+      saveInput(field.name, event.target.checked)
     } else {
+      setOption(event.target.value)
       saveInput(field.name, event.target.value)
     }
   }
@@ -384,34 +447,56 @@ function SingleSelectView({
         return (
           <>
             {field.helper && <HelperText field={field} error={error} />}
-            <FormControl className="m-0 mt-2 min-w-[90%]" component="fieldset">
-              {!field.helper && (
-                <FormLabel component="legend">
-                  <Label field={field} error={error} />
-                </FormLabel>
-              )}
-              <RadioGroup
-                className="flex w-full flex-row"
-                aria-label={field.name}
-                value={option}
-                onChange={(event) => {
-                  handleChange(event)
-                  onChange(event)
+            {field.type === 'checkbox' ? (
+              <FormControlLabel
+                sx={{
+                  marginLeft: 0,
                 }}
-                name="radio-buttons-group"
+                control={
+                  <Checkbox
+                    checked={checked}
+                    onChange={handleChange}
+                    name={field.name}
+                    inputProps={{ 'aria-label': field.name }}
+                  />
+                }
+                label={field.name}
+                labelPlacement="start"
+              />
+            ) : (
+              <FormControl
+                className="m-0 mt-2 min-w-[90%]"
+                component="fieldset"
               >
-                {(optionsData() || []).map((choice: any) => (
-                  <Fragment key={choice.name}>
-                    <FormControlLabel
-                      value={choice.name}
-                      disabled={disabled}
-                      control={<Radio />}
-                      label={choice.name.toString()}
-                    />
-                  </Fragment>
-                ))}
-              </RadioGroup>
-            </FormControl>
+                {!field.helper && (
+                  <FormLabel component="legend">
+                    <Label field={field} error={error} />
+                  </FormLabel>
+                )}
+                <RadioGroup
+                  className="flex w-full flex-row"
+                  aria-label={field.name}
+                  value={option}
+                  onChange={(event) => {
+                    handleChange(event)
+                    onChange(event)
+                  }}
+                  name="radio-buttons-group"
+                >
+                  {(optionsData || []).map((choice: any) => (
+                    <Fragment key={choice.name}>
+                      <FormControlLabel
+                        value={choice.name}
+                        disabled={disabled}
+                        control={<Radio />}
+                        label={choice.name.toString()}
+                      />
+                    </Fragment>
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            )}
+
             {error && (
               <FormHelperText className="mb-4 text-left font-rubik font-medium text-red-100">
                 Select at least one item from the list
@@ -505,8 +590,21 @@ function TextInputField({
 }: Form) {
   const [shouldShrink, setShouldShrink] = useState(false)
   const [numError, setNumError] = useState(false)
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    saveInput(field.name, event.target.value)
+  const [inputValue, setInputValue] = useState(value ?? undefined)
+
+  // update inputValue when the value prop changes
+  useEffect(() => {
+    setInputValue(value ?? '')
+  }, [value])
+
+  const handleBlur = () => {
+    // we save input on blur to optimize for saves
+    setShouldShrink(false)
+    let parsedValue = inputValue === '' ? undefined : inputValue // default to undefined for empty strings
+    if (field.type === 'number' && parsedValue)
+      parsedValue = Number(parsedValue) // convert the value to number for number fields
+
+    saveInput(field.name, parsedValue)
   }
 
   return (
@@ -519,9 +617,9 @@ function TextInputField({
       <Controller
         name={field.name}
         control={control}
-        defaultValue={value}
+        defaultValue={inputValue}
         rules={{ required: true }}
-        render={({ field: { onChange, value: val } }) => (
+        render={() => (
           <>
             {field.helper && (
               <InputLabel>
@@ -533,13 +631,13 @@ function TextInputField({
                 error?.message ? `${styles.textfieldError}` : ''
               } `}
               id="outlined-basic"
-              defaultValue={value}
+              defaultValue={inputValue}
               disabled={disabled}
-              value={val ?? ''}
-              onBlur={() => setShouldShrink(false)}
+              value={inputValue ?? ''}
+              onBlur={handleBlur}
               onFocus={() => setShouldShrink(true)}
               InputLabelProps={{
-                shrink: value || shouldShrink,
+                shrink: inputValue || shouldShrink,
               }}
               inputProps={
                 type === 'number'
@@ -555,16 +653,11 @@ function TextInputField({
                   const targetValue = e.target.value
                   const regex = /^\d*\.?\d*$/
                   if (!regex.test(targetValue)) {
-                    setNumError(true)
-                  } else {
-                    setNumError(false)
-                    handleChange(e)
-                    onChange(e)
+                    return setNumError(true)
                   }
-                } else {
-                  handleChange(e)
-                  onChange(e)
                 }
+                setNumError(false)
+                setInputValue(e.target.value)
               }}
               label={<Label field={field} error={error} />}
               variant="outlined"
@@ -576,7 +669,7 @@ function TextInputField({
             )}
             {error && (
               <FormHelperText className="mb-4 text-left font-rubik font-medium text-red-100">
-                This field is required
+                {error?.message ?? 'This field is required'}
               </FormHelperText>
             )}
           </>
@@ -712,30 +805,45 @@ function LinkRecordInput({
     field?.foreignTableId
   )
 
-  const dataSave = (onChange: (val: any) => any, nameId: any, name: any) => {
+  const dataSave = (onChange: (val: any) => any, nameId: any, value: any) => {
     onChange(nameId)
-    setSelectedChoices(name)
-    saveInput(field.name, nameId)
+    setSelectedChoices(value)
+
+    if (field?.valueType === 'collaborator') {
+      // save the value as an email
+      saveInput(field.name, {
+        email: value?.email || '',
+        id: nameId,
+      })
+    } else {
+      saveInput(field.name, nameId)
+    }
+    // saveInput(field.name, nameId)
   }
   const handleChange = (onChange: (val: any) => any, value: any) => {
+    const saveValue = (v: any) => {
+      dataSave(onChange, v, value)
+    }
+
     if (value) {
       if (Array.isArray(value)) {
         const recordId = value.map((rec) => rec.id)
-        dataSave(onChange, recordId, value)
+        saveValue(recordId)
       } else {
-        dataSave(onChange, [value.id], value)
+        saveValue([value.id])
       }
     } else {
-      dataSave(onChange, value, value)
+      saveValue(value)
     }
   }
 
   useEffect(() => {
     if (linkedValue && linkedRecords.length > 0) {
+      const parsedLinkedValue = linkedValue?.id ?? linkedValue
       const recordValue = linkedRecords.filter(
         (rec: any) =>
-          Array.isArray(linkedValue) &&
-          linkedValue.some((val: any) => rec.id === val)
+          Array.isArray(parsedLinkedValue) &&
+          parsedLinkedValue.some((val: any) => rec.id === val)
       )
       if (field.relationship === 'many') {
         setSelectedChoices(recordValue)
@@ -835,41 +943,69 @@ function LinkRecordInputOptimizedSearch({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const [search, { loading: searching }] = useLazyQuery(OPTIMIZED_SEARCH, {
-    context: {
-      clientName: 'search',
-    },
-    onCompleted: (data) => {
-      const response = data.optimizedSearch.data || {}
-      const displayKey = response?.displayName || 'name'
+  const [search, { loading: searching }] = useLazyQuery(OPTIMIZED_SEARCH)
+  const abortControllerRef = useRef<AbortController | null>(null)
+  const [loadingError, setLoadingError] = useState<string | undefined>()
 
-      const searchResults = response?.results || []
-      setLinkedRecords((prev: any[]) =>
-        getUniqueRecords([
-          ...prev,
-          ...searchResults.map((rec: any) => ({
-            id: rec.id,
-            name: rec[displayKey],
-          })),
-        ])
-      )
-    },
-  })
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(async (keyword: string) => {
+        if (keyword.length < 4) return
+
+        // cancel any pending requests
+        if (abortControllerRef.current) {
+          abortControllerRef.current.abort()
+        }
+
+        abortControllerRef.current = new AbortController()
+        const signal = abortControllerRef.current?.signal
+
+        try {
+          setLoadingError(undefined)
+          const { data } = await search({
+            variables: { keyword, table: indexId },
+            context: {
+              clientName: 'search',
+              fetchOptions: {
+                signal,
+              },
+            },
+          })
+
+          const response = data?.optimizedSearch?.data || {}
+          const displayKey = response?.displayName || 'name'
+
+          const searchResults = response?.results || []
+          setLinkedRecords((prev: any[]) =>
+            getUniqueRecords([
+              ...prev,
+              ...searchResults.map((rec: any) => ({
+                id: rec.id,
+                name: rec[displayKey],
+              })),
+            ])
+          )
+        } catch (error: any) {
+          if (error?.name !== 'AbortError') {
+            logError(error)
+            setLoadingError(error?.message ?? 'Error loading records')
+          }
+        }
+      }, 500),
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [search]
+  )
 
   const settingLinkedData = searching || !airtableMeta
 
-  const debouncedSearch = debounce((keyword: string) => {
-    if (keyword.length < 3) return
-    search({ variables: { keyword, table: indexId } })
-  }, 500)
-
-  const handleSearch = (
-    event: SyntheticEvent<Element, Event>,
-    value: string
-  ) => {
-    setSearchKey(value)
-    debouncedSearch(value)
-  }
+  const handleSearch = useCallback(
+    (event: SyntheticEvent<Element, Event>, value: string) => {
+      setSearchKey(value)
+      debouncedSearch(value)
+    },
+    [debouncedSearch]
+  )
 
   return (
     <Controller
@@ -881,7 +1017,7 @@ function LinkRecordInputOptimizedSearch({
         <>
           {field.helper && (
             <InputLabel>
-              <HelperText field={field} error={error} />
+              <HelperText field={field} error={error || loadingError} />
             </InputLabel>
           )}
           <Autocomplete
@@ -954,90 +1090,54 @@ function LinkRecordInputDefault({
   handleChange,
   setLinkedRecords,
 }: any) {
-  const [getLinkedRecords, { data, loading: gettingLinkedRecords }] =
-    useLazyQuery(GLOBAL_SEARCH)
+  const [gettingLinkedRecords, setLoading] = useState(false)
+  const [loadingError, setLoadingError] = useState(null)
+
   const settingLinkedData = gettingLinkedRecords || !airtableMeta
   const { member } = useMember()
 
-  useEffect(() => {
-    if (data) {
-      const response = data.globalSearch.data || []
-      const displayFields: any[] = []
-      response.forEach((fl: any) => {
-        const loadedMeta =
-          fl.fields[airtableMeta[field.foreignTableId].primaryFieldName]
-        const loadedValue = loadedMeta && typeof loadedMeta === 'string'
-        if (loadedValue) {
-          displayFields.push({
-            id: fl.id,
-            name: loadedMeta?.toLocaleString(),
-          })
-        }
-      })
-      setLinkedRecords(displayFields)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
-  const checkAntaraIdKey = () => {
-    const validKeys = [
-      'Antara ID (from member)',
-      'Antara ID (from Members)',
-      'antara_id',
-      'Antara ID',
-      'antara_member_id',
-      'Antara Member ID',
-      'Antara ID (from Member)',
-    ]
-    let presentKey = ''
-    const metaFields = airtableMeta[field.foreignTableId]?.fields
-    if (metaFields) {
-      Object.keys(metaFields).forEach((ky) => {
-        validKeys.forEach((vl) => {
-          if (metaFields[ky].name === vl) {
-            presentKey = vl
-          }
-        })
-      })
-    }
+  const getTableFromName = () => {
+    const tableId = field.foreignTableId
+    const table = airtableMeta?.[tableId]
 
-    return presentKey
+    return table
   }
 
+  const { getLinkedData } = useForeignKeyDataHandler()
+
   useEffect(() => {
-    if (airtableMeta) {
-      let airtableField = airtableMeta[field.foreignTableId]?.primaryFieldName
-      let searchParam = ''
-      if (
-        field.foreignTableId === 'tblHs6JxFnMGAjNNC' &&
-        field.name === 'Consulting Clinician'
-      ) {
-        airtableField = 'Team'
-        searchParam = 'Doctor'
+    if (airtableMeta && member) {
+      const table = getTableFromName()
+      setLoading(true)
+      if (table) {
+        setLoadingError(null)
+        getLinkedData({ ...table, fieldId: field.id })
+          .then((options) => {
+            setLinkedRecords(options)
+          })
+          .catch(setLoadingError)
+          .finally(() => {
+            setLoading(false)
+          })
       }
-      getLinkedRecords({
-        variables: {
-          table: field.foreignTableId,
-          field: airtableField,
-          searchParam,
-          antaraIdKey: checkAntaraIdKey(),
-          antaraIdValue: checkAntaraIdKey() ? member?.antaraId || '' : '',
-        },
-      })
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [airtableMeta])
+  }, [airtableMeta, member])
+
+  const defaultValue = linkedValue?.id ?? linkedValue
 
   return (
     <Controller
       name={field.name}
-      defaultValue={linkedValue}
+      defaultValue={defaultValue}
       control={control}
       rules={{ required: true }}
       render={({ field: { onChange } }) => (
         <>
           {field.helper && (
             <InputLabel>
-              <HelperText field={field} error={error} />
+              <HelperText field={field} error={error || loadingError} />
             </InputLabel>
           )}
           <Autocomplete
@@ -1092,149 +1192,6 @@ function LinkRecordInputDefault({
   )
 }
 
-function CollaboratorInput({
-  value: linkedValue,
-  field,
-  saveInput,
-  airtableMeta,
-  disabled,
-  control,
-  error,
-}: Form) {
-  const [selectedChoices, setSelectedChoices] = useState<any>(() => {
-    if (field.relationship === 'many') {
-      return []
-    }
-    return null
-  })
-  const [linkedRecords, setLinkedRecords] = useState<any[]>([])
-  const filterOptions = createFilterOptions({
-    matchFrom: 'any',
-    limit: 50,
-  })
-  const [getLinkedRecords, { data, loading: gettingLinkedRecords }] =
-    useLazyQuery(GLOBAL_SEARCH)
-  const settingLinkedData = gettingLinkedRecords || !airtableMeta
-  useEffect(() => {
-    if (data) {
-      const response = data.globalSearch.data
-      const loadedMeta = response.map((res) => {
-        return {
-          email: res.fields.Email,
-          name: res.fields.Name,
-        }
-      })
-
-      setLinkedRecords(loadedMeta)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
-
-  useEffect(() => {
-    if (airtableMeta) {
-      const airtableField = airtableMeta[field.foreignTableId]?.primaryFieldName
-
-      getLinkedRecords({
-        variables: {
-          table: field.foreignTableId,
-          field: airtableField,
-          searchParam: '',
-          antaraIdKey: '',
-          antaraIdValue: '',
-        },
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [airtableMeta])
-
-  useEffect(() => {
-    if (linkedValue && linkedRecords.length > 0) {
-      const recordValue = linkedRecords.filter(
-        (rec: any) => rec.name === linkedValue.name
-      )
-      if (field.relationship === 'many') {
-        setSelectedChoices(recordValue)
-      } else {
-        setSelectedChoices(recordValue[0])
-      }
-    } else if (field.relationship === 'many') {
-      setSelectedChoices([])
-    } else {
-      setSelectedChoices(null)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [linkedValue, linkedRecords])
-  const handleChange = (onChange: (val: any) => any, value: any) => {
-    if (value) {
-      onChange(value)
-      saveInput(field.name, value)
-    }
-  }
-
-  return (
-    <Controller
-      name={field.name}
-      defaultValue={linkedValue}
-      control={control}
-      rules={{ required: true }}
-      render={({ field: { onChange } }) => (
-        <>
-          {field.helper && (
-            <InputLabel>
-              <HelperText field={field} error={error} />
-            </InputLabel>
-          )}
-          <Autocomplete
-            multiple={field.relationship === 'many'}
-            disablePortal
-            filterOptions={filterOptions}
-            disabled={disabled}
-            loading={settingLinkedData}
-            loadingText={
-              <div className="flex text-xs">
-                <LoadingIcon /> Loading {field.name} records
-              </div>
-            }
-            id="combo-box-demo"
-            options={linkedRecords}
-            value={selectedChoices}
-            disableCloseOnSelect={field.relationship === 'many'}
-            sx={{ marginBottom: 2 }}
-            onChange={(event: SyntheticEvent<Element, Event>, value: any) =>
-              handleChange(onChange, value)
-            }
-            getOptionLabel={(option) => option?.name || ''}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={<Label field={field} error={error} />}
-              />
-            )}
-            renderOption={(props, option, { selected }) => {
-              return (
-                <li {...props}>
-                  <Checkbox
-                    key={option.id}
-                    icon={icon}
-                    checkedIcon={checkedIcon}
-                    style={{ marginRight: 8 }}
-                    checked={selected}
-                  />
-                  {option.name}
-                </li>
-              )
-            }}
-          />
-          {error && (
-            <FormHelperText className="mb-4 text-left font-rubik font-medium text-red-100">
-              This field is required
-            </FormHelperText>
-          )}
-        </>
-      )}
-    />
-  )
-}
 function DateInputField({
   value: dateValue,
   field,

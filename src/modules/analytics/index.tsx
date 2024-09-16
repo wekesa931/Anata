@@ -6,6 +6,7 @@ export const useModuleAnalytics = () => {
   const rightSectionAnalytics = useAnalytics('Right Section')
   const middlesSectionAnalytics = useAnalytics('Middle Section')
   const homePageSectionAnalytics = useAnalytics('Home Page')
+  const memberAnalytics = useAnalytics('Member')
   const { member } = useMember()
 
   return {
@@ -18,6 +19,12 @@ export const useModuleAnalytics = () => {
     trackPersonalSectionAccessed: () => {
       // eslint-disable-next-line no-underscore-dangle
       leftSectionAnalytics.track('Personal section accessed', member?._raw)
+    },
+    trackSeeWhyButtonClicked: () => {
+      leftSectionAnalytics.track('See why button clicked')
+    },
+    trackAddButtonClicked: (title: any) => {
+      leftSectionAnalytics.track('Add button clicked', title)
     },
 
     trackClinicalSectionAccessed: () => {
@@ -85,6 +92,15 @@ export const useModuleAnalytics = () => {
         { document }
       )
     },
+    trackPeriodToDocumentGeneration: (
+      document: any,
+      durationInSeconds: any
+    ) => {
+      middlesSectionAnalytics.track('New prescription document generated', {
+        document,
+        durationInSeconds,
+      })
+    },
     trackNewDocumentPreviewEdited: (document: any) => {
       middlesSectionAnalytics.track('New document preview edited', { document })
     },
@@ -123,11 +139,14 @@ export const useModuleAnalytics = () => {
         rightSectionAnalytics.track('SMS send failed', sms)
       }
     },
-    trackValidateMemberClicked: (member: any) => {
-      rightSectionAnalytics.track('Call Validate member clicked', member)
+    trackValidateMemberClicked: (validatedMember: any) => {
+      rightSectionAnalytics.track(
+        'Call Validate member clicked',
+        validatedMember
+      )
     },
-    trackValidatedMember: (member: any) => {
-      rightSectionAnalytics.track('Call Member validated', member)
+    trackValidatedMember: (validatedMember: any) => {
+      rightSectionAnalytics.track('Call Member validated', validatedMember)
     },
     trackOpenFormClicked: (formName: any) => {
       rightSectionAnalytics.track('Call Open form clicked', formName)
@@ -210,12 +229,14 @@ export const useModuleAnalytics = () => {
     trackFieldNameSorted: (
       tableName: string,
       fieldName: string,
-      order: string
+      order: string,
+      source: 'home' | 'middle'
     ) => {
-      middlesSectionAnalytics.track(
-        `${tableName} table - ${fieldName} field sorted`,
-        { order }
-      )
+      const sectionAnalytics =
+        source === 'home' ? homePageSectionAnalytics : middlesSectionAnalytics
+      sectionAnalytics.track(`${tableName} table - ${fieldName} field sorted`, {
+        order,
+      })
     },
     trackTableGrouped: (tableName: string, groupColumn: string) => {
       homePageSectionAnalytics.track(
@@ -253,6 +274,89 @@ export const useModuleAnalytics = () => {
       homePageSectionAnalytics.track(
         'workflows section - opened from dashboard menu'
       )
+    },
+    trackMemberSearched: (searchedMember: any, source: 'main' | 'member') => {
+      memberAnalytics.track(`searched from ${source} dashboard`, {
+        member: searchedMember,
+      })
+    },
+    trackTaskItemOpened: (task: any) => {
+      homePageSectionAnalytics.track(`tasks - task opened`, { task })
+    },
+
+    // tasks modal
+    trackTaskCompletion: (data: any) => {
+      rightSectionAnalytics.track(
+        `complete button clicked for a single task`,
+        data
+      )
+    },
+    trackMissedTaskClicked: (data: any, tasksLength: any) => {
+      rightSectionAnalytics.track(`missed button clicked`, {
+        data,
+        tasksLength,
+      })
+    },
+    trackTemplateEdit: (item: any) => {
+      rightSectionAnalytics.track(item)
+    },
+    trackReshedulingDueDate: (item: any[]) => {
+      item.map((item) => {
+        rightSectionAnalytics.track(`rescheduling date modified - ${item}`)
+        return item
+      })
+    },
+    trackAutomaticActionsInteractionLog: (data: any) => {
+      rightSectionAnalytics.track(
+        `automatic next steps interaction log saved`,
+        data
+      )
+    },
+    trackAutomaticActionsSms: (data: any) => {
+      rightSectionAnalytics.track(`automatic next steps sms sent`, data)
+    },
+    trackUpdateAppointment: (data: any) => {
+      rightSectionAnalytics.track(
+        `Appointment linked to a task marked as missed `,
+        data
+      )
+    },
+
+    trackAutomaticActionSubmitted: () => {
+      rightSectionAnalytics.track('automatic actions submitted')
+    },
+    trackActiveTasksSectionOpened: (tasks: any) =>
+      rightSectionAnalytics.track('Active tasks section clicked', tasks),
+    trackInActiveTasksSectionOpened: (tasks: any) =>
+      rightSectionAnalytics.track('InActive tasks section clicked', tasks),
+    trackTaskCompletionForMultipleTasks: (data: any) => {
+      rightSectionAnalytics.track(
+        `complete button clicked for multiple tasks`,
+        data
+      )
+    },
+    trackLabRequestCreatedFromDocs: (labTypes: any) => {
+      middlesSectionAnalytics.track(
+        'lab requests created from UDM document upload',
+        {
+          labTypes,
+        }
+      )
+    },
+    trackLabRequestUpdated: (labRequest: any) => {
+      middlesSectionAnalytics.track('lab request updated', labRequest)
+    },
+    trackFormSaved: (form: any, workflowId?: string) => {
+      rightSectionAnalytics.track(`${form} form submitted`, {
+        form,
+        workflowId,
+      })
+    },
+    trackFormOpened: (formName: string) => {
+      rightSectionAnalytics.track(`${formName} form opened`)
+    },
+    trackFormClosed: (formName: string) => {
+      rightSectionAnalytics.track(`${formName} form closed`)
     },
   }
 }

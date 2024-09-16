@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
@@ -8,16 +8,17 @@ import { SortFilterProvider } from 'src/context/sort-filter'
 import Clinical from 'src/modules/clinical/views/clinical-summary-tables'
 import InteractionLogs from 'src/modules/interactions/components/interaction-logs.component'
 import Nutrition from 'src/modules/nutrition'
-import Files from 'src/modules/udm'
 import ErrorBoundary from 'src/components/error-boundary'
 import CallLog from 'src/modules/comms/calls/views/call-logs'
 import { withTabRouter } from 'src/utils/routing/tab-router'
-import ConditionsSection from 'src/modules/conditions/views/condition-details'
 import InterventionSection from 'src/modules/interventions/views/intervention-details'
 import MemberTasks from 'src/modules/tasks/components/member-tasks.component'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import _ from 'lodash'
+import ConditionsView from 'src/modules/conditions/views/conditions'
 import styles from './views.module.css'
+
+const Files = React.lazy(() => import('src/modules/udm'))
 
 function Views({ view, handleChange }: any) {
   const { trackMiddleSectionOpened: middleSectionOpened } = useModuleAnalytics()
@@ -68,7 +69,7 @@ function Views({ view, handleChange }: any) {
           </TabPanel>
           <TabPanel value="conditions">
             <ErrorBoundary>
-              <ConditionsSection />
+              <ConditionsView />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel value="interventions">
@@ -93,7 +94,9 @@ function Views({ view, handleChange }: any) {
           </TabPanel>
           <TabPanel value="udm">
             <ErrorBoundary>
-              <Files />
+              <Suspense fallback={<div>Loading...</div>}>
+                <Files />
+              </Suspense>
             </ErrorBoundary>
           </TabPanel>
           <TabPanel value="member-tasks">

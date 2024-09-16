@@ -39,6 +39,8 @@ export const membersTableColumns: ColumnSchema[] = [
   { name: 'caregiver_contact', type: 'string' },
   { name: 'nhif_number', type: 'string' },
   { name: 'other_refused_service', type: 'string' },
+  { name: 'member_cohorts', type: 'string' },
+  { name: 'health_status', type: 'string' },
 ]
 
 export const MembersSchema = tableSchema({

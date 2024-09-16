@@ -10,7 +10,11 @@ import {
   GET_BS_REFERENCE_RANGE,
 } from 'src/modules/vitals/services/gql'
 import { useLazyQuery } from '@apollo/client'
-import { HealthMetricNames, PanelNames } from '../types/clusters.types'
+import {
+  HealthMetricNames,
+  PanelNames,
+  AggregateMetricsParams,
+} from '../types/clusters.types'
 
 export const useClustersApi = () => {
   const [getData, { loading, error }] = useLazyQuery(GET_CLUSTERS_BY_PANEL, {
@@ -21,7 +25,11 @@ export const useClustersApi = () => {
 
   const [
     getAggregates,
-    { loading: aggregatesLoading, error: aggregatesError },
+    {
+      loading: aggregatesLoading,
+      error: aggregatesError,
+      refetch: refetchAggregates,
+    },
   ] = useLazyQuery(GET_AGGREGATED_METRICS, {
     context: {
       clientName: 'v2',
@@ -30,7 +38,11 @@ export const useClustersApi = () => {
 
   const [
     getBpAggregates,
-    { loading: bpAggregatesLoading, error: bpAggregatesError },
+    {
+      loading: bpAggregatesLoading,
+      error: bpAggregatesError,
+      refetch: refetchBpAggregates,
+    },
   ] = useLazyQuery(GET_AGGREGATED_BP_METRICS, {
     context: {
       clientName: 'v2',
@@ -39,7 +51,11 @@ export const useClustersApi = () => {
 
   const [
     getBsAggregates,
-    { loading: bsAggregatesLoading, error: bsAggregatesError },
+    {
+      loading: bsAggregatesLoading,
+      error: bsAggregatesError,
+      refetch: refetchBsAggregates,
+    },
   ] = useLazyQuery(GET_BS_AGGREGATES, {
     context: {
       clientName: 'v2',
@@ -48,7 +64,11 @@ export const useClustersApi = () => {
 
   const [
     getChlMeasurements,
-    { loading: chlMeasurementsLoading, error: chlMeasurementsError },
+    {
+      loading: chlMeasurementsLoading,
+      error: chlMeasurementsError,
+      refetch: refetchChlMeasurements,
+    },
   ] = useLazyQuery(GET_CHL_MEASUREMENTS, {
     context: {
       clientName: 'v2',
@@ -83,24 +103,28 @@ export const useClustersApi = () => {
     return results.flat()
   }
 
-  const getAggregateMetrics = async (
-    healthMetric: HealthMetricNames,
-    startDate: string | Date,
-    endDate: string | Date,
-    dailyMetrics?: boolean
-  ) => {
+  const getAggregateMetrics = async (args: AggregateMetricsParams) => {
+    const { startDate, endDate, healthMetric, refetch, dailyMetrics } = args
     const startDateOffset = dayjs(startDate).format('YYYY-MM-DD')
     const stopDateOffset = dayjs(endDate).format('YYYY-MM-DD')
 
-    const { data } = await getAggregates({
-      variables: {
-        healthMetric,
-        startDateOffset,
-        antaraId: member?.antaraId,
-        stopDateOffset,
-        granularity: dailyMetrics ? 'day' : 'cluster',
-      },
-    })
+    const fetchFn = refetch ? refetchAggregates : getAggregates
+    let data: any
+    if (refetch) {
+      data = (await refetchAggregates()).data
+    }
+
+    data = (
+      await fetchFn({
+        variables: {
+          healthMetric,
+          startDateOffset,
+          antaraId: member?.antaraId,
+          stopDateOffset,
+          granularity: dailyMetrics ? 'day' : 'cluster',
+        },
+      })
+    ).data
 
     const { healthMetricAggregatedMeasurements } = data
     if (!healthMetricAggregatedMeasurements?.edges?.length)
@@ -110,12 +134,17 @@ export const useClustersApi = () => {
   }
 
   const getAggregateBPMetrics = async (
-    startDate: string | Date,
-    endDate: string | Date,
-    dailyMetrics?: boolean
+    args: AggregateMetricsParams
   ): Promise<any[]> => {
+    const { startDate, endDate, refetch, dailyMetrics } = args
     const startDateOffset = dayjs(startDate).format('YYYY-MM-DD')
     const stopDateOffset = dayjs(endDate).format('YYYY-MM-DD')
+
+    if (refetch) {
+      const { data } = await refetchBpAggregates()
+
+      return data
+    }
 
     const { data } = await getBpAggregates({
       variables: {
@@ -130,9 +159,14 @@ export const useClustersApi = () => {
   }
 
   const getChlMeasurementsData = async (
+    refetch: boolean = false,
     offset?: number,
     first?: number
   ): Promise<any[]> => {
+    if (refetch) {
+      const { data } = await refetchChlMeasurements()
+      return data?.cholesterolMonitoring?.edges || []
+    }
     const { data } = await getChlMeasurements({
       variables: {
         antaraId: member?.antaraId,
@@ -144,13 +178,15 @@ export const useClustersApi = () => {
     return data?.cholesterolMonitoring?.edges || []
   }
 
-  const getAggregateBsMetrics = async (
-    startDate: string | Date,
-    endDate: string | Date,
-    dailyMetrics?: boolean
-  ) => {
+  const getAggregateBsMetrics = async (args: AggregateMetricsParams) => {
+    const { startDate, endDate, dailyMetrics, refetch } = args
     const startDateOffset = dayjs(startDate).format('YYYY-MM-DD')
     const stopDateOffset = dayjs(endDate).format('YYYY-MM-DD')
+
+    if (refetch) {
+      const { data } = await refetchBsAggregates()
+      return data
+    }
 
     const { data } = await getBsAggregates({
       variables: {

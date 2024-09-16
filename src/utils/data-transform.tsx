@@ -3,8 +3,11 @@ import {
   V2MemberType,
   PayorQueryType,
   PayorType,
+  MemberCohortType,
+  MemberCohortQueryType,
 } from 'src/modules/member/types'
 import { getAgeFull } from 'src/utils/date-time/helpers'
+import { toTitleCase } from './text-utils'
 
 const getSexAccronym = (sex: string) => {
   if (sex?.toLowerCase() === 'male') return 'M'
@@ -22,6 +25,52 @@ const parsePayor = (payor: PayorQueryType): PayorType => {
   }
 }
 
+export const parseMemberCohort = (
+  cohort: MemberCohortQueryType[]
+): MemberCohortType[] => {
+  return cohort?.map((c) => ({
+    name: c?.name,
+    billingStartedAt: c?.billingStartedAt,
+    skuRate: c?.skuRate,
+    billingFrequency: c?.billingFrequency,
+    subscriptionStatus: c?.subscriptionStatus,
+    isOptInRequired: c?.isOptInRequired,
+    optedInAt: c?.optedInAt,
+    optedOutAt: c?.optedOutAt,
+    nextBilledAt: c?.nextBilledAt,
+    billingMethod: c?.billingMethod,
+    activatedAt: c?.activatedAt,
+    activatedBy: c?.activatedBy,
+    pausedAt: c?.pausedAt,
+    pausedBy: c?.pausedBy,
+    cancelledAt: c?.cancelledAt,
+    cancelledBy: c?.cancelledBy,
+    remarks: c?.remarks,
+    billingEvents: c?.billingEvents,
+    revenueModelName: c?.revenueModelName,
+  }))
+}
+
+export const parseSearchData = (memberData: V2MemberQueryType) => {
+  const details = memberData.details || {}
+  const status = memberData.status || { employer: { name: '' } }
+  const birthDate = memberData?.birthDate || ''
+  const sex = details?.sex?.sex || ''
+
+  const fullName = details?.fullName
+  const age = getAgeFull(birthDate)
+
+  const employerName = status?.employer?.name || ''
+  const displayName = `${fullName} (${
+    memberData?.antaraId
+  }) - ${age} [${getSexAccronym(sex || '')}] - ${employerName}`
+
+  return {
+    displayName,
+    antaraId: memberData?.antaraId,
+  }
+}
+
 /**
  * Extract member details from graphql response structure
  */
@@ -36,6 +85,7 @@ export const parseV2MemberData = (
   const birthDate = memberData?.birthDate || ''
   member.antaraId = memberData?.antaraId
   member.birthDate = birthDate
+  member.healthStatus = memberData?.healthStatus
 
   // details information
   const { details = {} } = memberData
@@ -82,8 +132,17 @@ export const parseV2MemberData = (
   member = { ...member, ...contact }
 
   // insurance details
-  const { insuranceDetails = {} } = memberData
-  member = { ...member, insuranceDetails }
+  const { insuranceDetails = [] } = memberData
+
+  const parseVerificationStatus = (insurance: any) => ({
+    ...insurance,
+    verificationStatus: toTitleCase(insurance?.verificationStatus),
+  })
+
+  member = {
+    ...member,
+    insuranceDetails: insuranceDetails.map(parseVerificationStatus),
+  }
 
   // dependents and primary
   const { otherDependents = [], primary = null, dependents = [] } = memberData

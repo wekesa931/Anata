@@ -17,6 +17,43 @@ export const useFormsData = () => {
 
   const formsCollection: Collection<Forms> = database.collections.get('forms')
 
+  const formBuilder = (
+    form: Forms,
+    name: string,
+    data: any,
+    antaraId: string,
+    formId?: string
+  ) => {
+    form.member = antaraId
+    form.name = name
+    form.data = {
+      isDraft: true,
+      ...data,
+    }
+
+    // eslint-disable-next-line no-underscore-dangle
+    form._raw.id = formId || generateId(name.substring(0, 3))
+    form.createdBy = getUserModelDetails(user)
+    form.updatedBy = getUserModelDetails(user)
+    form.isSynced = false
+    form.isDraft = true
+    form.isEdited = false
+    form.createdAt = dayjs().valueOf()
+  }
+
+  const createEmptyForm = async (formName: string) => {
+    if (member && user) {
+      return database.write(async () => {
+        const created = await formsCollection.create((form) => {
+          formBuilder(form, formName, {}, member?.antaraId)
+        })
+        return created
+      })
+    }
+
+    return null
+  }
+
   const createForm = async (
     formName: string,
     formData: any = {},
@@ -26,9 +63,7 @@ export const useFormsData = () => {
       const initialFormData = initialFormValues(member, user, formName)
       return database.write(async () => {
         const created = await formsCollection.create((form) => {
-          form.member = member?.antaraId
-          form.name = formName
-          form.data = {
+          const data = {
             timestamp: dayjs().toDate(),
             isDraft: true,
             ...initialFormData[formName],
@@ -37,15 +72,7 @@ export const useFormsData = () => {
             createdBy: getUserModelDetails(user),
             updatedBy: getUserModelDetails(user),
           }
-
-          // eslint-disable-next-line no-underscore-dangle
-          form._raw.id = formId || generateId(formName.substring(0, 3))
-          form.createdBy = getUserModelDetails(user)
-          form.updatedBy = getUserModelDetails(user)
-          form.isSynced = false
-          form.isDraft = true
-          form.isEdited = false
-          form.createdAt = dayjs().valueOf()
+          formBuilder(form, formName, data, member?.antaraId, formId)
         })
         return created
       })
@@ -107,6 +134,7 @@ export const useFormsData = () => {
     getForms,
     deleteAllForms,
     deleteForm,
+    createEmptyForm,
   }
 }
 

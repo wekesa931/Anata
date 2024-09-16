@@ -94,6 +94,7 @@ function useClinicalSummary() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member?.airtableRecordId])
 
+  // TODO - this should go
   const getRiskScore = useCallback(() => {
     const riskScoreUrl = `hif/list?filterByFormula=FIND("${member?.airtableRecordId}", {Member Record ID})`
     airtableFetch(riskScoreUrl).then((response) => {
@@ -115,6 +116,7 @@ function useClinicalSummary() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member?.airtableRecordId])
 
+  // TODO: reduce bandiwth here
   const getHealthGoalsAndStatus = useCallback(
     () => {
       if (member?.airtableRecordId) {

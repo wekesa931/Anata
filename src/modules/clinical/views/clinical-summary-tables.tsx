@@ -5,9 +5,10 @@ import Medications from 'src/modules/clinical/clinical-modules/medications/compo
 import Consultation from 'src/modules/consultation'
 import Logistic from 'src/modules/clinical/clinical-modules/logistic-task/components/logistic-task.component'
 import DateRangeFiltered from 'src/context/date-range-filter'
-import LabRequest from 'src/modules/clinical/clinical-modules/labs/components/lab-request.component'
+import LabRequest from 'src/modules/labs/views/table'
 import VitalsDisplay from 'src/modules/vitals/views/displays'
 import VitalsTables from 'src/modules/vitals/views/tables'
+import HealthMetrics from 'src/modules/conditions/views/tables'
 
 function Clinical() {
   return (
@@ -24,6 +25,7 @@ function Clinical() {
             </div>
           </div>
           <VitalsTables />
+          <HealthMetrics />
         </div>
         <div className="flex-1">
           <div className="margin-bottom-16">

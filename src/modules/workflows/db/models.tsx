@@ -97,6 +97,11 @@ export class Forms extends Model {
       this.isEdited = false
       this.isSynced = true
       this.airtableId = airtableId
+      this.data = {
+        ...this.data,
+        isDraft: false,
+        airtableRecordId: airtableId,
+      }
     })
   }
 
@@ -113,6 +118,16 @@ export class Forms extends Model {
       this.data = {
         ...this.data,
         isDraft: false,
+      }
+    })
+  }
+
+  @writer async updatePrefills(prefills: any) {
+    await this.update(() => {
+      this.isEdited = true
+      this.data = {
+        ...this.data,
+        ...prefills,
       }
     })
   }

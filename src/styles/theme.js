@@ -30,6 +30,7 @@ module.exports = {
       'green-100': 'var(--green-100)',
       'green-50': 'var(--green-50)',
       'green-10': 'var(--green-10)',
+      'green-20': '#D6F7DB',
       'red-100': 'var(--red-100)',
       'red-50': 'var(--red-50)',
       'red-10': 'var(--red-10)',
@@ -68,6 +69,7 @@ module.exports = {
     minWidth: {
       200: '200px',
       '1/2': '50%',
+      auto: 'auto',
     },
     boxShadow: {
       template: `0 2.8px 2.2px 0 rgba(0, 0, 0, 0.02), 0 6.7px 5.3px 0 rgba(0, 0, 0, 0.03), 0 12.5px 10px 0 rgba(0, 0, 0, 0.04),
@@ -76,6 +78,14 @@ module.exports = {
     },
     width: {
       'fill-available': '-webkit-fill-available',
+      xs: '20rem',
+      sm: '24rem',
+      md: '28rem',
+      lg: '32rem',
+      xl: '36rem',
+      '2xl': '42rem',
+      '3xl': '48rem',
+      '4xl': '56rem',
     },
     height: {
       'dashboard-height': 'calc(100vh - 64px)',

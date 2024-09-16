@@ -8,6 +8,8 @@ import type { FormProps } from 'src/modules/workflows/types'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useVitalsUpdate } from 'src/modules/vitals/hooks/vitals.update.hook'
 import dayjs from 'dayjs'
+import { BS_OBSERVER } from 'src/modules/vitals/services/observers'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 // set the number field type message to be more specific field must be a number
 yup.setLocale({
@@ -43,6 +45,7 @@ function DMMonitoring({
   upsertDraft: saveDraft,
 }: FormProps) {
   const { handleCreateDMReading, loading } = useVitalsUpdate()
+  const { trackFormSaved } = useModuleAnalytics()
   const [initialValues, setInitialValues] = React.useState<any>({
     timestamp: dayjs().toDate(),
     preprandialBloodGlucose: '',
@@ -65,6 +68,8 @@ function DMMonitoring({
     handleCreateDMReading(values)
       .then(async () => {
         await form.markAsCompleted()
+        BS_OBSERVER.next()
+        trackFormSaved(form.name, form.workflow?.workflowId)
         handleSubmissionSuccess(false)
       })
       .catch((error) => {
@@ -81,7 +86,7 @@ function DMMonitoring({
       handleSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      {() => (
+      {({ errors }) => (
         <Form>
           <DateTimeField
             name="timestamp"
@@ -142,11 +147,18 @@ function DMMonitoring({
             `}
             disabled={disabled}
           />
-          <div className="flex justify-end">
+          <div className="flex items-center mt-8">
+            <p className="text-sm font-rubik text-dark-red-100">
+              {Object.values(errors).length > 0 &&
+                'Please fill all required fields'}
+            </p>
+          </div>
+          <div className="flex items-center mt-8">
             <PrimaryButton
               type="submit"
               disabled={loading || disabled}
               loading={loading}
+              fullWidth
             >
               Submit form
             </PrimaryButton>

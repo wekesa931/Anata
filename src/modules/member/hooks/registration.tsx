@@ -1,14 +1,10 @@
-import {
-  PhoneType,
-  InsuranceVerificationStatus,
-} from 'src/modules/member/types'
+import { PhoneType } from 'src/modules/member/types'
 import type { Member } from 'src/modules/member/db/models'
 import {
   useCreateMember,
   useUpdateBiodata,
   useUpdateContactsData,
   useUpdateAddressesData,
-  useVerifyInsuranceDetails,
   useUpdateInsuranceDetails,
   useUpdatePhones,
   useUpdateBirthdate,
@@ -26,11 +22,11 @@ import {
   preparePhonesForUpdate,
   prepareAddressesForUpdate,
   prepareInsurancesForUpdate,
-  transformInsurances,
   removeEmpty,
 } from 'src/modules/member/utils/data-transforms'
 import { useMembersData } from 'src/modules/member/hooks/member-data'
 import { toTitleCase } from 'src/utils/text-utils'
+import { parseUpdateContactError } from '../utils'
 
 export const useRegistrationData = () => {
   const { createMember, loading: creatingMember } = useCreateMember()
@@ -39,8 +35,6 @@ export const useRegistrationData = () => {
     useUpdateContactsData()
   const { updateAddressesData, loading: updatingAddresses } =
     useUpdateAddressesData()
-  const { verifyInsuranceDetails, loading: verifyingInsuranceDetails } =
-    useVerifyInsuranceDetails()
   const { updateInsuranceDetails, loading: updatingInsuranceDetails } =
     useUpdateInsuranceDetails()
   const { createDefaultMemberInstance, createMemberInstance } = useMembersData()
@@ -98,6 +92,10 @@ export const useRegistrationData = () => {
     member: Member,
     contactsData: ContactValues
   ) => {
+    const ignoreEmptyPhone = (phoneNumber?: string) => {
+      return phoneNumber && phoneNumber?.length > 4 ? phoneNumber : ''
+    }
+
     try {
       const phonesToUpdate = preparePhonesForUpdate(
         member.phones || [],
@@ -109,16 +107,39 @@ export const useRegistrationData = () => {
       })
       contactsData.phones = phonesToUpdate
 
-      const { data } = await updateContactsData({
+      // remove empty phone numbers
+      const { emergencyContact, caregiverContact } = contactsData
+      contactsData.emergencyContact.phoneNumber = ignoreEmptyPhone(
+        emergencyContact.phoneNumber
+      )
+      contactsData.caregiverContact.phoneNumber = ignoreEmptyPhone(
+        caregiverContact.phoneNumber
+      )
+
+      const { data = {} } = await updateContactsData({
         ...contactsData,
         antaraId: member.antaraId,
       })
+      const { updateMemberContact, updateMemberPhones } = data
+
+      // parse the errors if any
+      if (updateMemberPhones?.status !== 200) {
+        throw new Error('Unable to update phone details. Please try again')
+      }
+
+      if (updateMemberContact?.status !== 200) {
+        throw new Error(
+          parseUpdateContactError(updateMemberContact?.errors || {})
+        )
+      }
       const phones = transformPhones(data)
-      return await member.updateMember({
+      const update = await member.updateMember({
         phones,
         email: contactsData.email,
         emergencyContact: contactsData.emergencyContact,
+        caregiverContact: contactsData.caregiverContact,
       })
+      return update
     } catch (error) {
       logError(error)
       throw error
@@ -142,48 +163,6 @@ export const useRegistrationData = () => {
       return member.updateMember({
         addresses: addressData,
       })
-    } catch (error) {
-      logError(error)
-      throw error
-    }
-  }
-
-  const handleVerifyInsuranceDetails = async (
-    member: Member,
-    insuranceDetails: any,
-    insuranceId: number
-  ) => {
-    try {
-      const insurances = prepareInsurancesForUpdate(
-        member.insurances || ({} as DbValueTypes.InsuranceDetailsValues),
-        insuranceDetails
-      )
-      const res = await verifyInsuranceDetails(insurances, member.antaraId)
-      const newInsurances = transformInsurances(res)
-
-      // find the insurance with the id and check verificationStatus
-      const insurance = newInsurances.find((i: any) => i.id === insuranceId)
-      let verified = false
-      if (insurance) {
-        verified =
-          insurance.verificationStatus === InsuranceVerificationStatus.VERIFIED
-      }
-
-      const update = {
-        insurances: newInsurances,
-        antaraId: member.antaraId,
-        employer: insuranceDetails.employer,
-      }
-
-      await member.updateMember({
-        insurances: update.insurances,
-        employer: update.employer,
-      })
-
-      return {
-        verified,
-        update,
-      }
     } catch (error) {
       logError(error)
       throw error
@@ -250,12 +229,14 @@ export const useRegistrationData = () => {
 
   const handleUpdateBirthdate = async (
     member: Member,
-    birthDate: Date | null
+    values: Pick<BiodataValues, 'birthDate' | 'sex'>
   ) => {
+    const { birthDate, sex } = values
     try {
       const payload = {
         antaraId: member?.antaraId,
         birthDate,
+        sex,
         firstName: member?.firstName || '',
         lastName: member?.lastName || '',
         middleName: member?.middleName || '',
@@ -264,6 +245,7 @@ export const useRegistrationData = () => {
       await updateBirthdate(payload)
       return member.updateMember({
         birthDate: dayjs(birthDate).format('YYYY-MM-DD'),
+        sex,
       })
     } catch (error) {
       logError(error)
@@ -308,19 +290,16 @@ export const useRegistrationData = () => {
     createDefaultMemberInstance,
     handleUpdateContactsData,
     handleUpdateAddresses,
-    handleVerifyInsuranceDetails,
     handleUpdateInsuranceDetails,
     loading:
       creatingMember ||
       updatingMember ||
       updatingContactsData ||
       updatingAddresses ||
-      verifyingInsuranceDetails ||
       updatingInsuranceDetails ||
       updatingPhones ||
       updatingBirthdate ||
       updatingStatus,
-    isVerifyingInsurance: verifyingInsuranceDetails,
     handleUpdatePhones,
     isUpdatingPhones: updatingPhones,
     handleUpdateBirthdate,

@@ -54,6 +54,12 @@ const getAgeFull = (birthDate?: string | null) => {
   return `(${months} m)`
 }
 
+const adjustExclusiveDates = (range: [Date | null, Date | null]) => {
+  const start = dayjs(range[0]).subtract(1, 'day').toDate()
+  const end = dayjs(range[1]).add(1, 'day').toDate()
+  return [start, end]
+}
+
 export {
   dateIsToday,
   dateIsYesterday,
@@ -63,4 +69,5 @@ export {
   isMinor,
   getAgeFull,
   todayFormattedDate,
+  adjustExclusiveDates,
 }

@@ -118,7 +118,7 @@ body,
 #root,
 .appContainer {
   height: 100%;
-  font-family: 'Rubik';
+  font-family: 'Rubik' !important;
 }
 
 .dashboard-container {
@@ -1962,7 +1962,8 @@ a {
 }
 
 .upload-form-drawer .MuiPaper-root {
-  min-width: 380px !important;
+  min-width: 320px !important;
+  width: 36rem !important;
 }
 .pdf-dialog {
   position: relative;
@@ -2175,6 +2176,6 @@ a.fc-event:has(.singleEvent) {
 .MuiTablePagination-selectLabel,
 .MuiTablePagination-displayedRows,
 .MuiSelect-select,
-.MuiButton-root  {
+.MuiButton-root {
   font-family: 'Rubik', sans-serif !important;
 }

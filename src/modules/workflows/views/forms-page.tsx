@@ -13,14 +13,7 @@ import { useMember } from 'src/context/member'
 import FormPortal from './forms-portal'
 import { formNames } from '../utils'
 
-const FORMS = [
-  ...form_schemas,
-  {
-    name: 'Minor HIF',
-    type: 'airtableForm',
-    url: 'https://antara.formstack.com/forms/minor_hif_2023',
-  },
-]
+const FORMS = [...form_schemas]
 
 function Forms() {
   const [airtableForm, setAirtableForm] = useState<TForm | null>(null)
@@ -32,10 +25,7 @@ function Forms() {
 
   const openFormHandler = (form: TForm) => {
     if (form.type === 'airtableForm') {
-      setAirtableForm({
-        ...form,
-        url: `${form.url}?ANTARA ID=${member?.antaraId}`,
-      })
+      setAirtableForm(form)
     } else {
       openForm(form.name)
     }

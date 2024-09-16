@@ -77,15 +77,22 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
     }
   }
 
-  const saveInput = async (name: string, value: any) => {
+  const saveInput = (name: string, value: any) => {
     setIsEdited(true)
     form.saveInput(name, value)
     setFormData({ ...formData, [name]: value })
   }
 
+  const updatePrefills = (prefills: any) => {
+    setIsEdited(true)
+
+    form.updatePrefills(prefills)
+    setFormData({ ...formData, ...prefills })
+  }
+
   const handleSubmissionSuccess = (f: TWorkflowForm) => () => {
     f.clearDraft().then(() => {
-      notify('Form submitted succesfully.')
+      notify('Form submitted succesfully.', 'success')
       setIsEdited(false)
       closeForm(f)
     })
@@ -95,7 +102,8 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
     notify(
       err?.message && typeof err?.message === 'string'
         ? err?.message
-        : 'There was an error submitting your form. Please try again.'
+        : 'There was an error submitting your form. Please try again.',
+      'error'
     )
   }
 
@@ -118,6 +126,8 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
               saveInput={saveInput}
               handleSubmissionSuccess={handleSubmissionSuccess(form)}
               handleSubmissionError={handleSubmissionError}
+              updatePrefills={updatePrefills}
+              formData={formData}
             />
           </FormsSection>
         </WorkflowFormsLayout>

@@ -3,8 +3,9 @@ import airtableFetch from 'src/services/airtable/fetch'
 import logError from 'src/utils/logging/logger'
 import { useMember } from 'src/context/member'
 import { useUpdateMedications } from 'src/modules/clinical/clinical-modules/medications/services'
+import filterFields from 'src/utils/airtable/field-utils'
 
-const useMedicationData = () => {
+const useMedicationData = (loadMedication = true) => {
   const [medicationsData, setMedicationsData] = useState<any[]>([])
   const { member } = useMember()
   const [loading, setLoading] = useState(true)
@@ -23,10 +24,51 @@ const useMedicationData = () => {
   }
 
   const getMedications = async (antaraId: string) => {
+    const allowedFields: string[] = [
+      'Record ID',
+      'Autonumber',
+      'Change of medication',
+      'Check-ups Unit Price (from Medication)',
+      'Associated condition(s) (from memberDB)',
+      'County (from Member)',
+      'Created time',
+      'Data Source',
+      'Days until Refill',
+      'Dose (Numeric)',
+      'Duration',
+      'Frequency',
+      'Gender (from Member)',
+      'Geolocation (from Member)',
+      'Immutable Medication',
+      'Medication Name (from Medication Base)',
+      'Member Address',
+      'Member Status (from Member)',
+      'New Delivery URL',
+      'Prescribing facility name from Provider base',
+      'Quantity',
+      'Quantity Units',
+      'Refill Date calculated',
+      'Refillable',
+      'Refused services (from Member)',
+      'Route',
+      'Start Date',
+      'Status',
+      'Summary',
+      'Tags (from Member)',
+      'Unit Price (from One Stop) (from Medication)',
+      'created_by',
+      'created_at',
+      'last_modified',
+      'status_last_modified_at',
+      'updated_by',
+      'Other Medication',
+    ]
     setLoading(true)
     try {
       const medications = await airtableFetch(
-        `medications/list?filterByFormula=FIND("${antaraId}", {Antara ID (from Member)})`
+        `medications/list?filterByFormula=FIND("${antaraId}", {Antara ID (from Member)})&${filterFields(
+          allowedFields
+        )}`
       )
 
       const mappedResponses = medications?.map((med: any) => {
@@ -47,7 +89,7 @@ const useMedicationData = () => {
   }
 
   useEffect(() => {
-    if (member?.antaraId) {
+    if (member?.antaraId && loadMedication) {
       getMedications(member?.antaraId)
     }
 

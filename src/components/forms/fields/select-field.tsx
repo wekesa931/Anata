@@ -2,15 +2,40 @@ import React from 'react'
 import { FieldProps } from 'formik'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import { Checkbox, Chip, FormHelperText, OutlinedInput } from '@mui/material'
+import {
+  Autocomplete,
+  Checkbox,
+  Chip,
+  FormHelperText,
+  IconButton,
+  OutlinedInput,
+  TextField,
+} from '@mui/material'
+import { SearchOutlined } from '@mui/icons-material'
 import OutlinedField, { OutlinedFieldProps } from './outlined-field'
 
-type SelectFieldProps = {
-  options: { label: string; value: string }[]
-  multiple?: boolean
+export type Options = {
+  label: string
+  value: string
+  [key: string]: any
 }
 
-function ValueRenderer({ selected, props }: any) {
+export type SelectFieldProps = {
+  options: Options[]
+  multiple?: boolean
+  onClick?: (e: any) => void
+  loading?: boolean
+  bottomPadding?: boolean
+  CustomOptionRenderer?: React.FC<CustomOptionRendererProps>
+  loadingText?: string
+  displayHelper?: boolean
+}
+
+export type CustomOptionRendererProps = {
+  option: Options
+}
+
+export function ValueRenderer({ selected, props }: any) {
   if (!selected || selected?.length === 0) {
     return <span className="text-grey-main">{props.placeholder} </span>
   }
@@ -26,11 +51,21 @@ function ValueRenderer({ selected, props }: any) {
     )
   }
 
-  const selectedOption = props.options.find((o: any) => o.value === selected)
-  return selectedOption?.label || selected
+  const selectedOption = props.options.find(
+    (o: any) => o.value === selected || o.value === selected?.value
+  )
+  return props.CustomOptionRenderer ? (
+    <props.CustomOptionRenderer option={selectedOption} />
+  ) : (
+    <>{selectedOption?.label || selected}</>
+  )
 }
 
-function SelectField(props: OutlinedFieldProps & SelectFieldProps) {
+export function SelectField({
+  bottomPadding = true,
+  displayHelper = true,
+  ...props
+}: OutlinedFieldProps & SelectFieldProps) {
   const handleValueChange = (e: any, fieldProps: FieldProps) => {
     fieldProps.form.handleChange(fieldProps.field.name)(e)
     if (props.handleChange) {
@@ -53,44 +88,243 @@ function SelectField(props: OutlinedFieldProps & SelectFieldProps) {
       {(fieldProps: FieldProps) => {
         return (
           <>
-            <Select
-              {...fieldProps.field}
-              size="small"
-              multiple={props.multiple}
-              onChange={(e) => {
-                handleValueChange(e, fieldProps)
-              }}
-              error={!!fieldProps.meta.error}
-              input={
-                <OutlinedInput
-                  placeholder={props.placeholder}
-                  error={!!fieldProps.meta.error}
+            {props.displayMode ? (
+              <>
+                {props.CustomOptionRenderer ? (
+                  <props.CustomOptionRenderer
+                    option={
+                      props.options.find(
+                        (o: any) => o.value === fieldProps.field.value
+                      ) || fieldProps.field.value
+                    }
+                  />
+                ) : (
+                  <>
+                    <>{fieldProps.field.value}</>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <Select
+                  {...fieldProps.field}
                   size="small"
-                />
-              }
+                  multiple={props.multiple}
+                  onChange={(e) => {
+                    handleValueChange(e, fieldProps)
+                  }}
+                  className={props.xs ? 'h-8 w-full' : ''}
+                  error={!!fieldProps.meta.error}
+                  input={
+                    <OutlinedInput
+                      placeholder={props.placeholder}
+                      error={!!fieldProps.meta.error}
+                      size="small"
+                    />
+                  }
+                  onBlur={(e: any) => {
+                    handleBlur(e, fieldProps)
+                  }}
+                  displayEmpty
+                  renderValue={(selected: any) => (
+                    <ValueRenderer selected={selected} props={props} />
+                  )}
+                  disabled={props.disabled}
+                  autoFocus={props.autoFocus}
+                  onClick={props.onClick}
+                  MenuProps={{
+                    style: { zIndex: 99999 },
+                  }}
+                >
+                  {props.options.length ? (
+                    props.options.map((option: any) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {props?.multiple && (
+                          <Checkbox
+                            checked={
+                              fieldProps.field?.value?.indexOf(option.value) >
+                              -1
+                            }
+                          />
+                        )}
+                        {props.CustomOptionRenderer ? (
+                          <props.CustomOptionRenderer option={option} />
+                        ) : (
+                          <>{option.label}</>
+                        )}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem> No options available</MenuItem>
+                  )}
+                </Select>
+                {bottomPadding && displayHelper && (
+                  <FormHelperText error={!!fieldProps.meta.error}>
+                    {!!fieldProps.meta.error && !!fieldProps.meta.error
+                      ? fieldProps.meta.error
+                      : ' '}
+                  </FormHelperText>
+                )}
+              </>
+            )}
+          </>
+        )
+      }}
+    </OutlinedField>
+  )
+}
+
+type MultiselectFieldProps = SelectFieldProps &
+  OutlinedFieldProps & {
+    ExtraOptionsComponent?: React.ReactNode
+    isOpen?: boolean
+  }
+
+export function MultiselectField({
+  multiple = true,
+  ...props
+}: MultiselectFieldProps) {
+  const handleValueChange = (values: any, fieldProps: FieldProps) => {
+    fieldProps.form.setFieldValue(fieldProps.field.name, values)
+
+    if (props.saveInput) {
+      props.saveInput(fieldProps.field.name, values)
+    }
+  }
+
+  const handleBlur = (e: any, fieldProps: FieldProps) => {
+    fieldProps.form.handleBlur(fieldProps.field.name)(e)
+    if (props.handleBlur) {
+      props.handleBlur(e)
+    }
+  }
+
+  const [open, setOpen] = React.useState(false)
+
+  return (
+    <OutlinedField {...props} id="custom-autocomplete">
+      {(fieldProps: FieldProps) => {
+        return (
+          <>
+            <Autocomplete
+              open={open}
+              onOpen={() => {
+                setOpen(true)
+              }}
+              onClose={() => {
+                setOpen(false)
+              }}
+              getOptionLabel={(option) => option.label || ''}
+              multiple={multiple}
+              options={props.options}
+              disableCloseOnSelect={multiple}
+              onChange={(e, newValue) => {
+                handleValueChange(newValue, fieldProps)
+              }}
               onBlur={(e: any) => {
                 handleBlur(e, fieldProps)
               }}
-              displayEmpty
-              renderValue={(selected: any) => (
-                <ValueRenderer selected={selected} props={props} />
-              )}
-              disabled={props.disabled}
-              autoFocus={props.autoFocus}
-            >
-              {props.options.map((option: any) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {props?.multiple && (
-                    <Checkbox
-                      checked={
-                        fieldProps.field?.value?.indexOf(option.value) > -1
-                      }
+              slotProps={{
+                popper: {
+                  sx: {
+                    zIndex: 999999,
+                  },
+                },
+              }}
+              loading={props.loading}
+              value={fieldProps.field.value ?? []}
+              renderTags={(value: readonly Options[], getTagProps) => {
+                return (
+                  Array.isArray(value) &&
+                  value.map((option: Options, index: number) => (
+                    <Chip
+                      variant="outlined"
+                      label={option.label}
+                      {...getTagProps({ index })}
+                      className="font-rubik text-sm bg-blue-10 font-normal"
                     />
-                  )}
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
+                  ))
+                )
+              }}
+              renderInput={(params) => {
+                return (
+                  <div>
+                    <TextField
+                      {...params}
+                      ref={params.InputProps.ref}
+                      inputProps={params.inputProps}
+                      placeholder={props.placeholder || 'Search...'}
+                      // eslint-disable-next-line
+                      InputProps={{
+                        ...params.InputProps,
+                        startAdornment: (
+                          <>
+                            {!fieldProps.field.value?.length && (
+                              <IconButton size="small">
+                                <SearchOutlined />
+                              </IconButton>
+                            )}
+                            {params.InputProps.startAdornment}
+                          </>
+                        ),
+                      }}
+                      size="small"
+                    />
+                  </div>
+                )
+              }}
+              noOptionsText={
+                props.ExtraOptionsComponent ? (
+                  <div role="presentation" onClick={() => setOpen(false)}>
+                    {props.ExtraOptionsComponent}{' '}
+                  </div>
+                ) : (
+                  'No options found'
+                )
+              }
+              disabled={props.disabled}
+              renderOption={(optionProps, option, options) => {
+                const { selected, index } = options
+                return (
+                  <div>
+                    <div
+                      className={
+                        multiple ? 'border-b border-b-dark-blue-100' : ''
+                      }
+                    >
+                      <MenuItem
+                        {...optionProps}
+                        className="flex items-center gap-2 text-sm overflow-hidden "
+                        selected={selected}
+                      >
+                        {multiple && (
+                          <Checkbox
+                            checked={selected}
+                            sx={{
+                              '&.Mui-checked': {
+                                color: '#ff9800',
+                              },
+                              color: '#ff9800',
+                            }}
+                          />
+                        )}
+                        <p>{option?.label}</p>
+                      </MenuItem>
+                    </div>
+                    {index + 1 === props.options.length &&
+                      props.ExtraOptionsComponent && (
+                        <div
+                          className="w-full mb-0"
+                          role="presentation"
+                          onClick={() => setOpen(false)}
+                        >
+                          {props.ExtraOptionsComponent}
+                        </div>
+                      )}
+                  </div>
+                )
+              }}
+            />
             <FormHelperText error={!!fieldProps.meta.error}>
               {!!fieldProps.meta.error && !!fieldProps.meta.error
                 ? fieldProps.meta.error

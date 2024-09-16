@@ -395,3 +395,39 @@ export const GET_BS_REFERENCE_RANGE = gql`
     }
   }
 `
+
+export const GET_HEALTH_METRICS = gql`
+  query healthMetricsAndReferences($sex: String!, $ageInMonths: Int!) {
+    metrics: healthMetrics {
+      edges {
+        node {
+          name
+          description
+          helperText
+          measurementUnit {
+            name
+          }
+          measurementPanelType {
+            edges {
+              node {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+    references: referenceRanges(sex: $sex, ageInMonths: $ageInMonths) {
+      edges {
+        node {
+          minimumValue
+          maximumValue
+          name
+          healthMetric {
+            name
+          }
+        }
+      }
+    }
+  }
+`

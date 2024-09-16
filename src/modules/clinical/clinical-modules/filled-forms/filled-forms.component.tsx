@@ -44,26 +44,10 @@ function FilledForms() {
   const forms = [
     'baseline',
     'hif',
-    'ncf',
-    'minorhif',
-    'hntasks',
     'pafu',
-    'medications',
-    'appointments',
-    'vitals',
-    'bp',
-    'chl',
-    'dm',
-    'conditions',
-    'hmp',
-    'clinicalrounds',
-    'interventions',
-    'interventions_tracking',
     'mhc',
-    'physio',
     'minor_health_check',
-    'minorhifv2',
-    'healthTriageForm',
+    'incident',
   ]
 
   useEffect(() => {
@@ -92,14 +76,17 @@ function FilledForms() {
           setFilledForms([])
         } else {
           const formResponses = [
-            { name: 'Baseline', data: response[forms.indexOf('baseline')] },
+            { name: 'Health Check', data: response[forms.indexOf('baseline')] },
             { name: 'HIF', data: response[forms.indexOf('hif')] },
             {
               name: 'Nutritional Consultation',
               data: response[forms.indexOf('ncf')],
             },
             { name: 'Minor HIF', data: response[forms.indexOf('minorhif')] },
-            { name: 'HN Tasks', data: response[forms.indexOf('hntasks')] },
+            {
+              name: 'Care Team Tasks',
+              data: response[forms.indexOf('hntasks')],
+            },
             {
               name: 'Interactions',
               data: response[forms.indexOf('interactions')],
@@ -153,6 +140,18 @@ function FilledForms() {
             {
               name: 'Healthy triage form',
               data: response[forms.indexOf('healthTriageForm')],
+            },
+            {
+              name: 'Lab/imaging management',
+              data: response[forms.indexOf('labs')],
+            },
+            {
+              name: 'Incident reports',
+              data: response[forms.indexOf('incident')],
+            },
+            {
+              name: 'Logistics Tasks',
+              data: response[forms.indexOf('logisticsTasks')],
             },
           ]
           setFilledForms(formResponses)

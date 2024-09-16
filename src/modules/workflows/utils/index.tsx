@@ -6,6 +6,7 @@ import FORMS from 'src/modules/workflows/components/forms/form-inputs-definition
 import { User } from 'src/types/user'
 import { todayFormattedDate } from 'src/utils/date-time/helpers'
 import { v4 as uuidV4 } from 'uuid'
+import { logError } from 'src/utils/logging/logger'
 
 dayjs.locale('en')
 
@@ -80,6 +81,8 @@ export const ActiveForm = (activeForm: string) => {
     isBp: activeForm === 'BP Mon',
     isChl: activeForm === 'CHL Mon',
     isDm: activeForm === 'DM Mon',
+    isLabs: activeForm === 'Lab/imaging management',
+    isCareTeamTasks: activeForm === 'Care Team Tasks',
   }
 }
 
@@ -151,7 +154,15 @@ export const renameField = (
 }
 
 const isAllowedField = (name: string) => {
-  const allowedFields = ['createdBy', 'updatedBy', 'Data Source', 'Member']
+  const allowedFields = [
+    'createdBy',
+    'updatedBy',
+    'Data Source',
+    'Member',
+    'Assignee',
+    'HIF Completed',
+    'Status',
+  ]
   return allowedFields.includes(name)
 }
 
@@ -181,20 +192,43 @@ export const generatePayload = (
   const findById = (id: string) => findBy('id', id)?.name || null
 
   Object.keys(initialPayload)?.forEach((k) => {
+    const getValue = (v: any) => {
+      if (v?.id && v.email) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, ...rest } = v
+        return rest
+      }
+
+      return v
+    }
+
     const fieldId = findFieldId(k)
     if (fieldId) {
-      mappedPayload[fieldId] = initialPayload[k]
+      mappedPayload[fieldId] = getValue(initialPayload[k])
     } else if (isAllowedField(k)) {
-      mappedPayload[k] = initialPayload[k]
+      mappedPayload[k] = getValue(initialPayload[k])
     } else {
       erroredFields.push(k)
     }
   })
   if (erroredFields.length > 0) {
     const affectedFields = JSON.stringify(erroredFields)
-    throw new Error(
+    logError(
       `The following fields are missing on airtable and have not been saved ${affectedFields}`
     )
+  }
+
+  const containsNull = (obj: any, k: string) => {
+    if (obj?.[k] === null) return true
+
+    const all_null = (arr: any[]) =>
+      arr.every(function (v: any) {
+        return v === null
+      })
+
+    if (Array.isArray(obj?.[k]) && all_null(obj?.[k])) return true
+
+    return false
   }
   /**
    * Remove fields that are not defined in the local schema
@@ -204,15 +238,19 @@ export const generatePayload = (
   )
   Object.keys(mappedPayload)?.forEach((k) => {
     if (
-      !currentFieldOptionsInLocalSchema.includes(k) &&
-      !isAllowedField(findById(k))
+      (!currentFieldOptionsInLocalSchema.includes(k) &&
+        !isAllowedField(findById(k))) ||
+      containsNull(mappedPayload, k)
     ) {
       delete mappedPayload[k]
     }
   })
 
   return {
-    fields: mappedPayload,
+    generatedPayload: {
+      fields: mappedPayload,
+    },
+    findFieldId,
   }
 }
 
@@ -240,11 +278,11 @@ export const initialFormValues = (
       'BP Reading Type': isOnsite ? 'Ad hoc BP measurement' : null,
       'Type of reading': isOnsite ? 'Measured by Antara' : null,
     },
-    Baseline: {
+    'Health Check': {
       'Health Navigator': [user.userAirtableId],
       Gender: member?.sex,
-      'Is the BN a minor': member?.isMinor ? 'Yes' : 'No',
       'Date of baseline': dayjs().format('YYYY-MM-DD'),
+      'Is the BN a minor': member?.isMinor ? 'Yes' : 'No',
     },
     Vitals: {
       Staff: isOnsite
@@ -271,7 +309,7 @@ export const initialFormValues = (
       Minor: member?.isMinor ? 'yes' : 'no',
       'Interaction type': isOnsite ? 'In-person' : null,
       'Initial vs FU': isOnsite ? 'Initial consultation' : null,
-      'Date of appointment': dayjs().format('YYYY-MM-DD'),
+      'Date of Consultation': dayjs().format('YYYY-MM-DD'),
     },
     'Interaction log': {
       'Encounter Date': new Date(),
@@ -298,21 +336,28 @@ export const initialFormValues = (
     Interventions: {
       Status: 'Active',
     },
-    'HN Tasks': {
-      Status: 'Not Started',
-    },
     'Member tasks': {
       Status: 'Not Started',
     },
     'Prescriptions VC': {
       'Start Date': todayFormattedDate(new Date()),
-      'Prescribing facility from Provider base': ['recnjX3KGmGvKv7Ek'],
+      'Prescribing facility from Provider base':
+        process.env.PROD === 'true'
+          ? ['recnjX3KGmGvKv7Ek']
+          : ['recFp5U0cAetcColo'],
+      Status: 'ONGOING',
+    },
+    Prescriptions: {
+      Status: 'ONGOING',
     },
     'Healthy triage form': {
       Gender: member?.sex,
     },
     HIF: {
       'Your Age': member?.ageFull,
+    },
+    'Care Team Tasks': {
+      Status: 'Not Started',
     },
   }
 }
@@ -356,7 +401,7 @@ export const DUPLICATE_DEFAULTS: Record<string, any> = {
   'BP Mon': 'Date',
   'CHL Mon': 'Test Date',
   'DM Mon': 'Test Date',
-  'HN Tasks': 'Type',
+  'Care Team Tasks': 'Task definition',
   'Logistics Tasks': 'Type',
   'Member tasks': 'Type',
   'Prescriptions VC': 'Drug Name',
@@ -364,7 +409,7 @@ export const DUPLICATE_DEFAULTS: Record<string, any> = {
 }
 
 export const duplicates = [
-  'HN Tasks',
+  'Care Team Tasks',
   'Member tasks',
   'Prescriptions',
   'Appointments',
@@ -391,10 +436,10 @@ export const duplicates = [
   'Minor Health Check (6 to 17)',
   'Minor Health Check (0 to 5)',
   'Healthy triage form',
+  'Lab/imaging management',
 ]
 
 export const formNames: Record<string, string> = {
-  'HN Tasks': 'HN & ME Task',
   'Member tasks': 'Member Task',
   Prescriptions: 'HN Prescription',
   'Prescriptions VC': 'VC Prescription',
@@ -403,7 +448,7 @@ export const formNames: Record<string, string> = {
   'BP Mon': 'BP Monitoring',
   'CHL Mon': 'CHL Monitoring',
   'DM Mon': 'DM Monitoring',
-  Baseline: 'Baseline',
+  'Health Check': 'Health Check',
   Conditions: 'Condition Diagnosis',
   'Conditions Data tracking': 'Conditions Data Tracking',
   HIF: 'HIF',
@@ -423,6 +468,9 @@ export const formNames: Record<string, string> = {
   'Minor Health Check (0 to 5)': 'Minor Health Check (0 to 5)',
   'Minor Health Check (6 to 17)': 'Minor Health Check (6 to 17)',
   'Healthy triage form': 'Healthy triage form',
+  'Lab/imaging management': 'Lab/imaging management',
+  'Care Team Tasks': 'Care Team Tasks',
+  'Health Metrics': 'Health Metrics',
 }
 
 export const interactionlogform = {
@@ -497,6 +545,8 @@ export const interactionlogform = {
           { name: 'Nutrition follow up' },
           { name: 'Chief complaint review' },
           { name: 'HMP check-in call' },
+          { name: 'Lab result review' },
+          { name: 'Lab and vitals review' },
         ],
       },
     },

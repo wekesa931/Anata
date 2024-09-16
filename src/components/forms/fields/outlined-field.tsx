@@ -1,10 +1,9 @@
 import React from 'react'
 import { FormControl, FormLabel } from '@mui/material'
 import { Field, FieldProps } from 'formik'
-import parse from 'html-react-parser'
 
 export type OutlinedFieldProps = {
-  helperText?: string
+  helperText?: React.ReactNode
   label?: string
   required?: boolean
   name: string
@@ -21,6 +20,12 @@ export type OutlinedFieldProps = {
   autoFocus?: boolean
   saveInput?: (name: string, value: any) => void // enable save input to a different source on change
   EmptyOptionBtn?: React.ReactNode
+  id?: string
+  displayMode?: boolean
+  labelPlacement?: 'top' | 'left'
+  xs?: boolean
+  darkLabel?: boolean
+  autoWidth?: boolean
 }
 
 type OutlinedFieldPropType = {
@@ -36,18 +41,34 @@ function OutlinedField({
   validate,
   disabled = false,
   helperText,
+  id,
+  labelPlacement = 'top',
+  darkLabel,
+  autoWidth = false,
 }: OutlinedFieldProps & OutlinedFieldPropType) {
+  const isLeftLabel = labelPlacement === 'left'
   return (
-    <FormControl fullWidth={fullWidth} required={required}>
+    <FormControl
+      fullWidth={fullWidth}
+      required={required}
+      id={id}
+      className={`flex ${
+        isLeftLabel
+          ? 'flex-row items-center min-w-fit'
+          : 'flex-col justify-center'
+      } ${autoWidth ? 'w-auto' : ''}`}
+    >
       <FormLabel
         disabled={disabled}
-        className="font-rubik font-medium text-grey-main text-base text-left mb-2"
+        className={`font-rubik font-medium whitespace-nowrap ${
+          isLeftLabel ? 'text-xs mr-3' : 'text-base mb-2'
+        } text-left ${darkLabel ? 'text-black' : 'text-grey-main'} `}
       >
-        {label}
+        {isLeftLabel ? `${label}:` : label}
       </FormLabel>
-      {helperText && (
+      {helperText && !isLeftLabel && (
         <p className="mb-2.5 whitespace-pre-line font-rubik text-xs text-dark-blue-100">
-          {parse(helperText)}
+          {helperText}
         </p>
       )}
 

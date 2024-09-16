@@ -11,6 +11,7 @@ import {
   MEMBER_DETAILS_QUERY,
   UPDATE_MEMBER_STAFF,
   CREATE_COMPANY,
+  MEMBER_COHORT,
 } from 'src/modules/member/services/gql'
 import type {
   BiodataValues,
@@ -195,6 +196,7 @@ export const useUpdateBirthdate = () => {
         firstName: values.firstName,
         middleName: values.middleName,
         lastName: values.lastName,
+        sex: values.sex,
       },
     }
 
@@ -297,35 +299,6 @@ export const useUpdateAddressesData = () => {
   }
 }
 
-export const useVerifyInsuranceDetails = () => {
-  const [verify, { loading, error }] = useMutation(UPDATE_MEMBER_INSURANCE, {
-    context: { clientName: 'v2' },
-  })
-
-  const verifyInsuranceDetails = async (values: any, antaraId: string) => {
-    const response = await verify({
-      variables: {
-        memberInsurance: {
-          insuranceDetails: values,
-          antaraId,
-        },
-      },
-    })
-
-    if (response?.data?.updateMemberInsurance?.status !== 200) {
-      throw new Error('Failed to verify insurance details')
-    }
-
-    return response?.data?.updateMemberInsurance?.data?.insuranceDetails
-  }
-
-  return {
-    verifyInsuranceDetails,
-    loading,
-    error,
-  }
-}
-
 export const useUpdateInsuranceDetails = () => {
   const INSURANCE_UPDATE_MUTATION = composeMutations(
     UPDATE_MEMBER_INSURANCE,
@@ -405,5 +378,25 @@ export const useUpdateStatus = () => {
     loading,
     error,
     updateStatus,
+  }
+}
+
+export const useMemberCohorts = () => {
+  const [getData, { loading, error }] = useLazyQuery(MEMBER_COHORT)
+
+  const fetchMemberCohorts = async (antaraId: string) => {
+    const response = await getData({
+      variables: { antaraId },
+      context: {
+        clientName: 'v2',
+      },
+    })
+    return response
+  }
+
+  return {
+    fetchMemberCohorts,
+    loading,
+    error,
   }
 }

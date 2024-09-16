@@ -18,6 +18,8 @@ import { useModuleAnalytics } from 'src/modules/analytics'
 import { logError } from 'src/utils/logging/logger'
 import mime from 'mime-types'
 
+export type UDMDataHook = ReturnType<typeof useUdmData>
+
 export const useUdmData = () => {
   const {
     getAllFiles,
@@ -49,6 +51,7 @@ export const useUdmData = () => {
   const [confirmationDrawerHelper, setConfirmationDrawerHelper] =
     useState(false)
   const [networkError, setNetworkError] = useState(false)
+  const [shouldRefetch, setShouldRefetch] = useState(false)
 
   const getFiles = async (filters: FileFilters = {}) => {
     if (member) {
@@ -73,13 +76,16 @@ export const useUdmData = () => {
     )
   }
 
-  const handleShareFile = async (fileId: string, folderId: string) => {
+  const handleShareFile = async (fileId?: string, folderId: string) => {
     if (member) {
-      return shareFile({
+      const sharedFiled = shareFile({
         fileId,
         folderId,
         antaraId: member.antaraId,
       })
+
+      setShouldRefetch((prev) => !prev)
+      return sharedFiled
     }
     throw new Error('Member not found')
   }
@@ -109,6 +115,7 @@ export const useUdmData = () => {
     setProgress(0)
     setUploadStatus(UploadStatus.FAILED)
     logError(response.message)
+    throw new Error(response.message)
   }
 
   const handlePersistFile = async ({
@@ -132,6 +139,7 @@ export const useUdmData = () => {
         title: docMeta.title,
         recordId: member?.airtableRecordId,
         fileName,
+        otherMetadata: docMeta.otherMetadata,
       }
 
       if (docMeta.shareWith) {
@@ -151,7 +159,7 @@ export const useUdmData = () => {
         setUploadStatus(UploadStatus.SUCCESS)
         refetch({
           variables: {
-            antaraId: '69V-Z3Q5',
+            antaraId: member?.antaraId,
           },
         })
 
@@ -243,13 +251,17 @@ export const useUdmData = () => {
             handleUploadError(err)
           }
         })
-        .catch(logError)
+        .catch((err) => {
+          logError(err)
+          throw err
+        })
     }
   }
 
   return {
     getFiles,
     refetch,
+    shouldRefetch,
     loading,
     getFolders,
     getCategories,
@@ -278,5 +290,6 @@ export const useUdmData = () => {
     setConfirmationDrawerHelper,
     networkError,
     setNetworkError,
+    uploadStatus,
   }
 }

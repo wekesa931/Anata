@@ -20,7 +20,7 @@ type ReferenceAreaProps = {
 type Props<T> = {
   data: T[]
   xAxisDataKey: {
-    key: keyof T
+    key: keyof T | string
     formatter: (key: string) => string
   }
   yAxisDataKeys: {

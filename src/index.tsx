@@ -2,13 +2,32 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from 'src/App'
 import { datadogRum } from '@datadog/browser-rum'
-// import { registerSW } from 'virtual:pwa-register'
 
 const { DATADOG_APPLICATION_ID, DATADOG_CLIENT_TOKEN } = process.env
 
-// if ('serviceWorker' in navigator) {
-//   registerSW()
-// }
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    registrations.forEach((registration) => {
+      registration.unregister()
+    })
+  })
+
+  if ('caches' in window) {
+    caches.keys().then((cacheNames) => {
+      cacheNames.forEach((cacheName) => {
+        if (cacheName.startsWith('workbox-precache')) {
+          caches.delete(cacheName).then((success) => {
+            if (success) {
+              console.log(`Cache ${cacheName} deleted successfully`)
+            } else {
+              console.log(`Cache ${cacheName} deletion failed`)
+            }
+          })
+        }
+      })
+    })
+  }
+}
 
 if (!DATADOG_APPLICATION_ID || !DATADOG_CLIENT_TOKEN) {
   throw new Error(
@@ -29,12 +48,6 @@ datadogRum.init({
   defaultPrivacyLevel: 'mask-user-input',
 })
 
-datadogRum.startSessionReplayRecording()
-
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-)
+root.render(<App />)

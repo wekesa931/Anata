@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 
 export default [
   {
-    name: 'Baseline',
+    name: 'Health Check',
     id: 'tblQKOtAe0RqE5KFn',
     formId: 'shrTABmC46zid89Uh',
     fields: [
@@ -88,8 +88,9 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper: '',
+        hide: true,
       },
       {
         id: 'flduy9NCClJwBE00p',
@@ -148,7 +149,7 @@ export default [
       },
       {
         id: 'flddZHssUatiOZXKL',
-        name: 'PMH - Past Medical History',
+        name: 'Past Medical/Surgical History',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -174,13 +175,40 @@ export default [
         required: true,
         helper: '',
         conditionType: '',
-        parentKey: 'PMH',
+        parentKey: 'Past Medical/Surgical History',
         parentValues: ['Yes'],
         condition: (values: any) => {
-          if (Array.isArray(values.PMH)) {
-            return ['Yes'].some((r) => values.PMH.includes(r))
+          if (Array.isArray(values['Past Medical/Surgical History'])) {
+            return ['Yes'].some((r) =>
+              values['Past Medical/Surgical History'].includes(r)
+            )
           }
-          return ['Yes'].includes(values.PMH)
+          return ['Yes'].includes(values['Past Medical/Surgical History'])
+        },
+      },
+      {
+        id: 'fldgx2GVBMeyYC4h5',
+        name: 'Describe any medical/surgical history',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Past Medical/Surgical History',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Past Medical/Surgical History'])) {
+            return ['Yes'].some((r) =>
+              values['Past Medical/Surgical History'].includes(r)
+            )
+          }
+          return ['Yes'].includes(values['Past Medical/Surgical History'])
         },
       },
       {
@@ -373,45 +401,6 @@ export default [
             )
           }
           return ['Out of school'].includes(values['Educational Status'])
-        },
-      },
-      {
-        id: 'fldiCb2egrjuvp9wF',
-        name: 'Have you ever had surgery',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldgx2GVBMeyYC4h5',
-        name: 'Please describe any surgeries you may have had?',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Have you ever had surgery',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Have you ever had surgery'])) {
-            return ['Yes'].some((r) =>
-              values['Have you ever had surgery'].includes(r)
-            )
-          }
-          return ['Yes'].includes(values['Have you ever had surgery'])
         },
       },
       {
@@ -1951,53 +1940,6 @@ export default [
         },
       },
       {
-        id: 'fldWm6rmjATY4WQFS',
-        name: 'Access to a gym',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '"Do you have access to a gym or currently have a gym membership?"',
-        conditionType: '',
-        parentKey: 'Is the BN a minor',
-        parentValues: ['No'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Is the BN a minor'])) {
-            return ['No'].some((r) => values['Is the BN a minor'].includes(r))
-          }
-          return ['No'].includes(values['Is the BN a minor'])
-        },
-      },
-      {
-        id: 'fldMTns5CJz3iLFUM',
-        name: 'Gym usage',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: 'Are you using to the gym?',
-        conditionType: '',
-        parentKey: 'Access to a gym',
-        parentValues: ['True'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Access to a gym'])) {
-            return ['True'].some((r) => values['Access to a gym'].includes(r))
-          }
-          return ['True'].includes(values['Access to a gym'])
-        },
-      },
-      {
         id: 'fld9uHzUEN0N1vQbO',
         name: 'Social History',
         type: 'multiSelect',
@@ -2330,54 +2272,6 @@ export default [
           'Risk factors include a family history, prior abnormal readings, smoking, eating habits etc.\n\nIf the response is yes, click here: \n<a href="https://airtable.com/shreJWFrTNVXs6RKW" target="_blank">https://airtable.com/shreJWFrTNVXs6RKW</a> ',
       },
       {
-        id: 'fldh6jX8FztBouh0T',
-        name: 'If you could work on one aspect of your health?',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'IF NOT PRE-FILLED:\n"Have you ever thought about personal health goals? \nDo you have any?\nIs there any aspect of your health that you’d like to work on or work towards?  \nIt’s okay if you don’t have an answer right now. If something comes to mind, you can always reach out to me and we can talk about how I can help."\n\nIF PRE-FILLED:\n"It is great that you want to work on [insert health goal]. \nHave you already started to work towards, [insert health goal]?\nWere you able to achieve the goal? \nWhat was it like trying to reach that goal?"\n\nIF SUCCEEDED: \n"Do you have any new goals you would like to achieve now?\nWonderful, let’s work together on that"\n\nIF FAILED:\n"Would you like to keep trying with my support?"\n\nIf it is a nutritional goal, tell the member you will set up an appointment with the nutritionist.\nIf fitness, sell the virtues of the Nike app if non-gym type. If gym type, find out what they would like to achieve and walk them through how you will support them to achieve the goal. ',
-      },
-      {
-        id: 'fldAxV875t3dDatQF',
-        name: 'Other health goals',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'If you could work on one aspect of your health?',
-        parentValues: ['Other'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['If you could work on one aspect of your health?']
-            )
-          ) {
-            return ['Other'].some((r) =>
-              values[
-                'If you could work on one aspect of your health?'
-              ].includes(r)
-            )
-          }
-          return ['Other'].includes(
-            values['If you could work on one aspect of your health?']
-          )
-        },
-      },
-      {
         id: 'fldencAWEJaRGxdCh',
         name: 'Mental Health Phase',
         type: 'select',
@@ -2470,55 +2364,6 @@ export default [
         foreignTableId: null,
         required: false,
         helper: 'Fill in the Primary doctor not found',
-      },
-      {
-        id: 'fldhKJ7vAc79y1sWR',
-        name: 'Does the beneficiary require Ancillary services?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'HN makes a determination regarding the need for additional services on the basis of the responses to prior questions',
-      },
-      {
-        id: 'fld34icr6Q9NBiJ50',
-        name: 'Ancillary Services',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '[If you need to book any appointments with Antara (Nutrition, Mental Health, Virtual Consult, Physio...) please go to the members view in Scribe and use the Calendly links (buttons)]',
-        conditionType: '',
-        parentKey: 'Does the beneficiary require Ancillary services?',
-        parentValues: ['Yes'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Does the beneficiary require Ancillary services?']
-            )
-          ) {
-            return ['Yes'].some((r) =>
-              values[
-                'Does the beneficiary require Ancillary services?'
-              ].includes(r)
-            )
-          }
-          return ['Yes'].includes(
-            values['Does the beneficiary require Ancillary services?']
-          )
-        },
       },
       {
         id: 'fldse3MLimCctR0HA',
@@ -2615,20 +2460,6 @@ export default [
       {
         id: 'fld7favH3DrAxdLqY',
         name: 'What is your preferred time for communication',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fld3YXedBQKWsZpw3',
-        name: 'How to share your plan?',
         type: 'select',
         format: '',
         isDateTime: false,
@@ -2819,6 +2650,31 @@ export default [
         foreignTableId: null,
         required: true,
         helper: '',
+      },
+      {
+        id: 'fldZb8IvazevYxTQx',
+        name: 'Lab/imaging request',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldRTcRqRxpvhbjXg',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblgUOEkOSePEa30q',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Service',
+        parentValues: ['Laboratory', 'Radiology'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Service)) {
+            return ['Laboratory', 'Radiology'].some((r) =>
+              values.Service.includes(r)
+            )
+          }
+          return ['Laboratory', 'Radiology'].includes(values.Service)
+        },
       },
       {
         id: 'fld8g9weqaITSlPSc',
@@ -3017,309 +2873,6 @@ export default [
         foreignTableId: null,
         required: false,
         helper: 'BPM',
-      },
-    ],
-  },
-  {
-    name: 'HN Tasks',
-    id: 'tblxNecTDQLZENxzV',
-    formId: 'shrmZqamldvPG4uwg',
-    fields: [
-      {
-        id: 'fldD2d73HnneN7T11',
-        name: 'Case ID',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldNbgDNlONsdxhYN',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblpQpVJrFonBQuBg',
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldXv70vFRxPhxwCR',
-        name: 'Member',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fld14ZeOAwVrq7YaM',
-        unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblAjKAJOCIDk5Nco',
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'flduuoc5BjzK3NL2P',
-        name: 'Type',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldHT9VSNZu8wMx6x',
-        name: 'ME task type',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Type',
-        parentValues: ['ME task type'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Type)) {
-            return ['ME task type'].some((r) => values.Type.includes(r))
-          }
-          return ['ME task type'].includes(values.Type)
-        },
-      },
-      {
-        id: 'fldRJZxQK5EdOUfbq',
-        name: 'Other task type',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Type',
-        parentValues: ['Others'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Type)) {
-            return ['Others'].some((r) => values.Type.includes(r))
-          }
-          return ['Others'].includes(values.Type)
-        },
-      },
-      {
-        id: 'fldEf5muDMuGtC9FP',
-        name: 'Appointment',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fld4YyDh9WtNqXc8d',
-        unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblZB4YOpd7XH3cYt',
-        required: false,
-        helper: '',
-      },
-      {
-        id: 'fldFl3zVN0rQDdKmT',
-        name: 'HMP',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldJFcYaPfBBzFSBB',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tbl4QEwsZ5wu35YXx',
-        required: true,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Type',
-        parentValues: [
-          'HMP: Follow',
-          'HMP: Followup',
-          'HMP: Internal Review',
-          'HMP: Member Review',
-          'HMP: Send',
-          'HMP: Send Monitoring Plan & Coordinate Kit Delivery',
-          'HMP: Generate',
-          'HMP: Confirm Monitoring Plan and Kit Delivery ',
-          'HMP: Confirm Monitoring Plan and Kit Delivery',
-          'HMP: Collect condition data',
-          'HMP: book consult to review with member',
-        ],
-        condition: (values: any) => {
-          if (Array.isArray(values.Type)) {
-            return [
-              'HMP: Follow',
-              'HMP: Followup',
-              'HMP: Internal Review',
-              'HMP: Member Review',
-              'HMP: Send',
-              'HMP: Send Monitoring Plan & Coordinate Kit Delivery',
-              'HMP: Generate',
-              'HMP: Confirm Monitoring Plan and Kit Delivery ',
-              'HMP: Confirm Monitoring Plan and Kit Delivery',
-              'HMP: Collect condition data',
-              'HMP: book consult to review with member',
-            ].some((r) => values.Type.includes(r))
-          }
-          return [
-            'HMP: Follow',
-            'HMP: Followup',
-            'HMP: Internal Review',
-            'HMP: Member Review',
-            'HMP: Send',
-            'HMP: Send Monitoring Plan & Coordinate Kit Delivery',
-            'HMP: Generate',
-            'HMP: Confirm Monitoring Plan and Kit Delivery ',
-            'HMP: Confirm Monitoring Plan and Kit Delivery',
-            'HMP: Collect condition data',
-            'HMP: book consult to review with member',
-          ].includes(values.Type)
-        },
-      },
-      {
-        id: 'fldfitOLmHr14Kyig',
-        name: 'Collect Condition Data',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Type',
-        parentValues: ['HMP: Collect condition data'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Type)) {
-            return ['HMP: Collect condition data'].some((r) =>
-              values.Type.includes(r)
-            )
-          }
-          return ['HMP: Collect condition data'].includes(values.Type)
-        },
-      },
-      {
-        id: 'fldqnduTODJTpxxOW',
-        name: 'What condition data?',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-        conditionType: '',
-        parentKey: 'Collect Condition Data',
-        parentValues: ['Other'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Collect Condition Data'])) {
-            return ['Other'].some((r) =>
-              values['Collect Condition Data'].includes(r)
-            )
-          }
-          return ['Other'].includes(values['Collect Condition Data'])
-        },
-      },
-      {
-        id: 'fldHNNI2EgHSoW99w',
-        name: 'Due Date',
-        type: 'date',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldSarHHNRGsSXgAr',
-        name: 'Task Priority',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldQ8o2y88CKzKh9V',
-        name: 'Assignee',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fld1EcvtKBuRlsaPw',
-        unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblZyeANbBkE2q4uG',
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldma4BpT2S3rhEB1',
-        name: 'Status',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: '',
-      },
-      {
-        id: 'fldJMRweOiQSpj5Ea',
-        name: 'Collaborator (created by)',
-        type: 'collaborator',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Please select yourself here only if you want to be informed about the status of this task (especially if the task is supposed to be done by somebody else)',
-      },
-      {
-        id: 'fldqJ7IFjdm6mwLgZ',
-        name: 'Task Notes',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
       },
     ],
   },
@@ -3677,9 +3230,9 @@ export default [
         },
       },
       {
-        id: 'fld3Z6VDAKlYqEPyF',
-        name: 'Associated condition(s)',
-        type: 'foreignKey',
+        id: 'fldnZLrtIQ8wVHQai',
+        name: 'Associated condition(s) (from memberDB)',
+        type: 'conditions',
         format: '',
         isDateTime: false,
         options: [],
@@ -3859,7 +3412,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper:
           'Fill in the Prescribing Facility not found in the provider base. Enter Other facility name with format Name -Location e.g Antara Health - Lavington',
         parentKey: 'Prescribing facility from Provider base',
@@ -4079,9 +3632,9 @@ export default [
         },
       },
       {
-        id: 'fld3Z6VDAKlYqEPyF',
-        name: 'Associated condition(s)',
-        type: 'foreignKey',
+        id: 'fldnZLrtIQ8wVHQai',
+        name: 'Associated condition(s) (from memberDB)',
+        type: 'conditions',
         format: '',
         isDateTime: false,
         options: [],
@@ -4384,7 +3937,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper: '',
       },
       {
@@ -5652,9 +5205,9 @@ export default [
         },
       },
       {
-        id: 'fldJmfqKRRSYBKrAD',
-        name: 'Conditions',
-        type: 'foreignKey',
+        id: 'fld5dlB20vNhjlzGa',
+        name: 'Conditions (from MemberDB)',
+        type: 'conditions',
         format: '',
         isDateTime: false,
         options: [],
@@ -7646,46 +7199,6 @@ export default [
         },
       },
       {
-        id: 'fldDly3zjU11AMt0H',
-        name: 'What is Your Weight?',
-        type: 'number',
-        format: 'decimal',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '"How much do you weigh"\n\n(kg) examples: 60 or 75 or 85\n(If member has already given this information during screening or PSPB or HIF phase and if you can see it on Vitals section on src, please skip this step)',
-        conditionType: '',
-        parentKey: 'Your Age',
-        condition: (values: any) => {
-          return values['Your Age'] >= 18
-        },
-      },
-      {
-        id: 'fldbWsDSKqj9MqQ8V',
-        name: 'What is Your Height?',
-        type: 'number',
-        format: 'decimal',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '"Do you know how tall you are? Even if you have a vague memory of your height in Meters, let us know."\n\n(m) examples: 1.5 or 1.8 or 1.55\n(If member has already given this information during screening or PSPB or HIF phase, please see the height in the filled form)\n\nYou need to enter vitals? Please fill the vitals form in Guided workflow form',
-        conditionType: '',
-        parentKey: 'Your Age',
-        condition: (values: any) => {
-          return values['Your Age'] >= 18
-        },
-      },
-      {
         id: 'fldwJJH8FplI4qlLE',
         name: 'HIF Completed',
         type: 'checkbox-hidden',
@@ -8429,9 +7942,9 @@ export default [
         },
       },
       {
-        id: 'fldJrUwouuqQyDKSe',
-        name: 'Condition',
-        type: 'foreignKey',
+        id: 'fldVp1PeAPtthrPZJ',
+        name: 'Condition (from memberDB)',
+        type: 'conditions',
         format: '',
         isDateTime: false,
         options: [],
@@ -8439,7 +7952,7 @@ export default [
         unreversed: true,
         relationship: 'many',
         foreignTableId: 'tblgYVivvXVxFZN3B',
-        required: true,
+        required: false,
         helper:
           'Note: you can select several conditions that are related to this intervention',
       },
@@ -9643,8 +9156,6 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: true,
-        formId: 'shrFefBCXsPCUxo2o',
-        ctlabel: 'Fill in condition',
         helper:
           'Is the patient exceeding, on track, off track, or regressing on their goal?\n\nExceeding: the beneficiary has already reach the target level and will likely reach another level before the target date\n\nOn track: the beneficiary is not yet there but will likely succeed into reaching the target milestone\n\nOff track: the beneficiary is not yet there and will unlikely succeed into reaching the target milestone\n\nRegressing: the beneficiary is struggling with the milestone and we will likely have to refine another milestone or approach\n\nThe current progress of the intervention leads to a required update of the condition (new stage or new status)? click the button.',
       },
@@ -10185,6 +9696,8 @@ export default [
           'HMP follow-up',
           'Nutrition follow-up',
           'HMP check-in call',
+          'Lab result review',
+          'Lab and vitals review',
           'Other',
         ],
         symmetricColumnId: null,
@@ -10258,6 +9771,8 @@ export default [
           'Nutrition follow up',
           'Chief complaint review',
           'HMP check-in call',
+          'Lab result review',
+          'Lab and vitals review',
         ],
         symmetricColumnId: null,
         unreversed: false,
@@ -10626,17 +10141,17 @@ export default [
     formId: 'shr9Q23J6pB5oDd8p',
     fields: [
       {
-        id: 'fldGUtKdLV6l0xyWi',
-        name: 'Case ID',
-        type: 'foreignKey',
+        id: 'fldAmbaxjnJoHsWIy',
+        name: 'Consultation Type',
+        type: 'select',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldiD8F6x8CXMqz06',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblpQpVJrFonBQuBg',
-        required: false,
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
         helper: '',
       },
       {
@@ -10723,11 +10238,26 @@ export default [
         required: true,
         helper:
           'Please add the appointment record here. If you do not, the appointment will not be automatically marked as completed',
+        parentKey: 'Consultation Type',
+        parentValues: ['Refillable medication prescription'],
+        conditionType: '',
+        toggleRequriedOnCondition: true,
+        requirementCondition: (values: any) => {
+          if (Array.isArray(values?.['Consultation Type'])) {
+            return ['Refillable medication prescription'].some((r) =>
+              values?.['Consultation Type'].includes(r)
+            )
+          }
+
+          return ['Refillable medication prescription'].includes(
+            values?.['Consultation Type']
+          )
+        },
       },
       {
-        id: 'fldFUezkqIOSrnIQG',
-        name: 'Conditions',
-        type: 'foreignKey',
+        id: 'fldBSmu9GgOHtT9o6',
+        name: 'Conditions (from MemberDB)',
+        type: 'conditions',
         format: '',
         isDateTime: false,
         options: [],
@@ -10741,7 +10271,7 @@ export default [
       },
       {
         id: 'fldpvigLPXfHFbZpL',
-        name: 'Date of appointment',
+        name: 'Date of Consultation',
         type: 'date',
         format: '',
         isDateTime: false,
@@ -11696,20 +11226,6 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper: '',
-      },
-      {
-        id: 'fldAmbaxjnJoHsWIy',
-        name: 'Consultation Type',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
         helper: '',
       },
       {
@@ -12859,6 +12375,7 @@ export default [
     name: 'Conditions Data tracking',
     id: 'tblTw7086FsouxcrQ',
     formId: 'shrFdrXBS2PxcpyhC',
+    deprecated: true,
     fields: [
       {
         id: 'fld0df9G5TcifeSzu',
@@ -13028,7 +12545,7 @@ export default [
       {
         id: 'fld0o5latdAhM6o68',
         name: 'Update lower back pain stage',
-        type: 'multiSelect',
+        type: 'select',
         format: '',
         isDateTime: false,
         options: [],
@@ -14456,7 +13973,7 @@ export default [
           'Classify and prioritize risks based on their nature and potential impact',
       },
       {
-        id: 'fld0zuq9iUcEtU8hG',
+        id: 'fldxhSzc1bRrsS3GC',
         name: 'Severity',
         type: 'select',
         format: '',
@@ -14759,17 +14276,18 @@ export default [
       {
         id: 'fldgfD1bu2iFd32Dv',
         name: 'Antara Staff Involved',
-        type: 'collaborator',
+        type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
         symmetricColumnId: null,
         unreversed: false,
         relationship: null,
-        foreignTableId: 'tblHs6JxFnMGAjNNC',
+        foreignTableId: 'tblZyeANbBkE2q4uG',
         required: false,
         helper:
           'Please tag the staff member who was in charge of the member or who was linked to the incident',
+        valueType: 'collaborator',
       },
       {
         id: 'fldPryFGCNKcM0iAL',
@@ -14811,24 +14329,9 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper:
           'Give details of what action you took to escalate/resolve the incident',
-      },
-      {
-        id: 'fldxIeLSWfQW0ry2n',
-        name: 'Next steps',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Details any follow up taken/needs to be taken to fully resolve the issue',
       },
     ],
   },
@@ -14840,7 +14343,7 @@ export default [
     fields: [
       {
         id: 'fldKWwumVnBLYBpTk',
-        name: 'Full name',
+        name: 'Member',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
@@ -17097,7 +16600,7 @@ export default [
         foreignTableId: null,
         required: true,
         helper:
-          'Please look for ICD10 codes here: <a href="https://icdcodelookup.com/icd-10/codes" target="_blank">https://icdcodelookup.com/icd-10/codes</a>\nand enter it in the field. Examples: I10 or E10 or E11',
+          'Please look for ICD10 codes here: <a href="https://icd.who.int/browse/2024-01/mms/en#1656445230" target="_blank">https://icd.who.int/browse/2024-01/mms/en#1656445230</a>\nand enter it in the field. Examples: I10 or E10 or E11',
       },
       {
         id: 'fldxLWSXo9I3cpHJm',
@@ -17113,6 +16616,42 @@ export default [
         required: true,
         helper:
           'Starting stage should be captured at the first interaction with member (initial diagnosis)',
+        conditionType: '',
+        parentKey: 'Conditions master list',
+        parentValues: [],
+        condition: (values: any) => {
+          const excludedValues = [
+            'recxUYaZEcW0Qpcka',
+            'rec3j2hRFijsozw6n',
+            'rec3vjxYieEDPKSu8',
+            'rec9f9XtaH8Rc5LcA',
+            'recw3qqW2TuGxpxer',
+            'rec8VOK4o3VuLF6wE',
+            'recjEG5O3yovrAZ9H',
+            'recHRnpQOFJvxVCmW',
+            'recdroomItEDYaxgr',
+            'recsAJrt2BHOWx8yw',
+            'recBNK7kLdZoVBz37',
+            'recrMRkSqx73wCFbi',
+            'recXKOlsFXjYlhA2f',
+            'reczWetLRjucnWnaM',
+            'rechK1Jegmzd2RflC',
+            'recUBrSLXdg5iQaqX',
+            'recrdetlxISWD2VGT',
+            'recszkbhbalLxYDDi',
+            'rech9ejeE7BWWux3s',
+            'recK4naxSoUtmixtb',
+            'recOuLk0Jf921APaF',
+            'recHQ4cydmbn20Hh0',
+            'recxTjjfcIM89Xbas',
+          ]
+          if (Array.isArray(values['Conditions master list'])) {
+            return !excludedValues.some((r) =>
+              values['Conditions master list'].includes(r)
+            )
+          }
+          return !excludedValues.includes(values['Conditions master list'])
+        },
       },
       {
         id: 'fldUR3WYE6nqFoFHE',
@@ -17420,7 +16959,7 @@ export default [
     fields: [
       {
         id: 'fldOay3WV9hFM9qiN',
-        name: 'Full name',
+        name: 'Member',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
@@ -20392,6 +19931,541 @@ export default [
             values['Triaged Health goals']
           )
         },
+      },
+    ],
+  },
+  {
+    name: 'Lab/imaging management',
+    id: 'tblgUOEkOSePEa30q',
+    fields: [
+      {
+        id: 'fldohjoV0VUSXZhU1',
+        name: 'Members',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldlMTX3LzFLEmwAB',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldeWGWqiBAIVAoUl',
+        name: 'Type',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldr1TXHhKok0bF1U',
+        name: 'Routine lab (from Lab synced view)',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldZXuvCJL4zIKQtX',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tbld6zETvQncv6r2O',
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Type',
+        parentValues: ['Lab'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Type)) {
+            return ['Lab'].some((r) => values.Type.includes(r))
+          }
+          return ['Lab'].includes(values.Type)
+        },
+      },
+      {
+        id: 'fldDbTwahDc1HmnLo',
+        name: 'Imaging type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Type',
+        parentValues: ['Imaging'],
+        condition: (values: any) => {
+          if (Array.isArray(values.Type)) {
+            return ['Imaging'].some((r) => values.Type.includes(r))
+          }
+          return ['Imaging'].includes(values.Type)
+        },
+      },
+      {
+        id: 'fld02YD0Y9B9E5qhI',
+        name: 'Reason',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the reason why we are requesting this lab',
+      },
+      {
+        id: 'fld6jTSYzhiHagAlI',
+        name: 'Status',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          '[Needed] -> we want this service to happen but we have no logistic task planned or no appointment with provider scheduled\n[Scheduled] -> we have a logistic task planned or a provider appointment scheduled\n[Checkin Confirmed] -> if the request is about lab/imaging, this means the member went to facility or the sample was delivered to facility\n[Results received by Member] (only for lab and imaging)\n[Results received by Antara] (only for lab and imaging)\n[Results reviewed by HN] -> HN has identified from the result if Doctor needs to take over for review with member (only for lab and imaging)\n[Completed] -> results were reviewed with member for lab and imaging or PAFU is done for referral. Nothing else to do for this service request\n[Canceled]',
+      },
+      {
+        id: 'fldmuHwd9DZOXRrab',
+        name: 'Sample Collection Date',
+        type: 'date',
+        format: '',
+        isDateTime: true,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'That is when we collected the sample if we did it at Antara or the date and time the member went to the laboratory',
+        conditionType: '',
+        parentKey: 'Status',
+        parentValues: [
+          'Scheduled',
+          'Checkin Confirmed',
+          'Results received by Member',
+          'Results received by Antara',
+          'Results reviewed by HN',
+          'Completed',
+        ],
+        condition: (values: any) => {
+          if (Array.isArray(values.Status)) {
+            return [
+              'Scheduled',
+              'Checkin Confirmed',
+              'Results received by Member',
+              'Results received by Antara',
+              'Results reviewed by HN',
+              'Completed',
+            ].some((r) => values.Status.includes(r))
+          }
+          return [
+            'Scheduled',
+            'Checkin Confirmed',
+            'Results received by Member',
+            'Results received by Antara',
+            'Results reviewed by HN',
+            'Completed',
+          ].includes(values.Status)
+        },
+      },
+      {
+        id: 'fldc24RMxQw73x3Ln',
+        name: 'Sample Drop Off Date',
+        type: 'date',
+        format: '',
+        isDateTime: true,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'That is when we dropped the sample to that laboratory (only applicable if we managed the sample collection at Antara',
+        conditionType: '',
+        parentKey: 'Status',
+        parentValues: [
+          'Scheduled',
+          'Checkin Confirmed',
+          'Results received by Member',
+          'Results received by Antara',
+          'Results reviewed by HN',
+          'Completed',
+        ],
+        condition: (values: any) => {
+          if (Array.isArray(values.Status)) {
+            return [
+              'Scheduled',
+              'Checkin Confirmed',
+              'Results received by Member',
+              'Results received by Antara',
+              'Results reviewed by HN',
+              'Completed',
+            ].some((r) => values.Status.includes(r))
+          }
+          return [
+            'Scheduled',
+            'Checkin Confirmed',
+            'Results received by Member',
+            'Results received by Antara',
+            'Results reviewed by HN',
+            'Completed',
+          ].includes(values.Status)
+        },
+      },
+      {
+        id: 'fldiW9vzwlevhDBWo',
+        name: 'Result Date',
+        type: 'date',
+        format: '',
+        isDateTime: true,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'That is when the results were provided to us, whether it was from facility directly or from member',
+        conditionType: '',
+        parentKey: 'Status',
+        parentValues: [
+          'Checkin Confirmed',
+          'Results received by Member',
+          'Results received by Antara',
+          'Results reviewed by HN',
+          'Completed',
+        ],
+        condition: (values: any) => {
+          if (Array.isArray(values.Status)) {
+            return [
+              'Checkin Confirmed',
+              'Results received by Member',
+              'Results received by Antara',
+              'Results reviewed by HN',
+              'Completed',
+            ].some((r) => values.Status.includes(r))
+          }
+          return [
+            'Checkin Confirmed',
+            'Results received by Member',
+            'Results received by Antara',
+            'Results reviewed by HN',
+            'Completed',
+          ].includes(values.Status)
+        },
+      },
+      {
+        id: 'fldbT6Kn9FlIcvjPa',
+        name: 'Notes',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+    ],
+  },
+  {
+    name: 'Care Team Tasks',
+    id: 'tblxNecTDQLZENxzV',
+    fields: [
+      {
+        id: 'fldXv70vFRxPhxwCR',
+        name: 'Member',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld14ZeOAwVrq7YaM',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblAjKAJOCIDk5Nco',
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldluUjdXcncSqpNk',
+        name: 'Scribe Tags',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionalOptions: true,
+        isMixed: true,
+        prefills: (name: string, value: any) => {
+          return {
+            [name]: value,
+            'Task definition': null,
+            'Task Priority': null,
+            'Due Date': '',
+            'Task Notes': '',
+          }
+        },
+      },
+      {
+        id: 'fldwYDHowo9JFzkc7',
+        name: 'Task definition',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        conditionalOptions: true,
+        symmetricColumnId: 'flddtx6ew5YGX8rT8',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblaLD6v0VeD7m1mR',
+        required: true,
+        helper: '',
+        isMixed: true,
+        prefills: (name: string, value: any, airtableMetaArgs?: any) => {
+          const recordId =
+            Array.isArray(value) && !!value.length
+              ? value[0]
+              : value?.id ?? value
+          const args = airtableMetaArgs?.getTaskDefinitionById(recordId)
+
+          if (args) {
+            return {
+              'Task Priority': args?.defaultPriority,
+              'Task Notes': args?.notes,
+              'Due Date': args?.dueDate ?? dayjs(args?.dueDate).toDate(),
+              'Task definition': {
+                id: args.recordId,
+                name: args?.clinicalPrefferedName,
+              },
+            }
+          }
+
+          return {
+            [name]: value,
+          }
+        },
+      },
+      {
+        id: 'fldEf5muDMuGtC9FP',
+        name: 'Appointment',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldm4GuxFa1LS4tPh',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblhHcP4VrFV9atFx',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Scribe Tags',
+        parentValues: ['Internal Appointment', 'Appointment', 'Referral'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Scribe Tags'])) {
+            return ['Internal Appointment', 'Appointment', 'Referral'].some(
+              (r) => values['Scribe Tags'].includes(r)
+            )
+          }
+          const tagsValues = values['Scribe Tags']
+          return ['Internal Appointment', 'Appointment', 'Referral'].includes(
+            tagsValues?.name ?? tagsValues
+          )
+        },
+      },
+      {
+        id: 'fldFl3zVN0rQDdKmT',
+        name: 'HMP',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldrz47Uj13D7yBUx',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblMKwFctRYwBYHgt',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Scribe Tags',
+        parentValues: ['HMP'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Scribe Tags'])) {
+            return ['HMP'].some((r) => values['Scribe Tags'].includes(r))
+          }
+          const tagsValues = values['Scribe Tags']
+          return ['HMP'].includes(tagsValues?.name ?? tagsValues)
+        },
+      },
+      {
+        id: 'fldW9HN5LgN69AI6u',
+        name: 'Condition (from memberDb)',
+        type: 'conditions',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldVxEnaxNA305O1B',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblYSNrfZJnzdSwmx',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Scribe Tags',
+        parentValues: ['Condition'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Scribe Tags'])) {
+            return ['Condition'].some((r) => values['Scribe Tags'].includes(r))
+          }
+          const tagsValues = values['Scribe Tags']
+          return ['Condition'].includes(tagsValues?.name ?? tagsValues)
+        },
+      },
+      {
+        id: 'fldbIMqbMpXVQ5yF3',
+        name: 'Prescription',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldZ266HXKxJyMYR2',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tbl3iBWzYVWEpdLje',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Scribe Tags',
+        parentValues: ['Medication'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Scribe Tags'])) {
+            return ['Medication'].some((r) => values['Scribe Tags'].includes(r))
+          }
+          const tagsValues = values['Scribe Tags']
+          return ['Medication'].includes(tagsValues?.name ?? tagsValues)
+        },
+      },
+      {
+        id: 'fldQQ42wPjjwuD2kV',
+        name: 'Member tasks',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldBpGpwNj4gNVIWr',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tbljwCFIDT2vG65AH',
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Scribe Tags',
+        parentValues: ['Member Task'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Scribe Tags'])) {
+            return ['Member Task'].some((r) =>
+              values['Scribe Tags'].includes(r)
+            )
+          }
+          const tagsValues = values['Scribe Tags']
+          return ['Member Task'].includes(tagsValues?.name ?? tagsValues)
+        },
+      },
+      {
+        id: 'fldSarHHNRGsSXgAr',
+        name: 'Task Priority',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldqJ7IFjdm6mwLgZ',
+        name: 'Task Notes',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldHNNI2EgHSoW99w',
+        name: 'Due Date',
+        type: 'date',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldQ8o2y88CKzKh9V',
+        name: 'Assignee',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld1EcvtKBuRlsaPw',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblZyeANbBkE2q4uG',
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldma4BpT2S3rhEB1',
+        name: 'Status',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
       },
     ],
   },

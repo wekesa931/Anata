@@ -36,6 +36,7 @@ import {
 import { generateId } from 'src/storage/utils'
 import { getFormImplementation } from 'src/modules/workflows/components/forms'
 import dayjs from 'dayjs'
+import { LoadingButton } from '@mui/lab'
 import { formNames, duplicates, initialFormValues } from '../utils'
 
 type TitleProps = {
@@ -242,14 +243,17 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
   }
 
   const deleteWorkflow = async () => {
-    if (canDeleteWorkflow) {
-      deleteWorkflowFromAPI(workflow).then(() => {
-        workflow.delete().then(() => {
-          setShowDeleteWorkflowPrompt(false)
-          notify('Workflow deleted successfully')
-          closeWorkflow()
-        })
-      })
+    try {
+      await deleteWorkflowFromAPI(workflow)
+      await workflow.delete()
+
+      notify('Workflow deleted successfully')
+      closeWorkflow()
+    } catch (err) {
+      logError(err)
+      notify('Error deleting workflow')
+    } finally {
+      setShowDeleteWorkflowPrompt(false)
     }
   }
 
@@ -269,20 +273,28 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     }
   }
 
+  const updateDataAtIndex = (index: number, newData: any) => {
+    // update the form at that point in index with new data
+    return [...formsData].map((f: any, i) =>
+      i === index ? { ...f, ...newData } : f
+    )
+  }
+
   const handleSaveInput =
     (form: any, index: number) => (name: string, value: any) => {
       setIsEdited(true)
       form.saveInput(name, value)
-
-      setFormsData((prev: any) => {
-        const newForms = [...prev]
-        newForms[index] = form.data
-        return newForms
-      })
+      setFormsData(updateDataAtIndex(index, { [name]: value }))
     }
 
+  const updatePrefills = (form: any, index: number) => (prefills: any) => {
+    setIsEdited(true)
+    form.updatePrefills(prefills)
+    setFormsData(updateDataAtIndex(index, prefills))
+  }
+
   const handleSaveDraftWorkflow = async (ignoreNotification?: boolean) => {
-    return saveDraftWorkflow(workflow, activeForms, formsData)
+    return saveDraftWorkflow(workflow, activeForms)
       .then(() => {
         if (!ignoreNotification) {
           notify('Draft saved successfully')
@@ -297,12 +309,13 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     notify(
       err?.message && typeof err?.message === 'string'
         ? err?.message
-        : 'There was an error submitting your form. Please try again.'
+        : 'There was an error submitting your form. Please try again.',
+      'error'
     )
   }
 
   const notifySubmissionSuccess = () => {
-    notify('Form submitted succesfully.')
+    notify('Form submitted succesfully.', 'success')
     setIsEdited(false)
   }
 
@@ -317,11 +330,12 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
               .then(() => {
                 notifySubmissionSuccess()
               })
-              .catch((err) => {
+              .catch((err: any) => {
                 notify(
                   err?.message && typeof err?.message === 'string'
                     ? err?.message
-                    : 'An error occured while saving workflow data. Please try again'
+                    : 'An error occured while saving workflow data. Please try again',
+                  'error'
                 )
                 logError(err)
               })
@@ -472,6 +486,10 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                                       handleSubmissionSuccess={handleSubmissionSuccess(
                                         form
                                       )}
+                                      updatePrefills={updatePrefills(
+                                        form,
+                                        index
+                                      )}
                                       formData={formsData[index] || {}}
                                       isWorkflowComplete={workflow?.isCompleted}
                                       upsertDraft={handleSaveDraftWorkflow}
@@ -491,6 +509,7 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                           handleSubmissionSuccess={handleSubmissionSuccess(
                             activeForms[0]
                           )}
+                          updatePrefills={updatePrefills(activeForms[0], 0)}
                           formData={formsData[0] || {}}
                           isWorkflowComplete={workflow?.isCompleted}
                           upsertDraft={handleSaveDraftWorkflow}
@@ -568,14 +587,12 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
                       >
                         No, go back
                       </Button>
-                      <Button
+                      <LoadingButton
                         className="rounded-xl bg-red-100 font-rubik font-medium normal-case text-white"
-                        onClick={() => {
-                          deleteWorkflow()
-                        }}
+                        onClick={deleteWorkflow}
                       >
                         Yes, delete
-                      </Button>
+                      </LoadingButton>
                     </div>
                   </Stack>
                 </>

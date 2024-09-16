@@ -21,7 +21,7 @@ const getAdapter = (dbName: string) =>
     schema,
     migrations,
     useWebWorker: false,
-    useIncrementalIndexedDB: true,
+    useIncrementalIndexedDB: false,
 
     dbName,
     onQuotaExceededError: (error) => {

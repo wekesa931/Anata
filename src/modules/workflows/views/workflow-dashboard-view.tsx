@@ -4,10 +4,9 @@ import { useWorkflowData } from 'src/modules/workflows/hooks/workflow-data'
 import dayjs from 'dayjs'
 import Loading from 'src/components/loaders/centered'
 import DataTable, { Column } from 'src/components/table/data-table'
-import PrimaryButton from 'src/components/buttons/primary'
-import { useNavigate } from 'react-router-dom'
 import { useModuleAnalytics } from 'src/modules/analytics'
-import { useNotifications } from 'src/context/notifications'
+import { Link } from 'react-router-dom'
+import { logError } from 'src/utils/logging/logger'
 
 type Props = {
   user: User
@@ -19,7 +18,7 @@ function UpdatedDisplay({ value }: any) {
       <p className="text-grey-dark">{value?.updatedAt}</p>
       {value?.updatedBy && (
         <p className="text-grey-main">By: {value.updatedBy}</p>
-      )}{' '}
+      )}
     </div>
   )
 }
@@ -30,34 +29,28 @@ function StartedDisplay({ value }: any) {
       <p className="text-grey-dark">{value?.createdAt}</p>
       {value?.createdBy && (
         <p className="text-grey-main">By: {value.createdBy}</p>
-      )}{' '}
+      )}
     </div>
   )
 }
 
 function ActionComponent({ value }: any) {
-  const navigate = useNavigate()
   const { trackUserOpenedWorkflow } = useModuleAnalytics()
-  const { notify } = useNotifications()
 
-  const redirectToWorkflowModal = () => {
-    if (!value?.member) {
-      notify('Member ID not found')
-      return
-    }
-
+  const handleClick = () => {
     trackUserOpenedWorkflow(value)
-    navigate(
-      `/member/${value.member}?action=workflows&workflowId=${value.workflowId}`
-    )
   }
+
   return (
-    <PrimaryButton
-      className="bg-orange-main text-white hover:bg-orange-500 normal-case w-full shadow-none"
-      onClick={redirectToWorkflowModal}
+    <Link
+      onClick={handleClick}
+      to={`/member/${value?.member}?action=workflows&workflowId=${value?.workflowId}`}
+      className="font-rubik bg-orange-100 text-xs normal-case text-white hover:bg-orange-100 hover:text-white shadow-none px-4 py-1 rounded-md"
+      rel="noopener noreferrer"
+      target="_blank"
     >
       Open workflow
-    </PrimaryButton>
+    </Link>
   )
 }
 
@@ -91,33 +84,8 @@ const columns: readonly Column[] = [
     valueComponent: ActionComponent,
   },
 ]
-
-function createData(
-  workflowId: string,
-  workflow_type: string,
-  member_name: string,
-  createdAt: Date,
-  updatedAt: Date,
-  updatedBy: string,
-  createdBy: string,
-  member: string
-) {
-  return {
-    workflowId,
-    workflow_type,
-    member_name,
-    createdAt: formatDate(createdAt).valueOf(),
-    updatedAt: formatDate(updatedAt).valueOf(),
-    updatedBy,
-    createdBy,
-    member,
-  }
-}
-
 function formatDate(dateString: any) {
-  const date = dayjs(dateString)
-  const formattedDate = date.format('Do MMMM YYYY')
-  return formattedDate
+  return dayjs(dateString).format('Do MMMM YYYY')
 }
 
 function getMemberName(person: any = {}) {
@@ -130,37 +98,45 @@ function getMemberName(person: any = {}) {
     lastName ? ` ${lastName}` : ''
   }`
 }
-
 function WorkflowDashboardView({ user }: Props) {
   const [rows, setRows] = useState<any[]>([])
   const { hydrateWorkflows, incompleteWorkflows } = useWorkflowData()
   const [isLoadingOngoingWorflows, setIsLoadingOngoingWorkflows] =
-    useState<boolean>(false)
+    useState<boolean>(true)
+
+  const mapOngoingWorflows = () => {
+    if (incompleteWorkflows && incompleteWorkflows.length > 0) {
+      const updatedRows = incompleteWorkflows.map((workflow: any) => ({
+        workflowId: workflow.workflowId,
+        workflow_type: workflow.template,
+        member_name: getMemberName(workflow.memberData),
+        createdAt: formatDate(workflow.createdAt).valueOf(),
+        updatedAt: formatDate(workflow.updatedAt).valueOf(),
+        updatedBy: workflow.updatedBy?.name ?? '',
+        createdBy: workflow.createdBy?.name ?? '',
+        member: workflow.member,
+      }))
+      setRows(updatedRows)
+    }
+  }
 
   const addedBy = user?.email
 
   useEffect(() => {
     if (addedBy) {
       setIsLoadingOngoingWorkflows(true)
-      hydrateWorkflows('', addedBy).finally(() => {
-        if (incompleteWorkflows && incompleteWorkflows.length > 0) {
-          const updatedRows = incompleteWorkflows.map((workflow: any) =>
-            createData(
-              workflow.workflowId,
-              workflow.template,
-              getMemberName(workflow.memberData),
-              workflow.createdAt,
-              workflow.updatedAt,
-              workflow.updatedBy?.name ?? '',
-              workflow.createdBy?.name ?? '',
-              workflow.member
-            )
-          )
-          setRows(updatedRows)
-        }
-        setIsLoadingOngoingWorkflows(false)
-      })
+      hydrateWorkflows('', addedBy)
+        .then(() => {
+          mapOngoingWorflows()
+        })
+        .catch((error: any) => {
+          logError(error)
+        })
+        .finally(() => {
+          setIsLoadingOngoingWorkflows(false)
+        })
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, incompleteWorkflows])
 

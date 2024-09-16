@@ -9,6 +9,7 @@ import { logError } from 'src/utils/logging/logger'
 import { useNavigate } from 'react-router-dom'
 import { googleLogout } from '@react-oauth/google'
 import { toTitleCase } from 'src/utils/text-utils'
+import analytics from 'src/config/analytics'
 
 dayjs.extend(utc)
 type AuthContextType = {
@@ -42,10 +43,18 @@ function AuthProvider({ user, children }: Props) {
 
   const { getStaffByUser } = useAntaraStaff()
   const [currentUser, setCurrentUser] = useState(user || loggedInUser)
+
+  // clear cache storage on logout
+  const clearCache = () => {
+    localStorage.clear()
+  }
+
   const logout = async () => {
     storage.removeAll()
     setCurrentUser(null)
     googleLogout()
+    analytics.reset()
+    clearCache()
     navigate('/login')
   }
 
@@ -71,6 +80,8 @@ function AuthProvider({ user, children }: Props) {
               ...currentUser,
               userAirtableId: data?.atRecordId,
               fullName: data?.fullName,
+              phone: data?.phone,
+              signature: data?.signature,
               team: toTitleCase(data?.team),
             }
             setCurrentUser(updatedUser)

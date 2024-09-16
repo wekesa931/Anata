@@ -5,11 +5,16 @@ import Document from 'src/modules/udm/components/pdf-components/document'
 import ClinicalSummaryTemplate from 'src/modules/udm/views/reports/templates/clinical-summary'
 import { View } from '@react-pdf/renderer'
 import { Divider } from 'src/modules/udm/components/pdf-components/divider'
-import type { Condition } from 'src/modules/conditions/db/models'
 import ConditionsTemplate from 'src/modules/udm/views/reports/templates/conditions-section'
 import { SummaryInfo } from 'src/modules/udm/components/pdf-components/summary-info'
 import InterventionsTemplate from 'src/modules/udm/views/reports/templates/interventions-section'
 import type { Intervention } from 'src/modules/interventions/db/models'
+
+type ConditionData = {
+  condition: string
+  currentStage?: string
+  dateOfDiagnosis: string | null
+}
 
 type Props = {
   member: Member | null
@@ -19,7 +24,7 @@ type Props = {
   }
   formData: any
   clinicalData: any
-  conditions: Condition[]
+  conditions: ConditionData[]
   interventions: Intervention[]
   isInPatient?: boolean
 }

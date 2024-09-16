@@ -9,6 +9,7 @@ import {
   EmployerType,
   RosterMemberType,
   PayorType,
+  MemberCohortType,
 } from 'src/modules/member/types'
 import dayjs from 'dayjs'
 import {
@@ -16,7 +17,6 @@ import {
   transformInsuranceData,
 } from 'src/modules/member/utils/data-transforms'
 import { calcAge } from 'src/utils/date-time/date-formatters'
-import { toTitleCase } from 'src/utils/text-utils'
 
 type AddressValues = DbTypes.AddressValues
 type InsuranceDetailsValues = DbTypes.InsuranceDetailsValues
@@ -84,12 +84,13 @@ type MemberInfo = Partial<Record<keyof Member, any>>
 
 export const createOrUpdateMember = (
   member: Member,
-  memberData: V2MemberType
+  memberData: V2MemberType,
+  memberCohorts: MemberCohortType[]
 ) => {
   member.antaraId = memberData?.antaraId
-  member.firstName = toTitleCase(memberData?.firstName)
-  member.lastName = toTitleCase(memberData?.lastName)
-  member.middleName = toTitleCase(memberData?.middleName)
+  member.firstName = memberData?.firstName
+  member.lastName = memberData?.lastName
+  member.middleName = memberData?.middleName
   member.email = memberData?.email || member.email
   member.phone = memberData?.phone || member.phone
   member.phones = memberData?.phones?.length ? memberData.phones : member.phones
@@ -129,6 +130,8 @@ export const createOrUpdateMember = (
   member.kenyaNationalId = memberData?.kenyaNationalId
   member.caregiverContact = mergeCaregiverContact(member, memberData)
   member.nhifNumber = memberData?.nhifNumber
+  member.membercohortSet = memberCohorts
+  member.healthStatus = memberData.healthStatus
 
   return member
 }
@@ -211,6 +214,10 @@ export class Member extends Model {
 
   @text('nhif_number') nhifNumber?: string
 
+  @json('member_cohorts', identityJson) membercohortSet?: MemberCohortType[]
+
+  @text('health_status') healthStatus?: string
+
   @writer async destroy() {
     await super.destroyPermanently()
   }
@@ -224,23 +231,57 @@ export class Member extends Model {
     })
   }
 
+  get isEligible() {
+    return this.membercohortSet?.some(
+      (cohort) => cohort.subscriptionStatus === 'ACTIVE'
+    )
+  }
+
+  get hasGender() {
+    return this.sex && this.sex !== 'Unknown'
+  }
+
   get fullName() {
     return `${this.firstName} ${this.middleName || ''} ${this.lastName}`
   }
 
   get allPhones() {
-    const currentMemberPhones = this.phones || []
-    const primaryMemberPhones = this.primary?.phones || []
+    const currentMemberPhones =
+      this.phones?.map((p, index) => ({
+        name: this.fullName,
+        phone: p.phone,
+        label: `Phone ${index + 1}`,
+      })) || []
+    const primaryMemberPhones =
+      this.primary?.phones?.map((p, index) => ({
+        name: this.primary?.fullName,
+        phone: p.phone,
+        label: `Primary phone ${index + 1}`,
+      })) || []
     const otherDependentsPhones =
-      this.otherDependents?.map((d) => d.phones) || []
+      this.otherDependents?.map((d) =>
+        d?.phones?.map((p) => ({
+          name: d?.fullName,
+          phone: p.phone,
+          label: 'Dependent',
+        }))
+      ) || []
 
-    return {
-      phones: currentMemberPhones,
-      primary: primaryMemberPhones,
-      otherDependents: otherDependentsPhones,
-      emergencyContactPhone: this.emergencyContact?.phoneNumber,
-      caregiverContactPhone: this.caregiverContact?.phoneNumber,
-    }
+    return [
+      ...currentMemberPhones,
+      ...primaryMemberPhones,
+      ...otherDependentsPhones.flat(),
+      {
+        name: this.emergencyContact?.name,
+        phone: this.emergencyContact?.phoneNumber,
+        label: 'Emergency contact',
+      },
+      {
+        name: this.caregiverContact?.name,
+        phone: this.caregiverContact?.phoneNumber,
+        label: 'Caregiver contact',
+      },
+    ]
   }
 
   get isMinor() {
@@ -312,7 +353,7 @@ export class Member extends Model {
   @writer async reset() {
     // reset all the properties to their default values
     await this.update((member) => {
-      createOrUpdateMember(member, {} as V2MemberType)
+      createOrUpdateMember(member, {} as V2MemberType, [])
     })
   }
 

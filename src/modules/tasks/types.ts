@@ -1,5 +1,5 @@
 export type UserTask = {
-  type: string
+  task_definition?: string
   due_date: string
   notes: string
   status: string
@@ -12,7 +12,7 @@ export type UserTask = {
 }
 
 export type RawUserTask = {
-  Type: string
+  Type?: string[]
   'Due Date': string
   'Task Notes': string
   Status: string
@@ -70,4 +70,63 @@ export type Overview = {
 export type TasksAndOverview = {
   tasks: UserTask[]
   overview: Overview
+}
+
+export type TaskDefinition = {
+  clinicalPrefferedName?: string
+  scribeTags: string
+  recordId: string
+  notes: string
+  defaultTeam: AssigneeTypes
+  defaultPriority: string
+  sources?: string[]
+  sourceDetails?: string
+  messageTemplateTitle?: string
+  dueDate?: string
+  defaultPeriod: string
+  smsContent: string
+  interactionLogContent: string
+  defaultReschedulingDays: string
+  memberTaskType: string
+}
+
+export enum TaskDefinitionTypes {
+  LabManagement = 'Lab management',
+  NewDocument = 'New Document',
+}
+
+export enum AssigneeTypes {
+  ME = 'ME',
+  HN = 'HN',
+}
+
+type RecordId = [string] | []
+
+export type NewTask = {
+  Member: RecordId
+  'Task definition': RecordId
+  'Due Date': string
+  'Task Priority': string
+  Assignee: RecordId
+  Status: string
+  'Task Notes': string
+  Source: string
+  'Data Source': string
+}
+
+export const LabManagementRecordId =
+  process.env.PROD === 'true' ? 'recR0Rni1WNDiQpj3' : 'rec5i6q30NJAcXOsA'
+export const NewDocumentRecordId =
+  process.env.PROD === 'true' ? 'rec0bpNSpRx6huygq' : 'recbDbP099lD9mKw7'
+
+export type InitialValues = {
+  interactionLog: string
+  sms: string
+  dueDate: number
+  taskAttempt: number
+  reasonForApptMissed: string
+  smsCheck: boolean
+  interactionLogCheck: boolean
+  rescheduleTaskCheck: boolean
+  rescheduleApptCheck: boolean
 }

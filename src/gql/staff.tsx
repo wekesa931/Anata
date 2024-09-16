@@ -10,6 +10,9 @@ const GET_ANTARA_STAFF = gql`
           emailUsername
           team
           atRecordId
+          phone
+          signature
+          email
         }
       }
     }

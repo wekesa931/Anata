@@ -8,21 +8,28 @@ import { useClustersData } from 'src/modules/vitals/hooks/clusters.data.hook'
 import Loading from 'src/components/loaders/centered'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import { HealthMetricNames } from 'src/modules/vitals/types/clusters.types'
-import { getTimeFormat } from 'src/modules/vitals/utils'
+import { getTickCount, getTimeFormat } from 'src/modules/vitals/utils'
+import {
+  BP_OBSERVER,
+  useClustersObserver,
+} from 'src/modules/vitals/services/observers'
 
 dayjs.extend(advancedFormat)
 
 function BloodPressureView() {
-  const { getBpClusters, isLoading, getRanges } = useClustersData()
-  const [bpClusters, setBpClusters] = useState<Record<string, any>[]>([])
+  const { getBpClusters, getRanges, isLoading } = useClustersData()
   const [xDomain, setXDomain] = useState<[number, number]>([
     dayjs().subtract(1, 'month').valueOf(),
     dayjs().valueOf(),
   ])
-  const [currentTimeFilter, setCurrentTimeFilter] = useState<TimeFilters>(
-    TimeFilters.ONE_MONTH
-  )
   const [yDomain, setYDomain] = useState<[number, number]>([0, 160])
+
+  const {
+    currentTimeFilter,
+    loading,
+    clusters,
+    updateRangeFilterControls: setRangeFilterControls,
+  } = useClustersObserver(BP_OBSERVER, getBpClusters)
 
   useEffect(() => {
     getRanges(HealthMetricNames.Systolic).then((data) => {
@@ -34,12 +41,8 @@ function BloodPressureView() {
 
   const handleTimeRangeChange = (range: TimeRange, filter: TimeFilters) => {
     if (range[0] === null || range[1] === null) return
-    setCurrentTimeFilter(filter)
+    setRangeFilterControls({ range, filter })
     setXDomain([range[0].valueOf(), range[1].valueOf()])
-
-    getBpClusters(range, currentTimeFilter).then((data) => {
-      setBpClusters(data)
-    })
   }
 
   const CustomBpDot = withCustomBpDot({
@@ -53,22 +56,22 @@ function BloodPressureView() {
         onRangeChange={handleTimeRangeChange}
         type="Blood pressure"
       />
-      {isLoading ? (
+      {loading || isLoading ? (
         <div className="h-[300px]">
           <Loading message="Loading BP Data ..." />
         </div>
       ) : (
         <div className="relative">
-          {!bpClusters.length ? (
+          {!clusters.length ? (
             <div className="flex flex-col items-center justify-center h-[300px]">
               <p className="text-gray-400">No BP Data within this period</p>
             </div>
           ) : (
             <LineSeriesChat
-              data={bpClusters}
+              data={clusters}
               xAxisDataKey={{
-                formatter: getTimeFormat(currentTimeFilter),
                 key: 'timestamp',
+                formatter: getTimeFormat(currentTimeFilter),
               }}
               yAxisDataKeys={[
                 {
@@ -85,7 +88,7 @@ function BloodPressureView() {
               CustomDot={CustomBpDot}
               xAxisDomain={xDomain}
               yAxisDomain={yDomain}
-              filter={currentTimeFilter}
+              xTicks={getTickCount(currentTimeFilter, xDomain)}
             />
           )}
         </div>

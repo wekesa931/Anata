@@ -9,6 +9,8 @@ import type { FormProps } from 'src/modules/workflows/types'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useVitalsUpdate } from 'src/modules/vitals/hooks/vitals.update.hook'
 import dayjs from 'dayjs'
+import { VITALS_OBSERVER } from 'src/modules/vitals/services/observers'
+import { useModuleAnalytics } from 'src/modules/analytics'
 
 const validationSchema = yup.object().shape({
   timestamp: yup.date().required(),
@@ -57,6 +59,7 @@ function VitalsCollection({
   upsertDraft: saveDraft,
 }: FormProps) {
   const { loading, handleCreateVitalsReading } = useVitalsUpdate()
+  const { trackFormSaved } = useModuleAnalytics()
   const [initialValues, setInitialValues] = useState<any>({
     timestamp: dayjs().toDate(),
     temperature: '',
@@ -82,6 +85,8 @@ function VitalsCollection({
     handleCreateVitalsReading(values)
       .then(async () => {
         await form.markAsCompleted()
+        VITALS_OBSERVER.next()
+        trackFormSaved(form.name, form.workflow?.workflowId)
         handleSubmissionSuccess(false)
       })
       .catch((error) => {
@@ -107,7 +112,7 @@ function VitalsCollection({
       handleSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      {() => (
+      {({ errors }) => (
         <Form>
           <DateTimeField
             name="timestamp"
@@ -280,11 +285,19 @@ function VitalsCollection({
             disabled={disabled}
           />
 
-          <div className="flex justify-end">
+          <div className="flex items-center mt-8">
+            <p className="text-sm font-rubik text-dark-red-100">
+              {Object.values(errors).length > 0 &&
+                'Please fill all required fields'}
+            </p>
+          </div>
+
+          <div className="flex items-center mt-8">
             <PrimaryButton
               loading={loading}
               disabled={loading || disabled}
               type="submit"
+              fullWidth
             >
               Submit form
             </PrimaryButton>

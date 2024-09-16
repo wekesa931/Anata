@@ -37,11 +37,30 @@ export const GET_DOCUMENT_OPENSEARCH = gql`
   }
 `
 
+export const MEMBER_SEARCH_RESULTS = gql`
+  fragment MemberSearchFragment on MemberType {
+    antaraId
+    birthDate
+    details {
+      fullName
+      sex {
+        sex
+      }
+    }
+    status {
+      employer {
+        name
+      }
+    }
+  }
+`
+
 export const MEMBERS_DETAILS_FRAGMENT = gql`
   fragment MemberDetailsFragment on MemberType {
     antaraId
     birthDate
     lastSeen
+    healthStatus
     details {
       fullName
       firstName
@@ -289,7 +308,7 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
   }
 `
 
-export const SEARCH_MEMBERS = gql`
+export const SEARCH_MEMBERS_FULL = gql`
   query memberSearch($query: String!) {
     membersSearch(query: $query, first: 10) {
       edges {
@@ -300,4 +319,17 @@ export const SEARCH_MEMBERS = gql`
     }
   }
   ${MEMBERS_DETAILS_FRAGMENT}
+`
+
+export const SEARCH_MEMBERS = gql`
+  query memberSearch($query: String!) {
+    membersSearch(query: $query, first: 10) {
+      edges {
+        node {
+          ...MemberSearchFragment
+        }
+      }
+    }
+  }
+  ${MEMBER_SEARCH_RESULTS}
 `

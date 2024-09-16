@@ -69,7 +69,7 @@ type FilterMap = {
 
 type Props = {
   monthSlots?: number[]
-  defaultMonthSlot?: number
+  defaultMonthSlot?: number | null
   showCustomRange?: boolean
   showAllTime?: boolean
   children: React.ReactNode
@@ -129,21 +129,24 @@ export const DateRangeContext = React.createContext<ContextType>({
 
 function DateRangeFiltered({
   monthSlots = [1, 3, 12],
-  defaultMonthSlot = 3,
+  defaultMonthSlot = null, // Representing "All Time"
   showAllTime = true,
   showCustomRange = true,
   children,
 }: Props) {
   const allMonthFilters = monthSlots.map(MonthFilter)
-  const defaultFilter =
-    allMonthFilters.find((filter) => filter.months === defaultMonthSlot) ||
-    AllTimeFilter()
 
   const [allFilters, setAllFilters] = useState<FilterMap>({
     monthly: allMonthFilters,
     allTime: AllTimeFilter(),
     customRange: CustomRangeFilter(),
   })
+
+  const defaultFilter =
+    defaultMonthSlot === null
+      ? allFilters.allTime
+      : allMonthFilters.find((filter) => filter.months === defaultMonthSlot) ||
+        AllTimeFilter()
 
   const [currentFilter, setCurrentFilter] = useState<Filters>(defaultFilter)
   const [currentRange, setCurrentRange] = useState<DateRangeValue>(null)

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useNotifications } from 'src/context/notifications'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import { useFormsData } from '../forms-data'
 import { Forms as TWorkflowForm } from '../../db/models'
 
@@ -11,6 +12,7 @@ export const useFormsRouting = () => {
   const navigate = useNavigate()
   const { notify } = useNotifications()
   const { getForms, createForm, deleteForm } = useFormsData()
+  const { trackFormClosed, trackFormOpened } = useModuleAnalytics()
 
   const getFormIdsFromSearchParams = () => {
     const formIds = searchParams.get('formIds')
@@ -65,21 +67,23 @@ export const useFormsRouting = () => {
     try {
       const form = await createForm(formName, formData)
       if (form) {
+        trackFormOpened(form.name)
         setForms((prev) => [...prev, form])
         addFormIdToSearchParams(form.id)
         searchParams.set('action', 'forms')
 
         // notify the user that the form was created
-        notify(`Created form: ${formName}`, 1000)
+        notify(`Created form: ${formName}`, 'info')
         // navigate to new url with new form id
         navigateToNewUrl()
       }
     } catch (error) {
-      notify(`Failed to create form: ${formName}`, 1000)
+      notify(`Failed to create form: ${formName}`, 'error')
     }
   }
 
   const closeForm = async (form: TWorkflowForm) => {
+    trackFormClosed(form.name)
     setForms(forms.filter((f) => f.id !== form.id))
     removeFormIdFromSearchParams(form.id)
     navigateToNewUrl()

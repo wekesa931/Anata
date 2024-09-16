@@ -17,11 +17,12 @@ import useMedicationData from 'src/modules/clinical/clinical-modules/medications
 import { useNotifications } from 'src/context/notifications'
 
 export function EditMedication({ value }: any) {
-  const { editMedication, updatingMedications } = useMedicationData()
+  const { editMedication, updatingMedications } = useMedicationData(false)
   const [showModal, setShowModal] = useState(false)
   const [statusOptions, setStatusOptions] = useState<LookupOption[]>([])
   const { notify } = useNotifications()
   const initialValues = {
+    id: value?.['Record ID'],
     'Start Date': dayjs(value?.['Start Date']).toDate(),
     Status: value?.Status || '',
     refillFacility: {

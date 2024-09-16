@@ -10,6 +10,8 @@ import { useMember } from 'src/context/member'
 import DataTable, { Column } from 'src/components/table/data-table'
 import dayjs from 'dayjs'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import { useAppointmentsData } from 'src/modules/clinical/clinical-modules/appointments/hooks/appointments-data'
+import logError from 'src/utils/logging/logger'
 
 function PafuView({ data }: any) {
   const [showPafu, setShowPafu] = useState(false)
@@ -26,6 +28,8 @@ function PafuView({ data }: any) {
         })
         .finally(() => setLoading(false))
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pafuRecordId])
 
   const openPafu = (e: any) => {
@@ -89,7 +93,7 @@ const COLUMNS: Column[] = [
     label: 'Appt Date',
     sortable: true,
     type: 'date',
-    format: (v: any) => dayjs(v).format('DD/MM/YYYY'),
+    format: (v: any) => (v ? dayjs(v).format('DD/MM/YYYY') : '-'),
     width: '20%',
   },
   { id: 'Service', label: 'Service', width: '20%' },
@@ -101,8 +105,8 @@ const COLUMNS: Column[] = [
     valueComponent: ({ value }: any) => <PafuView data={value} />,
     width: '10%',
   },
-  { id: 'Missed #', label: 'Missed', units: '#', width: '15%' },
-  { id: 'Rescheduled #', label: 'Rescheduled', units: '#', width: '15%' },
+  { id: 'Missed', label: 'Missed', units: '#', width: '15%' },
+  { id: 'Rescheduled', label: 'Rescheduled', units: '#', width: '15%' },
 ]
 
 function Appointments() {
@@ -110,34 +114,46 @@ function Appointments() {
   const recId = member?.airtableRecordId
   const [appointments, setAppointments] = useState<any[]>([])
   const [filteredAppointments, setFilteredAppointments] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const {
     ops: {
       filters: { appointments: filters },
     },
   } = useSortFilter()
+  const { getAppointments } = useAppointmentsData()
 
   useEffect(() => {
     let isCancelled = false
+
     if (recId) {
-      airtableFetch(
-        `appointments/list?filterByFormula=FIND("${recId}", {Member Record ID})`
-      ).then((response) => {
-        if (!isCancelled) {
-          const apps = Object.keys(response).map((key) => response[key])
-          setAppointments(apps)
+      setLoading(true)
+      getAppointments()
+        .then((data: any[]) => {
+          if (!isCancelled) {
+            setAppointments(data)
+          }
+        })
+        .catch(logError)
+        .finally(() => {
           setLoading(false)
-        }
-      })
+        })
     }
+
     return () => {
       isCancelled = true
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recId])
 
   useEffect(() => {
     let isCancelled = false
-    let apps = appointments
+    let apps = appointments.map((app) => {
+      if (app.Status === 'Schedule needed' && !app.start_date_time) {
+        return { ...app, start_date_time: undefined }
+      }
+      return app
+    })
     if (filters) {
       if (filters.service) {
         apps = apps.filter((app) => app.Service === filters.service)

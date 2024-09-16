@@ -98,10 +98,7 @@ export function PhoneNumberSearch({
         }}
       />
       {isFetching ? (
-        <VerificationLoader
-          fullwidth={fullWidth}
-          message="Please wait while we check if this phone number already exists in our database..."
-        />
+        <VerificationLoader message="Please wait while we check if this phone number already exists in our database..." />
       ) : (
         <>
           {hasError ? (

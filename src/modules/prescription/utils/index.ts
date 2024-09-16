@@ -1,0 +1,36 @@
+import dayjs from 'dayjs'
+
+export const getMedicationName = (record: any): string => {
+  const medicationBaseName = record['Medication Name (from Medication Base)']
+  if (Array.isArray(medicationBaseName) && medicationBaseName.length > 0) {
+    if (medicationBaseName[0].toLowerCase() === 'other') {
+      return (
+        record['Molecule Name (from Clean Molecule) (from Medication)'] ||
+        record['Other Medication'] ||
+        'Other'
+      )
+    }
+    return medicationBaseName[0]
+  }
+
+  return (
+    record['Molecule Name (from Clean Molecule) (from Medication)'] ||
+    record['Other Medication']
+  )
+}
+
+export const formatDate = (dateString: any): string => {
+  return dayjs(dateString).format('hh:mma  YYYY-MM-DD')
+}
+
+export const getRoute = (record: any): string => {
+  const route = record.Route?.toLowerCase() ?? 'not provided'
+  return route === 'other' ? record['Other route'] : record?.Route || ''
+}
+
+export const getFrequency = (record: any): string => {
+  const frequency = record.Frequency?.toLowerCase() ?? 'not provided'
+  return frequency === 'other'
+    ? record['Other frequency']
+    : record?.Frequency || ''
+}

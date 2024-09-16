@@ -1,10 +1,10 @@
 import React from 'react'
-
 import LoadingComponent from 'src/components/loaders/table-loader'
 import DataTable, { Column } from 'src/components/table/data-table'
 import useMedicationData from 'src/modules/clinical/clinical-modules/medications/hooks'
 import { toTitleCase } from 'src/utils/text-utils'
 import { EditMedication } from 'src/modules/clinical/clinical-modules/medications/components/edit-medication'
+import { Details } from 'src/components/links'
 
 const MEDICATION_NAME_KEY = 'Medication Name (from Medication Base)'
 const OTHER_MEDICATION_NAME_KEY = 'Other Medication'
@@ -101,9 +101,13 @@ const COLUMNS: Column[] = [
   },
 ]
 
+function MedicationDetails({ data }: any) {
+  const urlkeys: string[] = ['New Delivery URL', 'Geolocation (from Member)']
+  return <Details data={data} urlkeys={urlkeys} title="Medications" />
+}
+
 function Medications() {
   const { medicationsData, loading } = useMedicationData()
-
   return (
     <div className="mb-ten">
       {!loading ? (
@@ -115,6 +119,7 @@ function Medications() {
           filterByDate
           defaultFilterColumn="Start Date"
           defaultSortColumn="Start Date"
+          RenderRowDetails={MedicationDetails}
         />
       ) : (
         <LoadingComponent message="Loading Medications" />

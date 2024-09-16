@@ -21,7 +21,6 @@ import {
 import { visuallyHidden } from '@mui/utils'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Order, getComparator, stableSort } from 'src/utils/sort/stable'
-import EmptyDataIcon from 'src/assets/img/icons/empty-data.svg'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import _, { isEmpty } from 'lodash'
 import {
@@ -29,9 +28,15 @@ import {
   makeFilterDataByDate,
 } from 'src/context/date-range-filter'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import {
+  pascalToTitle,
+  isObject,
+  extractValueFromObject,
+} from 'src/utils/data-table-utils'
 import { ArrowDropDown, ArrowRight } from '@mui/icons-material'
 import { toTitleCase } from 'src/utils/text-utils'
 import Loading from 'src/components/loaders/centered'
+import EmptyData from '../feedbacks/empty-data'
 
 export type Column = {
   label: string
@@ -137,20 +142,6 @@ function SortableTableHead(props: SortableTableHeadProps) {
 }
 
 function RowDetails({ data }: { data: any }) {
-  const pascalToTitle = (str: string) => {
-    return _.startCase(_.toLower(str))
-  }
-
-  const isObject = (value: any): value is Record<string, any> =>
-    typeof value === 'object' && value !== null
-
-  const extractValueFromObject = (obj: Record<string, any>): any => {
-    if ('value' in obj) {
-      return obj.value
-    }
-    return JSON.stringify(obj)
-  }
-
   const getValueFromKey = (key: string) => {
     const entry = data[key]
     let value = entry ?? '-'
@@ -197,6 +188,7 @@ type DetailedRowProps = {
   row: any
   tableName: string
   canExpandRow?: boolean
+  RenderDetails?: React.ComponentType<{ data: any }>
 }
 
 function DataTableDetailedRow({
@@ -204,6 +196,7 @@ function DataTableDetailedRow({
   row,
   tableName,
   canExpandRow = true,
+  RenderDetails,
 }: DetailedRowProps) {
   const getValueAndColor = (columnId: string) => {
     let value = row[columnId]?.value ?? row[columnId]
@@ -285,39 +278,31 @@ function DataTableDetailedRow({
           )
         })}
       </TableRow>
-      <Popper
-        open={!!anchorEl || selectedColum}
-        anchorEl={anchorEl}
-        className="z-20"
-      >
-        {selectedColum?.cellHeperText && (
-          <selectedColum.cellHeperText value={row} />
-        )}
-      </Popper>
+      {anchorEl && (
+        <Popper
+          open={!!anchorEl || selectedColum}
+          anchorEl={anchorEl}
+          className="z-20"
+        >
+          {selectedColum?.cellHeperText && (
+            <selectedColum.cellHeperText value={row} />
+          )}
+        </Popper>
+      )}
       {showDetails && (
         <TableRow>
           <TableCell colSpan={columns.length + 1} className="py-0 border-b-0">
             <Collapse in={open} timeout="auto" unmountOnExit>
-              <RowDetails data={row} />
+              {RenderDetails ? (
+                <RenderDetails data={row} />
+              ) : (
+                <RowDetails data={row} />
+              )}
             </Collapse>
           </TableCell>
         </TableRow>
       )}
     </>
-  )
-}
-
-function EmptyData({ title }: { title?: string }) {
-  return (
-    <div className="flex flex-col justify-start items-center font-rubik my-2">
-      <EmptyDataIcon />
-      <p className="text-base font-medium">No data</p>
-      <p className="text-sm text-dark-blue-100">
-        {' '}
-        Looks like there are no {title || 'data'} for this member
-      </p>
-      <p>Please check back again later</p>
-    </div>
   )
 }
 
@@ -437,9 +422,11 @@ type DataTableProps = {
   groupSortFunction?: (data: any, groupingColumn?: string) => any
   dataSortFunction?(data: any, comparator: (a: any, b: any) => number): any
   canExpandRow?: boolean
+  analyticsSource?: 'home' | 'middle'
+  RenderRowDetails?: React.ComponentType<{ data: any }>
 }
 
-function DataTable({
+export function DataTable({
   data,
   columns,
   title,
@@ -454,6 +441,8 @@ function DataTable({
   groupSortFunction,
   dataSortFunction,
   canExpandRow = true,
+  analyticsSource = 'middle',
+  RenderRowDetails,
 }: DataTableProps) {
   const [order, setOrder] = useState<Order>('desc')
   const [orderBy, setOrderBy] = useState<string>(defaultSortColumn || '')
@@ -519,7 +508,12 @@ function DataTable({
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
-    trackFieldNameSorted(title, property, isAsc ? 'Descending' : 'Ascending')
+    trackFieldNameSorted(
+      title,
+      property,
+      isAsc ? 'Descending' : 'Ascending',
+      analyticsSource
+    )
   }
 
   const cachedGroupByColumn =
@@ -529,7 +523,6 @@ function DataTable({
   const [groupByColumn, setGroupByColumn] = useState<string | undefined>(
     cachedGroupByColumn
   )
-
   const sortGroupedDataAlphabetically = (data: any) => {
     const sortedKeys = Object.keys(data).sort()
     return sortedKeys.reduce((acc: any, key) => {
@@ -563,8 +556,7 @@ function DataTable({
     setGroupedData(getGroupedData())
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [groupByColumn])
-
+  }, [groupByColumn, order])
   const getGroupedData = () => {
     const groupedData = _.groupBy(data, groupByColumn)
     if (groupByColumn) {
@@ -755,6 +747,7 @@ function DataTable({
                           row={row}
                           tableName={title}
                           canExpandRow={canExpandRow}
+                          RenderDetails={RenderRowDetails}
                         />
                       ))}
                     </>

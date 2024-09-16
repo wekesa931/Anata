@@ -25,8 +25,13 @@ const page = (data?: any, options?: any, callback?: any) => {
   if (env_check) segment?.page(data, options, callback) // eslint-disable-line no-unused-expressions
 }
 
+const reset = () => {
+  if (env_check) segment?.reset() // eslint-disable-line no-unused-expressions
+}
+
 export default {
   identify,
   track,
   page,
+  reset,
 }

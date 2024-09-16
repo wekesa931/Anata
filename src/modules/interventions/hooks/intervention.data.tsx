@@ -9,28 +9,12 @@ import {
   Attainment,
   Filter,
   InterventionStatus,
-  Intervention as TIntervention,
 } from 'src/modules/interventions/types'
 import { logError } from 'src/utils/logging/logger'
 import { useInterventionsApi } from 'src/modules/interventions/services/interventions.api'
 import { diffRecordsById } from 'src/utils/diff'
-
-const buildIntervention = (intervention: Intervention, data: TIntervention) => {
-  intervention.interventionType = data?.interventionType
-  intervention.interventionStatus = data?.interventionStatus
-  intervention.attainment = data?.attainment
-  intervention.antaraId = data?.antaraId
-  // eslint-disable-next-line no-underscore-dangle
-  intervention._raw.id = data.id
-  intervention.startingMeasurement = data?.startingMeasurement
-  intervention.currentMeasurement = data?.currentMeasurement
-  intervention.startingLevel = data?.startingLevel
-  intervention.currentLevel = data?.currentLevel
-  intervention.startingMilestone = data?.startingMilestone
-  intervention.currentMilestone = data?.currentMilestone
-  intervention.result = data?.result
-  intervention.persona = data?.persona
-}
+import { buildIntervention } from 'src/modules/interventions/utils'
+import { InterventionsObserver } from 'src/services/observers'
 
 export const useInterventionData = () => {
   const { member } = useMember()
@@ -260,9 +244,20 @@ export const useInterventionData = () => {
     }
   }
 
-  //   useEffect(() => {
-  //     deleteAllInterventions()
-  //   }, [])
+  useEffect(() => {
+    const subscription = InterventionsObserver.subscribe(() => {
+      if (member) {
+        hydrateInterventions(member)
+          .then(getAllInterventionsFromDb)
+          .catch(logError)
+      }
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member])
 
   return {
     loading: loading || isLoading,

@@ -16,7 +16,10 @@ import SuccessPrompt from 'src/modules/member/views/member-registration/componen
 import { v4 as uuidV4 } from 'uuid'
 import { DocMeta } from 'src/modules/udm/types'
 import { useUdmData } from 'src/modules/udm/hooks/udm.data'
+import { useTasksData } from 'src/modules/tasks/hooks/tasks.data'
+import { TaskDefinitionTypes } from 'src/modules/tasks/types'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import dayjs from 'dayjs'
 
 type Props = {
   loadingData?: boolean
@@ -26,6 +29,12 @@ type Props = {
   children: React.ReactElement<any>
   isInPatient?: boolean
   closeWindow: () => void
+  allowEdit?: boolean
+  modalHeader?: string
+  generatePDFCustomBtn?: React.ReactNode
+  modalLabel?: string
+  startTime?: any
+  createReviewTask?: boolean
 }
 
 function PdfPreview({
@@ -36,6 +45,12 @@ function PdfPreview({
   children,
   isInPatient = false,
   closeWindow,
+  allowEdit = true,
+  modalHeader,
+  generatePDFCustomBtn,
+  modalLabel,
+  startTime,
+  createReviewTask = true,
 }: Props) {
   const { member } = useMember()
 
@@ -45,7 +60,9 @@ function PdfPreview({
 
   const [showSuccess, setShowSuccess] = useState(false)
   const [fileId, setFileId] = useState<string>('')
-  const { trackNewDocumentGenerated } = useModuleAnalytics()
+  const { trackNewDocumentGenerated, trackPeriodToDocumentGeneration } =
+    useModuleAnalytics()
+  const { createTaskFromTemplate } = useTasksData()
 
   const handleClosePortalWindow = () => {
     setOpen(false)
@@ -64,6 +81,18 @@ function PdfPreview({
     }
     return handleUploadDocument(options)
   }
+  const prescriptionGenerationEvent = () => {
+    const shouldTrackDuration = modalLabel === 'Prescription generation'
+    const endTime = dayjs()
+
+    if (shouldTrackDuration) {
+      const durationInSeconds = endTime.diff(startTime, 'seconds')
+      trackPeriodToDocumentGeneration(docMeta, durationInSeconds)
+    }
+  }
+
+  const createDocumentReviewTask = () =>
+    createReviewTask && createTaskFromTemplate(TaskDefinitionTypes.NewDocument)
 
   const handleSaveReport = () => {
     setLoading(true)
@@ -75,6 +104,8 @@ function PdfPreview({
           const documentId = res?.data?.id?.toString()
           setFileId(documentId)
           trackNewDocumentGenerated(docMeta, true)
+          createDocumentReviewTask()
+          prescriptionGenerationEvent()
         })
         setTimeout(() => {
           setLoading(false)
@@ -107,20 +138,22 @@ function PdfPreview({
             id="scroll-dialog-title"
             className="d-flex align-center flex-between text-left border border-solid font-bold text-dark-blue-100"
           >
-            {member?.fullName}
+            {modalHeader || member?.fullName}
             <DialogActions>
-              <Button
-                autoFocus
-                onClick={() => {
-                  setShowPdfPreview(false)
-                  trackNewDocumentPreviewEdited(docMeta)
-                }}
-              >
-                <Edit className="file-action-btn" />
-                <Typography className="file-action-button-text text-blue-100 font-medium">
-                  Edit Details
-                </Typography>
-              </Button>
+              {allowEdit && (
+                <Button
+                  autoFocus
+                  onClick={() => {
+                    setShowPdfPreview(false)
+                    trackNewDocumentPreviewEdited(docMeta)
+                  }}
+                >
+                  <Edit className="file-action-btn" />
+                  <Typography className="file-action-button-text text-blue-100 font-medium">
+                    Edit Details
+                  </Typography>
+                </Button>
+              )}
               {error ? (
                 <Button
                   autoFocus
@@ -143,10 +176,15 @@ function PdfPreview({
                     </>
                   ) : (
                     <>
-                      <Download className="file-action-btn" />
-                      <Typography className="file-action-button-text text-blue-100 font-medium">
-                        Generate Report
-                      </Typography>
+                      {generatePDFCustomBtn || (
+                        <>
+                          <Download className="file-action-btn" />
+
+                          <Typography className="file-action-button-text text-blue-100 font-medium">
+                            Generate Report
+                          </Typography>
+                        </>
+                      )}
                     </>
                   )}
                 </Button>
@@ -200,7 +238,7 @@ function PdfPreview({
       {showSuccess && open && (
         <PortalWindow
           closeWindow={handleClosePortalWindow}
-          title="Health report generation"
+          title={!modalLabel ? 'Health report generation' : modalLabel}
           height={40}
         >
           <div className="px-4">
@@ -211,6 +249,7 @@ function PdfPreview({
               customMessage="Sharing will make the document available in the app for the member"
               handleClose={handleClosePortalWindow}
               fileId={fileId}
+              folder={docMeta?.folder}
             />
           </div>
         </PortalWindow>

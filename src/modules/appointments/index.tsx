@@ -14,6 +14,7 @@ import { User } from 'react-feather'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import ExternalLinkIcon from 'src/assets/img/icons/external-link.svg'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
+import { useAirtableMeta } from 'src/context/airtable-meta'
 import styles from './appointments.module.css'
 
 const SearchFieldsNameMap: Record<string, any> = {
@@ -41,6 +42,87 @@ function Appointments() {
   const [selected, setSelected] = React.useState(status[0])
   const { trackActionEdited } = useModuleAnalytics()
 
+  const [appointmentEditField, setAppointmenteEditField] = React.useState<
+    AirtableField[]
+  >([])
+  const { airtableMeta, getFieldOptions } = useAirtableMeta()
+  const { allAntaraStaffs, loading } = useAntaraStaff()
+  useEffect(() => {
+    if (airtableMeta) {
+      const APPOINTMENT_FIELDS: AirtableField[] = [
+        {
+          name: 'Comments',
+          type: 'long-text',
+        },
+        {
+          name: 'start_date_time',
+          helperText: 'Please enter time in UTC+3 (Kenya time zone)',
+          type: 'datetime',
+        },
+        {
+          name: 'Status',
+          type: 'single-select',
+          options: getFieldOptions('Appointments', 'Status') || [],
+          helperText:
+            'Schedule needed: if the appointment has no date and no time and you want our team to schedule it\nScheduled: we know the date and time and it is assigned\nMissed: the member did not pick up the call or picked up but could not do the call without giving a new date and time, we will need to reschedule\nComplete: successful interaction/ consultation has been done (on phone or in person)\nCanceled: we, Antara, decides that the appointment is not relevant anymore.',
+        },
+        {
+          name: 'Assignee',
+          type: 'single-select',
+          options: allAntaraStaffs.map((staff: any) => ({
+            label: staff.fullName,
+            value: staff.atRecordId,
+          })),
+        },
+        {
+          name: 'Assignee Name',
+          type: 'lookup',
+          calculated: true,
+        },
+        {
+          name: 'Reason for missed',
+          type: 'single-select',
+          options: getFieldOptions('Appointments', 'Reason for missed') || [],
+          condition: (appt: any = {}) => {
+            const { Status } = appt
+            return Status === 'Missed'
+          },
+          required: true,
+        },
+        {
+          name: 'Facilities from Provider base',
+          type: 'search',
+          tableId:
+            process.env.PROD === 'true'
+              ? 'tbltmQuqyuKPc4Ffo'
+              : 'tblU94ZnFmMT7S0o0',
+        },
+        {
+          name: 'Specialists from Provider Base',
+          type: 'search',
+          tableId:
+            process.env.PROD === 'true'
+              ? 'tblsixUe3jfbOUMQP'
+              : 'tblPpf5F81JypdC9k',
+        },
+        {
+          name: 'Reason for cancellation',
+          type: 'single-select',
+          options:
+            getFieldOptions('Appointments', 'Reason for cancellation') || [],
+          condition: (appt: any = {}) => {
+            const { Status } = appt
+            return Status === 'Cancelled'
+          },
+          required: true,
+        },
+      ]
+      setAppointmenteEditField(APPOINTMENT_FIELDS)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [airtableMeta, loading, allAntaraStaffs])
+
   const allowedFields = [
     'Service',
     'Status',
@@ -56,6 +138,7 @@ function Appointments() {
     'Specialist name from Provider base',
     'Assignee Name',
     'Reason for cancellation',
+    'Reason for missed',
   ]
 
   const { data, isLoading, isError, refresh } = useAirtableFetch(
@@ -65,85 +148,6 @@ function Appointments() {
     []
   )
 
-  const { allAntaraStaffs, loading } = useAntaraStaff()
-
-  const APPOINTMENT_FIELDS: AirtableField[] = [
-    {
-      name: 'Comments',
-      type: 'long-text',
-    },
-    {
-      name: 'start_date_time',
-      helperText: 'Please enter time in UTC+3 (Kenya time zone)',
-      type: 'datetime',
-    },
-    {
-      name: 'Status',
-      type: 'single-select',
-      options: [
-        'Scheduled',
-        'Completed',
-        'Missed',
-        'Cancelled',
-        'Schedule needed',
-      ].map((type) => ({ label: type, value: type })),
-      helperText:
-        'Schedule needed: if the appointment has no date and no time and you want our team to schedule it\nScheduled: we know the date and time and it is assigned\nMissed: the member did not pick up the call or picked up but could not do the call without giving a new date and time, we will need to reschedule\nComplete: successful interaction/ consultation has been done (on phone or in person)\nCanceled: we, Antara, decides that the appointment is not relevant anymore.',
-    },
-    {
-      name: 'Assignee',
-      type: 'single-select',
-      options: allAntaraStaffs.map((staff: any) => ({
-        label: staff.fullName,
-        value: staff.atRecordId,
-      })),
-    },
-    {
-      name: 'Assignee Name',
-      type: 'lookup',
-      calculated: true,
-    },
-    {
-      name: 'Reasons for missed or rescheduled meeting',
-      type: 'long-text',
-      condition: (appt: any = {}) => {
-        const { Status } = appt
-        return Status === 'Missed'
-      },
-    },
-    {
-      name: 'Facilities from Provider base',
-      type: 'search',
-      tableId:
-        process.env.PROD === 'true' ? 'tbltmQuqyuKPc4Ffo' : 'tblU94ZnFmMT7S0o0',
-    },
-    {
-      name: 'Specialists from Provider Base',
-      type: 'search',
-      tableId:
-        process.env.PROD === 'true' ? 'tblsixUe3jfbOUMQP' : 'tblPpf5F81JypdC9k',
-    },
-    {
-      name: 'Reason for cancellation',
-      type: 'single-select',
-      options: [
-        'Member unresponsive',
-        'Member not ready',
-        'Refused services',
-        'Appointment done',
-        'Appointment is booked',
-        'Not relevant as per protocol',
-        'No relevant data available',
-        'Member request',
-        'Other',
-      ].map((type) => ({ label: type, value: type })),
-      condition: (appt: any = {}) => {
-        const { Status } = appt
-        return Status === 'Cancelled'
-      },
-      required: true,
-    },
-  ]
   const user = useUser()
   const openCalendar = () => {
     if (member) {
@@ -152,7 +156,8 @@ function Appointments() {
       const email = member?.email || ''
       const memberEmail = email || 'navigation@antarahealth.com'
       const memberPhone = member?.phone
-      const link = `https://calendly.com/antara-health?name=${urlName}&email=${memberEmail}&a1=${memberPhone}&utm_source=src-${user?.name}`
+      const antaraId = member?.antaraId
+      const link = `https://calendly.com/antara-health?name=${urlName}&email=${memberEmail}&a1=${memberPhone}&utm_source=src-${user?.name}&utm_content=${antaraId}`
 
       const newWindow = window.open(link, '_blank', 'noopener,noreferrer')
       if (newWindow) newWindow.opener = null
@@ -204,7 +209,7 @@ function Appointments() {
   const includeFieldTypes = (appointment: any) => {
     const parsedFields: any[] = []
 
-    APPOINTMENT_FIELDS.forEach((field) => {
+    appointmentEditField.forEach((field) => {
       const key = field.name
       let value = appointment[key]
 
@@ -268,16 +273,18 @@ function Appointments() {
                 )}
               </div>
               <span>
-                <Tooltip title="Reschedule">
-                  <a
-                    href={appointment['Calendly Reschedule URL']}
-                    target="__blank"
-                    className="btn-unstyled"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <ExternalLinkIcon className="w-4 h-4 text-blue-50 " />
-                  </a>
-                </Tooltip>
+                {appointment['Calendly Reschedule URL'] && (
+                  <Tooltip title="Reschedule">
+                    <a
+                      href={appointment['Calendly Reschedule URL']}
+                      target="__blank"
+                      className="btn-unstyled"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <ExternalLinkIcon className="w-4 h-4 text-blue-50 " />
+                    </a>
+                  </Tooltip>
+                )}
               </span>
             </div>
           </div>

@@ -210,7 +210,7 @@ export const useWorkflowData = () => {
         ? [workflow.airtableId]
         : await getNewCaseId(workflow)
 
-      handleFormSubmission(form, formMeta, {
+      return handleFormSubmission(form, formMeta, {
         ...formData,
         'Case ID': caseId,
         'Data Source': 'Guided Workflow',
@@ -255,9 +255,8 @@ export const useWorkflowData = () => {
           }
           throw err
         })
-    } else {
-      throw new Error(`Workflow ${form.workflow?.id} not found in the cache`)
     }
+    throw new Error(`Workflow ${form.workflow?.id} not found in the cache`)
   }
 
   const handleSubmitForm = async (
@@ -288,9 +287,13 @@ export const useWorkflowData = () => {
     workflow?: TWorkflowModel
   ) => {
     setSubmittingForm(true)
-    return handleSubmitForm(form, formMeta, formData, workflow).finally(() => {
-      setSubmittingForm(false)
-    })
+    return handleSubmitForm(form, formMeta, formData, workflow)
+      .catch((err) => {
+        throw err
+      })
+      .finally(() => {
+        setSubmittingForm(false)
+      })
   }
 
   const handleCompleteWorkflow = async (workflow: TWorkflowModel) => {
@@ -350,14 +353,11 @@ export const useWorkflowData = () => {
   }
 
   const deleteWorkflowFromAPI = async (workflow: TWorkflowModel) => {
-    if (workflow.isSynced) {
-      return removeWorkflow({
-        workflowId: workflow.workflowId,
-      }).then(async () => {
-        await cancelWorkflowHnos(workflow)
-      })
-    }
-    return Promise.resolve()
+    return removeWorkflow({
+      workflowId: workflow.workflowId,
+    }).then(async () => {
+      await cancelWorkflowHnos(workflow)
+    })
   }
 
   const hydrateWorkflowForms = async (
@@ -548,10 +548,10 @@ export const useWorkflowData = () => {
 
   const handleSaveDraftWorkflow = async (
     workflow: TWorkflowModel,
-    activeForms: TWorkflowForm[],
-    formsData: any
+    activeForms: TWorkflowForm[]
   ) => {
     const hasDraft = activeForms.some((f) => f.isDraft)
+    const formsData = activeForms.map((f) => f?.data || {})
     // create a an array payload that looks like this
     // {formName: [form.data, form.data...]}
     const formName = activeForms?.[0]?.name || ''
@@ -585,15 +585,14 @@ export const useWorkflowData = () => {
 
   const saveDraftWorkflow = async (
     workflow: TWorkflowModel,
-    activeForms: TWorkflowForm[],
-    data: any
+    activeForms: TWorkflowForm[]
   ) => {
     if (workflow.isSynced) {
-      return handleSaveDraftWorkflow(workflow, activeForms, data)
+      return handleSaveDraftWorkflow(workflow, activeForms)
     }
     return syncWorkflow(workflow).then(async () => {
       trackWorkflowCreated(workflow.workflowObject)
-      await handleSaveDraftWorkflow(workflow, activeForms, data)
+      await handleSaveDraftWorkflow(workflow, activeForms)
     })
   }
 

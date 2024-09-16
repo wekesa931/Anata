@@ -1,12 +1,18 @@
 import { useDatabase } from '@nozbe/watermelondb/hooks'
-import { RosterMemberType, V2MemberType } from 'src/modules/member/types'
+import {
+  MemberCohortType,
+  RosterMemberType,
+  V2MemberType,
+} from 'src/modules/member/types'
 import { CollectionType } from 'src/storage/types'
 import { Collection, Q } from '@nozbe/watermelondb'
 import { Member, createOrUpdateMember } from 'src/modules/member/db/models'
 import {
   useGetMemberByAntaraId,
   normalizeMemberDetails,
+  useMemberCohorts,
 } from 'src/modules/member/services/member.api'
+import { parseMemberCohort } from 'src/utils/data-transform'
 import { transformRosterInsuranceData } from '../utils/data-transforms'
 
 export const useMembersData = () => {
@@ -15,6 +21,8 @@ export const useMembersData = () => {
     CollectionType.MEMBERS
   )
   const { getData, loading } = useGetMemberByAntaraId()
+
+  const { fetchMemberCohorts, loading: loadingCohorts } = useMemberCohorts()
 
   const createDefaultMemberInstance = async (
     rosterMember?: RosterMemberType,
@@ -44,25 +52,27 @@ export const useMembersData = () => {
         member.sex = rosterMember?.sex
         member.insurances = insuranceData
         member.tags = rosterMember?.tags?.split(',')
+        member.membercohortSet = rosterMember?.memberCohort
       })
     })
   }
 
   const createMemberInstance = async (
     member: Member | null,
-    memberData: V2MemberType
+    memberData: V2MemberType,
+    memberCohorts: MemberCohortType[]
   ) => {
     if (!member) {
       return database.write(async () => {
         return membersCollection.create((m) => {
-          return createOrUpdateMember(m, memberData)
+          return createOrUpdateMember(m, memberData, memberCohorts)
         })
       })
     }
     // update the member
     return database.write(async () => {
       return member.update((m) => {
-        return createOrUpdateMember(m, memberData)
+        return createOrUpdateMember(m, memberData, memberCohorts)
       })
     })
   }
@@ -77,9 +87,14 @@ export const useMembersData = () => {
         clientName: 'v2',
       },
     })
+    const { data: cohortData } = await fetchMemberCohorts(antaraId)
+    const memberCohorts = parseMemberCohort(
+      cohortData?.memberCohorts?.edges?.map((m: any) => m.node)
+    )
+
     const memberData = normalizeMemberDetails(data)
     if (memberData) {
-      return createMemberInstance(member, memberData)
+      return createMemberInstance(member, memberData, memberCohorts)
     }
 
     throw new Error(`Failed to load member ${antaraId}`)
@@ -101,7 +116,7 @@ export const useMembersData = () => {
     createDefaultMemberInstance,
     findMemberByAntaraIdFromLocalCache,
     hydrateMember,
-    loading,
+    loading: loading || loadingCohorts,
     membersCollection,
   }
 }

@@ -14,13 +14,7 @@ import RadioField from 'src/components/forms/fields/radio-field'
 import * as yup from 'yup'
 import DeleteFormEntry from 'src/modules/member/components/delete-form-entry'
 import { useRegistrationData } from 'src/modules/member/hooks/registration'
-import VerificationLoader from 'src/components/loaders/verification-loader'
-import type {
-  VerificationStatus,
-  DbValueTypes,
-  LookupOption,
-} from 'src/modules/member/types'
-import ErrorFeedback from 'src/components/feedbacks/error'
+import type { DbValueTypes, LookupOption } from 'src/modules/member/types'
 import { logError } from 'src/utils/logging/logger'
 import { useNotifications } from 'src/context/notifications'
 import { useRegistrationForm } from 'src/context/member-registration'
@@ -95,14 +89,6 @@ type InsuranceSectionProps = {
   primaryMember: Member | undefined
 }
 
-type Statuses = {
-  [key: number]: VerificationStatus
-}
-
-type BooleanStatus = {
-  [key: number]: boolean
-}
-
 const defaultInsurance = (primaryMember: Member | undefined) => ({
   employer: {
     isPrimaryMember: !primaryMember,
@@ -124,7 +110,7 @@ const defaultInsurance = (primaryMember: Member | undefined) => ({
       principalMemberInsuranceId: primaryMember?.primaryInsuranceId,
       relationshipToPrincipalMember: '',
       priority: 0,
-      verificationStatus: 'unverified',
+      verificationStatus: 'rejected',
     },
   ],
 
@@ -149,15 +135,7 @@ export function InsuranceForm({
   onPrev,
   showWizardContols = true,
 }: InsuranceFormProps) {
-  const {
-    handleVerifyInsuranceDetails,
-    isVerifyingInsurance,
-    handleUpdateInsuranceDetails,
-    loading,
-  } = useRegistrationData()
-  const [verificationStatus, setVerificationStatus] = useState<Statuses>({})
-  const [hasError, setHasError] = useState<BooleanStatus>({})
-  const [isLoading, setIsLoading] = useState<BooleanStatus>({})
+  const { handleUpdateInsuranceDetails, loading } = useRegistrationData()
   const { notify } = useNotifications()
   const { lookupOptions, insuranceCompanies } = useRegistrationForm()
   const [initialValues, setInitialValues] = useState<InsuranceDetailsValues>(
@@ -174,7 +152,6 @@ export function InsuranceForm({
   const [employer, setEmployer] = useState<string>('')
 
   useEffect(() => {
-    // console.log("Caling this ", member?.insurances?.insurances)
     const values = member?.needsInsurancePreffil
       ? defaultInsurance(primaryMember)
       : member?.insurances
@@ -183,7 +160,7 @@ export function InsuranceForm({
     setBusinessLookups(employerName)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [verificationStatus, member, primaryMember])
+  }, [member, primaryMember])
 
   const handleSubmit = (values: any, formikBag: any) => {
     const completeSubmission = () => {
@@ -228,70 +205,6 @@ export function InsuranceForm({
     }
   }
 
-  const shouldVerifyInsurance = (
-    touched: any,
-    index: number,
-    values: any = {}
-  ) => {
-    // check if either insuranceId or insuranceCompany field of a given insurances index object has been touched
-    const hasFilledValues = () => {
-      const insurance = values?.insurances?.[index]
-      return insurance && insurance.insuranceId && insurance.insuranceCompany
-    }
-    if (touched.insurances && touched.insurances[index]) {
-      const touchedFields =
-        touched.insurances[index].insuranceCompany ||
-        touched.insurances[index].insuranceId
-
-      return touchedFields && hasFilledValues()
-    }
-
-    return false
-  }
-
-  const verifyInsurance = (
-    p: InsuranceDetailsValues,
-    c: any,
-    index: number
-  ) => {
-    // find the insurance at index and verify it
-    setVerificationStatus({ ...verificationStatus, [index]: 'pending' })
-    setHasError({})
-    setIsLoading({ ...isLoading, [index]: true })
-    const variables = {
-      ...p,
-      insurances: p.insurances.map((i: any) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { isPrincipalMember, ...rest } = i
-        return rest
-      }),
-    }
-
-    if (member) {
-      handleVerifyInsuranceDetails(member, variables, c?.insuranceId)
-        .then((newDetails) => {
-          const { verified } = newDetails
-          if (verified) {
-            setVerificationStatus({
-              ...verificationStatus,
-              [index]: 'verified',
-            })
-          } else {
-            setVerificationStatus({
-              ...verificationStatus,
-              [index]: 'unverified',
-            })
-          }
-        })
-        .catch(() => {
-          setHasError({ ...hasError, [index]: true })
-        })
-        .finally(() => {
-          setIsLoading({})
-        })
-    }
-  }
-
   const getBusinessLocations = (
     companies: LookupOption[],
     companyName?: string
@@ -333,7 +246,6 @@ export function InsuranceForm({
         >
           {({
             values,
-            touched,
             setFieldValue,
             isValid,
             setSubmitting,
@@ -349,6 +261,7 @@ export function InsuranceForm({
                   label="Employer"
                   name="employer.name"
                   placeholder="--Select--"
+                  group
                   options={sortAlphabetically(employers || [], 'label')}
                   handleChange={(v) => {
                     setBusinessLookups(v)
@@ -425,13 +338,6 @@ export function InsuranceForm({
                               placeholder="--Select--"
                               options={insuranceCompanies || []}
                               name={`insurances.${index}.insuranceCompany`}
-                              handleBlur={() => {
-                                if (
-                                  shouldVerifyInsurance(touched, index, values)
-                                ) {
-                                  verifyInsurance(values, p, index)
-                                }
-                              }}
                               required={false}
                               autoFocus={index === 0}
                             />
@@ -439,42 +345,22 @@ export function InsuranceForm({
                               label="Insurance ID"
                               placeholder="Enter insurance ID"
                               name={`insurances.${index}.insuranceId`}
-                              handleBlur={() => {
-                                if (
-                                  shouldVerifyInsurance(touched, index, values)
-                                ) {
-                                  verifyInsurance(values, p, index)
-                                }
-                              }}
                               required={false}
                             />
-                            <>
-                              {hasError[index] ? (
-                                <ErrorFeedback message="An error occured. Please try again." />
-                              ) : (
-                                <>
-                                  {isLoading[index] && (
-                                    <VerificationLoader message="One moment while we verify the insurance ID..." />
-                                  )}
-
-                                  {verificationStatus[index] === 'verified' && (
-                                    <p className="text-orange-main text-sm font-rubik text-left">
-                                      Insurance ID successfully verified
-                                    </p>
-                                  )}
-                                  {verificationStatus[index] ===
-                                    'unverified' && (
-                                    <p className="text-orange-main text-sm font-rubik text-left">
-                                      We are unable to automatically verify this
-                                      insurance ID. Please confirm that it is
-                                      correct then proceed. The verification
-                                      will be manually done later.
-                                    </p>
-                                  )}
-                                </>
-                              )}
-                            </>
-
+                            {!showWizardContols && (
+                              <SelectField
+                                name={`insurances.${index}.verificationStatus`}
+                                label="Insurance verification status"
+                                placeholder="--Select--"
+                                options={[
+                                  { label: 'VERIFIED', value: 'Verified' },
+                                  { label: 'PENDING', value: 'Pending' },
+                                  { label: 'REJECTED', value: 'Rejected' },
+                                ]}
+                                required={false}
+                                autoFocus={index === 0}
+                              />
+                            )}
                             <RadioField
                               name={`insurances.${index}.isPrincipalMember`}
                               label={`Is this the principal member in the ${values.insurances[index]?.insuranceCompany} insurance scheme?`}
@@ -524,7 +410,6 @@ export function InsuranceForm({
                           })
                         }}
                         className="normal-case text-sm my-2"
-                        disabled={isVerifyingInsurance}
                       >
                         <p className="flex justify-start text-left gap-2 text-xs">
                           +<span>Add insurance</span>
@@ -548,7 +433,7 @@ export function InsuranceForm({
                     <NextButton
                       type="submit"
                       loading={loading}
-                      disabled={loading || isVerifyingInsurance || !isValid}
+                      disabled={loading || !isValid}
                     >
                       Submit
                     </NextButton>
@@ -559,7 +444,7 @@ export function InsuranceForm({
                       type="submit"
                       fullWidth
                       variant="contained"
-                      disabled={loading || isVerifyingInsurance || !isValid}
+                      disabled={loading || !isValid}
                       loading={loading}
                       onClick={() => {
                         if (!isValid) {

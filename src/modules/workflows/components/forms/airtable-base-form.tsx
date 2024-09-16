@@ -3,15 +3,23 @@ import FORM_DEFINITIONS from 'src/modules/workflows/components/forms/form-inputs
 import validationRules from 'src/modules/workflows/components/forms/validation-schema'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { every, isEmpty } from 'lodash'
+import { every, groupBy, isEmpty } from 'lodash'
 import type { FormProps } from 'src/modules/workflows/types'
 import useWorkflowData from 'src/modules/workflows/hooks/workflow-data'
 import ButtonField from 'src/modules/workflows/components/forms/button-field'
 import WorkflowFormsFields from 'src/modules/workflows/components/forms/form-fields'
 import { useAirtableMeta } from 'src/context/airtable-meta'
 import CalendlyLink from 'src/modules/workflows/components/forms/calendly-link'
-import { LoadingButton } from '@mui/lab'
 import { useNotifications } from 'src/context/notifications'
+import { triggerRefresh } from 'src/services/observers'
+import { TaskDefinition } from 'src/modules/tasks/types'
+import { useModuleAnalytics } from 'src/modules/analytics'
+import PrimaryButton from 'src/components/buttons/primary'
+
+const TASK_DEFINITION_FIELD_ID =
+  process.env.PROD === 'true' ? 'fldrJeu9BzF1p0thE' : 'fldwYDHowo9JFzkc7'
+
+const SCRIBE_TAGS_FIELD_ID = 'fldluUjdXcncSqpNk'
 
 function AirtableBasedForm({
   form,
@@ -22,6 +30,7 @@ function AirtableBasedForm({
   isWorkflowComplete = false,
   upsertDraft,
   workflow,
+  updatePrefills,
 }: FormProps) {
   const formSchema: any = (FORM_DEFINITIONS as any).find(
     (f: any) => f?.name === form.name
@@ -34,6 +43,8 @@ function AirtableBasedForm({
     formSchema,
     !!workflow
   )
+
+  const { trackFormSaved } = useModuleAnalytics()
 
   const {
     control,
@@ -67,7 +78,8 @@ function AirtableBasedForm({
 
   const { submitForm, submittingForm } = useWorkflowData()
   const canSubmitForm = every(errors, isEmpty)
-  const { airtableMeta } = useAirtableMeta()
+  const airtableMetaData = useAirtableMeta()
+  const { airtableMeta, taskDefinitions } = airtableMetaData
   const [isFormDraft, setIsFormDraft] = useState(true)
   const { notify } = useNotifications()
 
@@ -115,7 +127,9 @@ function AirtableBasedForm({
 
       await submitForm(form, formSchema, formattedPayload, workflow)
       setIsFormDraft(false)
-      handleSubmissionSuccess()
+      triggerRefresh(form.name) // refreshes the display data
+      trackFormSaved(form.name, form.workflow?.workflowId)
+      handleSubmissionSuccess(false) // ensures that the draft is saved again post submission
     } catch (e) {
       setIsFormDraft(true)
       handleSubmissionError(e)
@@ -138,18 +152,18 @@ function AirtableBasedForm({
   }, [canSubmitForm])
 
   const getFieldsToRender = () => {
+    const values = getValues()
     const returnFields: any = []
     formSchema?.fields?.forEach((field: any) => {
-      if (!field.condition || field.condition(getValues())) {
-        const fieldValue = getValues()[field.name] || null
+      if (!field.condition || field.condition(values)) {
+        const fieldValue = values[field.name] || null
         returnFields.push({
           field,
           fieldValue,
         })
       }
     })
-
-    return returnFields
+    return returnFields.filter((f: any) => !f?.field?.hide)
   }
 
   const generateFromState = () => {
@@ -158,9 +172,112 @@ function AirtableBasedForm({
     return fieldsToRender?.reduce((acc: any, curr: any) => {
       return {
         ...acc,
-        [curr?.field?.name]: curr?.fieldValue,
+        [curr?.field?.name]: curr?.fieldValue?.name ?? curr?.fieldValue,
       }
     }, {})
+  }
+  const handleSaveInput = (fl: any) => (name: string, value: any) => {
+    const prefills = {
+      [name]: value,
+      ...(fl?.prefills && fl.prefills(name, value, airtableMetaData)),
+    }
+    updatePrefills ? updatePrefills(prefills) : saveInput(name, value)
+  }
+
+  /**
+   * Enable handling conditional requirements for the field
+   * @param field field to get required rules for
+   */
+  const getRequirements = (field: any) => {
+    const prevRequired = field?.required
+
+    if (
+      field?.toggleRequriedOnCondition &&
+      !!field?.requirementCondition &&
+      field?.requirementCondition(getValues())
+    ) {
+      return !prevRequired
+    }
+
+    return prevRequired
+  }
+
+  const filterDefinitions = (definitions: any[]) => {
+    return definitions.filter(
+      (t: any) =>
+        t?.fields?.Status === 'Live' && !t?.fields?.['Automated-task-only']
+    )
+  }
+
+  const taskDefinitionsFilterFn = (field: any, values: any) => {
+    const selectedTag = values?.['Scribe Tags']
+    let parsedField = field
+    if (selectedTag) {
+      const definitions = taskDefinitions.filter((taskDefinition: any) =>
+        taskDefinition.scribeTags.includes(selectedTag?.name ?? selectedTag)
+      )
+
+      if (definitions.length) {
+        parsedField = {
+          ...field,
+          options: definitions.map((t: TaskDefinition) => ({
+            id: t.recordId,
+            name: t.clinicalPrefferedName,
+          })),
+          type: 'select',
+        }
+      }
+    } else {
+      parsedField = {
+        ...field,
+        type: 'foreignKey',
+        filterResponse: filterDefinitions,
+      }
+    }
+
+    return parsedField
+  }
+
+  const getOptions = (field: any) => {
+    if (field.id === TASK_DEFINITION_FIELD_ID && field.conditionalOptions) {
+      const fields = taskDefinitionsFilterFn(field, getValues())
+      return fields
+    }
+    if (field.id === SCRIBE_TAGS_FIELD_ID) {
+      const definitionOptions = [
+        ...new Set( // extract unique tags (from duplicated if any)
+          Object.keys(groupBy(taskDefinitions, 'scribeTags')) // group the definitions by scribeTags
+            .map((tag: any) => tag.split(',')) // split by , to extract multiple tags in a single string
+            .flat() // flatten to obtain a single array (may contain duplicated)
+        ),
+      ].map((t) => ({
+        id: t,
+        name: t,
+      }))
+
+      const parsedField = {
+        ...field,
+        options: definitionOptions,
+      }
+      return parsedField
+    }
+
+    return {}
+  }
+
+  const getFieldValue = (field: any, fieldValue: any) => {
+    if (fieldValue?.id) {
+      const parsedField = getOptions(field)
+      if (parsedField?.type === 'foreignKey') {
+        return [fieldValue?.id]
+      }
+    }
+
+    if (field.type === 'collaborator') {
+      return fieldValue
+    }
+
+    return fieldValue?.name ?? fieldValue
   }
 
   return (
@@ -172,12 +289,17 @@ function AirtableBasedForm({
               <div>
                 {field?.formId && <ButtonField field={field} />}
                 <WorkflowFormsFields
-                  value={fieldValue}
+                  value={getFieldValue(field, fieldValue)}
                   control={control}
-                  field={{ ...field, parentTableId: formSchema?.id }}
+                  field={{
+                    ...field,
+                    parentTableId: formSchema?.id,
+                    required: getRequirements(field),
+                    ...getOptions(field),
+                  }}
                   error={errors[field.name]}
                   airtableMeta={airtableMeta}
-                  saveInput={saveInput}
+                  saveInput={handleSaveInput(field)}
                   isWorkflow={!!form.workflow}
                   disabled={!isFormDraft}
                 />
@@ -186,11 +308,9 @@ function AirtableBasedForm({
             </div>
           ))}
 
-          <div className="flex items-center justify-end">
-            <LoadingButton
-              className={`rounded-xl font-rubik text-sm font-medium normal-case text-white ${
-                !disabled ? 'bg-blue-100 ' : 'bg-disabled-grey'
-              }`}
+          <div className="flex items-center mt-8">
+            <PrimaryButton
+              fullWidth
               disabled={disabled}
               onClick={() => {
                 if (canSubmitForm) {
@@ -202,7 +322,7 @@ function AirtableBasedForm({
               loading={isSubmitting || submittingForm}
             >
               Submit form
-            </LoadingButton>
+            </PrimaryButton>
           </div>
         </form>
       )}

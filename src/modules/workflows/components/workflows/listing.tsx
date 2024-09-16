@@ -4,6 +4,7 @@ import { sortByCreatedAt, workflowStartDate } from 'src/modules/workflows/utils'
 import { useWorkflowData } from 'src/modules/workflows/hooks/workflow-data'
 import { Workflows as TWorkflowModel } from 'src/modules/workflows/db/models'
 import { useMember } from 'src/context/member'
+import { useSearchParams } from 'react-router-dom'
 import Loader from '../loaders'
 
 type WorkflowListProps = {
@@ -18,6 +19,16 @@ function WorkflowListItem({
   workflow: TWorkflowModel
   openWorkflow: WorkflowListProps['openWorkflow']
 }) {
+  const [searchParams] = useSearchParams()
+
+  useEffect(() => {
+    const workflowId = searchParams.get('workflowId')
+    if (workflowId && workflow.workflowId === workflowId) {
+      openWorkflow(workflow)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <div
       className={`mb-[5px] flex items-center justify-between rounded-lg bg-white p-2 font-sans hover:bg-dark-blue-10 `}
@@ -50,7 +61,7 @@ function WorkflowList({
     useWorkflowData()
   const { member } = useMember()
 
-  const [isLoadingWorflows, setIsLoadingWorkflows] = useState<boolean>(false)
+  const [isLoadingWorflows, setIsLoadingWorkflows] = useState<boolean>(true)
 
   const hasActiveWorkflows =
     !!incompleteWorkflows?.length || !!completedWorkflows?.length

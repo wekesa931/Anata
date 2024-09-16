@@ -57,7 +57,7 @@ const COLUMNS: Column[] = [
     format: (value: string) => dayjs(value).format('Do MMM YYYY'),
   },
   {
-    id: 'type',
+    id: 'task_definition',
     label: 'Task type',
     sortable: true,
   },
@@ -196,7 +196,7 @@ function HnTasksView({ user }: Props) {
                   columns={COLUMNS}
                   defaultGroupColumn="priority"
                   groupColumns={[
-                    { label: 'Task type', value: 'type' },
+                    { label: 'Task type', value: 'task_definition' },
                     { label: 'Task status', value: 'status' },
                     { label: 'Priority', value: 'priority' },
                     { label: 'Member name', value: 'member' },
@@ -211,6 +211,7 @@ function HnTasksView({ user }: Props) {
                   }
                   dataSortFunction={sortByPriorityAndKey}
                   groupSortFunction={sortGroupedDataByColumn}
+                  analyticsSource="home"
                 />
               )}
             </>

@@ -1,5 +1,7 @@
 import { useMutation, useLazyQuery } from '@apollo/client'
+import dayjs from 'dayjs'
 import { groupBy } from 'lodash'
+import { useMember } from 'src/context/member'
 import {
   CREATE_VITALS_READING,
   CREATE_BLOOD_PRESSURE_READING,
@@ -11,6 +13,7 @@ import {
   GET_VITALS,
   GET_BP_PANEL,
   GET_BS_PANEL,
+  GET_HEALTH_METRICS,
 } from 'src/modules/vitals/services/gql'
 import { GET_REPORT_GEN_MEASUREMENTS_RANGES } from 'src/modules/vitals/services/report-generation.gql'
 import {
@@ -20,6 +23,7 @@ import {
   DMMonitoringFormInputs,
   ReportGenNormalRangeVariables,
 } from 'src/modules/vitals/types'
+import { throwGraphErrors } from 'src/utils/error-handling'
 
 export const useGetVitalsReadingApi = () => {
   const context = {
@@ -31,23 +35,23 @@ export const useGetVitalsReadingApi = () => {
 
   const [
     getVitalsData,
-    { loading: vitalsLoading, error: vitalsError, refetch },
+    { loading: vitalsLoading, error: vitalsError, refetch: refetchVitals },
   ] = useLazyQuery(GET_VITALS, {
     context,
   })
   const [
     getBPData,
-    { loading: bpLoading, error: bpError, refetch: refetchBs },
+    { loading: bpLoading, error: bpError, refetch: refetchBp },
   ] = useLazyQuery(GET_BP_PANEL, {
     context,
   })
 
-  const [getBsData, { loading: bsLoading, error: bsError }] = useLazyQuery(
-    GET_BS_PANEL,
-    {
-      context,
-    }
-  )
+  const [
+    getBsData,
+    { loading: bsLoading, error: bsError, refetch: refetchBs },
+  ] = useLazyQuery(GET_BS_PANEL, {
+    context,
+  })
 
   const parseBsReadings = (input: any = {}) => {
     const bsEdges = input?.bs?.edges?.map((item: any) => item.node)
@@ -79,76 +83,66 @@ export const useGetVitalsReadingApi = () => {
     return returnData
   }
 
-  const getBsReadings = async (antaraId: string) => {
+  const getBsReadings = async (antaraId: string, refetch: boolean = false) => {
     if (!antaraId) throw new Error('Antara ID is required')
+    let data: any
 
-    const { data } = await getBsData({
-      variables: {
-        antaraId,
-      },
-    })
+    if (refetch) {
+      data = (await refetchBs()).data
+    }
+
+    data = (
+      await getBsData({
+        variables: {
+          antaraId,
+        },
+      })
+    ).data
 
     return parseBsReadings(data)
   }
 
-  const refetchBsReadings = async (antaraId: string) => {
+  const getBPReadings = async (antaraId: string, refetch: boolean = false) => {
     if (!antaraId) throw new Error('Antara ID is required')
 
-    const { data } = await refetchBs({
-      variables: {
-        antaraId,
-      },
-    })
+    let data: any
 
-    return parseBsReadings(data)
-  }
+    if (refetch) {
+      data = (await refetchBp()).data
+    }
 
-  const getBPReadings = async (antaraId: string) => {
-    if (!antaraId) throw new Error('Antara ID is required')
-
-    const { data } = await getBPData({
-      variables: {
-        antaraId,
-      },
-    })
+    data = (
+      await getBPData({
+        variables: {
+          antaraId,
+        },
+      })
+    ).data
 
     return data?.bloodPressureMonitoring?.edges?.map((item: any) => item.node)
   }
 
-  const refetchBPReadings = async (antaraId: string) => {
+  const getVitalsReadings = async (
+    antaraId: string,
+    refetch: boolean = false
+  ) => {
     if (!antaraId) throw new Error('Antara ID is required')
 
-    const { data } = await getBPData({
-      variables: {
-        antaraId,
-      },
-    })
+    let data: any
 
-    return data?.bloodPressureMonitoring?.edges?.map((item: any) => item.node)
-  }
+    if (refetch) {
+      data = (await refetchVitals()).data
+    }
 
-  const getVitalsReadings = async (antaraId: string) => {
-    if (!antaraId) throw new Error('Antara ID is required')
-
-    const { data } = await getVitalsData({
-      variables: {
-        antaraId,
-      },
-    })
+    data = (
+      await getVitalsData({
+        variables: {
+          antaraId,
+        },
+      })
+    ).data
 
     return data?.vitals?.edges?.map((item: any) => item?.node)
-  }
-
-  const refetchVitalsReadings = async (antaraId: string) => {
-    if (!antaraId) throw new Error('Antara ID is required')
-
-    const { data } = await refetch({
-      variables: {
-        antaraId,
-      },
-    })
-
-    return data?.vitals?.edges?.map((item: any) => item.node)
   }
 
   const getAllVitalsReadings = async (antaraId: string) => {
@@ -196,15 +190,12 @@ export const useGetVitalsReadingApi = () => {
     getAllVitalsReadings,
     vitalsLoading,
     vitalsError,
-    refetchVitalsReadings,
     getBPReadings,
     bpLoading,
     bpError,
-    refetchBPReadings,
     getBsReadings,
     bsLoading,
     bsError,
-    refetchBsReadings,
   }
 }
 export const useCreateVitalsReadingApi = () => {
@@ -376,40 +367,22 @@ export const useCreateDMReadingApi = () => {
     throw new Error('Neither blood glucose nor hba1c is present')
   }
 
-  const parseDmErrors = (data: any = {}) => {
-    const { uploadBloodGlucoseReading, uploadHba1cReading } = data
-    const errors = []
-    const successMessage = []
-    if (uploadBloodGlucoseReading?.errors) {
-      errors.push(uploadBloodGlucoseReading?.errors)
-    } else {
-      successMessage.push('Blood Glucose Reading Uploaded Successfully')
-    }
-
-    if (uploadHba1cReading?.errors) {
-      errors.push(uploadHba1cReading?.errors)
-    } else {
-      successMessage.push('HBA1C Reading Uploaded Successfully')
-    }
-
-    return {
-      errors,
-      successMessage,
-    }
-  }
-
   const createDMReadings = async (input: DMMonitoringFormInputs) => {
     const variables = parseDMReadings(input)
     if (isObjectEmpty(variables)) {
       throw new Error('No data to upload')
     }
 
-    const { data } = await mutate({
-      mutation: selectMutation(variables),
-      variables: selectVariables(variables),
-    })
+    try {
+      const { data } = await mutate({
+        mutation: selectMutation(variables),
+        variables: selectVariables(variables),
+      })
 
-    return parseDmErrors(data)
+      return data
+    } catch (error) {
+      return throwGraphErrors(error)
+    }
   }
 
   return {
@@ -450,5 +423,49 @@ export const useGetLabsRanges = () => {
   return {
     loading,
     getReportGenMeasurementsRangesData,
+  }
+}
+
+export const useGetHealthMetrics = () => {
+  const [load] = useLazyQuery(GET_HEALTH_METRICS, {
+    context: {
+      clientName: 'v2',
+    },
+  })
+  const { member } = useMember()
+
+  const getHealthMetrics = async () => {
+    if (!member) return { references: [], metrics: [] }
+    const sex = member?.sex || 'Unknown'
+    const ageInMonths = dayjs().diff(member?.birthDate, 'month')
+    const variables = {
+      sex,
+      ageInMonths,
+    }
+
+    const { data } = await load({
+      variables,
+    })
+
+    const { references, metrics } = data
+    const b = references?.edges?.map(({ node }: any) => ({
+      ...node,
+      healthMetric: node?.healthMetric.name,
+    }))
+
+    const m = metrics?.edges?.map(({ node }: any) => ({
+      ...node,
+      isInPanel: !!node?.measurementPanelType?.edges?.length,
+      measurementUnit: node?.measurementUnit?.name,
+    }))
+
+    return {
+      references: b,
+      metrics: m,
+    }
+  }
+
+  return {
+    getHealthMetrics,
   }
 }

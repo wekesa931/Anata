@@ -5,6 +5,7 @@ import {
   parseDataToOptions,
   parseLookupEntries,
 } from 'src/modules/member/utils/data-transforms'
+import { CACHE_KEYS, getFromCache } from 'src/storage/localstorage-cache'
 
 export const useGetLookupEntries = () => {
   const [loadLookupEntries, { loading: loadingEntries }] = useLazyQuery(
@@ -19,15 +20,20 @@ export const useGetLookupEntries = () => {
     GET_INSURANCE_COMPANIES
   )
 
+  const getInsuranceCompaniesAPI = async () => {
+    const res = await loadInsuranceCompanies()
+    return parseDataToOptions(res?.data?.insuranceCompanies, 'name')
+  }
+
+  const getLookupsAPI = async () => {
+    const res = await loadLookupEntries()
+    return parseLookupEntries(res?.data)
+  }
   return {
     isLoading: loading || loadingEntries,
-    getInsuranceCompanies: async () => {
-      const res = await loadInsuranceCompanies()
-      return parseDataToOptions(res?.data?.insuranceCompanies, 'name')
-    },
-    getLookupEntries: async () => {
-      const res = await loadLookupEntries()
-      return parseLookupEntries(res?.data)
-    },
+    getInsuranceCompanies: async () =>
+      getFromCache(CACHE_KEYS.INSURANCES, getInsuranceCompaniesAPI),
+    getLookupEntries: async () =>
+      getFromCache(CACHE_KEYS.LOOKUPS, getLookupsAPI),
   }
 }

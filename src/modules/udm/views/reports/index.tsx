@@ -5,6 +5,7 @@ import { NewDocumentPopper } from 'src/modules/udm/components/reports/new-docume
 import MedicalCampComponent from 'src/modules/udm/views/reports/medical-camp'
 import OPGeneralComponent from 'src/modules/udm/views/reports/op-general'
 import DocListItem from 'src/modules/udm/components/reports/list-item'
+import PrescriptionComponent from 'src/modules/prescription/views/prescription'
 import dayjs from 'dayjs'
 import { DocMeta } from 'src/modules/udm/types'
 import { useModuleAnalytics } from 'src/modules/analytics'
@@ -14,6 +15,7 @@ enum DocTypes {
   OP_GENERAL = 'OP_GENERAL',
   IN_PATIENT = 'IN_PATIENT',
   SPECIALIST = 'SPECIALIST',
+  PRESCRIPTION = 'PRESCRIPTION',
 }
 
 function ReportGenerator() {
@@ -57,14 +59,17 @@ function ReportGenerator() {
   }
 
   const createDocMeta = (
+    documentType: string,
     title: string,
     description?: string,
-    date?: string | Date
+    date?: string | Date,
+    folder: string = 'Health Reports'
   ): DocMeta => {
     return {
-      docType: 'Medical Progress Report',
+      docType: documentType,
       description: description || title,
       title: `${title} - ${dayjs(date).format('DD-MM-YYYY')}`,
+      folder,
     } as DocMeta
   }
 
@@ -72,21 +77,31 @@ function ReportGenerator() {
     switch (docType) {
       case DocTypes.MEDICAL_CAMP:
         return createDocMeta(
+          'Medical Progress Report',
           'Medical camp onsite report',
           'Medical General report',
           date
         )
       case DocTypes.OP_GENERAL:
-        return createDocMeta('OP general report')
+        return createDocMeta('Medical Progress Report', 'OP general report')
       case DocTypes.IN_PATIENT:
-        return createDocMeta('In patient report')
+        return createDocMeta('Medical Progress Report', 'In patient report')
       case DocTypes.SPECIALIST:
-        return createDocMeta('Specialist report')
+        return createDocMeta('Medical Progress Report', 'Specialist report')
+      case DocTypes.PRESCRIPTION:
+        return createDocMeta(
+          'Prescription',
+          'Prescription report',
+          '',
+          date,
+          'Prescription'
+        )
       default:
         return {
           docType: '',
           description: '',
           title: '',
+          folder: '',
         }
     }
   }
@@ -105,6 +120,8 @@ function ReportGenerator() {
         return 'In Patient Report'
       case DocTypes.SPECIALIST:
         return 'Specialist Report'
+      case DocTypes.PRESCRIPTION:
+        return 'Prescription'
       default:
         return 'Health Report Generate'
     }
@@ -159,6 +176,13 @@ function ReportGenerator() {
                 openPortal(DocTypes.MEDICAL_CAMP)
               }}
             />
+            <DocListItem
+              title="Prescription Generation"
+              subtitle="For a doctor after consultation"
+              onClick={() => {
+                openPortal(DocTypes.PRESCRIPTION)
+              }}
+            />
           </Paper>
         ) : (
           <>
@@ -167,6 +191,11 @@ function ReportGenerator() {
                 closeModal={closeModal}
                 getDocMeta={getDocMeta}
                 title={getTitle()}
+              />
+            ) : docType === DocTypes.PRESCRIPTION ? (
+              <PrescriptionComponent
+                closeModal={closeModal}
+                getDocMeta={getDocMeta}
               />
             ) : (
               <OPGeneralComponent

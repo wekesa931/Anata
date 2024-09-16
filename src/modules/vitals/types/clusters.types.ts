@@ -83,3 +83,11 @@ export type ReferenceDomain = {
   referenceRanges: ReferenceRange[]
   domain: [number, number]
 }
+
+export type AggregateMetricsParams = {
+  startDate: string | Date
+  endDate: string | Date
+  dailyMetrics?: boolean
+  refetch?: boolean
+  healthMetric?: HealthMetricNames
+}

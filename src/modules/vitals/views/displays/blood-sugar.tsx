@@ -8,27 +8,32 @@ import Loading from 'src/components/loaders/centered'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import { withCustomBsDot } from 'src/modules/vitals/components/custom-bs-dot'
 import { getTickCount, getTimeFormat } from 'src/modules/vitals/utils'
+import {
+  BS_OBSERVER,
+  useClustersObserver,
+} from 'src/modules/vitals/services/observers'
 
 dayjs.extend(advancedFormat)
 
 function BloodSugarView() {
   const { getBsClusters, isLoading } = useClustersData()
-  const [bsData, setBsData] = useState<any[]>([])
   const [xDomain, setXDomain] = useState<[number, number]>([
     dayjs().subtract(1, 'month').valueOf(),
     dayjs().valueOf(),
   ])
-  const [currentTimeFilter, setCurrentTimeFilter] = useState<TimeFilters>(
-    TimeFilters.ONE_MONTH
-  )
+
+  const {
+    loading,
+    clusters,
+    currentTimeFilter,
+    updateRangeFilterControls: setRangeFilterControls,
+  } = useClustersObserver(BS_OBSERVER, getBsClusters)
 
   const handleTimeRangeChange = (range: TimeRange, filter: TimeFilters) => {
     if (range[0] === null || range[1] === null) return
-    setCurrentTimeFilter(filter)
+
+    setRangeFilterControls({ range, filter })
     setXDomain([range[0].valueOf(), range[1].valueOf()])
-    getBsClusters(range, currentTimeFilter).then((data) => {
-      setBsData(data)
-    })
   }
 
   const CustomDot = withCustomBsDot({
@@ -42,19 +47,19 @@ function BloodSugarView() {
         onRangeChange={handleTimeRangeChange}
         type="Blood sugar"
       />
-      {isLoading ? (
+      {loading || isLoading ? (
         <div className="h-[300px]">
           <Loading message="Loading BS Data ..." />
         </div>
       ) : (
         <div className="relative">
-          {!bsData.length ? (
+          {!clusters.length ? (
             <div className="flex flex-col items-center justify-center h-[300px]">
               <p className="text-gray-400">No BS Data within this period</p>
             </div>
           ) : (
             <LineSeriesChat
-              data={bsData}
+              data={clusters}
               xAxisDataKey={{
                 formatter: getTimeFormat(currentTimeFilter),
                 key: 'timestamp',

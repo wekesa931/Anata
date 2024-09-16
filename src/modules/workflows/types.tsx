@@ -64,6 +64,7 @@ export type TWorkflow = {
   member?: Record<string, any>
   prefills?: Record<string, any>
   forms?: RawForm[]
+  memberId: string
 }
 
 export type WorkflowVariables = {
@@ -130,7 +131,7 @@ export type FormField = {
   id: string
   isDateTime: boolean
   name: string
-  options: { choices: any[] }
+  options: any[]
   relationship: 'one' | 'many' | null
   required: boolean
   symmetricColumnId: string
@@ -139,7 +140,12 @@ export type FormField = {
   condition?: (values: any) => boolean
   formId?: string
   ctlabel?: string
-  parentTableId?: string
+  parentTableId: string
+  conditionalOptions?: boolean
+  prefills?: (name: string, value: any, airtableMetaData: any) => any
+  filterResponse: (response: any[]) => any[]
+  hide?: boolean
+  valueType?: 'collaborator' | 'default'
 }
 
 export type FormMeta = {
@@ -160,6 +166,7 @@ export type Form = {
   error: any
   saveInput: (name: string, value: any) => void
   isWorkflow?: boolean
+  relationship?: 'one' | 'many' | null
 }
 
 export type NotifyFn = (message: string) => void
@@ -184,4 +191,5 @@ export type FormProps = {
   isWorkflowComplete?: boolean
   upsertDraft?: () => Promise<void>
   workflow?: any
+  updatePrefills?: (prefills: any) => void
 }

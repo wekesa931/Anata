@@ -8,6 +8,11 @@ import type { FormProps } from 'src/modules/workflows/types'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useVitalsUpdate } from 'src/modules/vitals/hooks/vitals.update.hook'
 import SelectField from 'src/components/forms/fields/select-field'
+import { Subject } from 'rxjs'
+import { BP_OBSERVER } from 'src/modules/vitals/services/observers'
+import { useModuleAnalytics } from 'src/modules/analytics'
+
+export const bpUpdateSubject = new Subject<void>()
 
 const validationSchema = yup.object().shape({
   timestamp: yup.date().required(),
@@ -43,6 +48,7 @@ function BPReadingForm({
     pulse: '',
     bpReadingType: '',
   })
+  const { trackFormSaved } = useModuleAnalytics()
 
   useEffect(() => {
     if (form?.data) {
@@ -57,6 +63,8 @@ function BPReadingForm({
     handleCreateBloodPressureReading(values)
       .then(async () => {
         await form.markAsCompleted()
+        BP_OBSERVER.next()
+        trackFormSaved(form.name, form.workflow?.workflowId)
         handleSubmissionSuccess(false, values)
       })
       .catch((error) => {
@@ -73,7 +81,7 @@ function BPReadingForm({
       handleSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      {() => {
+      {({ errors }) => {
         return (
           <Form>
             <DateTimeField
@@ -128,12 +136,19 @@ function BPReadingForm({
               required={false}
               disabled={disabled}
             />
+            <div className="flex items-center mt-8">
+              <p className="text-sm font-rubik text-dark-red-100">
+                {Object.values(errors).length > 0 &&
+                  'Please fill all required fields'}
+              </p>
+            </div>
 
-            <div className="flex justify-end items-center gap-4 mt-3">
+            <div className="flex items-center flex-col gap-4 mt-8">
               <PrimaryButton
                 loading={loading}
                 disabled={loading || disabled}
                 type="submit"
+                fullWidth
               >
                 Submit form
               </PrimaryButton>

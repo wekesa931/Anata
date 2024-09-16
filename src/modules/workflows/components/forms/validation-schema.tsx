@@ -1,5 +1,59 @@
 import * as Yup from 'yup'
 
+/**
+ * a utility function to check if a value is included in a source (mainly for conditional validation)
+ * @param val the value to check
+ * @param source the source to check against
+ * @param constraint the condition type to flip the result of the check
+ * @returns  boolean
+ */
+const is = (val: any, source: any, constraint: boolean) => {
+  const isIncluded = Array.isArray(val)
+    ? val.some((item) => source.includes(item))
+    : source?.includes(val)
+
+  if (constraint) {
+    return isIncluded
+  }
+
+  return !isIncluded
+}
+
+// a function to update the schema based on the condition - if any
+const updateOnCondition = (
+  fl: any,
+  dataType: any = Yup.string /** datatype */
+) => {
+  return {
+    [fl.name]: dataType().when(`${fl.parentKey}`, {
+      is: (val: any) =>
+        is(
+          val,
+          fl?.parentValues,
+          fl?.conditionType !== '!' && !fl?.toggleRequriedOnCondition
+        ),
+      then: dataType().required(),
+      otherwise: dataType().nullable().notRequired(),
+    }),
+  }
+}
+
+// a function to update the schema based on the conditional required
+// NB conditional required is different from condition in that it only updates the requirement
+// of the field and does not hide the field from the UI
+const updateOnConditionalRequired = (fl: any, dataType: any = Yup.string) => {
+  /**
+   * We want to handle cases where a field is marked as optional but has optional requirements condition
+   * e.g require appts field if the consultation type has has `Refillable medication prescription` selected
+   */
+  if (fl?.parentKey && !!fl?.requirementCondition) {
+    return updateOnCondition(fl, dataType)
+  }
+  return {
+    [fl.name]: dataType().nullable().notRequired(),
+  }
+}
+
 const validationRules = (formMeta: any, isWorkflow: boolean) => {
   let dateFields: string[] = []
   let numberFields: any[] = []
@@ -21,31 +75,12 @@ const validationRules = (formMeta: any, isWorkflow: boolean) => {
               if (fl.required) {
                 schema = {
                   ...schema,
-                  [fieldName]: Yup.mixed().when(`${fl.parentKey}`, {
-                    is: (val: any) => {
-                      if (fl?.conditionType === '!') {
-                        return !fl.parentValues.includes(val)
-                      }
-                      return fl?.parentValues?.includes(val)
-                    },
-                    then: Yup.mixed().required(),
-                    otherwise: Yup.mixed().nullable().notRequired(),
-                  }),
+                  ...updateOnCondition(fl, Yup.mixed),
                 }
               } else {
                 schema = {
                   ...schema,
-                  [fieldName]: Yup.mixed()
-                    .when(`${fl.parentKey}`, {
-                      is: (val) => {
-                        if (fl?.conditionType === '!') {
-                          return !fl.parentValues.includes(val)
-                        }
-                        return fl.parentValues.includes(val)
-                      },
-                      then: Yup.mixed().nullable().notRequired(),
-                    })
-                    .nullable(),
+                  ...updateOnConditionalRequired(fl, Yup.mixed),
                 }
               }
             } else if (fl.required) {
@@ -207,7 +242,7 @@ const validationRules = (formMeta: any, isWorkflow: boolean) => {
         case 'checkbox':
           schema = {
             ...schema,
-            [fieldName]: Yup.boolean(),
+            [fieldName]: Yup.boolean().nullable().default(false),
           }
           break
         case 'select':
@@ -216,56 +251,35 @@ const validationRules = (formMeta: any, isWorkflow: boolean) => {
         case 'text':
         case 'multilineText':
         case 'singleLineText':
-        case 'richText':
+        case 'conditions':
+        case 'richText': {
+          const fieldType = fl?.isMixed ? Yup.mixed : Yup.string
           if (fl.parentKey) {
             if (fl.required) {
               schema = {
                 ...schema,
-                [fieldName]: Yup.string().when(`${fl.parentKey}`, {
-                  is: (val) => {
-                    const isIncluded = Array.isArray(val)
-                      ? val.some((item) => fl?.parentValues?.includes(item))
-                      : fl?.parentValues?.includes(val)
-
-                    if (fl?.conditionType === '!') {
-                      return !isIncluded
-                    }
-
-                    return isIncluded
-                  },
-                  then: Yup.string().required(),
-                  otherwise: Yup.string().nullable().notRequired(),
-                }),
+                ...updateOnCondition(fl, fieldType),
               }
             } else {
               schema = {
                 ...schema,
-                [fieldName]: Yup.string()
-                  .when(`${fl.parentKey}`, {
-                    is: (val) => {
-                      if (fl?.conditionType === '!') {
-                        return !fl.parentValues.includes(val)
-                      }
-                      return fl?.parentValues?.includes(val)
-                    },
-                    then: Yup.string().nullable().notRequired(),
-                    otherwise: Yup.string().nullable().notRequired(),
-                  })
-                  .nullable(),
+                ...updateOnConditionalRequired(fl, fieldType),
               }
             }
           } else if (fl.required) {
             schema = {
               ...schema,
-              [fieldName]: Yup.string().required(),
+              [fieldName]: fieldType().required(),
             }
           } else {
             schema = {
               ...schema,
-              [fieldName]: Yup.string().nullable().notRequired(),
+              [fieldName]: fieldType().nullable().notRequired(),
             }
           }
           break
+        }
+
         default:
           schema = { ...schema }
       }

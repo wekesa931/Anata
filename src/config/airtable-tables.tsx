@@ -2,7 +2,7 @@ const TABLE_ROUTES: Record<string, string> = {
   Members: 'members',
   HIF: 'hif',
   HMP: 'hmp',
-  Baseline: 'baseline',
+  'Health Check': 'baseline',
   Conditions: 'conditions',
   'VC condition diagnosis': 'conditions',
   'Conditions Data tracking': 'conditionsDataTracking',
@@ -18,6 +18,7 @@ const TABLE_ROUTES: Record<string, string> = {
   Appointments: 'appointments',
   Interactions: 'interactions',
   'HN Tasks': 'hntasks',
+  'Care Team Tasks': 'hntasks',
   'HN Meetings': 'meetings',
   'Clinical Rounds': 'clinicalrounds',
   'Nutritional Consultation': 'ncf',
@@ -47,6 +48,9 @@ const TABLE_ROUTES: Record<string, string> = {
   'Minor Health Check (6 to 17)': 'minorHealthCheckSixToSeventeen',
   'Minor Health Check (0 to 5)': 'minorHealthCheckZeroToFive',
   'Healthy triage form': 'healthTriageForm',
+  'Lab/imaging management': 'labs',
+  'Healthy Program Tracking': 'healthyTrackingProgram',
+  'Routine Labs synced from Lab base': 'routine_labs',
 }
 
 export default TABLE_ROUTES

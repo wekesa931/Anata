@@ -9,9 +9,17 @@ export function ItemTitle({ title }: { title: string }) {
   )
 }
 
-export function ItemChild({ child }: { child?: string | React.ReactNode }) {
+export function ItemChild({
+  child,
+  className,
+}: {
+  child?: string | React.ReactNode
+  className?: string
+}) {
   return (
-    <p className="text-dark-blue-100 font-rubik text-base font-normal">
+    <p
+      className={`text-dark-blue-100 font-rubik text-base font-normal ${className}`}
+    >
       {child || '-'}
     </p>
   )

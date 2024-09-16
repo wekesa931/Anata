@@ -45,26 +45,29 @@ const validationSchema = yup.object().shape({
   assignedHn: yup
     .object()
     .shape({
-      fullName: yup.string().required('Required'),
-      emailUsername: yup.string().required('Required'),
-      atRecordId: yup.string().required('Required'),
+      fullName: yup.string().notRequired(),
+      emailUsername: yup.string().notRequired(),
+      atRecordId: yup.string().notRequired(),
     })
+    .notRequired()
     .nullable(),
   assignedMe: yup
     .object()
     .shape({
-      fullName: yup.string().required('Required'),
-      emailUsername: yup.string().required('Required'),
-      atRecordId: yup.string().required('Required'),
+      fullName: yup.string().notRequired(),
+      emailUsername: yup.string().notRequired(),
+      atRecordId: yup.string().notRequired(),
     })
+    .notRequired()
     .nullable(),
   assignedNutritionist: yup
     .object()
     .shape({
-      fullName: yup.string().required('Required'),
-      emailUsername: yup.string().required('Required'),
-      atRecordId: yup.string().required('Required'),
+      fullName: yup.string().notRequired(),
+      emailUsername: yup.string().notRequired(),
+      atRecordId: yup.string().notRequired(),
     })
+    .notRequired()
     .nullable(),
   onboardStage: yup.string().nullable(),
   status: yup.string().nullable(),
@@ -195,6 +198,7 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
                     handleBlur={() => {
                       setIsEdited(true)
                     }}
+                    required={false}
                   />
 
                   <SelectField
@@ -204,7 +208,7 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
                     placeholder="-- Select --"
                     handleChange={(v) => {
                       const selectedME = antaraMEs.find((me) => me.value === v)
-                      setFieldValue('assignedMe.name', selectedME?.label)
+                      setFieldValue('assignedMe.fullName', selectedME?.label)
                       setFieldValue(
                         'assignedMe.atRecordId',
                         selectedME?.recordId
@@ -213,6 +217,7 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
                     handleBlur={() => {
                       setIsEdited(true)
                     }}
+                    required={false}
                   />
                 </FlexRow>
                 <SelectField
@@ -236,6 +241,7 @@ export function StatusForm({ member, setIsEdited, onNext }: StatusFormProps) {
                   handleBlur={() => {
                     setIsEdited(true)
                   }}
+                  required={false}
                 />
                 {userError && (
                   <ErrorComponent handleClose={() => setUserError(null)}>
