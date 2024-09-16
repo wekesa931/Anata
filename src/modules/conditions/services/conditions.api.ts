@@ -149,9 +149,11 @@ export const useConditionsApi = () => {
   }
 
   const fetchConditionsData = async (antaraId: string) => {
-    // '22V-K57Q'
     try {
-      const { data } = await fetch({ variables: { antaraId } })
+      const { data } = await fetch({
+        variables: { antaraId },
+        fetchPolicy: 'network-only',
+      })
       return transformRawConditions(data?.memberConditions || [])
     } catch (error) {
       console.error('Error fetching conditions data:', error)
