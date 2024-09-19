@@ -39,6 +39,7 @@ import { INDEXES } from 'src/modules/workflows/utils'
 import { useMember } from 'src/context/member'
 import useConditionsData from 'src/modules/conditions/hooks/conditions.data'
 import logError from 'src/utils/logging/logger'
+import airtableFetch from 'src/services/airtable/fetch'
 import styles from './styles.module.css'
 import { useForeignKeyDataHandler } from '../../hooks/foreign-key-data-handler'
 
@@ -1201,6 +1202,8 @@ function DateInputField({
   error,
 }: Form) {
   const [value, setValue] = useState<Date | null>(null)
+  const [blockedDates, setBlockedDates] = useState<string[]>([])
+
   useEffect(() => {
     if (dateValue) {
       setValue(dateValue)
@@ -1218,6 +1221,55 @@ function DateInputField({
       saveInput(field.name, dayjs(newValue).format('YYYY-MM-DD'))
     }
   }
+
+  const checkLogisticsDateLimit = async () => {
+    const currentDate = dayjs().format('YYYY-MM-DD')
+    const log_tasks = await airtableFetch(
+      `logisticsTasks/list?filterByFormula=AND(IS_AFTER({Due date}, "${currentDate}"), OR({Status}="Scheduled", {Status}="Assigned"))&fields[]=Status&fields[]=Due date`
+    )
+
+    const taskCountByDate = log_tasks.reduce((acc: any[], task: any) => {
+      const dueDate = task['Due date']
+      const existingEntry = acc.find((item) => item.date === dueDate)
+
+      if (existingEntry) {
+        existingEntry.task_count += 1
+      } else {
+        acc.push({ date: dueDate, task_count: 1 })
+      }
+
+      return acc
+    }, [])
+
+    const datesToBlock = taskCountByDate
+      .filter((item: any) => item.task_count > 20)
+      .map((item: any) => item.date)
+
+    setBlockedDates(datesToBlock)
+  }
+
+  const shouldDisableDate = (date: Date) => {
+    const today = dayjs().startOf('day')
+    const day = dayjs(date).startOf('day')
+    const formattedDate = dayjs(date).format('YYYY-MM-DD')
+
+    return day.isBefore(today) || blockedDates.includes(formattedDate)
+  }
+
+  useEffect(() => {
+    if (field) {
+      const validParentTableIds = ['tbl1swHWo6AtNfLQk', 'tblJmoQGSS2vl8u9g']
+
+      const checkLogisticsDueDate =
+        validParentTableIds.includes(field.parentTableId) &&
+        field.name.toLowerCase() === 'due date'
+
+      if (checkLogisticsDueDate) {
+        checkLogisticsDateLimit()
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [field])
 
   return (
     <Box
@@ -1248,6 +1300,7 @@ function DateInputField({
                       onChange(newValue)
                     }
                   }}
+                  shouldDisableDate={shouldDisableDate}
                 />
               ) : (
                 <MobileDatePicker
@@ -1262,6 +1315,7 @@ function DateInputField({
                     }
                   }}
                   renderInput={(params) => <TextField {...params} />}
+                  shouldDisableDate={shouldDisableDate}
                 />
               )}
               {error && (
