@@ -1225,7 +1225,7 @@ function DateInputField({
   const checkLogisticsDateLimit = async () => {
     const currentDate = dayjs().format('YYYY-MM-DD')
     const log_tasks = await airtableFetch(
-      `logisticsTasks/list?filterByFormula=AND(IS_AFTER({Due date}, "${currentDate}"), OR({Status}="Scheduled", {Status}="Assigned"))&fields[]=Status&fields[]=Due date`
+      `logisticsTasks/list?filterByFormula=AND(OR(IS_SAME({Due date}, "${currentDate}"), IS_AFTER({Due date}, "${currentDate}")), OR({Status}="Scheduled", {Status}="Assigned"))&fields[]=Status&fields[]=Due date`
     )
 
     const taskCountByDate = log_tasks.reduce((acc: any[], task: any) => {
