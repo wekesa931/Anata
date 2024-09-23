@@ -1313,7 +1313,7 @@ function DateInputField({
                       onChange(newValue)
                     }
                   }}
-                  shouldDisableDate={shouldDisableDate(field)}
+                  shouldDisableDate={shouldDisableDate}
                 />
               ) : (
                 <MobileDatePicker
