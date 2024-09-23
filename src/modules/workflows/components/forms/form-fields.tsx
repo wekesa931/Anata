@@ -1224,9 +1224,20 @@ function DateInputField({
 
   const checkLogisticsDateLimit = async () => {
     const currentDate = dayjs().format('YYYY-MM-DD')
+    const today = dayjs().startOf('day')
+    const startOfYear = dayjs().startOf('year')
+
     const log_tasks = await airtableFetch(
       `logisticsTasks/list?filterByFormula=AND(OR(IS_SAME({Due date}, "${currentDate}"), IS_AFTER({Due date}, "${currentDate}")), OR({Status}="Scheduled", {Status}="Assigned"))&fields[]=Status&fields[]=Due date`
     )
+
+    const pastDatesToBlock = []
+    let currentDateIterator = dayjs(startOfYear)
+
+    while (currentDateIterator.isBefore(today)) {
+      pastDatesToBlock.push(currentDateIterator.format('YYYY-MM-DD'))
+      currentDateIterator = currentDateIterator.add(1, 'day')
+    }
 
     const taskCountByDate = log_tasks.reduce((acc: any[], task: any) => {
       const dueDate = task['Due date']
@@ -1241,19 +1252,21 @@ function DateInputField({
       return acc
     }, [])
 
-    const datesToBlock = taskCountByDate
+    const logisticsDatesToBlock = taskCountByDate
       .filter((item: any) => item.task_count > 20)
       .map((item: any) => item.date)
+
+    const datesToBlock = [
+      ...new Set([...pastDatesToBlock, ...logisticsDatesToBlock]),
+    ]
 
     setBlockedDates(datesToBlock)
   }
 
   const shouldDisableDate = (date: Date) => {
-    const today = dayjs().startOf('day')
-    const day = dayjs(date).startOf('day')
     const formattedDate = dayjs(date).format('YYYY-MM-DD')
 
-    return day.isBefore(today) || blockedDates.includes(formattedDate)
+    return blockedDates.includes(formattedDate)
   }
 
   useEffect(() => {
@@ -1300,7 +1313,7 @@ function DateInputField({
                       onChange(newValue)
                     }
                   }}
-                  shouldDisableDate={shouldDisableDate}
+                  shouldDisableDate={shouldDisableDate(field)}
                 />
               ) : (
                 <MobileDatePicker
