@@ -14,6 +14,7 @@ const mapAssigneeTeam = (antaraStaff: any[]) => {
     'HN_TEAM_LEAD',
     'NUTRITIONIST_TEAM_LEAD',
     'HN_TEAM_LEAD',
+    'MENTAL_HEALTH_COUNSELOR',
   ]
   return antaraStaff
     .filter(({ team }: any) => {
