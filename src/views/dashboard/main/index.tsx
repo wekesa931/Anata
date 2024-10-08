@@ -4,7 +4,14 @@ import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar'
 import Header from 'src/assets/img/vector/header.svg'
 import LogoutIcon from '@mui/icons-material/ExitToApp'
 import TasksIcon from '@mui/icons-material/ViewQuilt'
-import { NavLink, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import {
+  NavLink,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom'
 import WorkflowsIcon from '@mui/icons-material/Assignment'
 import RegisterIcon from '@mui/icons-material/PersonAddAlt1'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -114,6 +121,7 @@ function MainDashboard() {
     auth.logout()
     trackUserLoggedOut()
   }
+  const navigate = useNavigate()
 
   return (
     <div className="flex h-full font-rubik flex-col w-full overflow-x-hidden relative ">
@@ -171,6 +179,7 @@ function MainDashboard() {
                   icon={<RegisterIcon />}
                   onClick={() => {
                     setIsFormOpen(true)
+                    navigate('/register-member?register=true')
                     trackUserOpenedRegistration()
                   }}
                   className={`text-grey-main mb-2 hover:bg-blue-20  ml-1.5 rounded-2xl ${
