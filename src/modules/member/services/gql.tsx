@@ -301,7 +301,9 @@ export const MEMBER_COHORT = gql`
           skuRate
           nextBilledAt
           billingFrequency
-          billingMethod
+          billingMethod {
+            name
+          }
           accreditedAntaraServices {
             name
           }

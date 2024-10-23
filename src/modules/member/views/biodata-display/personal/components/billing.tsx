@@ -73,7 +73,7 @@ function BillingSectionItem({
               <div className="flex items-center justify-between gap-1">
                 <p className="text-dark-blue-100"> Billing method </p>
                 <ItemChild
-                  child={memberCohortItem?.billingMethod}
+                  child={memberCohortItem?.billingMethod?.name}
                   className="text-dark-blue-50"
                 />
               </div>

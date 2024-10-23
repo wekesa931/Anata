@@ -44,6 +44,9 @@ export type IndividualBillableEventType = {
 export type RemarkType = {
   remark: string
 }
+export type BillingMethodType = {
+  name: string
+}
 export type MemberCohortType = {
   id?: string
   name?: string
@@ -55,7 +58,7 @@ export type MemberCohortType = {
   skuRate?: string
   nextBilledAt?: string
   billingFrequency?: string
-  billingMethod?: string
+  billingMethod?: BillingMethodType
   activatedAt?: string
   activatedBy?: string
   pausedAt?: string
@@ -233,7 +236,7 @@ export type MemberCohortQueryType = {
   skuRate?: string
   nextBilledAt?: string
   billingFrequency?: string
-  billingMethod?: string
+  billingMethod?: BillingMethodType
   activatedAt?: string
   activatedBy?: string
   pausedAt?: string
