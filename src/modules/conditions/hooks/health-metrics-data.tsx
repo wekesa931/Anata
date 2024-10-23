@@ -30,7 +30,6 @@ export const useHealthMetricsData = () => {
   const [healthMetricsOptions, setHealthMetricOptions] = useState<
     HealthMetrics[]
   >([])
-
   const { loadHealthMetrics } = useLoadMeasurements(
     healthMetricsOptions.map((h) => h.name)
   )
@@ -78,7 +77,9 @@ export const useHealthMetricsData = () => {
 
   const getOptionsFromMetrics = async () => {
     const { metrics } = await getHealthMetrics()
-    const metricsNotInPanel = metrics?.filter((m: any) => !m.isInPanel)
+    const metricsNotInPanel = metrics?.filter(
+      (m: any) => !m.isInPanel || m.name === 'BMI Percentile'
+    )
 
     return metricsNotInPanel.map((m: any) => ({
       name: m?.name,
