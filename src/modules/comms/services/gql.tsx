@@ -208,7 +208,7 @@ export const SEND_SMS = gql`
 `
 
 export const GET_CALL_LOGS = gql`
-  query conferenceSessions($antaraId: String, $last: Int, $first: Int) {
+  query conferenceSessions($antaraId: String!, $last: Int, $first: Int) {
     conferenceSessions(antaraId: $antaraId, last: $last, first: $first) {
       edges {
         node {
