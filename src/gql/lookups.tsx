@@ -6,6 +6,8 @@ export const GET_INSURANCE_COMPANIES = gql`
       edges {
         node {
           name
+          isEmployerRequiredForPolicyHolders
+          isInsuranceIdRequiredForPolicyHolders
         }
       }
     }

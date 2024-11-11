@@ -48,6 +48,7 @@ export const parseMemberCohort = (
     remarks: c?.remarks,
     billingEvents: c?.billingEvents,
     revenueModelName: c?.revenueModelName,
+    billingPackage: c?.billingPackage,
   }))
 }
 

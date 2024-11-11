@@ -323,8 +323,60 @@ export const MEMBER_COHORT = gql`
             createdAt
           }
           revenueModelName
+          billingPackage {
+            name
+            billingPackageId
+            isFfs
+            isOneDayHealthCamp
+            isUnlimitedMembership
+          }
         }
       }
+    }
+  }
+`
+export const PROSPECTIVE_MEMBER_COHORT = gql`
+  query prospectiveCohortsForMember($antaraId: String!) {
+    prospectiveCohortsForMember(antaraId: $antaraId) {
+      edges {
+        node {
+          id
+          name
+          cohortId
+          billingPackage {
+            name
+            billingPackageId
+            isFfs
+            isOneDayHealthCamp
+            isUnlimitedMembership
+          }
+          servicePricing {
+            price
+            service {
+              name
+            }
+          }
+          billingMethod {
+            name
+          }
+        }
+      }
+    }
+  }
+`
+export const ADD_MEMBER_COHORT = gql`
+  mutation addMemberCohortAssignment($input: MemberCohortAssignmentInput) {
+    addMemberCohortAssignment(input: $input) {
+      memberCohort {
+        id
+        name
+        memberAntaraId
+        subscriptionStatus
+        cohortId
+      }
+      errors
+      status
+      message
     }
   }
 `

@@ -19,6 +19,7 @@ type SelectFieldProps = {
   multiple?: boolean
   placeholder?: string
   group?: boolean
+  groupByField?: 'label' | 'value'
 }
 
 const StyledAutocompletePopper = styled('div')(({ theme }) => ({
@@ -104,9 +105,18 @@ function GroupedSearchField(props: OutlinedFieldProps & SelectFieldProps) {
 
   const [open, setOpen] = React.useState(false)
 
+  const groupByField = props.groupByField || 'value'
+
   return (
     <OutlinedField {...props}>
       {(fieldProps: FieldProps) => {
+        const selectedOption = props.options.find(
+          (option) => option.value === fieldProps.field.value
+        )
+        const inputValue =
+          props.groupByField === 'label'
+            ? selectedOption?.label
+            : fieldProps?.field?.value
         return (
           <>
             <Autocomplete
@@ -116,7 +126,7 @@ function GroupedSearchField(props: OutlinedFieldProps & SelectFieldProps) {
               onOpen={() => setOpen(false)}
               onClose={() => setOpen(false)}
               groupBy={(option) =>
-                option.value && option.value[0]?.toUpperCase()
+                option[groupByField] && option[groupByField][0]?.toUpperCase()
               }
               renderGroup={(params) => (
                 <li key={params.key}>
@@ -126,8 +136,7 @@ function GroupedSearchField(props: OutlinedFieldProps & SelectFieldProps) {
                   </GroupItems>
                 </li>
               )}
-              inputValue={props.multiple ? undefined : fieldProps?.field?.value}
-              // eslint-disable-next-line
+              inputValue={props.multiple ? undefined : inputValue} // eslint-disable-next-line
               onChange={(event, newValue) => {
                 if (newValue === null) {
                   handleClear(fieldProps)

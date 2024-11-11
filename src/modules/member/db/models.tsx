@@ -350,6 +350,32 @@ export class Member extends Model {
     }`
   }
 
+  get isFfsEligible() {
+    return (
+      !this.membercohortSet ||
+      this.membercohortSet.length === 0 ||
+      this.membercohortSet.every(
+        (item) => item.subscriptionStatus === 'CANCELLED'
+      ) ||
+      this.membercohortSet.some(
+        (cohort) =>
+          cohort.subscriptionStatus === 'ACTIVE' && cohort.billingPackage?.isFfs
+      )
+    )
+  }
+
+  get activeFFSCohort() {
+    if (!this.isFfsEligible || !this.membercohortSet) {
+      return []
+    }
+    const activeFfsCohorts = this.membercohortSet.filter(
+      (item) =>
+        item.subscriptionStatus === 'ACTIVE' &&
+        item.billingPackage?.isFfs === true
+    )
+    return activeFfsCohorts
+  }
+
   @writer async reset() {
     // reset all the properties to their default values
     await this.update((member) => {

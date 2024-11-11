@@ -6,6 +6,7 @@ import {
   ContactsSection,
   AddressSection,
   InsuranceSection,
+  BillingSection,
 } from 'src/modules/member/views/member-registration/components/wizard-layout'
 import { useRegistrationData } from 'src/modules/member/hooks/registration'
 import { logError } from 'src/utils/logging/logger'
@@ -14,6 +15,7 @@ import BioDataForm from 'src/modules/member/components/forms/biodata-form'
 import ContactsForm from 'src/modules/member/components/forms/contacts-form'
 import AddressesForm from 'src/modules/member/components/forms/addresses-form'
 import InsuranceForm from 'src/modules/member/components/forms/insurance-form'
+import BillingFormComponent from 'src/modules/member/components/forms/billing/components/billing-method-form'
 import PrimaryMemberSearch from 'src/modules/member/components/primary-member-search'
 import { RegistrationFormsNames } from 'src/modules/member/types'
 import { useRegistrationForm } from 'src/context/member-registration'
@@ -52,7 +54,7 @@ function RegistrationForm({
       })
       .catch((error) => {
         logError(error)
-        notify('Failed to create member instance', 1000)
+        notify('Failed to create member instance', 'error')
       })
 
     return () => {
@@ -66,6 +68,11 @@ function RegistrationForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const getInsuranceDetails = (): any[] => {
+    const data = localStorage.getItem('registration_insurance')
+    return data ? JSON.parse(data) : []
+  }
+
   const handleCloseForm = async () => {
     await Promise.all([
       member?.destroy(),
@@ -76,6 +83,8 @@ function RegistrationForm({
       closeForm()
     })
   }
+
+  const insuranceData = getInsuranceDetails()
 
   return (
     <MemberRegistrationWizardLayout
@@ -120,12 +129,18 @@ function RegistrationForm({
         <AddressesForm member={member} />
       </AddressSection>
       <InsuranceSection>
-        <InsuranceForm
+        <InsuranceForm member={member} primaryMember={selectedPrimaryMember} />
+      </InsuranceSection>
+      <BillingSection>
+        <BillingFormComponent
+          insuranceData={insuranceData}
+          setBillingEditMode={setIsEdited}
           member={member}
-          setCompleted={setCompleted}
+          handleFormCompletion={setCompleted}
+          type="billing-method"
           primaryMember={selectedPrimaryMember}
         />
-      </InsuranceSection>
+      </BillingSection>
     </MemberRegistrationWizardLayout>
   )
 }

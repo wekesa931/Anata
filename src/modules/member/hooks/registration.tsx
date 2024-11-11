@@ -9,6 +9,7 @@ import {
   useUpdatePhones,
   useUpdateBirthdate,
   useUpdateStatus,
+  useAddMemberCohort,
 } from 'src/modules/member/services/member.api'
 import { logError } from 'src/utils/logging/logger'
 import dayjs from 'dayjs'
@@ -41,6 +42,7 @@ export const useRegistrationData = () => {
   const { updatePhones, loading: updatingPhones } = useUpdatePhones()
   const { updateBirthdate, loading: updatingBirthdate } = useUpdateBirthdate()
   const { updateStatus, loading: updatingStatus } = useUpdateStatus()
+  const { addMemberCohort, loading: linkingCohort } = useAddMemberCohort()
 
   const transformPhones = (data: any) => {
     if (data) {
@@ -284,6 +286,20 @@ export const useRegistrationData = () => {
     }
   }
 
+  const handleMemberCohortAddition = async (member: Member, values: any) => {
+    if (member?.antaraId) {
+      const payload = {
+        antaraId: member?.antaraId,
+        cohortId: values?.cohortId,
+        insuranceId: values?.insuranceId,
+        lastBilledAt: null,
+      }
+      const response = await addMemberCohort(payload)
+      return response
+    }
+    return member
+  }
+
   return {
     createMemberInstance,
     handleUpdateBioData,
@@ -299,10 +315,12 @@ export const useRegistrationData = () => {
       updatingInsuranceDetails ||
       updatingPhones ||
       updatingBirthdate ||
-      updatingStatus,
+      updatingStatus ||
+      linkingCohort,
     handleUpdatePhones,
     isUpdatingPhones: updatingPhones,
     handleUpdateBirthdate,
     handleUpdateStatus,
+    handleMemberCohortAddition,
   }
 }

@@ -22,7 +22,11 @@ export const useMembersData = () => {
   )
   const { getData, loading } = useGetMemberByAntaraId()
 
-  const { fetchMemberCohorts, loading: loadingCohorts } = useMemberCohorts()
+  const {
+    fetchMemberCohorts,
+    fetchProspectiveMemberCohorts,
+    loading: loadingCohorts,
+  } = useMemberCohorts()
 
   const createDefaultMemberInstance = async (
     rosterMember?: RosterMemberType,
@@ -110,6 +114,15 @@ export const useMembersData = () => {
     }
     return null
   }
+  const prospectiveMemberCohorts = async (antaraId: string) => {
+    const { data } = await fetchProspectiveMemberCohorts(antaraId)
+
+    const prospectiveCohorts =
+      data?.prospectiveCohortsForMember?.edges.map((edge: any) => edge.node) ||
+      []
+
+    return prospectiveCohorts || []
+  }
 
   return {
     createMemberInstance,
@@ -118,5 +131,6 @@ export const useMembersData = () => {
     hydrateMember,
     loading: loading || loadingCohorts,
     membersCollection,
+    prospectiveMemberCohorts,
   }
 }

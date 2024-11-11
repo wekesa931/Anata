@@ -69,7 +69,7 @@ export function MemberRegistrationWizardLayout({
       } else if (child.type === InsuranceSection) {
         acc.insurance = child.props.children
       } else if (child.type === BillingSection) {
-        acc.insurance = child.props.children
+        acc.billing = child.props.children
       }
       return acc
     },
@@ -92,7 +92,7 @@ export function MemberRegistrationWizardLayout({
           <InsuranceSection>{sections.insurance}</InsuranceSection>
         </WizardStep>
         <WizardStep label="Billing and Service">
-          <InsuranceSection>{sections.insurance}</InsuranceSection>
+          <BillingSection>{sections.insurance}</BillingSection>
         </WizardStep>
       </Wizard>
     </LayoutContext.Provider>

@@ -14,12 +14,15 @@ import RadioField from 'src/components/forms/fields/radio-field'
 import * as yup from 'yup'
 import DeleteFormEntry from 'src/modules/member/components/delete-form-entry'
 import { useRegistrationData } from 'src/modules/member/hooks/registration'
-import type { DbValueTypes, LookupOption } from 'src/modules/member/types'
+import type {
+  DbValueTypes,
+  LookupOption,
+  SelectedInsurance,
+} from 'src/modules/member/types'
 import { logError } from 'src/utils/logging/logger'
 import { useNotifications } from 'src/context/notifications'
 import { useRegistrationForm } from 'src/context/member-registration'
 import { relationshipOptions } from 'src/config/constants'
-import { useNavigate } from 'react-router-dom'
 import { getChanges, isDirty } from 'src/utils/form-validation-methods'
 import { sortAlphabetically } from 'src/utils/sort'
 import ErrorComponent from 'src/components/feedbacks/error-component'
@@ -28,12 +31,23 @@ import CreateMissingCompany from 'src/modules/member/components/forms/company-cr
 
 type InsuranceDetailsValues = DbValueTypes.InsuranceDetailsValues
 
-const validationSchema = (isDependent = false) =>
-  yup.object().shape({
+const validationSchema = (
+  isDependent = false,
+  selectedInsurances: Record<string, SelectedInsurance> = {}
+) => {
+  return yup.object().shape({
     employer: yup.object().shape({
       name: isDependent
         ? yup.string()
-        : yup.string().required('Employer is required'),
+        : yup.string().when([], {
+            is: () => {
+              return Object.values(selectedInsurances).some(
+                (insurance) => insurance.isEmployerRequiredForPolicyHolders
+              )
+            },
+            then: yup.string().required('Employer is required'),
+            otherwise: yup.string(),
+          }),
       department: yup
         .object()
         .shape({
@@ -58,7 +72,13 @@ const validationSchema = (isDependent = false) =>
             otherwise: yup.string(),
           }),
           insuranceId: yup.string().when('insuranceCompany', {
-            is: (insuranceCompany: string) => !!insuranceCompany,
+            is(insuranceCompany: string) {
+              if (!insuranceCompany) return false
+              const selectedInsurance = Object.values(selectedInsurances).find(
+                (insurance) => insurance.name === insuranceCompany
+              )
+              return selectedInsurance?.isInsuranceIdRequiredForPolicyHolders
+            },
             then: yup.string().required('Insurance ID is required'),
             otherwise: yup.string(),
           }),
@@ -82,9 +102,9 @@ const validationSchema = (isDependent = false) =>
       )
     ),
   })
+}
 
 type InsuranceSectionProps = {
-  setCompleted: (completed: any, primaryMember?: any) => void
   member: Member | null
   primaryMember: Member | undefined
 }
@@ -118,33 +138,41 @@ const defaultInsurance = (primaryMember: Member | undefined) => ({
 })
 
 export default function InsuranceSectionForm(props: InsuranceSectionProps) {
-  const { onPrev } = useWizardContext()
+  const { onPrev, onNext } = useWizardContext()
 
-  return <InsuranceForm {...props} onPrev={onPrev} showWizardContols />
+  return (
+    <InsuranceForm
+      {...props}
+      onPrev={onPrev}
+      onNext={onNext}
+      showWizardContols
+    />
+  )
 }
 
 type InsuranceFormProps = InsuranceSectionProps & {
   onPrev?: () => void
+  onNext: () => void
   showWizardContols?: boolean
 }
 
 export function InsuranceForm({
-  setCompleted,
   member,
   primaryMember,
   onPrev,
+  onNext,
   showWizardContols = true,
 }: InsuranceFormProps) {
   const { handleUpdateInsuranceDetails, loading } = useRegistrationData()
   const { notify } = useNotifications()
   const { lookupOptions, insuranceCompanies } = useRegistrationForm()
+  const [selectedInsurance, setSelectedInsurances] = useState({})
   const [initialValues, setInitialValues] = useState<InsuranceDetailsValues>(
     {} as InsuranceDetailsValues
   )
   const [employers, setEmployers] = useState<LookupOption[]>(
     lookupOptions?.employers
   )
-  const navigate = useNavigate()
   const [businessLocations, setBusinessLocations] = useState<LookupOption[]>([])
   const [departments, setDepartments] = useState<LookupOption[]>([])
   const [userError, setUserError] = useState<string | null>(null)
@@ -163,11 +191,6 @@ export function InsuranceForm({
   }, [member, primaryMember])
 
   const handleSubmit = (values: any, formikBag: any) => {
-    const completeSubmission = () => {
-      setCompleted(member, primaryMember)
-      if (member?.antaraId) navigate(`/member/${member.antaraId}`)
-    }
-
     const parseInsuranceData = (insurances: any[]) => {
       // remove empty insurances or insurances whose insuranceCompany and insuranceId fields are empty
       const filteredInsurances = insurances.filter((insurance: any) => {
@@ -189,19 +212,29 @@ export function InsuranceForm({
               'Insurance and employer details updated',
               getChanges(initialValues, values)
             )
-            completeSubmission()
+
+            if (showWizardContols) {
+              localStorage.setItem(
+                'registration_insurance',
+                JSON.stringify(values.insurances)
+              )
+            }
+            onNext()
           })
           .catch((e) => {
             logError(e)
             setUserError(e?.message)
-            notify('An error occurred while updating insurance details', 2000)
+            notify(
+              'An error occurred while updating insurance details',
+              'error'
+            )
           })
           .finally(() => {
             formikBag.setSubmitting(false)
           })
       }
     } else {
-      completeSubmission()
+      onNext()
     }
   }
 
@@ -236,13 +269,27 @@ export function InsuranceForm({
     setDepartments(d)
   }
 
+  const handleInsuranceChange = (insuranceCompany: any, index: any) => {
+    const selected = insuranceCompanies.find(
+      (insurance) => insurance.name === insuranceCompany
+    )
+
+    setSelectedInsurances((prev) => ({
+      ...prev,
+      [index]: selected || {},
+    }))
+  }
+
   return (
     <div className="overflow-scroll">
       {Object.keys(initialValues).length > 0 && (
         <PrimaryForm
           initialValues={initialValues}
           handleSubmit={handleSubmit}
-          validationSchema={validationSchema(!!primaryMember)}
+          validationSchema={validationSchema(
+            !!primaryMember,
+            selectedInsurance
+          )}
         >
           {({
             values,
@@ -252,71 +299,6 @@ export function InsuranceForm({
           }: FormikProps<InsuranceDetailsValues>) => {
             return (
               <Form>
-                <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
-                  {' '}
-                  Employer details{' '}
-                </h3>
-
-                <GroupedSearchField
-                  label="Employer"
-                  name="employer.name"
-                  placeholder="--Select--"
-                  group
-                  options={sortAlphabetically(employers || [], 'label')}
-                  handleChange={(v) => {
-                    setBusinessLookups(v)
-                    setFieldValue('employer.businessLocation', {})
-                    setFieldValue('employer.department', {})
-                  }}
-                  handleInputChange={(v) => {
-                    setEmployer(v)
-                  }}
-                  required={!primaryMember}
-                  EmptyOptionBtn={
-                    <CreateMissingCompany
-                      missingEmployer={employer}
-                      onMissingCompanySaved={(companyName: string) => {
-                        setFieldValue('employer.name', companyName)
-                        setEmployers((prev) => [
-                          ...prev,
-                          { label: companyName, value: companyName },
-                        ])
-                      }}
-                    />
-                  }
-                />
-                {!!businessLocations.length && (
-                  <SelectField
-                    label="Business Unit/Branch/Wing"
-                    name="employer.businessLocation.businessLocationId"
-                    placeholder="--Select--"
-                    options={businessLocations}
-                    handleChange={(v) => {
-                      const businessLocation =
-                        businessLocations?.find((d) => d.value === v)?.label ||
-                        ''
-                      setFieldValue(
-                        'employer.businessLocation.name',
-                        businessLocation
-                      )
-                    }}
-                    required={false}
-                  />
-                )}
-                {!!departments.length && (
-                  <SelectField
-                    label="Department"
-                    name="employer.department.departmentId"
-                    placeholder="--Select--"
-                    options={departments}
-                    handleChange={(v: any) => {
-                      const department =
-                        departments?.find((d) => d.value === v)?.label || ''
-                      setFieldValue('employer.department.name', department)
-                    }}
-                    required={false}
-                  />
-                )}
                 <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
                   {' '}
                   Insurance details{' '}
@@ -338,8 +320,11 @@ export function InsuranceForm({
                               placeholder="--Select--"
                               options={insuranceCompanies || []}
                               name={`insurances.${index}.insuranceCompany`}
-                              required={false}
+                              required
                               autoFocus={index === 0}
+                              handleChange={(e) => {
+                                handleInsuranceChange(e, index)
+                              }}
                             />
                             <TextField
                               label="Insurance ID"
@@ -418,6 +403,71 @@ export function InsuranceForm({
                     </>
                   )}
                 </FieldArray>
+
+                <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
+                  Employer details
+                </h3>
+
+                <GroupedSearchField
+                  label="Employer"
+                  name="employer.name"
+                  placeholder="--Select--"
+                  group
+                  options={sortAlphabetically(employers || [], 'label')}
+                  handleChange={(v) => {
+                    setBusinessLookups(v)
+                    setFieldValue('employer.businessLocation', {})
+                    setFieldValue('employer.department', {})
+                  }}
+                  handleInputChange={(v) => {
+                    setEmployer(v)
+                  }}
+                  required={!primaryMember}
+                  EmptyOptionBtn={
+                    <CreateMissingCompany
+                      missingEmployer={employer}
+                      onMissingCompanySaved={(companyName: string) => {
+                        setFieldValue('employer.name', companyName)
+                        setEmployers((prev) => [
+                          ...prev,
+                          { label: companyName, value: companyName },
+                        ])
+                      }}
+                    />
+                  }
+                />
+                {!!businessLocations.length && (
+                  <SelectField
+                    label="Business Unit/Branch/Wing"
+                    name="employer.businessLocation.businessLocationId"
+                    placeholder="--Select--"
+                    options={businessLocations}
+                    handleChange={(v) => {
+                      const businessLocation =
+                        businessLocations?.find((d) => d.value === v)?.label ||
+                        ''
+                      setFieldValue(
+                        'employer.businessLocation.name',
+                        businessLocation
+                      )
+                    }}
+                    required={false}
+                  />
+                )}
+                {!!departments.length && (
+                  <SelectField
+                    label="Department"
+                    name="employer.department.departmentId"
+                    placeholder="--Select--"
+                    options={departments}
+                    handleChange={(v: any) => {
+                      const department =
+                        departments?.find((d) => d.value === v)?.label || ''
+                      setFieldValue('employer.department.name', department)
+                    }}
+                    required={false}
+                  />
+                )}
                 {userError && (
                   <ErrorComponent handleClose={() => setUserError(null)}>
                     {userError}
@@ -435,7 +485,7 @@ export function InsuranceForm({
                       loading={loading}
                       disabled={loading || !isValid}
                     >
-                      Submit
+                      Next
                     </NextButton>
                   </div>
                 ) : (

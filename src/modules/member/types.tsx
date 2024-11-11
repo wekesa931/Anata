@@ -225,6 +225,14 @@ export type PayorQueryType = {
   }
 }
 
+export type BillingPackageType = {
+  name: string
+  billingPackageId: number
+  isFfs: boolean
+  isOneDayHealthCamp: boolean
+  isUnlimitedMembership: boolean
+}
+
 export type MemberCohortQueryType = {
   id?: string
   billingStartedAt?: string
@@ -246,6 +254,7 @@ export type MemberCohortQueryType = {
   remarks?: RemarkType[]
   billingEvents?: IndividualBillableEventType[]
   revenueModelName?: string
+  billingPackage?: BillingPackageType[]
 }
 
 export type V2MemberQueryType = {
@@ -527,4 +536,12 @@ export enum InsuranceVerificationStatus {
 
 export type BooleanStatus = {
   [key: number]: boolean
+}
+
+export type SelectedInsurance = {
+  label: string
+  value: string
+  name: string
+  isEmployerRequiredForPolicyHolders: boolean
+  isInsuranceIdRequiredForPolicyHolders: boolean
 }

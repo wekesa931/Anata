@@ -12,6 +12,8 @@ import {
   UPDATE_MEMBER_STAFF,
   CREATE_COMPANY,
   MEMBER_COHORT,
+  PROSPECTIVE_MEMBER_COHORT,
+  ADD_MEMBER_COHORT,
 } from 'src/modules/member/services/gql'
 import type {
   BiodataValues,
@@ -28,6 +30,7 @@ import {
   V2MemberType,
   MemberDetailsQueryVariables,
 } from 'src/modules/member/types'
+import { throwGraphErrors } from 'src/utils/error-handling'
 
 export const normalizeMemberDetails: NormalizeDataFn<any> = (data: any) => {
   if (data?.members?.edges?.length > 0) {
@@ -382,8 +385,14 @@ export const useUpdateStatus = () => {
 }
 
 export const useMemberCohorts = () => {
-  const [getData, { loading, error }] = useLazyQuery(MEMBER_COHORT)
-
+  const [getData, { loading: loadingData, error: errorData }] =
+    useLazyQuery(MEMBER_COHORT)
+  const [
+    getProspectiveMemberCohorts,
+    { loading: loadingProspective, error: errorProspective },
+  ] = useLazyQuery(PROSPECTIVE_MEMBER_COHORT, {
+    fetchPolicy: 'network-only',
+  })
   const fetchMemberCohorts = async (antaraId: string) => {
     const response = await getData({
       variables: { antaraId },
@@ -394,9 +403,53 @@ export const useMemberCohorts = () => {
     return response
   }
 
+  const fetchProspectiveMemberCohorts = async (antaraId: string) => {
+    const response = await getProspectiveMemberCohorts({
+      variables: { antaraId },
+      context: {
+        clientName: 'v2',
+      },
+    })
+    return response
+  }
+
   return {
     fetchMemberCohorts,
+    fetchProspectiveMemberCohorts,
+    loading: loadingData || loadingProspective,
+    error: errorData || errorProspective,
+  }
+}
+export const useAddMemberCohort = () => {
+  const [mutate, { loading, error }] = useMutation(ADD_MEMBER_COHORT, {
+    context: {
+      clientName: 'v2',
+    },
+  })
+
+  const addMemberCohort = async (values: any) => {
+    const { antaraId, cohortId, insuranceId, lastBilledAt } = values
+
+    try {
+      const result = await mutate({
+        variables: {
+          input: {
+            antaraId,
+            cohortId,
+            insuranceId,
+            lastBilledAt,
+          },
+        },
+      })
+      return result
+    } catch (err) {
+      return throwGraphErrors(err)
+    }
+  }
+
+  return {
     loading,
     error,
+    addMemberCohort,
   }
 }
