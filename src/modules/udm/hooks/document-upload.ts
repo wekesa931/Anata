@@ -164,7 +164,8 @@ export const useDocumentUpload = ({
     return createTaskFromTemplate(
       linkedLabRequests.length
         ? TaskDefinitionTypes.LabManagement
-        : TaskDefinitionTypes.NewDocument
+        : TaskDefinitionTypes.NewDocument,
+      values.docType
     )
   }
 

@@ -1,7 +1,7 @@
 import { useTasksAPI } from 'src/modules/tasks/services/tasks.service'
 import {
   transformRawTaskDefinitionsToTaskDefinitions,
-  mapTaskDefinitionToNewask,
+  mapTaskDefinitionToNewTask,
 } from 'src/modules/tasks/utils/transform'
 import { useMember } from 'src/context/member'
 import { logError } from 'src/utils/logging/logger'
@@ -21,7 +21,10 @@ export const useTasksData = () => {
     return definitions
   }
 
-  const createTaskFromTemplate = async (type: TaskDefinitionTypes) => {
+  const createTaskFromTemplate = async (
+    type: TaskDefinitionTypes,
+    documentType: string
+  ) => {
     try {
       const templates = await loadTaskTemplates()
       const templateId =
@@ -35,7 +38,11 @@ export const useTasksData = () => {
       }
 
       if (member && member?.airtableRecordId) {
-        const newTask = mapTaskDefinitionToNewask(taskDefinition, member)
+        const newTask = mapTaskDefinitionToNewTask(
+          taskDefinition,
+          member,
+          documentType
+        )
 
         return createTask(newTask)
       }

@@ -92,7 +92,8 @@ function PdfPreview({
   }
 
   const createDocumentReviewTask = () =>
-    createReviewTask && createTaskFromTemplate(TaskDefinitionTypes.NewDocument)
+    createReviewTask &&
+    createTaskFromTemplate(TaskDefinitionTypes.NewDocument, docMeta.docType)
 
   const handleSaveReport = () => {
     setLoading(true)

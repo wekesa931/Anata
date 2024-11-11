@@ -75,9 +75,10 @@ export const transformRawTaskDefinitionsToTaskDefinitions = (
   ) as TaskDefinition[]
 }
 
-export const mapTaskDefinitionToNewask = (
+export const mapTaskDefinitionToNewTask = (
   taskDefinition: TaskDefinition,
-  member: Member
+  member: Member,
+  documentType: string
 ): NewTask => {
   const getAssignee = () => {
     switch (taskDefinition.defaultTeam) {
@@ -99,6 +100,11 @@ export const mapTaskDefinitionToNewask = (
       .format('YYYY-MM-DD')
   }
 
+  const taskNotes = taskDefinition.notes.replace(
+    '[specify document type]',
+    documentType
+  )
+
   return {
     Member: member?.airtableRecordId ? [member?.airtableRecordId] : [],
     Assignee: assignee ? [assignee] : [],
@@ -106,7 +112,7 @@ export const mapTaskDefinitionToNewask = (
     'Due Date': getDueDate(),
     'Task Priority': taskDefinition.defaultPriority,
     Status: 'Not Started',
-    'Task Notes': taskDefinition.notes,
+    'Task Notes': taskNotes,
     Source: 'UDM',
     'Data Source': 'UDM',
   }
