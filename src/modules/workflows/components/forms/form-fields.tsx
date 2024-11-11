@@ -1253,7 +1253,16 @@ function DateInputField({
     }, [])
 
     const logisticsDatesToBlock = taskCountByDate
-      .filter((item: any) => item.task_count > 20)
+      .filter((item: any) => {
+        const date = dayjs(item.date)
+        const isSaturday = date.day() === 6
+        const is1stOr3rdSaturday = [1, 3].includes(Math.ceil(date.date() / 7))
+
+        if (isSaturday && is1stOr3rdSaturday) {
+          return item.task_count > 15
+        }
+        return item.task_count > 35
+      })
       .map((item: any) => item.date)
 
     const datesToBlock = [
