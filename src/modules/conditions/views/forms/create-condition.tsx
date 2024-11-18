@@ -176,6 +176,29 @@ export function CreateCondition({
     icd11Code: false,
   })
 
+  const handleStagePrefill = (
+    condition: ConditionDefinition,
+    selectedStageId: any
+  ) => {
+    const conditionIcd11Code = condition?.icd11Code || ''
+    const selectedStage = condition?.possibleStages?.find(
+      (stage) => stage.value === selectedStageId
+    )
+
+    const newIcd11Code = selectedStage?.icd11Code || conditionIcd11Code
+
+    setInitialValues((prevValues: any) => ({
+      ...prevValues,
+      startingStageId: selectedStageId,
+      icd11Code: newIcd11Code,
+    }))
+
+    setPrefilled((prev) => ({
+      ...prev,
+      icd11Code: !!newIcd11Code,
+    }))
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleConditionPrefills = (
     n: string,
@@ -284,7 +307,10 @@ export function CreateCondition({
                   values?.verificationStatus
                 )}
                 placeholder="-- Select --"
-                saveInput={saveInput}
+                saveInput={(name, value) => {
+                  handleStagePrefill(values.condition, value)
+                  saveInput(name, value)
+                }}
                 disabled={disabled}
               />
 

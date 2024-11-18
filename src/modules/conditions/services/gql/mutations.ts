@@ -15,6 +15,7 @@ export const CREATE_NEW_CONDITION = gql`
           possibleStages {
             name
             id
+            icd11Code
           }
           conditionDefinitionId
         }

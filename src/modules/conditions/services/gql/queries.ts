@@ -15,6 +15,7 @@ export const CONDITIONSV2_QUERY = gql`
         possibleStages {
           name: technicalName
           id: conditionStageId
+          icd11Code
         }
         conditionDefinitionId
       }
@@ -134,6 +135,7 @@ export const CONDITIONS_DEFINITION_QUERY = gql`
           possibleStages {
             name: technicalName
             id: conditionStageId
+            icd11Code
           }
           possibleTargets {
             name

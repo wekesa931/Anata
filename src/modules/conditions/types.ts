@@ -29,6 +29,7 @@ export type Stage = {
 export type Status = {
   label: string
   value: string
+  icd11Code?: string
 }
 
 export type ConditionDefinition = {
@@ -73,7 +74,7 @@ export type RawConditionDefinition = {
   name: string
   conditionDefinitionId: number
   possibleTargets: { id: string; name: string }[]
-  possibleStages: { id: string; name: string }[]
+  possibleStages: { id: string; name: string; icd11Code?: string }[]
   icd11Code: string | null
   createdAt: string
   createdBy: string
@@ -88,7 +89,7 @@ export type RawCondition = {
     name: string
     conditionDefinitionId: number
     possibleTargets: { id: string; name: string }[]
-    possibleStages: { id: string; name: string }[]
+    possibleStages: { id: string; name: string; icd11Code?: string }[]
   }
   createdAt: string
   createdBy: string

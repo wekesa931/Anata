@@ -125,6 +125,7 @@ export const useConditionsApi = () => {
       acc[key] = data[key]?.map((item: any) => ({
         label: item.name,
         value: item.id,
+        icd11Code: item.icd11Code,
       }))
       return acc
     }, {})

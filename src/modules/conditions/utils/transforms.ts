@@ -13,6 +13,7 @@ const transformStatus = (status: any, idFieldName: string = 'id'): Status => {
   return {
     value: status?.[idFieldName] || 'Unknown',
     label: status?.name || 'Pending',
+    icd11Code: status?.icd11Code || '',
   }
 }
 
