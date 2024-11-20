@@ -24,6 +24,7 @@ export type Stage = {
   achievement: Status
   observations: string[]
   conditionStageId: number
+  icd11Code?: string
 }
 
 export type Status = {
@@ -107,12 +108,14 @@ export type RawCondition = {
     name: string
     target: { targetId: number; name: string }
     createdAt: string
+    icd11Code?: string
   }
   startingObservation: { displayItems: string[] }
   startingStage: {
     name: string
     target: { targetId: number; name: string }
     createdAt: string
+    icd11Code?: string
   }
   targetAchievementStatus: { name: string; targetAchievementStatusId: number }
   verificationStatus: { name: string; conditionVerificationStatusId: number }

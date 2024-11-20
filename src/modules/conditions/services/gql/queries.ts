@@ -39,6 +39,7 @@ export const CONDITIONSV2_QUERY = gql`
           name
         }
         createdAt
+        icd11Code
       }
 
       target {

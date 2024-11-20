@@ -28,7 +28,8 @@ const transformStage = (
   stage: any,
   rawAchievement: any,
   rawObservations: any,
-  rawTarget: any
+  rawTarget: any,
+  icd11Code?: string
 ): Stage => {
   return {
     id: stage?.id || null,
@@ -38,6 +39,7 @@ const transformStage = (
     observations: rawObservations?.displayItems || [],
     date: stage?.createdAt,
     conditionStageId: stage?.conditionStageId || null,
+    icd11Code: icd11Code || '',
   }
 }
 
@@ -83,7 +85,8 @@ export const transformRawCondition = (
       rawCondition.startingStage,
       rawCondition.targetAchievementStatus,
       rawCondition.startingObservation,
-      rawCondition.target
+      rawCondition.target,
+      rawCondition?.startingStage?.icd11Code ?? rawCondition?.icd11Code ?? ''
     ),
     isChronic: rawCondition.isChronic,
     shouldSystemAutoUpdate: !!rawCondition.shouldSystemAutoUpdate,
@@ -141,7 +144,7 @@ export const getInitialValues = (condition: Condition) => {
       ? formatDate(condition.diagnosisDate)
       : null,
     isNewlyDiagnosed: condition.isNewlyDiagnosed ? 'yes' : 'no',
-    icd11Code: condition.icd11Code,
+    icd11Code: condition.initialStage.icd11Code || condition.icd11Code,
     onsetDate: condition.onsetDate,
     notes: condition.notes,
     initialStageName: condition.initialStage.name,
