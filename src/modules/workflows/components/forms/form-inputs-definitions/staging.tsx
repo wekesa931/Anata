@@ -20332,7 +20332,7 @@ export default [
         options: [],
         symmetricColumnId: 'fldVxEnaxNA305O1B',
         unreversed: true,
-        relationship: 'one',
+        relationship: 'many',
         foreignTableId: 'tblYSNrfZJnzdSwmx',
         required: false,
         helper: '',
