@@ -258,3 +258,11 @@ export const GET_MEMBER_CHATS = gql`
     }
   }
 `
+
+export const SEND_WHATSAPP_MESSAGE = gql`
+  mutation sendWhatsAppMessageMutation($input: SendWhatsappMessageInput!) {
+    sendWhatsappMessage(input: $input) {
+      message
+    }
+  }
+`

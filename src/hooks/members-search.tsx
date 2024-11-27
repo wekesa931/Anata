@@ -43,7 +43,6 @@ export const useMemberSearch = () => {
   useEffect(() => {
     if (memberData) {
       const details = memberData?.members.edges[0]?.node
-
       if (details) {
         setMemberDetails(parseV2MemberData(details))
       }

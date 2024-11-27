@@ -18,7 +18,7 @@ import {
 } from '@mui/material'
 import { formatCurreny } from 'src/modules/member/utils'
 import { PortalForm } from 'src/modules/member/components/update-forms'
-import { InsuranceForm } from 'src/modules/member/components/forms/insurance-form'
+import InsuranceForm from 'src/modules/member/components/forms/billing/index'
 import { useNotifications } from 'src/context/notifications'
 import type { Member } from 'src/modules/member/db/models'
 import { ExpandMoreOutlined } from '@mui/icons-material'
@@ -180,7 +180,6 @@ function InsuranceSection({ member }: InsuranceSectionProps) {
                 handleClose()
               }}
               primaryMember={undefined}
-              showWizardContols={false}
             />
           )}
         </PortalForm>

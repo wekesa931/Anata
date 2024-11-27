@@ -91,8 +91,8 @@ export function MemberRegistrationWizardLayout({
         <WizardStep label="Insurance & Employer">
           <InsuranceSection>{sections.insurance}</InsuranceSection>
         </WizardStep>
-        <WizardStep label="Billing and Service">
-          <BillingSection>{sections.insurance}</BillingSection>
+        <WizardStep label="Billing & Service">
+          <BillingSection>{sections.billing}</BillingSection>
         </WizardStep>
       </Wizard>
     </LayoutContext.Provider>

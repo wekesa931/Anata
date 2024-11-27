@@ -30,6 +30,7 @@ export const parseMemberCohort = (
 ): MemberCohortType[] => {
   return cohort?.map((c) => ({
     name: c?.name,
+    cohortId: c?.cohortId?.toString(),
     billingStartedAt: c?.billingStartedAt,
     skuRate: c?.skuRate,
     billingFrequency: c?.billingFrequency,
@@ -48,7 +49,10 @@ export const parseMemberCohort = (
     remarks: c?.remarks,
     billingEvents: c?.billingEvents,
     revenueModelName: c?.revenueModelName,
+    uuid: c?.uuid,
     billingPackage: c?.billingPackage,
+    payor: c?.payor,
+    servicePricing: c?.servicePricing,
   }))
 }
 
@@ -87,6 +91,11 @@ export const parseV2MemberData = (
   member.antaraId = memberData?.antaraId
   member.birthDate = birthDate
   member.healthStatus = memberData?.healthStatus
+  member.eligibleForServices = memberData?.eligibleForServices
+  member.activeBillingPackageEnrollment =
+    memberData?.activeBillingPackageEnrollment
+  member.pendingBillingPackageEnrollment =
+    memberData?.pendingBillingPackageEnrollment
 
   // details information
   const { details = {} } = memberData

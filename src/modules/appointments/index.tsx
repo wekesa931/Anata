@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import AirtableField from 'src/types/airtable-field'
 import { useUser } from 'src/context/user'
 import useAirtableFetch from 'src/hooks/airtable-fetch'
@@ -10,11 +10,16 @@ import airtableFetch from 'src/services/airtable/fetch'
 import { useMember } from 'src/context/member'
 import useHandleResponses from 'src/utils/airtable/error-handler'
 import useAntaraStaff from 'src/hooks/antara-staff.hook'
-import { User } from 'react-feather'
+import { User, HelpCircle, CheckCircle, XCircle, Clock } from 'react-feather'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import ExternalLinkIcon from 'src/assets/img/icons/external-link.svg'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import { useAirtableMeta } from 'src/context/airtable-meta'
+import { SEND_WHATSAPP_MESSAGE } from 'src/modules/comms/services/gql'
+import { useMutation } from '@apollo/client'
+import { useNotifications } from 'src/context/notifications'
+import Modal from 'src/components/modals'
+import { Button } from '@mui/material'
 import styles from './appointments.module.css'
 
 const SearchFieldsNameMap: Record<string, any> = {
@@ -32,8 +37,14 @@ const SearchFieldsNameMap: Record<string, any> = {
   },
 }
 
+type ConsentValue = 'Needed' | 'Requested' | 'Consented' | 'Rejected'
+
 function Appointments() {
   const [appointments, setAppointments] = React.useState<any[]>([])
+  const [isConsentModalOpen, setIsConsentModalOpen] = useState(false)
+  const [activeAppointment, setActiveAppointment] = useState({})
+  const [showOptions, setShowOptions] = useState(false)
+
   const { member } = useMember()
   const recId = member?.airtableRecordId
 
@@ -47,6 +58,8 @@ function Appointments() {
   >([])
   const { airtableMeta, getFieldOptions } = useAirtableMeta()
   const { allAntaraStaffs, loading } = useAntaraStaff()
+  const [sendWhatsappMessage] = useMutation(SEND_WHATSAPP_MESSAGE)
+  const { notify } = useNotifications()
   useEffect(() => {
     if (airtableMeta) {
       const APPOINTMENT_FIELDS: AirtableField[] = [
@@ -139,6 +152,8 @@ function Appointments() {
     'Assignee Name',
     'Reason for cancellation',
     'Reason for missed',
+    'Consent',
+    'calendly_booking_url',
   ]
 
   const { data, isLoading, isError, refresh } = useAirtableFetch(
@@ -244,60 +259,274 @@ function Appointments() {
     return parsedFields
   }
 
+  const includesArrayValue = (source: any, value: any): boolean => {
+    if (Array.isArray(source)) {
+      return source.includes(value)
+    }
+    return false
+  }
+  const triggerAppointmentConsent = async (appt: any) => {
+    sendWhatsappMessage({
+      variables: {
+        input: {
+          antaraId: member?.antaraId,
+          botName: member?.hasPrimary
+            ? 'FFS Dependent Service Consent'
+            : 'FFS Service Consent',
+          components: [
+            {
+              memberName: member?.fullName,
+              serviceName:
+                appt.Service === 'Baseline' ? 'Health Check' : appt.Service,
+              appointmentDate: dayjs(appt.start_date_time).format(
+                'MMMM Do h:mm A'
+              ),
+              insurerName: member?.primaryInsuranceCompany,
+              appointmentBookingUrl: appt.calendly_booking_url,
+            },
+          ],
+        },
+      },
+    })
+      .then(() => {
+        notify('Appointment consent to member sent successfully', 'success')
+      })
+      .catch((err) => {
+        notify(`Unable to send member consent ${err}`, 'error')
+      })
+  }
+
+  const getConsentState = (consentValue: ConsentValue) => {
+    switch (consentValue) {
+      case 'Needed':
+      case 'Requested':
+        return {
+          message: 'Consent needed',
+          color: '#FF9500',
+          Icon: HelpCircle,
+        }
+      case 'Consented':
+        return {
+          message: 'Consent confirmed',
+          color: '#34C759',
+          Icon: CheckCircle,
+        }
+      case 'Rejected':
+        return { message: 'Consent rejected', color: '#CB314B', Icon: XCircle }
+      default:
+        return { message: 'Consent needed', color: '#FF9500', Icon: HelpCircle }
+    }
+  }
+
+  const isToday = (date: dayjs.Dayjs) => dayjs().isSame(date, 'day')
+
+  const formatTimeRange = (start: string, end: string) => (
+    <>
+      <span>{dayjs(start).format('hh:mm A')}</span>
+      <span className="mx-1">-</span>
+      <span>{dayjs(end).format('hh:mm A')}</span>
+    </>
+  )
+
+  const formatDate = (start: string, end: string) => {
+    const startDate = dayjs(start)
+
+    if (isToday(startDate)) {
+      return (
+        <>
+          <span>Today</span>
+          <span className="mx-1">:</span>
+          {formatTimeRange(start, end)}
+        </>
+      )
+    }
+    return (
+      <>
+        <span>{startDate.format("DD MMM 'YY")}</span>
+        <span className="mx-1">:</span>
+        {formatTimeRange(start, end)}
+      </>
+    )
+  }
   useEffect(() => {
     function getAssigneeName(assigned: string | { fullName: string }) {
       return typeof assigned === 'string' ? assigned : assigned?.fullName || ''
     }
+    const allowedConsentStatuses = [
+      'Needed',
+      'Requested',
+      'Consented',
+      'Rejected',
+    ]
+
     const getDisplayInfo = (appointment: any) => {
+      const consent =
+        appointment.Consent || (member?.isFfsEligible ? 'Needed' : undefined)
+
+      const consentVisilibility =
+        includesArrayValue(allowedConsentStatuses, consent) &&
+        includesArrayValue(['Scheduled'], appointment.Status)
+
+      const resendConsent = includesArrayValue(['Needed', 'Requested'], consent)
+      const { message, color, Icon } = getConsentState(consent)
+
       return (
         <div className="d-flex justify-center w-full items-start flex-col">
           <div className="font-medium text-base text-dark-blue-100 flex-col w-full">
-            <div className="flex justify-between">
-              <div className="flex-col">
-                <span>{appointment.Service}</span>
-                {appointment.Assignee && (
-                  <div className="text-gray-400 text-sm flex items-center">
-                    <User width={14} height={14} />
-                    {Array.isArray(appointment['Assignee Name']) &&
-                      appointment['Assignee Name'].map(
-                        (
-                          assigned: string | { fullName: string },
-                          index: number
-                        ) => (
-                          <span key={index} className="ml-1">
-                            {getAssigneeName(assigned)}
-                          </span>
-                        )
-                      )}
-                  </div>
-                )}
+            <div className="flex justify-between items-center">
+              <div
+                className={`flex-col ${
+                  consentVisilibility && member?.isFfsEligible ? 'w-1/2' : ''
+                }`}
+              >
+                <span className="font-medium!">{appointment.Service}</span>
               </div>
-              <span>
-                {appointment['Calendly Reschedule URL'] && (
-                  <Tooltip title="Reschedule">
-                    <a
-                      href={appointment['Calendly Reschedule URL']}
-                      target="__blank"
-                      className="btn-unstyled"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <ExternalLinkIcon className="w-4 h-4 text-blue-50 " />
-                    </a>
-                  </Tooltip>
+              {consentVisilibility && member?.isFfsEligible && (
+                <div className="flex-none">
+                  <span
+                    className="text-sm font-medium flex items-center space-x-2"
+                    style={{ color }}
+                  >
+                    {Icon && <Icon width={14} height={14} />}
+                    <span>{message}</span>
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <section>
+            <div className="text-gray-400 text-sm flex items-center mb-1">
+              <Clock width={14} height={14} />
+              <span className="ml-2">
+                {formatDate(
+                  appointment.start_date_time,
+                  appointment.end_date_time
                 )}
               </span>
             </div>
-          </div>
-          <div className="font-medium text-sm text-gray-400 flex justify-between w-full items-center">
-            <span className="status">{appointment.Status}</span>
-            {appointment.Status !== 'Schedule needed' ? (
-              <span>
-                {dayjs(appointment.start_date_time).format("DD MMM 'YY HH:mmA")}
-              </span>
-            ) : (
-              <span>-</span>
+
+            <div className="mb-1">
+              <div className="text-gray-400 text-sm flex items-center">
+                <User width={14} height={14} className="mr-2" />
+                {Array.isArray(appointment['Assignee Name'])
+                  ? appointment['Assignee Name'].map(
+                      (
+                        assigned: string | { fullName: string },
+                        index: number
+                      ) => (
+                        <span key={index} className="ml-1">
+                          {getAssigneeName(assigned)}
+                        </span>
+                      )
+                    )
+                  : 'Not Assigned'}
+                <span className="mx-1">|</span>
+                <span className="status">{appointment.Status}</span>
+              </div>
+            </div>
+          </section>
+          <div>
+            {appointment['Calendly Reschedule URL'] && (
+              <div className="flex text-gray-400">
+                <Tooltip title="Reschedule">
+                  <a
+                    href={appointment['Calendly Reschedule URL']}
+                    target="__blank"
+                    className="btn-unstyled"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <ExternalLinkIcon className="w-4 h-4 text-blue-50 " />
+                  </a>
+                </Tooltip>
+
+                <span className="ml-2">Calendly Reschedule URL</span>
+              </div>
             )}
           </div>
+          {consentVisilibility && member?.isFfsEligible && (
+            <>
+              {resendConsent && (
+                <div className="p-2 items-center mt-2 w-full">
+                  {showOptions}
+                  <section className="flex items-center justify-between relative">
+                    <button
+                      className="text-[#5D6B82] px-2 py-1 text-sm font-medium rounded border w-full mr-1"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        triggerAppointmentConsent(appointment)
+                      }}
+                    >
+                      Request consent
+                    </button>
+                    <button
+                      className="text-[#5D6B82] px-2 py-1 text-sm font-medium rounded w-full ml-1 border"
+                      onMouseEnter={() => setShowOptions(true)}
+                      onMouseLeave={() => setShowOptions(false)}
+                    >
+                      Update consent
+                    </button>
+                  </section>
+                  <div>
+                    {showOptions && (
+                      <div
+                        className="px-0 bg-[#FFFFFF] w-1/2 z-20 shadow-lg float-right"
+                        onMouseEnter={() => setShowOptions(true)}
+                        onMouseLeave={() => setShowOptions(false)}
+                      >
+                        <button
+                          tabIndex={0}
+                          className="w-full border-none flex text-[#424242] p-2 cursor-pointer"
+                          style={{
+                            backgroundColor: '#E0E0E0',
+                            transition: 'background-color 0.2s',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#E8F5E9'
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#fff'
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setActiveAppointment(appointment)
+                            setIsConsentModalOpen(true)
+                          }}
+                        >
+                          <CheckCircle
+                            width={16}
+                            height={16}
+                            className="mr-2"
+                          />
+                          Confirmed
+                        </button>
+                        <button
+                          className="w-full border-none flex text-[#D32F2F] p-2 cursor-pointer"
+                          style={{
+                            backgroundColor: '#fff',
+                            transition: 'background-color 0.2s',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#FFEBEE'
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#fff'
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleUpdateConsent(appointment, 'Rejected')
+                          }}
+                        >
+                          <XCircle width={16} height={16} className="mr-2" />
+                          Rejected
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
       )
     }
@@ -313,7 +542,7 @@ function Appointments() {
       setAppointments(mappedResponse)
     }
     // eslint-disable-next-line
-  }, [data])
+  }, [data, showOptions])
 
   const getPastAppointments = (pastAppointments: any[]): any[] => {
     return pastAppointments.filter((appointment: any) => {
@@ -356,14 +585,48 @@ function Appointments() {
   const isReadytoShowAppt = !isLoading && !loading
 
   const isItemEditable = (item: any) => {
-    const data = item?.data
-    const status = data.find(({ name }: any) => name === 'Status')?.value
-    return status !== 'Cancelled'
+    const items = item?.data
+    const filteredStatus = items.find(
+      ({ name }: any) => name === 'Status'
+    )?.value
+    return filteredStatus !== 'Cancelled'
+  }
+
+  const handleUpdateConsent = async (
+    appt: any,
+    type: 'Consented' | 'Rejected'
+  ) => {
+    try {
+      if (type === 'Rejected') {
+        notify('Appointment consent rejection request initiated', 'success')
+      }
+
+      const payload = {
+        Consent: type,
+      }
+
+      const res = await airtableFetch('appointments', 'post', {
+        id: appt['Record ID'],
+        fields: payload,
+      })
+
+      handleResponses(res)
+      setIsConsentModalOpen(false)
+      refresh()
+    } catch (err) {
+      notify(`Unable to update member consent ${err}`, 'error')
+    }
   }
 
   return (
     <div>
-      <button className={styles.appointment} onClick={openCalendar}>
+      <button
+        className={styles.appointment}
+        onClick={(e) => {
+          e.stopPropagation()
+          openCalendar()
+        }}
+      >
         Book Appointment
       </button>
       <div className="margin-top-0">
@@ -427,6 +690,50 @@ function Appointments() {
           page.
         </p>
       )}
+      <Modal
+        open={isConsentModalOpen && Object.keys(activeAppointment).length > 0}
+        setModalOpen={setIsConsentModalOpen}
+        height="auto"
+        width="30%"
+        closeOption={false}
+      >
+        <div className="modal-body">
+          <p className="mb-10 mt-5">
+            Consent can only be given by text (whatsapp or SMS), do not confirm
+            consent over the phone
+          </p>
+        </div>
+        <div className="modal-footer flex justify-between">
+          <Button
+            fullWidth
+            className="border mr-1"
+            sx={{
+              backgroundColor: '#ffff',
+              border: '1px #205284 solid',
+              color: '#205284',
+            }}
+            onClick={() => handleUpdateConsent(activeAppointment, 'Consented')}
+          >
+            Yes
+          </Button>
+          <Button
+            type="button"
+            fullWidth
+            className="border ml-1"
+            sx={{
+              backgroundColor: '#972323 !important',
+              border: '1px #972323 solid',
+              color: '#FFFFFF !important',
+            }}
+            onClick={() => {
+              setIsConsentModalOpen(false)
+              setActiveAppointment({})
+            }}
+          >
+            Cancel
+          </Button>
+        </div>
+      </Modal>
     </div>
   )
 }

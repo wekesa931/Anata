@@ -14,8 +14,8 @@ import { useNotifications } from 'src/context/notifications'
 import BioDataForm from 'src/modules/member/components/forms/biodata-form'
 import ContactsForm from 'src/modules/member/components/forms/contacts-form'
 import AddressesForm from 'src/modules/member/components/forms/addresses-form'
-import InsuranceForm from 'src/modules/member/components/forms/insurance-form'
-import BillingFormComponent from 'src/modules/member/components/forms/billing/components/billing-method-form'
+import InsuranceForm from 'src/modules/member/components/forms/billing/index'
+import MembershipForm from 'src/modules/member/components/forms/billing/components/membership-form'
 import PrimaryMemberSearch from 'src/modules/member/components/primary-member-search'
 import { RegistrationFormsNames } from 'src/modules/member/types'
 import { useRegistrationForm } from 'src/context/member-registration'
@@ -68,11 +68,6 @@ function RegistrationForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const getInsuranceDetails = (): any[] => {
-    const data = localStorage.getItem('registration_insurance')
-    return data ? JSON.parse(data) : []
-  }
-
   const handleCloseForm = async () => {
     await Promise.all([
       member?.destroy(),
@@ -83,8 +78,6 @@ function RegistrationForm({
       closeForm()
     })
   }
-
-  const insuranceData = getInsuranceDetails()
 
   return (
     <MemberRegistrationWizardLayout
@@ -115,6 +108,7 @@ function RegistrationForm({
             isChildRegistration={formName === 'child'}
             primaryMember={selectedPrimaryMember}
             rosterMember={rosterMember}
+            showWizardControls
           />
         )}
       </BiodataSection>
@@ -123,22 +117,24 @@ function RegistrationForm({
           member={member}
           setIsEdited={setIsEdited}
           isChildRegistration={formName === 'child'}
+          showWizardControls
         />
       </ContactsSection>
       <AddressSection>
-        <AddressesForm member={member} />
+        <AddressesForm member={member} showWizardControls />
       </AddressSection>
       <InsuranceSection>
-        <InsuranceForm member={member} primaryMember={selectedPrimaryMember} />
+        <InsuranceForm
+          member={member}
+          primaryMember={selectedPrimaryMember}
+          showWizardControls
+        />
       </InsuranceSection>
       <BillingSection>
-        <BillingFormComponent
-          insuranceData={insuranceData}
-          setBillingEditMode={setIsEdited}
+        <MembershipForm
           member={member}
-          handleFormCompletion={setCompleted}
-          type="billing-method"
           primaryMember={selectedPrimaryMember}
+          setCompleted={setCompleted}
         />
       </BillingSection>
     </MemberRegistrationWizardLayout>

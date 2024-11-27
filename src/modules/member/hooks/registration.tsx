@@ -10,6 +10,9 @@ import {
   useUpdateBirthdate,
   useUpdateStatus,
   useAddMemberCohort,
+  useUpdateMemberBillingPackage,
+  useUpdateMemberCohort,
+  useMemberCohorts,
 } from 'src/modules/member/services/member.api'
 import { logError } from 'src/utils/logging/logger'
 import dayjs from 'dayjs'
@@ -27,6 +30,7 @@ import {
 } from 'src/modules/member/utils/data-transforms'
 import { useMembersData } from 'src/modules/member/hooks/member-data'
 import { toTitleCase } from 'src/utils/text-utils'
+import { parseMemberCohort } from 'src/utils/data-transform'
 import { parseUpdateContactError } from '../utils'
 
 export const useRegistrationData = () => {
@@ -43,6 +47,15 @@ export const useRegistrationData = () => {
   const { updateBirthdate, loading: updatingBirthdate } = useUpdateBirthdate()
   const { updateStatus, loading: updatingStatus } = useUpdateStatus()
   const { addMemberCohort, loading: linkingCohort } = useAddMemberCohort()
+  const { acceptBillingPackageEnrollment, loading: acceptBillingPackage } =
+    useUpdateMemberBillingPackage()
+  const { declineBillingPackageEnrollment, loading: declineBillingPackage } =
+    useUpdateMemberBillingPackage()
+
+  const { updateMemberCohort, loading: updatingCohort } =
+    useUpdateMemberCohort()
+  const { fetchMemberCohorts } = useMemberCohorts()
+  const { hydrateMember } = useMembersData()
 
   const transformPhones = (data: any) => {
     if (data) {
@@ -299,6 +312,69 @@ export const useRegistrationData = () => {
     }
     return member
   }
+  const handleMemberCohortUpdate = async (member: Member, values: any) => {
+    if (member?.antaraId) {
+      const payload = {
+        antaraId: member?.antaraId,
+        cohortId: values?.cohortId,
+        billingPackageId: values?.billingPackageId,
+      }
+      const response = await updateMemberCohort(payload)
+      await hydrateMember(null, member.antaraId)
+
+      return response
+    }
+    return member
+  }
+
+  const handleAcceptBillingPackageEnrollment = async (
+    member: Member,
+    values: any
+  ) => {
+    if (member?.antaraId) {
+      const payload = {
+        antaraId: member?.antaraId,
+        cohortId: values?.cohortId,
+      }
+      const response = await acceptBillingPackageEnrollment(payload)
+      const { data: cohortData } = await fetchMemberCohorts(member.antaraId)
+      const memberCohorts = parseMemberCohort(
+        cohortData?.memberCohorts?.edges?.map((m: any) => m.node)
+      )
+      member.updateMember({
+        membercohortSet: memberCohorts,
+      })
+      await hydrateMember(null, member.antaraId)
+
+      return response
+    }
+    return member
+  }
+
+  const handleDeclineBillingPackageEnrollment = async (
+    member: Member,
+    values: any
+  ) => {
+    if (member?.antaraId) {
+      const payload = {
+        antaraId: member?.antaraId,
+        cohortId: values?.cohortId,
+        reasonForRefusal: values?.reasonForRefusal,
+      }
+      const response = await declineBillingPackageEnrollment(payload)
+
+      const { data: cohortData } = await fetchMemberCohorts(member.antaraId)
+      const memberCohorts = parseMemberCohort(
+        cohortData?.memberCohorts?.edges?.map((m: any) => m.node)
+      )
+      member.updateMember({
+        membercohortSet: memberCohorts,
+      })
+      await hydrateMember(null, member.antaraId)
+      return response
+    }
+    return member
+  }
 
   return {
     createMemberInstance,
@@ -316,11 +392,17 @@ export const useRegistrationData = () => {
       updatingPhones ||
       updatingBirthdate ||
       updatingStatus ||
-      linkingCohort,
+      linkingCohort ||
+      acceptBillingPackage ||
+      declineBillingPackage ||
+      updatingCohort,
     handleUpdatePhones,
     isUpdatingPhones: updatingPhones,
     handleUpdateBirthdate,
     handleUpdateStatus,
     handleMemberCohortAddition,
+    handleMemberCohortUpdate,
+    handleAcceptBillingPackageEnrollment,
+    handleDeclineBillingPackageEnrollment,
   }
 }

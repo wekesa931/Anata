@@ -43,7 +43,7 @@ function ContactsSection({ member }: ContactsSectionProps) {
             <ContactsForm
               member={member}
               setIsEdited={setIsEdited}
-              showWizardContols={false}
+              showWizardControls={false}
               onNext={() => {
                 notify('Contacts updated')
                 handleClose()

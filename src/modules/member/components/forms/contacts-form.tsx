@@ -28,6 +28,7 @@ type ContactsSectionProps = {
   member: Member | null
   isChildRegistration?: boolean
   setIsEdited: (isEdited: boolean) => void
+  showWizardControls?: boolean
 }
 
 const validationSchema = (isChildRegistration = false) =>
@@ -84,20 +85,12 @@ const validationSchema = (isChildRegistration = false) =>
 
 export default function ContactsSectionForm(props: ContactsSectionProps) {
   const { onNext, onPrev } = useWizardContext()
-  return (
-    <ContactsForm
-      {...props}
-      onNext={onNext}
-      onPrev={onPrev}
-      showWizardContols
-    />
-  )
+  return <ContactsForm {...props} onNext={onNext} onPrev={onPrev} />
 }
 
 type ContactsFormProps = ContactsSectionProps & {
   onNext: () => void
   onPrev?: () => void
-  showWizardContols?: boolean
 }
 
 export function ContactsForm({
@@ -105,7 +98,7 @@ export function ContactsForm({
   isChildRegistration,
   onNext,
   onPrev,
-  showWizardContols = true,
+  showWizardControls = false,
   setIsEdited,
 }: ContactsFormProps) {
   const { handleUpdateContactsData, loading } = useRegistrationData()
@@ -305,7 +298,7 @@ export function ContactsForm({
                 </ErrorComponent>
               )}
 
-              {showWizardContols ? (
+              {showWizardControls ? (
                 <div className="flex justify-between gap-4 mt-3">
                   <PreviousButton onClick={onPrev} disabled={loading}>
                     Previous

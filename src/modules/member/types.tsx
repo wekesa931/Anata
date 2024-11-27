@@ -46,7 +46,16 @@ export type RemarkType = {
 }
 export type BillingMethodType = {
   name: string
+  description: string
 }
+
+export type ServicePricingType = {
+  price: number
+  service: {
+    name: string
+  }
+}
+
 export type MemberCohortType = {
   id?: string
   name?: string
@@ -68,6 +77,11 @@ export type MemberCohortType = {
   remarks?: RemarkType[]
   billingEvents?: IndividualBillableEventType[]
   revenueModelName?: string
+  billingPackage?: BillingPackageType
+  payor?: CohortPayorType
+  servicePricing?: ServicePricingType[]
+  uuid?: string
+  cohortId?: string
 }
 
 export type RosterMemberType = {
@@ -97,6 +111,8 @@ export type RosterMemberType = {
   }
   tags: string
   memberCohort: MemberCohortType[]
+  billingPackage?: BillingPackageType
+  servicePricing?: ServicePricingType[]
 }
 
 export type PayorType = {
@@ -107,9 +123,16 @@ export type PayorType = {
   status?: string
 }
 
+export type BillingEnrollmentPackageType = {
+  billingPackage?: BillingPackageType
+}
+
 export type V2MemberType = {
   antaraId: string
   healthStatus: string
+  eligibleForServices?: string
+  activeBillingPackageEnrollment?: BillingEnrollmentPackageType
+  pendingBillingPackageEnrollment?: BillingPackageType
   birthDate: string
   firstName?: string
   middleName?: string
@@ -232,6 +255,9 @@ export type BillingPackageType = {
   isOneDayHealthCamp: boolean
   isUnlimitedMembership: boolean
 }
+export type CohortPayorType = {
+  payorName: string
+}
 
 export type MemberCohortQueryType = {
   id?: string
@@ -254,13 +280,20 @@ export type MemberCohortQueryType = {
   remarks?: RemarkType[]
   billingEvents?: IndividualBillableEventType[]
   revenueModelName?: string
-  billingPackage?: BillingPackageType[]
+  cohortId?: string
+  uuid?: string
+  billingPackage?: BillingPackageType
+  servicePricing?: ServicePricingType[]
+  payor?: CohortPayorType
 }
 
 export type V2MemberQueryType = {
   antaraId: string
   birthDate?: string
   healthStatus?: string
+  eligibleForServices?: string
+  activeBillingPackageEnrollment?: BillingEnrollmentPackageType
+  pendingBillingPackageEnrollment?: BillingPackageType
   details: {
     fullName?: string
     firstName?: string

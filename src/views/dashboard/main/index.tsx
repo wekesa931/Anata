@@ -63,7 +63,7 @@ function MainDashboard() {
     trackUserLoggedOut,
   } = useHomePageAnalytics()
   const [collapsed, setCollapsed] = useState(true)
-  const { setIsFormOpen, isDataLoading } = useRegistrationForm()
+  const { isDataLoading } = useRegistrationForm()
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [broken, setBroken] = useState(false)
@@ -178,7 +178,6 @@ function MainDashboard() {
                 <MenuItem
                   icon={<RegisterIcon />}
                   onClick={() => {
-                    setIsFormOpen(true)
                     navigate('/register-member?register=true')
                     trackUserOpenedRegistration()
                   }}

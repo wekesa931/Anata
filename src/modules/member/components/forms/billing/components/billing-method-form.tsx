@@ -25,20 +25,20 @@ type BillingMethodProps = {
   member: Member | null
   primaryMember: Member | undefined
   handleFormCompletion?: () => void
-  type: 'fee-for-service' | 'billing-method'
+  type: 'fee-for-service' | 'billing-method' | 'unlimited'
   setBillingMethod?: (value: any) => void
   setUnlimitedMembershipMode?: (value: any) => void
   setCompleted?: (completed: any, primaryMember?: any) => void
+  showWizardControls?: boolean
 }
 
 function BillingMethodComponent(props: BillingMethodProps) {
   const { onNext } = useWizardContext()
-  return <BillingMethodForm {...props} onNext={onNext} showWizardControls />
+  return <BillingMethodForm {...props} onNext={onNext} />
 }
 
 type BillingFormProps = BillingMethodProps & {
   onNext: () => Promise<void> | void
-  showWizardControls?: boolean
   showPhoneInput?: boolean
   isEditing?: boolean
 }
@@ -47,6 +47,7 @@ interface BillingMethod {
   label: string
   value: string
   description: string
+  billingPackage: any
 }
 
 export function BillingMethodForm({
@@ -69,11 +70,11 @@ export function BillingMethodForm({
   })
   const [loadingCohorts, setLoadingCohorts] = useState(true)
   const [validation, setValidation] = useState(false)
-  const { handleMemberCohortAddition } = useRegistrationData()
+  const { handleMemberCohortUpdate } = useRegistrationData()
   const { notify } = useNotifications()
   const navigate = useNavigate()
 
-  const activeFFSCohort = member?.activeFFSCohort[0]
+  const activeCohort = member?.activeCohorts[0]
 
   const handleEditDetails = () => {
     if (setBillingEditMode) {
@@ -96,14 +97,17 @@ export function BillingMethodForm({
 
     if (isDirty(initialValues, value)) {
       if (member) {
+        const activeBillingPackageId = billingMethods.find(
+          (item) => item.value === value.billingMethod
+        )?.billingPackage.billingPackageId
+
         const data = {
           cohortId: parseInt(value.billingMethod, 10),
-          insuranceId: insuranceData?.insurances?.[0].insuranceId,
-          lastBilledAt: null,
+          billingPackageId: activeBillingPackageId,
         }
         setLoading(true)
         try {
-          await handleMemberCohortAddition(member, data)
+          await handleMemberCohortUpdate(member, data)
           notify('Member cohort updated successfully', 'success')
           completeSubmission()
           if (showWizardControls)
@@ -124,16 +128,20 @@ export function BillingMethodForm({
 
   const fetchMemberCohorts = async (antaraId: any) => {
     const request = await prospectiveMemberCohorts(antaraId)
-    const filteredData =
-      type === 'fee-for-service'
-        ? request.filter(
-            (item: any) => item.billingPackage?.isUnlimitedMembership
-          )
-        : request
+    const filteredData = request.filter((item: any) => {
+      if (type === 'fee-for-service') {
+        return item.billingPackage?.isUnlimitedMembership
+      }
+      if (type === 'unlimited') {
+        return item.billingPackage?.isFfs
+      }
+      return true
+    })
     const formattedCohorts = filteredData.map((cohort: any) => ({
       label: cohort.name?.toUpperCase().split('KES')[0].trim(),
       value: cohort.cohortId,
       description: cohort.billingMethod.name,
+      billingPackage: cohort.billingPackage,
     }))
 
     setBillingMethods(formattedCohorts)
@@ -195,7 +203,8 @@ export function BillingMethodForm({
               </div>
             ) : (
               <>
-                {validation && type === 'fee-for-service' ? (
+                {validation &&
+                (type === 'fee-for-service' || type === 'unlimited') ? (
                   <div>
                     <div className="full-width">
                       <h3 className="font-medium text-base">Heads up!</h3>
@@ -205,7 +214,7 @@ export function BillingMethodForm({
                           {getNewCohortLabel(formik.values.billingMethod)}
                         </strong>{' '}
                         will automatically cancel{' '}
-                        <strong>{activeFFSCohort?.name}</strong> billing method.
+                        <strong>{activeCohort?.name}</strong> billing method.
                       </p>
                       <p className="mt-5">Are you sure you want to proceed?</p>
                       <div className="mt-10 flex flex-col gap-4">

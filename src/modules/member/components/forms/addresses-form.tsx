@@ -21,31 +21,24 @@ import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 
 type AddressesSectionProps = {
   member: Member | null
+  showWizardControls?: boolean
 }
 
 function AddressSectionForm(props: AddressesSectionProps) {
   const { onNext, onPrev } = useWizardContext()
-  return (
-    <AddressesForm
-      {...props}
-      onNext={onNext}
-      onPrev={onPrev}
-      showWizardControls
-    />
-  )
+  return <AddressesForm {...props} onNext={onNext} onPrev={onPrev} />
 }
 
 type AddressesFormProps = AddressesSectionProps & {
   onNext: () => void
   onPrev?: () => void
-  showWizardControls?: boolean
 }
 
 export function AddressesForm({
   member,
   onNext,
   onPrev,
-  showWizardControls = true,
+  showWizardControls = false,
 }: AddressesFormProps) {
   const { handleUpdateAddresses, loading } = useRegistrationData()
   const { notify } = useNotifications()
@@ -76,6 +69,9 @@ export function AddressesForm({
       }
 
   const handleSubmit = (values: any, formikBag: any) => {
+    const handleNext = () => {
+      onNext()
+    }
     if (isDirty(initialValues, values)) {
       if (member) {
         handleUpdateAddresses(member, values)
@@ -84,7 +80,7 @@ export function AddressesForm({
               'Addresses updated',
               getChanges(initialValues, values)
             )
-            onNext()
+            handleNext()
           })
           .catch((err) => {
             logError(err)
@@ -97,7 +93,7 @@ export function AddressesForm({
       }
     } else {
       formikBag.setSubmitting(false)
-      onNext()
+      handleNext()
     }
   }
 

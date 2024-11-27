@@ -14,6 +14,9 @@ import {
   MEMBER_COHORT,
   PROSPECTIVE_MEMBER_COHORT,
   ADD_MEMBER_COHORT,
+  SWITCH_BILLING_PACKAGE,
+  ACCEPT_BILLING_PACKAGE_ENROLLMENT,
+  DECLINE_BILLING_PACKAGE_ENROLLMENT,
 } from 'src/modules/member/services/gql'
 import type {
   BiodataValues,
@@ -451,5 +454,101 @@ export const useAddMemberCohort = () => {
     loading,
     error,
     addMemberCohort,
+  }
+}
+export const useUpdateMemberCohort = () => {
+  const [update, { loading, error }] = useMutation(SWITCH_BILLING_PACKAGE, {
+    context: {
+      clientName: 'v2',
+    },
+  })
+
+  const updateMemberCohort = async (values: any) => {
+    const { antaraId, cohortId, billingPackageId } = values
+
+    try {
+      const result = await update({
+        variables: {
+          input: {
+            antaraId,
+            cohortId,
+            billingPackageId,
+          },
+        },
+      })
+      return result
+    } catch (err) {
+      return throwGraphErrors(err)
+    }
+  }
+
+  return {
+    loading,
+    error,
+    updateMemberCohort,
+  }
+}
+
+export const useUpdateMemberBillingPackage = () => {
+  const [
+    mutate,
+    { loading: loadingEnrollmentUpdate, error: errorEnrollmentUpdate },
+  ] = useMutation(ACCEPT_BILLING_PACKAGE_ENROLLMENT, {
+    context: {
+      clientName: 'v2',
+    },
+  })
+
+  const [
+    update,
+    { loading: loadingEnrollmentRefusal, error: errorEnrollmentRefusal },
+  ] = useMutation(DECLINE_BILLING_PACKAGE_ENROLLMENT, {
+    context: {
+      clientName: 'v2',
+    },
+  })
+
+  const acceptBillingPackageEnrollment = async (values: any) => {
+    const { antaraId, cohortId } = values
+
+    try {
+      const result = await mutate({
+        variables: {
+          input: {
+            antaraId,
+            cohortId,
+          },
+        },
+      })
+      return result
+    } catch (err) {
+      return throwGraphErrors(err)
+    }
+  }
+
+  const declineBillingPackageEnrollment = async (values: any) => {
+    const { cohortId, reasonForRefusal, antaraId } = values
+
+    try {
+      const result = await update({
+        variables: {
+          input: {
+            cohortId,
+            reasonForRefusal,
+            antaraId,
+          },
+        },
+      })
+      return result
+    } catch (err) {
+      return throwGraphErrors(err)
+    }
+  }
+
+  return {
+    loading: loadingEnrollmentRefusal || loadingEnrollmentUpdate,
+    error: errorEnrollmentRefusal || errorEnrollmentUpdate,
+    acceptBillingPackageEnrollment,
+    declineBillingPackageEnrollment,
   }
 }

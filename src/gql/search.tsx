@@ -61,6 +61,23 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
     birthDate
     lastSeen
     healthStatus
+    eligibleForServices
+    activeBillingPackageEnrollment {
+      billingPackage {
+        name
+        billingPackageId
+        isFfs
+        isOneDayHealthCamp
+        isUnlimitedMembership
+      }
+    }
+    pendingBillingPackageEnrollment {
+      name
+      billingPackageId
+      isFfs
+      isOneDayHealthCamp
+      isUnlimitedMembership
+    }
     details {
       fullName
       firstName

@@ -6,6 +6,7 @@ import { X } from 'react-feather'
 import { Button, Divider, Paper, Popper } from '@mui/material'
 import PhoneForwardedIcon from '@mui/icons-material/PhoneForwarded'
 import { useNotifications } from 'src/context/notifications'
+import { useLocation } from 'react-router-dom'
 import MemberPreferences from './member-preferences'
 
 export interface IProps {
@@ -33,6 +34,7 @@ function ContactList({
   const { member } = useMember()
   const { initiateCall } = useCall()
   const { notify } = useNotifications()
+  const location = useLocation()
 
   const calloutChange = async (e: any, relevantContact: any) => {
     e.stopPropagation()
@@ -60,7 +62,14 @@ function ContactList({
       open={Boolean(anchorEl)}
       anchorEl={anchorEl}
       placement="bottom-start"
-      className="z-20 max-w-[30rem] rounded-lg"
+      className="max-w-[30rem] rounded-lg"
+      sx={{
+        zIndex:
+          member?.eligibleForServices !== 'YES' &&
+          location.search !== '?register=true'
+            ? 999999
+            : 20,
+      }}
     >
       <Paper className="rounded-xl p-0">
         <div className="h-12 bg-dark-blue-70 p-4 w-full text-white text-left text-base rounded-tl-xl rounded-tr-xl font-bold">

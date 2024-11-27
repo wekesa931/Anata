@@ -1,35 +1,74 @@
-import React, { useEffect, useState } from 'react'
-import { useWizardContext } from 'src/components/wizard'
+import React, { useState } from 'react'
+import GroupedSearchField from 'src/components/forms/fields/grouped-search-field'
+import { sortAlphabetically } from 'src/utils/sort'
+import CreateMissingCompany from 'src/modules/member/components/forms/company-create-form'
+import type {
+  LookupOption,
+  DbValueTypes,
+  SelectedInsurance,
+} from 'src/modules/member/types'
+import { useRegistrationForm } from 'src/context/member-registration'
+import SelectField from 'src/components/forms/fields/select-field'
+import { FieldArray, Form, FormikProps } from 'formik'
+import DeleteFormEntry from 'src/modules/member/components/delete-form-entry'
+import TextField from 'src/components/forms/fields/text'
+import RadioField from 'src/components/forms/fields/radio-field'
+import { relationshipOptions } from 'src/config/constants'
 import PrimaryButton, {
   NextButton,
   PreviousButton,
 } from 'src/components/buttons/primary'
-import { FieldArray, Form, FormikProps } from 'formik'
-import TextField from 'src/components/forms/fields/text'
-import SelectField from 'src/components/forms/fields/select-field'
-import GroupedSearchField from 'src/components/forms/fields/grouped-search-field'
-import PrimaryForm from 'src/components/forms/primary-form'
-import type { Member } from 'src/modules/member/db/models'
-import RadioField from 'src/components/forms/fields/radio-field'
-import * as yup from 'yup'
-import DeleteFormEntry from 'src/modules/member/components/delete-form-entry'
-import { useRegistrationData } from 'src/modules/member/hooks/registration'
-import type {
-  DbValueTypes,
-  LookupOption,
-  SelectedInsurance,
-} from 'src/modules/member/types'
-import { logError } from 'src/utils/logging/logger'
-import { useNotifications } from 'src/context/notifications'
-import { useRegistrationForm } from 'src/context/member-registration'
-import { relationshipOptions } from 'src/config/constants'
-import { getChanges, isDirty } from 'src/utils/form-validation-methods'
-import { sortAlphabetically } from 'src/utils/sort'
 import ErrorComponent from 'src/components/feedbacks/error-component'
-import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
-import CreateMissingCompany from 'src/modules/member/components/forms/company-create-form'
+import { useNotifications } from 'src/context/notifications'
+import PrimaryForm from 'src/components/forms/primary-form'
+import * as yup from 'yup'
 
 type InsuranceDetailsValues = DbValueTypes.InsuranceDetailsValues
+
+type Insurance = {
+  insuranceCompany: string
+  insuranceId: string
+  isPrincipalMember: string
+  principalMemberInsuranceId?: string
+  relationshipToPrincipalMember: string
+  priority: number
+  verificationStatus: string
+}
+
+type InsuranceDetails = {
+  employer: {
+    isPrimaryMember: boolean
+    name: string
+    department: {
+      departmentId: string
+      name: string
+    }
+    businessLocation: {
+      businessLocationId: string
+      name: string
+    }
+  }
+  insurances: Insurance[]
+  antaraId: string
+}
+
+type InsuranceProps = {
+  alertState: string
+  type: string
+  setBusinessLookups: (value: string) => void
+  primaryMember: any
+  businessLocations: any
+  departments: any
+  showWizardControls: boolean
+  defaultInsurance: (primaryMember: any) => InsuranceDetails
+  userError: any
+  setUserError: (error: any) => void
+  onPrev: (() => void) | undefined
+  loading: boolean
+  handleSubmit: (values: any, formikBag: any) => void
+  setAlertState: (value: string) => void
+  initialValues: any
+}
 
 const validationSchema = (
   isDependent = false,
@@ -104,162 +143,73 @@ const validationSchema = (
   })
 }
 
-type InsuranceSectionProps = {
-  member: Member | null
-  primaryMember: Member | undefined
-  showWizardControls?: boolean
-}
-
-const defaultInsurance = (primaryMember: Member | undefined) => ({
-  employer: {
-    isPrimaryMember: !primaryMember,
-    name: '',
-    department: {
-      departmentId: '',
-      name: '',
-    },
-    businessLocation: {
-      businessLocationId: '',
-      name: '',
-    },
-  },
-  insurances: [
-    {
-      insuranceCompany: primaryMember?.primaryInsuranceCompany || '',
-      insuranceId: '',
-      isPrincipalMember: primaryMember ? 'no' : 'yes',
-      principalMemberInsuranceId: primaryMember?.primaryInsuranceId,
-      relationshipToPrincipalMember: '',
-      priority: 0,
-      verificationStatus: 'rejected',
-    },
-  ],
-
-  antaraId: '',
-})
-
-export default function InsuranceSectionForm(props: InsuranceSectionProps) {
-  const { onPrev, onNext } = useWizardContext()
-
-  return <InsuranceForm {...props} onPrev={onPrev} onNext={onNext} />
-}
-
-type InsuranceFormProps = InsuranceSectionProps & {
-  onPrev?: () => void
-  onNext: () => void
-}
-
-export function InsuranceForm({
-  member,
+function InsuranceForm({
+  alertState,
+  type,
+  setBusinessLookups,
   primaryMember,
-  onPrev,
-  onNext,
+  businessLocations,
+  departments,
   showWizardControls = false,
-}: InsuranceFormProps) {
-  const { handleUpdateInsuranceDetails, loading } = useRegistrationData()
-  const { notify } = useNotifications()
+  defaultInsurance,
+  userError,
+  setUserError,
+  onPrev,
+  loading,
+  handleSubmit,
+  setAlertState,
+  initialValues,
+}: InsuranceProps) {
   const { lookupOptions, insuranceCompanies } = useRegistrationForm()
   const [selectedInsurance, setSelectedInsurances] = useState({})
-  const [initialValues, setInitialValues] = useState<InsuranceDetailsValues>(
-    {} as InsuranceDetailsValues
-  )
   const [employers, setEmployers] = useState<LookupOption[]>(
     lookupOptions?.employers
   )
-  const [businessLocations, setBusinessLocations] = useState<LookupOption[]>([])
-  const [departments, setDepartments] = useState<LookupOption[]>([])
-  const [userError, setUserError] = useState<string | null>(null)
-  const analytics = useMemberAnalytics()
   const [employer, setEmployer] = useState<string>('')
+  const { notify } = useNotifications()
 
-  useEffect(() => {
-    const values = member?.needsInsurancePreffil
-      ? defaultInsurance(primaryMember)
-      : member?.insurances
-    setInitialValues(values as InsuranceDetailsValues)
-    const employerName = values?.employer?.name
-    setBusinessLookups(employerName)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member, primaryMember])
-
-  const handleSubmit = (values: any, formikBag: any) => {
-    const parseInsuranceData = (insurances: any[]) => {
-      // remove empty insurances or insurances whose insuranceCompany and insuranceId fields are empty
-      const filteredInsurances = insurances.filter((insurance: any) => {
-        const { insuranceCompany, insuranceId } = insurance
-        return insuranceCompany && insuranceId
-      })
-
-      return filteredInsurances
-    }
-
-    if (isDirty(initialValues, values)) {
-      if (member) {
-        handleUpdateInsuranceDetails(member, {
-          ...values,
-          insurances: parseInsuranceData(values.insurances),
-        })
-          .then(() => {
-            analytics.trackProfileEdited(
-              'Insurance and employer details updated',
-              getChanges(initialValues, values)
-            )
-
-            if (showWizardControls) {
-              localStorage.setItem(
-                'registration_insurance',
-                JSON.stringify(values.insurances)
-              )
-            }
-            onNext()
-          })
-          .catch((e) => {
-            logError(e)
-            setUserError(e?.message)
-            notify(
-              'An error occurred while updating insurance details',
-              'error'
-            )
-          })
-          .finally(() => {
-            formikBag.setSubmitting(false)
-          })
-      }
-    } else {
-      onNext()
+  const getBillingAlertHeader = () => {
+    switch (alertState) {
+      case 'all':
+        return 'Missing employer and insurance details'
+      case 'business':
+        return 'Missing employer details'
+      case 'insurance':
+        return 'Missing insurance details'
+      default:
+        return ''
     }
   }
 
-  const getBusinessLocations = (
-    companies: LookupOption[],
-    companyName?: string
-  ) => {
-    if (companyName) {
-      const company = companies.find((c) => c.value === companyName)
-      return (company?.businessLocations || []) as LookupOption[]
+  const getBillingAlertDescription = () => {
+    switch (alertState) {
+      case 'all':
+        return 'This member does not have employer and insurance details. Please add them then assign a billing method'
+      case 'business':
+        return 'This member does not have employer details. Please add them then assign a billing method'
+      case 'insurance':
+        return 'This member does not have insurance details. Please add them then assign a billing method'
+      default:
+        return ''
     }
-
-    return []
   }
+  const getAlertCheck = (value: any) => {
+    const employerName = value?.employer?.name?.trim()
 
-  const getBusinessDepartments = (
-    companies: LookupOption[],
-    companyName?: string
-  ) => {
-    if (companyName) {
-      const company = companies.find((c) => c.value === companyName)
-      return (company?.departments || []) as LookupOption[]
-    }
-
-    return []
-  }
-
-  const setBusinessLookups = (v?: string) => {
-    const b = getBusinessLocations(lookupOptions?.employers || [], v) || []
-    const d = getBusinessDepartments(lookupOptions?.employers || [], v) || []
-    setBusinessLocations(b)
-    setDepartments(d)
+    const isInsuranceProvided = value?.insurances?.some(
+      (insurance: any) =>
+        insurance?.insuranceCompany?.trim() && insurance?.insuranceId?.trim()
+    )
+    const newState =
+      !employerName && !isInsuranceProvided
+        ? 'all'
+        : !employerName
+        ? 'business'
+        : !isInsuranceProvided
+        ? 'insurance'
+        : ''
+    setAlertState(newState)
+    return newState !== ''
   }
 
   const handleInsuranceChange = (insuranceCompany: any, index: any) => {
@@ -275,26 +225,31 @@ export function InsuranceForm({
 
   return (
     <div className="overflow-scroll">
-      {Object.keys(initialValues).length > 0 && (
-        <PrimaryForm
-          initialValues={initialValues}
-          handleSubmit={handleSubmit}
-          validationSchema={validationSchema(
-            !!primaryMember,
-            selectedInsurance
-          )}
-        >
-          {({
-            values,
-            setFieldValue,
-            isValid,
-            setSubmitting,
-          }: FormikProps<InsuranceDetailsValues>) => {
-            return (
-              <Form>
+      <PrimaryForm
+        initialValues={initialValues}
+        handleSubmit={handleSubmit}
+        validationSchema={validationSchema(!!primaryMember, selectedInsurance)}
+      >
+        {({
+          values,
+          setFieldValue,
+          isValid,
+          setSubmitting,
+        }: FormikProps<InsuranceDetailsValues>) => {
+          return (
+            <Form>
+              <div>
+                {getAlertCheck(values) && type === 'assign-billing' && (
+                  <div className="bg-[#FFEBEA] rounded-md p-4 mb-4">
+                    <h1 className="text-dark-blue-100 text-base font-medium font-rubik mb-2">
+                      {getBillingAlertHeader()}
+                    </h1>
+                    <p>{getBillingAlertDescription()}</p>
+                  </div>
+                )}
+
                 <h3 className="text-dark-blue-100 text-base my-4 font-medium font-rubik">
-                  {' '}
-                  Insurance details{' '}
+                  Insurance details
                 </h3>
                 <FieldArray name="insurances">
                   {({ push, remove }) => (
@@ -437,8 +392,8 @@ export function InsuranceForm({
                     options={businessLocations}
                     handleChange={(v) => {
                       const businessLocation =
-                        businessLocations?.find((d) => d.value === v)?.label ||
-                        ''
+                        businessLocations?.find((d: any) => d.value === v)
+                          ?.label || ''
                       setFieldValue(
                         'employer.businessLocation.name',
                         businessLocation
@@ -470,8 +425,7 @@ export function InsuranceForm({
                 {showWizardControls ? (
                   <div className="flex justify-between gap-4 mt-3">
                     <PreviousButton onClick={onPrev} disabled={loading}>
-                      {' '}
-                      Previous{' '}
+                      Previous
                     </PreviousButton>
                     <NextButton
                       type="submit"
@@ -501,11 +455,13 @@ export function InsuranceForm({
                     </PrimaryButton>
                   </div>
                 )}
-              </Form>
-            )
-          }}
-        </PrimaryForm>
-      )}
+              </div>
+            </Form>
+          )
+        }}
+      </PrimaryForm>
     </div>
   )
 }
+
+export default InsuranceForm

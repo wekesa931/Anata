@@ -1,5 +1,5 @@
 import React from 'react'
-import { InsuranceForm } from 'src/modules/member/components/forms/insurance-form'
+import InsuranceForm from 'src/modules/member/components/forms/billing/index'
 import type { Member } from 'src/modules/member/db/models'
 import UpdateForms from 'src/modules/member/components/update-forms'
 import { useNotifications } from 'src/context/notifications'
@@ -21,7 +21,6 @@ function MissingInsurance({ member }: MissingInfoBlockProps) {
             handleClose()
           }}
           primaryMember={undefined}
-          showWizardContols={false}
         />
       )}
     </UpdateForms>

@@ -303,9 +303,13 @@ export const MEMBER_COHORT = gql`
           billingFrequency
           billingMethod {
             name
+            description
           }
-          accreditedAntaraServices {
-            name
+          servicePricing {
+            price
+            service {
+              name
+            }
           }
           activatedAt
           activatedBy
@@ -322,6 +326,8 @@ export const MEMBER_COHORT = gql`
             billingPeriodEndDate
             createdAt
           }
+          cohortId
+          uuid
           revenueModelName
           billingPackage {
             name
@@ -329,6 +335,9 @@ export const MEMBER_COHORT = gql`
             isFfs
             isOneDayHealthCamp
             isUnlimitedMembership
+          }
+          payor {
+            payorName
           }
         }
       }
@@ -358,6 +367,7 @@ export const PROSPECTIVE_MEMBER_COHORT = gql`
           }
           billingMethod {
             name
+            description
           }
         }
       }
@@ -365,7 +375,7 @@ export const PROSPECTIVE_MEMBER_COHORT = gql`
   }
 `
 export const ADD_MEMBER_COHORT = gql`
-  mutation addMemberCohortAssignment($input: MemberCohortAssignmentInput) {
+  mutation addMemberCohortAssignment($input: MemberCohortAssignmentInput!) {
     addMemberCohortAssignment(input: $input) {
       memberCohort {
         id
@@ -373,6 +383,83 @@ export const ADD_MEMBER_COHORT = gql`
         memberAntaraId
         subscriptionStatus
         cohortId
+      }
+      errors
+      status
+      message
+    }
+  }
+`
+
+export const UPDATE_MEMBER_COHORT = gql`
+  mutation updateMemberCohortAssignment($input: MemberCohortUpdateInput!) {
+    updateMemberCohortAssignment(input: $input) {
+      memberCohort {
+        id
+        name
+        memberAntaraId
+        subscriptionStatus
+        cohortId
+      }
+      errors
+      status
+      message
+    }
+  }
+`
+export const ACCEPT_BILLING_PACKAGE_ENROLLMENT = gql`
+  mutation acceptBillingPackageEnrollment(
+    $input: BillingPackageEnrollmentAcceptanceInput!
+  ) {
+    acceptBillingPackageEnrollment(input: $input) {
+      data {
+        billingPackage {
+          id
+          name
+          isFfs
+          isUnlimitedMembership
+          isOneDayHealthCamp
+          billingPackageId
+        }
+      }
+      errors
+      status
+      message
+    }
+  }
+`
+export const DECLINE_BILLING_PACKAGE_ENROLLMENT = gql`
+  mutation declineBillingPackageEnrollment(
+    $input: BillingPackageEnrollmentRefusalInput!
+  ) {
+    declineBillingPackageEnrollment(input: $input) {
+      data {
+        billingPackage {
+          id
+          name
+          isFfs
+          isUnlimitedMembership
+          isOneDayHealthCamp
+          billingPackageId
+        }
+      }
+      errors
+      status
+      message
+    }
+  }
+`
+
+export const SWITCH_BILLING_PACKAGE = gql`
+  mutation switchBillingPackage($input: BillingPackageSwitchingInput!) {
+    switchBillingPackage(input: $input) {
+      data {
+        id
+        name
+        isFfs
+        isUnlimitedMembership
+        isOneDayHealthCamp
+        billingPackageId
       }
       errors
       status

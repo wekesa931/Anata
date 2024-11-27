@@ -25,7 +25,6 @@ import { useRegistrationForm } from 'src/context/member-registration'
 import { getChanges, isDirty } from 'src/utils/form-validation-methods'
 import * as yup from 'yup'
 import ErrorComponent from 'src/components/feedbacks/error-component'
-import { useNavigate, useParams } from 'react-router-dom'
 import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 
 type BioDataSectionProps = {
@@ -35,6 +34,7 @@ type BioDataSectionProps = {
   isChildRegistration?: boolean
   primaryMember?: Member | null
   rosterMember?: RosterMemberType
+  showWizardControls?: boolean
 }
 
 type InitialStateProps = {
@@ -113,12 +113,11 @@ const extractInitialState = ({
 
 function BioDataFormSection(props: BioDataSectionProps) {
   const { onNext } = useWizardContext()
-  return <BioDataForm {...props} onNext={onNext} showWizardControls />
+  return <BioDataForm {...props} onNext={onNext} />
 }
 
 type BioDataFormProps = BioDataSectionProps & {
   onNext: () => Promise<void> | void
-  showWizardControls?: boolean
   showPhoneInput?: boolean
   isEditing?: boolean
 }
@@ -129,7 +128,7 @@ export function BioDataForm({
   member,
   isChildRegistration = false,
   onNext,
-  showWizardControls = true,
+  showWizardControls = false,
   showPhoneInput = true,
   primaryMember,
   rosterMember,
@@ -150,7 +149,6 @@ export function BioDataForm({
   const { lookupOptions } = useRegistrationForm()
   const [userError, setUserError] = useState<string | null>(null)
   const analytics = useMemberAnalytics()
-  const { antaraId } = useParams()
 
   const parseMemberFromResponse = (response: any, phone: string) => {
     if (response) {
@@ -185,8 +183,6 @@ export function BioDataForm({
     }
   }
 
-  const navigate = useNavigate()
-
   const handleSubmit = (values: any, formikBag: any) => {
     if (isDirty(initialValues, values) || !member?.antaraId) {
       if (member) {
@@ -208,9 +204,6 @@ export function BioDataForm({
               'Bio data updated',
               getChanges(initialValues, values)
             )
-            // we only want to navigate if we're in a member's dashboard to avoid losing the wizard context
-            const inMembersDashboard = !!antaraId
-            inMembersDashboard && navigate(`/member/${member.antaraId}`)
             onNext()
           })
           .catch((err) => {

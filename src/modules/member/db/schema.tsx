@@ -41,6 +41,9 @@ export const membersTableColumns: ColumnSchema[] = [
   { name: 'other_refused_service', type: 'string' },
   { name: 'member_cohorts', type: 'string' },
   { name: 'health_status', type: 'string' },
+  { name: 'eligible_for_services', type: 'string' },
+  { name: 'active_billing_package_enrollment', type: 'string' },
+  { name: 'pending_billing_package_enrollment', type: 'string' },
 ]
 
 export const MembersSchema = tableSchema({

@@ -65,6 +65,8 @@ type PortalFormProps = {
   modalTitle?: string
   isEdited: boolean
   children: (modalProps: ModalChildProps) => React.ReactElement
+  height?: number
+  width?: number
 }
 
 export function PortalForm({
@@ -74,6 +76,8 @@ export function PortalForm({
   setIsEdited,
   children,
   handleOpen,
+  height = 66,
+  width = 50,
 }: PortalFormProps) {
   return (
     <PortalWindow
@@ -81,6 +85,8 @@ export function PortalForm({
       title={modalTitle}
       isEdited={isEdited}
       setIsEdited={setIsEdited}
+      height={height}
+      width={width}
     >
       <div className="p-4">
         {children({ handleClose, handleOpen, setIsEdited })}

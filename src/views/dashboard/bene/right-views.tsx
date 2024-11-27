@@ -16,9 +16,13 @@ import { withTabRouter } from 'src/utils/routing/tab-router'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import _ from 'lodash'
 import MessageCircleIcon from 'src/assets/img/icons/message-circle.svg'
+import { useLocation } from 'react-router-dom'
+import { useMember } from 'src/context/member'
 
 function Actions({ handleChange, view }: any) {
   const { setCounterValue } = useCall()
+  const { member } = useMember()
+  const location = useLocation()
 
   useEffect(() => {
     setCounterValue()
@@ -29,6 +33,13 @@ function Actions({ handleChange, view }: any) {
   const rightSectionHandleChange = (event: any, newValue: string) => {
     handleChange(event, newValue)
     rightSectionOpened(`${_.startCase(_.toLower(newValue))} section opened`)
+  }
+
+  const blockedMember = () => {
+    return (
+      member?.eligibleForServices !== 'YES' &&
+      location.search !== '?register=true'
+    )
   }
 
   return (
@@ -53,7 +64,11 @@ function Actions({ handleChange, view }: any) {
           <Tab className="tab-view" label="Workflows" value="workflows" />
           <Tab label="Appointments" value="appointments" />
         </TabList>
-        <div className="d-flex flex-between communication-icons">
+        <div
+          className={`d-flex flex-between communication-icons ${
+            blockedMember() ? 'z-[999999]' : ''
+          }`}
+        >
           <button
             className="btn"
             style={{
@@ -68,7 +83,7 @@ function Actions({ handleChange, view }: any) {
         </div>
       </Box>
       <div
-        className="full-height d-flex flex-column flex-1"
+        className="full-height d-flex flex-column flex-1 "
         style={{ overflowY: 'auto' }}
       >
         <TabPanel value="tasks">
@@ -91,7 +106,10 @@ function Actions({ handleChange, view }: any) {
             <Appointments />
           </ErrorBoundary>
         </TabPanel>
-        <TabPanel value="messages" className="full-height">
+        <TabPanel
+          value="messages"
+          className={`full-height ${blockedMember() ? 'z-[999999]' : ''}`}
+        >
           <ErrorBoundary>
             <Communication />
           </ErrorBoundary>

@@ -97,6 +97,7 @@ export const useMembersData = () => {
     )
 
     const memberData = normalizeMemberDetails(data)
+
     if (memberData) {
       return createMemberInstance(member, memberData, memberCohorts)
     }

@@ -1,0 +1,118 @@
+import React, { useState, useEffect } from 'react'
+import PrimaryButton from 'src/components/buttons/primary'
+import { Button } from '@mui/material'
+import { useMember } from 'src/context/member'
+import InsuranceForm from 'src/modules/member/components/forms/billing/index'
+import MembershipForm from 'src/modules/member/components/forms/billing/components/membership-form'
+import Modal from 'src/components/modals'
+import { useNavigate } from 'react-router-dom'
+import { useRegistrationForm } from 'src/context/member-registration'
+
+function ModalHeader({
+  updateState,
+}: {
+  updateState: boolean
+}): React.ReactElement {
+  return (
+    <>
+      <div className="full-width flex text-center justify-between">
+        <h3 className="font-medium text-[#000000] text-xl">
+          {!updateState ? 'Restricted Service' : 'Unlock Scribe'}
+        </h3>
+      </div>
+    </>
+  )
+}
+
+function BillingEligibilityModal() {
+  const [modalOpen, setModalOpen] = useState(true)
+  const { setIsFormOpen } = useRegistrationForm()
+
+  const [updateState, setUpdateState] = useState(false)
+  const [billingMethodView, setBillingMethodView] = useState(false)
+
+  const { member } = useMember()
+  const navigate = useNavigate()
+
+  const setCompleted = async () => {
+    window.location.reload()
+    setModalOpen(false)
+  }
+
+  useEffect(() => {
+    if (member?.antaraId) {
+      setIsFormOpen(false)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member])
+
+  return (
+    <>
+      <Modal
+        open={modalOpen}
+        setModalOpen={setModalOpen}
+        heading={<ModalHeader updateState={updateState} />}
+        height="auto"
+        width="30%"
+        closeOption={false}
+      >
+        {!updateState ? (
+          <div>
+            <p className="mt-5">
+              This service is restricted only to members assigned to a billing
+              method.
+            </p>
+
+            <p className="mt-4">
+              Please update insurance details and billing service to unlock
+              antara services
+            </p>
+            <div className="mt-4 flex flex-col gap-2">
+              <PrimaryButton
+                onClick={() => {
+                  setUpdateState(true)
+                }}
+              >
+                Update
+              </PrimaryButton>
+              <Button
+                className="border "
+                sx={{
+                  backgroundColor: '#ffff',
+                  border: '1px #205284 solid',
+                  color: '#205284',
+                }}
+                onClick={() => {
+                  navigate('/member')
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <section>
+            {!billingMethodView ? (
+              <InsuranceForm
+                member={member}
+                primaryMember={undefined}
+                showWizardControls
+                isRestrictedUser
+                setNextResctrictedPhase={setBillingMethodView}
+              />
+            ) : (
+              <MembershipForm
+                member={member}
+                primaryMember={undefined}
+                setCompleted={setCompleted}
+              />
+            )}
+          </section>
+        )}
+      </Modal>
+    </>
+  )
+}
+
+export default BillingEligibilityModal

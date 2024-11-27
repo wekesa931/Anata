@@ -9,6 +9,7 @@ import { Member } from 'src/modules/member/db/models'
 import { useUdmData } from 'src/modules/udm/hooks/udm.data'
 import { useDocumentsReadApi } from 'src/modules/udm/services/udm.api'
 import logError from 'src/utils/logging/logger'
+import { useNavigate } from 'react-router-dom'
 
 type SuccessfulProps = {
   title?: string
@@ -56,6 +57,7 @@ function SuccessPrompt({
   const { findFolderByName } = useDocumentsReadApi()
   const { trackNewDocumentShared } = useModuleAnalytics()
   const { notify } = useNotifications()
+  const navigate = useNavigate()
 
   const shareFile = () => {
     findFolderByName(folder).then((res) => {
@@ -149,6 +151,19 @@ function SuccessPrompt({
             </>
           )}
         </div>
+        {formFilled === 'primary' && setSelectedForm && (
+          <PrimaryButton
+            type="button"
+            fullWidth
+            variant="contained"
+            className="mb-4 capitalize mt-5"
+            onClick={() => {
+              member && navigate(`/member/${member.antaraId}`)
+            }}
+          >
+            View Member Profile
+          </PrimaryButton>
+        )}
       </div>
     </div>
   )

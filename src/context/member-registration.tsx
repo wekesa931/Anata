@@ -86,7 +86,10 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (openRegistrationFromSearchParams && !isFormOpen && !loading) {
       setIsFormOpen(true)
+      return
     }
+
+    setIsFormOpen(false)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openRegistrationFromSearchParams, loading])

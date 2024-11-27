@@ -10,6 +10,8 @@ import {
   RosterMemberType,
   PayorType,
   MemberCohortType,
+  BillingEnrollmentPackageType,
+  BillingPackageType,
 } from 'src/modules/member/types'
 import dayjs from 'dayjs'
 import {
@@ -132,6 +134,11 @@ export const createOrUpdateMember = (
   member.nhifNumber = memberData?.nhifNumber
   member.membercohortSet = memberCohorts
   member.healthStatus = memberData.healthStatus
+  member.eligibleForServices = memberData.eligibleForServices
+  member.activeBillingPackageEnrollment =
+    memberData.activeBillingPackageEnrollment
+  member.pendingBillingPackageEnrollment =
+    memberData.pendingBillingPackageEnrollment
 
   return member
 }
@@ -217,6 +224,14 @@ export class Member extends Model {
   @json('member_cohorts', identityJson) membercohortSet?: MemberCohortType[]
 
   @text('health_status') healthStatus?: string
+
+  @text('eligible_for_services') eligibleForServices?: string
+
+  @json('active_billing_package_enrollment', identityJson)
+  activeBillingPackageEnrollment?: BillingEnrollmentPackageType
+
+  @json('pending_billing_package_enrollment', identityJson)
+  pendingBillingPackageEnrollment?: BillingPackageType
 
   @writer async destroy() {
     await super.destroyPermanently()
@@ -352,28 +367,45 @@ export class Member extends Model {
 
   get isFfsEligible() {
     return (
-      !this.membercohortSet ||
-      this.membercohortSet.length === 0 ||
-      this.membercohortSet.every(
-        (item) => item.subscriptionStatus === 'CANCELLED'
-      ) ||
-      this.membercohortSet.some(
-        (cohort) =>
-          cohort.subscriptionStatus === 'ACTIVE' && cohort.billingPackage?.isFfs
-      )
+      !this.activeBillingPackageEnrollment ||
+      this.activeBillingPackageEnrollment?.billingPackage?.isFfs
     )
   }
 
-  get activeFFSCohort() {
+  get acrreditedFFSServices() {
     if (!this.isFfsEligible || !this.membercohortSet) {
       return []
     }
-    const activeFfsCohorts = this.membercohortSet.filter(
-      (item) =>
-        item.subscriptionStatus === 'ACTIVE' &&
-        item.billingPackage?.isFfs === true
-    )
-    return activeFfsCohorts
+    const services = this.membercohortSet
+      .filter((obj) => obj.billingPackage?.isFfs)
+      .reduce((acc, obj) => {
+        if (obj.servicePricing) {
+          const pricingData = obj.servicePricing
+          pricingData.forEach((data) => {
+            if (data.service) {
+              acc.push({
+                name: data.service.name,
+                price: data.price,
+              })
+            }
+          })
+        }
+        return acc
+      }, [] as { name: string; price: number }[])
+    return services
+  }
+
+  get activeCohorts() {
+    if (!this.membercohortSet) return []
+
+    return this.membercohortSet.filter((item) => {
+      const isActive = item.subscriptionStatus === 'ACTIVE'
+      const isEligible =
+        (this.isFfsEligible && item.billingPackage?.isFfs) ||
+        (!this.isFfsEligible && item.billingPackage?.isUnlimitedMembership)
+
+      return isActive && isEligible
+    })
   }
 
   @writer async reset() {
