@@ -316,7 +316,7 @@ export const useRegistrationData = () => {
     if (member?.antaraId) {
       const payload = {
         antaraId: member?.antaraId,
-        cohortId: values?.cohortId,
+        billingSchemeId: values?.billingSchemeId,
         billingPackageId: values?.billingPackageId,
       }
       const response = await updateMemberCohort(payload)
@@ -334,7 +334,7 @@ export const useRegistrationData = () => {
     if (member?.antaraId) {
       const payload = {
         antaraId: member?.antaraId,
-        cohortId: values?.cohortId,
+        billingSchemeId: values?.billingSchemeId,
       }
       const response = await acceptBillingPackageEnrollment(payload)
       const { data: cohortData } = await fetchMemberCohorts(member.antaraId)
@@ -358,7 +358,7 @@ export const useRegistrationData = () => {
     if (member?.antaraId) {
       const payload = {
         antaraId: member?.antaraId,
-        cohortId: values?.cohortId,
+        billingSchemeId: values?.billingSchemeId,
         reasonForRefusal: values?.reasonForRefusal,
       }
       const response = await declineBillingPackageEnrollment(payload)

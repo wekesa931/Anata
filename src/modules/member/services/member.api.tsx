@@ -464,14 +464,14 @@ export const useUpdateMemberCohort = () => {
   })
 
   const updateMemberCohort = async (values: any) => {
-    const { antaraId, cohortId, billingPackageId } = values
+    const { antaraId, billingSchemeId, billingPackageId } = values
 
     try {
       const result = await update({
         variables: {
           input: {
             antaraId,
-            cohortId,
+            billingSchemeId,
             billingPackageId,
           },
         },
@@ -509,14 +509,14 @@ export const useUpdateMemberBillingPackage = () => {
   })
 
   const acceptBillingPackageEnrollment = async (values: any) => {
-    const { antaraId, cohortId } = values
+    const { antaraId, billingSchemeId } = values
 
     try {
       const result = await mutate({
         variables: {
           input: {
             antaraId,
-            cohortId,
+            billingSchemeId,
           },
         },
       })
@@ -527,13 +527,13 @@ export const useUpdateMemberBillingPackage = () => {
   }
 
   const declineBillingPackageEnrollment = async (values: any) => {
-    const { cohortId, reasonForRefusal, antaraId } = values
+    const { billingSchemeId, reasonForRefusal, antaraId } = values
 
     try {
       const result = await update({
         variables: {
           input: {
-            cohortId,
+            billingSchemeId,
             reasonForRefusal,
             antaraId,
           },

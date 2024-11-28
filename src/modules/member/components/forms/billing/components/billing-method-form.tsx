@@ -102,7 +102,7 @@ export function BillingMethodForm({
         )?.billingPackage.billingPackageId
 
         const data = {
-          cohortId: parseInt(value.billingMethod, 10),
+          billingSchemeId: parseInt(value.billingMethod, 10),
           billingPackageId: activeBillingPackageId,
         }
         setLoading(true)
@@ -139,7 +139,7 @@ export function BillingMethodForm({
     })
     const formattedCohorts = filteredData.map((cohort: any) => ({
       label: cohort.name?.toUpperCase().split('KES')[0].trim(),
-      value: cohort.cohortId,
+      value: cohort.billingSchemeId,
       description: cohort.billingMethod.name,
       billingPackage: cohort.billingPackage,
     }))

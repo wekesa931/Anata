@@ -23,9 +23,7 @@ function UnlimitedServicesView({
   ]
 
   const ffsMembership =
-    availableCohorts?.filter(
-      (item: any) => item.name.toLowerCase() === 'ffs'
-    ) || []
+    availableCohorts?.filter((item: any) => item.billingPackage.isFfs) || []
 
   return (
     <div>

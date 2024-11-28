@@ -82,14 +82,14 @@ export function BillingMethodForm({
 
     if (tag === 'unlimited' && unlimitedCohorts.length > 0) {
       payload = {
-        cohortId: parseInt(unlimitedCohorts[0].value),
+        billingSchemeId: parseInt(unlimitedCohorts[0].value),
         antaraId: member?.antaraId,
       }
     }
 
     if (tag === 'ffs' && ffsCohorts.length > 0) {
       payload = {
-        cohortId: parseInt(ffsCohorts[0].value),
+        billingSchemeId: parseInt(ffsCohorts[0].value),
         antaraId: member?.antaraId,
       }
     }
@@ -113,12 +113,12 @@ export function BillingMethodForm({
   }
   const processDeclineBillingPackageEnrollment = async () => {
     if (member && billingMethods.length > 0) {
-      const cohortId =
+      const billingSchemeId =
         subscriptionState === 'Unlimited'
           ? unlimitedCohorts[0].value
           : ffsCohorts[0].value
       const payload = {
-        cohortId: parseInt(cohortId),
+        billingSchemeId: parseInt(billingSchemeId),
         reasonForRefusal:
           selectedReason === 'other' ? otherReason : selectedReason,
         antaraId: member?.antaraId,
@@ -150,7 +150,7 @@ export function BillingMethodForm({
     const request = await prospectiveMemberCohorts(antaraId)
     const formattedCohorts = request.map((cohort: any) => ({
       label: cohort.name?.toUpperCase().split('KES')[0].trim(),
-      value: cohort.cohortId,
+      value: cohort.billingSchemeId,
       description: cohort.billingMethod.name,
       billingPackage: cohort.billingPackage,
       billingMethod: cohort.billingMethod,

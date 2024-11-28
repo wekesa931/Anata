@@ -119,8 +119,9 @@ export const useMembersData = () => {
     const { data } = await fetchProspectiveMemberCohorts(antaraId)
 
     const prospectiveCohorts =
-      data?.prospectiveCohortsForMember?.edges.map((edge: any) => edge.node) ||
-      []
+      data?.prospectiveBillingSchemesForMember?.edges.map(
+        (edge: any) => edge.node
+      ) || []
 
     return prospectiveCohorts || []
   }

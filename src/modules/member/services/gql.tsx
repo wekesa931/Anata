@@ -345,13 +345,13 @@ export const MEMBER_COHORT = gql`
   }
 `
 export const PROSPECTIVE_MEMBER_COHORT = gql`
-  query prospectiveCohortsForMember($antaraId: String!) {
-    prospectiveCohortsForMember(antaraId: $antaraId) {
+  query prospectiveBillingSchemesForMember($antaraId: String!) {
+    prospectiveBillingSchemesForMember(antaraId: $antaraId) {
       edges {
         node {
           id
           name
-          cohortId
+          billingSchemeId
           billingPackage {
             name
             billingPackageId
@@ -454,12 +454,14 @@ export const SWITCH_BILLING_PACKAGE = gql`
   mutation switchBillingPackage($input: BillingPackageSwitchingInput!) {
     switchBillingPackage(input: $input) {
       data {
-        id
-        name
-        isFfs
-        isUnlimitedMembership
-        isOneDayHealthCamp
-        billingPackageId
+        billingPackage {
+          id
+          name
+          isFfs
+          isUnlimitedMembership
+          isOneDayHealthCamp
+          billingPackageId
+        }
       }
       errors
       status
