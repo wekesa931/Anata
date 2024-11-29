@@ -240,9 +240,12 @@ export function BillingMethodForm({
                         <p className="text-[#182C4C] font-medium text-base mb-3">
                           Free for Member !
                         </p>
+                        <p className="text-sm mb-1">
+                          The Member will be billed for each service they use.
+                        </p>
                         <p className="text-sm mb-4">
-                          Member will get all these services and more paid for
-                          the&apos;re insurance provider.
+                          Please note this member will not be eligible for
+                          longitudinal care.
                         </p>
                         <p className="text-sm">No extra charges incurred.</p>
                       </>

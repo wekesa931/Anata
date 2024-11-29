@@ -65,13 +65,20 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
     setViewSubscriptionDetails(!viewSubscriptionDetails)
   }
 
+  const unknownMembership =
+    typeof member?.activeBillingPackageEnrollment !== 'object'
+
   return member ? (
     <div className="flex flex-col h-full">
       <div className="flex-1 bg-white-100 flex justify-start flex-col overflow-y-auto border-l border-2 border-solid border-dark-blue-10 border-b-0">
         <div
           ref={memberDataRef}
           className={`py-2 px-0 items-center justify-between sticky top-0 w-full z-10 ${
-            member?.isFfsEligible ? 'bg-[#FFEACC]' : 'bg-[#98EBA5]'
+            unknownMembership
+              ? 'bg-red-10'
+              : member?.isFfsEligible
+              ? 'bg-[#FFEACC]'
+              : 'bg-[#98EBA5]'
           }`}
         >
           {member ? (
@@ -96,30 +103,38 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
                     </p>
                   )}
 
-                  <p className="font-medium mb-1">
-                    {member?.isFfsEligible
-                      ? 'Fee for Service'
-                      : 'Unlimited Membership'}
-                  </p>
-                  <p className="font-normal text-xs">
-                    since {getSubscriptionDate()}
-                  </p>
+                  {unknownMembership ? (
+                    <div>Unknown Membership</div>
+                  ) : (
+                    <div>
+                      <p className="font-medium mb-1">
+                        {member?.isFfsEligible
+                          ? 'Fee for Service'
+                          : 'Unlimited Membership'}
+                      </p>
+                      <p className="font-normal text-xs">
+                        since {getSubscriptionDate()}
+                      </p>
+                    </div>
+                  )}
                 </div>
-                <div
-                  role="button"
-                  className="px-3 py-0 border border-1 border-neural-base bg-white mr-3 cursor-pointer"
-                  onClick={handleSubscriptionView}
-                  tabIndex={0}
-                  onKeyDown={handleSubscriptionView}
-                >
-                  <span className="font-normal text-xs text-[#5D6B82] mb-4">
-                    {member.activeBillingPackageEnrollment?.billingPackage
-                      ?.isFfs
-                      ? 'View Pricing'
-                      : 'Benefits'}
-                  </span>
-                  <KeyboardArrowDownIcon />
-                </div>
+                {!unknownMembership && (
+                  <div
+                    role="button"
+                    className="px-3 py-0 border border-1 border-neural-base bg-white mr-3 cursor-pointer"
+                    onClick={handleSubscriptionView}
+                    tabIndex={0}
+                    onKeyDown={handleSubscriptionView}
+                  >
+                    <span className="font-normal text-xs text-[#5D6B82] mb-4">
+                      {member.activeBillingPackageEnrollment?.billingPackage
+                        ?.isFfs
+                        ? 'View Pricing'
+                        : 'Benefits'}
+                    </span>
+                    <KeyboardArrowDownIcon />
+                  </div>
+                )}
               </div>
             </section>
           ) : (

@@ -65,7 +65,7 @@ export function BillingMethodForm({
   const [billingMethods, setBillingMethods] = useState<BillingMethod[]>([])
   const { prospectiveMemberCohorts } = useMembersData()
   const [loading, setLoading] = useState(false)
-  const [initialValues] = React.useState<any>({
+  const [initialValues, setInitialValues] = React.useState<any>({
     billingMethod: '',
   })
   const [loadingCohorts, setLoadingCohorts] = useState(true)
@@ -94,8 +94,10 @@ export function BillingMethodForm({
 
       if (member?.antaraId) navigate(`/member/${member.antaraId}`)
     }
-
-    if (isDirty(initialValues, value)) {
+    if (
+      isDirty(initialValues, value) ||
+      ['fee-for-service', 'unlimited'].includes(type)
+    ) {
       if (member) {
         const activeBillingPackageId = billingMethods.find(
           (item) => item.value === value.billingMethod
@@ -145,6 +147,15 @@ export function BillingMethodForm({
     }))
 
     setBillingMethods(formattedCohorts)
+    if (['fee-for-service', 'unlimited'].includes(type)) {
+      setInitialValues({
+        billingMethod: formattedCohorts[0].value,
+      })
+
+      setValidation(true)
+      setLoadingCohorts(false)
+      return
+    }
     setLoadingCohorts(false)
   }
 
