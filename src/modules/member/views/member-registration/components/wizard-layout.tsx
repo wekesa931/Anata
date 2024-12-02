@@ -91,7 +91,7 @@ export function MemberRegistrationWizardLayout({
         <WizardStep label="Insurance & Employer">
           <InsuranceSection>{sections.insurance}</InsuranceSection>
         </WizardStep>
-        <WizardStep label="Billing & Service">
+        <WizardStep label="Billing Scheme">
           <BillingSection>{sections.billing}</BillingSection>
         </WizardStep>
       </Wizard>

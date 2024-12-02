@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { MemberCohortType } from 'src/modules/member/types'
 import {
   SectionItem,
@@ -25,7 +25,6 @@ import { PortalForm } from 'src/modules/member/components/update-forms'
 import InsuranceForm from 'src/modules/member/components/forms/billing/index'
 import { useNotifications } from 'src/context/notifications'
 import InElligibilityReasonsComponent from 'src/modules/member/components/billing-reasons'
-import { useMembersData } from 'src/modules/member/hooks/member-data'
 import SelectField from 'src/components/forms/fields/select-field'
 import { Form } from 'formik'
 import PrimaryForm from 'src/components/forms/primary-form'
@@ -41,7 +40,6 @@ function BillingSectionItem({
   member,
   editCohort,
   availableCohorts,
-  setAvailableCohorts,
   setInitialValues,
   setDisplayReasons,
   setActiveBillingPackageId,
@@ -62,9 +60,6 @@ function BillingSectionItem({
   const memberConsent =
     memberCohortItem?.isOptInRequired === 'Yes' ? 'Agree' : 'Not required'
   const activeStatus = memberCohortItem?.subscriptionStatus === 'ACTIVE'
-  const { prospectiveMemberCohorts } = useMembersData()
-
-  const [editableCohort, setEditableCohort] = useState({})
   const [editableCohortId, setEditableCohortId] = useState('')
 
   const handleSaveInput = (value: any) => {
@@ -87,40 +82,8 @@ function BillingSectionItem({
   const isEditable =
     editCohort && editableCohortId === memberCohortItem.cohortId
 
-  useEffect(() => {
-    const fetchMemberCohorts = async (antaraId: any) => {
-      const request = await prospectiveMemberCohorts(antaraId)
-
-      const formattedCohorts = request.map((chrt: any) => ({
-        label: chrt.name?.toUpperCase().split('KES')[0].trim(),
-        value: chrt.cohortId,
-        billingPackage: chrt.billingPackage,
-      }))
-
-      const existingCohort = formattedCohorts.find(
-        (cohortData: any) => cohortData.value === memberCohortItem?.cohortId
-      )
-
-      if (!existingCohort && memberCohortItem?.name) {
-        formattedCohorts.push({
-          label: memberCohortItem.name.toUpperCase().split('KES')[0].trim(),
-          value: memberCohortItem.cohortId,
-          billingPackage: memberCohortItem.billingPackage,
-        })
-      }
-
-      setAvailableCohorts(formattedCohorts)
-    }
-
-    if (member?.antaraId) {
-      fetchMemberCohorts(member.antaraId)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member, editableCohort])
-
   const handleEditCohortData = (values: any) => {
     setEditableCohortId(isEditable ? '' : values.cohortId)
-    setEditableCohort(values)
     setEditCohort(true)
     setInitialValues({
       cohortName: values?.cohortId || '',
@@ -347,7 +310,7 @@ function BillingSection({ member }: BillingSectionProps) {
                 handleOpen={() => toggleEditForm(true)}
                 isEdited={isEdited}
                 setIsEdited={setIsEdited}
-                modalTitle="Assign Billing Method"
+                modalTitle="Assign Billing Package"
                 height={processLoader ? 40 : 66}
                 width={processLoader ? 40 : 50}
               >
@@ -380,7 +343,7 @@ function BillingSection({ member }: BillingSectionProps) {
             <div id="billing-section">
               <SectionItem>
                 <div className="mb-4">
-                  <ItemTitle title="Billing and Service" />
+                  <ItemTitle title="Billing Scheme" />
                 </div>
                 <GridItems single>
                   <div className="flex items-center justify-between gap-1">

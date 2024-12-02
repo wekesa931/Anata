@@ -210,7 +210,9 @@ export function BillingMethodForm({
             {loadingCohorts ? (
               <div className="rounded-md p-4 mb-4 flex flex-col items-center justify-center h-[300px]">
                 <FadeLoader color="#222222" loading data-testid="loader" />
-                <div className="mt-4 text-center">Fetching Billing Methods</div>
+                <div className="mt-4 text-center">
+                  Fetching Billing Packages
+                </div>
               </div>
             ) : (
               <>
@@ -225,7 +227,7 @@ export function BillingMethodForm({
                           {getNewCohortLabel(formik.values.billingMethod)}
                         </strong>{' '}
                         will automatically cancel{' '}
-                        <strong>{activeCohort?.name}</strong> billing method.
+                        <strong>{activeCohort?.name}</strong> billing package.
                       </p>
                       <p className="mt-5">Are you sure you want to proceed?</p>
                       <div className="mt-10 flex flex-col gap-4">

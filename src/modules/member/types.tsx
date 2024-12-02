@@ -125,6 +125,9 @@ export type PayorType = {
 
 export type BillingEnrollmentPackageType = {
   billingPackage?: BillingPackageType
+  billingSchemeSubscription?: {
+    subscriptionStatus?: string
+  }
 }
 
 export type V2MemberType = {

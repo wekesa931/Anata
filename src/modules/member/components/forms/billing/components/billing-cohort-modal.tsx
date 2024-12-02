@@ -42,7 +42,7 @@ function ModalHeader({
       <h3 className="font-medium text-base">Heads up!</h3>
       <p className="mt-2">
         Moving the member to <strong>{newCohortLabel}</strong> will
-        automatically cancel <strong>{oldCohortLabel}</strong> billing method.
+        automatically cancel <strong>{oldCohortLabel}</strong> billing package.
       </p>
       <p className="mt-5">Are you sure you want to proceed?</p>
     </div>

@@ -61,11 +61,11 @@ function BillingEligibilityModal() {
           <div>
             <p className="mt-5">
               This service is restricted only to members assigned to a billing
-              method.
+              scheme.
             </p>
 
             <p className="mt-4">
-              Please update insurance details and billing service to unlock
+              Please update insurance details and billing package to unlock
               antara services
             </p>
             <div className="mt-4 flex flex-col gap-2">

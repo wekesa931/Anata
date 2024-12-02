@@ -184,11 +184,11 @@ function InsuranceForm({
   const getBillingAlertDescription = () => {
     switch (alertState) {
       case 'all':
-        return 'This member does not have employer and insurance details. Please add them then assign a billing method'
+        return 'This member does not have employer and insurance details. Please add them then assign a billing package'
       case 'business':
-        return 'This member does not have employer details. Please add them then assign a billing method'
+        return 'This member does not have employer details. Please add them then assign a billing package'
       case 'insurance':
-        return 'This member does not have insurance details. Please add them then assign a billing method'
+        return 'This member does not have insurance details. Please add them then assign a billing package'
       default:
         return ''
     }

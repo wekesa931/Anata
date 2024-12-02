@@ -70,6 +70,9 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
         isOneDayHealthCamp
         isUnlimitedMembership
       }
+      billingSchemeSubscription {
+        subscriptionStatus
+      }
     }
     pendingBillingPackageEnrollment {
       name

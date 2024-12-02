@@ -26,6 +26,13 @@ function DashboardContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member])
 
+  const isSubscriptionValid = (enrollment: any) => {
+    const validStatuses = ['ACTIVE', 'GRACE_PERIOD']
+    const status = enrollment?.billingSchemeSubscription?.subscriptionStatus
+
+    return !status || validStatuses.includes(status)
+  }
+
   return isLoading ? (
     <div className="flex items-center justify-center h-screen w-full">
       <CenteredLoader message="Loading member..." />
@@ -48,8 +55,7 @@ function DashboardContent() {
               <RightViews />
             </div>
           </div>
-          {(member?.eligibleForServices === 'NO' ||
-            member?.eligibleForServices === 'UNKNOWN') &&
+          {!isSubscriptionValid(member?.activeBillingPackageEnrollment) &&
             location.search !== '?register=true' && <BillingEligibilityModal />}
         </>
       )}
