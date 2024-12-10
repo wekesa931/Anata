@@ -29,11 +29,11 @@ function DashboardContent() {
   const isSubscriptionValid = (enrollment: any) => {
     const validStatuses = ['ACTIVE', 'GRACE_PERIOD']
     const status = enrollment?.billingSchemeSubscription?.subscriptionStatus
-
-    return !status || validStatuses.includes(status)
+    if (!status) return false
+    return validStatuses.includes(status)
   }
 
-  return isLoading ? (
+  return isLoading && !member && !memberNotFound ? (
     <div className="flex items-center justify-center h-screen w-full">
       <CenteredLoader message="Loading member..." />
     </div>
