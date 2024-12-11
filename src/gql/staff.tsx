@@ -9,6 +9,9 @@ const GET_ANTARA_STAFF = gql`
           fullName
           emailUsername
           team
+          staffTeam {
+            name
+          }
           atRecordId
           phone
           signature

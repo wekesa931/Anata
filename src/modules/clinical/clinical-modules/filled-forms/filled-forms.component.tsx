@@ -46,7 +46,8 @@ function FilledForms() {
     'hif',
     'pafu',
     'mhc',
-    'minor_health_check',
+    'minorHealthCheckZeroToFive',
+    'minorHealthCheckSixToSeventeen',
     'incident',
   ]
 

@@ -14,11 +14,15 @@ const mapAssigneeTeam = (antaraStaff: any[]) => {
     'HN_TEAM_LEAD',
     'NUTRITIONIST_TEAM_LEAD',
     'HN_TEAM_LEAD',
-    'MENTAL_HEALTH_COUNSELOR',
+    'PHARMTECH',
+    'MENTAL HEALTH COUNSELOR',
+    'HEALTHY PROGRAM COORDINATOR',
+    'LOG',
   ]
   return antaraStaff
-    .filter(({ team }: any) => {
-      return teamType.some((value) => team === value)
+    .filter(({ team, staffTeam }: any) => {
+      const teamName = (team || staffTeam?.name)?.toUpperCase()
+      return teamType.includes(teamName)
     })
     .sort((a, b) => a?.fullName?.localeCompare(b?.fullName))
 }
@@ -43,7 +47,10 @@ export const useAntaraStaff = () => {
   const [getAntaraStaff, { loading }] = useLazyQuery(GET_ANTARA_STAFF)
 
   const filterByTeam = (team: any[], staffMembers: any[] = []) => {
-    return staffMembers.filter((e: any) => team.includes(e?.team))
+    return staffMembers.filter((e: any) => {
+      const teamType = (e?.team || e?.staffTeam?.name)?.toUpperCase()
+      return team.includes(teamType)
+    })
   }
 
   const extractStaffData = (staffMembers: any[] = []) => {
