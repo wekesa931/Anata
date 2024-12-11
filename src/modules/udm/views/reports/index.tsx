@@ -9,6 +9,7 @@ import PrescriptionComponent from 'src/modules/prescription/views/prescription'
 import dayjs from 'dayjs'
 import { DocMeta } from 'src/modules/udm/types'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import ClaimComponent from 'src/modules/claimForms/views/claim'
 
 enum DocTypes {
   MEDICAL_CAMP = 'MEDICAL_CAMP',
@@ -16,6 +17,7 @@ enum DocTypes {
   IN_PATIENT = 'IN_PATIENT',
   SPECIALIST = 'SPECIALIST',
   PRESCRIPTION = 'PRESCRIPTION',
+  CLAIMFORM = 'CLAIMFORM',
 }
 
 function ReportGenerator() {
@@ -96,6 +98,14 @@ function ReportGenerator() {
           date,
           'Prescription'
         )
+      case DocTypes.CLAIMFORM:
+        return createDocMeta(
+          'Claim Form',
+          'Claim Form Regeneration',
+          '',
+          date,
+          'Claim Form'
+        )
       default:
         return {
           docType: '',
@@ -122,6 +132,8 @@ function ReportGenerator() {
         return 'Specialist Report'
       case DocTypes.PRESCRIPTION:
         return 'Prescription'
+      case DocTypes.CLAIMFORM:
+        return 'Claim Form Regeneration'
       default:
         return 'Health Report Generate'
     }
@@ -183,6 +195,13 @@ function ReportGenerator() {
                 openPortal(DocTypes.PRESCRIPTION)
               }}
             />
+            <DocListItem
+              title="Claim Form Regeneration"
+              subtitle="For rectifying claim forms"
+              onClick={() => {
+                openPortal(DocTypes.CLAIMFORM)
+              }}
+            />
           </Paper>
         ) : (
           <>
@@ -197,6 +216,8 @@ function ReportGenerator() {
                 closeModal={closeModal}
                 getDocMeta={getDocMeta}
               />
+            ) : docType === DocTypes.CLAIMFORM ? (
+              <ClaimComponent closeModal={closeModal} getDocMeta={getDocMeta} />
             ) : (
               <OPGeneralComponent
                 closeModal={closeModal}

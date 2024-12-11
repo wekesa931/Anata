@@ -148,6 +148,14 @@ const GET_FILE_CATEGORIES = gql`
     }
   }
 `
+const REGENERATE_CLAIM_FORM = gql`
+  mutation regenerateClaimForm($input: RegenerateClaimFormInput!) {
+    regenerateClaimForm(input: $input) {
+      status
+      response
+    }
+  }
+`
 
 export {
   GET_FILES,
@@ -158,4 +166,5 @@ export {
   GET_FOLDERS,
   SHARE_FILE,
   GET_FILE_CATEGORIES,
+  REGENERATE_CLAIM_FORM,
 }

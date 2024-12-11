@@ -110,6 +110,11 @@ export const useModuleAnalytics = () => {
         { document }
       )
     },
+    trackClaimFormRegenerated: (data: any) => {
+      middlesSectionAnalytics.track('Claim Form Regeneration Button Clicked', {
+        data,
+      })
+    },
 
     // comms
     trackOutboundCall: (call: any) => {
