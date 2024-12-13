@@ -97,13 +97,15 @@ const extractInitialState = ({
     tags: member?.tags || [],
     refusedServices: member?.refusedServices || [],
     antaraId: member?.antaraId || '',
-    primaryMemberAntaraId: primaryMember?.antaraId,
+    primaryMemberAntaraId: member?.primary?.antaraId || '',
+    relationshipToPrimary: member?.primary?.relationshipToPrimary || '',
     // next-line: possible data polution if dependent is an adult child
-    relationshipToPrimary: isChildRegistration
+    isChildRegistration: isChildRegistration
       ? 'Child'
       : primaryMember
       ? 'Spouse'
       : '',
+
     referralSource: member?.referralSource || '',
     otherRefusedService: member?.otherRefusedService,
     nhifNumber: member?.nhifNumber || '',
@@ -328,6 +330,27 @@ export function BioDataForm({
                         required={false}
                       />
                     </FlexRow>
+                    {isEditing && (
+                      <FlexRow>
+                        <TextField
+                          name="primaryMemberAntaraId"
+                          label="Primary Member Antara ID"
+                          placeholder="Enter Primary Member Antara ID"
+                          required={false}
+                        />
+                        <SelectField
+                          name="relationshipToPrimary"
+                          label="Relationship to Primary"
+                          options={[
+                            { label: 'Self', value: 'Self' },
+                            { label: 'Spouse', value: 'Spouse' },
+                            { label: 'Child', value: 'Child' },
+                          ]}
+                          required={false}
+                          placeholder="Select relationship"
+                        />
+                      </FlexRow>
+                    )}
                     {!isChildRegistration ? (
                       <>
                         <SelectField
