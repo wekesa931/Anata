@@ -158,7 +158,9 @@ function ClaimModalView({
       .catch((error) => {
         console.error('Error during regeneration:', error)
         notify(
-          'Something went wrong with the generation of the document, please try again or contact RET team'
+          'Something went wrong with the generation of the document, please try again or contact RET team',
+          'error',
+          8000
         )
       })
       .finally(() => {

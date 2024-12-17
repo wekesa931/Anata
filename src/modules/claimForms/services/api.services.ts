@@ -15,11 +15,16 @@ export const useClaimAPI = () => {
   const { member } = useMember()
 
   const formatDate = (dateString: any): string => {
-    return dayjs(dateString).format('hh:mma  YYYY-MM-DD')
+    return dayjs(dateString).format('DD/MM/YYYY - hh:mma')
   }
 
   const fetchConsultationData = async () => {
-    const allowedFields = ['Created', 'Status (from Appointments)', 'Record ID']
+    const allowedFields = [
+      'Created',
+      'Status (from Appointments)',
+      'Record ID',
+      'Consulting Clinician Name',
+    ]
     const memberConsultation = await airtableFetch(
       `clinicalconsultation/list?&filterByFormula=AND(FIND("${
         member?.antaraId
@@ -35,7 +40,9 @@ export const useClaimAPI = () => {
 
     const formattedOptions = sortedConsultations.map((consultation: any) => ({
       value: consultation,
-      label: formatDate(consultation.Created),
+      label: `${consultation['Consulting Clinician Name']} - ${formatDate(
+        consultation.Created
+      )}`,
     }))
     return formattedOptions
   }
