@@ -22,6 +22,7 @@ const TABLE_ROUTES: Record<string, string> = {
   'HN Meetings': 'meetings',
   'Clinical Rounds': 'clinicalrounds',
   'Nutritional Consultation': 'ncf',
+  'Nutritional Consultation - Old': 'ncf',
   Activity: 'activity',
   Team: 'team',
   'Msg Templates': 'msgTemplates',
