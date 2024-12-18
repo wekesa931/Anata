@@ -5927,6 +5927,1404 @@ export default [
     ],
   },
   {
+    name: 'Nutritional Consultation - Old',
+    id: 'tblJoayRD7xQ33qpR',
+    formId: 'shrFmDt0AU4XjbsAr',
+    fields: [
+      {
+        id: 'fld97KWfGQMlZeAT3',
+        name: 'Case ID',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldujoBzhHxX4oSOt',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tbl7Kh4tVrQp9JdUc',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldXvSfjevSU59hol',
+        name: 'Member',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld33jxyGnKOQkPgN',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblidCJtioaFSYwvk',
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldr6yxzbVBuh0OCC',
+        name: 'Appointments',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldNkjgTUFxBnfNX7',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblZB4YOpd7XH3cYt',
+        required: false,
+        helper:
+          'Please select the appointment so that the system can automatically update the status after your consultation',
+      },
+      {
+        id: 'fldjL2gP5X6ZpRhEo',
+        name: 'Date of Consultation',
+        type: 'date',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld3tBosjJIiQNX1F',
+        name: 'Nutritional Consultation #',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldQbVDAaAm7m1Vtl',
+        name: 'Source of NC request',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldW1SZOP6G11ny2B',
+        name: 'Assessment Type',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fld5PQAlXm2zG4lDW',
+        name: 'Do you have any of the following conditions?',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld7cngqqlITbCrRD',
+        name: 'Describe Other Condition',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['Other'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['Other'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldMYi3r23NEB3qpY',
+        name: 'Conditions (from MemberDB)',
+        type: 'conditions',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldm4JKb5DAWFzFYc',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblYSNrfZJnzdSwmx',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldgXkBa5ueRWLcBk',
+        name: 'HMP',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld1ToqzQ0FELQLam',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblMKwFctRYwBYHgt',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldCBcTkWDirOsrKw',
+        name: 'Consulting Clinican',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld4usvEu91PpcNHb',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblHs6JxFnMGAjNNC',
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fld1CS9ZVxdfSs7Yh',
+        name: 'Breakfast',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Describe your typical meal here',
+      },
+      {
+        id: 'fldEGAssEiCL7qr9c',
+        name: 'Lunch',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Describe your typical meal here',
+      },
+      {
+        id: 'fldehyaYtQMzpVZ9S',
+        name: 'Dinner',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Describe your typical meal here',
+      },
+      {
+        id: 'fldWtHET2RY5pWQXL',
+        name: 'Snacks',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Describe your typical snacks here',
+      },
+      {
+        id: 'fldpRQ41n7VtcRuS1',
+        name: 'How many glasses of water do you take in a day?',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldWRCNu3yWkBXt3c',
+        name: 'High Salt Foods (Packaged salty snacks like crisps, salted nuts, popcorn or salty biscuits/crackers)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldE3XjTNTLI7kHFz',
+        name: 'High Salt Foods (Cold Cuts or Processed Meats like sausage, bacon, ham, or smokie)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldmfoOXeuvxvuSPb',
+        name: 'High Salt Foods (Fast food like chips, bhajia, pizza, deep-fried chicken, or cheesy foods)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fld2vDVdB8ck2N3u3',
+        name: 'High Salt Foods (Canned foods like baked beans, maize, corn, peas, or tomatoes)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldUDB2dCQZmQdtRA',
+        name: 'High Salt Foods (Condiments like tomato sauce, ketchup, chili sauce or mustard)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldT6wajypTInDPXG',
+        name: 'High Salt Foods (Seasoning like Royco, Maggi cubes, Soy sauce, Tomato Paste)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldQER2cg8hzwVTPC',
+        name: 'High Salt Foods (Table Salt)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fld8VEFIe2e4PtqtT',
+        name: 'Is salt added to your food when cooked?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldOshDKPvDSVyzof',
+        name: 'Basal Daily Sodium',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldRowVXuyA2bcpJm',
+        name: 'Estimated daily sodium intake',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Level [0]: <1500mg (Recommended for hypertensives)\nLevel [1]: 1500-2500mg (Normal)\nLevel [2]: 2500-3500mg (High)\nLevel [3]: 3500-4500mg (Very High)\nLevel [4]: >4500mg (Excessively High)',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldgOLvIDrnMc1T8Q',
+        name: 'High Potassium Foods (Dark green leafy or traditional/kienyeji vegetables)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldhrrx0yX9QZ9AzL',
+        name: 'High Potassium Foods (Ripe bananas)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldr0sgrdqpOIYzkr',
+        name: 'High Potassium Foods (Cooked plantains/ green bananas)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fld6RMbLT1NJZDnJZ',
+        name: 'High Potassium Foods (Unsalted nuts)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fld8iuz7sgu9itaPc',
+        name: 'High Potassium Foods (Root vegetables like beetroot, sweet potatoes, arrow roots or yams)',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldp5AvGTFGkNi6N3',
+        name: 'Basal Daily Potassium',
+        type: 'number',
+        format: 'integer',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'flddULOofgHvRKU70',
+        name: 'Estimated Daily Potassium Intake',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Level [0]: >3500mg (Recommended)\nLevel [1]: 2500-3500mg (Normal)\nLevel [2]: 1500-2500mg (Low)\nLevel [3]: <1500mg (Inadequate)',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Blood Pressure'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Blood Pressure'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Blood Pressure'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldLOY33TW8gOOkaN',
+        name: 'Basal Metabolic Rate',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['Overweight'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['Overweight'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['Overweight'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldJ8R7OCRTbzvp70',
+        name: 'Estimated Daily Caloric Intake',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['Overweight'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['Overweight'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['Overweight'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldcLRAVW3R2xuXl0',
+        name: 'Estimated Caloric Needs',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['Overweight'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['Overweight'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['Overweight'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldrnlIM2dOFULhDQ',
+        name: 'Breakfast Glycemic Load',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['Diabetes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['Diabetes'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['Diabetes'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldOgwk0ZhW8BlSAO',
+        name: 'Lunch Glycemic Load',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['Diabetes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['Diabetes'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['Diabetes'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldmaVhJDwt0p4XDL',
+        name: 'Snacks Glycemic Load',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['Diabetes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['Diabetes'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['Diabetes'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldnRUSLScLdKh4tQ',
+        name: 'Dinner Glycemic Load',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['Diabetes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['Diabetes'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['Diabetes'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fld9Tp1N5bO9XzGYn',
+        name: 'Total Daily Glycemic Load',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Please input the calculated glycemic load using this field.\nLevel 0: <100 (Recommended for diabetes)\nLevel 1: 100 - 180 (recommended for at risk/healthy)\nLevel 2: 181 - 200\nLevel 3: >200',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['Diabetes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['Diabetes'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['Diabetes'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fld3s2ByuDjHcvKws',
+        name: 'Eggs',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Cholesterol'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Cholesterol'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Cholesterol'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldqrE4NfGeA8GTQ2',
+        name: 'Solid Cooking Fats',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Cholesterol'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Cholesterol'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Cholesterol'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'flduTh07roJyr0CFB',
+        name: 'Deep Fried',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Cholesterol'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Cholesterol'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Cholesterol'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldMRmTLNVIIjA6GD',
+        name: 'Fast Food',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Cholesterol'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Cholesterol'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Cholesterol'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldLPkl6LKeEGHZ7w',
+        name: 'Cold Cuts',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: 'Please enter the number of times per week',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Cholesterol'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Cholesterol'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Cholesterol'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fldH4zP9eAeYncWu7',
+        name: 'Daily estimated cholesterol intake',
+        type: 'number',
+        format: 'decimal',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'CHOLESTEROL INTAKE LEVELS\t\t\nLevel [0]: <200mg (Recommended for those with heart disease)\nLevel [1]: 200-300mg (Normal)\nLevel [2]: 300-500mg (High)\nLevel [3]: >500mg (Very High)',
+        conditionType: '',
+        parentKey: 'Do you have any of the following conditions?',
+        parentValues: ['High Cholesterol'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Do you have any of the following conditions?']
+            )
+          ) {
+            return ['High Cholesterol'].some((r) =>
+              values['Do you have any of the following conditions?'].includes(r)
+            )
+          }
+          return ['High Cholesterol'].includes(
+            values['Do you have any of the following conditions?']
+          )
+        },
+      },
+      {
+        id: 'fld9OCSyJzHE7Ib5e',
+        name: 'Current dietary challenges',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'What dietary challenges is the member facing currently?',
+      },
+      {
+        id: 'fld2ahqR93fsHyYuH',
+        name: 'Describe current dietary challenges',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        condition: (values: any) => {
+          if (Array.isArray(values['Current dietary challenges'])) {
+            return ['Other'].some((r) =>
+              values['Current dietary challenges'].includes(r)
+            )
+          }
+          return ['Other'].includes(values['Current dietary challenges'])
+        },
+      },
+      {
+        id: 'fldIh3t7oy1oL3gG9',
+        name: 'Future dietary challenges',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'What dietary challenges does the member anticipate?',
+      },
+      {
+        id: 'flda0buplgSWwz2T6',
+        name: 'Describe future dietary challenges',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        condition: (values: any) => {
+          if (Array.isArray(values['Future dietary challenges'])) {
+            return ['Other'].some((r) =>
+              values['Future dietary challenges'].includes(r)
+            )
+          }
+          return ['Other'].includes(values['Future dietary challenges'])
+        },
+      },
+      {
+        id: 'fldYbwXC8AvuQ9b8g',
+        name: 'Assessment',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'A summary of the nutrition diagnosis, diet type, meal portions & dietary behaviours',
+      },
+      {
+        id: 'fldJGI1AH4AlbDk6o',
+        name: 'Nutrition consultation outcomes',
+        type: 'multiSelect',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+      },
+      {
+        id: 'fldYlv7EnMoPW0T1N',
+        name: 'Other outcomes',
+        type: 'multilineText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Nutrition consultation outcomes',
+        parentValues: ['Other'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Nutrition consultation outcomes'])) {
+            return ['Other'].some((r) =>
+              values['Nutrition consultation outcomes'].includes(r)
+            )
+          }
+          return ['Other'].includes(values['Nutrition consultation outcomes'])
+        },
+      },
+      {
+        id: 'fldyXgLDarMyh2YuI',
+        name: 'Recommendation',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'A summary of the recommended HMP template, diet plan & dietary milestones\nClick here to track the dietary interventions: <a href="https://airtable.com/app5syOvwU86ByWD8/tblTmMtBgwT76JrQN/viw7Lol2O4HIYTFJS?blocks=hide" target="_blank">https://airtable.com/app5syOvwU86ByWD8/tblTmMtBgwT76JrQN/viw7Lol2O4HIYTFJS?blocks=hide</a> ',
+      },
+      {
+        id: 'fldaBEyw3S8a40Gro',
+        name: 'Date of next Nutritional Consultation',
+        type: 'date',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper:
+          'Please book the next appointment with the member using calendly now if less than 10 days from today and enter the date here in the form (note that if the date is more than 10 days, a task for ME will be created so that they confirm the availability of the member)',
+      },
+      {
+        id: 'fldDt5sfuzRfkev7Q',
+        name: 'Put anything else you want to share here!',
+        type: 'richText',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+    ],
+  },
+  {
     name: 'Vitals',
     id: 'tblNC7CZy3MqYRs6j',
     formId: 'shr0VkCzeprnRSIhA',
