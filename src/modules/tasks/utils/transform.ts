@@ -19,7 +19,7 @@ const mapRawTaskToUserTask = (rawTask: RawUserTask): UserTask => {
     return undefined
   }
   return {
-    task_definition: extractFromArray(rawTask.Type),
+    task_definition: rawTask.Type,
     due_date: rawTask['Due Date'],
     notes: rawTask['Task Notes'],
     status: rawTask.Status,
@@ -27,8 +27,8 @@ const mapRawTaskToUserTask = (rawTask: RawUserTask): UserTask => {
     assignee: extractFromArray(rawTask.AssigneeName),
     recordid: rawTask.recordid,
     status_last_modified_at: rawTask.status_last_modified_at,
-    member: extractFromArray(rawTask['Member Name Lookup']),
-    antaraId: extractFromArray(rawTask['Antara ID']),
+    member: rawTask['Member Name Lookup'],
+    antaraId: rawTask['Antara ID'],
   }
 }
 

@@ -226,7 +226,6 @@ function Tasks() {
 
   const { member } = useMember()
   const { notify } = useNotifications()
-  const { getTaskDefinitionById } = useAirtableMeta()
 
   const fields = [
     'Type',
@@ -430,12 +429,16 @@ function Tasks() {
     const defaultReschedulingDays = getDefaultReschedulingDays(taskDefs)
 
     let smsTemplate = ''
-    const smsContent = taskDefs.find(
-      (taskDef) => taskDef.smsContent && taskDef.smsContent.length > 0
-    )?.smsContent[0]
+    const smsContent = taskDefs.find((taskDef) => {
+      return (
+        taskDef['Notification content from template for missed tasks'] &&
+        taskDef['Notification content from template for missed tasks'].length >
+          0
+      )
+    })?.['Notification content from template for missed tasks'][0]
     if (smsContent) {
       const memberTaskType = taskDefs
-        .map((taskDef) => taskDef.memberTaskType)
+        .map((taskDef) => taskDef['Member facing name for Task type'])
         .filter(Boolean) // Filter out empty values
         .join(', ')
       smsTemplate = smsContent
@@ -448,8 +451,8 @@ function Tasks() {
     // Build the interaction log content with clinical preferred names
     let interactionLogContent = ''
     const interactionLogDetails = taskDefs.find(
-      (taskDef) => taskDef.interactionLogContent
-    )?.interactionLogContent
+      (taskDef) => taskDef['Interaction log form content']
+    )?.['Interaction log form content']
     if (interactionLogDetails) {
       interactionLogContent = interactionLogDetails.replace(
         /\[SMS content\]/g,
@@ -482,29 +485,43 @@ function Tasks() {
         tasks
           .map((task) => {
             const taskDefinition = task?.['Task definition'] || []
-            const taskDefinitionById =
-              taskDefinition.length > 0
-                ? getTaskDefinitionById(taskDefinition[0])
-                : []
-            return taskDefinitionById
+            return taskDefinition
           })
           .filter((definition) => definition !== null) || []
       ),
     ]
 
-    setTemplateData(extractTaskTemplate(taskDefinitions, tasks))
-    setModalOpen(true)
+    try {
+      const filterFormula = `OR(${taskDefinitions
+        .map((definition) => `{Name} = "${definition}"`)
+        .join(', ')})`
 
-    // Track missed task clicked for all tasks
-    tasks.forEach((task) => trackMissedTaskClicked(task, tasks.length))
-    trackMissedTaskClicked(tasks, tasks.length)
+      const fetchedTaskDefinitions = await airtableFetch(
+        `tasksDefinition/list?filterByFormula=${encodeURIComponent(
+          filterFormula
+        )}`
+      )
+
+      const processedDefinitions = fetchedTaskDefinitions.map((def: any) => {
+        return {
+          ...def,
+          recordId: def.id,
+        }
+      })
+
+      setTemplateData(extractTaskTemplate(processedDefinitions, tasks))
+      setModalOpen(true)
+
+      // Track missed task clicked for all tasks
+      tasks.forEach((task) => trackMissedTaskClicked(task, tasks.length))
+      trackMissedTaskClicked(tasks, tasks.length)
+    } catch (error) {
+      logError(error)
+      notify('Error fetching task definitions')
+    }
   }
 
   useEffect(() => {
-    function getAssigneeName(assigned: string | { fullName: string }) {
-      return typeof assigned === 'string' ? assigned : assigned?.fullName || ''
-    }
-
     // Display the mergedRecords
     function DisplayInfo({ hnTask }: any) {
       return (
@@ -644,17 +661,7 @@ function Tasks() {
               <section>
                 <p className="text-dark-blue-50">Assigned to</p>
                 {hnTask['Assignee Name'] ? (
-                  <p className="mt-2">
-                    {Array.isArray(hnTask['Assignee Name']) &&
-                      hnTask['Assignee Name'].map(
-                        (
-                          assigned: string | { fullName: string },
-                          index: number
-                        ) => (
-                          <span key={index}>{getAssigneeName(assigned)}</span>
-                        )
-                      )}
-                  </p>
+                  <p className="mt-2">{hnTask['Assignee Name']}</p>
                 ) : (
                   <p className="mt-2">-</p>
                 )}

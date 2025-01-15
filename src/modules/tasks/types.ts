@@ -12,7 +12,7 @@ export type UserTask = {
 }
 
 export type RawUserTask = {
-  Type?: string[]
+  Type?: string
   'Due Date': string
   'Task Notes': string
   Status: string
@@ -21,8 +21,8 @@ export type RawUserTask = {
   AssigneeName?: string[]
   status_last_modified_at: string
   recordid: string
-  'Member Name Lookup'?: string[]
-  'Antara ID'?: string[]
+  'Member Name Lookup'?: string
+  'Antara ID'?: string
 }
 
 export enum Filters {

@@ -13,7 +13,7 @@ const getTaskFields = (
       options: taskDefinition
         .map((taskDef) => ({
           label: taskDef.clinicalPrefferedName,
-          value: taskDef.recordId,
+          value: taskDef.clinicalPrefferedName || taskDef.recordId,
         }))
         .sort((a, b) => a.label.localeCompare(b.label)),
       disabled: true,
