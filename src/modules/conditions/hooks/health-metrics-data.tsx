@@ -120,7 +120,10 @@ export const useHealthMetricsData = () => {
       const payload = healthMetrics.map((metric: any) => ({
         antaraId,
         healthMetricName: metric.name,
-        value: parseFloat(values[metric.name]),
+        // check if value does not cast to a number, if so save as it is, else convert to a number
+        value: Number.isNaN(parseFloat(values[metric.name]))
+          ? values[metric.name]
+          : parseFloat(values[metric.name]),
         measurementPanelId: null,
         measurer,
         timestamp,
