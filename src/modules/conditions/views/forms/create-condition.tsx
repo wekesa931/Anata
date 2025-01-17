@@ -1,4 +1,4 @@
-import { Form } from 'formik'
+import { Form, FormikErrors } from 'formik'
 import React, { useEffect } from 'react'
 import PrimaryButton from 'src/components/buttons/primary'
 import {
@@ -176,9 +176,19 @@ export function CreateCondition({
     icd11Code: false,
   })
 
+  /**
+   * prefills icd11 code field after stage of diagnosis field is filled
+   * @param condition condition field
+   * @param selectedStageId starting stage id field
+   * @param setFieldValueFxn formik function that updates field value, given field name and value
+   */
   const handleStagePrefill = (
     condition: ConditionDefinition,
-    selectedStageId: any
+    selectedStageId: any,
+    setFieldValueFxn: (
+      field: string,
+      value: any
+    ) => Promise<void | FormikErrors<any>>
   ) => {
     const conditionIcd11Code = condition?.icd11Code || ''
     const selectedStage = condition?.possibleStages?.find(
@@ -187,12 +197,11 @@ export function CreateCondition({
 
     const newIcd11Code = selectedStage?.icd11Code || conditionIcd11Code
 
-    setInitialValues((prevValues: any) => ({
-      ...prevValues,
-      startingStageId: selectedStageId,
-      icd11Code: newIcd11Code,
-    }))
+    // populate fields with value
+    setFieldValueFxn('icd11Code', newIcd11Code)
+    setFieldValueFxn('startingStageId', selectedStageId)
 
+    // update icd11code field as prefilled
     setPrefilled((prev) => ({
       ...prev,
       icd11Code: !!newIcd11Code,
@@ -264,7 +273,7 @@ export function CreateCondition({
           lookups
         )}
       >
-        {({ values, errors }) => (
+        {({ values, setFieldValue, errors }) => (
           <Form>
             <AutocompleteField
               label="Condition"
@@ -308,7 +317,7 @@ export function CreateCondition({
                 )}
                 placeholder="-- Select --"
                 saveInput={(name, value) => {
-                  handleStagePrefill(values.condition, value)
+                  handleStagePrefill(values.condition, value, setFieldValue)
                   saveInput(name, value)
                 }}
                 disabled={disabled}
