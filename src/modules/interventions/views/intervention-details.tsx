@@ -18,7 +18,7 @@ import { Intervention } from 'src/modules/interventions/db/models'
 import useInterventionData from 'src/modules/interventions/hooks/intervention.data'
 import InterventionFilter from 'src/modules/interventions/components/intervention-filter'
 import { Item, ItemTitle } from 'src/components/layouts/display-items.component'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { useModuleAnalytics } from 'src/modules/analytics'
 
 const StatusIs = (status: string) => {
@@ -47,16 +47,9 @@ function InterventionCard({ intervention, activeId }: InterventionCardProps) {
   const attainmentIs = AttainmentIs(attainment || '')
   const currentMeasurement = intervention?.currentMeasurement || []
   const currentMilestone = intervention?.currentMilestone || []
-  const [conditions, setConditions] = useState<any[]>([])
 
   const { trackInterventionsDetailsOpened: interventionsDetailsOpened } =
     useModuleAnalytics()
-
-  useEffect(() => {
-    intervention.conditions.then((i) => {
-      setConditions(i)
-    })
-  }, [intervention])
 
   useEffect(() => {
     setExpanded(intervention.id === activeId)
@@ -175,25 +168,15 @@ function InterventionCard({ intervention, activeId }: InterventionCardProps) {
                   <ItemTitle title="Conditions" />
                 </div>
                 <div className="grow">
-                  <div>
-                    {conditions.length > 0 ? (
-                      conditions.map((cond: any, index: number) => (
-                        <Link
-                          key={index}
-                          to="?view=conditions"
-                          state={{ conditionId: cond?.id }}
-                        >
-                          <span className="bg-blue-10 text-center rounded-md text-dark-blue-100 py-1 px-1.5 font-rubik text-sm mx-2  hover:bg-blue-20">
-                            {cond?.condition}
-                          </span>
-                        </Link>
-                      ))
-                    ) : (
-                      <p className="text-dark-blue-50 font-rubik text-left text-xs ml-2">
-                        No condition available
-                      </p>
-                    )}
-                  </div>
+                  {intervention.condition ? (
+                    <span className="bg-blue-10 text-center rounded-md text-dark-blue-100 py-1 px-1.5 font-rubik text-sm mx-2  hover:bg-blue-20">
+                      {intervention?.condition}
+                    </span>
+                  ) : (
+                    <p className="text-dark-blue-50 font-rubik text-left text-xs ml-2">
+                      No condition available{' '}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

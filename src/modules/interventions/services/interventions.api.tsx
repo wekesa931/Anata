@@ -31,6 +31,8 @@ const transformInterventionData = (
       ],
     result: currentIntervention["Intervention's final result"],
     persona: currentIntervention['Last recorded persona'],
+    notes: currentIntervention.Notes,
+    condition: currentIntervention['Condition (from memberDB)'],
   }
 }
 

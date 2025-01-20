@@ -454,7 +454,6 @@ export const formNames: Record<string, string> = {
   HIF: 'HIF',
   HMP: 'HMP Intake',
   'Nutritional Consultation': 'Nutritional Consultation',
-  'Nutritional Consultation - Old': 'Nutritional Consultation - Old',
   Interventions: 'Intervention Intake',
   'Intervention Data Tracking': 'Intervention Data Tracking',
   'Clinical Consultation': 'Clinical Consultation',

@@ -19,4 +19,6 @@ export const buildIntervention = (
   intervention.currentMilestone = data?.currentMilestone
   intervention.result = data?.result
   intervention.persona = data?.persona
+  intervention.notes = data?.notes
+  intervention.condition = data?.condition
 }

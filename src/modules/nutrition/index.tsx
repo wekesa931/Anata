@@ -199,7 +199,6 @@ Level [3]: >500mg (Very High)`,
           columns={columns}
           data={consultations}
           dateColumnKey="Date of Consultation"
-          modalFields={allowedFields}
         />
       )}
       {isError && (

@@ -12,6 +12,8 @@ export type Intervention = {
   currentMilestone?: string[]
   result?: string
   persona?: string
+  notes?: string
+  condition?: string
 }
 
 export enum InterventionStatus {

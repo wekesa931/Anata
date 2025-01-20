@@ -47,6 +47,10 @@ export class Intervention extends Model {
   @text('result') result?: string
 
   @text('persona') persona?: string
+
+  @text('notes') notes?: string
+
+  @text('condition') condition?: string
 }
 
 export default [Intervention]
