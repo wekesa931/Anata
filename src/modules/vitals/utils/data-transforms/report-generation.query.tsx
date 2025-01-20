@@ -203,15 +203,15 @@ const processHba1cProgress = (data: Progress) => {
 
 const humanizeChl = (measurements: any) => {
   const { timestamp, data = {} } = measurements
-  const { hdl, ldl, triglycerides, total_cholesterol } = data
+  const { hdl, ldl, triglyceride, total_cholesterol } = data
   const formattedTime = timestamp ? formatTime(timestamp) : ''
 
   return {
     HDL: formattedTime && hdl ? `${hdl?.value} on (${formattedTime})` : '',
     LDL: formattedTime && ldl ? `${ldl?.value} on (${formattedTime})` : '',
     Triglycerides:
-      formattedTime && triglycerides?.value
-        ? `${triglycerides?.value} on (${formattedTime})`
+      formattedTime && triglyceride?.value
+        ? `${triglyceride?.value} on (${formattedTime})`
         : '',
     'Total Cholesterol':
       formattedTime && total_cholesterol?.value

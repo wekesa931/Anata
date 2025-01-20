@@ -112,7 +112,7 @@ export const getAppointmentToUpdate = (selectedTasks: any, values: any) => {
   return selectedTasks
     ?.filter((task: any) => !!task?.Appointment)
     .map((task: any) => {
-      const apptId = task?.Appointment?.[0]
+      const apptId = task?.['Appointment Record ID']
       return {
         id: apptId,
         fields: {

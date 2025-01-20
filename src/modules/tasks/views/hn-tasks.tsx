@@ -48,9 +48,7 @@ function useTransformedApiRecords(rawApiRecords: any) {
       status: 'Status',
       taskPriority: 'Task Priority',
       measurementsToTake: 'Collect Condition Data',
-      assignee: {
-        fullName: 'Assignee Name',
-      },
+      assignee: 'Assignee Name',
       lastStatusChangedAt: 'Last Status changed at',
       formUrl: 'Open URL',
       reasonForCancellation: 'Reason for cancellation',
@@ -93,7 +91,7 @@ function useTransformedApiRecords(rawApiRecords: any) {
         status: string
         taskPriority: string
         measurementsToTake: string
-        assignee: { fullName: string }
+        assignee: string
         lastStatusChangedAt: string
         formUrl: string
         reasonForCancellation: string
@@ -245,6 +243,7 @@ function Tasks() {
     'Number of Attempts',
     'Task definition',
     'Appointment',
+    'Appointment Record ID',
   ]
 
   function buildAirtableUrl(memberRecordId: any, queryFields: string[]) {
