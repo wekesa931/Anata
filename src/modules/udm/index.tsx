@@ -88,7 +88,23 @@ function Files() {
   } = udmDataHook
 
   const uploadDocument = async (docMeta: DocMeta) => {
-    const fileName = filesContent[0]?.name
+    let fileName = filesContent[0]?.name
+
+    // store invalid file extensions that can be converted to jpeg
+    const invalidExtensions = ['jfif']
+
+    // check if file has an extension not supported from invalidExtensions arr
+    const fileNameHasInvalidExtension = invalidExtensions.some((ext: string) =>
+      fileName.endsWith(ext)
+    )
+    if (fileNameHasInvalidExtension) {
+      // converts invalidExtensions array to string eg .jiff|.otherExt
+      const pattern = new RegExp(`\\.(${invalidExtensions.join('|')})$`, 'i')
+
+      // replace the invalid ext eg .jiff ext with .jpeg
+      fileName = fileName.replace(pattern, '.jpeg')
+    }
+
     const shouldUploadByLink = filesContent.length === 0 || !fileName
     const options = {
       document: docMeta,
