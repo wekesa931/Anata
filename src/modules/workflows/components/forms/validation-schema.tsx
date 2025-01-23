@@ -32,7 +32,7 @@ const updateOnCondition = (
           fl?.parentValues,
           fl?.conditionType !== '!' && !fl?.toggleRequriedOnCondition
         ),
-      then: dataType().required(),
+      then: dataType().required().typeError(`${fl.name} is required`),
       otherwise: dataType().nullable().notRequired(),
     }),
   }
