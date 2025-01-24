@@ -609,13 +609,13 @@ function Tasks() {
                       </>
                     )}
 
-                  {hnTask['Open URL'] && hnTask['Open URL'].url && (
+                  {hnTask['Open URL'] && (
                     <Tooltip title="Open URL">
                       <button
                         className="btn-unstyled"
                         data-testid="task-url-link"
                         onClick={(e) => {
-                          let url = hnTask['Open URL']?.url
+                          let url = hnTask['Open URL']
                           if (url) {
                             const prefills = extractPrefills(url)
                             url = url.split('/')[3].split('?')
@@ -625,7 +625,7 @@ function Tasks() {
                             )
                             formMeta
                               ? openForm(formMeta.name, prefills)
-                              : window.open(hnTask['Open URL']?.url)
+                              : window.open(hnTask['Open URL'])
                           }
 
                           e.stopPropagation()

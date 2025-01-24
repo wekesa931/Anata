@@ -14,6 +14,7 @@ export const interventionColumns: ColumnSchema[] = [
   { name: 'current_milestone', type: 'string' },
   { name: 'result', type: 'string' },
   { name: 'persona', type: 'string' },
+  { name: 'notes', type: 'string' },
   { name: 'condition', type: 'string' },
 ]
 
