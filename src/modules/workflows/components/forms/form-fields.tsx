@@ -1222,6 +1222,94 @@ function DateInputField({
     }
   }
 
+  // prevents selection of previous year(s) from calendar, get current year
+  const startOfCurrentYear = dayjs().startOf('year').toDate()
+
+  // gets Kenyan holidays
+  const getKenyanHolidays = (year = dayjs().year()) => {
+    const fixedHolidays = [
+      '01-01', // New Year
+      '04-18', // Good Friday
+      '04-21', // Easter Monday
+      '05-01', // Labour Day
+      '06-01', // Madaraka Day
+      '10-10', // Huduma Day
+      '10-20', // Mashujaa Day
+      '12-12', // Jamhuri Day
+      '12-25', // Christmas
+      '12-26', // Boxing Day
+    ]
+
+    // update when dates are confirmed each year
+    const flexibleHolidays = [
+      '03-31', // Idd ul-Fitr: Deps on moon sighting
+      '07-07', // Eid al-Adha: Deps on moon sighting
+    ]
+
+    /**
+     * if fixed holidays falls on a Sunday,
+     * move it to Monday (Kenya's holiday laws)
+     */
+    const moveSundaysToMonday = fixedHolidays.map((h) => {
+      let date = dayjs(`${year}-${h}`) // append year
+
+      // check if day is a sunday, add 1 day to it
+      if (date.day() === 0) {
+        date = date.add(1, 'day')
+      }
+      return date.format('MM-DD') // return as mm-dd
+    })
+
+    // combine all holidays
+    const allHolidays = [...moveSundaysToMonday, ...flexibleHolidays]
+    const holidays = allHolidays.map((date) => `${year}-${date}`)
+    return holidays
+  }
+
+  const getAllSundays = (year = dayjs().year()) => {
+    const sundays = []
+    const today = dayjs()
+
+    // find most recent Sun if it's before today, if it's not(past Sun) add 7 to get the next coming Sun,
+    // else return today's date if today is a Sun
+    let currentDate = today.day(0).isBefore(today) ? today.day(7) : today.day(0)
+
+    while (currentDate.year() === year) {
+      sundays.push(currentDate.format('YYYY-MM-DD'))
+      // update to next week
+      currentDate = currentDate.add(1, 'week')
+    }
+    return sundays
+  }
+
+  // gets 2nd & 4th/last saturdays
+  const getSecondAndFourthSaturdays = (year = dayjs().year()) => {
+    const saturdays = []
+    const today = dayjs()
+    let currentDate = dayjs().startOf('month') // get date at start of every month
+
+    while (currentDate.year() === year) {
+      const secondSat = currentDate.day(6).add(7, 'day') // finds 1st Sat & adds 7 to get 2nd Sat
+      const fourthSat = secondSat.add(14, 'day') // adds 14 to get 4th Sat
+
+      if (secondSat.isAfter(today))
+        saturdays.push(secondSat.format('YYYY-MM-DD'))
+
+      if (fourthSat.isAfter(today))
+        saturdays.push(fourthSat.format('YYYY-MM-DD'))
+
+      // update to next month
+      currentDate = currentDate.add(1, 'month')
+    }
+
+    return saturdays
+  }
+
+  // all sundays plus the 2nd & 4th saturdays
+  const getLogisticsOffDays = () => {
+    return [...getAllSundays(), ...getSecondAndFourthSaturdays()]
+  }
+
   const checkLogisticsDateLimit = async () => {
     const currentDate = dayjs().format('YYYY-MM-DD')
     const today = dayjs().startOf('day')
@@ -1259,14 +1347,19 @@ function DateInputField({
         const is1stOr3rdSaturday = [1, 3].includes(Math.ceil(date.date() / 7))
 
         if (isSaturday && is1stOr3rdSaturday) {
-          return item.task_count > 15
+          return item.task_count > 10
         }
         return item.task_count > 35
       })
       .map((item: any) => item.date)
 
     const datesToBlock = [
-      ...new Set([...pastDatesToBlock, ...logisticsDatesToBlock]),
+      ...new Set([
+        ...pastDatesToBlock,
+        ...logisticsDatesToBlock,
+        ...getKenyanHolidays(),
+        ...getLogisticsOffDays(),
+      ]),
     ]
 
     setBlockedDates(datesToBlock)
@@ -1329,6 +1422,7 @@ function DateInputField({
                   label={<Label field={field} error={error} />}
                   inputFormat="dd/MM/yyyy"
                   disabled={disabled}
+                  minDate={startOfCurrentYear}
                   value={value}
                   onChange={(newValue: Date | null) => {
                     if (newValue) {
