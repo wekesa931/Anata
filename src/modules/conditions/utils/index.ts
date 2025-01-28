@@ -66,12 +66,13 @@ export const shouldShowReasonForStatusChange = (
   initialValues: any,
   values: any
 ) => {
-  const { clinicalStatus } = initialValues
+  const { clinicalStatus, reasonForClinicalStatusChange } = initialValues
   const currentClinicalStatus = values?.clinicalStatus
 
   const show =
     clinicalStatus?.value !==
-    (currentClinicalStatus?.value ?? currentClinicalStatus)
+      (currentClinicalStatus?.value ?? currentClinicalStatus) ||
+    reasonForClinicalStatusChange === null
 
   return show
 }

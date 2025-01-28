@@ -123,7 +123,11 @@ export const useConditionsData = () => {
             : null,
           targetAchievementStatusId:
             values.achievementStatus?.value || values.achievementStatus,
-          targetId: values.currentTarget?.value || values.currentTarget,
+          /*
+           targetId while updating come from values.currentTarget?.value
+           while tracking comes from values.targetId
+           */
+          targetId: values.currentTarget?.value || values.targetId,
           isNewlyDiagnosed: values.isNewlyDiagnosed === 'yes',
           shouldSystemAutoUpdate: values.shouldSystemAutoUpdate,
           reasonForClinicalStatusChange: values.reasonForClinicalStatusChange,
