@@ -13,6 +13,7 @@ import { useWizardContext } from 'src/components/wizard'
 import type { Member } from 'src/modules/member/db/models'
 import FadeLoader from 'react-spinners/FadeLoader'
 import { useRegistrationData } from 'src/modules/member/hooks/registration'
+import useAnalytics from 'src/hooks/analytics'
 
 const declineReasons = [
   {
@@ -60,6 +61,7 @@ export function BillingMethodForm({
   primaryMember,
   setCompleted,
 }: BillingFormProps) {
+  const {track} = useAnalytics('Billing Package Enrollment')
   const [showDeclineSection, setShowDeclineSection] = useState(false)
   const [selectedReason, setSelectedReason] = useState('')
   const [subscriptionState, setSubscriptionState] = useState('')
@@ -99,6 +101,7 @@ export function BillingMethodForm({
       try {
         await handleAcceptBillingPackageEnrollment(member, payload)
         notify('Member subscription updated successfully', 'success')
+        track('Accepted')
         if (setCompleted) {
           await setCompleted(member, primaryMember)
         }
@@ -127,6 +130,7 @@ export function BillingMethodForm({
       try {
         await handleDeclineBillingPackageEnrollment(member, payload)
         notify('Member subscription declined successfully', 'success')
+        track('Declined')
         if (subscriptionState === 'Unlimited' && ffsCohorts.length > 0) {
           setSubscriptionState('Ffs')
           setShowDeclineSection(false)

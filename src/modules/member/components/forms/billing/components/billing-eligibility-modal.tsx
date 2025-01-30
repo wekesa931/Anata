@@ -5,8 +5,9 @@ import { useMember } from 'src/context/member'
 import InsuranceForm from 'src/modules/member/components/forms/billing/index'
 import MembershipForm from 'src/modules/member/components/forms/billing/components/membership-form'
 import Modal from 'src/components/modals'
-import { useNavigate } from 'react-router-dom'
+
 import { useRegistrationForm } from 'src/context/member-registration'
+import useAnalytics from 'src/hooks/analytics'
 
 function ModalHeader({
   updateState,
@@ -25,6 +26,7 @@ function ModalHeader({
 }
 
 function BillingEligibilityModal() {
+  const {track} = useAnalytics('Billing Package Enrollment')
   const [modalOpen, setModalOpen] = useState(true)
   const { setIsFormOpen } = useRegistrationForm()
 
@@ -32,7 +34,10 @@ function BillingEligibilityModal() {
   const [billingMethodView, setBillingMethodView] = useState(false)
 
   const { member } = useMember()
-  const navigate = useNavigate()
+  const onUpdateLater = () => {
+    setModalOpen(false)
+    track('Snoozed')
+  }
 
   const setCompleted = async () => {
     window.location.reload()
@@ -60,8 +65,7 @@ function BillingEligibilityModal() {
         {!updateState ? (
           <div>
             <p className="mt-5">
-              This service is restricted only to members assigned to a billing
-              scheme.
+              This Member is not Billable.
             </p>
 
             <p className="mt-4">
@@ -83,11 +87,9 @@ function BillingEligibilityModal() {
                   border: '1px #205284 solid',
                   color: '#205284',
                 }}
-                onClick={() => {
-                  navigate('/member')
-                }}
+                onClick={onUpdateLater}
               >
-                Cancel
+                Update later
               </Button>
             </div>
           </div>
