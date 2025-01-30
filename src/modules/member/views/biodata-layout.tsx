@@ -13,6 +13,8 @@ import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import type { Member } from 'src/modules/member/db/models'
 import dayjs from 'dayjs'
+import PrimaryButton from 'src/components/buttons/primary'
+import SmartServiceCharge from 'src/modules/appointments/smart-verification/smart-service-booking-flow'
 import { SubscriptionServiceLayout } from './subscription/index'
 
 type MemberBiodataProps = {
@@ -24,6 +26,7 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
   const [memberDataHeight, setMemberDataHeight] = useState<number>(0)
   const memberDataRef = useRef<HTMLDivElement>(null)
   const analytics = useMemberAnalytics()
+  const [startSmartPayment, setStartSmartPayment] = useState<boolean>(false)
   const [viewSubscriptionDetails, setViewSubscriptionDetails] =
     useState<boolean>(false)
 
@@ -47,6 +50,10 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
     }
   }, [memberDataHeight])
 
+  const onMembershipSmartPayment = () => {
+    setStartSmartPayment(true)
+  }
+
   const getSubscriptionDate = () => {
     const activeCohorts = member?.membercohortSet?.filter(
       (cohort) => cohort.subscriptionStatus === 'ACTIVE'
@@ -67,6 +74,11 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
 
   const unknownMembership =
     typeof member?.activeBillingPackageEnrollment !== 'object'
+
+  const membershipService = {
+    service: { name: '' },
+    servicePricingId: member?.membershipServicePricingId,
+  }
 
   return member ? (
     <div className="flex flex-col h-full">
@@ -115,6 +127,12 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
                       <p className="font-normal text-xs">
                         since {getSubscriptionDate()}
                       </p>
+                      {member?.shouldRenewMembership && <PrimaryButton
+                        className="capitalize mt-2 bg-orange-100"
+                        onClick={onMembershipSmartPayment}
+                      >
+                        Collect Payment
+                      </PrimaryButton>}
                     </div>
                   )}
                 </div>
@@ -152,34 +170,43 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
         <MissingInfoBlock member={member} />
 
         <div className="flex flex-col h-full">
-          <TabContext value={value}>
-            <div className="flex justify-between items-center font-rubik font-medium">
-              <TabList onChange={handleChange}>
-                <Tab
-                  label="personal"
-                  className="uppercase"
-                  value="personal"
-                  onClick={analytics.trackPersonalSectionAccessed}
-                />
-                <Tab
-                  label="clinical"
-                  className="uppercase"
-                  value="clinical"
-                  onClick={analytics.trackClinicalSectionAccessed}
-                />
-              </TabList>
+          {startSmartPayment ? (
+            <div className="p-2">
+              <SmartServiceCharge
+                selectedService={membershipService}
+                cancelSmartBilling={() => setStartSmartPayment(false)}
+              />
             </div>
-            <div>
-              <TabPanel value="personal" className="p-0">
-                <PersonalSection member={member} />
-              </TabPanel>
-            </div>
-            <div>
-              <TabPanel value="clinical" className="p-0">
-                <ClinicalSection />
-              </TabPanel>
-            </div>
-          </TabContext>
+          ) : (
+            <TabContext value={value}>
+              <div className="flex justify-between items-center font-rubik font-medium">
+                <TabList onChange={handleChange}>
+                  <Tab
+                    label="personal"
+                    className="uppercase"
+                    value="personal"
+                    onClick={analytics.trackPersonalSectionAccessed}
+                  />
+                  <Tab
+                    label="clinical"
+                    className="uppercase"
+                    value="clinical"
+                    onClick={analytics.trackClinicalSectionAccessed}
+                  />
+                </TabList>
+              </div>
+              <div>
+                <TabPanel value="personal" className="p-0">
+                  <PersonalSection member={member} />
+                </TabPanel>
+              </div>
+              <div>
+                <TabPanel value="clinical" className="p-0">
+                  <ClinicalSection />
+                </TabPanel>
+              </div>
+            </TabContext>
+          )}
         </div>
       </div>
     </div>

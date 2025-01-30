@@ -71,7 +71,24 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
         isUnlimitedMembership
       }
       billingSchemeSubscription {
+        nextBilledAt
         subscriptionStatus
+        billingScheme {
+          claimMethod {
+            claimMethodId
+            name
+          }
+          servicePricing {
+            service {
+              name
+              userFriendlyName
+              bookingUrl
+              appointmentType
+            }
+            price
+            servicePricingId
+          }
+        }
       }
     }
     pendingBillingPackageEnrollment {

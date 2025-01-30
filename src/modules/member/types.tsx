@@ -50,9 +50,13 @@ export type BillingMethodType = {
 }
 
 export type ServicePricingType = {
+  servicePricingId: number
   price: number
   service: {
+    appointmentType: string
+    bookingUrl: string
     name: string
+    userFriendlyName: string
   }
 }
 
@@ -126,7 +130,14 @@ export type PayorType = {
 export type BillingEnrollmentPackageType = {
   billingPackage?: BillingPackageType
   billingSchemeSubscription?: {
+    nextBilledAt?: string
     subscriptionStatus?: string
+    billingScheme: {
+      servicePricing: ServicePricingType[]
+      claimMethod: {
+        name: string
+      }
+    }
   }
 }
 

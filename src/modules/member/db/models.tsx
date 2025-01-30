@@ -408,6 +408,16 @@ export class Member extends Model {
     })
   }
 
+  get isMemberBilledThroughSmart() {
+    const claimMethod =
+      this.activeBillingPackageEnrollment?.billingSchemeSubscription
+        ?.billingScheme?.claimMethod?.name
+    if (claimMethod?.toLowerCase()?.includes('smart')) {
+      return true
+    }
+    return false
+  }
+
   @writer async reset() {
     // reset all the properties to their default values
     await this.update((member) => {
@@ -434,6 +444,28 @@ export class Member extends Model {
 
   get hasMissingPhone() {
     return !this.phone && !this.phones?.length
+  }
+
+  get membershipServicePricingId() {
+    if (
+      this.activeBillingPackageEnrollment?.billingPackage?.isUnlimitedMembership
+    ) {
+      return this.activeBillingPackageEnrollment?.billingSchemeSubscription
+        ?.billingScheme?.servicePricing?.[0]?.servicePricingId
+    }
+    return null
+  }
+
+  get shouldRenewMembership() {
+    if (
+      this.activeBillingPackageEnrollment?.billingPackage?.isUnlimitedMembership
+    ) {
+      const expiryDate =
+        this.activeBillingPackageEnrollment?.billingSchemeSubscription
+          ?.nextBilledAt
+      return !expiryDate || dayjs().isAfter(dayjs(expiryDate))
+    }
+    return false
   }
 }
 

@@ -3,7 +3,7 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton'
 
-const getClassName = (
+export const getClassName = (
   variant: LoadingButtonProps['variant'],
   color: LoadingButtonProps['color'],
   disabled: boolean
@@ -35,15 +35,25 @@ const getClassName = (
   return `bg-blue-btn text-white hover:bg-blue-btn-hover`
 }
 
-function PrimaryButton(props: LoadingButtonProps) {
+type PrimaryButtonProps = LoadingButtonProps & {
+  onClick: () => any
+}
+
+function PrimaryButton(props: PrimaryButtonProps) {
+  const [error, setError] = React.useState(null)
   const { loading, ...rest } = props
 
   const variant = props?.variant || 'contained'
   const color = props?.color || 'primary'
 
+  const onButtonClick = () => {
+    props.onClick && props.onClick().catch((e) => setError(e.message))
+  }
+
   return (
     <LoadingButton
       {...rest}
+      onClick={onButtonClick}
       variant={variant}
       className={`py-2 px-4 rounded-md font-rubik font-medium ${getClassName(
         variant,
@@ -54,6 +64,11 @@ function PrimaryButton(props: LoadingButtonProps) {
       color={color}
     >
       {props.children}
+      {error && (
+        <div className="z-50 top-5 absolute items-center bg-red-100 p-2 rounded-2xl min-w-52">
+          <p>{error}</p>
+        </div>
+      )}
     </LoadingButton>
   )
 }

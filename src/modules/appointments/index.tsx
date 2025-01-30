@@ -1,7 +1,6 @@
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import AirtableField from 'src/types/airtable-field'
-import { useUser } from 'src/context/user'
 import useAirtableFetch from 'src/hooks/airtable-fetch'
 import List from 'src/components/list'
 import filterFields from 'src/utils/airtable/field-utils'
@@ -21,6 +20,7 @@ import { useNotifications } from 'src/context/notifications'
 import Modal from 'src/components/modals'
 import { Button } from '@mui/material'
 import styles from './appointments.module.css'
+import ServiceBooking from './service-booking.component'
 
 const SearchFieldsNameMap: Record<string, any> = {
   'Facilities from Provider base': {
@@ -44,6 +44,7 @@ function Appointments() {
   const [isConsentModalOpen, setIsConsentModalOpen] = useState(false)
   const [activeAppointment, setActiveAppointment] = useState({})
   const [showOptions, setShowOptions] = useState(false)
+  const [serviceBookingStarted, setServiceBookingStarted] = useState(false)
 
   const { member } = useMember()
   const recId = member?.airtableRecordId
@@ -162,22 +163,6 @@ function Appointments() {
     &${filterFields(allowedFields)}`,
     []
   )
-
-  const user = useUser()
-  const openCalendar = () => {
-    if (member) {
-      const fullName = member?.fullName || ''
-      const urlName = fullName?.replace(' ', '%20')
-      const email = member?.email || ''
-      const memberEmail = email || 'navigation@antarahealth.com'
-      const memberPhone = member?.phone
-      const antaraId = member?.antaraId
-      const link = `https://calendly.com/antara-health?name=${urlName}&email=${memberEmail}&a1=${memberPhone}&utm_source=src-${user?.name}&utm_content=${antaraId}`
-
-      const newWindow = window.open(link, '_blank', 'noopener,noreferrer')
-      if (newWindow) newWindow.opener = null
-    }
-  }
 
   const { handleResponses } = useHandleResponses('Appointments')
 
@@ -618,13 +603,21 @@ function Appointments() {
     }
   }
 
+  const openServiceBooking = () => {
+    setServiceBookingStarted(!serviceBookingStarted)
+  }
+
+  if (serviceBookingStarted) {
+    return <ServiceBooking onBackPress={openServiceBooking} />
+  }
+
   return (
     <div>
       <button
         className={styles.appointment}
         onClick={(e) => {
           e.stopPropagation()
-          openCalendar()
+          openServiceBooking()
         }}
       >
         Book Appointment
