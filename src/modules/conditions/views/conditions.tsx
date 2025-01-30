@@ -83,10 +83,22 @@ export function ConditionsView() {
     }
   }
 
-  const handleEdit = (initialValues: any) => (values: any) => {
+  const handleEdit = (initialValues: any, show?: boolean) => (values: any) => {
     if (isDirty(initialValues, values)) {
       if (member) {
         setSubmitData(true)
+        /* add reason for clinical change to payload if
+         clinical status field was not updated
+        */
+        if (
+          !show &&
+          initialValues.reasonForClinicalStatusChange &&
+          !values.reasonForClinicalStatusChange
+        ) {
+          values.reasonForClinicalStatusChange =
+            initialValues.reasonForClinicalStatusChange
+        }
+
         handleUpdateConditions(values)
           .then((result: any) => {
             if (result?.error) {
@@ -149,7 +161,9 @@ export function ConditionsView() {
   const showReasonForStatusChange = (initialValues: any, values: any) => {
     const show = shouldShowReasonForStatusChange(initialValues, values)
 
-    show ? setShowStatusChange(values?.id) : handleEdit(initialValues)(values)
+    show
+      ? setShowStatusChange(values?.id)
+      : handleEdit(initialValues, show)(values)
   }
 
   return (
