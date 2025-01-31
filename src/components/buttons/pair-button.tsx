@@ -6,7 +6,7 @@ type HorizontalButtonProps = LoadingButtonProps & {
   rightButton: any
 }
 
-const HorizontalPairButton = (props: HorizontalButtonProps) => {
+function HorizontalPairButton(props: HorizontalButtonProps) {
   const [error, setError] = React.useState(null)
 
   useEffect(() => {

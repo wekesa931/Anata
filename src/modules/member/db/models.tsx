@@ -29,6 +29,14 @@ const sanitizeTags = (data: any) =>
 const sanitizeRefusedServices = (data: any) =>
   Array.isArray(data) ? data.map(String) : []
 
+export enum BillingMethodName {
+  INVOICE_TO_INDIVIDUAL = 'INVOICE TO INDIVIDUAL',
+  INVOICE_TO_BROKER = 'INVOICE TO BROKER',
+  INVOICE_TO_INSURER = 'INVOICE TO INSURER',
+  INVOICE_TO_EMPLOYER = 'INVOICE TO EMPLOYER',
+  OP_CLAIM_INSURANCE_BENEFITS = 'OP CLAIM INSURANCE BENEFITS',
+}
+
 type EmergencyContact = {
   name?: string
   phoneNumber?: string
@@ -413,6 +421,24 @@ export class Member extends Model {
       this.activeBillingPackageEnrollment?.billingSchemeSubscription
         ?.billingScheme?.claimMethod?.name
     if (claimMethod?.toLowerCase()?.includes('smart')) {
+      return true
+    }
+    return false
+  }
+
+  get isUnlimitedMembershipMember() {
+    return this.activeBillingPackageEnrollment?.billingSchemeSubscription
+      ?.billingScheme?.billingPackage?.isUnlimitedMembership
+  }
+
+  get isOnFreeMembership() {
+    const billingMethodName =
+      this.activeBillingPackageEnrollment?.billingSchemeSubscription?.billingScheme?.billingMethod?.name?.toLowercase()
+    if (
+      billingMethodName === BillingMethodName.INVOICE_TO_EMPLOYER ||
+      billingMethodName === BillingMethodName.INVOICE_TO_INSURER ||
+      billingMethodName === BillingMethodName.INVOICE_TO_BROKER
+    ) {
       return true
     }
     return false

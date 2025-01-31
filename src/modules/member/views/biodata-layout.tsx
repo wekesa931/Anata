@@ -127,12 +127,14 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
                       <p className="font-normal text-xs">
                         since {getSubscriptionDate()}
                       </p>
-                      {member?.shouldRenewMembership && <PrimaryButton
-                        className="capitalize mt-2 bg-orange-100"
-                        onClick={onMembershipSmartPayment}
-                      >
-                        Collect Payment
-                      </PrimaryButton>}
+                      {member?.shouldRenewMembership && (
+                        <PrimaryButton
+                          className="capitalize mt-2 bg-orange-100"
+                          onClick={onMembershipSmartPayment}
+                        >
+                          Collect Payment
+                        </PrimaryButton>
+                      )}
                     </div>
                   )}
                 </div>

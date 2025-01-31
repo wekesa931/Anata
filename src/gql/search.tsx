@@ -74,19 +74,42 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
         nextBilledAt
         subscriptionStatus
         billingScheme {
-          claimMethod {
-            claimMethodId
+          billingSchemeId
+          name
+          status
+          billingFrequency
+          billingMethod {
             name
+            description
+            memberFacingText
           }
+          billingPackage {
+            billingPackageId
+            name
+            isFfs
+            isUnlimitedMembership
+            isOneDayHealthCamp
+          }
+          payor {
+            hasFfsBillingSchemes
+            hasUnlimitedMembershipBillingSchemes
+            payorName
+          }
+          skuRate
           servicePricing {
             service {
               name
               userFriendlyName
               bookingUrl
               appointmentType
+              initials
+              eligibleForFfs
             }
             price
-            servicePricingId
+          }
+          claimMethod {
+            claimMethodId
+            name
           }
         }
       }

@@ -61,7 +61,7 @@ export function BillingMethodForm({
   primaryMember,
   setCompleted,
 }: BillingFormProps) {
-  const {track} = useAnalytics('Billing Package Enrollment')
+  const { track } = useAnalytics('Billing Package Enrollment')
   const [showDeclineSection, setShowDeclineSection] = useState(false)
   const [selectedReason, setSelectedReason] = useState('')
   const [subscriptionState, setSubscriptionState] = useState('')
@@ -230,26 +230,24 @@ export function BillingMethodForm({
             <div>
               {subscriptionState === 'Unlimited' && (
                 <div>
-                  <h1 className="font-medium mb-6">Unlimited Membership</h1>
-                  <p className="text-sm text-[#5D6B82] font-medium mb-5">
-                    Add the member to unlimited membership to get the best from
-                    Antara at the lowest price in the market
-                  </p>
+                  {member?.isOnFreeMembership ? (
+                    <h1 className="font-medium mb-6">Free for Member!</h1>
+                  ) : (
+                    <h1 className="font-medium mb-6">Unlimited Membership</h1>
+                  )}
+                  {!member?.isOnFreeMembership && (
+                    <p className="text-sm text-[#5D6B82] font-medium mb-5">
+                      Add the member to unlimited membership to get the best
+                      from Antara at the lowest price in the market
+                    </p>
+                  )}
 
                   <section className="block border rounded-xl border-solid border-dark-blue-10 my-1 mb-4 shadow-none p-5 bg-[#D6F7DB]">
-                    {['INVOICE TO INSURER', 'INVOICE TO EMPLOYER'].includes(
-                      unlimitedCohorts[0].billingMethod.name
-                    ) ? (
+                    {member?.isOnFreeMembership ? (
                       <>
-                        <p className="text-[#182C4C] font-medium text-base mb-3">
-                          Free for Member !
-                        </p>
                         <p className="text-sm mb-1">
-                          The Member will be billed for each service they use.
-                        </p>
-                        <p className="text-sm mb-4">
-                          Please note this member will not be eligible for
-                          longitudinal care.
+                          The Member will get all services paid fpr by their
+                          insurance provider.
                         </p>
                         <p className="text-sm">No extra charges incurred.</p>
                       </>
@@ -267,11 +265,19 @@ export function BillingMethodForm({
                     )}
                   </section>
                   <div className="text-sm mb-4">
-                    <p className="mb-3">
-                      Billing starts only after their first consultation is
-                      complete.
-                    </p>
-                    <p>They can also cancel any time.</p>
+                    {member?.isOnFreeMembership ? (
+                      <p className="mb-3">
+                        We do not touch their insurance benefits
+                      </p>
+                    ) : (
+                      <>
+                        <p className="mb-3">
+                          Billing starts only after their first consultation is
+                          complete.
+                        </p>
+                        <p>They can also cancel any time.</p>
+                      </>
+                    )}
                   </div>
                   <PrimaryButton
                     type="button"

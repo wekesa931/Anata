@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import PrimaryButton from 'src/components/buttons/primary'
 import numberWithCommas from 'src/components/utils/number-format'
-import { BenefitsType, useAppointmentsApi } from '../services/appointments.api'
 import HorizontalPairButton from 'src/components/buttons/pair-button'
+import { BenefitsType, useAppointmentsApi } from '../services/appointments.api'
 
 function Benefits({
   benefits,

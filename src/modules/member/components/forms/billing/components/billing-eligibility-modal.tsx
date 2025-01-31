@@ -26,7 +26,7 @@ function ModalHeader({
 }
 
 function BillingEligibilityModal() {
-  const {track} = useAnalytics('Billing Package Enrollment')
+  const { track } = useAnalytics('Billing Package Enrollment')
   const [modalOpen, setModalOpen] = useState(true)
   const { setIsFormOpen } = useRegistrationForm()
 
@@ -64,9 +64,7 @@ function BillingEligibilityModal() {
       >
         {!updateState ? (
           <div>
-            <p className="mt-5">
-              This Member is not Billable.
-            </p>
+            <p className="mt-5">This Member is not Billable.</p>
 
             <p className="mt-4">
               Please update insurance details and billing package to unlock

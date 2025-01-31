@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { ServicePricingType } from 'src/modules/member/types'
 import PrimaryButton from 'src/components/buttons/primary'
+import HorizontalPairButton from 'src/components/buttons/pair-button'
 import { useAppointmentsApi } from '../services/appointments.api'
 import Benefits from './benefits.component'
-import HorizontalPairButton from 'src/components/buttons/pair-button'
 
 function ManualVerification({
   selectedService,

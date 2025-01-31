@@ -19,7 +19,7 @@ import DoneIcon from '@mui/icons-material/Done'
 import Tooltip from 'src/components/tooltip'
 import { GridCloseIcon } from '@mui/x-data-grid'
 import EmptyDataIcon from 'src/assets/img/icons/empty-data.svg'
-import dayjs from 'dayjs'
+
 import { toTitleCase } from 'src/utils/text-utils'
 import { PortalForm } from 'src/modules/member/components/update-forms'
 import InsuranceForm from 'src/modules/member/components/forms/billing/index'
@@ -57,8 +57,6 @@ function BillingSectionItem({
   setActiveBillingPackageId: (values: number) => void
   setEditCohort: (values: boolean) => void
 }) {
-  const memberConsent =
-    memberCohortItem?.isOptInRequired === 'Yes' ? 'Agree' : 'Not required'
   const activeStatus = memberCohortItem?.subscriptionStatus === 'ACTIVE'
   const [editableCohortId, setEditableCohortId] = useState('')
 
@@ -90,7 +88,9 @@ function BillingSectionItem({
       reason: [],
     })
   }
-
+  const memberBillingScheme =
+    member?.activeBillingPackageEnrollment?.billingSchemeSubscription
+      ?.billingScheme
   return (
     <div>
       <Accordion
@@ -120,10 +120,9 @@ function BillingSectionItem({
               ) : (
                 <section>
                   <h4 className="text-dark-blue-100 mt-2">
-                    {memberCohortItem?.name
-                      ?.toUpperCase()
-                      .split('KES')[0]
-                      .trim()}
+                    {member?.isUnlimitedMembershipMember
+                      ? 'Unlimited Membership'
+                      : 'Fee For Service'}
                   </h4>
                   <p className="text-dark-blue-50 text-sm mt-2 mb-2">
                     {memberCohortItem?.payor?.payorName}
@@ -171,7 +170,7 @@ function BillingSectionItem({
                 <div className="flex items-center justify-between gap-1">
                   <p className="text-dark-blue-100"> Billing method </p>
                   <ItemChild
-                    child={memberCohortItem?.billingMethod?.name}
+                    child={memberBillingScheme?.billingMethod?.name}
                     className="text-dark-blue-50"
                   />
                 </div>
@@ -180,7 +179,7 @@ function BillingSectionItem({
                 <div className="flex items-center justify-between gap-1">
                   <p className="text-dark-blue-100">Amount </p>
                   <ItemChild
-                    child={`KES ${memberCohortItem?.skuRate}`}
+                    child={`KES ${memberBillingScheme?.skuRate}`}
                     className="text-dark-blue-50"
                   />
                 </div>
@@ -189,38 +188,16 @@ function BillingSectionItem({
                 <div className="flex items-center justify-between gap-1">
                   <p className="text-dark-blue-100"> Frequency</p>
                   <ItemChild
-                    child={memberCohortItem?.billingFrequency}
+                    child={memberBillingScheme?.billingFrequency}
                     className="text-dark-blue-50"
                   />
                 </div>
               </GridItems>
-              <GridItems single>
-                <div className="flex items-center justify-between gap-1">
-                  <p className="text-dark-blue-100"> Member Consent</p>
-                  <ItemChild
-                    child={memberConsent}
-                    className="text-dark-blue-50"
-                  />
-                </div>
-              </GridItems>
-              {memberConsent === 'Agree' && (
-                <GridItems single>
-                  <div className="flex items-center justify-between gap-1">
-                    <p className="text-dark-blue-100"> Opted in at </p>
-                    <ItemChild
-                      child={dayjs(memberCohortItem?.optedInAt).format(
-                        'DD MMMM YYYY'
-                      )}
-                      className="text-dark-blue-50"
-                    />
-                  </div>
-                </GridItems>
-              )}
               <GridItems single>
                 <div className="flex items-center justify-between gap-1">
                   <p className="text-dark-blue-100"> Status</p>
                   <ItemChild
-                    child={toTitleCase(memberCohortItem?.subscriptionStatus)}
+                    child={toTitleCase(memberBillingScheme?.status)}
                     className="text-dark-blue-50"
                   />
                 </div>
@@ -261,9 +238,9 @@ function BillingSection({ member }: BillingSectionProps) {
     (panel: string) => (_: React.SyntheticEvent, isExpanded: boolean) => {
       setExpandedAccordion(isExpanded ? panel : false)
     }
-  const verification =
-    member?.verificationStatus === 'VERIFIED' ? 'Eligible' : 'Not eligible'
-  const memberStatus = member?.status
+  const isActiveBillingScheme =
+    member?.activeBillingPackageEnrollment?.billingSchemeSubscription
+      ?.subscriptionStatus
   const memberCohortDetails: MemberCohortType[] = member?.membercohortSet || []
   const [initialValues, setInitialValues] = useState({
     cohortName: '',
@@ -275,10 +252,7 @@ function BillingSection({ member }: BillingSectionProps) {
     useState<number>(0)
 
   const billingEligibility = () => {
-    const activeCohorts = memberCohortDetails.filter(
-      (cohort) => cohort.subscriptionStatus === 'ACTIVE'
-    )
-    if (activeCohorts.length > 0 && memberStatus === 'Active') {
+    if (isActiveBillingScheme === 'ACTIVE') {
       return 'Eligible'
     }
 
@@ -352,11 +326,11 @@ function BillingSection({ member }: BillingSectionProps) {
                     </p>
                     <div className="flex items-center gap-2">
                       <ItemChild
-                        child={verification}
+                        child={billingEligibility()}
                         className="ml-2 text-dark-blue-50"
                       />
                       <Tooltip>
-                        {verification === 'Eligible' ? (
+                        {billingEligibility() === 'Eligible' ? (
                           <DoneIcon className="text-[#ebfbed] bg-[#34c759] w-4 h-4 rounded-2xl" />
                         ) : (
                           <GridCloseIcon className="text-[#ebfbed] bg-rose-500 w-4 h-4 rounded-2xl" />
@@ -454,7 +428,7 @@ function BillingSection({ member }: BillingSectionProps) {
                   </>
                 ) : (
                   <>
-                    {memberCohortDetails.map((cohort, index) => (
+                    {[memberCohortDetails[0]].map((cohort, index) => (
                       <BillingSectionItem
                         memberCohortItem={cohort}
                         member={member}
