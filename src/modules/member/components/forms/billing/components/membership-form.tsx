@@ -82,7 +82,7 @@ export function BillingMethodForm({
   const processBillingPackageEnrollment = async (tag: string) => {
     let payload = {}
 
-    if (tag === 'unlimited' && unlimitedCohorts.length > 0) {
+    if (tag === 'unlimited' && unlimitedProspectiveCohorts.length > 0) {
       payload = {
         billingSchemeId: parseInt(unlimitedProspectiveCohorts[0].value),
         antaraId: member?.antaraId,
@@ -249,7 +249,7 @@ export function BillingMethodForm({
                     {isFreeService ? (
                       <>
                         <p className="text-sm mb-1">
-                          The Member will get all services paid fpr by their
+                          The Member will get all services paid for by their
                           insurance provider.
                         </p>
                         <p className="text-sm">No extra charges incurred.</p>
