@@ -10,7 +10,7 @@ import PrimaryButton from 'src/components/buttons/primary'
 import { useMembersData } from 'src/modules/member/hooks/member-data'
 import { useNotifications } from 'src/context/notifications'
 import { useWizardContext } from 'src/components/wizard'
-import type { Member } from 'src/modules/member/db/models'
+import { BillingMethodName, type Member } from 'src/modules/member/db/models'
 import FadeLoader from 'react-spinners/FadeLoader'
 import { useRegistrationData } from 'src/modules/member/hooks/registration'
 import useAnalytics from 'src/hooks/analytics'
@@ -84,7 +84,7 @@ export function BillingMethodForm({
 
     if (tag === 'unlimited' && unlimitedCohorts.length > 0) {
       payload = {
-        billingSchemeId: parseInt(unlimitedCohorts[0].value),
+        billingSchemeId: parseInt(unlimitedProspectiveCohorts[0].value),
         antaraId: member?.antaraId,
       }
     }
@@ -118,7 +118,7 @@ export function BillingMethodForm({
     if (member && billingMethods.length > 0) {
       const billingSchemeId =
         subscriptionState === 'Unlimited'
-          ? unlimitedCohorts[0].value
+          ? unlimitedProspectiveCohorts[0].value
           : ffsCohorts[0].value
       const payload = {
         billingSchemeId: parseInt(billingSchemeId),
@@ -167,7 +167,7 @@ export function BillingMethodForm({
     }
   }
 
-  const unlimitedCohorts = billingMethods.filter(
+  const unlimitedProspectiveCohorts = billingMethods.filter(
     (item: any) => item.billingPackage?.isUnlimitedMembership
   )
 
@@ -191,7 +191,7 @@ export function BillingMethodForm({
 
   useEffect(() => {
     if (member && billingMethods.length > 0) {
-      if (unlimitedCohorts.length > 0) {
+      if (unlimitedProspectiveCohorts.length > 0) {
         setSubscriptionState('Unlimited')
         return
       }
@@ -213,10 +213,13 @@ export function BillingMethodForm({
     !selectedReason || (selectedReason === 'other' && !otherReason.trim())
 
   const getMemberFacingText =
-    unlimitedCohorts.length > 0
-      ? unlimitedCohorts[0].billingMethod.description
+    unlimitedProspectiveCohorts.length > 0
+      ? unlimitedProspectiveCohorts[0].billingMethod.description
       : ''
-
+    // We are infering this from the prospective cohorts options 
+    // and not from the active billing package enrollment of a member.
+    const isFreeService = unlimitedProspectiveCohorts.length > 0 && [BillingMethodName.INVOICE_TO_EMPLOYER, BillingMethodName.INVOICE_TO_INSURER, BillingMethodName.INVOICE_TO_BROKER].includes(
+        unlimitedProspectiveCohorts[0].billingMethod.name)
   return (
     <div>
       {loadingCohorts ? (
@@ -230,12 +233,12 @@ export function BillingMethodForm({
             <div>
               {subscriptionState === 'Unlimited' && (
                 <div>
-                  {member?.isOnFreeMembership ? (
+                  {isFreeService ? (
                     <h1 className="font-medium mb-6">Free for Member!</h1>
                   ) : (
                     <h1 className="font-medium mb-6">Unlimited Membership</h1>
                   )}
-                  {!member?.isOnFreeMembership && (
+                  {!isFreeService && (
                     <p className="text-sm text-[#5D6B82] font-medium mb-5">
                       Add the member to unlimited membership to get the best
                       from Antara at the lowest price in the market
@@ -243,7 +246,7 @@ export function BillingMethodForm({
                   )}
 
                   <section className="block border rounded-xl border-solid border-dark-blue-10 my-1 mb-4 shadow-none p-5 bg-[#D6F7DB]">
-                    {member?.isOnFreeMembership ? (
+                    {isFreeService ? (
                       <>
                         <p className="text-sm mb-1">
                           The Member will get all services paid fpr by their
@@ -265,7 +268,7 @@ export function BillingMethodForm({
                     )}
                   </section>
                   <div className="text-sm mb-4">
-                    {member?.isOnFreeMembership ? (
+                    {isFreeService ? (
                       <p className="mb-3">
                         We do not touch their insurance benefits
                       </p>
@@ -400,14 +403,14 @@ export function BillingMethodForm({
                   color: '#205284',
                 }}
                 onClick={() => {
-                  if (unlimitedCohorts.length > 0) {
+                  if (unlimitedProspectiveCohorts.length > 0) {
                     setSubscriptionState('Unlimited')
                   }
                   setShowDeclineSection(false)
                 }}
                 disabled={loadingEnrollment}
               >
-                {unlimitedCohorts.length > 0
+                {unlimitedProspectiveCohorts.length > 0
                   ? 'Join Membership instead'
                   : 'Go back'}
               </Button>
