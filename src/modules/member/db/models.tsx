@@ -433,7 +433,7 @@ export class Member extends Model {
 
   get isOnFreeMembership() {
     const billingMethodName =
-      this.activeBillingPackageEnrollment?.billingSchemeSubscription?.billingScheme?.billingMethod?.name?.toLowercase()
+      this.activeBillingPackageEnrollment?.billingSchemeSubscription?.billingScheme?.billingMethod?.name
     if (
       billingMethodName === BillingMethodName.INVOICE_TO_EMPLOYER ||
       billingMethodName === BillingMethodName.INVOICE_TO_INSURER ||
@@ -484,7 +484,8 @@ export class Member extends Model {
 
   get shouldRenewMembership() {
     if (
-      this.activeBillingPackageEnrollment?.billingPackage?.isUnlimitedMembership
+      this.activeBillingPackageEnrollment?.billingPackage?.isUnlimitedMembership &&
+      !this.isOnFreeMembership
     ) {
       const expiryDate =
         this.activeBillingPackageEnrollment?.billingSchemeSubscription
