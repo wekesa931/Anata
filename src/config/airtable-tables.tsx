@@ -51,6 +51,7 @@ const TABLE_ROUTES: Record<string, string> = {
   'Lab/imaging management': 'labs',
   'Healthy Program Tracking': 'healthyTrackingProgram',
   'Routine Labs synced from Lab base': 'routine_labs',
+  'Care Plan Master List': 'carePlan',
 }
 
 export default TABLE_ROUTES

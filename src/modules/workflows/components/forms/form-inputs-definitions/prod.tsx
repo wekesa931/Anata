@@ -6905,23 +6905,7 @@ export default [
     name: 'Interventions',
     id: 'tblTmMtBgwT76JrQN',
     formId: 'shrwlizJiy4xcAR2Y',
-    helper:
-      'Please use this form to enter in a new intervention for a beneficiary',
     fields: [
-      {
-        id: 'fldCgT1FPO8iK1SLi',
-        name: 'Case ID',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldxRQ6AVQRpbpEtd',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tbl7Kh4tVrQp9JdUc',
-        required: false,
-        helper: '',
-      },
       {
         id: 'fldnE7LZxxsDSXA1F',
         name: 'Member',
@@ -6933,20 +6917,48 @@ export default [
         unreversed: true,
         relationship: 'one',
         foreignTableId: 'tblidCJtioaFSYwvk',
-        required: true,
+        required: false,
         helper: '',
       },
       {
-        id: 'fldIM0afO9BuMtoJg',
-        name: 'HMP',
+        id: 'fld70d5ifwYuNB62f',
+        name: 'Condition (from memberDB)',
+        type: 'conditions',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fld70d5ifwYuNB62f',
+        unreversed: true,
+        relationship: 'many',
+        foreignTableId: 'tblYSNrfZJnzdSwmx',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldulJbxJR9kPhlXO',
+        name: 'Care Plan Master List',
         type: 'foreignKey',
         format: '',
         isDateTime: false,
         options: [],
-        symmetricColumnId: 'fldM3NKbxpX4mj6Wf',
+        symmetricColumnId: 'fldOZhP1wT9FK4yH9',
         unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblMKwFctRYwBYHgt',
+        relationship: 'one',
+        foreignTableId: 'tblO5d1RLXDjp4dNs',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldU2O14PwFb5dpMW',
+        name: 'Status',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
         required: false,
         helper: '',
       },
@@ -6961,13 +6973,13 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper: '',
       },
       {
-        id: 'fldaNcgPoBcmBH07w',
-        name: 'Intervention',
-        type: 'select',
+        id: 'fld6HBMUGRwgNhp6M',
+        name: 'Starting level',
+        type: 'text',
         format: '',
         isDateTime: false,
         options: [],
@@ -6975,12 +6987,12 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper: '',
       },
       {
-        id: 'fldxMX1UvHY8a1PUZ',
-        name: 'Other intervention',
+        id: 'fldh9FY9zIOwKezbB',
+        name: 'Target',
         type: 'text',
         format: '',
         isDateTime: false,
@@ -6989,690 +7001,13 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper: '',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Other'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Other'].some((r) => values.Intervention.includes(r))
-          }
-          return ['Other'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fld70d5ifwYuNB62f',
-        name: 'Condition (from memberDB)',
-        type: 'conditions',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fld8VuhvyzeT14NFA',
-        unreversed: true,
-        relationship: 'many',
-        foreignTableId: 'tblYSNrfZJnzdSwmx',
-        required: false,
-        helper:
-          'Note: you can select several conditions that are related to this intervention',
-      },
-      {
-        id: 'fldU2O14PwFb5dpMW',
-        name: 'Status',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'Active intervention - it is ongoing\nInactive intervention- not ongoing',
-      },
-      {
-        id: 'fldu4Nwamz7R2ocWm',
-        name: 'Status Cause',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Paused should be an option under inactive\nSuccessful can either be active or inactive',
-      },
-      {
-        id: 'fldwibgAvaWBZhv3j',
-        name: 'Resumption Date',
-        type: 'date',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'The date the intervention gets back to effect',
-        conditionType: '',
-        parentKey: 'Status Cause',
-        parentValues: ['Stopped', 'Paused'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Status Cause'])) {
-            return ['Stopped', 'Paused'].some((r) =>
-              values['Status Cause'].includes(r)
-            )
-          }
-          return ['Stopped', 'Paused'].includes(values['Status Cause'])
-        },
-      },
-      {
-        id: 'fldDOdcPCIRv2deLh',
-        name: 'Starting activity - description',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Please briefly describe the type of activity, the frequency and the duration',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Activity Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Activity Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Activity Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldgdar5xv7r46nSF',
-        name: 'Starting activity measurement',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Please go to this view <a href="https://coda.io/d/Clinical-Hub_dLO3YmEbw6e/Activity-METs-calculator_suNvx#_luc_1" target="_blank">https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Activity-METs-calculator_sudrw#_luOZM</a> to identify the MET-Min/week (total of MET-Min/week of each activity)\nExample: 500 or 550',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Activity Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Activity Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Activity Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldOsrHl0q0peeL94',
-        name: 'Starting asthma measurement',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Please use this link to score the asthma condition and enter the result: <a href="https://www.asthmacontroltest.com/en-gb/welcome/" target="_blank">https://www.asthmacontroltest.com/en-gb/welcome/</a>\nExample: 6 or 21',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Asthma Action Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Asthma Action Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Asthma Action Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldPjxnzz9on7basl',
-        name: 'Starting salt measurement',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Daily salt intake in mg - without the unit\nExample: 1000',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Salt Reduction Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Salt Reduction Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Salt Reduction Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldOPuOknClXEuVIQ',
-        name: 'Starting BMI measurement',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Stage 1: BMI 25.0 - 29.9\nStage 2: BMI 30.0 - 39.9\nStage 3: BMI =/>40',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Weight Gain Plan', 'Caloric Reduction Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Weight Gain Plan', 'Caloric Reduction Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Weight Gain Plan', 'Caloric Reduction Plan'].includes(
-            values.Intervention
-          )
-        },
-      },
-      {
-        id: 'fldzwPjrFkl8JBu7A',
-        name: 'Starting glycemix index',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Glycemix index\nExample: 85 or 167',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Diabetic Diet Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Diabetic Diet Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Diabetic Diet Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fld99KfJX7bA73FxO',
-        name: 'Starting cholesterol measurement',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Daily cholesterol intake in mg - without the unit\nExample: 220 or 450',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Cholesterol Reduction'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Cholesterol Reduction'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Cholesterol Reduction'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldOKy5oLDAE1isdc',
-        name: 'Starting Potassium measurement',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Daily potassium intake in mg without the unit\nExample: 200',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Potassium Rich Diet Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Potassium Rich Diet Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Potassium Rich Diet Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldig3ueNTzHRCjUU',
-        name: 'Starting activity level',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '0: 0 MET-minutes/week\n1: <500 MET-minutes/week\n2: 500 - 1499 MET-minutes/week\n3: 1500 - 2900 MET-minutes/week\n4: >= 3000 MET-minutes/week',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Activity Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Activity Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Activity Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldHQIt7n5MBWGKRJ',
-        name: 'Starting Asthma level',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Above 11 years old\n1: Score 24 - 27\n2: Score 21 - 23\n3: Score 16 - 20\n4: Score < 15\n\n4 to 11 years old\n1: Score 25 - 27\n2: Score 21 - 24\n3: Score 13 - 20\n4: Score < 12',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Asthma Action Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Asthma Action Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Asthma Action Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldDpUmNqPPcx4EUm',
-        name: 'Starting salt level',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '0: <1500mg (Recommended for hypertensives)\n1: 1500-2500mg (Normal)\n2: 2501-3500mg (High)\n3: 3501-4500mg (Very High)\n4: >4500mg (Excessively High)',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Salt Reduction Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Salt Reduction Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Salt Reduction Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldyTMe0prmNCiAmn',
-        name: 'Starting BMI level',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '1: BMI 25-30\n2: BMI 31-40\n3: BMI >40',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Caloric Reduction Plan', 'Weight Gain Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Caloric Reduction Plan', 'Weight Gain Plan'].includes(
-            values.Intervention
-          )
-        },
-      },
-      {
-        id: 'fld8vyy47pdiFprUD',
-        name: 'Weight gain milestone target',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '      * If BMI 17.0 - 18.4:\n1-month: 1% increase\n3-month: 1% increase\n6-month: 1% increase\n      * If BMI 16.0 - 16.9:\n1-month: 1% increase\n3-month: 2% increase\n6-month: 2% increase\n      * If BMI < 16.0:\n1-month: 2% increase\n3-month: 2% increase\n6-month: 3% increase',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Weight Gain Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Weight Gain Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Weight Gain Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldOGxcqIyo9hf9Dc',
-        name: 'Starting Glycemix level',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Level 0: <100\nLevel 1: 100 - 180\nLevel 2: 181 - 200\nLevel 3: >200',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Diabetic Diet Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Diabetic Diet Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Diabetic Diet Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fld6xSPIjtfXoA2et',
-        name: 'Starting cholesterol level',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '0: <200mg (Recommended for those with heart disease)\n1: 200-300mg (Normal)\n2: 301-500mg (High)\n3: >500mg (Very High)',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Cholesterol Reduction'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Cholesterol Reduction'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Cholesterol Reduction'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldW7aB4CRW8bcTyu',
-        name: 'Starting potassium level',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '0: >3500mg (Recommended)\n1: 2500-3500mg (Normal)\n2: 1500-2499mg (Low)\n3: <1500mg (Inadequate)',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Potassium Rich Diet Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Potassium Rich Diet Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Potassium Rich Diet Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldjxvGhKaM7oYTeL',
-        name: 'Activity milestone target',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'If 0 go to level 1: <500 MET-minutes/week\nIf 1 go to level 2: 500 - 1499 MET-minutes/week\nIf 2 go to level 3: 1500 - 2900 MET-minutes/week\nIf 3 and 4 go to level 4: >= 3000 MET-minutes/week',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Activity Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Activity Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Activity Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldBzVbSYXjvGuNfq',
-        name: 'Asthma milestone target',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Above 11 years old\nIf 1 and 2, go to level 1: Score 24 - 27\nIf 3, go to level 2: Score 21 - 23\nIf 4, go to level 3: Score 16 - 20\n\n4 to 11 years old\nIf 1 and 2, go to level 1: Score 25 - 27\nIf 3, go to level 2: Score 21 - 24\nIf 4, go to level 3: Score 13 - 20',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Asthma Action Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Asthma Action Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Asthma Action Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldDT3gwroP6jT8Ee',
-        name: 'Potassium rich diet milestone target',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'If 0 and 1, got to level 0: >3500mg (Recommended)\nIf 2, go to level 1: 2500-3500mg (Normal)\nIf 3, go to level 2: 1500-2499mg (Low)\nIf 4, go to level 3: <1500mg (Inadequate)',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Potassium Rich Diet Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Potassium Rich Diet Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Potassium Rich Diet Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldrjBM0FWxXfT8Q1',
-        name: 'Caloric reduction milestone target',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'If Stage 1:\n1-month: 1% reduction\n3-month: 2% reduction\n6-month: 2% reduction\n\nIf Stage 2:\n1-month: 2% reduction\n3-month: 2% reduction\n6-month: 3% reduction\n \nIf Stage 3:\n1-month: 2% reduction\n3-month: 3% reduction\n6-month: 5% reduction',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Caloric Reduction Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Caloric Reduction Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Caloric Reduction Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldx1hmjkXUKsyqwK',
-        name: 'Salt reduction milestone target',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'If 0 and 1, go to level 0: <1500mg (Recommended for hypertensives)\nIf 2, go to level 1: 1500-2500mg (Normal)\nIf 3, go to level 2: 2500-3500mg (High)\nIf 4, go to level 3: 3500-4500mg (Very High)',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Salt Reduction Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Salt Reduction Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Salt Reduction Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldWJ9vYYmJWvDeAG',
-        name: 'Diabetic milestone target',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'If condition is Diabetes + condition stage = AT RISK and:\n  Level 0: <100, target = Level 0: <100\n  Level 1: 100 - 180, target = Level 1: 100 - 180\n  Level 2: 181 - 200, target = Level 1: 100 -180\n  Level 3: >200, target = Level 2: 181 - 200\n\n If condition is Diabetes + condition stage = PRE-DIABETES, 1, 2, or 3 and:\n  Level 0: <100, target = Level 0: <100\n  Level 1: 100 - 180, target = Level 0 <100\n  Level 2: 181 - 200, target = Level 1: 100 -180\n  Level 3: >200, target = Level 2: 181 - 200',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Diabetic Diet Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Diabetic Diet Plan'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Diabetic Diet Plan'].includes(values.Intervention)
-        },
-      },
-      {
-        id: 'fldRA57xdMV6siq2v',
-        name: 'Cholesterol milestone target',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'If 0 and 1, go to level 0: <200mg (Recommended for those with heart disease)\nIf 2, go to level 1: 200-300mg (Normal)\nIf 3, go to level 2: 300-500mg (High)',
-        conditionType: '',
-        parentKey: 'Intervention',
-        parentValues: ['Cholesterol Reduction'],
-        condition: (values: any) => {
-          if (Array.isArray(values.Intervention)) {
-            return ['Cholesterol Reduction'].some((r) =>
-              values.Intervention.includes(r)
-            )
-          }
-          return ['Cholesterol Reduction'].includes(values.Intervention)
-        },
       },
       {
         id: 'fldSjoPwKwk0F88NJ',
         name: 'Notes',
-        type: 'richText',
+        type: 'text',
         format: '',
         isDateTime: false,
         options: [],
@@ -12850,23 +12185,7 @@ export default [
     name: 'Intervention Data Tracking',
     id: 'tbljaKK4MXz7M990E',
     formId: 'shrU6coJtTURljj15',
-    helper:
-      'This form should be used to collect data about a bene intervention progress',
     fields: [
-      {
-        id: 'fld3HJ6VSpWRPUrXE',
-        name: 'Member Intervention',
-        type: 'foreignKey',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: 'fldED2PmnAj6gH4Dd',
-        unreversed: true,
-        relationship: 'one',
-        foreignTableId: 'tblTmMtBgwT76JrQN',
-        required: true,
-        helper: '',
-      },
       {
         id: 'fldCtuk3JlRtqOFXy',
         name: 'Date',
@@ -12878,67 +12197,26 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
-        helper: 'Date that the data was collected',
-      },
-      {
-        id: 'fldItp6l73XyoRfiY',
-        name: 'HMP Number',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: 'Please enter the CURRENT HMP#',
-      },
-      {
-        id: 'fldsXSgs2qXYzCuD0',
-        name: 'Intervention type',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'This type selection will allow the form to ask the right questions for this intervention',
-      },
-      {
-        id: 'fldrCo5S3DKKPrsJd',
-        name: 'Current activity - description',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
         required: false,
-        helper:
-          'Please briefly describe the types of activities, frequencies and duration',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Activity Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Activity Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Activity Plan'].includes(values['Intervention type'])
-        },
+        helper: '',
       },
       {
-        id: 'fld1EwIkwxiNB0Zuv',
-        name: 'Current activity measurement',
+        id: 'fld3HJ6VSpWRPUrXE',
+        name: 'Member Intervention',
+        type: 'foreignKey',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: 'fldED2PmnAj6gH4Dd',
+        unreversed: true,
+        relationship: 'one',
+        foreignTableId: 'tblTmMtBgwT76JrQN',
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldNfRnl6HOndfeeA',
+        name: 'Current level (2025)',
         type: 'text',
         format: '',
         isDateTime: false,
@@ -12947,421 +12225,8 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
-        helper:
-          'Please go to this view <a href="https://coda.io/d/Clinical-Hub_dLO3YmEbw6e/Activity-METs-calculator_suNvx#_luc_1" target="_blank">https://coda.io/d/Member-Ops-HQ_dC7z-wysRxW/Activity-METs-calculator_sudrw#_luOZM</a> to identify the MET-Min/week (total of MET-Min/week of each activity)\nExample: 500 or 550',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Activity Plan', 'Fitness Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Activity Plan', 'Fitness Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Activity Plan', 'Fitness Plan'].includes(
-            values['Intervention type']
-          )
-        },
-      },
-      {
-        id: 'fldCFOsgFR4thpBsu',
-        name: 'Current asthma score',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'Please use this link to score the asthma condition and enter the result: <a href="https://www.asthmacontroltest.com/en-gb/welcome/" target="_blank">https://www.asthmacontroltest.com/en-gb/welcome/</a>',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Asthma Action Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Asthma Action Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Asthma Action Plan'].includes(values['Intervention type'])
-        },
-      },
-      {
-        id: 'fldq7uuwv4SEggicV',
-        name: 'Current salt measurement',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'Enter salt measurement in mg without unit - 2000 or 3000 or 1500...',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Salt Reduction Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Salt Reduction Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Salt Reduction Plan'].includes(values['Intervention type'])
-        },
-      },
-      {
-        id: 'fldYQsM2dhJdhXXn6',
-        name: 'Current BMI change measurement',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'Stage 1: BMI 25.0 - 29.9\nStage 2: BMI 30.0 - 39.9\nStage 3: BMI =/>40',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Caloric Reduction Plan', 'Weight Gain Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Caloric Reduction Plan', 'Weight Gain Plan'].includes(
-            values['Intervention type']
-          )
-        },
-      },
-      {
-        id: 'fldfFw7ks29uUAqxX',
-        name: 'Current glycemix index',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: 'Enter glycemic measurement - 80 or 90 or 130...',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Diabetic Diet Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Diabetic Diet Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Diabetic Diet Plan'].includes(values['Intervention type'])
-        },
-      },
-      {
-        id: 'fld0ABI8orJr9X4es',
-        name: 'current cholesterol measurement',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'Enter daily cholesterol intake in mg without unit \nExample: 200 or 300 or 150...',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Cholesterol Reduction'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Cholesterol Reduction'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Cholesterol Reduction'].includes(values['Intervention type'])
-        },
-      },
-      {
-        id: 'flduK3cldnw1wkPUS',
-        name: 'Current potassium measurement',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'Enter daily potassium intake in mg without the unit\nExample: 200',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Potassium Rich Diet Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Potassium Rich Diet Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Potassium Rich Diet Plan'].includes(
-            values['Intervention type']
-          )
-        },
-      },
-      {
-        id: 'fldaePZSqQRFIOJay',
-        name: 'Current asthma trigger measurement',
-        type: 'multiSelect',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
         required: false,
-        helper: 'Please select the type of trigger',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Asthma trigger management'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Asthma trigger management'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Asthma trigger management'].includes(
-            values['Intervention type']
-          )
-        },
-      },
-      {
-        id: 'fldMgIrXxtnFg0E8Z',
-        name: 'Current activity level',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '0: 0 MET-minutes/week\n1: <500 MET-minutes/week\n2: 500 - 1499 MET-minutes/week\n3: 1500 - 2900 MET-minutes/week\n4: >= 3000 MET-minutes/week',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Activity Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Activity Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Activity Plan'].includes(values['Intervention type'])
-        },
-      },
-      {
-        id: 'fldCMJwVSO853fe1s',
-        name: 'Current asthma level',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Above 11 years old\n1: Score 24 - 27\n2: Score 21 - 23\n3: Score 16 - 20\n4: Score < 15\n\n4 to 11 years old\n1: Score 25 - 27\n2: Score 21 - 24\n3: Score 13 - 20\n4: Score < 12',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Asthma Action Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Asthma Action Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Asthma Action Plan'].includes(values['Intervention type'])
-        },
-      },
-      {
-        id: 'fldozIVUzDlVUE1is',
-        name: 'Current BMI level',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '1: BMI 25-30\n2: BMI 31-40\n3: BMI >40',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Caloric Reduction Plan', 'Weight Gain Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Caloric Reduction Plan', 'Weight Gain Plan'].includes(
-            values['Intervention type']
-          )
-        },
-      },
-      {
-        id: 'fldmFpfdvoqor5bka',
-        name: 'Current salt level',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '0: <1500mg (Recommended for hypertensives)\n1: 1500-2500mg (Normal)\n2: 2501-3500mg (High)\n3: 3501-4500mg (Very High)\n4: >4500mg (Excessively High)',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Salt Reduction Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Salt Reduction Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Salt Reduction Plan'].includes(values['Intervention type'])
-        },
-      },
-      {
-        id: 'fldqLlNeOr3tYf6EC',
-        name: 'Current potassium level',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '0: >3500mg (Recommended)\n1: 2500-3500mg (Normal)\n2: 1500-2499mg (Low)\n3: <1500mg (Inadequate)',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Potassium Rich Diet Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Potassium Rich Diet Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Potassium Rich Diet Plan'].includes(
-            values['Intervention type']
-          )
-        },
-      },
-      {
-        id: 'fldDaI2JW3324ujcS',
-        name: 'Current cholesterol level',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          '0: <200mg (Recommended for those with heart disease)\n1: 200-300mg (Normal)\n2: 301-500mg (High)\n3: >500mg (Very High)',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Cholesterol Reduction'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Cholesterol Reduction'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Cholesterol Reduction'].includes(values['Intervention type'])
-        },
-      },
-      {
-        id: 'fldjlKnq4zFU8u49g',
-        name: 'Current diabetic level',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Level 0: <100\nLevel 1: 100 - 180\nLevel 2: 181 - 200\nLevel 3: >200',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Diabetic Diet Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Diabetic Diet Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Diabetic Diet Plan'].includes(values['Intervention type'])
-        },
-      },
-      {
-        id: 'fldLOX17z5GCASFOw',
-        name: 'Current Milestone Target',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          "What was the BN's Milestone Target at LAST HMP\n\nCaloric Reduction BMI Target: \nIf Stage 1:\n1-month: 1% reduction\n3-month: 2% reduction\n6-month: 2% reduction\n \nIf Stage 2:\n1-month: 2% reduction\n3-month: 2% reduction\n6-month: 3% reduction\n\nIf Stage 3:\n1-month: 2% reduction\n3-month: 3% reduction\n6-month: 5% reduction\n\nSalt:\nLevel 0: <1500mg (Recommended for hypertensives)\nLevel 1: 1500-2500mg (Normal)\nLevel 2: 2500-3500mg (High)\nLevel 3: 3500-4500mg (Very High)\nLevel 4: >4500mg (Excessively High)\n\nGlycemic Index:\nStage 0: 80-180 (At Risk)\nStage 1: <80 (Newly dx)\nStage 2: <100 (1st line meds)\nStage 3: <180 (2nd line meds)\n\nActivity:\nLevel 1: 7-10 km per week\nLevel 2: 10-15km brisk walking per week\nLevel 3: 15-20km brisk walking per week\nLevel 4: Daily exercise/Athlete\n\nCholesterol:\nLevel [0]: <200mg (Recommended for those with heart disease)\nLevel 1: 200-300mg (Normal)\nLevel 2: 300-500mg (High)\nLevel 3: >500mg (Very High)\n\nAsthma:\nStage 1: Mild intermittent\nStage 2: Moderate intermittent\nStage 3: Moderate persistent\nStage 4: Severe persistent\n\nIf BMI 17.0 - 18.4:\n1-month: 1% increase\n3-month: 1% increase\n6-month: 1% increase\nIf BMI 16.0 - 16.9:\n1-month: 1% increase\n3-month: 2% increase\n6-month: 2% increase\nIf BMI < 16.0:\n1-month: 2% increase\n3-month: 2% increase\n6-month: 3% increase",
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Caloric Reduction Plan', 'Weight Gain Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Caloric Reduction Plan', 'Weight Gain Plan'].includes(
-            values['Intervention type']
-          )
-        },
+        helper: '',
       },
       {
         id: 'fldm57eb2B0cNjonu',
@@ -13374,14 +12239,13 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
-        helper:
-          'Is the patient exceeding, on track, off track, or regressing on their goal?\n\nExceeding: the beneficiary has already reach the target level and will likely reach another level before the target date\n\nOn track: the beneficiary is not yet there but will likely succeed into reaching the target milestone\n\nOff track: the beneficiary is not yet there and will unlikely succeed into reaching the target milestone\n\nRegressing: the beneficiary is struggling with the milestone and we will likely have to refine another milestone or approach\n\nThe current progress of the intervention leads to a required update of the condition (new stage or new status)? click the button.',
+        required: false,
+        helper: '',
       },
       {
-        id: 'flds05B74ZBhtCTUV',
-        name: 'Is the member doing what we want them to be doing in this intervention?',
-        type: 'select',
+        id: 'fldJw7pLxBqrlFudC',
+        name: 'Notes',
+        type: 'multilineText',
         format: '',
         isDateTime: false,
         options: [],
@@ -13389,61 +12253,8 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
-        helper:
-          'Question is used to generate Persona of the member for this intervention',
-        conditionType: '!',
-        parentKey: 'Current Milestone Attainment',
-        parentValues: ['Exceeded', 'On Track'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Current Milestone Attainment'])) {
-            return ['Exceeded', 'On Track'].some(
-              (r) => !values['Current Milestone Attainment'].includes(r)
-            )
-          }
-          return !['Exceeded', 'On Track'].includes(
-            values['Current Milestone Attainment']
-          )
-        },
-      },
-      {
-        id: 'fldBC1pC8wgOsaWBT',
-        name: 'Does the member want to be doing what we want them to do in this intervention?',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper:
-          'Question is used to generate Persona of the member for this intervention',
-        conditionType: '',
-        parentKey:
-          'Is the member doing what we want them to be doing in this intervention?',
-        parentValues: ['No'],
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values[
-                'Is the member doing what we want them to be doing in this intervention?'
-              ]
-            )
-          ) {
-            return ['No'].some((r) =>
-              values[
-                'Is the member doing what we want them to be doing in this intervention?'
-              ].includes(r)
-            )
-          }
-          return ['No'].includes(
-            values[
-              'Is the member doing what we want them to be doing in this intervention?'
-            ]
-          )
-        },
+        required: false,
+        helper: '',
       },
       {
         id: 'fldxs3oO67guP0PDY',
@@ -13456,63 +12267,8 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
-        helper:
-          'Select the status: Active : intervention is ongoing \n Paused: the member decided to stop for now or you decide to pause it to focus on another intervention \n Completed: intervention is done \n Canceled: the intervention will not apply anymore',
-      },
-      {
-        id: 'fldKyHKhvNtQ3WRZj',
-        name: 'Reason for status update',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
-        helper: 'Please enter the reason that explain the status',
-      },
-      {
-        id: 'fldqAL8R4DCw2IKsL',
-        name: 'Status Cause',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
         required: false,
-        helper:
-          "If intervention has been completely successful or should stop for any reason and we do not need the member to continue it, please change the status below. \n\n(By entering a new status below, the Intervention status will be automatically changed in Airtable)\n\n`Paused` means Antara and/or bene temporarily stop an intervention\n'Stopped' means Antara decided to stop the intervention\n'Opted out' means beneficiary decided to stop the intervention",
-      },
-      {
-        id: 'fld8oWfNzH0zQwcVX',
-        name: 'Resumption Date',
-        type: 'date',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'The date the intervention gets back to effect',
-        conditionType: '',
-        parentKey: 'Status Cause',
-        parentValues: ['Stopped', 'Paused'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Status Cause'])) {
-            return ['Stopped', 'Paused'].some((r) =>
-              values['Status Cause'].includes(r)
-            )
-          }
-          return ['Stopped', 'Paused'].includes(values['Status Cause'])
-        },
+        helper: '',
       },
       {
         id: 'fldQzwHoVXf9ure8X',
@@ -13526,237 +12282,26 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        helper:
-          'If you are doing this update at the end of a HMP cycle, please capture the result of the intervention',
-      },
-      {
-        id: 'fldJm6DPdfLZfoLUG',
-        name: 'Other result',
-        type: 'text',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Please enter the other result',
-        conditionType: '',
-        parentKey: 'Intervention result',
-        parentValues: ['Other'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention result'])) {
-            return ['Other'].some((r) =>
-              values['Intervention result'].includes(r)
-            )
-          }
-          return ['Other'].includes(values['Intervention result'])
-        },
-      },
-      {
-        id: 'fldfn6Uygthm68RU7',
-        name: 'Next activity milestone target',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Optional unless you want to change the current milestone\n\n0: 0 MET-minutes/week\n1: <500 MET-minutes/week\n2: 500 - 1499 MET-minutes/week\n3: 1500 - 2900 MET-minutes/week\n4: >= 3000 MET-minutes/week',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Activity Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Activity Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Activity Plan'].includes(values['Intervention type'])
-        },
-      },
-      {
-        id: 'fldWQw5BoLC4nkwYq',
-        name: 'Next asthma milestone target',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Optional unless you want to change the current milestone\n\nIf 1 and 2, go to level 1\nIf 3, go to level 2\nIf 4, go to level 3',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Asthma Action Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Asthma Action Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Asthma Action Plan'].includes(values['Intervention type'])
-        },
-      },
-      {
-        id: 'fldoD0EXYB09WFFdP',
-        name: 'Next diabetic milestone',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'If condition is Diabetes + condition stage = AT RISK and:\nLevel 0: <100, target = Level 0: <100\nLevel 1: 100 - 180, target = Level 1: 100 - 180\nLevel 2: 181 - 200, target = Level 1: 100 -180\nLevel 3: >200, target = Level 2: 181 - 200\n\nIf condition is Diabetes + condition stage = PRE-DIABETES, 1, 2, or 3 and:\nLevel 0: <100, target = Level 0: <100\nLevel 1: 100 - 180, target = Level 0 <100\nLevel 2: 181 - 200, target = Level 1: 100 -180\nLevel 3: >200, target = Level 2: 181 - 200\n',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Diabetic Diet Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Diabetic Diet Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Diabetic Diet Plan'].includes(values['Intervention type'])
-        },
-      },
-      {
-        id: 'fldnfxxENZSQ4oPw4',
-        name: 'Next potassium rich diet milestone',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: 'Optional unless you want to change the current milestone',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Potassium Rich Diet Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Potassium Rich Diet Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Potassium Rich Diet Plan'].includes(
-            values['Intervention type']
-          )
-        },
-      },
-      {
-        id: 'flduaiyogoXQQ4OL7',
-        name: 'Next BMI milestone',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Optional unless you want to change the current milestone\n\nIf Stage 1:\n1-month: 1% reduction\n3-month: 2% reduction\n6-month: 2% reduction\n \nIf Stage 2:\n1-month: 2% reduction\n3-month: 2% reduction\n6-month: 3% reduction\n\nIf Stage 3:\n1-month: 2% reduction\n3-month: 3% reduction\n6-month: 5% reduction\n\nIf BMI 17.0 - 18.4:\n1-month: 1% increase\n3-month: 1% increase\n6-month: 1% increase\nIf BMI 16.0 - 16.9:\n1-month: 1% increase\n3-month: 2% increase\n6-month: 2% increase\nIf BMI < 16.0:\n1-month: 2% increase\n3-month: 2% increase\n6-month: 3% increase',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Caloric Reduction Plan', 'Weight Gain Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Caloric Reduction Plan', 'Weight Gain Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Caloric Reduction Plan', 'Weight Gain Plan'].includes(
-            values['Intervention type']
-          )
-        },
-      },
-      {
-        id: 'fldKIeM74fkUcirDl',
-        name: 'Next salt reduction milestone',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Optional unless you want to change the current milestone\n\nLevel 0: <1500mg (Recommended for hypertensives)\nLevel 1: 1500-2500mg (Normal)\nLevel 2: 2500-3500mg (High)\nLevel 3: 3500-4500mg (Very High)\nLevel 4: >4500mg (Excessively High)',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Salt Reduction Plan'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Salt Reduction Plan'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Salt Reduction Plan'].includes(values['Intervention type'])
-        },
-      },
-      {
-        id: 'fldQaatGVMnJ9YmVH',
-        name: 'Next cholesterol reduction milestone',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper:
-          'Optional unless you want to change the current milestone\n\nLevel 0: <200mg (Recommended for those with heart disease)\nLevel 1: 200-300mg (Normal)\nLevel 2: 300-500mg (High)\nLevel 3: >500mg (Very High)',
-        conditionType: '',
-        parentKey: 'Intervention type',
-        parentValues: ['Cholesterol Reduction'],
-        condition: (values: any) => {
-          if (Array.isArray(values['Intervention type'])) {
-            return ['Cholesterol Reduction'].some((r) =>
-              values['Intervention type'].includes(r)
-            )
-          }
-          return ['Cholesterol Reduction'].includes(values['Intervention type'])
-        },
-      },
-      {
-        id: 'fldN914KuTtTNwNRj',
-        name: 'Source of data',
-        type: 'select',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: true,
         helper: '',
       },
       {
-        id: 'fldJw7pLxBqrlFudC',
-        name: 'Notes',
-        type: 'multilineText',
+        id: 'flds05B74ZBhtCTUV',
+        name: 'Is the member doing what we want them to be doing in this intervention?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+      },
+      {
+        id: 'fldBC1pC8wgOsaWBT',
+        name: 'Does the member want to be doing what we want them to do in this intervention?',
+        type: 'select',
         format: '',
         isDateTime: false,
         options: [],
