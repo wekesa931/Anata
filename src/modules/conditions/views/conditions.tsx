@@ -105,11 +105,13 @@ export function ConditionsView() {
               notify(`Error updating conditions : ${result.error.message}`)
             } else {
               notify('Conditions updated successfully')
+              setExpanded(values.id)
               setDisplayMode((prev) => ({
                 ...prev,
                 [values.id]: false,
               }))
               setShowStatusChange(undefined)
+              setRefetch(!refetch)
             }
             setSubmitData(false)
           })
@@ -128,7 +130,15 @@ export function ConditionsView() {
   }
 
   useEffect(() => {
-    loadAndFilterConditions(activeFilter)
+    loadAndFilterConditions(activeFilter).then(() => {
+      if (expanded && conditions.some((c: any) => c.id === expanded)) {
+        // expand condition after updating
+        updateExpanded(expanded)(undefined, true)
+      } else {
+        setExpanded(false)
+      }
+    })
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFilter, refetch])
 
@@ -144,7 +154,7 @@ export function ConditionsView() {
   const loading = conditionsLoading || loadingLookups
 
   const updateExpanded =
-    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    (panel: string) => (event?: React.SyntheticEvent, isExpanded?: boolean) => {
       setExpanded(isExpanded ? panel : false)
     }
 
