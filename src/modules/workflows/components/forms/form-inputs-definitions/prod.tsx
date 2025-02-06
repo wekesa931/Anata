@@ -12243,20 +12243,6 @@ export default [
         helper: '',
       },
       {
-        id: 'fldJw7pLxBqrlFudC',
-        name: 'Notes',
-        type: 'multilineText',
-        format: '',
-        isDateTime: false,
-        options: [],
-        symmetricColumnId: null,
-        unreversed: false,
-        relationship: null,
-        foreignTableId: null,
-        required: false,
-        helper: '',
-      },
-      {
         id: 'fldxs3oO67guP0PDY',
         name: 'Status update',
         type: 'select',
@@ -12285,6 +12271,31 @@ export default [
         helper: '',
       },
       {
+        id: 'fldQzwHoVXf9ure8X',
+        name: 'Intervention result',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Status update',
+        parentValues: ['Completed', 'Canceled'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Status update'])) {
+            return ['Completed', 'Canceled'].some((r) =>
+              values['Status update'].includes(r)
+            )
+          }
+          return ['Completed', 'Canceled'].includes(values['Status update'])
+        },
+      },
+      {
         id: 'flds05B74ZBhtCTUV',
         name: 'Is the member doing what we want them to be doing in this intervention?',
         type: 'select',
@@ -12297,11 +12308,51 @@ export default [
         foreignTableId: null,
         required: false,
         helper: '',
+        conditionType: '',
+        parentKey: 'Current Milestone Attainment',
+        parentValues: ['Off Track', 'Regressed/Negative Progress'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Current Milestone Attainment'])) {
+            return ['Off Track', 'Regressed/Negative Progress'].some((r) =>
+              values['Current Milestone Attainment'].includes(r)
+            )
+          }
+          return ['Off Track', 'Regressed/Negative Progress'].includes(
+            values['Current Milestone Attainment']
+          )
+        },
       },
       {
         id: 'fldBC1pC8wgOsaWBT',
         name: 'Does the member want to be doing what we want them to do in this intervention?',
         type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Current Milestone Attainment',
+        parentValues: ['Off Track', 'Regressed/Negative Progress'],
+        condition: (values: any) => {
+          if (Array.isArray(values['Current Milestone Attainment'])) {
+            return ['Off Track', 'Regressed/Negative Progress'].some((r) =>
+              values['Current Milestone Attainment'].includes(r)
+            )
+          }
+          return ['Off Track', 'Regressed/Negative Progress'].includes(
+            values['Current Milestone Attainment']
+          )
+        },
+      },
+      {
+        id: 'fldJw7pLxBqrlFudC',
+        name: 'Notes',
+        type: 'multilineText',
         format: '',
         isDateTime: false,
         options: [],
