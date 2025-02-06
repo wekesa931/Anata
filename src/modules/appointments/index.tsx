@@ -19,6 +19,7 @@ import { useMutation } from '@apollo/client'
 import { useNotifications } from 'src/context/notifications'
 import Modal from 'src/components/modals'
 import { Button } from '@mui/material'
+import ReplayIcon from '@mui/icons-material/Replay'
 import styles from './appointments.module.css'
 import ServiceBooking from './service-booking.component'
 
@@ -621,11 +622,19 @@ function Appointments() {
         }}
       >
         Book Appointment
-      </button>
+      </button>{' '}
+      <Tooltip title="Refresh appointments" className="">
+        {(!isLoading || isError) && (
+          <ReplayIcon
+            className="w-5 cursor-pointer"
+            onClick={() => refresh()}
+          />
+        )}
+      </Tooltip>
       <div className="margin-top-0">
-        {isReadytoShowAppt && (
-          <>
-            <h4 className="mt-5">Up next</h4>
+        <>
+          <h4 className="mt-5">Up next</h4>
+          {isReadytoShowAppt && (
             <List
               list={getNextAppointments(appointments)}
               emptyListText="No Appointment found for this member"
@@ -634,8 +643,14 @@ function Appointments() {
               modalTitle="Appointment"
               isItemEditable={isItemEditable}
             />
-          </>
-        )}
+          )}
+          {isLoading && (
+            <div className="d-flex flex-direction-column flex-align-center margin-top-32">
+              <LoadingIcon className="h-6 w-6" />
+              <p className="text-small">Loading Next Appointments...</p>
+            </div>
+          )}
+        </>
       </div>
       <div
         className="d-flex flex-align-center mt-5"
@@ -671,16 +686,16 @@ function Appointments() {
           />
         </div>
       )}
-      {isLoading && loading && (
+      {isLoading && (
         <div className="d-flex flex-direction-column flex-align-center margin-top-32">
           <LoadingIcon className="h-6 w-6" />
-          <p className="text-small">Loading Appointments...</p>
+          <p className="text-small">Loading Past Appointments...</p>
         </div>
       )}
       {isError && (
         <p className="text-small text-danger margin-top-24">
-          An error occurred while fetching appointments, please refresh the
-          page.
+          An error occurred while fetching appointments, please click on the
+          refresh icon or refresh the page.
         </p>
       )}
       <Modal
