@@ -14,7 +14,9 @@ function ServiceBooking({ onBackPress }: { onBackPress: () => void }) {
   const services: ServicePricingType[] =
     member?.activeBillingPackageEnrollment?.billingSchemeSubscription
       ?.billingScheme?.servicePricing || []
-
+  const servicesWithBookingUrl = services.filter(
+    (service) => service?.service?.bookingUrl && service?.service?.initials !== 'MDL'
+  )
   const onServiceSelect = (service: ServicePricingType) => {
     if (member?.isMemberBilledThroughSmart) {
       setSelectedService(service)
@@ -42,7 +44,7 @@ function ServiceBooking({ onBackPress }: { onBackPress: () => void }) {
       <p className="text-dark-blue-50 py-2 font-normal text-sm font-rubik">
         Select one
       </p>
-      {services?.map((service: any, key: number) => (
+      {servicesWithBookingUrl?.map((service: any, key: number) => (
         <div
           role="presentation"
           className="h-14 cursor-pointer rounded-lg flex border mb-2 hover:cursor-pointer"
