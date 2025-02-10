@@ -97,6 +97,7 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
           }
           skuRate
           servicePricing {
+            servicePricingId
             service {
               name
               userFriendlyName
