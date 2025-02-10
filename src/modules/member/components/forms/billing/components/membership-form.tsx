@@ -216,10 +216,15 @@ export function BillingMethodForm({
     unlimitedProspectiveCohorts.length > 0
       ? unlimitedProspectiveCohorts[0].billingMethod.description
       : ''
-    // We are infering this from the prospective cohorts options 
-    // and not from the active billing package enrollment of a member.
-    const isFreeService = unlimitedProspectiveCohorts.length > 0 && [BillingMethodName.INVOICE_TO_EMPLOYER, BillingMethodName.INVOICE_TO_INSURER, BillingMethodName.INVOICE_TO_BROKER].includes(
-        unlimitedProspectiveCohorts[0].billingMethod.name)
+  // We are infering this from the prospective cohorts options
+  // and not from the active billing package enrollment of a member.
+  const isFreeService =
+    unlimitedProspectiveCohorts.length > 0 &&
+    [
+      BillingMethodName.INVOICE_TO_EMPLOYER,
+      BillingMethodName.INVOICE_TO_INSURER,
+      BillingMethodName.INVOICE_TO_BROKER,
+    ].includes(unlimitedProspectiveCohorts[0].billingMethod.name)
   return (
     <div>
       {loadingCohorts ? (

@@ -15,7 +15,8 @@ function ServiceBooking({ onBackPress }: { onBackPress: () => void }) {
     member?.activeBillingPackageEnrollment?.billingSchemeSubscription
       ?.billingScheme?.servicePricing || []
   const servicesWithBookingUrl = services.filter(
-    (service) => service?.service?.bookingUrl && service?.service?.initials !== 'MDL'
+    (service) =>
+      service?.service?.bookingUrl && service?.service?.initials !== 'MDL'
   )
   const onServiceSelect = (service: ServicePricingType) => {
     if (member?.isMemberBilledThroughSmart) {

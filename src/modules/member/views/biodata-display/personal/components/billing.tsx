@@ -25,25 +25,17 @@ import { PortalForm } from 'src/modules/member/components/update-forms'
 import InsuranceForm from 'src/modules/member/components/forms/billing/index'
 import { useNotifications } from 'src/context/notifications'
 import InElligibilityReasonsComponent from 'src/modules/member/components/billing-reasons'
-import SelectField from 'src/components/forms/fields/select-field'
 import { Form } from 'formik'
 import PrimaryForm from 'src/components/forms/primary-form'
 import CloseIcon from '@mui/icons-material/Close'
 import SaveIcon from '@mui/icons-material/Save'
 import BillingCohortModal from 'src/modules/member/components/forms/billing/components/billing-cohort-modal'
-import EditIcon from '@mui/icons-material/Edit'
 
 function BillingSectionItem({
   memberCohortItem,
   expanded,
   handleChange,
   member,
-  editCohort,
-  availableCohorts,
-  setInitialValues,
-  setDisplayReasons,
-  setActiveBillingPackageId,
-  setEditCohort,
 }: {
   memberCohortItem: MemberCohortType
   expanded: boolean
@@ -57,37 +49,14 @@ function BillingSectionItem({
   setActiveBillingPackageId: (values: number) => void
   setEditCohort: (values: boolean) => void
 }) {
-  const activeStatus = memberCohortItem?.subscriptionStatus === 'ACTIVE'
-  const [editableCohortId, setEditableCohortId] = useState('')
+  const memberCohortDetails =
+    member?.activeBillingPackageEnrollment?.billingSchemeSubscription
+      ?.billingScheme
+  const status =
+    member?.activeBillingPackageEnrollment?.billingSchemeSubscription
+      ?.subscriptionStatus
+  const isActive = status === 'ACTIVE'
 
-  const handleSaveInput = (value: any) => {
-    if (memberCohortItem) {
-      if (value !== memberCohortItem?.cohortId) {
-        setDisplayReasons(true)
-      } else {
-        setDisplayReasons(false)
-      }
-      const selected = availableCohorts.find(
-        (cohort: any) => cohort.value === value
-      )
-      setActiveBillingPackageId(selected?.billingPackage?.billingPackageId || 0)
-    }
-  }
-  const handleAccordionClick = (event: React.MouseEvent) => {
-    event.stopPropagation()
-  }
-
-  const isEditable =
-    editCohort && editableCohortId === memberCohortItem.cohortId
-
-  const handleEditCohortData = (values: any) => {
-    setEditableCohortId(isEditable ? '' : values.cohortId)
-    setEditCohort(true)
-    setInitialValues({
-      cohortName: values?.cohortId || '',
-      reason: [],
-    })
-  }
   const memberBillingScheme =
     member?.activeBillingPackageEnrollment?.billingSchemeSubscription
       ?.billingScheme
@@ -106,58 +75,25 @@ function BillingSectionItem({
         <AccordionSummary expandIcon={<ExpandMoreOutlined />}>
           <div className="mb-1 w-full">
             <div className="flex items-center justify-between">
-              {isEditable ? (
-                <SelectField
-                  name="cohortName"
-                  label=""
-                  options={availableCohorts}
-                  required={false}
-                  handleChange={(e) => {
-                    handleSaveInput(e)
-                  }}
-                  onClick={handleAccordionClick}
-                />
-              ) : (
-                <section>
-                  <h4 className="text-dark-blue-100 mt-2">
-                    {member?.isUnlimitedMembershipMember
-                      ? 'Unlimited Membership'
-                      : 'Fee For Service'}
-                  </h4>
-                  <p className="text-dark-blue-50 text-sm mt-2 mb-2">
-                    {memberCohortItem?.payor?.payorName}
-                  </p>
-                </section>
-              )}
-              {memberCohortItem.subscriptionStatus === 'DISABLED' &&
-                availableCohorts.length > 1 && (
-                  <div className="mr-4">
-                    <Tooltip title="Edit">
-                      <EditIcon
-                        className={`text-[#ff9500] w-4 h-5 rounded-sm mr-2 ${
-                          editCohort ? 'ml-1 pb-1 text-gray-300' : ''
-                        }`}
-                        onClick={(e) => {
-                          e?.stopPropagation()
-                          handleEditCohortData(memberCohortItem)
-                        }}
-                        sx={{
-                          color: editCohort ? 'gray' : 'inherit',
-                          cursor: editCohort ? 'not-allowed' : 'pointer',
-                        }}
-                      />
-                    </Tooltip>
-                  </div>
-                )}
+              <section>
+                <h4 className="text-dark-blue-100 mt-2">
+                  {member?.isUnlimitedMembershipMember
+                    ? 'Unlimited Membership'
+                    : 'Fee For Service'}
+                </h4>
+                <p className="text-dark-blue-50 text-sm mt-2 mb-2">
+                  {memberCohortDetails?.payor?.payorName}
+                </p>
+              </section>
             </div>
             <span
               className={`inline-block px-4 py-1 mt-2 gap-4 text-xs font-medium rounded-full ${
-                activeStatus
+                isActive
                   ? 'bg-[#ebfbed] text-[#34c759]'
                   : 'text-red-100 bg-red-10'
               }`}
             >
-              {toTitleCase(memberCohortItem?.subscriptionStatus)}
+              {toTitleCase(status)}
             </span>
           </div>
         </AccordionSummary>

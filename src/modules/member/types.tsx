@@ -137,6 +137,11 @@ export type BillingEnrollmentPackageType = {
       claimMethod: {
         name: string
       }
+      payor: {
+        hasFfsBillingSchemes: boolean
+        hasUnlimitedMembershipBillingSchemes: boolean
+        payorName: string
+      }
     }
   }
 }
