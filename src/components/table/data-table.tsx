@@ -21,7 +21,12 @@ import {
 import { visuallyHidden } from '@mui/utils'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Order, getComparator, stableSort } from 'src/utils/sort/stable'
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
+import {
+  ArrowDropUp,
+  ArrowDropDown,
+  ArrowRight,
+  OpenInFull,
+} from '@mui/icons-material'
 import _, { isEmpty } from 'lodash'
 import {
   useDateRangeFilter,
@@ -33,9 +38,10 @@ import {
   isObject,
   extractValueFromObject,
 } from 'src/utils/data-table-utils'
-import { ArrowDropDown, ArrowRight } from '@mui/icons-material'
 import { toTitleCase } from 'src/utils/text-utils'
 import Loading from 'src/components/loaders/centered'
+import Tooltip from 'src/components/tooltip'
+import Modal from 'src/components/modals'
 import EmptyData from '../feedbacks/empty-data'
 
 export type Column = {
@@ -142,6 +148,13 @@ function SortableTableHead(props: SortableTableHeadProps) {
 }
 
 function RowDetails({ data }: { data: any }) {
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalData, setModalData] = useState<any>()
+  const handleModalToggle = (rowData?: [string, any]) => {
+    setModalOpen(!modalOpen)
+    setModalData(rowData ?? null)
+  }
+
   const getValueFromKey = (key: string) => {
     const entry = data[key]
     let value = entry ?? '-'
@@ -165,20 +178,61 @@ function RowDetails({ data }: { data: any }) {
       <p className="text-dark-blue-100 font-bold text-base">More details</p>
       <Divider className="my-2" />
       <div className="grid grid-cols-3 gap-4">
-        {Object.keys(data).map((key, index) => (
-          <div key={index} className="flex flex-col">
-            <p className="text-dark-blue-100 font-bold text-sm">
-              {pascalToTitle(key)}
-            </p>
-            <p
-              className="text-sm break-words"
-              style={{ color: getValueFromKey(key)?.textColor }}
-            >
-              {getValueFromKey(key)?.value}
-            </p>
-          </div>
-        ))}
-      </div>
+        {Object.keys(data).map((key, index) => {
+          return (
+            <div key={index} className="flex flex-col relative">
+              <div className="flex flex-row items-center text-dark-blue-100 font-bold text-sm">
+                <p>{pascalToTitle(key)}</p>
+                {key === 'PMH' && (
+                  <Tooltip
+                    title={`Expand ${key === 'PMH' && pascalToTitle(key)}`}
+                    className=""
+                  >
+                    <span>
+                      <OpenInFull
+                        onClick={() => {
+                          const fullNotes = getValueFromKey(key)?.value
+                          handleModalToggle([key, fullNotes])
+                        }}
+                        sx={{ fontSize: '11px', marginLeft: '5px' }}
+                        color="primary"
+                        className="cursor-pointer"
+                      />
+                    </span>
+                  </Tooltip>
+                )}
+              </div>
+
+              <div className="relative">
+                <p
+                  className={`text-sm ${
+                    key === 'PMH'
+                      ? 'overflow-hidden text-ellipsis line-clamp-4'
+                      : 'break-words'
+                  } `}
+                  style={{
+                    color: getValueFromKey(key)?.textColor,
+                    height: key === 'PMH' ? '100px' : '',
+                  }}
+                >
+                  {getValueFromKey(key)?.value}
+                </p>
+              </div>
+            </div>
+          )
+        })}
+      </div>{' '}
+      {modalOpen && (
+        <Modal
+          open={modalOpen}
+          setModalOpen={handleModalToggle}
+          heading={`${modalData[0]} Notes`}
+          height="auto"
+          width="auto"
+        >
+          <Box sx={{ width: 450, marginTop: '10px' }}>{modalData[1]}</Box>
+        </Modal>
+      )}
     </Box>
   )
 }
@@ -263,7 +317,7 @@ function DataTableDetailedRow({
                       if (!open) trackRowDetailsAccessed(tableName, row)
                     }}
                   >
-                    {open ? <ArrowDropUpIcon /> : <ArrowRight />}
+                    {open ? <ArrowDropUp /> : <ArrowRight />}
                   </IconButton>
                 )}
                 {column.valueComponent ? (
