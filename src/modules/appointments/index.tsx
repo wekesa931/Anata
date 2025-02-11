@@ -156,6 +156,7 @@ function Appointments() {
     'Reason for missed',
     'Consent',
     'calendly_booking_url',
+    'end_date_time',
   ]
 
   const { data, isLoading, isError, refresh } = useAirtableFetch(
@@ -314,23 +315,23 @@ function Appointments() {
     </>
   )
 
-  const formatDate = (start: string, end: string) => {
+  const formatDate = (start: string, end?: string) => {
     const startDate = dayjs(start)
-
     if (isToday(startDate)) {
       return (
         <>
           <span>Today</span>
           <span className="mx-1">:</span>
-          {formatTimeRange(start, end)}
+          {end ? formatTimeRange(start, end) : startDate.format('hh:mm A')}
         </>
       )
     }
+
     return (
       <>
         <span>{startDate.format("DD MMM 'YY")}</span>
         <span className="mx-1">:</span>
-        {formatTimeRange(start, end)}
+        {end ? formatTimeRange(start, end) : startDate.format('hh:mm A')}
       </>
     )
   }
