@@ -222,12 +222,12 @@ function CallProvider({ children }: any) {
    *
    * */
   useEffect(() => {
-    if (activeCall?.state !== 'FULFILLED') {
+    if (activeCall?.state && activeCall?.state !== 'FULFILLED') {
       if (pushNotification?.data?.event === 'Participant Joined') {
-        const parsedParticipant = JSON.parse(
-          pushNotification?.data?.participant
-        )
-        const parsedSession = JSON.parse(pushNotification?.data?.session)
+        if (!pushNotification?.data) return
+
+        const parsedParticipant = pushNotification?.data
+
         const participantExists = conferenceParticipants.find(
           (participant) =>
             participant.participantId === parsedParticipant?.participant_id
@@ -241,7 +241,7 @@ function CallProvider({ children }: any) {
               isOnHold: parsedParticipant?.is_on_hold,
               participantId: parsedParticipant?.participant_id,
               biodataValidated: parsedParticipant?.biodata_validated,
-              session: parsedSession?.room_name,
+              session: parsedParticipant?.room_name,
               isMember: parsedParticipant?.is_member,
               conferenceRoom: parsedParticipant?.conference_room,
               isStaff: parsedParticipant?.is_staff,
