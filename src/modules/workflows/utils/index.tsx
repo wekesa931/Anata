@@ -76,7 +76,7 @@ export const ActiveForm = (activeForm: string) => {
     isIncidentReports: activeForm === 'Incident reports',
     isInteractionsLog: activeForm === 'Interaction log',
     isMemberFeedback: activeForm === 'Member Feedback',
-    isInterventionDataTracking: activeForm === 'Intervention Data Tracking',
+    isInterventionDataTracking: activeForm === 'Care Plan Tracking',
     isVitals: activeForm === 'Vitals',
     isBp: activeForm === 'BP Mon',
     isChl: activeForm === 'CHL Mon',
@@ -333,9 +333,6 @@ export const initialFormValues = (
     'Conditions Data tracking': {
       Date: todayFormattedDate(new Date()),
     },
-    Interventions: {
-      Status: 'Active',
-    },
     'Member tasks': {
       Status: 'Not Started',
     },
@@ -405,7 +402,7 @@ export const DUPLICATE_DEFAULTS: Record<string, any> = {
   'Logistics Tasks': 'Type',
   'Member tasks': 'Type',
   'Prescriptions VC': 'Drug Name',
-  Interventions: 'Intervention',
+  'Care Plan Intake': 'Intervention',
 }
 
 export const duplicates = [
@@ -420,8 +417,8 @@ export const duplicates = [
   'Conditions',
   'HMP',
   'Nutritional Consultation',
-  'Interventions',
-  'Intervention Data Tracking',
+  'Care Plan Intake',
+  'Care Plan Tracking',
   'Conditions Data tracking',
   'Clinical Consultation',
   'Prescriptions VC',
@@ -454,8 +451,8 @@ export const formNames: Record<string, string> = {
   HIF: 'HIF',
   HMP: 'HMP Intake',
   'Nutritional Consultation': 'Nutritional Consultation',
-  Interventions: 'Intervention Intake',
-  'Intervention Data Tracking': 'Intervention Data Tracking',
+  'Care Plan Intake': 'Care Plan Intake',
+  'Care Plan Tracking': 'Care Plan Tracking',
   'Clinical Consultation': 'Clinical Consultation',
   'Mental Health Consultation': 'Mental Health Consultation',
   'Physiotherapy Consultation': 'Physiotherapy consultation',

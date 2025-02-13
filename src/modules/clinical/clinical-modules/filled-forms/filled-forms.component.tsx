@@ -115,11 +115,11 @@ function FilledForms() {
               data: response[forms.indexOf('clinicalrounds')],
             },
             {
-              name: 'Intervention',
+              name: 'Care Plan Intake',
               data: response[forms.indexOf('interventions')],
             },
             {
-              name: 'Intervention Tracking',
+              name: 'Care Plan Tracking',
               data: response[forms.indexOf('interventions_tracking')],
             },
             {

@@ -46,7 +46,6 @@ function InterventionCard({ intervention, activeId }: InterventionCardProps) {
   const attainment = intervention.attainment?.toUpperCase()
   const attainmentIs = AttainmentIs(attainment || '')
   const currentMeasurement = intervention?.currentMeasurement || []
-  const currentMilestone = intervention?.currentMilestone || []
 
   const { trackInterventionsDetailsOpened: interventionsDetailsOpened } =
     useModuleAnalytics()
@@ -138,22 +137,8 @@ function InterventionCard({ intervention, activeId }: InterventionCardProps) {
               <Item title="current level" child={intervention?.currentLevel} />
             </div>
             <div className="flex flex-col gap-2">
-              <Item
-                title="starting Milestone"
-                child={intervention?.startingMilestone}
-              />
-              <Item
-                title="current Milestone"
-                child={currentMilestone.map(
-                  (measurement: string, index: number) => (
-                    <Tooltip key={index} title={measurement}>
-                      <span className="bg-blue-10 text-center rounded-md text-dark-blue-100 py-1 px-1.5 font-rubik text-sm mx-2">
-                        {measurement}
-                      </span>
-                    </Tooltip>
-                  )
-                )}
-              />
+              <Item title="Target" child={intervention?.target} />
+              <Item title="Notes" child={intervention?.notes} />
             </div>
             <div className="flex flex-col gap-2">
               <Item title="Result" child={intervention?.result} />

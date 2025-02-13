@@ -8,8 +8,7 @@ export type Intervention = {
   currentMeasurement?: string[]
   startingLevel?: string
   currentLevel?: string
-  startingMilestone?: string
-  currentMilestone?: string[]
+  target?: string
   result?: string
   persona?: string
   notes?: string

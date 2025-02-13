@@ -40,9 +40,7 @@ export class Intervention extends Model {
 
   @text('current_level') currentLevel?: string
 
-  @text('starting_milestone') startingMilestone?: string
-
-  @json('current_milestone', sanitizeMeasurement) currentMilestone?: string[]
+  @text('target') target?: string
 
   @text('result') result?: string
 

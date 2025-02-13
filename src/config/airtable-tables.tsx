@@ -28,6 +28,8 @@ const TABLE_ROUTES: Record<string, string> = {
   'Msg Campaigns': 'msgCampaigns',
   Interventions: 'interventions',
   'Intervention Data Tracking': 'interventions_tracking',
+  'Care Plan Intake': 'interventions',
+  'Care Plan Tracking': 'interventions_tracking',
   'src baseline': 'scribeBaseline',
   'members field ids': 'memberFieldIds',
   Providers: 'providers',
