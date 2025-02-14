@@ -173,6 +173,9 @@ function RowDetails({ data }: { data: any }) {
     }
   }
 
+  // Store keys that can be expanded to view more texts on a modal
+  const expandOptions = ['PMH']
+
   return (
     <Box sx={{ margin: 1 }} className="ww-full">
       <p className="text-dark-blue-100 font-bold text-base">More details</p>
@@ -183,9 +186,11 @@ function RowDetails({ data }: { data: any }) {
             <div key={index} className="flex flex-col relative">
               <div className="flex flex-row items-center text-dark-blue-100 font-bold text-sm">
                 <p>{pascalToTitle(key)}</p>
-                {key === 'PMH' && (
+                {expandOptions.includes(key) && (
                   <Tooltip
-                    title={`Expand ${key === 'PMH' && pascalToTitle(key)}`}
+                    title={`Expand ${
+                      expandOptions.includes(key) && pascalToTitle(key)
+                    }`}
                     className=""
                   >
                     <span>
@@ -212,7 +217,12 @@ function RowDetails({ data }: { data: any }) {
                   } `}
                   style={{
                     color: getValueFromKey(key)?.textColor,
-                    height: key === 'PMH' ? '100px' : '',
+                    height: expandOptions.includes(key) ? '100px' : 'auto',
+                    display: expandOptions.includes(key)
+                      ? '-webkit-box' // Ensure clamping works across all browsers
+                      : 'block',
+                    WebkitLineClamp: expandOptions.includes(key) ? 5 : 'unset',
+                    WebkitBoxOrient: 'vertical',
                   }}
                 >
                   {getValueFromKey(key)?.value}

@@ -184,7 +184,6 @@ Level [3]: >500mg (Very High)`,
       setConsultations(mappedData)
     }
   }, [data])
-
   return (
     <>
       {isLoading && (
@@ -193,13 +192,18 @@ Level [3]: >500mg (Very High)`,
           <p className="text-small">Loading Nutritional Consultations</p>
         </div>
       )}
-      {consultations.length > 0 && (
+      {consultations.length > 0 && !isLoading && (
         <Table
           title="Nutritional Consultations"
           columns={columns}
           data={consultations}
           dateColumnKey="Date of Consultation"
         />
+      )}
+      {consultations.length === 0 && !isLoading && (
+        <p className="font-rubik text-base text-grey-main font-medium">
+          No nutrition data recorded
+        </p>
       )}
       {isError && (
         <p className="text-danger">

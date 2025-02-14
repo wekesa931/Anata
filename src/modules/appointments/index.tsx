@@ -615,23 +615,26 @@ function Appointments() {
 
   return (
     <div>
-      <button
-        className={styles.appointment}
-        onClick={(e) => {
-          e.stopPropagation()
-          openServiceBooking()
-        }}
-      >
-        Book Appointment
-      </button>{' '}
-      <Tooltip title="Refresh appointments" className="">
+      <div className="flex flex-row justify-between items-center">
+        <button
+          className={styles.appointment}
+          onClick={(e) => {
+            e.stopPropagation()
+            openServiceBooking()
+          }}
+        >
+          Book Appointment
+        </button>{' '}
         {(!isLoading || isError) && (
-          <ReplayIcon
-            className="w-5 cursor-pointer"
-            onClick={() => refresh()}
-          />
+          <Tooltip title="Refresh appointments">
+            <ReplayIcon
+              className="w-6 cursor-pointer"
+              color="primary"
+              onClick={() => refresh()}
+            />
+          </Tooltip>
         )}
-      </Tooltip>
+      </div>
       <div className="margin-top-0">
         <>
           <h4 className="mt-5">Up next</h4>
