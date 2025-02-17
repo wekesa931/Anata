@@ -12350,16 +12350,21 @@ export default [
         required: false,
         helper: '',
         conditionType: '',
-        parentKey: 'Current Milestone Attainment',
-        parentValues: ['Off Track', 'Regressed/Negative Progress'],
+        parentKey: [
+          'Current Milestone Attainment',
+          'Is the member doing what we want them to be doing in this intervention?',
+        ],
+        parentValues: ['Off Track', 'Regressed/Negative Progress', 'No'],
         condition: (values: any) => {
-          if (Array.isArray(values['Current Milestone Attainment'])) {
-            return ['Off Track', 'Regressed/Negative Progress'].some((r) =>
-              values['Current Milestone Attainment'].includes(r)
+          return (
+            ['Off Track', 'Regressed/Negative Progress'].includes(
+              values['Current Milestone Attainment']
+            ) &&
+            ['No'].includes(
+              values[
+                'Is the member doing what we want them to be doing in this intervention?'
+              ]
             )
-          }
-          return ['Off Track', 'Regressed/Negative Progress'].includes(
-            values['Current Milestone Attainment']
           )
         },
       },
