@@ -448,6 +448,16 @@ export class Member extends Model {
     return false
   }
 
+  get isPaidForByIndividual() {
+    const billingMethodName =
+      this.activeBillingPackageEnrollment?.billingSchemeSubscription
+        ?.billingScheme?.billingMethod?.name
+    if (billingMethodName === BillingMethodName.INVOICE_TO_INDIVIDUAL) {
+      return true
+    }
+    return false
+  }
+
   @writer async reset() {
     // reset all the properties to their default values
     await this.update((member) => {
@@ -490,7 +500,8 @@ export class Member extends Model {
     if (
       this.activeBillingPackageEnrollment?.billingPackage
         ?.isUnlimitedMembership &&
-      !this.isOnFreeMembership
+      !this.isOnFreeMembership &&
+      !this.isPaidForByIndividual
     ) {
       const expiryDate =
         this.activeBillingPackageEnrollment?.billingSchemeSubscription
