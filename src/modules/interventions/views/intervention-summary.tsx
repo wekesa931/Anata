@@ -66,7 +66,7 @@ function InterventionsSection() {
   return (
     <SectionItem>
       <>
-        <ItemTitle title="Active Interventions" />
+        <ItemTitle title="Active Care Plans" />
         {loading ? (
           <BlockSekeleton height={100} />
         ) : (

@@ -51,7 +51,7 @@ function Views({ view, handleChange }: any) {
               classes={{ root: styles.MuiTabRoot }}
             />
             <Tab label="Conditions" value="conditions" />
-            <Tab label="Interventions" value="interventions" />
+            <Tab label="Care Plans" value="interventions" />
             <Tab label="Interactions" value="interactions" />
             <Tab label="Call Log" value="call-logs" />
             <Tab label="Nutrition" value="nutrition" />
