@@ -136,6 +136,7 @@ export const createOrUpdateMember = (
   member.verificationStatus = memberData?.verificationStatus
   member.rosterMember = memberData?.rosterMember
   member.referralSource = memberData?.referralSource
+  member.registrationChannel = memberData?.registrationChannel
   member.payor = memberData?.payor
   member.kenyaNationalId = memberData?.kenyaNationalId
   member.caregiverContact = mergeCaregiverContact(member, memberData)
@@ -218,6 +219,8 @@ export class Member extends Model {
   @date('last_synced_at') lastSyncedAt?: number
 
   @text('referral_source') referralSource?: string
+
+  @text('registration_channel') registrationChannel?: string
 
   @text('other_refused_service') otherRefusedService?: string
 

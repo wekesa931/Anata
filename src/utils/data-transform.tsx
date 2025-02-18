@@ -104,6 +104,7 @@ export const parseV2MemberData = (
   const sex = details?.sex?.sex || ''
   member.sex = sex
   member.maritalStatus = details?.maritalStatus?.maritalStatus
+  member.registrationChannel = details?.registrationChannel?.name
   member.kenyaNationalId = details?.kenyaNationalId
 
   // phones

@@ -34,6 +34,7 @@ export const membersTableColumns: ColumnSchema[] = [
   { name: 'verification_status', type: 'string' },
   { name: 'roster_member', type: 'string' },
   { name: 'referral_source', type: 'string' },
+  { name: 'registration_channel', type: 'string' },
   { name: 'payor', type: 'string' },
   { name: 'kenya_national_id', type: 'string' },
   { name: 'caregiver_contact', type: 'string' },

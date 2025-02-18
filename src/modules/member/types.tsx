@@ -210,6 +210,8 @@ export type V2MemberType = {
   relationshipToPrimary?: string
   rosterMember: RosterMemberType
   referralSource?: string
+  registrationChannel?: string
+  re?: string
   payor?: PayorType
   kenyaNationalId?: string
   caregiverName?: string
@@ -329,6 +331,9 @@ export type V2MemberQueryType = {
     }
     relationshipToPrimary?: string
     referralSource?: string
+    registrationChannel?: {
+      name?: string
+    }
     kenyaNationalId?: string
     nhifNumber?: string
   }
@@ -426,6 +431,7 @@ export type BiodataValues = BirthdateUpdateValues & {
   primaryMemberAntaraId?: string
   relationshipToPrimary?: string
   referralSource?: string
+  registrationChannel?: string
   otherRefusedService?: string
   refusedServices: string[]
   nhifNumber?: string
@@ -515,6 +521,7 @@ export type LookupOptions = {
   onboardingStages: LookupOption[]
   sexes: LookupOption[]
   maritalStatuses: LookupOption[]
+  registrationChannel: LookupOption[]
   phoneTypes: LookupOption[]
   benefits: LookupOption[]
   tags: LookupOption[]

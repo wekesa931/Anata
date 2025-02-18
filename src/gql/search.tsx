@@ -138,6 +138,9 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
       relationshipToPrimary
       primaryMemberAntaraId
       referralSource
+      registrationChannel {
+        name
+      }
       kenyaNationalId
       nhifNumber
     }
