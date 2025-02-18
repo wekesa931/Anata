@@ -285,6 +285,7 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
       principalMemberInsuranceId
       relationshipToPrincipalMember
       verificationStatus
+      reasonForVerificationFailure
       insuranceCompany {
         id
         name

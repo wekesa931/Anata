@@ -9,7 +9,6 @@ import { PortalForm } from 'src/modules/member/components/update-forms'
 import { StatusForm } from 'src/modules/member/components/forms/statuses-form'
 import type { Member } from 'src/modules/member/db/models'
 import { useMemberAnalytics } from 'src/modules/member/hooks/analytics'
-import { toTitleCase } from 'src/utils/text-utils'
 
 type StatusesSectionProps = {
   member: Member | null
@@ -91,12 +90,6 @@ function StatusesSection({ member }: StatusesSectionProps) {
           <Item
             title="Member status"
             child={<MemberStatus status={member?.status} />}
-          />
-        </GridItems>
-        <GridItems>
-          <Item
-            title="Verification Status"
-            child={toTitleCase(member?.verificationStatus)}
           />
         </GridItems>
       </SectionItem>

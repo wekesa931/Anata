@@ -130,6 +130,7 @@ export const transformInsurances = (
     benefits: d?.benefitUtilizations || [],
     id: d?.id || '',
     healthPolicy: d?.memberPolicy?.healthPolicy?.name || '',
+    reasonForVerificationFailure: d?.reasonForVerificationFailure || '',
   }))
 }
 

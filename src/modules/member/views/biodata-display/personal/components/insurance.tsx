@@ -140,6 +140,14 @@ function InsuranceSectionItem({
           }
         />
       </GridItems>
+      {insuranceItem?.verificationStatus?.toLowerCase() !== 'verified' && (
+        <GridItems className="mt-2 bg-red-20 p-2 rounded-md" single>
+          <Item
+            title="Reason for verification failure"
+            child={insuranceItem?.reasonForVerificationFailure ?? '-'}
+          />
+        </GridItems>
+      )}
     </div>
   )
 }

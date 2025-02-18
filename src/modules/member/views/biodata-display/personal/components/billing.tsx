@@ -30,6 +30,7 @@ import PrimaryForm from 'src/components/forms/primary-form'
 import CloseIcon from '@mui/icons-material/Close'
 import SaveIcon from '@mui/icons-material/Save'
 import BillingCohortModal from 'src/modules/member/components/forms/billing/components/billing-cohort-modal'
+import MembershipForm from 'src/modules/member/components/forms/billing/components/membership-form'
 
 function BillingSectionItem({
   memberCohortItem,
@@ -167,6 +168,8 @@ function BillingSection({ member }: BillingSectionProps) {
   const [processLoader, setProcessLoader] = useState(false)
   const [editCohort, setEditCohort] = useState(false)
   const [validation, setValidation] = useState(false)
+  const [updateBillingForm, setUpdateBillingForm] = useState(false)
+  const [billingMethodView, setBillingMethodView] = useState(false)
 
   const { notify } = useNotifications()
 
@@ -201,6 +204,14 @@ function BillingSection({ member }: BillingSectionProps) {
 
   const toggleEditForm = (open: boolean) => {
     setBillingForm(open)
+  }
+
+  const toggleUpdateBillingForm = (open: boolean) => {
+    setUpdateBillingForm(open)
+  }
+
+  const setCompleted = async () => {
+    setUpdateBillingForm(false)
   }
 
   const requestComplete = () => {
@@ -251,7 +262,40 @@ function BillingSection({ member }: BillingSectionProps) {
               />
             )}
             <div id="billing-section">
-              <SectionItem>
+              {updateBillingForm && (
+                <PortalForm
+                  modalTitle="Edit Billing Scheme"
+                  handleClose={() => toggleUpdateBillingForm(false)}
+                  isEdited={isEdited}
+                  setIsEdited={setIsEdited}
+                  handleOpen={() => toggleEditForm(true)}
+                >
+                  {() => (
+                    <>
+                      {!billingMethodView ? (
+                        <InsuranceForm
+                          member={member}
+                          primaryMember={undefined}
+                          showWizardControls
+                          isRestrictedUser
+                          setNextResctrictedPhase={setBillingMethodView}
+                        />
+                      ) : (
+                        <MembershipForm
+                          member={member}
+                          primaryMember={undefined}
+                          setCompleted={setCompleted}
+                        />
+                      )}
+                    </>
+                  )}
+                </PortalForm>
+              )}
+              <SectionItem
+                title="Billing scheme"
+                editable={member?.eligibleForServices?.toLowerCase() !== 'yes'}
+                handleEdit={() => toggleUpdateBillingForm(true)}
+              >
                 <div className="mb-4">
                   <ItemTitle title="Billing Scheme" />
                 </div>
@@ -262,11 +306,12 @@ function BillingSection({ member }: BillingSectionProps) {
                     </p>
                     <div className="flex items-center gap-2">
                       <ItemChild
-                        child={billingEligibility()}
-                        className="ml-2 text-dark-blue-50"
+                        child={member?.eligibleForServices?.toLowerCase()}
+                        className="ml-2 text-dark-blue-50 capitalize"
                       />
                       <Tooltip>
-                        {billingEligibility() === 'Eligible' ? (
+                        {member?.eligibleForServices?.toLowerCase() ===
+                        'yes' ? (
                           <DoneIcon className="text-[#ebfbed] bg-[#34c759] w-4 h-4 rounded-2xl" />
                         ) : (
                           <GridCloseIcon className="text-[#ebfbed] bg-rose-500 w-4 h-4 rounded-2xl" />

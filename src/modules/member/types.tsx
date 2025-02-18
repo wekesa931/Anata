@@ -493,6 +493,7 @@ export type InsuranceDetailsType = {
   relationshipToPrincipalMember?: string
   toDelete?: boolean
   verificationStatus?: string
+  reasonForVerificationFailure?: string
 }
 
 export enum RegistrationFormsNames {
@@ -539,6 +540,7 @@ export namespace DbValueTypes {
     healthPolicy?: string
     insuranceCompanyLogo?: string
     id?: string
+    reasonForVerificationFailure?: string
   }
 
   export type InsuranceDetailsValues = {
