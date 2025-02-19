@@ -63,7 +63,8 @@ type InsuranceProps = {
   defaultInsurance: (primaryMember: any) => InsuranceDetails
   userError: any
   setUserError: (error: any) => void
-  onPrev: (() => void) | undefined
+  onPrev?: (() => void) | undefined
+  hasOnPrev?: boolean
   loading: boolean
   handleSubmit: (values: any, formikBag: any) => void
   setAlertState: (value: string) => void
@@ -155,6 +156,7 @@ function InsuranceForm({
   userError,
   setUserError,
   onPrev,
+  hasOnPrev = true,
   loading,
   handleSubmit,
   setAlertState,
@@ -423,10 +425,17 @@ function InsuranceForm({
                 )}
 
                 {showWizardControls ? (
-                  <div className="flex justify-between gap-4 mt-3">
-                    <PreviousButton onClick={onPrev} disabled={loading}>
-                      Previous
-                    </PreviousButton>
+                  <div
+                    className={`flex  gap-4 mt-3 ${
+                      !hasOnPrev ? 'justify-end' : 'justify-between'
+                    }`}
+                  >
+                    {hasOnPrev && (
+                      <PreviousButton onClick={onPrev} disabled={loading}>
+                        Previous
+                      </PreviousButton>
+                    )}
+
                     <NextButton
                       type="submit"
                       loading={loading}

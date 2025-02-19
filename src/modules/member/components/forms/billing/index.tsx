@@ -20,6 +20,7 @@ type InsuranceSectionProps = {
   member: Member | null
   primaryMember: Member | undefined
   showWizardControls?: boolean
+  hasOnPrev?: boolean
   setProcessLoader?: (value: boolean) => void
   type?: string
   inEligibilityReasons?: Array<{ tag: string }>
@@ -56,6 +57,7 @@ const defaultInsurance = (primaryMember: Member | undefined) => ({
 
 export default function InsuranceSectionForm(props: InsuranceSectionProps) {
   const { onPrev, onNext } = useWizardContext()
+
   return <InsuranceForm {...props} onPrev={onPrev} onNext={onNext} />
 }
 
@@ -71,6 +73,7 @@ export function InsuranceForm({
   onPrev,
   onNext,
   showWizardControls = false,
+  hasOnPrev = true,
   type = 'insurance-form',
   setProcessLoader,
   inEligibilityReasons = [],
@@ -282,6 +285,7 @@ export function InsuranceForm({
                   userError={userError}
                   setUserError={setUserError}
                   onPrev={onPrev}
+                  hasOnPrev={hasOnPrev}
                   loading={loading}
                   handleSubmit={handleSubmit}
                   setAlertState={setAlertState}

@@ -96,6 +96,8 @@ export const parseV2MemberData = (
     memberData?.activeBillingPackageEnrollment
   member.pendingBillingPackageEnrollment =
     memberData?.pendingBillingPackageEnrollment
+  member.reasonsForServiceIneligibility =
+    memberData?.reasonsForServiceIneligibility
 
   // details information
   const { details = {} } = memberData

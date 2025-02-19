@@ -31,6 +31,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import SaveIcon from '@mui/icons-material/Save'
 import BillingCohortModal from 'src/modules/member/components/forms/billing/components/billing-cohort-modal'
 import MembershipForm from 'src/modules/member/components/forms/billing/components/membership-form'
+import { formatCurrency } from 'src/modules/member/utils'
 
 function BillingSectionItem({
   memberCohortItem,
@@ -116,7 +117,7 @@ function BillingSectionItem({
                 <div className="flex items-center justify-between gap-1">
                   <p className="text-dark-blue-100">Amount </p>
                   <ItemChild
-                    child={`KES ${memberBillingScheme?.skuRate}`}
+                    child={`${formatCurrency(memberBillingScheme?.skuRate)}`}
                     className="text-dark-blue-50"
                   />
                 </div>
@@ -220,6 +221,9 @@ function BillingSection({ member }: BillingSectionProps) {
 
   const handleSubmit = () => {}
 
+  /** is member eligible for Antara Services  */
+  const isEligibleForAntaraServices = member?.eligibleForServices?.toLowerCase()
+
   return member ? (
     <PrimaryForm initialValues={initialValues} handleSubmit={handleSubmit}>
       {(values) => (
@@ -277,6 +281,7 @@ function BillingSection({ member }: BillingSectionProps) {
                           member={member}
                           primaryMember={undefined}
                           showWizardControls
+                          hasOnPrev={false}
                           isRestrictedUser
                           setNextResctrictedPhase={setBillingMethodView}
                         />
@@ -293,12 +298,9 @@ function BillingSection({ member }: BillingSectionProps) {
               )}
               <SectionItem
                 title="Billing scheme"
-                editable={member?.eligibleForServices?.toLowerCase() !== 'yes'}
+                editable
                 handleEdit={() => toggleUpdateBillingForm(true)}
               >
-                <div className="mb-4">
-                  <ItemTitle title="Billing Scheme" />
-                </div>
                 <GridItems single>
                   <div className="flex items-center justify-between gap-1">
                     <p className="text-dark-blue-100">
@@ -306,12 +308,19 @@ function BillingSection({ member }: BillingSectionProps) {
                     </p>
                     <div className="flex items-center gap-2">
                       <ItemChild
-                        child={member?.eligibleForServices?.toLowerCase()}
+                        child={isEligibleForAntaraServices}
                         className="ml-2 text-dark-blue-50 capitalize"
                       />
-                      <Tooltip>
-                        {member?.eligibleForServices?.toLowerCase() ===
-                        'yes' ? (
+                      <Tooltip
+                        title={
+                          isEligibleForAntaraServices === 'unknown'
+                            ? 'Not enough information is available to determine eligibility'
+                            : isEligibleForAntaraServices === 'no'
+                            ? 'Member is NOT eligible to receive antara services'
+                            : 'Member is eligibile to receive antara services'
+                        }
+                      >
+                        {isEligibleForAntaraServices === 'yes' ? (
                           <DoneIcon className="text-[#ebfbed] bg-[#34c759] w-4 h-4 rounded-2xl" />
                         ) : (
                           <GridCloseIcon className="text-[#ebfbed] bg-rose-500 w-4 h-4 rounded-2xl" />
@@ -320,7 +329,6 @@ function BillingSection({ member }: BillingSectionProps) {
                     </div>
                   </div>
                 </GridItems>
-
                 <GridItems single>
                   <div className="flex items-center justify-between gap-1 mb-2">
                     <p className="text-dark-blue-100">Billing Eligibility:</p>
@@ -339,6 +347,18 @@ function BillingSection({ member }: BillingSectionProps) {
                     </div>
                   </div>
                 </GridItems>
+
+                {/* reason for ineligibility */}
+                {member?.reasonsForServiceIneligibility?.length > 0 && (
+                  <div className=" h-16 bg-red-20 mx-1 py-2 rounded-lg font-rubik text-dark-blue-100 w-full">
+                    <h3 className="text-sm text-center">
+                      Reason for ineligibility
+                    </h3>
+                    <p className="text-xs text-center">
+                      {member?.reasonsForServiceIneligibility ?? '-'}
+                    </p>
+                  </div>
+                )}
 
                 <div className="mb-4 mt-5 flex items-center justify-between">
                   <ItemTitle title="Billing Scheme" />
@@ -378,7 +398,6 @@ function BillingSection({ member }: BillingSectionProps) {
                     </div>
                   )}
                 </div>
-
                 {memberCohortDetails.length === 0 ||
                 checkAllDeactivatedCohorts ? (
                   <>

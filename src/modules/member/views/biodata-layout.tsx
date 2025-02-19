@@ -16,6 +16,7 @@ import dayjs from 'dayjs'
 import PrimaryButton from 'src/components/buttons/primary'
 import SmartServiceCharge from 'src/modules/appointments/smart-verification/smart-service-booking-flow'
 import { SubscriptionServiceLayout } from './subscription/index'
+import { formatCurrency } from '../utils'
 
 type MemberBiodataProps = {
   member: Member | null
@@ -80,6 +81,10 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
     servicePricingId: member?.membershipServicePricingId,
   }
 
+  const memberBillingScheme =
+    member?.activeBillingPackageEnrollment?.billingSchemeSubscription
+      ?.billingScheme
+
   return member ? (
     <div className="flex flex-col h-full">
       <div className="flex-1 bg-white-100 flex justify-start flex-col overflow-y-auto border-l border-2 border-solid border-dark-blue-10 border-b-0">
@@ -132,7 +137,8 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
                           className="capitalize mt-2 bg-orange-100"
                           onClick={onMembershipSmartPayment}
                         >
-                          Collect Payment
+                          Collect Payment <br />
+                          {formatCurrency(memberBillingScheme?.skuRate)}
                         </PrimaryButton>
                       )}
                     </div>

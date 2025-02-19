@@ -43,6 +43,7 @@ export const membersTableColumns: ColumnSchema[] = [
   { name: 'member_cohorts', type: 'string' },
   { name: 'health_status', type: 'string' },
   { name: 'eligible_for_services', type: 'string' },
+  { name: 'reasons_for_service_ineligibility', type: 'string' },
   { name: 'active_billing_package_enrollment', type: 'string' },
   { name: 'pending_billing_package_enrollment', type: 'string' },
 ]

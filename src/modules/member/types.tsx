@@ -150,6 +150,7 @@ export type V2MemberType = {
   antaraId: string
   healthStatus: string
   eligibleForServices?: string
+  reasonsForServiceIneligibility?: string[]
   activeBillingPackageEnrollment?: BillingEnrollmentPackageType
   pendingBillingPackageEnrollment?: BillingPackageType
   birthDate: string
@@ -313,6 +314,7 @@ export type V2MemberQueryType = {
   birthDate?: string
   healthStatus?: string
   eligibleForServices?: string
+  reasonsForServiceIneligibility?: string[]
   activeBillingPackageEnrollment?: BillingEnrollmentPackageType
   pendingBillingPackageEnrollment?: BillingPackageType
   details: {

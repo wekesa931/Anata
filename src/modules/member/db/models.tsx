@@ -144,6 +144,8 @@ export const createOrUpdateMember = (
   member.membercohortSet = memberCohorts
   member.healthStatus = memberData.healthStatus
   member.eligibleForServices = memberData.eligibleForServices
+  member.reasonsForServiceIneligibility =
+    memberData?.reasonsForServiceIneligibility
   member.activeBillingPackageEnrollment =
     memberData.activeBillingPackageEnrollment
   member.pendingBillingPackageEnrollment =
@@ -237,6 +239,9 @@ export class Member extends Model {
   @text('health_status') healthStatus?: string
 
   @text('eligible_for_services') eligibleForServices?: string
+
+  @json('reasons_for_service_ineligibility', identityJson)
+  reasonsForServiceIneligibility?: string[]
 
   @json('active_billing_package_enrollment', identityJson)
   activeBillingPackageEnrollment?: BillingEnrollmentPackageType

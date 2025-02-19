@@ -16,7 +16,7 @@ import {
   Divider,
   Tooltip,
 } from '@mui/material'
-import { formatCurreny } from 'src/modules/member/utils'
+import { formatCurrency } from 'src/modules/member/utils'
 import { PortalForm } from 'src/modules/member/components/update-forms'
 import InsuranceForm from 'src/modules/member/components/forms/billing/index'
 import { useNotifications } from 'src/context/notifications'
@@ -119,7 +119,7 @@ function InsuranceSectionItem({
                 <GridItems key={benefit?.id || index}>
                   <ItemChild child={benefit?.benefit?.name || '-'} />
                   <ItemChild
-                    child={formatCurreny(
+                    child={formatCurrency(
                       (benefit?.benefit?.limit || 0) -
                         (benefit?.utilizedPortion || 0)
                     )}

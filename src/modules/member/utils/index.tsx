@@ -14,10 +14,14 @@ export const getBioDataTitle = (v2Member: V2MemberType, isLoading: boolean) => {
   return '-'
 }
 
-export const formatCurreny = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'KES',
-}).format
+// format currency, with an option to customize currency symbol
+export const formatCurrency = (value: number, currency = 'Kes') => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 2,
+  }).format(value)
+}
 
 export const parseUpdateContactError = (error: any) => {
   let errorMessage = ''

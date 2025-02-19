@@ -62,6 +62,7 @@ export const MEMBERS_DETAILS_FRAGMENT = gql`
     lastSeen
     healthStatus
     eligibleForServices
+    reasonsForServiceIneligibility
     activeBillingPackageEnrollment {
       billingPackage {
         name
