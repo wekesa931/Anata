@@ -52,6 +52,9 @@ function BillingEligibilityModal() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member])
 
+  /** holds reasons for service ineligibility  */
+  const reasonsForIneligibility = member?.reasonsForServiceIneligibility || []
+
   return (
     <>
       <Modal
@@ -65,6 +68,25 @@ function BillingEligibilityModal() {
         {!updateState ? (
           <div>
             <p className="mt-5">This Member is not Billable.</p>
+
+            {/* reason for ineligibility */}
+            {reasonsForIneligibility?.length > 0 && (
+              <div className=" h-auto bg-red-20 mx-1 py-2 rounded-md font-rubik text-dark-blue-100 ineligibility-reason">
+                <h3 className="text-sm text-center pb-1 pl-2">
+                  {reasonsForIneligibility.length === 1
+                    ? 'Reason '
+                    : 'Reasons '}
+                  for ineligibility
+                </h3>
+                <ul className="text-xs text-start pl-6">
+                  {reasonsForIneligibility?.map(
+                    (reason: string, index: number) => (
+                      <li key={index}>{reason}</li>
+                    )
+                  )}
+                </ul>
+              </div>
+            )}
 
             <p className="mt-4">
               Please update insurance details and billing package to unlock

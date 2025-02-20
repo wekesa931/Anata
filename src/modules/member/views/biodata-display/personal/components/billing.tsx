@@ -224,6 +224,9 @@ function BillingSection({ member }: BillingSectionProps) {
   /** is member eligible for Antara Services  */
   const isEligibleForAntaraServices = member?.eligibleForServices?.toLowerCase()
 
+  /** holds reasons for service ineligibility  */
+  const reasonsForIneligibility = member?.reasonsForServiceIneligibility || []
+
   return member ? (
     <PrimaryForm initialValues={initialValues} handleSubmit={handleSubmit}>
       {(values) => (
@@ -349,14 +352,21 @@ function BillingSection({ member }: BillingSectionProps) {
                 </GridItems>
 
                 {/* reason for ineligibility */}
-                {member?.reasonsForServiceIneligibility?.length > 0 && (
-                  <div className=" h-16 bg-red-20 mx-1 py-2 rounded-lg font-rubik text-dark-blue-100 w-full">
-                    <h3 className="text-sm text-center">
-                      Reason for ineligibility
+                {reasonsForIneligibility.length > 0 && (
+                  <div className=" h-auto bg-red-20 mx-1 py-2 rounded-md font-rubik text-dark-blue-100 ineligibility-reason">
+                    <h3 className="text-sm text-center pb-1 pl-2">
+                      {reasonsForIneligibility.length === 1
+                        ? 'Reason '
+                        : 'Reasons '}
+                      for ineligibility
                     </h3>
-                    <p className="text-xs text-center">
-                      {member?.reasonsForServiceIneligibility ?? '-'}
-                    </p>
+                    <ul className="text-xs text-start pl-6">
+                      {reasonsForIneligibility?.map(
+                        (reason: string, index: number) => (
+                          <li key={index}>{reason}</li>
+                        )
+                      )}
+                    </ul>
                   </div>
                 )}
 

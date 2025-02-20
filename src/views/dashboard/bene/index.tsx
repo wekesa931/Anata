@@ -33,6 +33,14 @@ function DashboardContent() {
     return validStatuses.includes(status)
   }
 
+  /** is member eligible for Antara Services  */
+  const isEligibleForAntaraServices = member?.eligibleForServices?.toLowerCase()
+
+  /** determines if the BillingEligibilityModal is shown  */
+  const showNoEligibleForServiceModal =
+    !isSubscriptionValid(member?.activeBillingPackageEnrollment) ||
+    isEligibleForAntaraServices !== 'yes'
+
   return isLoading && !member && !memberNotFound ? (
     <div className="flex items-center justify-center h-screen w-full">
       <CenteredLoader message="Loading member..." />
@@ -55,7 +63,7 @@ function DashboardContent() {
               <RightViews />
             </div>
           </div>
-          {!isSubscriptionValid(member?.activeBillingPackageEnrollment) &&
+          {showNoEligibleForServiceModal &&
             location.search !== '?register=true' && <BillingEligibilityModal />}
         </>
       )}
