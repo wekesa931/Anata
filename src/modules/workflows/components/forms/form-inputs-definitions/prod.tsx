@@ -6945,7 +6945,7 @@ export default [
         unreversed: true,
         relationship: 'one',
         foreignTableId: 'tblO5d1RLXDjp4dNs',
-        required: false,
+        required: true,
         helper: '',
       },
       {
@@ -6959,7 +6959,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
       },
       {
@@ -6967,13 +6967,13 @@ export default [
         name: 'Started At',
         type: 'date',
         format: '',
-        isDateTime: false,
+        isDateTime: true,
         options: [],
         symmetricColumnId: null,
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
       },
       {
@@ -12225,7 +12225,7 @@ export default [
         unreversed: true,
         relationship: 'one',
         foreignTableId: 'tblTmMtBgwT76JrQN',
-        required: false,
+        required: true,
         helper: '',
       },
       {
@@ -12281,7 +12281,7 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: false,
+        required: true,
         helper: '',
       },
       {
