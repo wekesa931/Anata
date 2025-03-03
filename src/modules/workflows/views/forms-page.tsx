@@ -94,14 +94,16 @@ function Forms() {
           <AirtableIframe src={airtableForm.url as string} />
         </PortalWindow>
       )}
-      {forms.map((form: TWorkflowForm, index: number) => (
-        <FormPortal
-          key={form.name}
-          form={form}
-          closeForm={closeForm}
-          index={index}
-        />
-      ))}
+      {forms.map((form: TWorkflowForm, index: number) => {
+        return (
+          <FormPortal
+            key={form.name}
+            form={form}
+            closeForm={closeForm}
+            index={index}
+          />
+        )
+      })}
     </>
   )
 }

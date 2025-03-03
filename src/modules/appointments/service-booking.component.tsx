@@ -19,7 +19,10 @@ function ServiceBooking({ onBackPress }: { onBackPress: () => void }) {
       service?.service?.bookingUrl && service?.service?.initials !== 'MDL'
   )
   const onServiceSelect = (service: ServicePricingType) => {
-    if (member?.isMemberBilledThroughSmart && !member?.isUnlimitedMembershipMember) {
+    if (
+      member?.isMemberBilledThroughSmart &&
+      !member?.isUnlimitedMembershipMember
+    ) {
       setSelectedService(service)
     } else {
       openCalendar(service?.service?.bookingUrl)

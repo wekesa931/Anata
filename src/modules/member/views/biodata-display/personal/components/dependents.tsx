@@ -121,7 +121,7 @@ function V2DependentItem({
     </a>
   )
 }
-function DependentItem({
+export function DependentItem({
   dependent,
   isPrimary,
   dependentSource = DependentSource.V2SCHEMA,

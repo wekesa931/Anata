@@ -2561,6 +2561,175 @@ export default [
         required: false,
         helper: '',
       },
+      {
+        id: 'fldLz0tUI2kz0lLL2',
+        name: 'Have you added all the dependents of the primary member?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: 'Please ensure that you have registered the entire family',
+        condition: (member: { registrationChannel: string }) => {
+          return (
+            member?.registrationChannel &&
+            member?.registrationChannel === 'WhatsApp'
+          )
+        },
+      },
+      {
+        id: 'add-dependents-button',
+        type: 'button',
+        name: 'Add dependents',
+        format: '',
+        isDateTime: false,
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        condition: (member: { registrationChannel: string }) =>
+          // show if registrationChannel is WhatsApp
+          member?.registrationChannel &&
+          member?.registrationChannel === 'WhatsApp',
+      },
+      {
+        id: 'fldFnhLy2BLsK1GUa',
+        name: 'Reason for not adding all dependents of the primary member',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey: 'Have you added all the dependents of the primary member?',
+        parentValues: ['No'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Have you added all the dependents of the primary member?']
+            )
+          ) {
+            return ['No'].some((r) =>
+              values[
+                'Have you added all the dependents of the primary member?'
+              ].includes(r)
+            )
+          }
+          return ['No'].includes(
+            values['Have you added all the dependents of the primary member?']
+          )
+        },
+      },
+      {
+        id: 'fldMPGNWtOuR5eGU4',
+        name: 'Have you schedule service for each dependent of the primary member?',
+        type: 'select',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper:
+          'Please ensure that you have scheduled first service for all dependents, especially children',
+        conditionType: '',
+        parentKey: 'Have you added all the dependents of the primary member?',
+        parentValues: ['Yes'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Have you added all the dependents of the primary member?']
+            )
+          ) {
+            return ['Yes'].some((r) =>
+              values[
+                'Have you added all the dependents of the primary member?'
+              ].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values['Have you added all the dependents of the primary member?']
+          )
+        },
+      },
+      {
+        id: 'schedule-service-button',
+        type: 'button',
+        name: 'Schedule service',
+        format: '',
+        isDateTime: false,
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: false,
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values['Have you added all the dependents of the primary member?']
+            )
+          ) {
+            return ['Yes'].some((r) =>
+              values[
+                'Have you added all the dependents of the primary member?'
+              ].includes(r)
+            )
+          }
+          return ['Yes'].includes(
+            values['Have you added all the dependents of the primary member?']
+          )
+        },
+      },
+      {
+        id: 'fldIwkKrDjyyvCxS2',
+        name: 'Reason for not scheduling for each dependent of the primary member',
+        type: 'text',
+        format: '',
+        isDateTime: false,
+        options: [],
+        symmetricColumnId: null,
+        unreversed: false,
+        relationship: null,
+        foreignTableId: null,
+        required: true,
+        helper: '',
+        conditionType: '',
+        parentKey:
+          'Have you schedule service for each dependent of the primary member?',
+        parentValues: ['No'],
+        condition: (values: any) => {
+          if (
+            Array.isArray(
+              values[
+                'Have you schedule service for each dependent of the primary member?'
+              ]
+            )
+          ) {
+            return ['No'].some((r) =>
+              values[
+                'Have you schedule service for each dependent of the primary member?'
+              ].includes(r)
+            )
+          }
+          return ['No'].includes(
+            values[
+              'Have you schedule service for each dependent of the primary member?'
+            ]
+          )
+        },
+      },
     ],
   },
   {

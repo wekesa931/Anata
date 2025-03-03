@@ -87,7 +87,7 @@ function MemberRegistrationForm({
       : undefined
   )
 
-  const { member: rosterMember } = useRegistrationForm()
+  const { member: rosterMember, registrationContext } = useRegistrationForm()
 
   const handleClick = (selection: RegistrationForms) => {
     setSelectedForm(selection)
@@ -101,19 +101,23 @@ function MemberRegistrationForm({
             Select the member type you want to register
           </h1>
           <div className="flex justify-start flex-col gap-4 mt-4">
-            <RegistrationItem
-              title="Primary member"
-              subtitle="This is the main account holder"
-              Icon={AccountCircleOutlined}
-              handleClick={() =>
-                handleClick({
-                  name: RegistrationFormsNames.PRIMARY,
-                  member: undefined,
-                  completed: false,
-                  title: getTitleFormForm(RegistrationFormsNames.PRIMARY),
-                })
-              }
-            />
+            {/* if reg. context is add-dependent-only hide primary member registration */}
+            {registrationContext !== 'add-dependent-only' && (
+              <RegistrationItem
+                title="Primary member"
+                subtitle="This is the main account holder"
+                Icon={AccountCircleOutlined}
+                handleClick={() =>
+                  handleClick({
+                    name: RegistrationFormsNames.PRIMARY,
+                    member: undefined,
+                    completed: false,
+                    title: getTitleFormForm(RegistrationFormsNames.PRIMARY),
+                  })
+                }
+              />
+            )}
+
             <RegistrationItem
               title="Adult Dependent"
               subtitle="This is an adult dependent to the primary member"

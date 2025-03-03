@@ -19,6 +19,7 @@ type RegistrationFormContextType = {
   antaraNutritionists: LookupOption[]
   member: any
   openFormWithParams: (value: boolean, params?: OpenFormParams) => void
+  registrationContext: string | undefined
 }
 
 type OpenFormParams = {
@@ -38,10 +39,15 @@ const RegistrationFormContext =
     antaraNutritionists: [],
     member: null,
     openFormWithParams: () => null,
+    registrationContext: undefined,
   })
 
 function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
   const [isFormOpen, setIsFormOpen] = React.useState<boolean>(false)
+  /** hides primary member reg. option, if its dependent reg only */
+  const [registrationContext, setRegistrationContext] = React.useState<
+    string | undefined
+  >(undefined)
   const { getInsuranceCompanies, getLookupEntries } = useGetLookupEntries()
   const [insuranceCompanies, setInsuranceCompanies] = useState<LookupOption[]>(
     []
@@ -59,14 +65,19 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
     searchParams.get('register') === 'true'
   )
 
-  const toggleOpenForm = (isOpen: boolean) => {
-    if (isOpen) {
+  const toggleOpenForm = (isOpen: boolean, context?: undefined) => {
+    setRegistrationContext(context)
+    if (isOpen && !context) {
       setIsFormOpen(true)
       searchParams.set('register', 'true')
+    } else if (isOpen && context) {
+      setIsFormOpen(true)
+      searchParams.set('register-dependent-only', 'true')
     } else {
       setIsFormOpen(false)
       searchParams.delete('register')
       searchParams.delete('registrationForm')
+      searchParams.delete('register-dependent-only')
       setMember(null)
     }
 
@@ -121,6 +132,7 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
     antaraNutritionists: mapAssigneeToLookup(antaraNutritionists),
     openFormWithParams,
     member,
+    registrationContext,
   }
 
   return (

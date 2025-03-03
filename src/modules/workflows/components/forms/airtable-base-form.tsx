@@ -15,6 +15,7 @@ import { triggerRefresh } from 'src/services/observers'
 import { TaskDefinition } from 'src/modules/tasks/types'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import PrimaryButton from 'src/components/buttons/primary'
+import { useMember } from 'src/context/member'
 
 const TASK_DEFINITION_FIELD_ID =
   process.env.PROD === 'true' ? 'fldrJeu9BzF1p0thE' : 'fldwYDHowo9JFzkc7'
@@ -82,6 +83,7 @@ function AirtableBasedForm({
   const { airtableMeta, taskDefinitions } = airtableMetaData
   const [isFormDraft, setIsFormDraft] = useState(true)
   const { notify } = useNotifications()
+  const { member } = useMember()
 
   useEffect(() => {
     setIsFormDraft(form.isDraft)
@@ -151,11 +153,16 @@ function AirtableBasedForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSubmitForm])
 
+  /** get fields to render to the form  */
   const getFieldsToRender = () => {
     const values = getValues()
     const returnFields: any = []
     formSchema?.fields?.forEach((field: any) => {
-      if (!field.condition || field.condition(values)) {
+      if (
+        !field.condition ||
+        field.condition(values) ||
+        field.condition(member)
+      ) {
         const fieldValue = values[field.name] || null
         returnFields.push({
           field,

@@ -47,7 +47,7 @@ function PrimaryButton(props: PrimaryButtonProps) {
   const color = props?.color || 'primary'
 
   const onButtonClick = () => {
-    props.onClick && props.onClick().catch((e) => setError(e.message))
+    props.onClick && props.onClick()?.catch((e) => setError(e.message))
   }
 
   return (

@@ -40,6 +40,10 @@ import { useMember } from 'src/context/member'
 import useConditionsData from 'src/modules/conditions/hooks/conditions.data'
 import logError from 'src/utils/logging/logger'
 import airtableFetch from 'src/services/airtable/fetch'
+import { useRegistrationForm } from 'src/context/member-registration'
+import PrimaryButton from 'src/components/buttons/primary'
+import { DependentItem } from 'src/modules/member/views/biodata-display/personal/components/dependents'
+import { V2MemberType } from 'src/modules/member/types'
 import styles from './styles.module.css'
 import { useForeignKeyDataHandler } from '../../hooks/foreign-key-data-handler'
 
@@ -88,6 +92,7 @@ function Label({ error, field }: any) {
     </p>
   )
 }
+
 function WorkflowFormsFields({
   value,
   field,
@@ -100,6 +105,22 @@ function WorkflowFormsFields({
   const notIn = (arr: string[]) => !arr.includes(field.foreignTableId)
   const notCaseIdField = () => notIn(['tbl7Kh4tVrQp9JdUc', 'tblpQpVJrFonBQuBg'])
   const notMemberField = () => notIn(['tblAjKAJOCIDk5Nco', 'tblidCJtioaFSYwvk'])
+
+  const { setIsFormOpen } = useRegistrationForm()
+  const { member } = useMember()
+  const [isOpen, setIsOpen] = useState(false)
+  const [allDependents, setAllDependents] = useState<V2MemberType[]>(() => [
+    ...(member?.dependents || []),
+    ...(member?.otherDependents || []),
+  ])
+
+  const handleListDependents = () => {
+    setAllDependents([
+      ...(member?.dependents || []),
+      ...(member?.otherDependents || []),
+    ])
+    setIsOpen((prev) => !prev)
+  }
 
   switch (field.type) {
     case 'foreignKey':
@@ -198,6 +219,34 @@ function WorkflowFormsFields({
           control={control}
           error={error}
         />
+      )
+    case 'button':
+      return (
+        <>
+          <FieldButton
+            field={field}
+            setIsFormOpen={setIsFormOpen}
+            toggleList={() => handleListDependents()}
+            isOpen={isOpen}
+          />
+          {isOpen && (
+            <>
+              {allDependents.length === 0 && (
+                <p className="p-2 text-xs">
+                  No dependents listed to schedule service
+                </p>
+              )}
+              {allDependents.length > 0 &&
+                allDependents.map((dependent, index) => (
+                  <DependentItem
+                    dependent={dependent}
+                    key={index}
+                    isPrimary={false}
+                  />
+                ))}
+            </>
+          )}
+        </>
       )
     case 'conditions':
       return (
@@ -577,6 +626,46 @@ function MultiSelectMultipleInput({
         </>
       )}
     />
+  )
+}
+
+/**
+ * displays button as a form field
+ * @param param0
+ * @returns
+ */
+function FieldButton({
+  field,
+  setIsFormOpen,
+  toggleList,
+  isOpen,
+}: {
+  field: any
+  setIsFormOpen?: (val: boolean, context: string | undefined) => void
+  toggleList?: () => void
+  isOpen?: boolean
+}) {
+  return (
+    <PrimaryButton
+      fullWidth
+      className="normal-case"
+      onClick={() => {
+        if (field.id === 'add-dependents-button') {
+          setIsFormOpen && setIsFormOpen(true, 'add-dependent-only')
+        } else {
+          // toggle and view list of dependents to schedule services
+          toggleList && toggleList()
+        }
+      }}
+    >
+      {/* display button name according to field id */}
+      {field.id === 'add-dependents-button' && field.name}
+      {field.id === 'schedule-service-button' && !isOpen
+        ? field.name
+        : field.id === 'schedule-service-button' && isOpen
+        ? 'Hide dependents list'
+        : ''}
+    </PrimaryButton>
   )
 }
 
