@@ -10,7 +10,9 @@ const transformInterventionData = (
 ): Intervention => {
   return {
     interventionType:
-      currentIntervention['Care Plan Name (from Care Plan Master List)'][0],
+      currentIntervention[
+        'Care Plan Name (from Care Plan Master List)'
+      ]?.toString(),
     interventionStatus: currentIntervention.Status?.toString(),
     attainment:
       currentIntervention['last recorded milestone attainment']?.toString(),
