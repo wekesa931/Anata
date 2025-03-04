@@ -193,6 +193,12 @@ export function BioDataForm({
         if (referralSource === OTHER_REFERRAL_SOURCE) {
           referralSourceValue = otherReferralSource
         }
+
+        /** if it's child/dependent registration append primaryMemberAntaraId */
+        if (primaryMember) {
+          rest.primaryMemberAntaraId = primaryMember?.antaraId
+        }
+
         handleUpdateBioData(
           member,
           {

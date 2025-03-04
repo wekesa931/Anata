@@ -62,6 +62,7 @@ export const useGetMemberByPhone = () => {
 
   return {
     getMemberByPhone: async (phoneNumber: string) => {
+      /** check if phone no already exist */
       const res = await getMemberByPhone({
         variables: {
           phoneNumber,

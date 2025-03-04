@@ -97,6 +97,7 @@ export const UPDATE_MEMBER_DETAILS = gql`
           middleName
           kenyaNationalId
           nhifNumber
+          primaryMemberAntaraId
         }
       }
       errors
