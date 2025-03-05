@@ -2592,10 +2592,12 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        condition: (member: { registrationChannel: string }) =>
-          // show if registrationChannel is WhatsApp
+        condition: (member: { registrationChannel: string }, values: any) =>
+          /* show if registrationChannel is WhatsApp &
+           if no option for add dependents to primary has been selected */
           member?.registrationChannel &&
-          member?.registrationChannel === 'WhatsApp',
+          member?.registrationChannel === 'WhatsApp' &&
+          !values['Have you added all the dependents of the primary member?'],
       },
       {
         id: 'fldFnhLy2BLsK1GUa',
@@ -2675,21 +2677,24 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        condition: (values: any) => {
-          if (
-            Array.isArray(
-              values['Have you added all the dependents of the primary member?']
-            )
-          ) {
-            return ['Yes'].some((r) =>
-              values[
+        condition: (_member: any, values: any) => {
+          /* show if dependent prompt option is Yes &
+           if no option for schedule dependents service has been selected */
+          const dependentAdded =
+            String(
+              values?.[
                 'Have you added all the dependents of the primary member?'
-              ].includes(r)
-            )
+              ]
+            ).toLowerCase() === 'yes'
+
+          const scheduleOption =
+            values?.[
+              'Have you schedule service for each dependent of the primary member?'
+            ]
+
+          if (dependentAdded && !scheduleOption) {
+            return true
           }
-          return ['Yes'].includes(
-            values['Have you added all the dependents of the primary member?']
-          )
         },
       },
       {
@@ -2711,23 +2716,17 @@ export default [
         parentValues: ['No'],
         condition: (values: any) => {
           if (
-            Array.isArray(
-              values[
+            String(
+              values['Have you added all the dependents of the primary member?']
+            ).toLowerCase() === 'yes' &&
+            String(
+              values?.[
                 'Have you schedule service for each dependent of the primary member?'
               ]
-            )
+            ).toLowerCase() === 'no'
           ) {
-            return ['No'].some((r) =>
-              values[
-                'Have you schedule service for each dependent of the primary member?'
-              ].includes(r)
-            )
+            return true
           }
-          return ['No'].includes(
-            values[
-              'Have you schedule service for each dependent of the primary member?'
-            ]
-          )
         },
       },
     ],

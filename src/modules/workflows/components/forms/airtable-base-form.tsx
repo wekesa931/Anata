@@ -161,7 +161,7 @@ function AirtableBasedForm({
       if (
         !field.condition ||
         field.condition(values) ||
-        field.condition(member)
+        field.condition(member, values)
       ) {
         const fieldValue = values[field.name] || null
         returnFields.push({
