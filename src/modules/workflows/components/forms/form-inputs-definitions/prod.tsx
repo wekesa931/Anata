@@ -2199,9 +2199,9 @@ export default [
         unreversed: false,
         relationship: null,
         foreignTableId: null,
-        required: true,
+        required: false,
         helper: 'Please ensure that you have registered the entire family',
-        condition: (member: { registrationChannel: string }) => {
+        condition: (_values: any, member: { registrationChannel: string }) => {
           // show if registrationChannel is whatsapp
           return (
             member?.registrationChannel &&
@@ -2220,7 +2220,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        condition: (member: { registrationChannel: string }, values: any) =>
+        condition: (values: any, member: { registrationChannel: string }) =>
           /* show if registrationChannel is WhatsApp &
            if no option for add dependents to primary has been selected */
           member?.registrationChannel &&
@@ -2305,7 +2305,7 @@ export default [
         relationship: null,
         foreignTableId: null,
         required: false,
-        condition: (_member: any, values: any) => {
+        condition: (values: any) => {
           /* show if dependent prompt option is Yes &
            if no option for schedule dependents service has been selected */
           const dependentAdded =
@@ -2323,6 +2323,7 @@ export default [
           if (dependentAdded && !scheduleOption) {
             return true
           }
+          return false
         },
       },
       {

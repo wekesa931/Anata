@@ -158,11 +158,7 @@ function AirtableBasedForm({
     const values = getValues()
     const returnFields: any = []
     formSchema?.fields?.forEach((field: any) => {
-      if (
-        !field.condition ||
-        field.condition(values) ||
-        field.condition(member, values)
-      ) {
+      if (!field.condition || field.condition(values, member)) {
         const fieldValue = values[field.name] || null
         returnFields.push({
           field,
