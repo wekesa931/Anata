@@ -7137,7 +7137,7 @@ export default [
         name: 'Started At',
         type: 'date',
         format: '',
-        isDateTime: true,
+        isDateTime: false,
         options: [],
         symmetricColumnId: null,
         unreversed: false,
