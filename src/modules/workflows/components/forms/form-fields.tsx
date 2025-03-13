@@ -1182,6 +1182,10 @@ function LinkRecordInputDefault({
 }: any) {
   const [gettingLinkedRecords, setLoading] = useState(false)
   const [loadingError, setLoadingError] = useState(null)
+  /** store dynamic helper texts */
+  const [dynamicHelperTexts, setDynamicHelperTexts] = useState<
+    { name: string; id: string }[]
+  >([])
 
   const settingLinkedData = gettingLinkedRecords || !airtableMeta
   const { member } = useMember()
@@ -1189,11 +1193,38 @@ function LinkRecordInputDefault({
   const getTableFromName = () => {
     const tableId = field.foreignTableId
     const table = airtableMeta?.[tableId]
-
     return table
   }
 
   const { getLinkedData } = useForeignKeyDataHandler()
+
+  useEffect(() => {
+    const getHelperTexts = (table: any) => {
+      if (airtableMeta && member) {
+        const helperTextTable = {
+          fields: table.fields,
+          primaryFieldName: 'Helper text',
+          primaryFieldId: 'fldAukJDjn8jz2hOa',
+          name: 'Care Plan Master List',
+          id: 'tblO5d1RLXDjp4dNs',
+        }
+        getLinkedData({ ...helperTextTable, fieldId: 'viw1QkB6g0mANKrUO' })
+          .then((options) => {
+            setDynamicHelperTexts(options)
+          })
+          .catch((error: any) => {
+            if (error?.name !== 'AbortError') {
+              logError(error)
+            }
+          })
+      }
+    }
+
+    if (field.name === 'Care Plan Master List') {
+      getHelperTexts(airtableMeta?.tblO5d1RLXDjp4dNs)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [field.name])
 
   useEffect(() => {
     if (airtableMeta && member) {
@@ -1223,61 +1254,71 @@ function LinkRecordInputDefault({
       defaultValue={defaultValue}
       control={control}
       rules={{ required: true }}
-      render={({ field: { onChange } }) => (
-        <>
-          {field.helper && (
-            <InputLabel>
-              <HelperText field={field} error={error || loadingError} />
-            </InputLabel>
-          )}
-          <Autocomplete
-            multiple={field.relationship === 'many'}
-            disablePortal
-            filterOptions={filterOptions}
-            disabled={disabled}
-            loading={settingLinkedData}
-            loadingText={
-              <div className="flex text-xs">
-                <LoadingIcon /> Loading {field.alias || field.name} records
-              </div>
-            }
-            id="combo-box-demo"
-            options={linkedRecords}
-            value={selectedChoices}
-            disableCloseOnSelect={field.relationship === 'many'}
-            sx={{ marginBottom: 2 }}
-            onChange={(event: SyntheticEvent<Element, Event>, value: any) =>
-              handleChange(onChange, value)
-            }
-            getOptionLabel={(option) => option?.name || ''}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={<Label field={field} error={error} />}
-              />
+      render={({ field: { onChange } }) => {
+        if (field.name === 'Care Plan Master List') {
+          const filterKey = defaultValue?.[0]
+          const filteredValue = dynamicHelperTexts?.find(
+            (obj: any) => obj?.id === filterKey
+          )
+          field.helper = filteredValue?.name
+        }
+
+        return (
+          <>
+            {field.helper && (
+              <InputLabel>
+                <HelperText field={field} error={error || loadingError} />
+              </InputLabel>
             )}
-            renderOption={(props, option, { selected }) => {
-              return (
-                <li {...props}>
-                  <Checkbox
-                    key={option.id}
-                    icon={icon}
-                    checkedIcon={checkedIcon}
-                    style={{ marginRight: 8 }}
-                    checked={selected}
-                  />
-                  {option.name}
-                </li>
-              )
-            }}
-          />
-          {error && (
-            <FormHelperText className="mb-4 text-left font-rubik font-medium text-red-100">
-              This field is required
-            </FormHelperText>
-          )}
-        </>
-      )}
+            <Autocomplete
+              multiple={field.relationship === 'many'}
+              disablePortal
+              filterOptions={filterOptions}
+              disabled={disabled}
+              loading={settingLinkedData}
+              loadingText={
+                <div className="flex text-xs">
+                  <LoadingIcon /> Loading {field.alias || field.name} records
+                </div>
+              }
+              id="combo-box-demo"
+              options={linkedRecords}
+              value={selectedChoices}
+              disableCloseOnSelect={field.relationship === 'many'}
+              sx={{ marginBottom: 2 }}
+              onChange={(event: SyntheticEvent<Element, Event>, value: any) =>
+                handleChange(onChange, value)
+              }
+              getOptionLabel={(option) => option?.name || ''}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={<Label field={field} error={error} />}
+                />
+              )}
+              renderOption={(props, option, { selected }) => {
+                return (
+                  <li {...props}>
+                    <Checkbox
+                      key={option.id}
+                      icon={icon}
+                      checkedIcon={checkedIcon}
+                      style={{ marginRight: 8 }}
+                      checked={selected}
+                    />
+                    {option.name}
+                  </li>
+                )
+              }}
+            />
+            {error && (
+              <FormHelperText className="mb-4 text-left font-rubik font-medium text-red-100">
+                This field is required
+              </FormHelperText>
+            )}
+          </>
+        )
+      }}
     />
   )
 }
