@@ -386,10 +386,12 @@ function Appointments() {
             <div className="text-gray-400 text-sm flex items-center mb-1">
               <Clock width={14} height={14} />
               <span className="ml-2">
-                {formatDate(
-                  appointment.start_date_time,
-                  appointment.end_date_time
-                )}
+                {appointment.Status.toLowerCase() === 'schedule needed'
+                  ? 'Pending'
+                  : formatDate(
+                      appointment.start_date_time,
+                      appointment.end_date_time
+                    )}
               </span>
             </div>
 
