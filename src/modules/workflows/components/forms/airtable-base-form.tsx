@@ -35,8 +35,11 @@ function AirtableBasedForm({
   updatePrefills,
 }: FormProps) {
   const formSchema: any = (FORM_DEFINITIONS as any).find(
-    (f: any) => f?.name === form.name
+    (f: any) =>
+      f?.name ===
+      (form.name === 'Interventions' ? 'Care Plan Intake' : form.name)
   )
+
   if (!formSchema) {
     throw new Error(`Form fields for form:${name} not found`)
   }
