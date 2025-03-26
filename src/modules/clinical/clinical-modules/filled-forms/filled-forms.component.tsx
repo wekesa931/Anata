@@ -167,7 +167,9 @@ function FilledForms() {
 
   return (
     <div>
-      <h4>Filled forms</h4>
+      <h4 className="text-xl text-[#444] font-rubik font-medium">
+        Filled forms
+      </h4>
       {isReadyToShow && (
         <List
           list={filledForms.filter((form: any) => !!form.data)}

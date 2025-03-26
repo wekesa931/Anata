@@ -19,7 +19,9 @@ function Clinical() {
           <Logistic />
           <LabRequest />
           <div className="my-4">
-            <h4>Labs & Vitals </h4>
+            <h4 className="text-xl text-[#444] font-rubik font-medium">
+              Labs & Vitals{' '}
+            </h4>
             <div className="border border-blue-light rounded p-2 my-2">
               <VitalsDisplay />
             </div>

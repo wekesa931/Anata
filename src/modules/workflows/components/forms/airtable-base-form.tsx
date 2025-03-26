@@ -16,6 +16,7 @@ import { TaskDefinition } from 'src/modules/tasks/types'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import PrimaryButton from 'src/components/buttons/primary'
 import { useMember } from 'src/context/member'
+import { useRefreshTrigger } from 'src/context/refresh-trigger'
 
 const TASK_DEFINITION_FIELD_ID =
   process.env.PROD === 'true' ? 'fldrJeu9BzF1p0thE' : 'fldwYDHowo9JFzkc7'
@@ -59,6 +60,8 @@ function AirtableBasedForm({
     defaultValues: form?.data || {},
     mode: 'onBlur',
   })
+
+  const { triggerRefreshComponent } = useRefreshTrigger()
 
   useEffect(() => {
     const sub$ = watch((value, { type }) => {
@@ -126,12 +129,12 @@ function AirtableBasedForm({
     const formattedPayload = preProcessInput(form?.data)
     try {
       upsertDraft && (await upsertDraft())
-
       await submitForm(form, formSchema, formattedPayload, workflow)
       setIsFormDraft(false)
       triggerRefresh(form.name) // refreshes the display data
       trackFormSaved(form.name, form.workflow?.workflowId)
       handleSubmissionSuccess(false) // ensures that the draft is saved again post submission
+      triggerRefreshComponent(form.name)
     } catch (e) {
       setIsFormDraft(true)
       handleSubmissionError(e)

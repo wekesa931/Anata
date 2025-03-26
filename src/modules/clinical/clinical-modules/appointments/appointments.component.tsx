@@ -5,13 +5,14 @@ import { useSortFilter } from 'src/context/sort-filter'
 import airtableFetch from 'src/services/airtable/fetch'
 import Modal from 'src/components/modals'
 import TextArea from 'src/components/forms/textarea'
-import LoadingComponent from 'src/components/loaders/table-loader'
 import { useMember } from 'src/context/member'
 import DataTable, { Column } from 'src/components/table/data-table'
 import dayjs from 'dayjs'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import { useAppointmentsData } from 'src/modules/clinical/clinical-modules/appointments/hooks/appointments-data'
 import logError from 'src/utils/logging/logger'
+import { useRefreshTrigger } from 'src/context/refresh-trigger'
+import ErrorRetry from 'src/components/feedbacks/error-retry'
 
 function PafuView({ data }: any) {
   const [showPafu, setShowPafu] = useState(false)
@@ -115,17 +116,49 @@ function Appointments() {
   const [appointments, setAppointments] = useState<any[]>([])
   const [filteredAppointments, setFilteredAppointments] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
   const {
     ops: {
       filters: { appointments: filters },
     },
   } = useSortFilter()
   const { getAppointments } = useAppointmentsData()
+  const { refreshKey, setRefreshKey } = useRefreshTrigger()
+
+  const fetchAppointments = async () => {
+    setError(null)
+    setLoading(true)
+    try {
+      const data = await getAppointments()
+      setAppointments(data)
+    } catch (error: any) {
+      logError(error)
+      setError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (refreshKey.includes('Appointments')) {
+      setLoading(true)
+      fetchAppointments()
+    }
+
+    // clean up, reset refreshKey
+    return () => {
+      if (setRefreshKey) {
+        setRefreshKey('')
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshKey])
 
   useEffect(() => {
     let isCancelled = false
 
     if (recId) {
+      setError(null)
       setLoading(true)
       getAppointments()
         .then((data: any[]) => {
@@ -133,7 +166,10 @@ function Appointments() {
             setAppointments(data)
           }
         })
-        .catch(logError)
+        .catch((error) => {
+          logError(error)
+          setError(error)
+        })
         .finally(() => {
           setLoading(false)
         })
@@ -170,7 +206,6 @@ function Appointments() {
     }
   }, [appointments, filters])
 
-  const isReadyToShow = filteredAppointments?.length >= 0 && !loading
   return (
     <div>
       <div className="d-flex flex-align-center">
@@ -183,18 +218,23 @@ function Appointments() {
           </span>
         )}
       </div>
-      {isReadyToShow && (
+      {error ? (
+        <ErrorRetry retry={fetchAppointments} />
+      ) : (
         <DataTable
           columns={COLUMNS}
           data={filteredAppointments}
           title="Appointments"
           filterByDate
+          loading={loading}
+          loadingContext={
+            refreshKey?.includes('Appointments') ? refreshKey : undefined
+          }
           dateColumnKey="start_date_time"
           defaultFilterColumn="start_date_time"
           defaultSortColumn="start_date_time"
         />
       )}
-      {loading && <LoadingComponent message="Loading Appointments " />}
     </div>
   )
 }

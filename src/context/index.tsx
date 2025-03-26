@@ -9,6 +9,7 @@ import { SidebarProvider } from 'src/context/sidebar'
 import { CommsProvider } from 'src/context/comms'
 import { NotificationsProvider } from 'src/context/notifications'
 import { RegistrationFormProvider } from 'src/context/member-registration'
+import { RefreshProvider } from 'src/context/refresh-trigger'
 
 function AppContexts({ children }: any) {
   return (
@@ -19,11 +20,13 @@ function AppContexts({ children }: any) {
             <AirtableMetaProvider>
               <SidebarProvider>
                 <ToastProvider>
-                  <CommsProvider>
-                    <RegistrationFormProvider>
-                      {children}
-                    </RegistrationFormProvider>
-                  </CommsProvider>
+                  <RefreshProvider>
+                    <CommsProvider>
+                      <RegistrationFormProvider>
+                        {children}
+                      </RegistrationFormProvider>
+                    </CommsProvider>
+                  </RefreshProvider>
                 </ToastProvider>
               </SidebarProvider>
             </AirtableMetaProvider>

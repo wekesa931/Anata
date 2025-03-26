@@ -1,8 +1,8 @@
-import React from 'react'
-
-import Table, { Column } from 'src/components/table/data-table'
-import LoadingComponent from 'src/components/loaders/table-loader'
+import React, { useEffect } from 'react'
+import { Column, DataTable } from 'src/components/table/data-table'
 import { Paper } from '@mui/material'
+import { useRefreshTrigger } from 'src/context/refresh-trigger'
+import ErrorRetry from 'src/components/feedbacks/error-retry'
 import useLogisticData from '../data'
 
 function StatusHelperText() {
@@ -32,24 +32,40 @@ const COLUMS: Column[] = [
 ]
 
 function Logistic() {
-  const { logisticData, loading } = useLogisticData()
+  const { logisticData, loading, setLoading, refreshLogisticData, error } =
+    useLogisticData()
 
-  return (
-    <div className="mb-ten">
-      {!loading ? (
-        <Table
-          title="Logistic Details"
-          columns={COLUMS}
-          data={logisticData}
-          dateColumnKey="Due date"
-          filterByDate
-          defaultFilterColumn="Due date"
-          defaultSortColumn="Due date"
-        />
-      ) : (
-        <LoadingComponent message="Loading logistic tasks" />
-      )}
-    </div>
+  const { refreshKey, setRefreshKey } = useRefreshTrigger()
+
+  useEffect(() => {
+    if (refreshKey.includes('Logistics')) {
+      setLoading(true)
+      refreshLogisticData()
+    }
+
+    // clean up, reset refreshKey
+    return () => {
+      if (setRefreshKey) {
+        setRefreshKey('')
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshKey])
+
+  return error ? (
+    <ErrorRetry retry={refreshLogisticData} />
+  ) : (
+    <DataTable
+      title="Logistic Details"
+      columns={COLUMS}
+      data={logisticData}
+      loading={loading}
+      loadingContext={refreshKey.includes('Logistics') ? refreshKey : undefined}
+      dateColumnKey="Due date"
+      filterByDate
+      defaultFilterColumn="Due date"
+      defaultSortColumn="Due date"
+    />
   )
 }
 

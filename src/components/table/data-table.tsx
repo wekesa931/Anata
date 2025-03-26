@@ -42,6 +42,7 @@ import { toTitleCase } from 'src/utils/text-utils'
 import Loading from 'src/components/loaders/centered'
 import Tooltip from 'src/components/tooltip'
 import Modal from 'src/components/modals'
+import { useRefreshTrigger } from 'src/context/refresh-trigger'
 import EmptyData from '../feedbacks/empty-data'
 
 export type Column = {
@@ -482,6 +483,7 @@ type DataTableProps = {
   groupColumns?: GroupColumns[]
   defaultGroupColumn?: string
   loading?: boolean
+  loadingContext?: string | undefined
   filterControl?: React.ReactNode
   groupSortFunction?: (data: any, groupingColumn?: string) => any
   dataSortFunction?(data: any, comparator: (a: any, b: any) => number): any
@@ -501,6 +503,7 @@ export function DataTable({
   defaultGroupColumn,
   titleComponent,
   loading = false,
+  loadingContext = undefined,
   filterControl,
   groupSortFunction,
   dataSortFunction,
@@ -513,6 +516,33 @@ export function DataTable({
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const { currentRange } = useDateRangeFilter()
+
+  const { refreshKey } = useRefreshTrigger()
+
+  // loading state triggered by refresh key change
+  const [refreshTableLoading, setRefreshTableLoading] = useState(false)
+
+  // determines if datatable will refresh on refreshKey change
+  const refreshTableContext = refreshKey?.includes(loadingContext!)
+
+  // determines loading state for the datatable, normal loading and trigger refetch loading
+  const showLoading =
+    loading || (refreshTableContext && refreshTableLoading && loadingContext)
+
+  // trigger datatable loading when refresh key changes
+  useEffect(() => {
+    if (refreshTableContext) {
+      setRefreshTableLoading(true)
+    }
+  }, [refreshTableContext, refreshKey])
+
+  // reset datatable loading state when refresh completes
+  useEffect(() => {
+    if (!loading && refreshTableContext) {
+      setRefreshTableLoading(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, refreshTableContext])
 
   const filterDataByDate = makeFilterDataByDate(filterByDate, currentRange)
   const {
@@ -749,7 +779,7 @@ export function DataTable({
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
           />
-          {loading ? (
+          {showLoading ? (
             <TableBody>
               <TableRow>
                 <TableCell

@@ -41,8 +41,8 @@ export const useLabsData = () => {
 
   const getLabRequests = async (antaraId: string) => {
     try {
-      setError(null)
       setLoading(true)
+      setError(null)
       const response = await getAllLabRequests(antaraId)
       setLabRequests(response?.map(transformRawLabRequest))
     } catch (e: any) {
