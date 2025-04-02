@@ -452,6 +452,7 @@ export const formNames: Record<string, string> = {
   HMP: 'HMP Intake',
   'Nutritional Consultation': 'Nutritional Consultation',
   'Care Plan Intake': 'Care Plan Intake',
+  Interventions: 'Care Plan Intake',
   'Care Plan Tracking': 'Care Plan Tracking',
   'Clinical Consultation': 'Clinical Consultation',
   'Mental Health Consultation': 'Mental Health Consultation',

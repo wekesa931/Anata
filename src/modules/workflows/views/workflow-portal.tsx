@@ -116,7 +116,9 @@ function WorkflowPortalRaw({ workflow, closeWorkflow }: WorkflowPortalProps) {
     !some(workflowForms, (form: TWorkflowForm) => form.isSynced)
 
   const setFormStates = (formName: string) => {
-    setActiveFormName(formName)
+    setActiveFormName(
+      formName === 'Interventions' ? 'Care Plan Intake' : formName
+    )
     getFormsByName(workflow, formName).then((allActiveForms) => {
       setActiveForms(allActiveForms)
 
