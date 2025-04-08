@@ -10,6 +10,8 @@ export const useHomePageAnalytics = () => {
       homePageSections.track('task section - accessed from the left menu'),
     trackUserNavigatedToWorkflowsPage: () =>
       homePageSections.track('workflow section - clicked'),
+    trackUserNavigatedToEngagementsPage: () =>
+      homePageSections.track('member engagement section - clicked'),
     trackUserOpenedWorkflow: (workflow: any) =>
       homePageSections.track('workflow section - workflow opened', {
         workflow,

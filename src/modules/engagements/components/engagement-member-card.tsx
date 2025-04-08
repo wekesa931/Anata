@@ -1,0 +1,300 @@
+import React, { useEffect } from 'react'
+import PrimaryButton from 'src/components/buttons/primary'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import ErrorRetry from 'src/components/feedbacks/error-retry'
+import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined'
+import { Engagement, EngagementFeedbackOptions } from '../typings'
+
+interface EngagementMemberCardI {
+  engagement: Engagement
+  currentMemberIndex: number
+  index: number
+  engagements: Engagement[]
+  updateStatus: (val: string, engagement: Engagement) => Promise<void>
+  feedbackOptions: EngagementFeedbackOptions[]
+  feedbackOptionsError: any
+  mutateStatusError: any
+  resetErrorandRetry: () => void
+  updateFeedback: (val: string) => void
+  engagementFeedback: string
+  handleEndEngagement: (
+    feedback: string,
+    engagement: Engagement
+  ) => Promise<void>
+}
+
+export default function EngagementMemberCard({
+  engagement,
+  currentMemberIndex,
+  index,
+  engagements,
+  updateStatus,
+  feedbackOptions,
+  feedbackOptionsError,
+  mutateStatusError,
+  updateFeedback,
+  engagementFeedback,
+  handleEndEngagement,
+  resetErrorandRetry,
+}: EngagementMemberCardI) {
+  const handleFeedBack = (val: any) => {
+    updateFeedback(val)
+  }
+
+  const openDashboard = () => {
+    updateStatus('Opened', engagement)
+    window.open(
+      `/member/${engagement?.member?.antaraId}`,
+      '_blank',
+      'noopener,noreferrer'
+    )
+  }
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [engagements, currentMemberIndex])
+
+  // engagement feedback component
+  function EngagementFeedBackComponent() {
+    return (
+      <div
+        className={`text-lg text-semibold text-center pb-2 ${
+          !mutateStatusError && 'border-t'
+        }`}
+        style={{ height: mutateStatusError && '510px' }}
+      >
+        {mutateStatusError && mutateStatusError.memberIndex === index ? (
+          <div className="flex items-center justify-center flex-col p-2">
+            <div className="flex items-center justify-center flex-col mt-[15%] mb-[15%] ">
+              <div>
+                <div className="">
+                  <ReportProblemOutlinedIcon
+                    sx={{ fontSize: 58 }}
+                    className="text-red-100 bg-red-10 rounded-full p-2"
+                  />
+                </div>
+                <div className="text-lg font-semibold my-4">
+                  Something Went Wrong
+                </div>
+              </div>
+
+              <ErrorRetry
+                retry={() => resetErrorandRetry()}
+                hideDefaultMessage
+                customMessageDescription={`Tracking engagement STATUS for ${engagement?.member?.fullName} failed. Please retry or contact suppport.`}
+                showErroIcon={false}
+              />
+            </div>
+          </div>
+        ) : (
+          <>
+            <p className="mt-4 text-lg font-medium">
+              Did you contact the member?
+            </p>
+            <div className="flex flex-col space-y-2 mt-6">
+              {feedbackOptionsError && (
+                <>
+                  <div>
+                    <div className="">
+                      <ReportProblemOutlinedIcon
+                        sx={{ fontSize: 58 }}
+                        className="text-red-100 bg-red-10 rounded-full p-2"
+                      />
+                    </div>
+                    <div className="text-lg font-semibold my-4">
+                      Something Went Wrong
+                    </div>
+                  </div>
+                  <ErrorRetry
+                    retry={() => resetErrorandRetry()}
+                    hideDefaultMessage
+                    customMessageDescription="Could not fetch feedback options. Please retry or contact suppport"
+                    showErroIcon={false}
+                  />
+                </>
+              )}
+              {!feedbackOptionsError &&
+                feedbackOptions.map((option, indx) => {
+                  return (
+                    <div className="relative" key={indx}>
+                      {engagementFeedback === option.name && (
+                        <CheckCircleIcon
+                          fontSize="small"
+                          className="text-primary-button h-12 absolute left-2"
+                        />
+                      )}
+                      <button
+                        className={`w-full py-2.5 px-4 text-md border hover:text-black hover:bg-gray-200 rounded-xl ${
+                          engagementFeedback === option.name && 'bg-gray-200'
+                        }`}
+                        onClick={() => handleFeedBack(option.name)}
+                      >
+                        {option.name}
+                      </button>
+                    </div>
+                  )
+                })}
+            </div>
+            <PrimaryButton
+              className="mt-4 rounded-xl bg-[#007AFF] disabled:cursor-pointer"
+              fullWidth
+              type="submit"
+              disabled={!engagementFeedback.trim()}
+              onClick={() =>
+                handleEndEngagement(engagementFeedback, engagement)
+              }
+            >
+              Submit Feedback
+            </PrimaryButton>
+          </>
+        )}
+      </div>
+    )
+  }
+
+  // engagement complete component
+  function EngagementComplete() {
+    return (
+      <div className="w-[400px] opacity-100 relative">
+        <div
+          className="w-80 flex flex-col items-center justify-center bg-white shadow-lg rounded-2xl border border-gray-200"
+          style={{ height: '510px' }}
+        >
+          <div className="flex items-center justify-center w-16 h-16 text-green-100 rounded-full">
+            <CheckCircleIcon className="text-green-100 w-12 h-12" />
+          </div>
+          <p className="mt-2 font-medium text-lg">Done</p>
+          <div className="mt-4 italic font-extralight text-sm">
+            Results saved. Task masked as {engagementStatus}{' '}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  /**
+   * get member card style
+   * @param index number
+   * @returns
+   */
+  const getCardStyle = (index: number) => {
+    if (index === currentMemberIndex) {
+      return 'rounded-2xl bg-white shadow-lg w-[400px] transition scale-100'
+    }
+
+    /** style 1st and 3rd card */
+    if (
+      index ===
+        (currentMemberIndex === 0
+          ? engagements.length - 1
+          : currentMemberIndex - 1) ||
+      index ===
+        (currentMemberIndex === engagements.length - 1
+          ? 0
+          : currentMemberIndex + 1)
+    ) {
+      return 'rounded-2xl w-[400px] bg-gray-10 backdrop-blur-md opacity-25 transform scale-90 transition z-10'
+    }
+
+    /** hide other cards */
+    return 'rounded-2xl w-[400px] opacity-0 transform scale-80 transition absolute hidden'
+  }
+
+  /** stores engagement status */
+  const engagementStatus = engagement?.status?.name.toLowerCase()
+
+  const isStatusIsCompleteOrCanceled =
+    engagementStatus === 'canceled' || engagementStatus === 'completed'
+
+  const showCardDetails = !isStatusIsCompleteOrCanceled && !mutateStatusError
+  const showCardDetailsIfCardIndexHasNoError =
+    mutateStatusError && mutateStatusError.memberIndex !== index
+  const showMutateErrorCard =
+    !isStatusIsCompleteOrCanceled &&
+    mutateStatusError &&
+    mutateStatusError.memberIndex === index
+
+  return (
+    <div
+      className={`w-[400px] opacity-100 relative mt-8 shadow-template-allow-scaling ${getCardStyle(
+        index
+      )}`}
+    >
+      {(showCardDetails || showCardDetailsIfCardIndexHasNoError) && (
+        <div className="p-6">
+          {showCardDetails && (
+            <>
+              <div className="flex flex-row">
+                <h2 className="text-xl font-semibold text-gray-800 overflow-hidden ">
+                  {engagement?.member?.fullName}
+                </h2>
+                {engagementStatus === 'opened' && (
+                  <button
+                    className="absolute top-2 right-2 text-sm border rounded-lg px-2 text-gray-500 hover:bg-gray-100"
+                    onClick={() => {
+                      window.open(
+                        `/member/${engagement?.member?.antaraId}`,
+                        '_blank'
+                      )
+                    }}
+                  >
+                    Open Profile <ArrowForwardIcon sx={{ fontSize: 14 }} />
+                  </button>
+                )}
+              </div>
+              <p className="text-gray-600 text-sm mb-3">
+                {engagement?.member?.age}y
+              </p>
+            </>
+          )}
+
+          {engagementStatus === 'active' && (
+            <>
+              {/* Context */}
+              <div className="bg-gray-100 rounded-t-xl p-4 mb-4">
+                <p className="text-sm font-semibold mb-1">Context</p>
+                <p className="text-gray-700 font-rubik font-light text-sm max-h-32 h-28 overflow-y-auto">
+                  {engagement.context}
+                </p>
+              </div>
+
+              {/* Action */}
+              <div className="bg-blue-20 rounded-b-xl p-4 mb-4 scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent">
+                <div className="font-semibold text-sm mb-1">Action</div>
+                <p className="text-gray-700 text-sm font-thin leading-relaxed max-h-32 h-28 overflow-y-auto">
+                  {engagement.action}
+                </p>
+              </div>
+
+              {index === currentMemberIndex ? (
+                <PrimaryButton
+                  className="rounded-xl bg-[#007AFF]"
+                  fullWidth
+                  type="submit"
+                  onClick={() => openDashboard()}
+                >
+                  Open Dashboard
+                </PrimaryButton>
+              ) : (
+                <PrimaryButton
+                  className="rounded-xl"
+                  fullWidth
+                  disableRipple
+                  type="submit"
+                >
+                  Open Dashboard
+                </PrimaryButton>
+              )}
+            </>
+          )}
+          {engagementStatus === 'opened' && EngagementFeedBackComponent()}
+        </div>
+      )}
+
+      {showMutateErrorCard && EngagementFeedBackComponent()}
+
+      {isStatusIsCompleteOrCanceled && EngagementComplete()}
+    </div>
+  )
+}

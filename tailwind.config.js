@@ -4,7 +4,7 @@ const scribeTheme = require('./src/styles/theme.js')
 module.exports = {
   jit: true,
   important: true,
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: scribeTheme,
-  plugins: [],
+  plugins: [require('tailwind-scrollbar'), require('tailwindcss-filters')],
 }

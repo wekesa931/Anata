@@ -5,21 +5,41 @@ import ErrorIcon from 'src/assets/img/icons/error.svg'
 type Props = {
   retry: () => void
   retryText?: string
+  showErroIcon?: boolean
+  hideDefaultMessage?: boolean
+  customMessageSubTitle?: string
+  customMessageDescription?: string
 }
 
-function Error({ retry, retryText }: Props) {
+function Error({
+  retry,
+  retryText,
+  showErroIcon = true,
+  hideDefaultMessage = false,
+  customMessageSubTitle,
+  customMessageDescription,
+}: Props) {
   return (
     <div className="flex flex-col justify-start items-center font-rubik my-2 gap-2">
-      <ErrorIcon />
-      <p className="text-base font-medium">Ooops!</p>
+      {showErroIcon && <ErrorIcon />}
+      {!hideDefaultMessage && <p className="text-base font-medium">Ooops!</p>}
       <p className="text-sm text-dark-blue-100">
         {' '}
-        Something unexpected happened.
+        {hideDefaultMessage
+          ? customMessageSubTitle
+          : ' Something unexpected happened.'}
       </p>
-      <p>
-        Don&apos;t worry, it&apos;s not you, it&apos;s us. Please refresh the
-        page to resolve.
-      </p>
+      {hideDefaultMessage ? (
+        <p className="text-sm p-1 tracking-widest" style={{}}>
+          {customMessageDescription}
+        </p>
+      ) : (
+        <p>
+          Don&apos;t worry, it&apos;s not you, it&apos;s us. Please refresh the
+          page to resolve.
+        </p>
+      )}
+
       <Button
         variant="contained"
         color="primary"

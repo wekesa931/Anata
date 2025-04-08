@@ -36,7 +36,7 @@ export const getClassName = (
 }
 
 type PrimaryButtonProps = LoadingButtonProps & {
-  onClick: () => any
+  onClick?: () => any
 }
 
 function PrimaryButton(props: PrimaryButtonProps) {
@@ -55,7 +55,7 @@ function PrimaryButton(props: PrimaryButtonProps) {
       {...rest}
       onClick={onButtonClick}
       variant={variant}
-      className={`py-2 px-4 rounded-md font-rubik font-medium ${getClassName(
+      className={`py-2 px-4 font-rubik font-medium ${getClassName(
         variant,
         color,
         props?.disabled || false

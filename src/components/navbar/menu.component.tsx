@@ -2,6 +2,7 @@ import React from 'react'
 import { MenuItem, Menu, ListItemIcon, ListItemText } from '@mui/material'
 import TasksIcon from '@mui/icons-material/ViewQuilt'
 import WorkflowsIcon from '@mui/icons-material/Assignment'
+import CallSplitIcon from '@mui/icons-material/CallSplit'
 import { useNavigate } from 'react-router-dom'
 import { useModuleAnalytics } from 'src/modules/analytics'
 
@@ -11,7 +12,7 @@ type FloatingMenuProps = {
   handleClose: () => void
 }
 
-type Menus = 'tasks' | 'workflows'
+type Menus = 'tasks' | 'workflows' | 'engagements'
 
 function FloatingMenu({ anchorEl, open, handleClose }: FloatingMenuProps) {
   const navigate = useNavigate()
@@ -67,6 +68,15 @@ function FloatingMenu({ anchorEl, open, handleClose }: FloatingMenuProps) {
           <WorkflowsIcon />
         </ListItemIcon>
         <ListItemText> My Workflows</ListItemText>
+      </MenuItem>
+      <MenuItem
+        className="hover:bg-greyscale-6 hover:text-white cursor-pointer px-4 py-2"
+        onClick={() => openLink('/my-engagements', 'engagements')}
+      >
+        <ListItemIcon className="text-white">
+          <CallSplitIcon />
+        </ListItemIcon>
+        <ListItemText> My Engagements</ListItemText>
       </MenuItem>
     </Menu>
   )

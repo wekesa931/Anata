@@ -15,6 +15,7 @@ import {
 import WorkflowsIcon from '@mui/icons-material/Assignment'
 import RegisterIcon from '@mui/icons-material/PersonAddAlt1'
 import MenuIcon from '@mui/icons-material/Menu'
+import CallSplitIcon from '@mui/icons-material/CallSplit'
 import SearchInput from 'src/components/search'
 import { useAuth } from 'src/context/auth'
 import { useUser } from 'src/context/user'
@@ -24,6 +25,7 @@ import MemberRegistration from 'src/modules/member/views/member-registration/mem
 import { useHomePageAnalytics } from 'src/views/dashboard/main/analytics'
 import { useRegistrationForm } from 'src/context/member-registration'
 import WorkflowView from 'src/modules/workflows/views/workflow-dashboard-view'
+import EngagementsView from 'src/modules/engagements/views/engagements-dashboard-view'
 
 function RedirectToTasks({
   setActive,
@@ -49,6 +51,7 @@ enum Active {
   MY_TASKS = '/my-tasks',
   MY_WORKFLOWS = '/my-workflows',
   REGISTER_MEMBER = '/register-member',
+  MY_ENGAGEMENTS = '/my-engagements',
 }
 
 function MainDashboard() {
@@ -59,6 +62,7 @@ function MainDashboard() {
   const {
     trackUserNavigatedToTasksPage,
     trackUserNavigatedToWorkflowsPage,
+    trackUserNavigatedToEngagementsPage,
     trackUserOpenedRegistration,
     trackUserLoggedOut,
   } = useHomePageAnalytics()
@@ -173,6 +177,17 @@ function MainDashboard() {
               >
                 My Workflows
               </MenuItem>
+              <MenuItem
+                icon={<CallSplitIcon />}
+                onClick={() => {
+                  setActive(Active.MY_ENGAGEMENTS)
+                  trackUserNavigatedToEngagementsPage()
+                }}
+                className={activeStyle(active === Active.MY_ENGAGEMENTS)}
+                component={<NavLink to="/my-engagements" />}
+              >
+                My Engagements
+              </MenuItem>
 
               {!isDataLoading && (
                 <MenuItem
@@ -238,6 +253,14 @@ function MainDashboard() {
                 element={
                   <div className="h-full">
                     <WorkflowView user={user} />
+                  </div>
+                }
+              />
+              <Route
+                path="/my-engagements"
+                element={
+                  <div className="h-full">
+                    <EngagementsView />
                   </div>
                 }
               />

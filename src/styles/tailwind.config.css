@@ -10,3 +10,10 @@
     font-family: Rubik, system-ui, sans-serif !important;
   }
 }
+
+@layer utilities {
+  .backdrop-blur-md {
+    backdrop-filter: blur(64px) !important;
+    -webkit-backdrop-filter: blur(64px) !important;
+  }
+}

@@ -13,6 +13,7 @@ import constants from 'src/config/constants'
 import storage from 'src/storage/secure-storage'
 import refreshToken from 'src/utils/auth/refresh-token'
 import { RetryLink } from '@apollo/client/link/retry'
+import { mockLink } from 'src/modules/engagements/__mocks__/schema'
 
 const retryLink = new RetryLink({
   attempts: {
@@ -108,20 +109,22 @@ const handleErrors = onError(
 )
 
 /** Build a dynamic client based on the version */
-
 const apolloClient = new ApolloClient({
   link: ApolloLink.from([
     retryLink,
     handleErrors,
     authMiddleWare().concat(
-      // 3 clients in use, v2, v1 and opensearch all with different endpoints
       ApolloLink.split(
-        (operation) => operation.getContext().clientName === 'v2',
-        v2Link,
+        (operation) => operation.getContext().clientName === 'mock', // for mocking queries
+        mockLink,
         ApolloLink.split(
-          (operation) => operation.getContext().clientName === 'search',
-          searchLink,
-          v1Link
+          (operation) => operation.getContext().clientName === 'v2',
+          v2Link,
+          ApolloLink.split(
+            (operation) => operation.getContext().clientName === 'search',
+            searchLink,
+            v1Link // default to v1
+          )
         )
       )
     ),
