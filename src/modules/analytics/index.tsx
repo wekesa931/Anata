@@ -1,5 +1,6 @@
 import { useMember } from 'src/context/member'
 import useAnalytics from 'src/hooks/analytics'
+import { Member as EngagementMember } from '../engagements/typings'
 
 export const useModuleAnalytics = () => {
   const leftSectionAnalytics = useAnalytics('Left Section')
@@ -362,6 +363,58 @@ export const useModuleAnalytics = () => {
     },
     trackFormClosed: (formName: string) => {
       rightSectionAnalytics.track(`${formName} form closed`)
+    },
+    //  track recommendations
+    trackLeftNavigationClicked: (assignedStaff: any) => {
+      homePageSectionAnalytics.track('recommendation-left-navigation-clicked', {
+        assignedStaff,
+      })
+    },
+    trackRightNavigationClicked: (assignedStaff: any) => {
+      homePageSectionAnalytics.track(
+        'recommendation-right-navigation-clicked',
+        {
+          assignedStaff,
+        }
+      )
+    },
+    trackOpenDashboardClicked: (
+      assignedStaff: string,
+      memberInfo: EngagementMember,
+      recommendationUuid: string
+    ) => {
+      homePageSectionAnalytics.track('recommendation-dashboard-opened', {
+        assignedStaff,
+        memberInfo,
+        recommendationUuid,
+      })
+    },
+    trackOpenDashboardFromFeedbackClicked: (
+      assignedStaff: string,
+      memberInfo: EngagementMember,
+      recommendationUuid: string
+    ) => {
+      homePageSectionAnalytics.track(
+        'recommendation-from-feedback-dashboard-opened',
+        {
+          assignedStaff,
+          memberInfo,
+          recommendationUuid,
+        }
+      )
+    },
+    trackRecommendationFeedbackGiven: (
+      assignedStaff: string,
+      memberInfo: EngagementMember,
+      recommendationUuid: string,
+      feedbackType: string
+    ) => {
+      homePageSectionAnalytics.track('recommendation-feedback-given', {
+        assignedStaff,
+        memberInfo,
+        recommendationUuid,
+        feedbackType,
+      })
     },
   }
 }

@@ -4,6 +4,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import ErrorRetry from 'src/components/feedbacks/error-retry'
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import { Engagement, EngagementFeedbackOptions } from '../typings'
 
 interface EngagementMemberCardI {
@@ -11,6 +12,7 @@ interface EngagementMemberCardI {
   currentMemberIndex: number
   index: number
   engagements: Engagement[]
+  engagementsResData: Engagement[]
   updateStatus: (val: string, engagement: Engagement) => Promise<void>
   feedbackOptions: EngagementFeedbackOptions[]
   feedbackOptionsError: any
@@ -29,6 +31,7 @@ export default function EngagementMemberCard({
   currentMemberIndex,
   index,
   engagements,
+  engagementsResData,
   updateStatus,
   feedbackOptions,
   feedbackOptionsError,
@@ -38,6 +41,9 @@ export default function EngagementMemberCard({
   handleEndEngagement,
   resetErrorandRetry,
 }: EngagementMemberCardI) {
+  const { trackOpenDashboardClicked, trackOpenDashboardFromFeedbackClicked } =
+    useModuleAnalytics()
+
   const handleFeedBack = (val: any) => {
     updateFeedback(val)
   }
@@ -49,11 +55,25 @@ export default function EngagementMemberCard({
       '_blank',
       'noopener,noreferrer'
     )
+    trackOpenDashboardClicked(
+      engagement.assignedTo.fullName,
+      engagement.member,
+      engagement.uuid
+    )
+  }
+
+  const openDashboardFromFeedBack = () => {
+    window.open(`/member/${engagement?.member?.antaraId}`, '_blank')
+    trackOpenDashboardFromFeedbackClicked(
+      engagement.assignedTo.fullName,
+      engagement.member,
+      engagement.uuid
+    )
   }
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [engagements, currentMemberIndex])
+  }, [engagements, currentMemberIndex, engagementsResData])
 
   // engagement feedback component
   function EngagementFeedBackComponent() {
@@ -232,12 +252,7 @@ export default function EngagementMemberCard({
                 {engagementStatus === 'opened' && (
                   <button
                     className="absolute top-2 right-2 text-sm border rounded-lg px-2 text-gray-500 hover:bg-gray-100"
-                    onClick={() => {
-                      window.open(
-                        `/member/${engagement?.member?.antaraId}`,
-                        '_blank'
-                      )
-                    }}
+                    onClick={() => openDashboardFromFeedBack()}
                   >
                     Open Profile <ArrowForwardIcon sx={{ fontSize: 14 }} />
                   </button>

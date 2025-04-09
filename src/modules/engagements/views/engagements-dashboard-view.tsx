@@ -5,6 +5,7 @@ import ArrowForward from '@mui/icons-material/ArrowForward'
 import ArrowBack from '@mui/icons-material/ArrowBack'
 import ErrorRetry from 'src/components/feedbacks/error-retry'
 import { throwGraphErrors } from 'src/utils/error-handling'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import EngagementMemberCard from '../components/engagement-member-card'
 import {
   ENGAGEMENT_RECOMMENDATIONS_QUERY,
@@ -32,6 +33,12 @@ export default function EngagementsDashboardView() {
   const [feedbackOptionsError, setFeedbackOptionsError] = useState('')
   const [mutateStatusError, setMutateStatusError] = useState<any>()
   const [completeEngagementMsg, setCompleteEngagementMsg] = useState('')
+
+  const {
+    trackLeftNavigationClicked,
+    trackRightNavigationClicked,
+    trackRecommendationFeedbackGiven,
+  } = useModuleAnalytics()
 
   const [getData, { loading, error }] = useLazyQuery(
     ENGAGEMENT_RECOMMENDATIONS_QUERY,
@@ -101,19 +108,29 @@ export default function EngagementsDashboardView() {
     })
   }
 
-  const handleNext = useCallback(() => {
-    setEngagements(cleanupEngagementList(engagements))
-    setCurrentMemberIndex((prevIndex) =>
-      prevIndex === engagements.length - 1 ? 0 : prevIndex + 1
-    )
-  }, [engagements])
+  const handleNext = useCallback(
+    (engagement?: Engagement) => {
+      setEngagements(cleanupEngagementList(engagements))
+      setCurrentMemberIndex((prevIndex) =>
+        prevIndex === engagements.length - 1 ? 0 : prevIndex + 1
+      )
+      trackRightNavigationClicked(engagement?.assignedTo.fullName)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [engagements]
+  )
 
-  const handleBack = useCallback(() => {
-    setEngagements(cleanupEngagementList(engagements))
-    setCurrentMemberIndex((prevIndex) =>
-      prevIndex === 0 ? engagements.length - 1 : prevIndex - 1
-    )
-  }, [engagements])
+  const handleBack = useCallback(
+    (engagement?: Engagement) => {
+      setEngagements(cleanupEngagementList(engagements))
+      setCurrentMemberIndex((prevIndex) =>
+        prevIndex === 0 ? engagements.length - 1 : prevIndex - 1
+      )
+      trackLeftNavigationClicked(engagement?.assignedTo.fullName)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [engagements]
+  )
 
   useEffect(() => {
     // index of the first engagement with status "opened"
@@ -128,7 +145,8 @@ export default function EngagementsDashboardView() {
   }, [engagements])
 
   useEffect(() => {
-    if (engagements.length < 2 && engagementsResData.length > 0) {
+    // show engagements have been completed
+    if (engagements.length === 1 && engagementsResData.length > 0) {
       const results = cleanupEngagementList(engagements)
       if (results.length === 0 && engagementsResData.length > 0) {
         setCompleteEngagementMsg(
@@ -229,6 +247,16 @@ export default function EngagementsDashboardView() {
           )
           return updatedEngagements
         })
+        // update for stats tracking
+        setEngagementsResData((prev) => {
+          const updated = prev.map((eng) =>
+            eng.uuid ===
+            data?.updateEngagementRecommendation?.engagementRecommendation?.uuid
+              ? data?.updateEngagementRecommendation?.engagementRecommendation
+              : eng
+          )
+          return updated
+        })
       }
     } catch (error: any) {
       setMutateStatusError(() => ({
@@ -243,15 +271,22 @@ export default function EngagementsDashboardView() {
     setEngagementFeedback((prev) => (prev === val ? '' : val))
   }
 
-  const submitFeedback = async (feedback: string, engagement: any) => {
-    const feedbackOptionSubmitted: any = feedbackOptions.find(
-      (option) => option.name === feedback
+  const submitFeedback = async (feedback: string, engagement: Engagement) => {
+    const feedbackOptionSubmitted: any = feedbackOptions.find((option) =>
+      option.name.toLowerCase().includes(feedback.toLowerCase())
     )
+
     // get outcome status based on feedback selected
     const updatedStatus = feedbackOptionSubmitted.engagementOutcomeStatus.name
     // track a successful feedback
     const isSuccessful = feedback === 'Yes and member engaged'
     await handleUpdateStatus(updatedStatus, engagement, isSuccessful)
+    trackRecommendationFeedbackGiven(
+      engagement.assignedTo.fullName,
+      engagement.member,
+      engagement.uuid,
+      feedback
+    )
     setEngagementFeedback('')
     // Update engagementsResData based on the status update
     setEngagementsResData((prevData) => {
@@ -281,17 +316,16 @@ export default function EngagementsDashboardView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // get total count of engagement finished (completed/canceled)
-  const completedEngagements = () => {
-    const res = engagementsResData.filter(
-      (eng: Engagement) =>
-        eng.status.name.toLowerCase() === 'completed' && !!eng.remarks.trim()
-    )
-    return res.length
-  }
-
   // engagement feedback stats component
   function EngagementStatsComponent() {
+    // get total count of successful engagements (completed and remarks saved)
+    const getCompletedEngagements = () => {
+      return engagementsResData.filter(
+        (eng) =>
+          eng.status.name.toLowerCase() === 'completed' && !!eng.remarks?.trim()
+      ).length
+    }
+
     return (
       <div className="w-[320px] bg-gray-10 z-100 border p-1 rounded-2xl relative shadow-template">
         <div className="flex flex-row items-center justify-center gap-3 px-4">
@@ -323,7 +357,7 @@ export default function EngagementsDashboardView() {
           </div>
           <div className="flex flex-col">
             <p className="font-semibold">
-              <span className="text-2xl">{completedEngagements()}</span>
+              <span className="text-2xl">{getCompletedEngagements()}</span>
               <span className="text-lg"> of {engagementsResData.length}</span>
             </p>
             <p className="text-sm font-normal">Daily Goal</p>
@@ -351,7 +385,7 @@ export default function EngagementsDashboardView() {
         <>
           {/* engagement stats component */}
           <div className="text-sm text-gray-500 mb-6 absolute top-0">
-            {EngagementStatsComponent()}
+            <EngagementStatsComponent />
           </div>
           <div className="flex items-center justify-center relative space-x-6">
             {engagements?.map((engagement: Engagement, index) => (
@@ -364,7 +398,7 @@ export default function EngagementsDashboardView() {
                       engagements.length === 1 ||
                       mutateStatusError
                     }
-                    onClick={handleBack}
+                    onClick={() => handleBack(engagement)}
                     className={`absolute -left-20 top-1/2 rounded-full bg-gray-100 hover:!bg-[#E8EAED] transition duration-200 p-4 order-1 disabled:cursor-not-allowed
                       ${
                         (engagements.length < 3 || engagements.length === 1) &&
@@ -387,6 +421,7 @@ export default function EngagementsDashboardView() {
                   <EngagementMemberCard
                     engagement={engagement}
                     engagements={engagements}
+                    engagementsResData={engagementsResData}
                     currentMemberIndex={currentMemberIndex}
                     index={index}
                     updateStatus={handleUpdateStatus}
@@ -408,7 +443,7 @@ export default function EngagementsDashboardView() {
                       engagements.length === 1 ||
                       mutateStatusError
                     }
-                    onClick={handleNext}
+                    onClick={() => handleNext(engagement)}
                     className={`absolute -right-20 top-1/2 rounded-full bg-gray-100 hover:!bg-[#E8EAED] transition duration-200 p-4 order-3 disabled:cursor-not-allowed
                        ${engagements.length === 1 && 'hidden'}
                        ${
