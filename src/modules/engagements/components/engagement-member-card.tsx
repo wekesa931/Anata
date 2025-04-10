@@ -196,7 +196,7 @@ export default function EngagementMemberCard({
    * @returns
    */
   const getCardStyle = (index: number) => {
-    if (index === currentMemberIndex) {
+    if (index === currentMemberIndex || engagements.length === 1) {
       return 'rounded-2xl bg-white shadow-lg w-[400px] transition scale-100'
     }
 
@@ -242,13 +242,13 @@ export default function EngagementMemberCard({
         <div className="p-6">
           {showCardDetails && (
             <>
-              <div className="flex flex-row">
+              <div className="flex flex-row my-3">
                 <h2 className="text-xl font-semibold text-gray-800 overflow-hidden ">
-                  {engagement?.member?.fullName}
+                  {engagement?.member?.fullName} Conversation
                 </h2>
                 {engagementStatus === 'opened' && (
                   <button
-                    className="absolute top-2 right-2 text-sm border rounded-lg px-2 text-gray-500 hover:bg-gray-100"
+                    className="absolute top-2.5 right-2 text-sm border rounded-lg px-2 text-gray-500 hover:bg-gray-100"
                     onClick={() => openDashboardFromFeedBack()}
                   >
                     Open Profile <ArrowForwardIcon sx={{ fontSize: 14 }} />

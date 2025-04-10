@@ -187,10 +187,24 @@ export default function EngagementsDashboardView() {
    * @returns
    */
   const getPositionStyle = (index: number) => {
+    const total = engagements.length
+    if (total === 2) {
+      // style for only 2 engagements
+      if (index === currentMemberIndex) {
+        return 'relative order-2 z-10' // center
+      }
+      // other card, last card, hide 1st card
+      const otherIndex = currentMemberIndex === 0 ? 1 : 0
+      if (index === otherIndex) {
+        return 'relative order-3'
+      }
+    }
+
     if (index === currentMemberIndex) {
       // center the current member card
       return 'relative order-2 z-10'
     }
+
     /* previous member card
     if the current index is the 1st element/card, the previous index should be the last one, for wrap around behavior
     if the current index is not the 1st, subtract 1 from current index to get index of the previous card
@@ -201,7 +215,15 @@ export default function EngagementsDashboardView() {
         ? engagements.length - 1
         : currentMemberIndex - 1)
     ) {
-      return 'relative order-3'
+      // hide prev card if we're on the first card and all engagements are active
+      //  or when we only have 2 engagements in no.
+      if (
+        (currentMemberIndex === 0 && allEngagementsActive()) ||
+        engagements.length === 2
+      ) {
+        return 'relative w-[500px] order-1 opacity-0 pointer-events-none'
+      }
+      return 'relative order-1'
     }
     /* next member card
     if the current index is the last one card, the next index should be the 1st index, for wrap around behavior
@@ -213,11 +235,7 @@ export default function EngagementsDashboardView() {
         ? 0
         : currentMemberIndex + 1)
     ) {
-      // hide next card if we're on the first card and all engagements are active
-      if (currentMemberIndex === 0 && allEngagementsActive()) {
-        return 'hidden'
-      }
-      return 'relative order-1'
+      return 'relative order-3'
     }
     // hide other cards
     return 'hidden'
@@ -349,7 +367,7 @@ export default function EngagementsDashboardView() {
     return (
       <div className="w-[320px] bg-gray-10 z-100 border p-1 rounded-2xl relative shadow-template">
         <div className="flex flex-row items-center justify-center gap-3 px-4">
-          <div className="flex w-[200px] gap-2 overflow-x-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500">
+          <div className="flex w-[200px] mt-2 gap-2 overflow-x-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500">
             {engagementsResData.map((eng) => {
               const status = eng.status.name.toLowerCase()
               const isSuccessful = !!eng.remarks.trim()
@@ -407,7 +425,12 @@ export default function EngagementsDashboardView() {
           <div className="text-sm text-gray-500 mb-6 absolute top-0">
             <EngagementStatsComponent />
           </div>
+
           <div className="relative flex items-center justify-center space-x-6">
+            {/* invisible 1st card slot if only 2 engagements exist */}
+            {engagements.length === 2 && (
+              <div className="relative w-[500px] order-1 opacity-0 pointer-events-none" />
+            )}
             {engagements?.map((engagement: Engagement, index) => (
               <div key={index} className={`${getPositionStyle(index)}`}>
                 {/* back button */}
@@ -467,13 +490,13 @@ export default function EngagementsDashboardView() {
                     }
                     onClick={() => handleNext(engagement)}
                     className={`absolute -right-10 top-1/2 transform -translate-y-1/2 rounded-full bg-gray-100 hover:!bg-[#E8EAED] transition duration-200 p-4 order-3 disabled:cursor-not-allowed
-                       ${engagements.length === 1 && 'hidden'}
                        ${
                          (engagement?.status?.name.toLowerCase() === 'opened' ||
                            engagements.length === 1 ||
                            mutateStatusError) &&
                          'bg-[#E8EAED]'
                        }`}
+                    hidden={engagements.length === 1}
                     aria-label="Next engagement"
                   >
                     <ArrowForward fontSize="small" className="text-gray-500" />
@@ -481,19 +504,6 @@ export default function EngagementsDashboardView() {
                 )}
               </div>
             ))}
-
-            {/* invisible 3rd card slot if only 2 engagements exist */}
-            {engagements.length === 2 && (
-              <div className="relative w-[500px] order-1 opacity-0 pointer-events-none" />
-            )}
-
-            {/* 
-            invisible 1st card slot if all engagements are 
-            active and user is in their 1st card
-             */}
-            {currentMemberIndex === 0 && allEngagementsActive() && (
-              <div className="relative w-[500px] order-1 opacity-0 pointer-events-none" />
-            )}
           </div>
         </>
       )}

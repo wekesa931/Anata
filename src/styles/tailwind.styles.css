@@ -694,8 +694,8 @@ html,
   top: 50% !important;
 }
 
-.top-2 {
-  top: 0.5rem !important;
+.top-2\.5 {
+  top: 0.625rem !important;
 }
 
 .top-5 {
