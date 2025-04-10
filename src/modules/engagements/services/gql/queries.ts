@@ -21,6 +21,9 @@ export const ENGAGEMENT_FRAGMENT = gql`
       fullName
       team
     }
+    feedback {
+      name
+    }
     modifiedAt
     modifiedBy
   }

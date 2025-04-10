@@ -12,6 +12,22 @@
 }
 
 @layer utilities {
+  .shadow-template-allow-scaling {
+    --tw-shadow: 0 2.8px 2.2px 0 rgba(0, 0, 0, 0.02),
+      0 6.7px 5.3px 0 rgba(0, 0, 0, 0.03), 0 12.5px 10px 0 rgba(0, 0, 0, 0.04),
+      0 22.3px 17.9px 0 rgba(0, 0, 0, 0.04),
+      0 41.8px 33.4px 0 rgba(0, 0, 0, 0.05), 0 100px 80px 0 rgba(0, 0, 0, 0.07) !important;
+    --tw-shadow-colored: 0 2.8px 2.2px 0 var(--tw-shadow-color),
+      0 6.7px 5.3px 0 var(--tw-shadow-color),
+      0 12.5px 10px 0 var(--tw-shadow-color),
+      0 22.3px 17.9px 0 var(--tw-shadow-color),
+      0 41.8px 33.4px 0 var(--tw-shadow-color),
+      0 100px 80px 0 var(--tw-shadow-color) !important;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+      var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.2)) !important;
+    will-change: transform, box-shadow !important;
+  }
   .backdrop-blur-md {
     backdrop-filter: blur(64px) !important;
     -webkit-backdrop-filter: blur(64px) !important;

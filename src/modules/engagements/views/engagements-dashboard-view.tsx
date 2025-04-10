@@ -175,6 +175,12 @@ export default function EngagementsDashboardView() {
     }
   }, [handleNext, handleBack])
 
+  const allEngagementsActive = useCallback(() => {
+    return engagementsResData.every(
+      (eng) => eng?.status?.name?.toLowerCase() === 'active'
+    )
+  }, [engagementsResData])
+
   /**
    * get member card position, prev, current and next
    * @param index number
@@ -183,7 +189,7 @@ export default function EngagementsDashboardView() {
   const getPositionStyle = (index: number) => {
     if (index === currentMemberIndex) {
       // center the current member card
-      return 'relative order-2 ml-10 mr-10'
+      return 'relative order-2 z-10'
     }
     /* previous member card
     if the current index is the 1st element/card, the previous index should be the last one, for wrap around behavior
@@ -195,7 +201,7 @@ export default function EngagementsDashboardView() {
         ? engagements.length - 1
         : currentMemberIndex - 1)
     ) {
-      return 'relative order-3 ml-10 mr-10'
+      return 'relative order-3'
     }
     /* next member card
     if the current index is the last one card, the next index should be the 1st index, for wrap around behavior
@@ -207,16 +213,22 @@ export default function EngagementsDashboardView() {
         ? 0
         : currentMemberIndex + 1)
     ) {
-      return 'relative order-1 ml-10 mr-10'
+      // hide next card if we're on the first card and all engagements are active
+      if (currentMemberIndex === 0 && allEngagementsActive()) {
+        return 'hidden'
+      }
+      return 'relative order-1'
     }
     // hide other cards
-    return 'absolute hidden'
+    return 'hidden'
   }
 
   const handleUpdateStatus = async (
     val: string,
     engagement: Engagement,
-    successful: boolean = false
+    successful: boolean = false,
+    failed?: boolean,
+    feedback?: string
   ) => {
     const variables: UpdateEngagementPayload = {
       input: {
@@ -227,6 +239,12 @@ export default function EngagementsDashboardView() {
 
     if (successful) {
       variables.input.remarks = 'successful'
+    } else if (failed) {
+      variables.input.remarks = 'failed'
+    }
+
+    if (feedback?.trim()) {
+      variables.input.feedback = feedback
     }
 
     try {
@@ -278,15 +296,17 @@ export default function EngagementsDashboardView() {
 
     // get outcome status based on feedback selected
     const updatedStatus = feedbackOptionSubmitted.engagementOutcomeStatus.name
-    // track a successful feedback
+    // track a successful/failed feedback
     const isSuccessful = feedback === 'Yes and member engaged'
-    await handleUpdateStatus(updatedStatus, engagement, isSuccessful)
-    trackRecommendationFeedbackGiven(
-      engagement.assignedTo.fullName,
-      engagement.member,
-      engagement.uuid,
+    const isNotSuccessful = feedback === 'Yes but member did not engage'
+    await handleUpdateStatus(
+      updatedStatus,
+      engagement,
+      isSuccessful,
+      isNotSuccessful,
       feedback
     )
+    trackRecommendationFeedbackGiven(engagement)
     setEngagementFeedback('')
     // Update engagementsResData based on the status update
     setEngagementsResData((prevData) => {
@@ -329,7 +349,7 @@ export default function EngagementsDashboardView() {
     return (
       <div className="w-[320px] bg-gray-10 z-100 border p-1 rounded-2xl relative shadow-template">
         <div className="flex flex-row items-center justify-center gap-3 px-4">
-          <div className="flex w-[200px] mt-2 gap-2 overflow-x-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500">
+          <div className="flex w-[200px] gap-2 overflow-x-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500">
             {engagementsResData.map((eng) => {
               const status = eng.status.name.toLowerCase()
               const isSuccessful = !!eng.remarks.trim()
@@ -387,7 +407,7 @@ export default function EngagementsDashboardView() {
           <div className="text-sm text-gray-500 mb-6 absolute top-0">
             <EngagementStatsComponent />
           </div>
-          <div className="flex items-center justify-center relative space-x-6">
+          <div className="relative flex items-center justify-center space-x-6">
             {engagements?.map((engagement: Engagement, index) => (
               <div key={index} className={`${getPositionStyle(index)}`}>
                 {/* back button */}
@@ -396,20 +416,22 @@ export default function EngagementsDashboardView() {
                     disabled={
                       engagement?.status?.name.toLowerCase() === 'opened' ||
                       engagements.length === 1 ||
-                      mutateStatusError
+                      mutateStatusError ||
+                      (currentMemberIndex === 0 && allEngagementsActive())
                     }
                     onClick={() => handleBack(engagement)}
-                    className={`absolute -left-20 top-1/2 rounded-full bg-gray-100 hover:!bg-[#E8EAED] transition duration-200 p-4 order-1 disabled:cursor-not-allowed
-                      ${
-                        (engagements.length < 3 || engagements.length === 1) &&
-                        'hidden'
-                      }
+                    className={`absolute -left-10 top-1/2 transform -translate-y-1/2 rounded-full bg-gray-100 hover:!bg-[#E8EAED] transition duration-200 p-4 order-1 disabled:cursor-not-allowed
                       ${
                         (engagement?.status?.name.toLowerCase() === 'opened' ||
                           engagements.length === 1 ||
                           mutateStatusError) &&
                         'bg-[#E8EAED]'
                       }`}
+                    hidden={
+                      (currentMemberIndex === 0 && allEngagementsActive()) ||
+                      engagements.length < 3 ||
+                      engagements.length === 1
+                    }
                     aria-label="Previous engagement"
                   >
                     <ArrowBack fontSize="small" className="text-gray-500" />
@@ -444,7 +466,7 @@ export default function EngagementsDashboardView() {
                       mutateStatusError
                     }
                     onClick={() => handleNext(engagement)}
-                    className={`absolute -right-20 top-1/2 rounded-full bg-gray-100 hover:!bg-[#E8EAED] transition duration-200 p-4 order-3 disabled:cursor-not-allowed
+                    className={`absolute -right-10 top-1/2 transform -translate-y-1/2 rounded-full bg-gray-100 hover:!bg-[#E8EAED] transition duration-200 p-4 order-3 disabled:cursor-not-allowed
                        ${engagements.length === 1 && 'hidden'}
                        ${
                          (engagement?.status?.name.toLowerCase() === 'opened' ||
@@ -462,7 +484,15 @@ export default function EngagementsDashboardView() {
 
             {/* invisible 3rd card slot if only 2 engagements exist */}
             {engagements.length === 2 && (
-              <div className="relative w-[400px] order-1 opacity-60 pointer-events-none" />
+              <div className="relative w-[500px] order-1 opacity-0 pointer-events-none" />
+            )}
+
+            {/* 
+            invisible 1st card slot if all engagements are 
+            active and user is in their 1st card
+             */}
+            {currentMemberIndex === 0 && allEngagementsActive() && (
+              <div className="relative w-[500px] order-1 opacity-0 pointer-events-none" />
             )}
           </div>
         </>

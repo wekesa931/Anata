@@ -1,6 +1,6 @@
 import { useMember } from 'src/context/member'
 import useAnalytics from 'src/hooks/analytics'
-import { Member as EngagementMember } from '../engagements/typings'
+import { Engagement } from '../engagements/typings'
 
 export const useModuleAnalytics = () => {
   const leftSectionAnalytics = useAnalytics('Left Section')
@@ -366,54 +366,31 @@ export const useModuleAnalytics = () => {
     },
     //  track recommendations
     trackLeftNavigationClicked: (assignedStaff: any) => {
-      homePageSectionAnalytics.track('recommendation-left-navigation-clicked', {
+      homePageSectionAnalytics.track('Engagement left arrow clicked', {
         assignedStaff,
       })
     },
     trackRightNavigationClicked: (assignedStaff: any) => {
-      homePageSectionAnalytics.track(
-        'recommendation-right-navigation-clicked',
-        {
-          assignedStaff,
-        }
-      )
-    },
-    trackOpenDashboardClicked: (
-      assignedStaff: string,
-      memberInfo: EngagementMember,
-      recommendationUuid: string
-    ) => {
-      homePageSectionAnalytics.track('recommendation-dashboard-opened', {
+      homePageSectionAnalytics.track('Engagement right arrow clicked', {
         assignedStaff,
-        memberInfo,
-        recommendationUuid,
       })
     },
-    trackOpenDashboardFromFeedbackClicked: (
-      assignedStaff: string,
-      memberInfo: EngagementMember,
-      recommendationUuid: string
-    ) => {
+    trackOpenDashboardClicked: (engagement: Engagement) => {
+      homePageSectionAnalytics.track('Engagement item dashboard opened', {
+        engagement,
+      })
+    },
+    trackOpenDashboardFromFeedbackClicked: (engagement: Engagement) => {
       homePageSectionAnalytics.track(
-        'recommendation-from-feedback-dashboard-opened',
+        'Engagement item feedback dashboard opened',
         {
-          assignedStaff,
-          memberInfo,
-          recommendationUuid,
+          engagement,
         }
       )
     },
-    trackRecommendationFeedbackGiven: (
-      assignedStaff: string,
-      memberInfo: EngagementMember,
-      recommendationUuid: string,
-      feedbackType: string
-    ) => {
-      homePageSectionAnalytics.track('recommendation-feedback-given', {
-        assignedStaff,
-        memberInfo,
-        recommendationUuid,
-        feedbackType,
+    trackRecommendationFeedbackGiven: (engagement: Engagement) => {
+      homePageSectionAnalytics.track('Engagement feedback given', {
+        engagement,
       })
     },
   }

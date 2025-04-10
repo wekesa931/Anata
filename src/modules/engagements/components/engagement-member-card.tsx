@@ -55,25 +55,18 @@ export default function EngagementMemberCard({
       '_blank',
       'noopener,noreferrer'
     )
-    trackOpenDashboardClicked(
-      engagement.assignedTo.fullName,
-      engagement.member,
-      engagement.uuid
-    )
+    trackOpenDashboardClicked(engagement)
   }
 
   const openDashboardFromFeedBack = () => {
     window.open(`/member/${engagement?.member?.antaraId}`, '_blank')
-    trackOpenDashboardFromFeedbackClicked(
-      engagement.assignedTo.fullName,
-      engagement.member,
-      engagement.uuid
-    )
+    trackOpenDashboardFromFeedbackClicked(engagement)
   }
 
   useEffect(() => {
+    getCardStyle(index)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [engagements, currentMemberIndex, engagementsResData])
+  }, [engagements, index, currentMemberIndex, engagementsResData])
 
   // engagement feedback component
   function EngagementFeedBackComponent() {
@@ -86,7 +79,7 @@ export default function EngagementMemberCard({
       >
         {mutateStatusError && mutateStatusError.memberIndex === index ? (
           <div className="flex items-center justify-center flex-col p-2">
-            <div className="flex items-center justify-center flex-col mt-[15%] mb-[15%] ">
+            <div className="flex items-center justify-center flex-col mt-[15%] mb-[15%]">
               <div>
                 <div className="">
                   <ReportProblemOutlinedIcon
@@ -145,9 +138,10 @@ export default function EngagementMemberCard({
                         />
                       )}
                       <button
-                        className={`w-full py-2.5 px-4 text-md border hover:text-black hover:bg-gray-200 rounded-xl ${
+                        className={`w-full py-2.5 px-2 text-center border hover:text-black hover:bg-gray-200 rounded-xl ${
                           engagementFeedback === option.name && 'bg-gray-200'
                         }`}
+                        style={{ fontSize: '16px' }}
                         onClick={() => handleFeedBack(option.name)}
                       >
                         {option.name}
@@ -178,16 +172,19 @@ export default function EngagementMemberCard({
     return (
       <div className="w-[400px] opacity-100 relative">
         <div
-          className="w-80 flex flex-col items-center justify-center bg-white shadow-lg rounded-2xl border border-gray-200"
+          className="flex flex-col items-center justify-center bg-white shadow-lg rounded-2xl border border-gray-200"
           style={{ height: '510px' }}
         >
           <div className="flex items-center justify-center w-16 h-16 text-green-100 rounded-full">
             <CheckCircleIcon className="text-green-100 w-12 h-12" />
           </div>
           <p className="mt-2 font-medium text-lg">Done</p>
-          <div className="mt-4 italic font-extralight text-sm">
-            Results saved. Task masked as {engagementStatus}{' '}
-          </div>
+          <p className="mt-4 italic font-extralight text-sm text-center leading-6">
+            Results saved. Engagement masked as <br />{' '}
+            {engagement.feedback.name} <br />
+            Engagement status is {engagementStatus === 'active' && 'still'}{' '}
+            {engagementStatus}{' '}
+          </p>
         </div>
       </div>
     )
@@ -237,7 +234,7 @@ export default function EngagementMemberCard({
 
   return (
     <div
-      className={`w-[400px] opacity-100 relative mt-8 shadow-template-allow-scaling ${getCardStyle(
+      className={`w-[400px] ml-8 mr-8 opacity-100 relative mt-8 shadow-template-allow-scaling ${getCardStyle(
         index
       )}`}
     >
@@ -268,7 +265,7 @@ export default function EngagementMemberCard({
             <>
               {/* Context */}
               <div className="bg-gray-100 rounded-t-xl p-4 mb-4">
-                <p className="text-sm font-semibold mb-1">Context</p>
+                <p className="text-sm text-gray-400 font-rubik mb-1">Context</p>
                 <p className="text-gray-700 font-rubik font-light text-sm max-h-32 h-28 overflow-y-auto">
                   {engagement.context}
                 </p>
@@ -276,7 +273,9 @@ export default function EngagementMemberCard({
 
               {/* Action */}
               <div className="bg-blue-20 rounded-b-xl p-4 mb-4 scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent">
-                <div className="font-semibold text-sm mb-1">Action</div>
+                <div className="text-sm text-gray-400 font-rubik mb-1">
+                  Action
+                </div>
                 <p className="text-gray-700 text-sm font-thin leading-relaxed max-h-32 h-28 overflow-y-auto">
                   {engagement.action}
                 </p>

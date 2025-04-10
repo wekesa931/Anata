@@ -7,9 +7,14 @@ export interface Engagement {
   member: Member
   remarks: string
   assignedTo: AssignedTo
+  feedback: Feedback
   modifiedAt: string
   modifiedBy: string
   __typename: string
+}
+
+export interface Feedback {
+  name: string
 }
 
 export interface Status {
@@ -53,4 +58,5 @@ export interface UpdateEngagementInput {
   engagementRecommendationUuid: string
   status: string
   remarks?: string
+  feedback?: string
 }
