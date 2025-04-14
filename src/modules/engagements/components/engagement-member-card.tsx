@@ -179,10 +179,19 @@ export default function EngagementMemberCard({
             <CheckCircleIcon className="text-green-100 w-12 h-12" />
           </div>
           <p className="mt-2 font-medium text-lg">Done</p>
-          <p className="mt-4 italic font-extralight text-sm text-center leading-6">
-            Results saved. Engagement feedback marked as <br />{' '}
-            {engagement.feedback.name}. <br />
-            Engagement status is {engagementStatus}.{' '}
+          <p className="mt-4 font-extralight text-sm text-center leading-8">
+            Recommendation feedback marked as <br />
+            <span className="text-bold italic">
+              {engagement.feedback.name}.
+            </span>
+            <br />
+            Recommendation status is{' '}
+            <span className="text-bold italic">{engagementStatus}.</span>
+            <br />
+            Results saved as{' '}
+            <span className="text-bold italic lowercase">
+              {engagement.result}.
+            </span>
           </p>
         </div>
       </div>
@@ -265,7 +274,7 @@ export default function EngagementMemberCard({
                   </button>
                 )}
                 {engagementPostponed && (
-                  <div className="absolute top-2.5 right-2 text-xs p-0.5 border rounded-xl text-primary-button">
+                  <div className="absolute top-2.5 right-2 text-xs p-0.5 px-1.5 border rounded-xl text-[#007AFF] bg-[#007AFF]/20">
                     Postponed
                   </div>
                 )}

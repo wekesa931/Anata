@@ -279,9 +279,11 @@ export default function EngagementsDashboardView() {
     }
 
     if (successful) {
-      variables.input.result = 'successful'
+      variables.input.result = 'Successful'
     } else if (failed) {
-      variables.input.result = 'failed'
+      variables.input.result = 'Failed'
+    } else if (val.toLowerCase().includes('canceled')) {
+      variables.input.result = 'Not applicable'
     }
 
     if (feedback?.trim()) {
@@ -379,52 +381,66 @@ export default function EngagementsDashboardView() {
 
   // engagement feedback stats component
   function EngagementStatsComponent() {
-    // get total count of successful engagements (completed and remarks saved)
-    const getCompletedEngagements = () => {
+    const getSuccessfulEngagements = () => {
       return engagementsResData.filter(
         (eng) =>
           eng.status.name.toLowerCase() === 'completed' &&
           !!eng.result?.trim() &&
           eng.result.toLowerCase().includes('successful')
-      ).length
+      )
     }
+
+    const successfulEngagements = getSuccessfulEngagements().length
 
     return (
       <div className="w-[320px] bg-gray-10 z-100 border p-1 rounded-2xl relative shadow-template">
         <div className="flex flex-row items-center justify-center gap-3 px-4">
           <div className="flex w-[200px] mt-2 gap-2 overflow-x-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500">
-            {engagementsResData.map((eng) => {
-              const status = eng.status.name.toLowerCase()
-              const isSuccessful =
-                !!eng.result.trim() &&
-                eng.result.toLowerCase().includes('successful')
-              return (
+            {/* show initial successful engagement upto 5 */}
+            {Array.from(
+              { length: Math.min(5, successfulEngagements) },
+              (_, index) => (
                 <div
-                  key={eng.id}
-                  className={`w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full border ${
-                    status === 'completed' && isSuccessful
-                      ? 'bg-green-10'
-                      : 'bg-gray-200'
-                  }`}
+                  key={`success-${index}`}
+                  className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full border bg-green-10"
                 >
-                  {status === 'completed' && isSuccessful && (
-                    <UserIconWithCheck />
-                  )}
-                  {(status === 'active' ||
-                    status === 'opened' ||
-                    status === 'postponed' ||
-                    status === 'canceled' ||
-                    (status === 'completed' && !isSuccessful)) && (
-                    <UserIconWithoutCheck />
-                  )}
+                  <UserIconWithCheck />
                 </div>
               )
-            })}
+            )}
+            {/* show additional successful engagements if user makes more than 5 successful conversions */}
+            {successfulEngagements > 5 &&
+              Array.from({ length: successfulEngagements - 5 }, (_, index) => (
+                <div
+                  key={`more-success-${index}`}
+                  className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full border bg-green-10"
+                >
+                  <UserIconWithCheck />
+                </div>
+              ))}
+            {/* show unsuccesful engagements icons if engagements is 5 in no */}
+            {engagementsResData.length > successfulEngagements &&
+              Array.from(
+                {
+                  length: Math.min(
+                    5 - successfulEngagements,
+                    engagementsResData.length - successfulEngagements
+                  ),
+                },
+                (_, index) => (
+                  <div
+                    key={`failed-${index}`}
+                    className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full border bg-gray-200"
+                  >
+                    <UserIconWithoutCheck />
+                  </div>
+                )
+              )}
           </div>
           <div className="flex flex-col">
             <p className="font-semibold">
-              <span className="text-2xl">{getCompletedEngagements()}</span>
-              <span className="text-lg"> of {engagementsResData.length}</span>
+              <span className="text-2xl">{successfulEngagements}</span>
+              <span className="text-lg"> of 5 </span>
             </p>
             <p className="text-sm font-normal">Daily Goal</p>
           </div>
@@ -437,7 +453,7 @@ export default function EngagementsDashboardView() {
     <div className="flex flex-col w-full items-center justify-center h-full px-20 relative overflow-x-hidden">
       {loading && (
         <div className="flex items-center justify-center flex-col mt-[15%] mb-[15%]">
-          <Loading message="Loading recomendations" />
+          <Loading message="Loading recommendations" />
         </div>
       )}
 
@@ -487,13 +503,13 @@ export default function EngagementsDashboardView() {
                       engagements.length < 3 ||
                       engagements.length === 1
                     }
-                    aria-label="Previous engagement"
+                    aria-label="Previous recommendation"
                   >
                     <ArrowBack fontSize="small" className="text-gray-500" />
                   </button>
                 )}
 
-                {/* member card */}
+                {/* recommendation card */}
                 {!completeEngagementMsg.trim() && (
                   <EngagementMemberCard
                     engagement={engagement}
@@ -530,7 +546,7 @@ export default function EngagementsDashboardView() {
                          'bg-[#E8EAED]'
                        }`}
                     hidden={engagements.length === 1}
-                    aria-label="Next engagement"
+                    aria-label="Next recommendation"
                   >
                     <ArrowForward fontSize="small" className="text-gray-500" />
                   </button>
