@@ -82,12 +82,7 @@ export default function EngagementsDashboardView() {
 
   const fetchEngagmentList = async () => {
     try {
-      const { data } = await getData({
-        variables: {
-          first: 1,
-          last: 20,
-        },
-      })
+      const { data } = await getData()
 
       const results =
         data?.engagementRecommendations?.edges?.map((item: any) => item.node) ||
@@ -110,28 +105,50 @@ export default function EngagementsDashboardView() {
 
   const handleNext = useCallback(
     (engagement?: Engagement) => {
-      setEngagements(cleanupEngagementList(engagements))
-      setCurrentMemberIndex((prevIndex) =>
-        prevIndex === engagements.length - 1 ? 0 : prevIndex + 1
-      )
+      setEngagements((prevEngagements) => {
+        const cleanedList = cleanupEngagementList(prevEngagements)
+        const engagementsLeft = cleanedList.length
+
+        setCurrentMemberIndex((currentIndex) => {
+          if (engagementsLeft === 0) return 0
+
+          // ensure index stays within bounds after cleanup
+          const safeIndex =
+            currentIndex >= engagementsLeft ? engagementsLeft - 1 : currentIndex
+          // modulus for wrap around behaviour to return current safe index if its < eng length or 0(1st idx) if its equal to eng length
+          return (safeIndex + 1) % engagementsLeft
+        })
+
+        return cleanedList
+      })
       trackRightNavigationClicked(engagement?.assignedTo.fullName)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [engagements]
+    [engagements, cleanupEngagementList]
   )
 
   const handleBack = useCallback(
     (engagement?: Engagement) => {
-      setEngagements(cleanupEngagementList(engagements))
-      setCurrentMemberIndex((prevIndex) =>
-        prevIndex === 0 ? engagements.length - 1 : prevIndex - 1
-      )
+      setEngagements((prevEngagements) => {
+        const cleanedList = cleanupEngagementList(prevEngagements)
+        const engagementsLeft = cleanedList.length
+
+        setCurrentMemberIndex((currentIndex) => {
+          if (engagementsLeft === 0) return 0
+
+          // ensure index stays within bounds after cleanup
+          const safeIndex =
+            currentIndex >= engagementsLeft ? engagementsLeft - 1 : currentIndex
+          return safeIndex === 0 ? engagementsLeft - 1 : safeIndex - 1
+        })
+
+        return cleanedList
+      })
       trackLeftNavigationClicked(engagement?.assignedTo.fullName)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [engagements]
+    [engagements, cleanupEngagementList]
   )
-
   useEffect(() => {
     // index of the first engagement with status "opened"
     const openedIndex = engagements.findIndex(
@@ -150,7 +167,7 @@ export default function EngagementsDashboardView() {
       const results = cleanupEngagementList(engagements)
       if (results.length === 0 && engagementsResData.length > 0) {
         setCompleteEngagementMsg(
-          'Engagements successfully completed. Well done.'
+          'Recommendations successfully completed. Well done.'
         )
       }
     }
@@ -177,7 +194,9 @@ export default function EngagementsDashboardView() {
 
   const allEngagementsActive = useCallback(() => {
     return engagementsResData.every(
-      (eng) => eng?.status?.name?.toLowerCase() === 'active'
+      (eng) =>
+        eng?.status?.name?.toLowerCase() === 'active' ||
+        eng?.status?.name?.toLowerCase() === 'postponed'
     )
   }, [engagementsResData])
 
@@ -187,22 +206,26 @@ export default function EngagementsDashboardView() {
    * @returns
    */
   const getPositionStyle = (index: number) => {
+    if (currentMemberIndex >= engagements.length) {
+      /** hide for index cards out of range */
+      return 'hidden'
+    }
     const total = engagements.length
     if (total === 2) {
       // style for only 2 engagements
       if (index === currentMemberIndex) {
-        return 'relative order-2 z-10' // center
+        return 'order-2 z-10' // center
       }
       // other card, last card, hide 1st card
       const otherIndex = currentMemberIndex === 0 ? 1 : 0
       if (index === otherIndex) {
-        return 'relative order-3'
+        return 'order-3'
       }
     }
 
     if (index === currentMemberIndex) {
       // center the current member card
-      return 'relative order-2 z-10'
+      return 'order-2 z-10'
     }
 
     /* previous member card
@@ -221,9 +244,9 @@ export default function EngagementsDashboardView() {
         (currentMemberIndex === 0 && allEngagementsActive()) ||
         engagements.length === 2
       ) {
-        return 'relative w-[500px] order-1 opacity-0 pointer-events-none'
+        return 'relative w-[470px] order-1 opacity-0 pointer-events-none'
       }
-      return 'relative order-1'
+      return 'order-1'
     }
     /* next member card
     if the current index is the last one card, the next index should be the 1st index, for wrap around behavior
@@ -235,7 +258,7 @@ export default function EngagementsDashboardView() {
         ? 0
         : currentMemberIndex + 1)
     ) {
-      return 'relative order-3'
+      return 'order-3'
     }
     // hide other cards
     return 'hidden'
@@ -256,9 +279,9 @@ export default function EngagementsDashboardView() {
     }
 
     if (successful) {
-      variables.input.remarks = 'successful'
+      variables.input.result = 'successful'
     } else if (failed) {
-      variables.input.remarks = 'failed'
+      variables.input.result = 'failed'
     }
 
     if (feedback?.trim()) {
@@ -360,7 +383,9 @@ export default function EngagementsDashboardView() {
     const getCompletedEngagements = () => {
       return engagementsResData.filter(
         (eng) =>
-          eng.status.name.toLowerCase() === 'completed' && !!eng.remarks?.trim()
+          eng.status.name.toLowerCase() === 'completed' &&
+          !!eng.result?.trim() &&
+          eng.result.toLowerCase().includes('successful')
       ).length
     }
 
@@ -370,7 +395,9 @@ export default function EngagementsDashboardView() {
           <div className="flex w-[200px] mt-2 gap-2 overflow-x-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500">
             {engagementsResData.map((eng) => {
               const status = eng.status.name.toLowerCase()
-              const isSuccessful = !!eng.remarks.trim()
+              const isSuccessful =
+                !!eng.result.trim() &&
+                eng.result.toLowerCase().includes('successful')
               return (
                 <div
                   key={eng.id}
@@ -385,6 +412,7 @@ export default function EngagementsDashboardView() {
                   )}
                   {(status === 'active' ||
                     status === 'opened' ||
+                    status === 'postponed' ||
                     status === 'canceled' ||
                     (status === 'completed' && !isSuccessful)) && (
                     <UserIconWithoutCheck />
@@ -406,10 +434,10 @@ export default function EngagementsDashboardView() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-full px-2 relative overflow-hidden">
+    <div className="flex flex-col w-full items-center justify-center h-full px-20 relative overflow-x-hidden">
       {loading && (
         <div className="flex items-center justify-center flex-col mt-[15%] mb-[15%]">
-          <Loading message="Loading engagements" />
+          <Loading message="Loading recomendations" />
         </div>
       )}
 
@@ -426,13 +454,16 @@ export default function EngagementsDashboardView() {
             <EngagementStatsComponent />
           </div>
 
-          <div className="relative flex items-center justify-center space-x-6">
+          <div className="relative flex items-center justify-center">
             {/* invisible 1st card slot if only 2 engagements exist */}
             {engagements.length === 2 && (
-              <div className="relative w-[500px] order-1 opacity-0 pointer-events-none" />
+              <div className="relative w-[400px] order-1 opacity-0 pointer-events-none" />
             )}
             {engagements?.map((engagement: Engagement, index) => (
-              <div key={index} className={`${getPositionStyle(index)}`}>
+              <div
+                key={index}
+                className={`relative ${getPositionStyle(index)}`}
+              >
                 {/* back button */}
                 {index === currentMemberIndex && (
                   <button
@@ -443,7 +474,8 @@ export default function EngagementsDashboardView() {
                       (currentMemberIndex === 0 && allEngagementsActive())
                     }
                     onClick={() => handleBack(engagement)}
-                    className={`absolute -left-10 top-1/2 transform -translate-y-1/2 rounded-full bg-gray-100 hover:!bg-[#E8EAED] transition duration-200 p-4 order-1 disabled:cursor-not-allowed
+                    className={`absolute -left-10 top-1/2 z-20 transform -translate-y-1/2 rounded-full border
+                       bg-white hover:!bg-[#E8EAED]  disabled:bg-[#E8EAED] transition duration-200 p-4 disabled:cursor-not-allowed
                       ${
                         (engagement?.status?.name.toLowerCase() === 'opened' ||
                           engagements.length === 1 ||
@@ -489,7 +521,8 @@ export default function EngagementsDashboardView() {
                       mutateStatusError
                     }
                     onClick={() => handleNext(engagement)}
-                    className={`absolute -right-10 top-1/2 transform -translate-y-1/2 rounded-full bg-gray-100 hover:!bg-[#E8EAED] transition duration-200 p-4 order-3 disabled:cursor-not-allowed
+                    className={`absolute -right-10  top-1/2 z-20 transform -translate-y-1/2 rounded-full border
+                       bg-white hover:!bg-[#E8EAED]  disabled:bg-[#E8EAED] transition duration-200 p-4 disabled:cursor-not-allowed
                        ${
                          (engagement?.status?.name.toLowerCase() === 'opened' ||
                            engagements.length === 1 ||

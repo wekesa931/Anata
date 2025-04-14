@@ -5,7 +5,7 @@ export interface Engagement {
   action: string
   status: Status
   member: Member
-  remarks: string
+  result: string
   assignedTo: AssignedTo
   feedback: Feedback
   modifiedAt: string
@@ -57,6 +57,6 @@ export interface UpdateEngagementPayload {
 export interface UpdateEngagementInput {
   engagementRecommendationUuid: string
   status: string
-  remarks?: string
+  result?: string
   feedback?: string
 }

@@ -366,30 +366,30 @@ export const useModuleAnalytics = () => {
     },
     //  track recommendations
     trackLeftNavigationClicked: (assignedStaff: any) => {
-      homePageSectionAnalytics.track('Engagement left arrow clicked', {
+      homePageSectionAnalytics.track('Recommendation left arrow clicked', {
         assignedStaff,
       })
     },
     trackRightNavigationClicked: (assignedStaff: any) => {
-      homePageSectionAnalytics.track('Engagement right arrow clicked', {
+      homePageSectionAnalytics.track('Recommendation right arrow clicked', {
         assignedStaff,
       })
     },
     trackOpenDashboardClicked: (engagement: Engagement) => {
-      homePageSectionAnalytics.track('Engagement item dashboard opened', {
+      homePageSectionAnalytics.track('Recommendation item dashboard opened', {
         engagement,
       })
     },
     trackOpenDashboardFromFeedbackClicked: (engagement: Engagement) => {
       homePageSectionAnalytics.track(
-        'Engagement item feedback dashboard opened',
+        'Recommendation item feedback dashboard opened',
         {
           engagement,
         }
       )
     },
     trackRecommendationFeedbackGiven: (engagement: Engagement) => {
-      homePageSectionAnalytics.track('Engagement feedback given', {
+      homePageSectionAnalytics.track('Recommendation feedback given', {
         engagement,
       })
     },

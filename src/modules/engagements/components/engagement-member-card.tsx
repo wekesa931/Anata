@@ -78,12 +78,12 @@ export default function EngagementMemberCard({
         style={{ height: mutateStatusError && '510px' }}
       >
         {mutateStatusError && mutateStatusError.memberIndex === index ? (
-          <div className="flex items-center justify-center flex-col p-2">
+          <div className="flex items-center justify-center flex-col p-6">
             <div className="flex items-center justify-center flex-col mt-[15%] mb-[15%]">
               <div>
                 <div className="">
                   <ReportProblemOutlinedIcon
-                    sx={{ fontSize: 58 }}
+                    sx={{ fontSize: 72 }}
                     className="text-red-100 bg-red-10 rounded-full p-2"
                   />
                 </div>
@@ -180,10 +180,9 @@ export default function EngagementMemberCard({
           </div>
           <p className="mt-2 font-medium text-lg">Done</p>
           <p className="mt-4 italic font-extralight text-sm text-center leading-6">
-            Results saved. Engagement masked as <br />{' '}
-            {engagement.feedback.name} <br />
-            Engagement status is {engagementStatus === 'active' && 'still'}{' '}
-            {engagementStatus}{' '}
+            Results saved. Engagement feedback marked as <br />{' '}
+            {engagement.feedback.name}. <br />
+            Engagement status is {engagementStatus}.{' '}
           </p>
         </div>
       </div>
@@ -200,22 +199,24 @@ export default function EngagementMemberCard({
       return 'rounded-2xl bg-white shadow-lg w-[400px] transition scale-100'
     }
 
+    /** style 1st card */
+    const isFirstCard =
+      index ===
+      (currentMemberIndex === 0
+        ? engagements.length - 1
+        : currentMemberIndex - 1)
+
+    /** style 3rd card */
+    const isThirdCard =
+      index ===
+      (currentMemberIndex === engagements.length - 1
+        ? 0
+        : currentMemberIndex + 1)
+
     /** style 1st and 3rd card */
-    if (
-      index ===
-        (currentMemberIndex === 0
-          ? engagements.length - 1
-          : currentMemberIndex - 1) ||
-      index ===
-        (currentMemberIndex === engagements.length - 1
-          ? 0
-          : currentMemberIndex + 1)
-    ) {
+    if (isFirstCard || isThirdCard) {
       return 'rounded-2xl w-[400px] bg-gray-10 backdrop-blur-md opacity-25 transform scale-90 transition z-10'
     }
-
-    /** hide other cards */
-    return 'rounded-2xl w-[400px] opacity-0 transform scale-80 transition absolute hidden'
   }
 
   /** stores engagement status */
@@ -223,6 +224,9 @@ export default function EngagementMemberCard({
 
   const isStatusIsCompleteOrCanceled =
     engagementStatus === 'canceled' || engagementStatus === 'completed'
+
+  /** mark engagement as postponed for later */
+  const engagementPostponed = engagementStatus === 'postponed'
 
   const showCardDetails = !isStatusIsCompleteOrCanceled && !mutateStatusError
   const showCardDetailsIfCardIndexHasNoError =
@@ -234,7 +238,7 @@ export default function EngagementMemberCard({
 
   return (
     <div
-      className={`w-[400px] ml-8 mr-8 opacity-100 relative mt-8 shadow-template-allow-scaling ${getCardStyle(
+      className={`relative mx-8 opacity-100 relative mt-8 shadow-template-allow-scaling ${getCardStyle(
         index
       )}`}
     >
@@ -242,9 +246,15 @@ export default function EngagementMemberCard({
         <div className="p-6">
           {showCardDetails && (
             <>
-              <div className="flex flex-row my-3">
+              <div
+                className={`flex flex-row ${
+                  engagementStatus === 'opened' && 'mt-3'
+                }
+                ${engagementPostponed && 'mt-1'}
+                `}
+              >
                 <h2 className="text-xl font-semibold text-gray-800 overflow-hidden ">
-                  {engagement?.member?.fullName} Conversation
+                  {engagement?.member?.fullName}
                 </h2>
                 {engagementStatus === 'opened' && (
                   <button
@@ -254,6 +264,11 @@ export default function EngagementMemberCard({
                     Open Profile <ArrowForwardIcon sx={{ fontSize: 14 }} />
                   </button>
                 )}
+                {engagementPostponed && (
+                  <div className="absolute top-2.5 right-2 text-xs p-0.5 border rounded-xl text-primary-button">
+                    Postponed
+                  </div>
+                )}
               </div>
               <p className="text-gray-600 text-sm mb-3">
                 {engagement?.member?.age}y
@@ -261,7 +276,8 @@ export default function EngagementMemberCard({
             </>
           )}
 
-          {engagementStatus === 'active' && (
+          {(engagementStatus === 'active' ||
+            engagementStatus === 'postponed') && (
             <>
               {/* Context */}
               <div className="bg-gray-100 rounded-t-xl p-4 mb-4">
@@ -281,7 +297,7 @@ export default function EngagementMemberCard({
                 </p>
               </div>
 
-              {index === currentMemberIndex ? (
+              {index === currentMemberIndex || engagements.length === 1 ? (
                 <PrimaryButton
                   className="rounded-xl bg-[#007AFF]"
                   fullWidth

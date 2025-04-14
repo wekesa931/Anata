@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const ENGAGEMENT_FRAGMENT = gql`
-  fragment EngagementRecommendationFields on EngagmentRecommendationType {
+  fragment EngagementRecommendationFields on EngagementRecommendationType {
     uuid
     id
     context
@@ -16,7 +16,7 @@ export const ENGAGEMENT_FRAGMENT = gql`
       age
       fullName
     }
-    remarks
+    result
     assignedTo {
       fullName
       team

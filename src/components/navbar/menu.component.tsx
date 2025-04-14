@@ -12,7 +12,7 @@ type FloatingMenuProps = {
   handleClose: () => void
 }
 
-type Menus = 'tasks' | 'workflows' | 'engagements'
+type Menus = 'tasks' | 'workflows' | 'recommendations'
 
 function FloatingMenu({ anchorEl, open, handleClose }: FloatingMenuProps) {
   const navigate = useNavigate()
@@ -71,12 +71,12 @@ function FloatingMenu({ anchorEl, open, handleClose }: FloatingMenuProps) {
       </MenuItem>
       <MenuItem
         className="hover:bg-greyscale-6 hover:text-white cursor-pointer px-4 py-2"
-        onClick={() => openLink('/my-engagements', 'engagements')}
+        onClick={() => openLink('/my-recommendations', 'recommendations')}
       >
         <ListItemIcon className="text-white">
           <CallSplitIcon />
         </ListItemIcon>
-        <ListItemText> My Engagements</ListItemText>
+        <ListItemText> My Recommendations</ListItemText>
       </MenuItem>
     </Menu>
   )

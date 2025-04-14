@@ -51,7 +51,7 @@ enum Active {
   MY_TASKS = '/my-tasks',
   MY_WORKFLOWS = '/my-workflows',
   REGISTER_MEMBER = '/register-member',
-  MY_ENGAGEMENTS = '/my-engagements',
+  MY_RECOMMENDATIONS = '/my-recommendations',
 }
 
 function MainDashboard() {
@@ -180,13 +180,13 @@ function MainDashboard() {
               <MenuItem
                 icon={<CallSplitIcon />}
                 onClick={() => {
-                  setActive(Active.MY_ENGAGEMENTS)
+                  setActive(Active.MY_RECOMMENDATIONS)
                   trackUserNavigatedToEngagementsPage()
                 }}
-                className={activeStyle(active === Active.MY_ENGAGEMENTS)}
-                component={<NavLink to="/my-engagements" />}
+                className={activeStyle(active === Active.MY_RECOMMENDATIONS)}
+                component={<NavLink to="/my-recommendations" />}
               >
-                My Engagements
+                My Recommendations
               </MenuItem>
 
               {!isDataLoading && (
@@ -257,7 +257,7 @@ function MainDashboard() {
                 }
               />
               <Route
-                path="/my-engagements"
+                path="/my-recommendations"
                 element={
                   <div className="h-full">
                     <EngagementsView />
