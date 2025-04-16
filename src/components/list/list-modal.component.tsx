@@ -13,9 +13,12 @@ import parse from 'html-react-parser'
 import { useNotifications } from 'src/context/notifications'
 import { logError } from 'src/utils/logging/logger'
 import { diff } from 'deep-object-diff'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import styles from './list.module.css'
 import PrimaryForm from '../forms/primary-form'
 import PrimaryButton from '../buttons/primary'
+import { processMarkdown } from './utils'
 
 export type TOpenItem = {
   name: string
@@ -309,7 +312,15 @@ function ListModal(props: ListModalProps) {
                     borderRadius="4px"
                     className={styles.modalPara}
                   >
-                    {format(activeItem.data[info])}
+                    {info
+                      .toLowerCase()
+                      .includes('interaction summary notes') ? (
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {processMarkdown(activeItem.data[info])}
+                      </ReactMarkdown>
+                    ) : (
+                      format(activeItem.data[info])
+                    )}
                   </Text>
                 </div>
               )

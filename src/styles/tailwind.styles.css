@@ -1109,6 +1109,10 @@ html,
   height: 1rem !important;
 }
 
+.h-40 {
+  height: 10rem !important;
+}
+
 .h-5 {
   height: 1.25rem !important;
 }

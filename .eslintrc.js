@@ -67,7 +67,7 @@ module.exports = {
     'no-nested-ternary': 0,
     'react/jsx-no-constructed-context-values': 0,
     'consistent-return': 0,
-    '@typescript-eslint/no-underscore-dangle': 0,
+    'no-underscore-dangle': ['error', { allow: ['__typename'] }],
     'jsx-a11y/control-has-associated-label': 'off',
     'jsx-a11y/label-has-for': 'off',
     'import/no-unresolved': [

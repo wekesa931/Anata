@@ -12,6 +12,8 @@ import {
 } from 'src/context/date-range-filter'
 import ListModal from './list-modal.component'
 import styles from './list.module.css'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 type ListProps = {
   list: { name: string; data: any }[]
@@ -138,11 +140,20 @@ function List({
     return editable && isItemEditable && isItemEditable(openItem)
   }
 
+  /**
+   * replace all mistyped line breaks \\n with correct one \n
+   * replace all line breaks with markdown line breaks (\n) to (  \n)
+   * @param text string
+   * @returns markdown
+   */
+  const processMarkdown = (text: string) =>
+    text.replace(/\\n/g, '\n').replace(/\n/g, '  \n')
+
   return (
     <div style={{ margin: '8px 0px' }}>
       {displayedData.length > 0 ? (
         <>
-          {displayedData.map((item, i) => {
+          {displayedData.map((item: any, i) => {
             return (
               item &&
               item.data && (
@@ -192,7 +203,20 @@ function List({
                     )}
                     <div className="flex-1">
                       {!conditionComponent ? (
-                        <div className="text-normal">{item.name}</div>
+                        <div
+                          className={`text-normal ${
+                            item?.data?.__typename === 'InteractionType' &&
+                            'h-40'
+                          }`}
+                        >
+                          {item?.data?.__typename === 'InteractionType' ? (
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {processMarkdown(item.name)}
+                            </ReactMarkdown>
+                          ) : (
+                            item.name
+                          )}
+                        </div>
                       ) : (
                         <div>
                           {item.data.Condition === 'Other'
