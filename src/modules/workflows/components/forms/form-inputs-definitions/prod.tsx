@@ -12302,7 +12302,7 @@ export default [
         foreignTableId: null,
         required: false,
         helper:
-          'Please enter the due date you agreed with the member. Please take the below rules into consideration when selecting the date:\nThika Road from Roysambu to Thika town - Wednesdays\nKiserian / Ngong / Langata / Karen - Thursdays\nMombasa Road / Utawala / JKIA / Kitengela- Fridays\nMaximum of two fasting tasks per day at Antara. Please verify with Logistics first (<a href="https://airtable.com/app5syOvwU86ByWD8/tblJmoQGSS2vl8u9g/viwrNUL5bEGmPbeWd?blocks=hide)" target="_blank">https://airtable.com/app5syOvwU86ByWD8/tblJmoQGSS2vl8u9g/viwrNUL5bEGmPbeWd?blocks=hide)</a>',
+          'Please enter the due date you agreed with the member. Please take the below rules into consideration when selecting the date:\nKitengela / Athi River - Mondays\nJKIA - Tuesday\nThika Road, from Roysambu to Thika town - Wednesdays\nKiserian / Ngong / Langata / Karen - Thursdays\nMombasa Road / Utawala - Fridays\nMaximum of three fasting tasks per day at Antara. Please verify with Logistics first (<a href="https://airtable.com/app5syOvwU86ByWD8/tblJmoQGSS2vl8u9g/viwrNUL5bEGmPbeWd?blocks=hide)" target="_blank">https://airtable.com/app5syOvwU86ByWD8/tblJmoQGSS2vl8u9g/viwrNUL5bEGmPbeWd?blocks=hide)</a>',
       },
       {
         id: 'fldqIcXvtcB2w3D83',
