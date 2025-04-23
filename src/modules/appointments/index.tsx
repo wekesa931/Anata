@@ -157,6 +157,7 @@ function Appointments() {
     'Consent',
     'calendly_booking_url',
     'end_date_time',
+    'Source',
   ]
 
   const { data, isLoading, isError, refresh } = useAirtableFetch(
@@ -396,7 +397,7 @@ function Appointments() {
             </div>
 
             <div className="mb-1">
-              <div className="text-gray-400 text-sm flex items-center">
+              <div className="text-gray-400 text-sm flex items-center gap-x-2">
                 <User width={14} height={14} className="mr-2" />
                 {Array.isArray(appointment['Assignee Name'])
                   ? appointment['Assignee Name'].map(
@@ -410,8 +411,14 @@ function Appointments() {
                       )
                     )
                   : 'Not Assigned'}
-                <span className="mx-1">|</span>
-                <span className="status">{appointment.Status}</span>
+                <span>|</span>
+                <Tooltip title="Appointment Status">
+                  <span className="status-no-margin">{appointment.Status}</span>
+                </Tooltip>
+                <span>|</span>
+                <Tooltip title="Appointment Source">
+                  <span className="status-no-margin">{appointment.Source}</span>
+                </Tooltip>
               </div>
             </div>
           </section>

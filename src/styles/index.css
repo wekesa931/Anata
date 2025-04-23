@@ -1561,6 +1561,17 @@ a {
   border-radius: 4px;
   background-color: #e8eaed;
 }
+.status-no-margin {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 0 0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: #e8eaed;
+}
 .up-next {
   width: 50px;
   height: 14px;

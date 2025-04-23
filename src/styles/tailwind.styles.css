@@ -780,6 +780,11 @@ html,
   margin-right: 0.25rem !important;
 }
 
+.mx-10 {
+  margin-left: 2.5rem !important;
+  margin-right: 2.5rem !important;
+}
+
 .mx-2 {
   margin-left: 0.5rem !important;
   margin-right: 0.5rem !important;
@@ -1109,10 +1114,6 @@ html,
   height: 1rem !important;
 }
 
-.h-40 {
-  height: 10rem !important;
-}
-
 .h-5 {
   height: 1.25rem !important;
 }
@@ -1191,6 +1192,10 @@ html,
 
 .max-h-32 {
   max-height: 8rem !important;
+}
+
+.max-h-40 {
+  max-height: 10rem !important;
 }
 
 .max-h-8 {
@@ -1628,6 +1633,11 @@ html,
 
 .gap-8 {
   gap: 2rem !important;
+}
+
+.gap-x-2 {
+  -moz-column-gap: 0.5rem !important;
+       column-gap: 0.5rem !important;
 }
 
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {

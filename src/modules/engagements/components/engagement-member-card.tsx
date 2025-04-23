@@ -179,20 +179,20 @@ export default function EngagementMemberCard({
             <CheckCircleIcon className="text-green-100 w-12 h-12" />
           </div>
           <p className="mt-2 font-medium text-lg">Done</p>
-          <p className="mt-4 font-extralight text-sm text-center leading-8">
+          <div className="text-start mt-4 font-extralight text-sm leading-8">
             Recommendation feedback marked as <br />
-            <span className="text-bold italic">
+            <span className="text-bold italic mx-10">
               {engagement.feedback.name}.
             </span>
             <br />
             Recommendation status is{' '}
             <span className="text-bold italic">{engagementStatus}.</span>
             <br />
-            Results saved as{' '}
+            Result saved as{' '}
             <span className="text-bold italic lowercase">
               {engagement.result}.
             </span>
-          </p>
+          </div>
         </div>
       </div>
     )
