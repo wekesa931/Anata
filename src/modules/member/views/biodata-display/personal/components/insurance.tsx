@@ -19,6 +19,7 @@ import {
 import { formatCurrency } from 'src/modules/member/utils'
 import { PortalForm } from 'src/modules/member/components/update-forms'
 import InsuranceForm from 'src/modules/member/components/forms/billing/index'
+import MembershipForm from 'src/modules/member/components/forms/billing/components/membership-form'
 import { useNotifications } from 'src/context/notifications'
 import type { Member } from 'src/modules/member/db/models'
 import { ExpandMoreOutlined } from '@mui/icons-material'
@@ -159,6 +160,8 @@ type InsuranceSectionProps = {
 function InsuranceSection({ member }: InsuranceSectionProps) {
   const [showEditForm, setShowEditForm] = React.useState(false)
   const [isEdited, setIsEdited] = React.useState(false)
+  const [isEditInsuranceDetailsView, setIsEditInsuranceDetailsView] =
+    React.useState(false)
   const { notify } = useNotifications()
   const analytics = useMemberAnalytics()
 
@@ -168,6 +171,11 @@ function InsuranceSection({ member }: InsuranceSectionProps) {
     analytics.trackEditProfile(
       `Edit insurance and employer ${open ? 'opened' : 'closed'}`
     )
+  }
+
+  const setCompleted = async () => {
+    setIsEditInsuranceDetailsView(false)
+    toggleEditForm(false)
   }
 
   return member ? (
@@ -180,15 +188,28 @@ function InsuranceSection({ member }: InsuranceSectionProps) {
           setIsEdited={setIsEdited}
           handleOpen={() => toggleEditForm(true)}
         >
-          {({ handleClose }) => (
-            <InsuranceForm
-              member={member}
-              setCompleted={() => {
-                notify('Insurance info updated')
-                handleClose()
-              }}
-              primaryMember={undefined}
-            />
+          {() => (
+            <>
+              {!isEditInsuranceDetailsView ? (
+                <InsuranceForm
+                  member={member}
+                  primaryMember={undefined}
+                  setCompleted={() => {
+                    notify('Insurance info updated')
+                  }}
+                  showWizardControls
+                  hasOnPrev={false}
+                  isRestrictedUser
+                  setNextResctrictedPhase={setIsEditInsuranceDetailsView}
+                />
+              ) : (
+                <MembershipForm
+                  member={member}
+                  primaryMember={undefined}
+                  setCompleted={setCompleted}
+                />
+              )}
+            </>
           )}
         </PortalForm>
       )}

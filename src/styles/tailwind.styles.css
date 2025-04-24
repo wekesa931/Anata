@@ -3149,8 +3149,8 @@ html,
   --scrollbar-track: transparent !important;
 }
 
-.scrollbar-thumb-gray-500 {
-  --scrollbar-thumb: #6b7280 !important;
+.scrollbar-thumb-\[\#608EB5\] {
+  --scrollbar-thumb: #608EB5 !important;
 }
 
 .scrollbar-thumb-transparent {

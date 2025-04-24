@@ -415,10 +415,6 @@ function Appointments() {
                 <Tooltip title="Appointment Status">
                   <span className="status-no-margin">{appointment.Status}</span>
                 </Tooltip>
-                <span>|</span>
-                <Tooltip title="Appointment Source">
-                  <span className="status-no-margin">{appointment.Source}</span>
-                </Tooltip>
               </div>
             </div>
           </section>

@@ -395,7 +395,7 @@ export default function EngagementsDashboardView() {
     return (
       <div className="w-[320px] bg-gray-10 z-100 border p-1 rounded-2xl relative shadow-template">
         <div className="flex flex-row items-center justify-center gap-3 px-4">
-          <div className="flex w-[200px] mt-2 gap-2 overflow-x-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500">
+          <div className="flex w-[200px] mt-2 gap-2 overflow-x-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[#608EB5]">
             {/* show initial successful engagement upto 5 */}
             {Array.from(
               { length: Math.min(5, successfulEngagements) },

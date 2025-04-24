@@ -174,7 +174,9 @@ function List({
                     </div>
                   </div>
                   <div
-                    className={`${styles.notes} overflow-auto bg-${
+                    className={`${
+                      styles.notes
+                    } overflow-x-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[#608EB5] bg-${
                       selectedTasks?.some((task) => task.recordid === item.id)
                         ? 'blue-10'
                         : 'white'
