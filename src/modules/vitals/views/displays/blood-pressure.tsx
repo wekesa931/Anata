@@ -13,6 +13,7 @@ import {
   BP_OBSERVER,
   useClustersObserver,
 } from 'src/modules/vitals/services/observers'
+import { useRefreshTrigger } from 'src/context/refresh-trigger'
 
 dayjs.extend(advancedFormat)
 
@@ -28,6 +29,7 @@ function BloodPressureView() {
     currentTimeFilter,
     loading,
     clusters,
+    refetchClusters,
     updateRangeFilterControls: setRangeFilterControls,
   } = useClustersObserver(BP_OBSERVER, getBpClusters)
 
@@ -49,6 +51,22 @@ function BloodPressureView() {
     filter: currentTimeFilter,
     type: 'Blood pressure',
   })
+
+  const { refreshKey, setRefreshKey } = useRefreshTrigger()
+
+  useEffect(() => {
+    if (refreshKey.includes('BP Mon')) {
+      refetchClusters()
+    }
+
+    // clean up, reset refreshKey
+    return () => {
+      if (setRefreshKey) {
+        setRefreshKey('')
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshKey])
 
   return (
     <div>

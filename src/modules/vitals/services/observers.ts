@@ -130,6 +130,11 @@ export const useClustersObserver = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rangeFilterControls.filter, rangeFilterControls.range])
 
+  const refetchClusters = async () => {
+    const data = await loadData(true)
+    setClusters(data)
+  }
+
   useEffect(() => {
     const subscription = observer.subscribe(async () => {
       setLoading(true)
@@ -152,5 +157,6 @@ export const useClustersObserver = (
     loading,
     error,
     updateRangeFilterControls,
+    refetchClusters,
   }
 }

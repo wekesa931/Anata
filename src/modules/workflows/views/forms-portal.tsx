@@ -11,6 +11,7 @@ import { getFormImplementation } from 'src/modules/workflows/components/forms'
 import { useFormsRouting } from 'src/modules/workflows/hooks/routing/forms'
 import { Forms as TWorkflowForm } from 'src/modules/workflows/db/models'
 import { useNotifications } from 'src/context/notifications'
+import { useRefreshTrigger } from 'src/context/refresh-trigger'
 import { formNames } from '../utils'
 
 type TitleProps = {
@@ -90,11 +91,15 @@ function FormPortal({ form, closeForm, index }: FormPortalProps) {
     setFormData({ ...formData, ...prefills })
   }
 
+  const { triggerRefreshComponent } = useRefreshTrigger()
+
   const handleSubmissionSuccess = (f: TWorkflowForm) => () => {
     f.clearDraft().then(() => {
       notify('Form submitted succesfully.', 'success')
       setIsEdited(false)
       closeForm(f)
+      // reload data
+      triggerRefreshComponent(f.name)
     })
   }
 

@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTablesData } from 'src/modules/vitals/hooks/tables.data.hook'
-import Loading from 'src/components/loaders/centered'
 import Table, { Column } from 'src/components/table/data-table'
 import ErrorComponent from 'src/components/feedbacks/error-retry'
 import dayjs from 'dayjs'
@@ -16,6 +15,7 @@ import {
   CHL_OBSERVER,
   useLabsAndVitalsObserver,
 } from 'src/modules/vitals/services/observers'
+import { useRefreshTrigger } from 'src/context/refresh-trigger'
 
 type TableProps = {
   data: any[]
@@ -23,6 +23,7 @@ type TableProps = {
   columns: readonly Column[]
   title: string
   defaultSortColumn?: string
+  loadingContext?: string | undefined
 }
 
 const toFixed = (value: number) =>
@@ -167,26 +168,49 @@ function DataTable({
   columns,
   title,
   defaultSortColumn,
+  loadingContext = undefined,
 }: TableProps) {
+  const { refreshKey } = useRefreshTrigger()
+
+  // loading state triggered by refresh key change
+  const [refreshTableLoading, setRefreshTableLoading] = useState(false)
+
+  // determines if datatable will refresh on refreshKey change
+  const refreshTableContext = refreshKey?.includes(loadingContext!)
+
+  // determines loading state for the datatable, normal loading and trigger refetch loading
+  const showLoading = loading || (refreshTableContext && refreshTableLoading)
+
+  // trigger datatable loading when refresh key changes
+  useEffect(() => {
+    if (refreshTableContext) {
+      setRefreshTableLoading(true)
+    }
+  }, [refreshTableContext, refreshKey])
+
+  // reset datatable loading state when refresh completes
+  useEffect(() => {
+    if (!loading && refreshTableContext) {
+      setRefreshTableLoading(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, refreshTableContext])
+
   return (
     <div className="mb-4">
-      {loading ? (
-        <div className="h-[300px]">
-          <Loading message={`Loading ${title} BP Data ...`} />
-        </div>
-      ) : (
-        <div>
-          <Table
-            columns={columns}
-            data={data}
-            title={title}
-            defaultSortColumn={defaultSortColumn || 'timestamp'}
-            defaultFilterColumn={defaultSortColumn || 'timestamp'}
-            dateColumnKey={defaultSortColumn || 'timestamp'}
-            filterByDate
-          />
-        </div>
-      )}
+      <div>
+        <Table
+          columns={columns}
+          data={data}
+          loading={showLoading}
+          loadingContext={loadingContext}
+          title={title}
+          defaultSortColumn={defaultSortColumn || 'timestamp'}
+          defaultFilterColumn={defaultSortColumn || 'timestamp'}
+          dateColumnKey={defaultSortColumn || 'timestamp'}
+          filterByDate
+        />
+      </div>
     </div>
   )
 }
@@ -403,6 +427,26 @@ export function BloodPressureTable() {
     refetchBpData
   )
 
+  const [loadingBP, setLoadingBP] = useState(false)
+
+  const { refreshKey, setRefreshKey } = useRefreshTrigger()
+
+  useEffect(() => {
+    if (refreshKey.includes('BP Mon')) {
+      setLoadingBP(true)
+      refetchBpData()
+    }
+
+    // clean up, reset refreshKey
+    return () => {
+      if (setRefreshKey) {
+        setRefreshKey('')
+      }
+      setLoadingBP(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshKey])
+
   return (
     <div>
       {error ? (
@@ -415,7 +459,10 @@ export function BloodPressureTable() {
           <DataTable
             data={data}
             columns={BP_Columns}
-            loading={loading}
+            loading={loading || loadingBP}
+            loadingContext={
+              refreshKey.includes('BP Mon') ? refreshKey : undefined
+            }
             title="Blood Pressure"
           />
         </div>

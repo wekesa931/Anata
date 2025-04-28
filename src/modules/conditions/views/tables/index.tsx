@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import Loading from 'src/components/loaders/centered'
+import React, { useEffect, useState } from 'react'
 import Table, { Column } from 'src/components/table/data-table'
 import ErrorComponent from 'src/components/feedbacks/error-retry'
 import TimeRangeFilter from 'src/modules/vitals/components/time-filter'
 import { TimeRange } from 'src/modules/vitals/types'
 import useHealthMetricsData from 'src/modules/conditions/hooks/health-metrics-data'
 import dayjs from 'dayjs'
+import { useRefreshTrigger } from 'src/context/refresh-trigger'
 
 type TableProps = {
   data: any[]
@@ -13,6 +13,7 @@ type TableProps = {
   columns: readonly Column[]
   title: string
   defaultSortColumn?: string
+  loadingContext?: string | undefined
 }
 
 const METRICS_COLUMNS: Column[] = [
@@ -28,26 +29,56 @@ const METRICS_COLUMNS: Column[] = [
   { id: 'value', label: 'Value' },
 ]
 
-function DataTable({ data, loading, columns, defaultSortColumn }: TableProps) {
+function DataTable({
+  data,
+  loading,
+  columns,
+  defaultSortColumn,
+  loadingContext,
+}: TableProps) {
+  const { refreshKey } = useRefreshTrigger()
+
+  // loading state triggered by refresh key change
+  const [refreshTableLoading, setRefreshTableLoading] = useState(false)
+
+  // determines if datatable will refresh on refreshKey change
+  const refreshTableContext = refreshKey?.includes(loadingContext!)
+
+  // determines loading state for the datatable, normal loading and trigger refetch loading
+  const showLoading = loading || (refreshTableContext && refreshTableLoading)
+
+  // trigger datatable loading when refresh key changes
+  useEffect(() => {
+    if (refreshTableContext) {
+      setRefreshTableLoading(true)
+    }
+  }, [refreshTableContext, refreshKey])
+
+  // reset datatable loading state when refresh completes
+  useEffect(() => {
+    if (!loading && refreshTableContext) {
+      setRefreshTableLoading(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, refreshTableContext])
+
   return (
     <div className="mb-4">
-      {loading ? (
-        <div className="h-[300px]">
-          <Loading message="Loading Health Metrics" />
-        </div>
-      ) : (
-        <div>
-          <Table
-            columns={columns}
-            data={data}
-            title=""
-            defaultSortColumn={defaultSortColumn || 'timestamp'}
-            defaultFilterColumn={defaultSortColumn || 'timestamp'}
-            dateColumnKey={defaultSortColumn || 'timestamp'}
-            filterByDate
-          />
-        </div>
-      )}
+      <div>
+        <Table
+          columns={columns}
+          data={data}
+          title=""
+          loading={showLoading}
+          loadingContext={
+            refreshKey.includes('Health Metrics') ? refreshKey : undefined
+          }
+          defaultSortColumn={defaultSortColumn || 'timestamp'}
+          defaultFilterColumn={defaultSortColumn || 'timestamp'}
+          dateColumnKey={defaultSortColumn || 'timestamp'}
+          filterByDate
+        />
+      </div>
     </div>
   )
 }
@@ -87,6 +118,26 @@ function MeasurementTable() {
       })
   }
 
+  const [retryLoadingMetrics, setRetryLoadingMetrics] = useState(false)
+
+  const { refreshKey, setRefreshKey } = useRefreshTrigger()
+
+  useEffect(() => {
+    if (refreshKey.includes('Health Metrics')) {
+      setRetryLoadingMetrics(true)
+      refetchMetricsData()
+    }
+
+    // clean up, reset refreshKey
+    return () => {
+      if (setRefreshKey) {
+        setRefreshKey('')
+      }
+      setRetryLoadingMetrics(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshKey])
+
   return (
     <div>
       {metricsError ? (
@@ -107,7 +158,10 @@ function MeasurementTable() {
             <DataTable
               data={metrics || []}
               columns={METRICS_COLUMNS}
-              loading={metricsLoading}
+              loading={metricsLoading || retryLoadingMetrics}
+              loadingContext={
+                refreshKey.includes('Health Metrics') ? refreshKey : undefined
+              }
               title=""
             />
           </div>
