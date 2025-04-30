@@ -164,12 +164,14 @@ export default function EngagementsDashboardView() {
   useEffect(() => {
     // show engagements have been completed
     if (engagements.length === 1 && engagementsResData.length > 0) {
-      const results = cleanupEngagementList(engagements)
-      if (results.length === 0 && engagementsResData.length > 0) {
-        setCompleteEngagementMsg(
-          'Recommendations successfully completed. Well done.'
-        )
-      }
+      setTimeout(() => {
+        const results = cleanupEngagementList(engagements)
+        if (results.length === 0 && engagementsResData.length > 0) {
+          setCompleteEngagementMsg(
+            'Recommendations successfully completed. Well done.'
+          )
+        }
+      }, 1500)
     }
   }, [engagements, engagementsResData])
 
