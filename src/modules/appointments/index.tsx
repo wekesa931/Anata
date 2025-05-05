@@ -387,7 +387,7 @@ function Appointments() {
             <div className="text-gray-400 text-sm flex items-center mb-1">
               <Clock width={14} height={14} />
               <span className="ml-2">
-                {appointment.Status.toLowerCase() === 'schedule needed'
+                {appointment?.Status?.toLowerCase() === 'schedule needed'
                   ? 'Pending'
                   : formatDate(
                       appointment.start_date_time,
