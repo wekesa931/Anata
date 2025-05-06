@@ -282,7 +282,7 @@ function InsuranceForm({
                               name={`insurances.${index}.insuranceId`}
                               required={false}
                             />
-                            {!showWizardControls && (
+                            {!hasOnPrev && (
                               <SelectField
                                 name={`insurances.${index}.verificationStatus`}
                                 label="Insurance verification status"
