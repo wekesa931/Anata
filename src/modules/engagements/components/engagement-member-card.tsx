@@ -170,7 +170,7 @@ export default function EngagementMemberCard({
   // engagement complete component
   function EngagementComplete() {
     return (
-      <div className="w-[400px] opacity-100 relative">
+      <div className=" w-[320px] md:w-[400px] lg:w-[430px] xl:w-[450px] opacity-100 relative">
         <div
           className="flex flex-col items-center justify-center bg-white shadow-lg rounded-2xl border border-gray-200"
           style={{ height: '510px' }}
@@ -205,7 +205,7 @@ export default function EngagementMemberCard({
    */
   const getCardStyle = (index: number) => {
     if (index === currentMemberIndex || engagements.length === 1) {
-      return 'rounded-2xl bg-white shadow-lg w-[400px] transition scale-100'
+      return 'rounded-2xl bg-white shadow-lg w-[320px] md:w-[400px] lg:w-[430px] xl:w-[450px] transition scale-100'
     }
 
     /** style 1st card */
@@ -224,7 +224,7 @@ export default function EngagementMemberCard({
 
     /** style 1st and 3rd card */
     if (isFirstCard || isThirdCard) {
-      return 'rounded-2xl w-[400px] bg-gray-10 backdrop-blur-md opacity-25 transform scale-90 transition z-10'
+      return 'rounded-2xl w-[320px] md:w-[400px] lg:w-[430px] xl:w-[450px] bg-gray-10 backdrop-blur-xl opacity-[0.20] transition scale-90  z-10'
     }
   }
 
@@ -247,12 +247,12 @@ export default function EngagementMemberCard({
 
   return (
     <div
-      className={`relative mx-8 opacity-100 relative mt-8 shadow-template-allow-scaling ${getCardStyle(
+      className={`relative mx-8 opacity-100 h-[auto] overflow-y-auto relative mt-10 lg:mt-14 xl:mt-16 shadow-template-allow-scaling ${getCardStyle(
         index
       )}`}
     >
       {(showCardDetails || showCardDetailsIfCardIndexHasNoError) && (
-        <div className="p-6">
+        <div className="p-4 xl:p-6">
           {showCardDetails && (
             <>
               <div
@@ -262,7 +262,7 @@ export default function EngagementMemberCard({
                 ${engagementPostponed && 'mt-1'}
                 `}
               >
-                <h2 className="text-xl font-semibold text-gray-800 overflow-hidden ">
+                <h2 className="text-md xl:text-xl font-semibold text-gray-800 overflow-hidden">
                   {engagement?.member?.fullName}
                 </h2>
                 {engagementStatus === 'opened' && (
@@ -279,7 +279,7 @@ export default function EngagementMemberCard({
                   </div>
                 )}
               </div>
-              <p className="text-gray-600 text-sm mb-3">
+              <p className="text-gray-600 text-sm mb-1 xl:mb-3">
                 {engagement?.member?.age}y
               </p>
             </>
@@ -289,9 +289,9 @@ export default function EngagementMemberCard({
             engagementStatus === 'postponed') && (
             <>
               {/* Context */}
-              <div className="bg-gray-100 rounded-t-xl p-4 mb-4">
+              <div className="bg-gray-100 rounded-t-xl p-4 mb-1.5 xl:mb-4">
                 <p className="text-sm text-gray-400 font-rubik mb-1">Context</p>
-                <p className="text-gray-700 font-rubik font-light text-sm max-h-32 h-28 overflow-y-auto">
+                <p className="text-gray-700 font-rubik font-light text-sm h-24 xl:h-28 overflow-y-auto">
                   {engagement.context}
                 </p>
               </div>
@@ -301,7 +301,7 @@ export default function EngagementMemberCard({
                 <div className="text-sm text-gray-400 font-rubik mb-1">
                   Action
                 </div>
-                <p className="text-gray-700 text-sm font-thin leading-relaxed max-h-32 h-28 overflow-y-auto">
+                <p className="text-gray-700 text-sm font-thin leading-relaxed h-24 xl:h-28 overflow-y-auto">
                   {engagement.action}
                 </p>
               </div>

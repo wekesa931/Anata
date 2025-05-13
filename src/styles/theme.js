@@ -102,5 +102,19 @@ module.exports = {
       5000: '5000ms',
       3000: '3000ms',
     },
+    keyframes: {
+      'slide-in-left': {
+        '0%': { transform: 'translateX(-20%)' },
+        '100%': { transform: 'translateX(0)' },
+      },
+      'slide-in-right': {
+        '0%': { transform: 'translateX(20%)' },
+        '100%': { transform: 'translateX(0)' },
+      },
+    },
+    animation: {
+      'slide-in-left': 'slide-in-left 0.5s ease-out',
+      'slide-in-right': 'slide-in-right 0.5s ease-out',
+    },
   },
 }

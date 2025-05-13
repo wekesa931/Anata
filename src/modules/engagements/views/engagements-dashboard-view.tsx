@@ -33,6 +33,7 @@ export default function EngagementsDashboardView() {
   const [feedbackOptionsError, setFeedbackOptionsError] = useState('')
   const [mutateStatusError, setMutateStatusError] = useState<any>()
   const [completeEngagementMsg, setCompleteEngagementMsg] = useState('')
+  const [direction, setDirection] = useState<null | string>(null)
 
   const {
     trackLeftNavigationClicked,
@@ -105,6 +106,7 @@ export default function EngagementsDashboardView() {
 
   const handleNext = useCallback(
     (engagement?: Engagement) => {
+      setDirection('right')
       setEngagements((prevEngagements) => {
         const cleanedList = cleanupEngagementList(prevEngagements)
         const engagementsLeft = cleanedList.length
@@ -129,6 +131,7 @@ export default function EngagementsDashboardView() {
 
   const handleBack = useCallback(
     (engagement?: Engagement) => {
+      setDirection('left')
       setEngagements((prevEngagements) => {
         const cleanedList = cleanupEngagementList(prevEngagements)
         const engagementsLeft = cleanedList.length
@@ -381,6 +384,11 @@ export default function EngagementsDashboardView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // reset animation state when animation ends
+  const handleAnimationEnd = () => {
+    setDirection(null)
+  }
+
   // engagement feedback stats component
   function EngagementStatsComponent() {
     const getSuccessfulEngagements = () => {
@@ -452,7 +460,7 @@ export default function EngagementsDashboardView() {
   }
 
   return (
-    <div className="flex flex-col w-full items-center justify-center h-full px-20 relative overflow-x-hidden">
+    <div className="flex flex-col w-full items-center justify-center h-full px-4 md:px-20 lg:px-64 xl:px-80 relative overflow-x-hidden">
       {loading && (
         <div className="flex items-center justify-center flex-col mt-[15%] mb-[15%]">
           <Loading message="Loading recommendations" />
@@ -468,7 +476,7 @@ export default function EngagementsDashboardView() {
       {!loading && !error && engagements.length > 0 && (
         <>
           {/* engagement stats component */}
-          <div className="text-sm text-gray-500 mb-6 absolute top-0">
+          <div className="text-sm text-gray-500 mb-6 absolute -top-3 md:top-0">
             <EngagementStatsComponent />
           </div>
 
@@ -480,7 +488,8 @@ export default function EngagementsDashboardView() {
             {engagements?.map((engagement: Engagement, index) => (
               <div
                 key={index}
-                className={`relative ${getPositionStyle(index)}`}
+                className={`relative ${getPositionStyle(index)}
+                `}
               >
                 {/* back button */}
                 {index === currentMemberIndex && (
@@ -492,8 +501,8 @@ export default function EngagementsDashboardView() {
                       (currentMemberIndex === 0 && allEngagementsActive())
                     }
                     onClick={() => handleBack(engagement)}
-                    className={`absolute -left-10 top-1/2 z-20 transform -translate-y-1/2 rounded-full border
-                       bg-white hover:!bg-[#E8EAED]  disabled:bg-[#E8EAED] transition duration-200 p-4 disabled:cursor-not-allowed
+                    className={`absolute -left-7 md:-left-10 top-1/2 z-20 transform -translate-y-1/2 rounded-full border
+                       bg-white hover:!bg-[#E8EAED] disabled:bg-[#E8EAED] transition duration-200 p-4 disabled:cursor-not-allowed
                       ${
                         (engagement?.status?.name.toLowerCase() === 'opened' ||
                           engagements.length === 1 ||
@@ -512,23 +521,43 @@ export default function EngagementsDashboardView() {
                 )}
 
                 {/* recommendation card */}
-                {!completeEngagementMsg.trim() && (
-                  <EngagementMemberCard
-                    engagement={engagement}
-                    engagements={engagements}
-                    engagementsResData={engagementsResData}
-                    currentMemberIndex={currentMemberIndex}
-                    index={index}
-                    updateStatus={handleUpdateStatus}
-                    feedbackOptions={feedbackOptions}
-                    feedbackOptionsError={feedbackOptionsError}
-                    mutateStatusError={mutateStatusError}
-                    resetErrorandRetry={handleResetFeedbackError}
-                    updateFeedback={handleUpdateFeedback}
-                    engagementFeedback={engagementFeedback}
-                    handleEndEngagement={submitFeedback}
-                  />
-                )}
+                <div
+                  className={`transition duration-100 ${
+                    index === currentMemberIndex
+                      ? direction === 'right'
+                        ? 'animate-slide-in-right'
+                        : direction === 'left'
+                        ? 'animate-slide-in-left'
+                        : ''
+                      : direction === 'right' &&
+                        index === currentMemberIndex + 1
+                      ? ''
+                      : direction === 'left' && index === currentMemberIndex - 1
+                      ? ''
+                      : // 'animate-slide-in-left'
+                        ''
+                  } 
+                  `}
+                  onAnimationEnd={handleAnimationEnd}
+                >
+                  {!completeEngagementMsg.trim() && (
+                    <EngagementMemberCard
+                      engagement={engagement}
+                      engagements={engagements}
+                      engagementsResData={engagementsResData}
+                      currentMemberIndex={currentMemberIndex}
+                      index={index}
+                      updateStatus={handleUpdateStatus}
+                      feedbackOptions={feedbackOptions}
+                      feedbackOptionsError={feedbackOptionsError}
+                      mutateStatusError={mutateStatusError}
+                      resetErrorandRetry={handleResetFeedbackError}
+                      updateFeedback={handleUpdateFeedback}
+                      engagementFeedback={engagementFeedback}
+                      handleEndEngagement={submitFeedback}
+                    />
+                  )}
+                </div>
 
                 {/* forward button */}
                 {index === currentMemberIndex && (
@@ -539,8 +568,8 @@ export default function EngagementsDashboardView() {
                       mutateStatusError
                     }
                     onClick={() => handleNext(engagement)}
-                    className={`absolute -right-10  top-1/2 z-20 transform -translate-y-1/2 rounded-full border
-                       bg-white hover:!bg-[#E8EAED]  disabled:bg-[#E8EAED] transition duration-200 p-4 disabled:cursor-not-allowed
+                    className={`absolute -right-7 md:-right-10 top-1/2 z-20 transform -translate-y-1/2 rounded-full border
+                       bg-white hover:!bg-[#E8EAED] disabled:bg-[#E8EAED] transition duration-200 p-4 disabled:cursor-not-allowed
                        ${
                          (engagement?.status?.name.toLowerCase() === 'opened' ||
                            engagements.length === 1 ||
