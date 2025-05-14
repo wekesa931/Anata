@@ -1,12 +1,43 @@
-name: Deploy to Prod
+name: Deploy
 on:
+  push:
+    branches:
+      - master
+      - production
   release:
     types: [published]
 
+  pull_request:
+    branches:
+      - master
+      - production
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        description: 'Select the environment to deploy to'
+        type: choice
+        options:
+          - sandbox
+          - staging
+          - prod
+      message:
+        type: string
+        description: 'Deployment message'
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
-  deploy:
-    name: Deploy to Prod
+  prepare:
+    name: Prepare for Deployment
     runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.get_env.outputs.environment }}
+      message: ${{ steps.get_message.outputs.message }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -16,16 +47,135 @@ jobs:
       - name: Get the version
         id: version
         run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
-      - name: Deploy
-        uses: AkhileshNS/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_email: 'dev-admin@antarahealth.com'
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+
+      - name: Get environment
+        id: get_env
         env:
-          # all variables starting with HD_ will be created/updated in
-          # heroku config vars during actions deployment
-          HD_COMMIT: ${{ github.sha }}
-          HD_VERSION: ${{ steps.version.outputs.version }}
-          HD_RELEASE_DATE: ${{ steps.date.outputs.date }}
-          HD_ON_HEROKU: true
+          INPUT_ENV: ${{ inputs.environment }}
+        run: |
+          if [ -n "$INPUT_ENV" ]; then
+              env="$INPUT_ENV"
+          elif [[ "${{ github.event_name }}" == "release" ]]; then
+              env="prod"
+          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+              env="sandbox"
+          elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/master" ]]; then
+              env="staging"
+          elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/production" ]]; then
+              env="preprod"
+          else
+              echo "Invalid environment selected."
+              exit 1
+          fi
+          echo "environment=$env" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Get commit message
+        id: get_message
+        run: |
+          if [ -z "${{ inputs.message }}" ]; then
+            if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+              msg="Pull request #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
+            elif [[ "${{ github.event_name }}" == "push" ]]; then
+              subject=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
+              msg="Push to branch ${{ github.ref }}: $subject"
+            elif [[ "${{ github.event_name }}" == "release" ]]; then
+              msg="Release ${{ github.event.release.tag_name }}: ${{ github.event.release.name }}"
+            else
+              msg="Deployment triggered by ${{ github.actor }}: ${{ inputs.message }}"
+            fi
+          else
+              msg="${{ inputs.message }}"
+          fi
+          echo "message=$msg" >> $GITHUB_OUTPUT
+
+  deploy:
+    name: Deploy to ${{ needs.prepare.outputs.environment }}
+    runs-on: ubuntu-latest
+    needs: prepare
+    environment: ${{ needs.prepare.outputs.environment }}
+    concurrency: ${{ needs.prepare.outputs.environment }}
+    env:
+      ANTARA_HNOS_BACKEND: ${{ secrets.ANTARA_HNOS_BACKEND }}
+      ANTARA_SHORTCODE: ${{ secrets.ANTARA_SHORTCODE }}
+      ANTARA_V2_GRAPHQL: ${{ secrets.ANTARA_V2_GRAPHQL }}
+      API_URL: ${{ secrets.API_URL }}
+      DATADOG_APPLICATION_ID: ${{ secrets.DATADOG_APPLICATION_ID }}
+      DATADOG_CLIENT_TOKEN: ${{ secrets.DATADOG_CLIENT_TOKEN }}
+      FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+      FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+      FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+      FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
+      FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
+      FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+      FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+      FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+      FIREBASE_VAPID_KEY: ${{ secrets.FIREBASE_VAPID_KEY }}
+      FORM_SCHEMA: ${{ secrets.FORM_SCHEMA }}
+      GITHUB_SCOPE: ${{ secrets.G_GITHUB_SCOPE }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+      NODE_ENV: ${{ secrets.NODE_ENV }}
+      NPM_CONFIG_LEGACY_PEER_DEPS: ${{ secrets.NPM_CONFIG_LEGACY_PEER_DEPS }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      OPENSEARCH_PASSWORD: ${{ secrets.OPENSEARCH_PASSWORD }}
+      OPENSEARCH_URL: ${{ secrets.OPENSEARCH_URL }}
+      OPENSEARCH_USER: ${{ secrets.OPENSEARCH_USER }}
+      PROD: ${{ secrets.PROD }}
+      REGISTRY_UR: ${{ secrets.REGISTRY_UR }}
+      RELEASE_DATE: ${{ secrets.RELEASE_DATE }}
+      SEGMENT_WRITE_KEY: ${{ secrets.SEGMENT_WRITE_KEY }}
+      SENTRY_API_KEY: ${{ secrets.SENTRY_API_KEY }}
+      SENTRY_PROJECT_NAME: ${{ secrets.SENTRY_PROJECT_NAME }}
+      SENTRY_PROJECT_ORG: ${{ secrets.SENTRY_PROJECT_ORG }}
+      VERSION: ${{ secrets.VERSION }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ACTION_ROLE_ARN }}
+          role-session-name: scribe-deployment
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build
+        run: |
+          export NODE_OPTIONS="--max-old-space-size=4096"
+          npm run build
+
+      - name: Push to S3
+        run: |
+          aws s3 sync ./dist s3://${{ secrets.AWS_S3_BUCKET }} \
+      
+      - name: Invalidate Cloudfront
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRO_ID }} --paths "/*" "/"
+
+      - name: Send Slack Notification
+        uses: slackapi/slack-github-action@v2.1.0
+        if: always()
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "Scribe deployment to ${{ needs.prepare.outputs.environment }}"
+            blocks:
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "Deployment of Scribe to ${{ needs.prepare.outputs.environment }} ${{ job.status }}!"
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "Message: `${{ needs.prepare.outputs.message }}`"
