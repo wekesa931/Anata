@@ -170,7 +170,7 @@ export default function EngagementMemberCard({
   // engagement complete component
   function EngagementComplete() {
     return (
-      <div className=" w-[320px] md:w-[400px] lg:w-[430px] xl:w-[450px] opacity-100 relative">
+      <div className="w-[320px] md:w-[400px] lg:w-[430px] xl:w-[450px] opacity-100 relative">
         <div
           className="flex flex-col items-center justify-center bg-white shadow-lg rounded-2xl border border-gray-200"
           style={{ height: '510px' }}
@@ -205,7 +205,7 @@ export default function EngagementMemberCard({
    */
   const getCardStyle = (index: number) => {
     if (index === currentMemberIndex || engagements.length === 1) {
-      return 'rounded-2xl bg-white shadow-lg w-[320px] md:w-[400px] lg:w-[430px] xl:w-[450px] transition scale-100'
+      return 'rounded-2xl bg-white shadow-lg w-[320px] md:w-[400px] lg:w-[430px] xl:w-[450px] transition-transform duration-1000 ease-in-out scale-100'
     }
 
     /** style 1st card */
@@ -224,7 +224,7 @@ export default function EngagementMemberCard({
 
     /** style 1st and 3rd card */
     if (isFirstCard || isThirdCard) {
-      return 'rounded-2xl w-[320px] md:w-[400px] lg:w-[430px] xl:w-[450px] bg-gray-10 backdrop-blur-xl opacity-[0.20] transition scale-90  z-10'
+      return 'rounded-2xl w-[320px] md:w-[400px] lg:w-[430px] xl:w-[450px] bg-gray-10 backdrop-blur-xl opacity-[0.20] transition-transform duration-0 ease-out delay-0 scale-90 z-10'
     }
   }
 
@@ -247,7 +247,7 @@ export default function EngagementMemberCard({
 
   return (
     <div
-      className={`relative mx-8 opacity-100 h-[auto] overflow-y-auto relative mt-10 lg:mt-14 xl:mt-16 shadow-template-allow-scaling ${getCardStyle(
+      className={`relative mx-8 opacity-100 overflow-y-auto relative mt-24 lg:mt-16 xl:mt-20 2xl:mt-24 shadow-template-allow-scaling ${getCardStyle(
         index
       )}`}
     >

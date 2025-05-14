@@ -249,7 +249,7 @@ export default function EngagementsDashboardView() {
         (currentMemberIndex === 0 && allEngagementsActive()) ||
         engagements.length === 2
       ) {
-        return 'relative w-[470px] order-1 opacity-0 pointer-events-none'
+        return 'relative md:w-[470px] xl:w-[512px] order-1 opacity-0 pointer-events-none'
       }
       return 'order-1'
     }
@@ -476,7 +476,7 @@ export default function EngagementsDashboardView() {
       {!loading && !error && engagements.length > 0 && (
         <>
           {/* engagement stats component */}
-          <div className="text-sm text-gray-500 mb-6 absolute -top-3 md:top-0">
+          <div className="fixed text-sm text-gray-500 top-16 2xl:top-28 z-50">
             <EngagementStatsComponent />
           </div>
 
@@ -522,7 +522,7 @@ export default function EngagementsDashboardView() {
 
                 {/* recommendation card */}
                 <div
-                  className={`transition duration-100 ${
+                  className={`transition-transform duration-1000 ${
                     index === currentMemberIndex
                       ? direction === 'right'
                         ? 'animate-slide-in-right'

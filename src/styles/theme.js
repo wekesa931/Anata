@@ -104,12 +104,12 @@ module.exports = {
     },
     keyframes: {
       'slide-in-left': {
-        '0%': { transform: 'translateX(-20%)' },
-        '100%': { transform: 'translateX(0)' },
+        '0%': { transform: 'translateX(-100%)', opacity: 0 },
+        '100%': { transform: 'translateX(0)', opacity: 100 },
       },
       'slide-in-right': {
-        '0%': { transform: 'translateX(20%)' },
-        '100%': { transform: 'translateX(0)' },
+        '0%': { transform: 'translateX(100%)', opacity: 0 },
+        '100%': { transform: 'translateX(0)', opacity: 100 },
       },
     },
     animation: {
