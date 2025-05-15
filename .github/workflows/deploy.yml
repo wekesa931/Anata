@@ -21,6 +21,7 @@ on:
         options:
           - sandbox
           - staging
+          - preprod
           - prod
       message:
         type: string
@@ -148,7 +149,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm ci --legacy-peer-deps --include=dev
 
       - name: Build
         run: |
