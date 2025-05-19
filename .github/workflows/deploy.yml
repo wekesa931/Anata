@@ -4,8 +4,9 @@ on:
     branches:
       - master
       - production
-  release:
-    types: [published]
+
+    tags:
+      - '*'
 
   pull_request:
     branches:
@@ -56,7 +57,7 @@ jobs:
         run: |
           if [ -n "$INPUT_ENV" ]; then
               env="$INPUT_ENV"
-          elif [[ "${{ github.event_name }}" == "release" ]]; then
+          elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == refs/tags/* ]]; then
               env="prod"
           elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
               env="sandbox"
@@ -80,8 +81,6 @@ jobs:
             elif [[ "${{ github.event_name }}" == "push" ]]; then
               subject=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
               msg="Push to branch ${{ github.ref }}: $subject"
-            elif [[ "${{ github.event_name }}" == "release" ]]; then
-              msg="Release ${{ github.event.release.tag_name }}: ${{ github.event.release.name }}"
             else
               msg="Deployment triggered by ${{ github.actor }}: ${{ inputs.message }}"
             fi
