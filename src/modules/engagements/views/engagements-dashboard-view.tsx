@@ -6,6 +6,7 @@ import ArrowBack from '@mui/icons-material/ArrowBack'
 import ErrorRetry from 'src/components/feedbacks/error-retry'
 import { throwGraphErrors } from 'src/utils/error-handling'
 import { useModuleAnalytics } from 'src/modules/analytics'
+import dayjs from 'dayjs'
 import EngagementMemberCard from '../components/engagement-member-card'
 import {
   ENGAGEMENT_RECOMMENDATIONS_QUERY,
@@ -392,12 +393,17 @@ export default function EngagementsDashboardView() {
   // engagement feedback stats component
   function EngagementStatsComponent() {
     const getSuccessfulEngagements = () => {
-      return engagementsResData.filter(
-        (eng) =>
-          eng.status.name.toLowerCase() === 'completed' &&
+      const today = dayjs().format('YYYY-MM-DD')
+
+      return engagementsResData.filter((eng) => {
+        const isCompleted = eng.status.name.toLowerCase() === 'completed'
+        const hasSuccessfulResult =
           !!eng.result?.trim() &&
           eng.result.toLowerCase().includes('successful')
-      )
+        const wasModifiedToday =
+          eng.modifiedAt && dayjs(eng.modifiedAt).format('YYYY-MM-DD') === today
+        return isCompleted && hasSuccessfulResult && wasModifiedToday
+      })
     }
 
     const successfulEngagements = getSuccessfulEngagements().length

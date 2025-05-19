@@ -375,22 +375,44 @@ export const useModuleAnalytics = () => {
         assignedStaff,
       })
     },
-    trackOpenDashboardClicked: (engagement: Engagement) => {
+    trackOpenDashboardClicked: ({
+      uuid,
+      member: { antaraId },
+      assignedTo: { fullName },
+    }: Engagement) => {
       homePageSectionAnalytics.track('Recommendation item dashboard opened', {
-        engagement,
+        uuid,
+        antaraId,
+        fullName,
       })
     },
-    trackOpenDashboardFromFeedbackClicked: (engagement: Engagement) => {
+    trackOpenDashboardFromFeedbackClicked: ({
+      uuid,
+      member: { antaraId },
+      assignedTo: { fullName },
+    }: Engagement) => {
       homePageSectionAnalytics.track(
         'Recommendation item feedback dashboard opened',
         {
-          engagement,
+          uuid,
+          antaraId,
+          fullName,
         }
       )
     },
-    trackRecommendationFeedbackGiven: (engagement: Engagement) => {
+    trackRecommendationFeedbackGiven: ({
+      uuid,
+      member: { antaraId },
+      assignedTo,
+      feedback,
+      result,
+    }: Engagement) => {
       homePageSectionAnalytics.track('Recommendation feedback given', {
-        engagement,
+        uuid,
+        antaraId,
+        assignedTo,
+        feedback,
+        result,
       })
     },
   }
