@@ -1,30 +1,11 @@
-name: Deploy
+name: Deploy to viva
 on:
   push:
-    branches:
-      - master
-      - production
-
     tags:
       - '*'
 
-  pull_request:
-    branches:
-      - master
-      - production
-
   workflow_dispatch:
     inputs:
-      environment:
-        required: true
-        description: 'Select the environment to deploy to'
-        type: choice
-        options:
-          - sandbox
-          - staging
-          - preprod
-          - prod
-          - viva
       message:
         type: string
         description: 'Deployment message'
@@ -54,22 +35,9 @@ jobs:
       - name: Get environment
         id: get_env
         env:
-          INPUT_ENV: ${{ inputs.environment }}
+          INPUT_ENV: viva
         run: |
-          if [ -n "$INPUT_ENV" ]; then
-              env="$INPUT_ENV"
-          elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == refs/tags/* ]]; then
-              env="prod"
-          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
-              env="sandbox"
-          elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/master" ]]; then
-              env="staging"
-          elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/production" ]]; then
-              env="preprod"
-          else
-              echo "Invalid environment selected."
-              exit 1
-          fi
+          env="$INPUT_ENV"
           echo "environment=$env" >> $GITHUB_OUTPUT
         shell: bash
 
@@ -77,8 +45,6 @@ jobs:
         id: get_message
         run: |
           if [ -z "${{ inputs.message }}" ]; then
-            if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-              msg="Pull request #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
             elif [[ "${{ github.event_name }}" == "push" ]]; then
               subject=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
               msg="Push to branch ${{ github.ref }}: $subject"
