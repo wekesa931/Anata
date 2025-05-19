@@ -45,7 +45,7 @@ jobs:
         id: get_message
         run: |
           if [ -z "${{ inputs.message }}" ]; then
-            elif [[ "${{ github.event_name }}" == "push" ]]; then
+            if [[ "${{ github.event_name }}" == "push" ]]; then
               subject=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
               msg="Push to branch ${{ github.ref }}: $subject"
             else
