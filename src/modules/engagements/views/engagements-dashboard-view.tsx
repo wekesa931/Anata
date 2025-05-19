@@ -273,8 +273,11 @@ export default function EngagementsDashboardView() {
   const handleUpdateStatus = async (
     val: string,
     engagement: Engagement,
-    successful: boolean = false,
-    failed?: boolean,
+    isSuccessful?: { successful: boolean; result: string },
+    isFailed?: { failed: boolean; result: string },
+    isCanceled?: { canceled: boolean; result: string },
+    isPostponed?: { postponed: boolean; result: string },
+    isClosed?: { closed: boolean; result: string },
     feedback?: string
   ) => {
     const variables: UpdateEngagementPayload = {
@@ -284,13 +287,28 @@ export default function EngagementsDashboardView() {
       },
     }
 
-    if (successful) {
-      variables.input.result = 'Successful'
-    } else if (failed) {
-      variables.input.result = 'Failed'
-    } else if (val.toLowerCase().includes('canceled')) {
-      variables.input.result = 'Not applicable'
+    const resultsMap = {
+      successful: isSuccessful,
+      failed: isFailed,
+      canceled: isCanceled,
+      postponed: isPostponed,
+      closed: isClosed,
+    } as const
+
+    // map result from above and save as the input result variable
+    for (const key of Object.keys(resultsMap) as Array<
+      keyof typeof resultsMap
+    >) {
+      const value = resultsMap[key]
+      if (value && (value as any)[key]) {
+        variables.input.result = value.result
+        break
+      }
     }
+
+    const engagementResult = variables.input.result
+    /** will store the engagement event */
+    let engagementEvent = null
 
     if (feedback?.trim()) {
       variables.input.feedback = feedback
@@ -304,6 +322,14 @@ export default function EngagementsDashboardView() {
       })
 
       if (data) {
+        if (engagementResult) {
+          engagementEvent = {
+            ...engagement,
+            result: engagementResult,
+            feedback: { name: feedback ?? '' },
+          }
+          trackRecommendationFeedbackGiven(engagementEvent)
+        }
         setEngagements((prev) => {
           // replace the updated engagement with the new response
           const updatedEngagements = prev.map((engag) =>
@@ -345,17 +371,31 @@ export default function EngagementsDashboardView() {
 
     // get outcome status based on feedback selected
     const updatedStatus = feedbackOptionSubmitted.engagementOutcomeStatus.name
+
+    // get outcome result based on feedback selected
+    const updatedResult = feedbackOptionSubmitted.name.toLowerCase()
+
     // track a successful/failed feedback
-    const isSuccessful = feedback === 'Yes and member engaged'
-    const isNotSuccessful = feedback === 'Yes but member did not engage'
+    const matchResult = (phrase: string) =>
+      feedback.toLowerCase() === updatedResult.toLowerCase() &&
+      feedback.toLowerCase().includes(phrase)
+
+    const isSuccessful = matchResult('yes and member engaged')
+    const isFailed = matchResult('yes but member did not engage')
+    const isCanceled = matchResult('wrong recommendation')
+    const isPostponed = matchResult('yes but member asked me to call later')
+    const isClosed = matchResult('did not do anything yet')
+
     await handleUpdateStatus(
       updatedStatus,
       engagement,
-      isSuccessful,
-      isNotSuccessful,
+      { successful: isSuccessful, result: 'Successful' },
+      { failed: isFailed, result: 'Failed' },
+      { canceled: isCanceled, result: 'Not Applicable' },
+      { postponed: isPostponed, result: 'Postponed' },
+      { closed: isClosed, result: 'None' },
       feedback
     )
-    trackRecommendationFeedbackGiven(engagement)
     setEngagementFeedback('')
     // Update engagementsResData based on the status update
     setEngagementsResData((prevData) => {

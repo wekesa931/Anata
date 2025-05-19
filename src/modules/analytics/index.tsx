@@ -403,14 +403,14 @@ export const useModuleAnalytics = () => {
     trackRecommendationFeedbackGiven: ({
       uuid,
       member: { antaraId },
-      assignedTo,
-      feedback,
+      assignedTo: { fullName },
+      feedback: { name: feedback },
       result,
     }: Engagement) => {
       homePageSectionAnalytics.track('Recommendation feedback given', {
         uuid,
         antaraId,
-        assignedTo,
+        fullName,
         feedback,
         result,
       })
