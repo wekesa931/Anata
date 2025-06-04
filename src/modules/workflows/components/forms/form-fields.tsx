@@ -1446,8 +1446,13 @@ function DateInputField({
     const startOfYear = dayjs().startOf('year')
 
     const log_tasks = await airtableFetch(
-      `logisticsTasks/list?filterByFormula=AND(OR(IS_SAME({Due date}, "${currentDate}"), IS_AFTER({Due date}, "${currentDate}")), OR({Status}="Scheduled", {Status}="Assigned"))&fields[]=Status&fields[]=Due date`
+      `logisticsTasks/list?filterByFormula=AND(OR(IS_SAME({Due date}, "${currentDate}"), IS_AFTER({Due date}, "${currentDate}")), OR({Status}="Scheduled", {Status}="Assigned"))&fields[]=Status&fields[]=Due date&fields[]=Assigned HN (From members table)`
     )
+
+    // exclude Eunice Atitoh's tasks from logistics task count
+    const filtered_log_tasks = log_tasks.filter((task: any) => {
+      return task['Assigned HN (From members table)'][0] !== 'recXNsjWFnZ9MeAew'
+    })
 
     const pastDatesToBlock = []
     let currentDateIterator = dayjs(startOfYear)
@@ -1457,18 +1462,21 @@ function DateInputField({
       currentDateIterator = currentDateIterator.add(1, 'day')
     }
 
-    const taskCountByDate = log_tasks.reduce((acc: any[], task: any) => {
-      const dueDate = task['Due date']
-      const existingEntry = acc.find((item) => item.date === dueDate)
+    const taskCountByDate = filtered_log_tasks.reduce(
+      (acc: any[], task: any) => {
+        const dueDate = task['Due date']
+        const existingEntry = acc.find((item) => item.date === dueDate)
 
-      if (existingEntry) {
-        existingEntry.task_count += 1
-      } else {
-        acc.push({ date: dueDate, task_count: 1 })
-      }
+        if (existingEntry) {
+          existingEntry.task_count += 1
+        } else {
+          acc.push({ date: dueDate, task_count: 1 })
+        }
 
-      return acc
-    }, [])
+        return acc
+      },
+      []
+    )
 
     const logisticsDatesToBlock = taskCountByDate
       .filter((item: any) => {
