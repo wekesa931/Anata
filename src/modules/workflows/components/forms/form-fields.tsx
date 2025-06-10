@@ -1202,11 +1202,11 @@ function LinkRecordInputDefault({
     const getHelperTexts = (table: any) => {
       if (airtableMeta && member) {
         const helperTextTable = {
-          fields: table.fields,
-          primaryFieldName: 'Helper text',
-          primaryFieldId: 'fldAukJDjn8jz2hOa',
-          name: 'Care Plan Master List',
-          id: 'tblO5d1RLXDjp4dNs',
+          fields: table?.fields,
+          primaryFieldName: table?.primaryFieldName,
+          primaryFieldId: table?.primaryFieldId,
+          name: table?.name,
+          id: table?.id,
         }
         getLinkedData({ ...helperTextTable, fieldId: 'viw1QkB6g0mANKrUO' })
           .then((options) => {
@@ -1221,7 +1221,10 @@ function LinkRecordInputDefault({
     }
 
     if (field.name === 'Care Plan Master List') {
-      getHelperTexts(airtableMeta?.tblO5d1RLXDjp4dNs)
+      const tbl = Object.keys(airtableMeta || {}).find(
+        (key) => airtableMeta[key]?.name === 'Care Plan Master List'
+      )
+      getHelperTexts(airtableMeta[tbl])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [field.name])
