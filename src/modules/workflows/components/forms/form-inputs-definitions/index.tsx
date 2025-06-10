@@ -1,7 +1,8 @@
 import prod from './prod'
 import staging from './staging'
+import viva from './viva'
 
-const forms = process.env.PROD === 'true' ? prod : staging
+const forms = process.env.API_URL?.includes("viva") ? viva : process.env.PROD === 'true' ? prod : staging
 
 const nonDeprecated = forms?.filter((form) => !form.deprecated)
 
