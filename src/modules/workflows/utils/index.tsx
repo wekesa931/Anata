@@ -267,7 +267,8 @@ export const checkModuleStatus = (payload: any[]) => {
 export const initialFormValues = (
   member: any,
   user: any,
-  workflow: any = null
+  workflow: any = null,
+  prefills?: any
 ): Record<string, any> => {
   const isOnsite = workflow === 'Onsite'
   const homeAddress = member?.homeAddress?.address || null
@@ -283,6 +284,7 @@ export const initialFormValues = (
       Gender: member?.sex,
       'Date of baseline': dayjs().format('YYYY-MM-DD'),
       'Is the BN a minor': member?.isMinor ? 'Yes' : 'No',
+      Appointments: prefills?.Appointments ?? [],
     },
     Vitals: {
       Staff: isOnsite
@@ -310,6 +312,7 @@ export const initialFormValues = (
       'Interaction type': isOnsite ? 'In-person' : null,
       'Initial vs FU': isOnsite ? 'Initial consultation' : null,
       'Date of Consultation': dayjs().format('YYYY-MM-DD'),
+      Appointments: prefills?.Appointments ?? [],
     },
     'Interaction log': {
       'Encounter Date': new Date(),

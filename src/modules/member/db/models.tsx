@@ -439,6 +439,11 @@ export class Member extends Model {
       ?.billingScheme?.billingPackage?.isUnlimitedMembership
   }
 
+  get isFFSMembershipMember() {
+    return this.activeBillingPackageEnrollment?.billingSchemeSubscription
+      ?.billingScheme?.billingPackage?.isFfs
+  }
+
   get isOnFreeMembership() {
     const billingMethodName =
       this.activeBillingPackageEnrollment?.billingSchemeSubscription

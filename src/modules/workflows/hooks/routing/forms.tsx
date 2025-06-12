@@ -36,6 +36,11 @@ export const useFormsRouting = () => {
       searchParams.set('formIds', formIds.join(','))
     } else {
       searchParams.delete('formIds')
+      searchParams.delete('reloadAppt')
+      searchParams.delete('selectedAppt')
+      searchParams.delete('completedApptSelection')
+      searchParams.delete('apptBilled')
+      searchParams.delete('selectedAppt')
     }
     setSearchParams(searchParams)
   }
@@ -58,10 +63,13 @@ export const useFormsRouting = () => {
   }
 
   const navigateToNewUrl = () =>
-    navigate({
-      pathname: location.pathname,
-      search: searchParams.toString(),
-    })
+    navigate(
+      {
+        pathname: location.pathname,
+        search: searchParams.toString(),
+      },
+      { replace: true }
+    )
 
   const openForm = async (formName: string, formData?: any) => {
     try {

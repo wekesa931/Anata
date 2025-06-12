@@ -2,6 +2,8 @@ import { useMutation } from '@apollo/client'
 import { useMember } from 'src/context/member'
 import { useState } from 'react'
 import { useUser } from 'src/context/user'
+import { useModuleAnalytics } from 'src/modules/analytics'
+import { useCheckForOTPPrompt } from 'src/modules/shared/services'
 import {
   CHECK_BENEFITS,
   POST_CLAIM,
@@ -31,6 +33,10 @@ export type BenefitsType = {
 export const useAppointmentsApi = () => {
   const { member } = useMember()
   const user = useUser()
+  const { trackOtpCodeValidated, trackOtpCodeInvalidated } =
+    useModuleAnalytics()
+
+  const { scheme, urlSource: source } = useCheckForOTPPrompt()
 
   const [memberBenefits, setMemberBenefits] = useState<BenefitsType | null>(
     null
@@ -119,13 +125,16 @@ export const useAppointmentsApi = () => {
       .then((res) => {
         if (res?.data?.checkVisitBenefits?.visit?.visitCode) {
           setMemberBenefits(res?.data)
+          trackOtpCodeValidated({ scheme, source })
         } else {
+          trackOtpCodeInvalidated({ scheme, source })
           throw Error(
             "This code doesn't match. Click 'Resend OTP' to get a new code"
           )
         }
       })
       .catch((e) => {
+        trackOtpCodeInvalidated({ scheme, source })
         if (e.graphQLErrors[0]?.extensions?.fields) {
           setOtpError(e.message)
         } else {
@@ -151,16 +160,21 @@ export const useAppointmentsApi = () => {
     })
   }
 
-  const openCalendar = (bookingUrl: string) => {
+  const openCalendar = (bookingUrl: string, visitCode?: string) => {
     const calendarUrl = bookingUrl || 'https://calendly.com/antara-health'
     if (member) {
       const fullName = member?.fullName || ''
-      const urlName = fullName?.replace(' ', '%20')
+      const urlName = encodeURIComponent(fullName) // replace ' ' with %20
       const email = member?.email || ''
       const memberEmail = email || 'navigation@antarahealth.com'
       const memberPhone = member?.phone
       const antaraId = member?.antaraId
-      const link = `${calendarUrl}?name=${urlName}&email=${memberEmail}&a1=${memberPhone}&utm_source=src-${user?.name}&utm_content=${antaraId}`
+      let link = `${calendarUrl}?name=${urlName}&email=${memberEmail}&a1=${memberPhone}&utm_source=src-${
+        user?.name ?? user?.fullName
+      }&utm_content=${antaraId}`
+      if (visitCode) {
+        link += `&utm_medium=${visitCode}`
+      }
       const newWindow = window.open(link, '_blank', 'noopener,noreferrer')
       if (newWindow) newWindow.opener = null
     }
@@ -170,6 +184,7 @@ export const useAppointmentsApi = () => {
     checkMemberBenefits,
     submittingVisitCode,
     visitCodeError,
+    setVisitCodeError,
     memberBenefits,
     otpError,
     checkingMemberBenefits,

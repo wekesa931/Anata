@@ -4,6 +4,7 @@ import { LoadingButton, LoadingButtonProps } from '@mui/lab'
 type HorizontalButtonProps = LoadingButtonProps & {
   leftButton: any
   rightButton: any
+  disabled?: boolean
 }
 
 function HorizontalPairButton(props: HorizontalButtonProps) {
@@ -19,12 +20,17 @@ function HorizontalPairButton(props: HorizontalButtonProps) {
 
   const onButtonClick = () => {
     props.rightButton.onClick &&
-      props.rightButton.onClick().catch((e) => setError(e.message))
+      props.rightButton?.onClick()?.catch((e) => setError(e.message))
   }
+
+  const isLeftDisabled = props.disabled || props.leftButton.disabled
+  const isRightDisabled = props.disabled || props.rightButton.disabled
+
   return (
     <div className="mt-4 flex justify-between">
       <LoadingButton
         {...props.leftButton}
+        disabled={isLeftDisabled}
         style={{ width: '48%' }}
         onClick={props.leftButton.onClick}
       >
@@ -32,6 +38,8 @@ function HorizontalPairButton(props: HorizontalButtonProps) {
       </LoadingButton>
       <LoadingButton
         {...props.rightButton}
+        disabled={isRightDisabled}
+        className={isRightDisabled ? 'opacity-50' : ''}
         style={{ width: '48%' }}
         onClick={onButtonClick}
       >

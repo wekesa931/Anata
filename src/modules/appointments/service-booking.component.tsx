@@ -1,10 +1,10 @@
 import ChevronLeftOutlinedIcon from '@mui/icons-material/ChevronLeftOutlined'
 import React from 'react'
 import { useMember } from 'src/context/member'
-import numberWithCommas from 'src/components/utils/number-format'
 import { ServicePricingType } from '../member/types'
 import { useAppointmentsApi } from './services/appointments.api'
 import SmartServiceCharge from './smart-verification/smart-service-booking-flow'
+import { formatCurrency } from '../member/utils'
 
 function ServiceBooking({ onBackPress }: { onBackPress: () => void }) {
   const { member } = useMember()
@@ -68,9 +68,8 @@ function ServiceBooking({ onBackPress }: { onBackPress: () => void }) {
             </p>
           </div>
           <div className="w-1/4 pr-2 content-center flex-none">
-            <p className="text-end	text-sm font-normal font-rubik">
-              {numberWithCommas(service?.price) || '00'}{' '}
-              <span className="text-dark-blue-50">.00</span>
+            <p className="text-end text-sm font-normal font-rubik break-words whitespace-normal">
+              {formatCurrency(service?.price, '')}
             </p>
           </div>
         </div>

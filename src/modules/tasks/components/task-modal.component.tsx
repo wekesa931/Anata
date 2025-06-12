@@ -67,7 +67,7 @@ type ListModalProps = {
   showUpdateAppointment: boolean
   taskType: boolean
 }
-function ModalHeader({
+export function ModalHeader({
   modalTitle,
   modalDescription,
   editMode,

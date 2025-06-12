@@ -415,5 +415,50 @@ export const useModuleAnalytics = () => {
         result,
       })
     },
+    // track smart visit code collection
+    trackVisitCodeValidated: ({ scheme, source, member }: any) => {
+      homePageSectionAnalytics.track('Smart visit code validated', {
+        scheme,
+        source,
+        member,
+      })
+    },
+    trackVisitCodeInvalidated: ({ scheme, source }: any) => {
+      homePageSectionAnalytics.track('Smart visit code invalidated', {
+        scheme,
+        source,
+        member: member?.antaraId,
+      })
+    },
+    // track smart OTP code collection
+    trackOtpCodeValidated: ({ scheme, source }: any) => {
+      homePageSectionAnalytics.track('Smart otp code validated', {
+        scheme,
+        source,
+        member: member?.antaraId,
+      })
+    },
+    trackOtpCodeInvalidated: ({ scheme, source }: any) => {
+      homePageSectionAnalytics.track('Smart otp code invalidated', {
+        scheme,
+        source,
+        member: member?.antaraId,
+      })
+    },
+    // track smart billing OTP code collection
+    trackBillingOtpCodeValidated: ({ scheme, source }: any) => {
+      homePageSectionAnalytics.track('Smart billing otp code validated', {
+        scheme,
+        source,
+        member: member?.antaraId,
+      })
+    },
+    trackBillingOtpCodeInvalidated: ({ scheme, source }: any) => {
+      homePageSectionAnalytics.track('Smart billing otp code invalidated', {
+        scheme,
+        source,
+        member: member?.antaraId,
+      })
+    },
   }
 }

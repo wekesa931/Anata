@@ -16,9 +16,19 @@ export const getBioDataTitle = (v2Member: V2MemberType, isLoading: boolean) => {
 
 // format currency, with an option to customize currency symbol
 export const formatCurrency = (value: number, currency = 'Kes') => {
+  if (!currency) {
+    // if no currency symbol, provided return jsut the formatted number
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value)
+  }
+
+  const currencyCode = currency === 'Kes' ? 'KES' : currency
+
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency,
+    currency: currencyCode,
     minimumFractionDigits: 2,
   }).format(value)
 }

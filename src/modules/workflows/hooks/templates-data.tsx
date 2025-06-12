@@ -39,7 +39,7 @@ export const useTemplatesData = () => {
     [templatesCollection]
   )
 
-  const createWorkflow = async (template: Templates) => {
+  const createWorkflow = async (template: Templates, prefills?: any) => {
     if (member) {
       const res = await syncWorkflowAPI({
         templateName: template.name,
@@ -62,7 +62,12 @@ export const useTemplatesData = () => {
         })
 
         // let's grab the initial form data
-        const initialFormData = initialFormValues(member, user, template.name)
+        const initialFormData = initialFormValues(
+          member,
+          user,
+          template.name,
+          prefills
+        )
 
         // for each module in the template, create a form
         await Promise.all(

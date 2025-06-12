@@ -1,70 +1,64 @@
 import React from 'react'
 import Accordion from '@mui/material/Accordion'
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked'
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
-import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
-import { Box } from '@mui/material'
+import { formatCurrency } from 'src/modules/member/utils'
 import ManualVerification from './manual-verification.component'
 
 type IProps = {
   selectedService: any
   cancelSmartBilling: () => void
+  hideCancelBtn?: boolean
+  showPrice?: boolean
+  otpContext?: any
+  closeModal?: any
+  appointment?: any
+  showAppointments?: boolean
+  handleVisitIdVerified?: any
 }
 
-function CustomExpandIcon() {
-  return (
-    <Box
-      sx={{
-        '.Mui-expanded & > .collapsIconWrapper': {
-          display: 'none',
-        },
-        '.expandIconWrapper': {
-          display: 'none',
-        },
-        '.Mui-expanded & > .expandIconWrapper': {
-          display: 'block',
-        },
-      }}
-    >
-      <div className="expandIconWrapper text-blue-100">
-        <RadioButtonCheckedIcon className="text-base" />
-      </div>
-      <div className="collapsIconWrapper text-dark-blue-50">
-        <RadioButtonUncheckedIcon className="text-base" />
-      </div>
-    </Box>
-  )
-}
-
-function SmartServiceCharge({ selectedService, cancelSmartBilling }: IProps) {
+function SmartServiceCharge({
+  selectedService,
+  cancelSmartBilling,
+  hideCancelBtn,
+  showPrice = false,
+  otpContext,
+  closeModal,
+  appointment,
+  showAppointments,
+  handleVisitIdVerified,
+}: IProps) {
   return (
     <>
-      <p className="font-medium font-rubik text-base">
-        {selectedService?.service?.name}
-      </p>
-      <p className="mt-2 mb-3 text-sm font-rubik text-sm text-dark-blue-70">
-        How do you want to collect the member’s consent for the service?
+      {/* show title only when booking appointment */}
+      {!otpContext?.modalOpen && selectedService && (
+        <p className="font-semibold font-rubik text-base text-[#205284] mb-1">
+          {selectedService?.service?.name}
+        </p>
+      )}
+      {/* end of show only when booking appointment */}
+      <p className="font-semibold font-rubik text-xs mb-1">
+        {showPrice && !showAppointments && (
+          <>
+            Service Fee:
+            <span className="font-normal text-sm ml-1">
+              {formatCurrency(selectedService?.price, 'Kes')}
+            </span>
+          </>
+        )}
       </p>
       <Accordion className="border border-dark-blue-10 shadow-none rounded-md">
-        <AccordionSummary
-          expandIcon={<CustomExpandIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <div>
-            <p className="font-medium font-rubik text-sm">Manually</p>
-            <p className="font-normal font-rubik text-xs text-dark-blue-70">
-              Get the visit code and enter it manually in Scribe
-            </p>
-          </div>
-        </AccordionSummary>
         <AccordionDetails>
-          <div className="border" />
-          <ManualVerification
-            selectedService={selectedService}
-            cancelSmartBilling={cancelSmartBilling}
-          />
+          <div className="mb-1">
+            <ManualVerification
+              hideCancelBtn={hideCancelBtn}
+              selectedService={selectedService}
+              cancelSmartBilling={cancelSmartBilling}
+              otpContext={otpContext}
+              closeModal={closeModal}
+              appointment={appointment}
+              handleVisitIdVerified={handleVisitIdVerified}
+            />
+          </div>
         </AccordionDetails>
       </Accordion>
     </>

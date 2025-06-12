@@ -40,6 +40,7 @@ const APPOINTMENT_FIELDS = [
   'Rescheduled',
   'Missed',
   'PAFU',
+  'visit id',
 ]
 
 export const useAppointmentsData = () => {

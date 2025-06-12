@@ -973,6 +973,10 @@ html,
   margin-top: 0.625rem !important;
 }
 
+.mt-24 {
+  margin-top: 6rem !important;
+}
+
 .mt-3 {
   margin-top: 0.75rem !important;
 }
@@ -1011,18 +1015,6 @@ html,
 
 .mt-\[40px\] {
   margin-top: 40px !important;
-}
-
-.mt-14 {
-  margin-top: 3.5rem !important;
-}
-
-.mt-20 {
-  margin-top: 5rem !important;
-}
-
-.mt-24 {
-  margin-top: 6rem !important;
 }
 
 .box-content {
@@ -1100,6 +1092,14 @@ html,
 
 .h-1 {
   height: 0.25rem !important;
+}
+
+.h-1\/2 {
+  height: 50% !important;
+}
+
+.h-10 {
+  height: 2.5rem !important;
 }
 
 .h-12 {
@@ -1431,6 +1431,10 @@ html,
   max-width: 30rem !important;
 }
 
+.max-w-full {
+  max-width: 100% !important;
+}
+
 .max-w-md {
   max-width: 28rem !important;
 }
@@ -1746,6 +1750,10 @@ html,
   text-overflow: ellipsis !important;
 }
 
+.whitespace-normal {
+  white-space: normal !important;
+}
+
 .whitespace-nowrap {
   white-space: nowrap !important;
 }
@@ -1756,6 +1764,10 @@ html,
 
 .whitespace-pre-wrap {
   white-space: pre-wrap !important;
+}
+
+.text-wrap {
+  text-wrap: wrap !important;
 }
 
 .break-normal {
@@ -2550,6 +2562,10 @@ html,
   padding-bottom: 0.5rem !important;
 }
 
+.pb-4 {
+  padding-bottom: 1rem !important;
+}
+
 .pb-7 {
   padding-bottom: 1.75rem !important;
 }
@@ -2781,11 +2797,6 @@ html,
   color: rgb(52 199 89 / var(--tw-text-opacity)) !important;
 }
 
-.text-\[\#424242\] {
-  --tw-text-opacity: 1 !important;
-  color: rgb(66 66 66 / var(--tw-text-opacity)) !important;
-}
-
 .text-\[\#444\] {
   --tw-text-opacity: 1 !important;
   color: rgb(68 68 68 / var(--tw-text-opacity)) !important;
@@ -2839,11 +2850,6 @@ html,
 .text-\[\#D1D5DB\] {
   --tw-text-opacity: 1 !important;
   color: rgb(209 213 219 / var(--tw-text-opacity)) !important;
-}
-
-.text-\[\#D32F2F\] {
-  --tw-text-opacity: 1 !important;
-  color: rgb(211 47 47 / var(--tw-text-opacity)) !important;
 }
 
 .text-\[\#FF3B30\] {
@@ -3431,10 +3437,6 @@ html,
 }
 
 @media (min-width: 1024px) {
-  .lg\:mt-14 {
-    margin-top: 3.5rem !important;
-  }
-
   .lg\:mt-16 {
     margin-top: 4rem !important;
   }
@@ -3456,10 +3458,6 @@ html,
 
   .xl\:mb-4 {
     margin-bottom: 1rem !important;
-  }
-
-  .xl\:mt-16 {
-    margin-top: 4rem !important;
   }
 
   .xl\:mt-20 {

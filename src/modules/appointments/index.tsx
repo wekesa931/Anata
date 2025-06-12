@@ -9,19 +9,27 @@ import airtableFetch from 'src/services/airtable/fetch'
 import { useMember } from 'src/context/member'
 import useHandleResponses from 'src/utils/airtable/error-handler'
 import useAntaraStaff from 'src/hooks/antara-staff.hook'
-import { User, HelpCircle, CheckCircle, XCircle, Clock } from 'react-feather'
+import { User, HelpCircle, CheckCircle, Clock } from 'react-feather'
 import { useModuleAnalytics } from 'src/modules/analytics'
 import ExternalLinkIcon from 'src/assets/img/icons/external-link.svg'
 import LoadingIcon from 'src/assets/img/icons/loading.svg'
 import { useAirtableMeta } from 'src/context/airtable-meta'
-import { SEND_WHATSAPP_MESSAGE } from 'src/modules/comms/services/gql'
-import { useMutation } from '@apollo/client'
 import { useNotifications } from 'src/context/notifications'
 import Modal from 'src/components/modals'
 import { Button } from '@mui/material'
 import ReplayIcon from '@mui/icons-material/Replay'
+import PromptOtpCollection from 'src/modules/shared/components/prompt-otp-collection'
+import ServiceBooking from 'src/modules/appointments/service-booking.component'
+import {
+  OTPCollectionModalInterface,
+  useCheckForOTPPrompt,
+} from 'src/modules/shared/services/index'
+import {
+  useQueryParam,
+  useRemoveQueryParam,
+  useSetQueryParam,
+} from 'src/modules/shared/hooks'
 import styles from './appointments.module.css'
-import ServiceBooking from './service-booking.component'
 
 const SearchFieldsNameMap: Record<string, any> = {
   'Facilities from Provider base': {
@@ -38,17 +46,41 @@ const SearchFieldsNameMap: Record<string, any> = {
   },
 }
 
-type ConsentValue = 'Needed' | 'Requested' | 'Consented' | 'Rejected'
+const allowedFields = [
+  'Service',
+  'Status',
+  'start_date_time',
+  'Comments',
+  'Calendly Reschedule URL',
+  'Record ID',
+  'Assignee',
+  'Reasons for missed or rescheduled meeting',
+  'Facilities from Provider base',
+  'Specialists from Provider Base',
+  'Facilities name from Provider base',
+  'Specialist name from Provider base',
+  'Assignee Name',
+  'Reason for cancellation',
+  'Reason for missed',
+  'Consent',
+  'calendly_booking_url',
+  'end_date_time',
+  'Source',
+  'visit id',
+]
 
 function Appointments() {
   const [appointments, setAppointments] = React.useState<any[]>([])
   const [isConsentModalOpen, setIsConsentModalOpen] = useState(false)
   const [activeAppointment, setActiveAppointment] = useState({})
-  const [showOptions, setShowOptions] = useState(false)
   const [serviceBookingStarted, setServiceBookingStarted] = useState(false)
 
   const { member } = useMember()
   const recId = member?.airtableRecordId
+
+  const setQueryParam = useSetQueryParam()
+  const hasUpdatedAppt = useQueryParam('reloadAppt')
+  const removeQueryParam = useRemoveQueryParam()
 
   const status = ['All', 'Completed', 'Cancelled', 'Missed']
 
@@ -60,8 +92,17 @@ function Appointments() {
   >([])
   const { airtableMeta, getFieldOptions } = useAirtableMeta()
   const { allAntaraStaffs, loading } = useAntaraStaff()
-  const [sendWhatsappMessage] = useMutation(SEND_WHATSAPP_MESSAGE)
   const { notify } = useNotifications()
+
+  const [otpCollectionModal, setOtpCollectionModal] =
+    useState<OTPCollectionModalInterface>({
+      name: '',
+      modalOpen: false,
+      service: { service: { name: '' } },
+    })
+  /** should prompt for OTP collection */
+  const { scheme, promptOTP, services } = useCheckForOTPPrompt()
+
   useEffect(() => {
     if (airtableMeta) {
       const APPOINTMENT_FIELDS: AirtableField[] = [
@@ -138,28 +179,6 @@ function Appointments() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [airtableMeta, loading, allAntaraStaffs])
 
-  const allowedFields = [
-    'Service',
-    'Status',
-    'start_date_time',
-    'Comments',
-    'Calendly Reschedule URL',
-    'Record ID',
-    'Assignee',
-    'Reasons for missed or rescheduled meeting',
-    'Facilities from Provider base',
-    'Specialists from Provider Base',
-    'Facilities name from Provider base',
-    'Specialist name from Provider base',
-    'Assignee Name',
-    'Reason for cancellation',
-    'Reason for missed',
-    'Consent',
-    'calendly_booking_url',
-    'end_date_time',
-    'Source',
-  ]
-
   const { data, isLoading, isError, refresh } = useAirtableFetch(
     `appointments/list?filterByFormula=FIND("${recId}", {Member Record ID})
     &sort=[{"field":"start_date_time","direction":"desc"}]
@@ -209,6 +228,26 @@ function Appointments() {
     })
   }
 
+  useEffect(() => {
+    if (hasUpdatedAppt === 'true') {
+      refresh()
+      const searchParams = new URLSearchParams(location.search)
+      const reloadAppt = searchParams.get('reloadAppt')
+
+      if (reloadAppt) {
+        removeQueryParam('reloadAppt')
+      }
+    }
+
+    return () => {
+      if (hasUpdatedAppt === 'true') {
+        removeQueryParam('reloadAppt')
+        removeQueryParam('selectedAppt')
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasUpdatedAppt])
+
   const includeFieldTypes = (appointment: any) => {
     const parsedFields: any[] = []
 
@@ -253,56 +292,68 @@ function Appointments() {
     }
     return false
   }
-  const triggerAppointmentConsent = async (appt: any) => {
-    sendWhatsappMessage({
-      variables: {
-        input: {
-          antaraId: member?.antaraId,
-          botName: member?.hasPrimary
-            ? 'FFS Dependent Service Consent'
-            : 'FFS Service Consent',
-          components: [
-            {
-              memberName: member?.fullName,
-              serviceName:
-                appt.Service === 'Baseline' ? 'Health Check' : appt.Service,
-              appointmentDate: dayjs(appt.start_date_time).format(
-                'MMMM Do h:mm A'
-              ),
-              insurerName: member?.primaryInsuranceCompany,
-              appointmentBookingUrl: appt.calendly_booking_url,
-            },
-          ],
+
+  /**
+   * prompt billing collection appointment has not visit id
+   * @param appointment
+   * @returns
+   */
+  const checkForOTPPrompt = async (appointment: any) => {
+    if (!promptOTP || scheme !== 'FFS') return
+
+    const { Service: serviceName } = appointment
+
+    const aliasMap: Record<string, string> = {
+      'Antara Virtual Doctor Consultation': 'Virtual Doctor Consultation',
+      'Virtual Doctor Consultation': 'Virtual Doctor Consultation',
+      'Pediatric Consultation': 'Paediatric Consultation',
+      'Paediatric Consultation': 'Paediatric Consultation',
+      'Nutrition Consultation': 'Nutrition Consultation',
+      'Mental Health Consultation': 'Mental Health Consultation',
+    }
+
+    // determine if service name exists as an alias to a service pricing name
+    const aliasMatch = aliasMap[serviceName]
+
+    const selectedService = services.find(
+      (serv) =>
+        serv.service.name ===
+        (aliasMatch ??
+          'Virtual Doctor Consultation' ??
+          'virtual doctor consultation')
+    )
+
+    if (!selectedService)
+      return notify('No service matches this appointment', 'error')
+
+    setQueryParam('selectedAppt', appointment.id)
+
+    setOtpCollectionModal({
+      name: serviceName,
+      modalOpen: true,
+      service: selectedService ?? {
+        service: {
+          name: `Collect OTP to capture service billing for ${serviceName}`,
         },
       },
     })
-      .then(() => {
-        notify('Appointment consent to member sent successfully', 'success')
-      })
-      .catch((err) => {
-        notify(`Unable to send member consent ${err}`, 'error')
-      })
+    setActiveAppointment(appointment)
   }
 
-  const getConsentState = (consentValue: ConsentValue) => {
-    switch (consentValue) {
-      case 'Needed':
-      case 'Requested':
-        return {
-          message: 'Consent needed',
-          color: '#FF9500',
-          Icon: HelpCircle,
-        }
-      case 'Consented':
-        return {
-          message: 'Consent confirmed',
-          color: '#34C759',
-          Icon: CheckCircle,
-        }
-      case 'Rejected':
-        return { message: 'Consent rejected', color: '#CB314B', Icon: XCircle }
-      default:
-        return { message: 'Consent needed', color: '#FF9500', Icon: HelpCircle }
+  useEffect(() => {}, [])
+
+  const getOtpVisitId = (appointment: any) => {
+    if (appointment['visit id'] && appointment.Status.includes('Scheduled')) {
+      return {
+        message: 'Billed',
+        color: '#34C759',
+        Icon: CheckCircle,
+      }
+    }
+    return {
+      message: 'Bill Pending',
+      color: '#FF9500',
+      Icon: HelpCircle,
     }
   }
 
@@ -336,49 +387,61 @@ function Appointments() {
       </>
     )
   }
+
   useEffect(() => {
     function getAssigneeName(assigned: string | { fullName: string }) {
       return typeof assigned === 'string' ? assigned : assigned?.fullName || ''
     }
-    const allowedConsentStatuses = [
-      'Needed',
-      'Requested',
-      'Consented',
-      'Rejected',
-    ]
 
-    const getDisplayInfo = (appointment: any) => {
-      const consent =
-        appointment.Consent || (member?.isFfsEligible ? 'Needed' : undefined)
+    const getDisplayInfo = (appointment: any, scheme: string) => {
+      const billingVisilibility = includesArrayValue(
+        ['Scheduled'],
+        appointment.Status
+      )
 
-      const consentVisilibility =
-        includesArrayValue(allowedConsentStatuses, consent) &&
-        includesArrayValue(['Scheduled'], appointment.Status)
+      const { color, Icon } = getOtpVisitId(appointment)
 
-      const resendConsent = includesArrayValue(['Needed', 'Requested'], consent)
-      const { message, color, Icon } = getConsentState(consent)
+      const showBillingStatusCollected =
+        scheme === 'FFS' && billingVisilibility && appointment['visit id']
+
+      const showBillingStatusPending =
+        scheme === 'FFS' && billingVisilibility && !appointment['visit id']
 
       return (
         <div className="d-flex justify-center w-full items-start flex-col">
           <div className="font-medium text-base text-dark-blue-100 flex-col w-full">
             <div className="flex justify-between items-center">
-              <div
-                className={`flex-col ${
-                  consentVisilibility && member?.isFfsEligible ? 'w-1/2' : ''
-                }`}
-              >
+              <div className="flex-col">
                 <span className="font-medium!">{appointment.Service}</span>
               </div>
-              {consentVisilibility && member?.isFfsEligible && (
-                <div className="flex-none">
-                  <span
-                    className="text-sm font-medium flex items-center space-x-2"
-                    style={{ color }}
-                  >
-                    {Icon && <Icon width={14} height={14} />}
-                    <span>{message}</span>
-                  </span>
-                </div>
+              {scheme === 'FFS' && (
+                <>
+                  {showBillingStatusCollected && (
+                    <div className="flex-none">
+                      <span
+                        className="text-sm font-medium flex items-center space-x-2"
+                        style={{ color }}
+                      >
+                        {Icon && <Icon width={14} height={14} />}
+                        <span>Billed</span>
+                      </span>
+                    </div>
+                  )}
+
+                  {showBillingStatusPending && (
+                    <div className="flex-none">
+                      <span
+                        className="text-sm font-medium flex items-center space-x-2"
+                        style={{ color }}
+                      >
+                        {Icon && <Icon width={14} height={14} />}
+                        <span>
+                          Billing <br /> Pending
+                        </span>
+                      </span>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -436,87 +499,21 @@ function Appointments() {
               </div>
             )}
           </div>
-          {consentVisilibility && member?.isFfsEligible && (
+          {showBillingStatusPending && member?.isFfsEligible && (
             <>
-              {resendConsent && (
-                <div className="p-2 items-center mt-2 w-full">
-                  {showOptions}
-                  <section className="flex items-center justify-between relative">
-                    <button
-                      className="text-[#5D6B82] px-2 py-1 text-sm font-medium rounded border w-full mr-1"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        triggerAppointmentConsent(appointment)
-                      }}
-                    >
-                      Request consent
-                    </button>
-                    <button
-                      className="text-[#5D6B82] px-2 py-1 text-sm font-medium rounded w-full ml-1 border"
-                      onMouseEnter={() => setShowOptions(true)}
-                      onMouseLeave={() => setShowOptions(false)}
-                    >
-                      Update consent
-                    </button>
-                  </section>
-                  <div>
-                    {showOptions && (
-                      <div
-                        className="px-0 bg-[#FFFFFF] w-1/2 z-20 shadow-lg float-right"
-                        onMouseEnter={() => setShowOptions(true)}
-                        onMouseLeave={() => setShowOptions(false)}
-                      >
-                        <button
-                          tabIndex={0}
-                          className="w-full border-none flex text-[#424242] p-2 cursor-pointer"
-                          style={{
-                            backgroundColor: '#E0E0E0',
-                            transition: 'background-color 0.2s',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = '#E8F5E9'
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = '#fff'
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setActiveAppointment(appointment)
-                            setIsConsentModalOpen(true)
-                          }}
-                        >
-                          <CheckCircle
-                            width={16}
-                            height={16}
-                            className="mr-2"
-                          />
-                          Confirmed
-                        </button>
-                        <button
-                          className="w-full border-none flex text-[#D32F2F] p-2 cursor-pointer"
-                          style={{
-                            backgroundColor: '#fff',
-                            transition: 'background-color 0.2s',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = '#FFEBEE'
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = '#fff'
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleUpdateConsent(appointment, 'Rejected')
-                          }}
-                        >
-                          <XCircle width={16} height={16} className="mr-2" />
-                          Rejected
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+              <div className="p-2 items-center mt-2 w-full">
+                <section className="flex items-center justify-between relative">
+                  <button
+                    className="text-[#5D6B82] px-2 py-1 text-sm font-medium rounded border w-full mr-1"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      checkForOTPPrompt(appointment)
+                    }}
+                  >
+                    Bill Member
+                  </button>
+                </section>
+              </div>
             </>
           )}
         </div>
@@ -527,14 +524,14 @@ function Appointments() {
       const mappedResponse = data?.map((d: any) => {
         return {
           data: includeFieldTypes(d),
-          name: getDisplayInfo(d),
+          name: getDisplayInfo(d, scheme),
           id: d['Record ID'],
         }
       })
       setAppointments(mappedResponse)
     }
     // eslint-disable-next-line
-  }, [data, showOptions])
+  }, [data])
 
   const getPastAppointments = (pastAppointments: any[]): any[] => {
     return pastAppointments.filter((appointment: any) => {
@@ -751,6 +748,15 @@ function Appointments() {
           </Button>
         </div>
       </Modal>
+
+      {/* smart otp collection prompt */}
+      {otpCollectionModal?.modalOpen && (
+        <PromptOtpCollection
+          otpCollectionModal={otpCollectionModal}
+          setOtpCollectionModal={setOtpCollectionModal}
+          selectedService={otpCollectionModal.service}
+        />
+      )}
     </div>
   )
 }

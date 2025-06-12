@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react'
 import PrimaryButton from 'src/components/buttons/primary'
 import numberWithCommas from 'src/components/utils/number-format'
 import HorizontalPairButton from 'src/components/buttons/pair-button'
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
+import { useCheckForOTPPrompt } from 'src/modules/shared/services'
+import { useQueryParam, useUpdateQueryParams } from 'src/modules/shared/hooks'
+import { useModuleAnalytics } from 'src/modules/analytics'
 import { BenefitsType, useAppointmentsApi } from '../services/appointments.api'
 
 function Benefits({
@@ -9,11 +13,15 @@ function Benefits({
   bookingUrl,
   visitCode,
   onCancel,
+  otpContext,
+  closeModal,
 }: {
   benefits: BenefitsType
   bookingUrl: string
   visitCode: string
   onCancel: () => void
+  otpContext?: any
+  closeModal?: any
 }) {
   const [time, setTime] = useState(120)
   const [counterInitiator, setCounterInitiator] = useState(0)
@@ -30,6 +38,19 @@ function Benefits({
   const hasInadequateBalance =
     benefits?.checkVisitBenefits?.message?.code === 'INADEQUATE_OP_BALANCE'
 
+  /** should update visit code in the appointments table after billing completed */
+  const {
+    scheme,
+    urlSource: source,
+    updateAppointment,
+  } = useCheckForOTPPrompt()
+
+  const { trackBillingOtpCodeValidated, trackBillingOtpCodeInvalidated } =
+    useModuleAnalytics()
+
+  const updateQueryParams = useUpdateQueryParams()
+  const appointmentId = useQueryParam('selectedAppt')
+
   const onBillingCodeChange = (e) => {
     setBillingCode(e.target.value)
   }
@@ -44,10 +65,25 @@ function Benefits({
 
   const onClaimPosting = () => {
     if (billingCode) {
-      postClaim(visitCode, billingCode).then((res) => {
+      postClaim(visitCode, billingCode).then((res: any) => {
         if (res?.data?.postVisitClaim?.visit?.visitCode) {
-          bookingUrl && openCalendar(bookingUrl)
-          onCancel()
+          if (otpContext && otpContext?.modalOpen) {
+            // otp submitted via the OTP prompt modal
+            // update appointment with the OTP
+            if (visitCode && appointmentId) {
+              updateAppointment(visitCode, appointmentId)
+              updateQueryParams({
+                completedAndBilledApptSelection: true,
+                apptBilled: true,
+              })
+              setTimeout(() => {
+                closeModal()
+              }, 200)
+            }
+          } else {
+            bookingUrl && openCalendar(bookingUrl, visitCode)
+            onCancel()
+          }
         }
       })
     }
@@ -75,7 +111,7 @@ function Benefits({
         }`}
       >
         <p
-          className={`font-normal font-rubik text-xs ${
+          className={`font-normal font-rubik text-xs p-1 text-wrap ${
             hasInadequateBalance ? 'text-red-100' : 'text-green-100'
           }`}
         >
@@ -116,7 +152,10 @@ function Benefits({
             }}
             rightButton={{
               text: 'Continue Anyway',
-              onClick: onClaimPosting,
+              onClick: () => {
+                onClaimPosting()
+                trackBillingOtpCodeInvalidated({ scheme, source })
+              },
               variant: 'contained',
               className: `text-xs capitalize text-white ${
                 postingClaim ? 'bg-dark-blue-10' : 'bg-blue-btn'
@@ -127,14 +166,14 @@ function Benefits({
         </>
       ) : (
         <>
-          <p className="text-sm text-dark-blue-70 font-rubik text-xs">
+          <p className="text-sm font-semibold text-dark-blue-70 font-rubik">
             Now enter the SMART OTP code to successfully bill member
           </p>
           <p className="my-2 font-medium text-sm text-dark-blue-50 font-rubik text-xs">
-            SMART OTP Code for billing{' '}
+            SMART OTP Code For Billing{' '}
           </p>
           <input
-            className={`text-sm border w-full h-8 rounded pl-2 ${
+            className={`text-sm border w-full h-10 rounded pl-2 ${
               billingCodeError ? 'border-red-100 bg-red-10 text-red-100' : ''
             }`}
             placeholder="Enter Otp"
@@ -170,8 +209,12 @@ function Benefits({
             }}
             rightButton={{
               text: 'Proceed',
-              onClick: onClaimPosting,
+              onClick: () => {
+                onClaimPosting()
+                trackBillingOtpCodeValidated({ scheme, source })
+              },
               variant: 'contained',
+              endIcon: <KeyboardDoubleArrowRightIcon />,
               className: `text-xs capitalize text-white ${
                 postingClaim ? 'bg-dark-blue-10' : 'bg-blue-btn'
               }`,
