@@ -88,6 +88,7 @@ export const useAppointmentsApi = () => {
   }
 
   const postClaim = (visitCode: string, otp: string) => {
+    setBillingCodeError(null)
     return postVisitClaim({
       variables: {
         input: {
@@ -104,11 +105,14 @@ export const useAppointmentsApi = () => {
         throw Error('Invalid code entered')
       })
       .catch((e) => {
-        if (e.graphQLErrors[0]?.extensions?.fields) {
-          setBillingCodeError(e.message)
-        } else {
-          throw new Error(e.message)
-        }
+        const graphQLError = e?.graphQLErrors?.[0]?.message
+        const message =
+          graphQLError ||
+          e.message ||
+          'Something went wrong, contact support to fix'
+
+        setBillingCodeError(message)
+        throw new Error(message)
       })
   }
 
