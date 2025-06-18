@@ -10,6 +10,7 @@ import { useNotifications } from 'src/context/notifications'
 import { logError } from 'src/utils/logging/logger'
 import ErrorComponent from 'src/components/feedbacks/error-component'
 import { Loader } from 'react-feather'
+import dayjs from 'dayjs'
 import useMedicationListingData from '../hooks/medication-listing'
 
 type ModalProps = {
@@ -82,7 +83,8 @@ function PrescriptionModalView({
       const data = await getConsultationData()
       setLoading(false)
       setUserError(null)
-      setConsultationData(data)
+      const res = sortConsulationData(data)
+      setConsultationData(res)
     } catch (error) {
       setUserError(`Error loading consultation data : ${error}`)
       logError(error)
@@ -96,6 +98,15 @@ function PrescriptionModalView({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member])
+
+  const sortConsulationData = (data: any) => {
+    return data.sort((a: any, b: any) => {
+      const format = 'hh:mma YYYY-MM-DD'
+      const dateA = dayjs(a.label.replace(/\s+/, ' '), format)
+      const dateB = dayjs(b.label.replace(/\s+/, ' '), format)
+      return dateB.valueOf() - dateA.valueOf()
+    })
+  }
 
   return modalOpen ? (
     <Modal
