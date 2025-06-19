@@ -143,8 +143,8 @@ function PdfPreview({
     if (values.autoPickPharmtech && antaraPharmtechs.length > 1) {
       pharmtech = autoPickRandomPharmtech(antaraPharmtechs)
     } else if (values.autoPickPharmtech && antaraPharmtechs.length === 1) {
-      pharmtech = 'recU1c3FqsXVm0OR4' // staging
-      // pharmtech = 'recu5uc1XUF8Rp14l' // prod
+      pharmtech =
+        process.env.PROD === 'true' ? 'recu5uc1XUF8Rp14l' : 'recU1c3FqsXVm0OR4'
     } else {
       pharmtech = values.selectedPharmtech
     }
@@ -154,8 +154,10 @@ function PdfPreview({
     setShowProgress(true)
     const payload = {
       Member: [member?.airtableRecordId],
-      'Task definition': ['recm6cPiqKkdzBSYu'], // staging
-      // 'Task definition': ['recCL3eSiTjV0Hfob'], // production
+      'Task definition':
+        process.env.PROD === 'true'
+          ? ['recCL3eSiTjV0Hfob']
+          : ['recutE8UEOsAvU73u'],
       Status: 'Not Started',
       'Task Priority': 'P0',
       'Task Notes': `Prescription Verification: view the latest prescription in the member's Docs and verify the following details: drug dosage, dosage form, duration, previous prescriptions that the member had/refilled.
@@ -171,8 +173,10 @@ function PdfPreview({
       Member: [member?.airtableRecordId],
       Status: 'Not Started',
       Assignee: [pharmtechRef.current],
-      'Task definition': ['recm6cPiqKkdzBSYu'], // staging
-      // 'Task definition': ['recXckw3qBntshGbB'], // prod
+      'Task definition':
+        process.env.PROD === 'true'
+          ? ['recXckw3qBntshGbB']
+          : ['rec48Fl5tTYRt3QI8'],
       'Task Priority': 'P0',
       'Task Notes': `Follow up with pharmacy to determine processing progress and appraise member, until member confirms delivery.
         Fill in the "Refill facility from Provider base" in HNOS: Prescription table, for each medication.
