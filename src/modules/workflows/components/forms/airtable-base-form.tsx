@@ -223,7 +223,7 @@ function AirtableBasedForm({
     let parsedField = field
     if (selectedTag) {
       const definitions = taskDefinitions.filter((taskDefinition: any) =>
-        taskDefinition.scribeTags.includes(selectedTag?.name ?? selectedTag)
+        taskDefinition.scribeTags?.includes(selectedTag?.name ?? selectedTag)
       )
 
       if (definitions.length) {
