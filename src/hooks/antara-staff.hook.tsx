@@ -123,6 +123,7 @@ export const useAntaraStaff = () => {
         allAntaraStaffs
       ),
       antaraLogistics: filterByTeam(['LOGISTICS'], allAntaraStaffs),
+      antaraPharmtechs: filterByTeam(['PHARMTECH'], allAntaraStaffs),
       getStaffByUser,
       getStaffData,
     }),

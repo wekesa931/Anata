@@ -17,6 +17,7 @@ type RegistrationFormContextType = {
   antaraHNs: LookupOption[]
   antaraMEs: LookupOption[]
   antaraNutritionists: LookupOption[]
+  antaraPharmtechs: LookupOption[]
   member: any
   openFormWithParams: (value: boolean, params?: OpenFormParams) => void
   registrationContext: string | undefined
@@ -37,6 +38,7 @@ const RegistrationFormContext =
     antaraHNs: [],
     antaraMEs: [],
     antaraNutritionists: [],
+    antaraPharmtechs: [],
     member: null,
     openFormWithParams: () => null,
     registrationContext: undefined,
@@ -52,8 +54,13 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
   const [insuranceCompanies, setInsuranceCompanies] = useState<LookupOption[]>(
     []
   )
-  const { antaraHNs, antaraMEs, loading, antaraNutritionists } =
-    useAntaraStaff()
+  const {
+    antaraHNs,
+    antaraMEs,
+    loading,
+    antaraNutritionists,
+    antaraPharmtechs,
+  } = useAntaraStaff()
   const [lookupOptions, setLookupOptions] = useState<LookupOptions>(
     {} as LookupOptions
   )
@@ -130,6 +137,7 @@ function RegistrationFormProvider({ children }: { children: React.ReactNode }) {
     antaraHNs: mapAssigneeToLookup(antaraHNs),
     antaraMEs: mapAssigneeToLookup(antaraMEs),
     antaraNutritionists: mapAssigneeToLookup(antaraNutritionists),
+    antaraPharmtechs: mapAssigneeToLookup(antaraPharmtechs),
     openFormWithParams,
     member,
     registrationContext,

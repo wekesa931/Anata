@@ -2562,10 +2562,6 @@ html,
   padding-bottom: 0.5rem !important;
 }
 
-.pb-4 {
-  padding-bottom: 1rem !important;
-}
-
 .pb-7 {
   padding-bottom: 1.75rem !important;
 }
@@ -2606,12 +2602,28 @@ html,
   padding-top: 0.25rem !important;
 }
 
+.pt-10 {
+  padding-top: 2.5rem !important;
+}
+
 .pt-2 {
   padding-top: 0.5rem !important;
 }
 
 .pt-7 {
   padding-top: 1.75rem !important;
+}
+
+.pt-3 {
+  padding-top: 0.75rem !important;
+}
+
+.pt-4 {
+  padding-top: 1rem !important;
+}
+
+.pt-6 {
+  padding-top: 1.5rem !important;
 }
 
 .text-left {

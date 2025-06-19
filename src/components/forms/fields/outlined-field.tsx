@@ -10,6 +10,7 @@ export type OutlinedFieldProps = {
   placeholder?: string
   handleBlur?: (e: any) => void
   handleChange?: (e: any) => void
+  handleValueChangeWithId?: (id: any, val: any) => void
   handleInputChange?: (e: any) => void
   fullWidth?: boolean
   validate?: (value: any) => string | undefined

@@ -1,14 +1,9 @@
 import { ChildCareOutlined, Person2Outlined } from '@mui/icons-material'
 import React, { useEffect } from 'react'
-import { Check, Share, X } from 'react-feather'
+import { Check, X } from 'react-feather'
 import PrimaryButton from 'src/components/buttons/primary'
-import { useNotifications } from 'src/context/notifications'
 import useAnalytics from 'src/hooks/analytics'
-import { useModuleAnalytics } from 'src/modules/analytics'
 import { Member } from 'src/modules/member/db/models'
-import { useUdmData } from 'src/modules/udm/hooks/udm.data'
-import { useDocumentsReadApi } from 'src/modules/udm/services/udm.api'
-import logError from 'src/utils/logging/logger'
 import { useNavigate } from 'react-router-dom'
 
 type SuccessfulProps = {
@@ -18,8 +13,8 @@ type SuccessfulProps = {
   setSelectedForm?: (form: any) => void
   isRosterMember?: boolean
   successMessage: string
-  headerMessage: string
-  customMessage: string
+  headerMessage?: string
+  customMessage?: string
   handleClose?: () => void
   fileId?: string
   primaryMember?: Member
@@ -36,9 +31,7 @@ function SuccessPrompt({
   headerMessage,
   customMessage,
   handleClose,
-  fileId,
   primaryMember,
-  folder = 'Health Reports',
 }: SuccessfulProps) {
   const analytics = useAnalytics('Member registration')
 
@@ -53,31 +46,7 @@ function SuccessPrompt({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  const { handleShareFile, sharingFile: sharing } = useUdmData()
-  const { findFolderByName } = useDocumentsReadApi()
-  const { trackNewDocumentShared } = useModuleAnalytics()
-  const { notify } = useNotifications()
   const navigate = useNavigate()
-
-  const shareFile = () => {
-    findFolderByName(folder).then((res) => {
-      const folderId = res?.node?.id
-      handleShareFile(fileId, folderId)
-        .then((response) => {
-          const message = response?.message
-          notify(message)
-          trackNewDocumentShared(response?.sharedFile)
-        })
-        .catch((err) => {
-          logError(err)
-          notify('An error occurred while sharing the file')
-          trackNewDocumentShared(fileId, false)
-        })
-        .finally(() => {
-          handleClose && handleClose()
-        })
-    })
-  }
 
   return (
     <div className="p-2 flex flex-col gap-4 font-rubik text-left">
@@ -137,16 +106,7 @@ function SuccessPrompt({
                   <X className="w-6 h-6 rounded-full bg-blue-btn text-white hover:bg-blue-btn" />
                 }
               >
-                Not now
-              </PrimaryButton>
-              <PrimaryButton
-                fullWidth
-                variant="contained"
-                startIcon={<Share />}
-                onClick={shareFile}
-                loading={sharing}
-              >
-                Share
+                Close
               </PrimaryButton>
             </>
           )}

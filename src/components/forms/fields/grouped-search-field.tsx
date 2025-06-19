@@ -15,7 +15,7 @@ import SearchOutlined from '@mui/icons-material/Search'
 import OutlinedField, { OutlinedFieldProps } from './outlined-field'
 
 type SelectFieldProps = {
-  options: { label: string; value: string }[]
+  options: { id?: string; label: string; value: string }[]
   multiple?: boolean
   placeholder?: string
   group?: boolean
@@ -94,12 +94,20 @@ function GroupedSearchField(props: OutlinedFieldProps & SelectFieldProps) {
     if (props.handleChange) {
       props.handleChange(e.value)
     }
+
+    if (props.handleValueChangeWithId) {
+      props.handleValueChangeWithId(e?.id, e.value)
+    }
   }
 
   const handleClear = (fieldProps: FieldProps) => {
     fieldProps.form.handleChange(fieldProps.field.name)('')
     if (props.handleChange) {
       props.handleChange('')
+    }
+
+    if (props.handleValueChangeWithId) {
+      props.handleValueChangeWithId('', '')
     }
   }
 

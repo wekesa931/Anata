@@ -13,6 +13,7 @@ import {
   SaveFileInput,
   ShareFileOptions,
 } from 'src/modules/udm/types'
+import airtableFetch from 'src/services/airtable/fetch'
 import { useMember } from 'src/context/member'
 
 export const useDocumentsReadApi = () => {
@@ -72,6 +73,8 @@ export const useDocumentsWriteApi = () => {
     useMutation(SAVE_FILE)
   const [shareFileMutation, { loading: sharing }] = useMutation(SHARE_FILE)
 
+  const { member } = useMember()
+
   const generateUploadLink = async (
     storageKey?: string,
     forceReplace = false,
@@ -124,6 +127,21 @@ export const useDocumentsWriteApi = () => {
     return data?.shareFile
   }
 
+  const createMedicationDeliveryTask = async (payload?: any) => {
+    if (!member?.airtableRecordId) return []
+    const res = await airtableFetch('create/hntasks', 'post', {
+      fields: payload,
+    })
+    return res
+  }
+  const confirmMedicationDeliveryTask = async (payload: any) => {
+    if (!member?.airtableRecordId) return []
+    const res = await airtableFetch('create/hntasks', 'post', {
+      fields: payload,
+    })
+    return res
+  }
+
   return {
     generateUploadLink,
     loading: gettingUploadLink || savingFile,
@@ -132,6 +150,8 @@ export const useDocumentsWriteApi = () => {
     errorSavingFile,
     sharingFile: sharing,
     shareFile,
+    createMedicationDeliveryTask,
+    confirmMedicationDeliveryTask,
   }
 }
 
