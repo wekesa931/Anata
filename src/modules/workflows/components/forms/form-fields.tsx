@@ -1454,7 +1454,9 @@ function DateInputField({
 
     // exclude Eunice Atitoh's tasks from logistics task count
     const filtered_log_tasks = log_tasks.filter((task: any) => {
-      return task['Assigned HN (From members table)'][0] !== 'recXNsjWFnZ9MeAew'
+      return (
+        task['Assigned HN (From members table)']?.[0] !== 'recXNsjWFnZ9MeAew'
+      )
     })
 
     const pastDatesToBlock = []
