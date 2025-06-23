@@ -138,6 +138,8 @@ function PdfPreview({
   const confirmMedicationDelRef = React.useRef<any>(null)
   const fileIdRef = React.useRef<any>(null)
 
+  const today = dayjs().format('YYYY-MM-DD')
+
   const udmOptionsPicked = async (values: any) => {
     let pharmtech = null
     if (values.autoPickPharmtech && antaraPharmtechs.length > 1) {
@@ -159,6 +161,7 @@ function PdfPreview({
           ? ['recCL3eSiTjV0Hfob']
           : ['recutE8UEOsAvU73u'],
       Status: 'Not Started',
+      'Due Date': `${today}`,
       'Task Priority': 'P0',
       'Task Notes': `Prescription Verification: view the latest prescription in the member's Docs and verify the following details: drug dosage, dosage form, duration, previous prescriptions that the member had/refilled.
         Review slack notification thread to check for doctor's notes on delivery preferences.
@@ -172,6 +175,7 @@ function PdfPreview({
     const confirmMedicationPayload = {
       Member: [member?.airtableRecordId],
       Status: 'Not Started',
+      'Due Date': `${today}`,
       Assignee: [pharmtechRef.current],
       'Task definition':
         process.env.PROD === 'true'
