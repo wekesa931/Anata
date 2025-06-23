@@ -41,7 +41,7 @@
     "@babel/preset-env": "^7.23.5",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@babel/runtime": "^7.20.0",
+    "@babel/runtime": "^7.26.10",
     "@commitlint/cli": "^18.2.0",
     "@commitlint/config-conventional": "^18.1.0",
     "@emotion/babel-plugin": "^11.11.0",
