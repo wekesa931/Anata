@@ -126,7 +126,7 @@
     "vite-plugin-svgr": "^4.1.0",
     "webpack": "^5.76.0",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.11.1",
+    "webpack-dev-server": "^5.2.1",
     "worker-loader": "^3.0.8"
   },
   "dependencies": {
