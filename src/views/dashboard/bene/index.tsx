@@ -41,7 +41,7 @@ function DashboardContent() {
     !isSubscriptionValid(member?.activeBillingPackageEnrollment) ||
     isEligibleForAntaraServices !== 'yes'
 
-  return isLoading && !member && !memberNotFound ? (
+  return false ? (
     <div className="flex items-center justify-center h-screen w-full">
       <CenteredLoader message="Loading member..." />
     </div>

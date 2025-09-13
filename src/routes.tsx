@@ -108,7 +108,7 @@ function Routes() {
             path="/*"
             element={
               <ProtectedRoute user={user}>
-                <MainDashboard />
+                <BeneDashboard />
               </ProtectedRoute>
             }
           />
