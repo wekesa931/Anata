@@ -79,12 +79,12 @@ function BillingSectionItem({
             <div className="flex items-center justify-between">
               <section>
                 <h4 className="text-dark-blue-100 mt-2">
-                  {member?.isUnlimitedMembershipMember
+                  {true
                     ? 'Unlimited Membership'
                     : 'Fee For Service'}
                 </h4>
                 <p className="text-dark-blue-50 text-sm mt-2 mb-2">
-                  {memberCohortDetails?.payor?.payorName}
+                  {'Jubilee Insurance'}
                 </p>
               </section>
             </div>
@@ -95,7 +95,7 @@ function BillingSectionItem({
                   : 'text-red-100 bg-red-10'
               }`}
             >
-              {toTitleCase(status)}
+              Active
             </span>
           </div>
         </AccordionSummary>
@@ -108,7 +108,7 @@ function BillingSectionItem({
                 <div className="flex items-center justify-between gap-1">
                   <p className="text-dark-blue-100"> Billing method </p>
                   <ItemChild
-                    child={memberBillingScheme?.billingMethod?.name}
+                    child={'Invoice to insurer'}
                     className="text-dark-blue-50"
                   />
                 </div>
@@ -117,7 +117,7 @@ function BillingSectionItem({
                 <div className="flex items-center justify-between gap-1">
                   <p className="text-dark-blue-100">Amount </p>
                   <ItemChild
-                    child={`${formatCurrency(memberBillingScheme?.skuRate)}`}
+                    child={`${formatCurrency(1500)}`}
                     className="text-dark-blue-50"
                   />
                 </div>
@@ -126,7 +126,7 @@ function BillingSectionItem({
                 <div className="flex items-center justify-between gap-1">
                   <p className="text-dark-blue-100"> Frequency</p>
                   <ItemChild
-                    child={memberBillingScheme?.billingFrequency}
+                    child={'Quarterly'}
                     className="text-dark-blue-50"
                   />
                 </div>
@@ -135,7 +135,7 @@ function BillingSectionItem({
                 <div className="flex items-center justify-between gap-1">
                   <p className="text-dark-blue-100"> Status</p>
                   <ItemChild
-                    child={toTitleCase(memberBillingScheme?.status)}
+                    child={toTitleCase('active')}
                     className="text-dark-blue-50"
                   />
                 </div>
@@ -227,7 +227,7 @@ function BillingSection({ member }: BillingSectionProps) {
   /** holds reasons for service ineligibility  */
   const reasonsForIneligibility = member?.reasonsForServiceIneligibility || []
 
-  return member ? (
+  return true ? (
     <PrimaryForm initialValues={initialValues} handleSubmit={handleSubmit}>
       {(values) => (
         <Form>
@@ -311,19 +311,15 @@ function BillingSection({ member }: BillingSectionProps) {
                     </p>
                     <div className="flex items-center gap-2">
                       <ItemChild
-                        child={isEligibleForAntaraServices}
+                        child={"Eligible"}
                         className="ml-2 text-dark-blue-50 capitalize"
                       />
                       <Tooltip
                         title={
-                          isEligibleForAntaraServices === 'unknown'
-                            ? 'Not enough information is available to determine eligibility'
-                            : isEligibleForAntaraServices === 'no'
-                            ? 'Member is NOT eligible to receive antara services'
-                            : 'Member is eligibile to receive antara services'
+                          'Member is eligibile to receive antara services'
                         }
                       >
-                        {isEligibleForAntaraServices === 'yes' ? (
+                        {true ? (
                           <DoneIcon className="text-[#ebfbed] bg-[#34c759] w-4 h-4 rounded-2xl" />
                         ) : (
                           <GridCloseIcon className="text-[#ebfbed] bg-rose-500 w-4 h-4 rounded-2xl" />
@@ -337,11 +333,11 @@ function BillingSection({ member }: BillingSectionProps) {
                     <p className="text-dark-blue-100">Billing Eligibility:</p>
                     <div className="flex items-center gap-2">
                       <ItemChild
-                        child={billingEligibility()}
+                        child={'Eligible'}
                         className="ml-2 text-dark-blue-50"
                       />
                       <Tooltip>
-                        {billingEligibility() === 'Eligible' ? (
+                        {true ? (
                           <DoneIcon className="text-[#ebfbed] bg-[#34c759] w-4 h-4 rounded-2xl" />
                         ) : (
                           <GridCloseIcon className="text-[#ebfbed] bg-rose-500 w-4 h-4 rounded-2xl" />
@@ -352,7 +348,7 @@ function BillingSection({ member }: BillingSectionProps) {
                 </GridItems>
 
                 {/* reason for ineligibility */}
-                {reasonsForIneligibility.length > 0 && (
+                {false && (
                   <div className=" h-auto bg-red-20 mx-1 py-2 rounded-md font-rubik text-dark-blue-100 ineligibility-reason">
                     <h3 className="text-sm text-center pb-1 pl-2">
                       {reasonsForIneligibility.length === 1
@@ -372,73 +368,14 @@ function BillingSection({ member }: BillingSectionProps) {
 
                 <div className="mb-4 mt-5 flex items-center justify-between">
                   <ItemTitle title="Billing Scheme" />
-                  {memberCohortDetails.length > 0 && (
-                    <div>
-                      {editCohort && (
-                        <>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setEditCohort(false)
-                            }}
-                            className="mt-3 mr-3 items-center bg-[#E4E4E4] text-[#5D6B82] h-9 p-[5px] rounded capitalize"
-                            type="button"
-                          >
-                            <CloseIcon />
-                            Cancel
-                          </button>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setValidation(true)
-                            }}
-                            className={`mt-3 items-center h-9 p-[5px] rounded capitalize ${
-                              !displayReasons
-                                ? 'bg-[#E0E0E0] text-[#A0A0A0]'
-                                : 'bg-[#007AFF] text-[#FFFFFF]'
-                            }`}
-                            disabled={!displayReasons}
-                          >
-                            <SaveIcon />
-                            Save
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  )}
+
                 </div>
                 {memberCohortDetails.length === 0 ||
                 checkAllDeactivatedCohorts ? (
-                  <>
-                    {member.pendingBillingPackageEnrollment ? (
-                      <div className="bg-red-20 rounded-md p-4 ">
-                        <h1 className="text-[#34C759] font-medium text-sm">
-                          Consent sent to member
-                        </h1>
-                        <p className="text-sm">
-                          Pending consent acceptance by member to activate
-                          billing scheme
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col justify-center items-center font-rubik my-2">
-                        <EmptyDataIcon />
-                        <p className="text-base font-medium text-center">
-                          Missing billing scheme
-                        </p>
-                        <div className="text-sm text-dark-blue-100 text-center mt-2 mb-4">
-                          <p>
-                            It seems like this member does not belong to a
-                            billing scheme
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </>
+                  <></>
                 ) : (
                   <>
-                    {[memberCohortDetails[0]].map((cohort, index) => (
+                    {[1].map((cohort, index) => (
                       <BillingSectionItem
                         memberCohortItem={cohort}
                         member={member}

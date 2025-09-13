@@ -51,7 +51,7 @@ function StatusesSection({ member }: StatusesSectionProps) {
     )
   }
 
-  return member ? (
+  return true ? (
     <div>
       {showEditForm && (
         <PortalForm
@@ -76,20 +76,20 @@ function StatusesSection({ member }: StatusesSectionProps) {
         handleEdit={() => toggleEditForm(true)}
       >
         <GridItems>
-          <Item title="Assigned HN" child={member?.assignedHn?.fullName} />
-          <Item title="Assigned ME" child={member?.assignedMe?.fullName} />
+          <Item title="Assigned HN" child={'Mercy Minage'} />
+          <Item title="Assigned ME" child={'Joseph Karauri'} />
         </GridItems>
         <GridItems>
           <Item
             title="Assigned Nutritionist"
-            child={member?.assignedNutritionist?.fullName}
+            child={'Lindy Cromwel'}
           />
         </GridItems>
         <GridItems>
-          <Item title="Onboarding stage" child={member?.onboardStage} />
+          <Item title="Onboarding stage" child={'Onboarded'} />
           <Item
             title="Member status"
-            child={<MemberStatus status={member?.status} />}
+            child={<MemberStatus status={'Active'} />}
           />
         </GridItems>
       </SectionItem>

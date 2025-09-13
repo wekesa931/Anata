@@ -42,39 +42,11 @@ export function SubscriptionServiceLayout({ member }: SubscriptionProps) {
 
   return (
     <section className="p-4">
-      {!loadingCohorts ? (
-        <>
-          {member?.isFfsEligible ? (
-            <>
-              {pricingModalView === 'fee-for-service' ? (
-                <FFSPricingView
-                  setPricingModalView={setPricingModalView}
-                  setUnlimitedMembershipMode={setUnlimitedMembershipMode}
-                  member={member}
-                  availableCohorts={availableCohorts}
-                />
-              ) : (
-                <UnlimitedBenefitsView
-                  unlimitedMembershipMode={unlimitedMembershipMode}
-                  setPricingModalView={setPricingModalView}
-                  setUnlimitedMembershipMode={setUnlimitedMembershipMode}
-                />
-              )}
-            </>
-          ) : (
-            <UnlimitedServicesView
+      <UnlimitedServicesView
               availableCohorts={availableCohorts}
               setUnlimitedMembershipMode={setUnlimitedMembershipMode}
               unlimitedMembershipMode={unlimitedMembershipMode}
             />
-          )}
-        </>
-      ) : (
-        <div className="rounded-md p-4 mb-4 flex flex-col items-center justify-center h-[300px]">
-          <FadeLoader color="#222222" loading data-testid="loader" />
-          <div className="mt-4 text-center">Loading subscription data </div>
-        </div>
-      )}
     </section>
   )
 }

@@ -48,12 +48,12 @@ function MemberPreferences() {
             </div>
           ) : (
             <>
-              {memberPreferences ? (
+              {true ? (
                 <div className="table text-left text-xs">
                   <div className="table-row">
                     <p
                       className={`table-cell text-dark-blue-100 font-medium ${
-                        isCallInTime() ? 'text-dark-blue-100' : 'text-red-100'
+                        true ? 'text-dark-blue-100' : 'text-red-100'
                       }`}
                     >
                       {' '}
@@ -61,16 +61,16 @@ function MemberPreferences() {
                     </p>
                     <p
                       className={`table-cell text-dark-blue-100 font-medium ${
-                        isCallInTime() ? 'text-dark-blue-100' : 'text-red-100'
+                        true ? 'text-dark-blue-100' : 'text-red-100'
                       }`}
                     >
-                      {memberPreferences?.timeOfCalling}
+                      10:00 AM
                     </p>
                   </div>
                   <div className={`table-row `}>
                     <p
                       className={`table-cell text-dark-blue-100 font-medium ${
-                        isTodayInPrefferedDays()
+                        true
                           ? 'text-dark-blue-100'
                           : 'text-red-100'
                       }`}
@@ -79,12 +79,12 @@ function MemberPreferences() {
                     </p>
                     <p
                       className={`table-cell text-dark-blue-100 font-medium ${
-                        isTodayInPrefferedDays()
+                        true
                           ? 'text-dark-blue-100'
                           : 'text-red-100'
                       }`}
                     >
-                      {(memberPreferences?.preferredDays || [])?.join(', ')}
+                      {['Monday'].join(', ')}
                     </p>
                   </div>
                   <div className="table-row">
@@ -94,7 +94,7 @@ function MemberPreferences() {
                     <div className="table-cell text-dark-blue-100 font-medium ">
                       <p className="flex gap-2 items-center">
                         <span>{memberPreferences?.frequency}</span>
-                        <small>(Last called - {getLastCalled(lastCall)})</small>
+                        <small>(Last called - 10 minutes ago)</small>
                       </p>
                     </div>
                   </div>
@@ -107,7 +107,7 @@ function MemberPreferences() {
             </>
           )}
           {hasErrors && !loading && (
-            <p className="text-sm font-rubik text-red-100">
+            <p style={{ color: 'var(--green-20)', minWidth: '200px' }} className="text-sm font-rubik">
               Please confirm that you&apos;d like to call the member anyway
               inspite of their preferences
             </p>

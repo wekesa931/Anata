@@ -8,6 +8,8 @@ import DataTable, { Column } from 'src/components/table/data-table'
 import filterFields from 'src/utils/airtable/field-utils'
 import { useRefreshTrigger } from 'src/context/refresh-trigger'
 import ErrorRetry from 'src/components/feedbacks/error-retry'
+import { GanttComponent, Inject, Selection, ColumnsDirective, ColumnDirective } from '@syncfusion/ej2-react-gantt';
+import { projectNewData } from 'src/modules/vitals/views/displays/data';
 
 const COLUMNS: Column[] = [
   { id: 'Date of Consultation', label: 'Date', sortable: true, type: 'date' },
@@ -106,22 +108,94 @@ function Consultation() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshKey])
 
+//   let dara = [
+//     {
+//         TaskID: 1,
+//         TaskName: 'Project Initiation',
+//         StartDate: new Date('04/02/2024'),
+//         EndDate: new Date('04/21/2019'),
+//         subtasks: [
+//             { TaskID: 2, TaskName: 'Identify Site location', StartDate: new Date('04/02/2019'), Duration: 4, Progress: 50 },
+//             { TaskID: 3, TaskName: 'Perform Soil test', StartDate: new Date('04/02/2019'), Duration: 4, Progress: 50  },
+//             { TaskID: 4, TaskName: 'Soil test approval', StartDate: new Date('04/02/2019'), Duration: 4, Progress: 50 },
+//         ]
+//     },
+//     {
+//         TaskID: 5,
+//         TaskName: 'Project Estimation',
+//         StartDate: new Date('04/02/2019'),
+//         EndDate: new Date('04/21/2019'),
+//         subtasks: [
+//             { TaskID: 6, TaskName: 'Develop floor plan for estimation', StartDate: new Date('04/04/2019'), Duration: 3, Progress: 50 },
+//             { TaskID: 7, TaskName: 'List materials', StartDate: new Date('04/04/2019'), Duration: 3, Progress: 50 },
+//             { TaskID: 8, TaskName: 'Estimation approval', StartDate: new Date('04/04/2019'), Duration: 3, Progress: 50 }
+//         ]
+//     }];
+// let taskSettings = {id: 'TaskID', name: 'TaskName', startDate: 'StartDate', endDate: 'EndDate', duration: 'Duration', progress: 'Progress', child: 'subtasks' };
+
+  let ganttInstance: GanttComponent;
+  const taskFields: any = {
+    id: 'TaskID',
+    name: 'TaskName',
+    startDate: 'StartDate',
+    endDate: 'EndDate',
+    duration: 'Duration',
+    progress: 'Progress',
+    dependency: 'Predecessor',
+    parentID:'ParentId'
+  };
+  const labelSettings: any = {
+    leftLabel: 'TaskName'
+  };
+  const splitterSettings:any= {
+      columnIndex: 2
+  };
+  const projectStartDate: Date = new Date('03/26/2025');
+  const projectEndDate: Date = new Date('07/20/2025');
+  const onCreated=(): void=>{
+    if(document.querySelector('.e-bigger'))
+        {
+            ganttInstance.rowHeight=48;
+            ganttInstance.taskbarHeight=28;
+        }
+  }
   return error ? (
     <ErrorRetry retry={getConsultation} />
   ) : (
-    <DataTable
-      columns={COLUMNS}
-      data={consultationData}
-      defaultSortColumn="Date of Consultation"
-      title="Consultation Details"
-      loading={loading}
-      loadingContext={
-        refreshKey.includes('Consultation') ? refreshKey : undefined
-      }
-      filterByDate
-      dateColumnKey="Date of Consultation"
-      defaultFilterColumn="Date of Consultation"
-    />
+    // <DataTable
+    //   columns={COLUMNS}
+    //   data={consultationData}
+    //   defaultSortColumn="Date of Consultation"
+    //   title="Engagement Details"
+    //   loading={loading}
+    //   loadingContext={
+    //     refreshKey.includes('Consultation') ? refreshKey : undefined
+    //   }
+    //   filterByDate
+    //   dateColumnKey="Date of Consultation"
+    //   defaultFilterColumn="Date of Consultation"
+    // />
+    <>
+    <h1 className="text-xl text-[#444] font-rubik font-medium">Chronic Care Engagement Plan</h1>
+    <div className='control-pane mb-4'>
+      <div className='control-section'>
+        <GanttComponent id='Default' ref={(gantt: any) => ganttInstance = gantt} dataSource={projectNewData} treeColumnIndex={1}
+          taskFields={taskFields} splitterSettings={splitterSettings} labelSettings={labelSettings} height='650px' taskbarHeight={25} rowHeight={46}
+          projectStartDate={projectStartDate} projectEndDate={projectEndDate} created={onCreated}>
+          <ColumnsDirective>
+            <ColumnDirective field='TaskID' width='80' ></ColumnDirective>
+            <ColumnDirective field='TaskName' headerText='Job Name' width='250' clipMode='EllipsisWithTooltip'></ColumnDirective>
+            <ColumnDirective field='StartDate'></ColumnDirective>
+            <ColumnDirective field='Duration'></ColumnDirective>
+            <ColumnDirective field='Progress'></ColumnDirective>
+            <ColumnDirective field='Predecessor'></ColumnDirective>
+          </ColumnsDirective>
+          <Inject services={[Selection]} />
+        </GanttComponent>
+      </div>
+    </div>
+    </>
+    
   )
 }
 

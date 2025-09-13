@@ -14,7 +14,7 @@ export interface IProps {
   tasksType?: string
   error?: any
   setError: (error: any) => void
-  phoneNumbers: any[]
+  // phoneNumbers: any[]
   handleNewCalls: () => void
   anchorEl?: any
   closeWindow: () => void
@@ -25,7 +25,6 @@ function ContactList({
   tasksType,
   error,
   setError,
-  phoneNumbers,
   handleNewCalls,
   anchorEl,
   closeWindow,
@@ -35,6 +34,15 @@ function ContactList({
   const { initiateCall } = useCall()
   const { notify } = useNotifications()
   const location = useLocation()
+  const phoneNumbers = [{
+    name: 'Bill Wekesa',
+    label: 'Phone 1',
+    phone: '+254715338188',
+  }, {
+    name: 'Betty Cheptoo',
+    label: 'Phone 2',
+    phone: '0712345679',
+  }]
 
   const calloutChange = async (e: any, relevantContact: any) => {
     e.stopPropagation()
@@ -77,7 +85,7 @@ function ContactList({
         </div>
         <MemberPreferences />
         <div data-testid="phone-list">
-          {error && (
+          {/* {error && (
             <div className="p-relative">
               <X
                 className="calls-error"
@@ -93,9 +101,9 @@ function ContactList({
                 buttonPadding="15px 8px"
               />
             </div>
-          )}
+          )} */}
           <div className="p-2">
-            {member ? (
+            {true ? (
               <div>
                 {phoneNumbers.length > 0 ? (
                   phoneNumbers?.map((con, i) => (

@@ -416,6 +416,16 @@ const BP_Columns: Column[] = [
   },
 ]
 
+// BP_Columns sample data
+// const BP_Columns_Sample_Data = [
+//   {
+//     timestamp: dayjs().format('DD MMM YYYY'),
+//     average: {
+//       value: '120/80',
+//     },
+//   },
+// ]
+
 export function BloodPressureTable() {
   const { getBpData } = useTablesData()
 
@@ -449,7 +459,7 @@ export function BloodPressureTable() {
 
   return (
     <div>
-      {error ? (
+      {false ? (
         <div>
           <p className="text-lg text-left mb-1">Blood Pressure</p>
           <ErrorComponent retry={refetchBpData} />
@@ -457,7 +467,23 @@ export function BloodPressureTable() {
       ) : (
         <div className="my-2">
           <DataTable
-            data={data}
+            data={
+              [
+                {
+                  timestamp: dayjs().format('DD MMM YYYY'),
+                  average: '120/80',
+                  pulse: '120',
+                  time: ''
+                },
+                {
+                  // previous day
+                  date: dayjs().subtract(10, 'day').format('DD MMM YYYY'),
+                  average: '120/80',
+                  pulse: '100',
+                  time: dayjs().subtract(1, 'day').format('HH:mm'),
+                },
+              ]
+            }
             columns={BP_Columns}
             loading={loading || loadingBP}
             loadingContext={

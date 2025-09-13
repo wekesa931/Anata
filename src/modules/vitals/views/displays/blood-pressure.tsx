@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import TimeRangeFilter from 'src/modules/vitals/components/time-filter'
 import { TimeRange, TimeFilters } from 'src/modules/vitals/types'
 import LineSeriesChat from 'src/components/charts/line'
+import { GanttComponent } from '@syncfusion/ej2-react-gantt';
 import dayjs from 'dayjs'
 import { withCustomBpDot } from 'src/modules/vitals/components/custom-bp-dot'
 import { useClustersData } from 'src/modules/vitals/hooks/clusters.data.hook'
@@ -14,6 +15,7 @@ import {
   useClustersObserver,
 } from 'src/modules/vitals/services/observers'
 import { useRefreshTrigger } from 'src/context/refresh-trigger'
+import { THREE_MONTH_DATA } from './data'
 
 dayjs.extend(advancedFormat)
 
@@ -80,13 +82,15 @@ function BloodPressureView() {
         </div>
       ) : (
         <div className="relative">
-          {!clusters.length ? (
+          {false ? (
             <div className="flex flex-col items-center justify-center h-[300px]">
               <p className="text-gray-400">No BP Data within this period</p>
             </div>
           ) : (
+            // Systolic range 120-129, Diastolic range 80-99
+            // 30  days data
             <LineSeriesChat
-              data={clusters}
+              data={THREE_MONTH_DATA}
               xAxisDataKey={{
                 key: 'timestamp',
                 formatter: getTimeFormat(currentTimeFilter),
@@ -108,6 +112,7 @@ function BloodPressureView() {
               yAxisDomain={yDomain}
               xTicks={getTickCount(currentTimeFilter, xDomain)}
             />
+            
           )}
         </div>
       )}

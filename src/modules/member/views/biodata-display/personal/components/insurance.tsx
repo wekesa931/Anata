@@ -29,7 +29,7 @@ function InsuranceSectionItem({
   insuranceItem,
   onEdit,
 }: {
-  insuranceItem: DbValueTypes.InsuranceType
+  insuranceItem: any
   onEdit: () => void
 }) {
   const benefits = insuranceItem?.benefits || []
@@ -39,16 +39,16 @@ function InsuranceSectionItem({
       <GridItems className="mt-2" single>
         <Item
           title="Insurance Provider"
-          child={insuranceItem?.insuranceCompany || 'Unknown'}
+          child={'Jubilee Insurance'}
         />
       </GridItems>
       <div className="flex gap-3 justify-start items-center">
         <GridItems className="mt-2" single>
-          <Item title="Insurance ID" child={insuranceItem?.insuranceId} />
+          <Item title="Insurance ID" child={'1234567890'} />
         </GridItems>
         <Tooltip
           title={
-            insuranceItem?.verificationStatus === 'Verified'
+            true
               ? 'This member insurance ID has been verified'
               : 'We could not find this member insurance ID'
           }
@@ -59,13 +59,13 @@ function InsuranceSectionItem({
             className={`
                 text-xs font-rubik font-medium text-center rounded-lg p-1 mt-3 uppercase 
                 ${
-                  insuranceItem?.verificationStatus === 'Verified'
+                  true
                     ? 'text-green-100 bg-green-10'
                     : 'text-red-100 bg-red-10'
                 }
               `}
           >
-            {insuranceItem?.verificationStatus}
+            {'Verified'}
           </span>
         </Tooltip>
         <div className="flex items-center justify-end mt-3 ml-auto">
@@ -81,7 +81,7 @@ function InsuranceSectionItem({
       <GridItems className="mt-2" single>
         <Item
           title="Health policy"
-          child={insuranceItem?.healthPolicy || '-'}
+          child={'Jubilee Health Policy'}
         />
       </GridItems>
 
@@ -92,8 +92,8 @@ function InsuranceSectionItem({
             <ItemTitle title="Balance" />
           </GridItems>
           <GridItems>
-            <ItemChild child="-" />
-            <ItemChild child="-" />
+            <ItemChild child="100,000" />
+            <ItemChild child="80,000" />
           </GridItems>
         </>
       ) : (
@@ -116,13 +116,13 @@ function InsuranceSectionItem({
                 <ItemTitle title="Benefit" />
                 <ItemTitle title="Balance" />
               </GridItems>
-              {benefits.map((benefit, index) => (
-                <GridItems key={benefit?.id || index}>
-                  <ItemChild child={benefit?.benefit?.name || '-'} />
+              {benefits.map((benefit: any, index: number) => (
+                <GridItems key={'765'}>
+                  <ItemChild child={'Healthcare'} />
                   <ItemChild
                     child={formatCurrency(
-                      (benefit?.benefit?.limit || 0) -
-                        (benefit?.utilizedPortion || 0)
+                      (100000) -
+                        (20000)
                     )}
                   />
                 </GridItems>
@@ -135,17 +135,17 @@ function InsuranceSectionItem({
         <Item
           title="Principal member info"
           child={
-            insuranceItem?.principalMemberInsuranceId
-              ? `Insurance ID: ${insuranceItem?.principalMemberInsuranceId} - ${insuranceItem?.relationshipToPrincipalMember}`
+            true
+              ? `Insurance ID: 2321`
               : '-'
           }
         />
       </GridItems>
-      {insuranceItem?.verificationStatus?.toLowerCase() !== 'verified' && (
+      {false && (
         <GridItems className="mt-2 bg-red-20 p-2 rounded-md" single>
           <Item
             title="Reason for verification failure"
-            child={insuranceItem?.reasonForVerificationFailure ?? '-'}
+            child={'Verification failed'}
           />
         </GridItems>
       )}
@@ -178,7 +178,7 @@ function InsuranceSection({ member }: InsuranceSectionProps) {
     toggleEditForm(false)
   }
 
-  return member ? (
+  return true ? (
     <div>
       {showEditForm && (
         <PortalForm
@@ -219,11 +219,11 @@ function InsuranceSection({ member }: InsuranceSectionProps) {
         handleEdit={() => toggleEditForm(true)}
       >
         <GridItems>
-          <Item title="Employer" child={member?.employer?.name} />
-          <Item title="Department" child={member?.employer?.department?.name} />
+          <Item title="Employer" child={'Airtel Limited'} />
+          <Item title="Department" child={'Communications'} />
         </GridItems>
         <Divider className="my-4" />
-        {member?.insuranceDetails?.length === 0 ? (
+        {[1].length === 0 ? (
           <div className=" h-16 bg-red-20 mx-1 py-2 rounded-lg font-rubik text-dark-blue-100 w-full">
             <h3 className="text-sm text-center">No insurance ID available</h3>
             <p className="text-xs text-center">
@@ -232,7 +232,7 @@ function InsuranceSection({ member }: InsuranceSectionProps) {
           </div>
         ) : (
           <>
-            {member?.insuranceDetails?.map((insurance, index) => (
+            {[1].map((insurance, index) => (
               <InsuranceSectionItem
                 key={index}
                 insuranceItem={insurance}

@@ -34,7 +34,7 @@ function SummarySection({ member }: SummarySectionProps) {
 
   const mergeRefusedServices = [...refusedServices, otherRefusedService]
 
-  return member ? (
+  return true ? (
     <div>
       {showUpdateForm && (
         <PortalForm
@@ -70,12 +70,12 @@ function SummarySection({ member }: SummarySectionProps) {
             title="Tags"
             child={
               <div className="flex flex-wrap gap-2">
-                {(member?.tags || []).map((tag, index) => (
+                {([1,2]).map((tag, index) => (
                   <span
                     key={index}
                     className="bg-blue-10 text-center rounded-md text-dark-blue-100 py-1 px-1.5 font-rubik text-sm"
                   >
-                    {tag}
+                    {index === 0 ? 'Chronic' : 'VIP'}
                   </span>
                 ))}
               </div>
@@ -100,27 +100,27 @@ function SummarySection({ member }: SummarySectionProps) {
           />
         </GridItems>
         <GridItems fullCols>
-          <Item title="First name" child={member?.firstName || '-'} />
-          <Item title="Middle name" child={member?.middleName || '-'} />
-          <Item title="Last name" child={member?.lastName || '-'} />
+          <Item title="First name" child={'Bill'} />
+          <Item title="Middle name" child={'Adams'} />
+          <Item title="Last name" child={'Wekesa'} />
         </GridItems>
         <GridItems fullCols>
           <Item
             title="DOB"
-            child={member?.birthDate ? formatDOB(member?.birthDate) : '-'}
+            child={'08/08/1990'}
           />
-          <Item title="Gender" child={member?.sex} />
-          <Item title="Marital status" child={member?.maritalStatus} />
+          <Item title="Gender" child={'M'} />
+          <Item title="Marital status" child={'Single'} />
         </GridItems>
         <GridItems>
-          <Item title="National ID" child={member?.kenyaNationalId} />
-          <Item title="NHIF Number" child={member?.nhifNumber} />
+          <Item title="National ID" child={'29509222'} />
+          <Item title="NHIF Number" child={'1234567890'} />
         </GridItems>
         <GridItems>
-          <Item title="Referral source" child={member?.referralSource} />
+          <Item title="Referral source" child={'Referral'} />
           <Item
             title="Registration channel"
-            child={member?.registrationChannel}
+            child={'WhatsApp'}
           />
         </GridItems>
       </SectionItem>

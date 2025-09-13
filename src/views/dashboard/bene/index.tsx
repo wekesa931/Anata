@@ -47,10 +47,8 @@ function DashboardContent() {
     </div>
   ) : (
     <div className="flex flex-col h-full flex-1 bg-white w-full">
-      {!!user?.userAirtableId && <NavBar />}
-      {memberNotFound ? (
-        <MemberNotFound />
-      ) : (
+      <NavBar />
+      
         <>
           <div className="w-full flex justify-between bg-white h-full relative rounded-t-2xl transition">
             <div className="h-full w-1/4">
@@ -63,10 +61,10 @@ function DashboardContent() {
               <RightViews />
             </div>
           </div>
-          {showNoEligibleForServiceModal &&
-            location.search !== '?register=true' && <BillingEligibilityModal />}
+          {/* {showNoEligibleForServiceModal &&
+            location.search !== '?register=true' && <BillingEligibilityModal />} */}
         </>
-      )}
+      
     </div>
   )
 }

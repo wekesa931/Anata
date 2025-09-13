@@ -5,6 +5,10 @@ import { datadogRum } from '@datadog/browser-rum'
 
 const { DATADOG_APPLICATION_ID, DATADOG_CLIENT_TOKEN } = process.env
 
+import { registerLicense } from '@syncfusion/ej2-base';
+
+registerLicense('Ngo9BigBOggjHTQxAR8/V1JFaF5cXGRCd0x3THxbf1x1ZFREal9WTnJZUj0eQnxTdEBjUH5ccXZWQWRaWUZwXEleYg==');
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then((registrations) => {
     registrations.forEach((registration) => {

@@ -85,52 +85,37 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
     member?.activeBillingPackageEnrollment?.billingSchemeSubscription
       ?.billingScheme
 
-  return member ? (
+  return true ? (
     <div className="flex flex-col h-full">
       <div className="flex-1 bg-white-100 flex justify-start flex-col overflow-y-auto border-l border-2 border-solid border-dark-blue-10 border-b-0">
         <div
           ref={memberDataRef}
-          className={`py-2 px-0 items-center justify-between sticky top-0 w-full z-10 ${
-            unknownMembership
-              ? 'bg-red-10'
-              : member?.isFfsEligible
-              ? 'bg-[#FFEACC]'
-              : 'bg-[#98EBA5]'
-          }`}
+          className={`py-2 px-0 items-center justify-between sticky top-0 w-full z-10 bg-[#98EBA5]`}
         >
-          {member ? (
+          {true ? (
             <section>
               <h3 className="font-rubik font-medium text-xl pl-4 text-dark-blue-100 ">
-                {`${member.fullName} ${getAgeFull(member?.birthDate)}`}
-                {member?.sex && (
+                {`Bill Adams Wekesa 33yrs`}
+                {true && (
                   <span className="w-6 h-6 bg-red-50 text-white rounded-[50%] ml-1 py-[2px] px-[6px]">
-                    {member?.sex.charAt(0) || ''}
+                    M
                   </span>
                 )}
               </h3>
               <div className="flex pl-4 justify-between mt-2 items-center">
                 <div className="text-[#5D6B82] ">
-                  {member.pendingBillingPackageEnrollment && (
-                    <p className="font-normal text-xs mb-2">
-                      {member.pendingBillingPackageEnrollment
-                        ?.isUnlimitedMembership
-                        ? 'Unlimited Membership'
-                        : 'Fee for Service'}
-                      <span className="ml-2">( pending consent )</span>
-                    </p>
-                  )}
 
-                  {unknownMembership ? (
+                  {false ? (
                     <div>Unknown Membership</div>
                   ) : (
                     <div>
                       <p className="font-medium mb-1">
-                        {member?.isFfsEligible
+                        {false
                           ? 'Fee for Service'
                           : 'Unlimited Membership'}
                       </p>
                       <p className="font-normal text-xs">
-                        since {getSubscriptionDate()}
+                        since 08/2024
                       </p>
                       {member?.shouldRenewMembership && (
                         <PrimaryButton
@@ -138,13 +123,13 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
                           onClick={onMembershipSmartPayment}
                         >
                           Collect Payment <br />
-                          {formatCurrency(memberBillingScheme?.skuRate)}
+                          {formatCurrency(1000)}
                         </PrimaryButton>
                       )}
                     </div>
                   )}
                 </div>
-                {!unknownMembership && (
+                {true && (
                   <div
                     role="button"
                     className="px-3 py-0 border border-1 border-neural-base bg-white mr-3 cursor-pointer"
@@ -153,8 +138,7 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
                     onKeyDown={handleSubscriptionView}
                   >
                     <span className="font-normal text-xs text-[#5D6B82] mb-4">
-                      {member.activeBillingPackageEnrollment?.billingPackage
-                        ?.isFfs
+                      {true
                         ? 'View Pricing'
                         : 'Benefits'}
                     </span>
@@ -175,7 +159,7 @@ function MemberBiodataLayout({ member }: MemberBiodataProps) {
             <SubscriptionServiceLayout member={member} />
           </div>
         )}
-        <MissingInfoBlock member={member} />
+        {/* <MissingInfoBlock member={member} /> */}
 
         <div className="flex flex-col h-full">
           {startSmartPayment ? (

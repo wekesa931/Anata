@@ -16,8 +16,8 @@ function Clinical() {
       <div className="mt-1">
         <div className="flex-1">
           <Consultation />
-          <Logistic />
-          <LabRequest />
+          {/* <Logistic />
+          <LabRequest /> */}
           <div className="my-4">
             <h4 className="text-xl text-[#444] font-rubik font-medium">
               Labs & Vitals{' '}

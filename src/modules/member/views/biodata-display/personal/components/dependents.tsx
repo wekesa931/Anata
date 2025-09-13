@@ -152,7 +152,7 @@ function DependentsSection({ member }: DependentsSectionProps) {
     (dependent) => !dependent?.v2Member
   )
 
-  return member ? (
+  return true ? (
     <SectionItem>
       <div className="mb-4">
         <ItemTitle title="Household" />

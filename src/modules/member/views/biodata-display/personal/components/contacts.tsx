@@ -29,7 +29,7 @@ function ContactsSection({ member }: ContactsSectionProps) {
     analytics.trackEditProfile(`Edit contacts ${open ? 'opened' : 'closed'}`)
   }
 
-  return member ? (
+  return true ? (
     <div>
       {showEditForm && (
         <PortalForm
@@ -59,21 +59,21 @@ function ContactsSection({ member }: ContactsSectionProps) {
         editable
         handleEdit={() => toggleEditForm(true)}
       >
-        {member?.phones?.map((phone, index) => (
+        {[1].map((phone, index) => (
           <GridItems key={index}>
-            <Item title={`Phone ${index + 1}`} child={phone?.phone} />
+            <Item title={`Phone ${index + 1}`} child={'+254715338188'} />
             <Item
               title="Last app opened date"
               child={
                 <LastOpenedApp
-                  lastUsedToAccessApp={phone?.lastUsedToAccessApp}
+                  lastUsedToAccessApp={'+254715338188'}
                 />
               }
             />
           </GridItems>
         ))}
 
-        {member?.phones?.length === 0 && (
+        {[1].length === 0 && (
           <GridItems>
             <Item title="Phone 1" child="-" />
             <Item title="Last app opened date" child="-" />
@@ -81,18 +81,18 @@ function ContactsSection({ member }: ContactsSectionProps) {
         )}
 
         <GridItems single>
-          <Item title="Email" child={member?.email} />
+          <Item title="Email" child={'bill.wekesa@gmail.com'} />
         </GridItems>
         <GridItems single>
           <Item
             title="Emergency contact"
-            child={member?.emergencyContactDisplay}
+            child={'Betty Cheptoo'}
           />
         </GridItems>
         <GridItems single>
           <Item
             title="Caregiver contact info"
-            child={member?.caregiverContactDisplay}
+            child={'+254777883647'}
           />
         </GridItems>
       </SectionItem>

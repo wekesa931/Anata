@@ -49,25 +49,25 @@ function AddressItem({ addressItem, label, deliveryInstructions }: ItemProps) {
   return (
     <SectionItem editable={false}>
       <GridItems single>
-        <Item title={label || 'Home'} child={addressItem?.description} />
+        <Item title={label || 'Home'} child={'Home Address'} />
       </GridItems>
       <GridItems single>
         <Item
           title="Geolocation"
           child={
             <MapLink
-              placeId={addressItem?.place_id}
-              residentialAddress={addressItem?.description}
+              placeId={'456'}
+              residentialAddress={'Home Address'}
             />
           }
         />
       </GridItems>
       <GridItems>
-        <Item title="County" child={addressItem?.residentialCounty} />
-        <Item title="Town" child={addressItem?.residentialTown} />
+        <Item title="County" child={'Nairobi'} />
+        <Item title="Town" child={'Kasarani'} />
       </GridItems>
       <GridItems single>
-        <Item title="Delivery instructions" child={deliveryInstructions} />
+        <Item title="Delivery instructions" child={''} />
       </GridItems>
     </SectionItem>
   )
@@ -92,7 +92,7 @@ function AddressesSection({ member }: Props) {
     analytics.trackEditProfile(`Edit addresses ${open ? 'opened' : 'closed'}`)
   }
 
-  return member ? (
+  return true ? (
     <>
       {showEditForm && (
         <PortalForm
@@ -115,7 +115,7 @@ function AddressesSection({ member }: Props) {
           )}
         </PortalForm>
       )}
-      {member?.hasAddress && (
+      {true && (
         <div className="flex justify-between items-center mr-1 font-rubik mb-2">
           <h3 className="text-dark-blue-50 text-base">Addresses</h3>
           <Button
@@ -127,7 +127,7 @@ function AddressesSection({ member }: Props) {
           </Button>
         </div>
       )}
-      {!member.hasAddress ? (
+      {false ? (
         <SectionItem>
           <div className="h-16 bg-red-20 mx-1 py-2 rounded-lg font-rubik text-dark-blue-100 w-full">
             <h3 className="text-sm text-center">No addresses available</h3>
@@ -138,7 +138,7 @@ function AddressesSection({ member }: Props) {
         </SectionItem>
       ) : (
         <>
-          {!!homeAddress && homeAddress?.address?.place_id && (
+          {true && (
             <AddressItem
               addressItem={homeAddress?.address}
               label={homeAddress?.addressLabel}

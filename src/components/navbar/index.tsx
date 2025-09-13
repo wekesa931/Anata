@@ -80,13 +80,13 @@ function NavBar() {
             <MenuIcon />
           </IconButton>
 
-          <img
+          {/* <img
             src={FlatLogo}
             width="32px"
             height="32px"
             alt="antara small logo"
-          />
-          <h5 className={styles.logoText}>Antara Health</h5>
+          /> */}
+          <h5 className={styles.logoText}>Anata Health</h5>
         </div>
         <FloatingMenu
           anchorEl={anchorEl}
